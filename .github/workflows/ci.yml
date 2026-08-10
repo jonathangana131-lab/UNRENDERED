@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, agent/integration/4-worldentity-hardening-sol9c6e]
   pull_request:
 
 permissions:
