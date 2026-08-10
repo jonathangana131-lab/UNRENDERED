@@ -1,4 +1,5 @@
 local process = require("@lune/process")
+local runObjectGenome = require("./object_genome")
 local runWorldEntity = require("./world_entity")
 
 local failures = 0
@@ -38,6 +39,7 @@ else
 end
 
 failures += runWorldEntity()
+failures += runObjectGenome()
 
 if failures > 0 then
 	process.exit(1)
