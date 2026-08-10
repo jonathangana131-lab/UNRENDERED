@@ -1,0 +1,56 @@
+name: Apply ObjectGenome material identity seal
+
+on:
+  push:
+    branches:
+      - agent/integration/6-objectgenome-material-identity-seal-sol56r8
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/integration/6-objectgenome-material-identity-seal-sol56r8
+      - name: Apply reviewed source edits
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("src/shared/Objects/ObjectGenome.luau")
+          text = path.read_text()
+
+          replacements = [
+              (
+                  'local StableId = require(script.Parent.Parent.Core.StableId)\n',
+                  'local StableId = require(script.Parent.Parent.Core.StableId)\nlocal MaterialDNA = require(script.Parent.Parent.Materials.MaterialDNA)\n',
+              ),
+              (
+                  '''function ObjectGenome.identityParts(value: ObjectGenome): { string }\n\treturn {\n\t\ttostring(value.schemaVersion),\n\t\tvalue.familyId,\n\t\ttostring(value.familyVersion),\n\t\tvalue.variantKey,\n\t}\nend\n''',
+                  '''function ObjectGenome.identityParts(value: ObjectGenome): { string }\n\tlocal parts = {\n\t\ttostring(value.schemaVersion),\n\t\tvalue.familyId,\n\t\ttostring(value.familyVersion),\n\t\tvalue.variantKey,\n\t}\n\n\tlocal materialBindings: { string } = {}\n\tfor _, component in ipairs(value.components) do\n\t\ttable.insert(\n\t\t\tmaterialBindings,\n\t\t\t`{component.key}={component.materialKey}@{component.materialRecipeVersion}`\n\t\t)\n\tend\n\ttable.sort(materialBindings)\n\tfor _, binding in ipairs(materialBindings) do\n\t\ttable.insert(parts, binding)\n\tend\n\n\treturn parts\nend\n''',
+              ),
+              (
+                  '''\t\tif not isSemanticKey(component.materialKey) then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_key",\n\t\t\t\tpath .. ".materialKey",\n\t\t\t\t"materialKey must be the stable lowercase MaterialDNA recipe id"\n\t\t\t)\n\t\tend\n\t\tif not isPositiveInteger(component.materialRecipeVersion) then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_recipe_version",\n\t\t\t\tpath .. ".materialRecipeVersion",\n\t\t\t\t"materialRecipeVersion must be a positive integer"\n\t\t\t)\n\t\tend\n''',
+                  '''\t\tlocal materialReferenceResult = MaterialDNA.validateReference({\n\t\t\tid = component.materialKey,\n\t\t\trecipeVersion = component.materialRecipeVersion,\n\t\t})\n\t\tif not materialReferenceResult.ok then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_reference",\n\t\t\t\tpath .. ".materialKey",\n\t\t\t\t`component material reference must satisfy MaterialDNA v2: {table.concat(materialReferenceResult.errors, "; ")}`\n\t\t\t)\n\t\tend\n''',
+              ),
+          ]
+
+          for old, new in replacements:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"expected exactly one source match, got {count}: {old[:80]!r}")
+              text = text.replace(old, new, 1)
+
+          path.write_text(text)
+      - name: Commit source edit
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/shared/Objects/ObjectGenome.luau
+          git diff --cached --check
+          git commit -m "fix(objects): seal exact material identity contract"
+          git push origin HEAD:agent/integration/6-objectgenome-material-identity-seal-sol56r8
