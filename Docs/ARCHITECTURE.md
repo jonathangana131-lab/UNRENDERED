@@ -79,10 +79,12 @@ Promotion and demotion preserve domain identity and persistent state.
 - F0–F4 on a WorldEntity is lifecycle state only. The Fidelity Manager owns policy inputs, budgets, hysteresis, reasons, and timing for choosing a target fidelity.
 - Promotion reuses the latest captured persistent state. Demotion requires a fresh plain-data capture before representation teardown so physical state cannot disappear with Instances.
 - `stateRevision` tracks durable-state captures independently from `representationRevision`, which tracks fidelity representation changes.
-- Captured state is recursively checked for plain finite data and defensively copied/frozen. Instance/userdata/function/thread values, metatables, cycles, and non-finite numbers are rejected at the boundary.
+- Captured state is recursively checked for plain finite data and defensively copied/frozen. Instance/userdata/function/thread values, metatables, cycles, and non-finite numbers are rejected at the boundary. Nested tables must be either string-keyed maps or dense 1-based arrays so persisted state has one portable interpretation.
 - The domain registry rejects duplicate live IDs, keeps the first registration authoritative, and emits a diagnostic describing both origins instead of silently replacing one entity with another.
+- Registry backing records and diagnostic history are closure-private. Callers observe current records/snapshots through the registry capability surface and cannot mutate backing state around duplicate detection or lifecycle revision boundaries.
+- Lifecycle changes for registered entities use `captureRegistered` / `transitionRegistered`, which atomically replace the registry's current immutable record. Pure `captureState` / `transition` remain available for detached records and tests.
 
-The registry is an identity diagnostic/index, not the universe database and not a persistence repository.
+The registry is an in-memory identity/lifecycle index and diagnostic guard, not the universe database, persistence repository, or fidelity-selection policy owner.
 
 ## Roblox-specific constraints
 
