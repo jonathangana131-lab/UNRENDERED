@@ -64,6 +64,16 @@ for name, recipe in pairs(MaterialExamples) do
 	expectValid(`fixture {name}`, recipe)
 end
 
+if MaterialDNA.SchemaVersion == 1 then
+	pass("supported schema version is explicit")
+else
+	fail("supported schema version is explicit", `expected 1, got {tostring(MaterialDNA.SchemaVersion)}`)
+end
+
+local futureSchema = deepCopy(MaterialExamples.commercialWallpaper)
+futureSchema.schemaVersion = MaterialDNA.SchemaVersion + 1
+expectIssueCode("reject unsupported future schema", futureSchema, "unsupported_version")
+
 local rawAssetId = deepCopy(MaterialExamples.commercialWallpaper)
 rawAssetId.response.visualFamily = "rbxassetid://123456789"
 expectIssueCode("reject raw Roblox asset IDs", rawAssetId, "raw_asset_id")
