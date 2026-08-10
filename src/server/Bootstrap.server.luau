@@ -2,6 +2,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
 
 local Shared = ReplicatedStorage:WaitForChild("UNRENDERED")
 local Versions = require(Shared.Core.Versions)
@@ -21,3 +22,17 @@ print(
 		deterministicProbe
 	)
 )
+
+if RunService:IsStudio() then
+	local PhysicsLabRecipe = require(Shared.Physics.PhysicsLabRecipe)
+	local PhysicsLabRealizer = require(script.Parent.PhysicsLab.PhysicsLabRealizer)
+	local recipe = PhysicsLabRecipe.build()
+	PhysicsLabRealizer.realize(recipe, Workspace)
+	print(
+		string.format(
+			"[UNRENDERED] Physics Lab realized | recipe=%s elements=%d",
+			recipe.recipeId,
+			#recipe.elements
+		)
+	)
+end
