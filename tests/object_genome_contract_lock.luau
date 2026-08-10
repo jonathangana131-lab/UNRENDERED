@@ -133,8 +133,14 @@ local function run(): number
 		"default mutable state remains writable",
 		stateMutationOk and mutableState.componentWear[componentKey] == 0.5
 	)
-	expect("default state records exact genome identity", mutableState.genomeId == ObjectGenome.identityKey(ownedGenome))
-	expect("mutated state still validates against its genome", ObjectGenome.inspectState(ownedGenome, mutableState).ok)
+	expect(
+		"default state records exact genome identity",
+		mutableState.genomeId == ObjectGenome.identityKey(ownedGenome)
+	)
+	expect(
+		"mutated state still validates against its genome",
+		ObjectGenome.inspectState(ownedGenome, mutableState).ok
+	)
 
 	local missingGenomeIdState = ObjectGenome.defaultState(Fixtures.officeChair)
 	missingGenomeIdState.genomeId = nil
