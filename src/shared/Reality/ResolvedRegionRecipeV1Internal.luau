@@ -466,4 +466,14 @@ function ResolvedRegionRecipe.migrate(
 	return migrated, receipt
 end
 
-return table.freeze(ResolvedRegionRecipe)
+local LegacyReplayCore = {
+	SCHEMA_VERSION = ResolvedRegionRecipe.SCHEMA_VERSION,
+	FINGERPRINT_VERSION = ResolvedRegionRecipe.FINGERPRINT_VERSION,
+	deserialize = ResolvedRegionRecipe.deserialize,
+	serialize = ResolvedRegionRecipe.serialize,
+	equal = ResolvedRegionRecipe.equal,
+	fingerprint = ResolvedRegionRecipe.fingerprint,
+	reproKey = ResolvedRegionRecipe.reproKey,
+}
+
+return table.freeze(LegacyReplayCore)

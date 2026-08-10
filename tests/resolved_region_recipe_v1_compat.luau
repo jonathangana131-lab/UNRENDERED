@@ -1,6 +1,8 @@
 local ProductionLoader = require("./support/ProductionLoader")
 
 local ResolvedRegionRecipeV1 = ProductionLoader.requireShared("Reality/ResolvedRegionRecipeV1")
+local ResolvedRegionRecipeV1Internal =
+	ProductionLoader.requireShared("Reality/ResolvedRegionRecipeV1Internal")
 
 local GOLDEN_REGION_ID = "region:v1:7cd90883b952e7534e6f3ffdd71d66a7"
 local GOLDEN_RECIPE_FINGERPRINT = "resolved-region:v1:6448a82dcdebe20b03d9a6a98847bdd7"
@@ -55,6 +57,12 @@ local function run(): number
 
 	expect("legacy v1 public boundary is replay-only", ResolvedRegionRecipeV1.REPLAY_ONLY == true)
 	expect("legacy v1 public boundary exposes no lock constructor", ResolvedRegionRecipeV1.lock == nil)
+	expect("legacy v1 internal core exposes no lock constructor", ResolvedRegionRecipeV1Internal.lock == nil)
+	expect(
+		"legacy v1 internal core exposes no observation or migration write path",
+		ResolvedRegionRecipeV1Internal.resolveOnObservation == nil
+			and ResolvedRegionRecipeV1Internal.migrate == nil
+	)
 	expect("historical v1 region identity remains compatible", locked.regionId == GOLDEN_REGION_ID)
 	expect(
 		"historical v1 recipe fingerprint remains compatible",
