@@ -4,6 +4,7 @@ local StableId = require(script.Parent.Parent.Core.StableId)
 local MaterialDNA = require(script.Parent.Parent.Materials.MaterialDNA)
 local ObjectGenome = require(script.Parent.Parent.Objects.ObjectGenome)
 local ObjectGenomeFixtures = require(script.Parent.Parent.Objects.ObjectGenomeFixtures)
+local ResolvedRegionRecipe = require(script.Parent.Parent.Reality.ResolvedRegionRecipe)
 local WorldEntity = require(script.Parent.Parent.Reality.WorldEntity)
 local PhysicsLabObjectGenomes = require(script.Parent.PhysicsLabObjectGenomes)
 
@@ -56,6 +57,7 @@ export type PhysicsLabRecipe = {
 	recipeKey: string,
 	worldId: string,
 	regionId: string,
+	resolvedRegion: ResolvedRegionRecipe.Recipe,
 	entities: { EntityRecipe },
 }
 
@@ -66,7 +68,21 @@ PhysicsLabRecipe.GENERATOR_VERSION = 1
 PhysicsLabRecipe.RECIPE_KEY = "physics-lab.hero-gate.v1"
 
 local WORLD_ID = StableId.fromParts("world", { "physics-lab", "hero-gate", "v1" })
-local REGION_ID = StableId.fromParts("region", { "physics-lab", "bay-a", "v1" })
+local RESOLVED_REGION = ResolvedRegionRecipe.resolveOnObservation(nil, {
+	-- #9 owns canonical region identity. The lab world StableId is an opaque,
+	-- deterministic reference to the seed/identity source for this permanent harness.
+	worldSeedRef = WORLD_ID,
+	regionAddress = {
+		x = 0,
+		z = 0,
+		layer = 0,
+	},
+	generatorVersions = ResolvedRegionRecipe.currentGeneratorVersions(),
+	semanticIntentKey = PhysicsLabRecipe.RECIPE_KEY,
+	topologyAnchors = { "physics-lab.hero-gate.bay-a" },
+	canonicalContentKeys = { PhysicsLabRecipe.RECIPE_KEY },
+})
+local REGION_ID = RESOLVED_REGION.regionId
 
 local WALL_MATERIAL: MaterialReference = table.freeze({
 	id = "material.v1.office-wallpaper.yellow-vinyl",
@@ -333,6 +349,7 @@ function PhysicsLabRecipe.build(): PhysicsLabRecipe
 		recipeKey = PhysicsLabRecipe.RECIPE_KEY,
 		worldId = WORLD_ID,
 		regionId = REGION_ID,
+		resolvedRegion = RESOLVED_REGION,
 		entities = table.freeze(entities),
 	})
 end
