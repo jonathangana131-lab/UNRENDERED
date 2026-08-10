@@ -4,6 +4,7 @@ local FidelityManager = ProductionLoader.requireShared("Physics/FidelityManager"
 local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
 local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
 local ObjectGenomeFixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
+local PhysicsLabObjectGenomes = ProductionLoader.requireShared("Physics/PhysicsLabObjectGenomes")
 local PhysicsLabRecipe = ProductionLoader.requireShared("Physics/PhysicsLabRecipe")
 local StableId = ProductionLoader.requireShared("Core/StableId")
 local WorldEntity = ProductionLoader.requireShared("Reality/WorldEntity")
@@ -29,6 +30,8 @@ local function run(): number
 	expect("region id is stable", StableId.is(first.regionId, "region"))
 	expect("recipe build has deterministic element count", #first.elements == #second.elements)
 	expect("recipe includes substantial lab geometry", #first.elements >= 19)
+	expect("lab door ObjectGenome validates", ObjectGenome.inspect(PhysicsLabObjectGenomes.commercialDoor).ok)
+	expect("lab cart ObjectGenome validates", ObjectGenome.inspect(PhysicsLabObjectGenomes.rollingCart).ok)
 
 	local requiredRoles = {}
 	for role in pairs(PhysicsLabRecipe.RequiredRoles) do
@@ -77,6 +80,21 @@ local function run(): number
 				`element {index} fixture ObjectState validates`,
 				genome ~= nil and ObjectGenome.inspectState(genome, element.entity.persistentState).ok
 			)
+			if genome ~= nil then
+				local componentMaterialsValid = true
+				for _, component in ipairs(genome.components) do
+					if
+						not MaterialDNA.validateReference({
+							id = component.materialKey,
+							recipeVersion = component.materialRecipeVersion,
+						}).ok
+					then
+						componentMaterialsValid = false
+						break
+					end
+				end
+				expect(`element {index} ObjectGenome material refs validate`, componentMaterialsValid)
+			end
 		else
 			expect(`element {index} proxy state begins empty`, next(element.entity.persistentState) == nil)
 		end
@@ -102,8 +120,10 @@ local function run(): number
 	end
 
 	local expectedGenomeByRole = {
+		door = ObjectGenome.identityKey(PhysicsLabObjectGenomes.commercialDoor),
 		chair = ObjectGenome.identityKey(ObjectGenomeFixtures.officeChair),
 		table = ObjectGenome.identityKey(ObjectGenomeFixtures.officeTable),
+		cart = ObjectGenome.identityKey(PhysicsLabObjectGenomes.rollingCart),
 		cabinet = ObjectGenome.identityKey(ObjectGenomeFixtures.filingCabinet),
 	}
 	for role, expectedGenomeId in pairs(expectedGenomeByRole) do
@@ -127,7 +147,7 @@ local function run(): number
 
 	local door = nil
 	local cabinet = nil
-	local hasRollingCart = false
+	local cart = nil
 	local stairCount = 0
 	for _, element in first.elements do
 		if element.role == "door" and element.representationKind == "hinged-panel" then
@@ -135,7 +155,7 @@ local function run(): number
 		elseif element.role == "cabinet" and element.representationKind == "sliding-drawer-proxy" then
 			cabinet = element
 		elseif element.role == "cart" and element.representationKind == "rolling-cart-proxy" then
-			hasRollingCart = true
+			cart = element
 		elseif element.role == "stairs" then
 			stairCount += 1
 		end
@@ -143,9 +163,25 @@ local function run(): number
 
 	expect("lab includes a hinged door representation contract", door ~= nil)
 	expect(
-		"door proxy has positive clearance inside authored 4x8 opening",
-		door ~= nil and door.sizeStuds.x < 4 and door.sizeStuds.y < 8
+		"door ObjectGenome frame has positive clearance inside authored 4.4-stud opening",
+		door ~= nil and door.sizeStuds.x < 4.4 and door.sizeStuds.y < 8
 	)
+	if door ~= nil then
+		local mechanism = PhysicsLabRecipe.mechanismFor(door)
+		expect("door proxy binds the production leaf hinge", door.mechanismKey == "leaf-hinge")
+		expect("door hinge resolves through ObjectGenome", mechanism ~= nil and mechanism.kind == "hinge")
+		if mechanism ~= nil and mechanism.kind == "hinge" then
+			expect(
+				"door proxy keeps authored hinge axis and limits",
+				mechanism.axis.x == 0
+					and mechanism.axis.y == 1
+					and mechanism.axis.z == 0
+					and mechanism.minDegrees == 0
+					and mechanism.maxDegrees == 105
+			)
+		end
+	end
+
 	expect("lab includes a drawer mechanism representation contract", cabinet ~= nil)
 	expect("cabinet proxy binds the production top-drawer mechanism", cabinet ~= nil and cabinet.mechanismKey == "slide-top")
 	if cabinet ~= nil then
@@ -162,7 +198,30 @@ local function run(): number
 			)
 		end
 	end
-	expect("lab includes a four-wheel rolling-cart representation contract", hasRollingCart)
+
+	expect("lab includes a four-caster rolling-cart representation contract", cart ~= nil)
+	if cart ~= nil then
+		local genome = PhysicsLabRecipe.objectGenomeFor(cart)
+		local casterCount = 0
+		if genome ~= nil then
+			for _, mechanism in ipairs(genome.mechanisms) do
+				if mechanism.kind == "caster" then
+					casterCount += 1
+					expect(
+						`cart caster {mechanism.key} uses authored axes`,
+						mechanism.swivelAxis.x == 0
+							and mechanism.swivelAxis.y == 1
+							and mechanism.swivelAxis.z == 0
+							and mechanism.rollAxis.x == 1
+							and mechanism.rollAxis.y == 0
+							and mechanism.rollAxis.z == 0
+					)
+				end
+			end
+		end
+		expect("cart proxy consumes four ObjectGenome caster mechanisms", casterCount == 4)
+	end
+
 	expect("lab stairs are actual stepped geometry", stairCount >= 4)
 
 	local mutationAccepted = pcall(function()
