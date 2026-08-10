@@ -96,11 +96,11 @@ function DeterminismContract.encodeParts(parts: { string }): string
 	return table.concat(chunks)
 end
 
-function DeterminismContract.hash32(text: string, seed: number?): number
+function DeterminismContract.hash32(text: string, seed: number): number
 	assert(type(text) == "string", "text must be a string")
-	local resolvedSeed = seed or 0
-	assertU32(resolvedSeed, "seed")
-	local hash = resolvedSeed
+	assert(type(seed) == "number", "seed must be an unsigned 32-bit integer")
+	assertU32(seed, "seed")
+	local hash = seed
 
 	for index = 1, #text do
 		hash = u32(hash + string.byte(text, index))

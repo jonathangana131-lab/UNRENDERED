@@ -7,7 +7,7 @@ local Hash32 = {
 	EncodingVersion = DeterminismContract.EncodingVersion,
 }
 
-function Hash32.jenkins(text: string, seed: number?): number
+function Hash32.jenkins(text: string, seed: number): number
 	return DeterminismContract.hash32(text, seed)
 end
 
