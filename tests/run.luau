@@ -1,5 +1,6 @@
 local process = require("@lune/process")
 local runObjectGenome = require("./object_genome")
+local runObjectGenomeContractLock = require("./object_genome_contract_lock")
 local runWorldEntity = require("./world_entity")
 
 local failures = 0
@@ -40,6 +41,7 @@ end
 
 failures += runWorldEntity()
 failures += runObjectGenome()
+failures += runObjectGenomeContractLock()
 
 if failures > 0 then
 	process.exit(1)
