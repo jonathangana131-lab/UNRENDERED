@@ -280,7 +280,10 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 	end
 
 	local function captureState(record: WorldEntity.WorldEntityRecord): WorldEntity.PlainData
-		assert(representations[record.id] ~= nil, `cannot capture absent Physics Lab representation: {record.id}`)
+		assert(
+			representations[record.id] ~= nil,
+			`cannot capture absent Physics Lab representation: {record.id}`
+		)
 		-- The landed F2 representation is an anchored proxy with no mutable Roblox
 		-- mechanism state. Preserve the authoritative plain domain state rather
 		-- than scraping Workspace and accidentally making Instances canonical.
@@ -332,7 +335,10 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 		if record.fidelity == "F0" then
 			assert(representation == nil, `F0 transition left physical representation behind: {entityId}`)
 		elseif record.fidelity == "F2" then
-			assert(representation ~= nil, `F2 transition failed to rebuild physical representation: {entityId}`)
+			assert(
+				representation ~= nil,
+				`F2 transition failed to rebuild physical representation: {entityId}`
+			)
 		else
 			error(`Physics Lab runtime escaped F0/F2 adapter boundary at {record.fidelity}`)
 		end
