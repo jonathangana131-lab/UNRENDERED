@@ -10,22 +10,24 @@ permissions:
 
 jobs:
   apply:
-    if: github.actor != 'github-actions[bot]'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
         with:
+          ref: agent/objects/6-support-cycle-exhaustive-sol56j9
           fetch-depth: 0
+
       - name: Patch exhaustive support validation and regressions
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
 
-          source_path = Path('src/shared/Objects/ObjectGenome.luau')
+          source_path = Path("src/shared/Objects/ObjectGenome.luau")
           source = source_path.read_text()
-          start = source.index('\tlocal supportMemo: { [string]: boolean } = {}')
-          end = source.index('\n\tlocal mechanismsByKey: { [string]: boolean } = {}', start)
+          start = source.index("\tlocal supportMemo: { [string]: boolean } = {}")
+          end = source.index("\n\tlocal mechanismsByKey: { [string]: boolean } = {}", start)
           replacement = '''\tlocal supportVisitState: { [string]: number } = {}
 \tlocal cycleEdgesReported: { [string]: boolean } = {}
 \tlocal function detectSupportCycles(componentKey: string): ()
@@ -115,7 +117,7 @@ jobs:
 '''
           source_path.write_text(source[:start] + replacement + source[end:])
 
-          test_path = Path('tests/object_genome.luau')
+          test_path = Path("tests/object_genome.luau")
           tests = test_path.read_text()
           marker = '''\tlocal supportCycle = deepCopy(Fixtures.officeTable)
 \tsupportCycle.components[1].externalSupport = "none"
@@ -148,16 +150,17 @@ jobs:
 \t)
 '''
           if marker not in tests:
-              raise SystemExit('supportCycle regression marker not found')
+              raise SystemExit("supportCycle regression marker not found")
           test_path.write_text(tests.replace(marker, addition, 1))
           PY
-      - name: Remove one-shot workflow
-        run: rm .github/workflows/apply-support-cycle-leaf.yml
-      - name: Commit leaf
+
+          rm .github/workflows/apply-support-cycle-leaf.yml
+
+      - name: Commit support-cycle leaf
         shell: bash
         run: |
-          git config user.name "UNRENDERED swarm"
-          git config user.email "actions@users.noreply.github.com"
-          git add src/shared/Objects/ObjectGenome.luau tests/object_genome.luau .github/workflows/apply-support-cycle-leaf.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
           git commit -m "Fix exhaustive ObjectGenome support cycles"
-          git push origin HEAD
+          git push origin HEAD:agent/objects/6-support-cycle-exhaustive-sol56j9
