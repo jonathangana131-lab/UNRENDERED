@@ -35,15 +35,14 @@ local function run(): number
 		return record.persistentState
 	end)
 
-	local accepted = pcall(function()
-		runtime:step(entityId, noDemand, 2, function(record)
-			captureCalls += 1
-			return record.persistentState
-		end)
+	local blocked = runtime:step(entityId, noDemand, 2, function(record)
+		captureCalls += 1
+		return record.persistentState
 	end)
 	local after = runtime:getRecord(entityId)
 
-	expect("runtime rejects committed fidelity transition without representation observer", not accepted)
+	expect("runtime blocks committed fidelity transition without representation observer", not blocked.transitioned)
+	expect("runtime exposes transition-required block reason", blocked.blockedReason == "transition-required")
 	expect("missing observer is rejected before demotion capture side effects", captureCalls == 0)
 	expect("missing observer preserves WorldEntity fidelity", after.fidelity == before.fidelity)
 	expect(
