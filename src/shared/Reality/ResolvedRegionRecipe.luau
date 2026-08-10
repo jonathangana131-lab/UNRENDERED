@@ -221,7 +221,8 @@ local function cloneCanonicalKeySet(value: unknown, path: string): { string }
 
 	local copy: { string } = {}
 	for index = 1, length do
-		copy[index] = checkedOpaqueKey(`{path}[{index}]`, sourceValue[index], ResolvedRegionRecipe.MAX_KEY_BYTES)
+		copy[index] =
+			checkedOpaqueKey(`{path}[{index}]`, sourceValue[index], ResolvedRegionRecipe.MAX_KEY_BYTES)
 	end
 	table.sort(copy)
 	for index = 2, #copy do
@@ -480,18 +481,11 @@ function ResolvedRegionRecipe.resolveOnObservation(existing: Recipe?, candidate:
 	end
 
 	local locked = ownRecipe(existing)
+	assert(
+		locked.schemaVersion ~= ResolvedRegionRecipe.LEGACY_SCHEMA_VERSION,
+		"schema-v1 observed truth requires upgradeLegacyV1 with an explicit WorldId before v2 observation"
+	)
 	local incomingWorldId, incomingWorldSeedRef, incomingAddress = ownObservationIdentity(candidate)
-	if locked.schemaVersion == ResolvedRegionRecipe.LEGACY_SCHEMA_VERSION then
-		assert(
-			locked.worldSeedRef == incomingWorldSeedRef,
-			"observation candidate worldSeedRef does not match locked legacy region"
-		)
-		assert(
-			sameAddress(locked.regionAddress, incomingAddress),
-			"observation candidate address does not match locked legacy region"
-		)
-		return locked
-	end
 
 	assert(locked.worldId == incomingWorldId, "observation candidate worldId does not match locked region")
 	assert(
@@ -607,10 +601,7 @@ function ResolvedRegionRecipe.requiresMigration(recipe: Recipe, targetVersions: 
 	return not sameVersions(owned.generatorVersions, target)
 end
 
-function ResolvedRegionRecipe.upgradeLegacyV1(
-	recipe: Recipe,
-	worldId: string
-): (Recipe, LegacyUpgradeReceipt)
+function ResolvedRegionRecipe.upgradeLegacyV1(recipe: Recipe, worldId: string): (Recipe, LegacyUpgradeReceipt)
 	local sourceRecipe = ownRecipe(recipe)
 	assert(
 		sourceRecipe.schemaVersion == ResolvedRegionRecipe.LEGACY_SCHEMA_VERSION,
@@ -655,11 +646,8 @@ function ResolvedRegionRecipe.migrate(
 	assert(sourceWorldId ~= nil, "schema-v2 recipe must own worldId")
 
 	local target = cloneVersions(targetVersions)
-	local ownedMigrationKey = checkedOpaqueKey(
-		"migrationKey",
-		migrationKey,
-		ResolvedRegionRecipe.MAX_KEY_BYTES
-	)
+	local ownedMigrationKey =
+		checkedOpaqueKey("migrationKey", migrationKey, ResolvedRegionRecipe.MAX_KEY_BYTES)
 	assert(
 		not sameVersions(sourceRecipe.generatorVersions, target),
 		"migration target versions must differ from locked versions"

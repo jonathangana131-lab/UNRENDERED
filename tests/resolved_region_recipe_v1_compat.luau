@@ -94,8 +94,7 @@ local function run(): number
 		locked.recipeFingerprint == GOLDEN_V1_FINGERPRINT
 	)
 
-	local reconstructed =
-		ResolvedRegionRecipe.deserializeLegacyV1(ResolvedRegionRecipe.serialize(locked))
+	local reconstructed = ResolvedRegionRecipe.deserializeLegacyV1(ResolvedRegionRecipe.serialize(locked))
 	expect(
 		"historical v1 serialized truth remains reconstructable",
 		ResolvedRegionRecipe.equal(locked, reconstructed)
@@ -111,13 +110,11 @@ local function run(): number
 		ResolvedRegionRecipe.requiresMigration(locked)
 	)
 
-	local observedAgain = ResolvedRegionRecipe.resolveOnObservation(
-		locked,
-		currentV2Candidate(GOLDEN_WORLD_ID)
-	)
 	expect(
-		"later v2-capable observation cannot silently rewrite locked v1 truth",
-		ResolvedRegionRecipe.equal(locked, observedAgain)
+		"legacy truth cannot participate in v2 observation before explicit WorldId upgrade",
+		rejects(function()
+			ResolvedRegionRecipe.resolveOnObservation(locked, currentV2Candidate(GOLDEN_WORLD_ID))
+		end)
 	)
 
 	local upgraded, receipt = ResolvedRegionRecipe.upgradeLegacyV1(locked, GOLDEN_WORLD_ID)
