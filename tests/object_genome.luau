@@ -73,6 +73,13 @@ local function run(): number
 		)
 		expect(fixture.name .. " repeat identity", identity == ObjectGenome.identityKey(fixture.genome))
 
+		for _, component in ipairs(fixture.genome.components) do
+			expect(
+				fixture.name .. " component uses MaterialDNA-style project key",
+				string.match(component.materialKey, "^material%.v1%.") ~= nil
+			)
+		end
+
 		local state = ObjectGenome.defaultState(fixture.genome)
 		expect(
 			fixture.name .. " default mutable state validates",
@@ -99,6 +106,13 @@ local function run(): number
 	expect(
 		"rejects missing material assignment",
 		hasCode(ObjectGenome.inspect(badMaterial), "component.material_key")
+	)
+
+	local legacyMaterial = deepCopy(Fixtures.officeChair)
+	legacyMaterial.components[1].materialKey = "material:polymer-rubber.caster.v1"
+	expect(
+		"rejects legacy material reference syntax",
+		hasCode(ObjectGenome.inspect(legacyMaterial), "component.material_key")
 	)
 
 	local danglingSupport = deepCopy(Fixtures.filingCabinet)
@@ -146,6 +160,18 @@ local function run(): number
 	expect(
 		"rotation-aware bounds accept a rotated non-cubic component that fits after rotation",
 		crossbar ~= nil and not hasCode(ObjectGenome.inspect(rotatedFits), "component.outside_bounds")
+	)
+
+	local mixedAxisOrder = deepCopy(Fixtures.officeTable)
+	local mixedCrossbar = findComponent(mixedAxisOrder, "crossbar")
+	if mixedCrossbar ~= nil then
+		-- This geometry fits for fixed-axis XYZ (Rz * Ry * Rx), but not if matrix order
+		-- is silently flipped to Rx * Ry * Rz. It therefore locks more than single-axis cases.
+		mixedCrossbar.localRotationDeg = { x = 80, y = 25, z = 10 }
+	end
+	expect(
+		"fixed-axis XYZ mixed rotation order is locked",
+		mixedCrossbar ~= nil and not hasCode(ObjectGenome.inspect(mixedAxisOrder), "component.outside_bounds")
 	)
 
 	local nonCanonicalRotation = deepCopy(Fixtures.officeTable)
