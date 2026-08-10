@@ -46,6 +46,13 @@ local function run(): number
 		}
 	end
 
+	local function potentialFromResolved(recipe)
+		local plain = ResolvedRegionRecipe.toPlainData(recipe)
+		plain.schemaVersion = nil
+		plain.id = nil
+		return plain
+	end
+
 	local candidate = makeCandidate()
 	local locked, lockDisposition = ResolvedRegionRecipe.lock(nil, candidate)
 	expectEqual("first observation reports a new lock", lockDisposition, "locked")
@@ -241,8 +248,7 @@ local function run(): number
 		expectEqual("migration result preserves canonical region identity", migration.target.id, locked.id)
 		expectEqual("migration does not mutate stored source truth", locked.generatorVersions.reality, 1)
 
-		local _, postMigrationDisposition =
-			ResolvedRegionRecipe.lock(locked, ResolvedRegionRecipe.toPlainData(migration.target))
+		local _, postMigrationDisposition = ResolvedRegionRecipe.lock(locked, potentialFromResolved(migration.target))
 		expectEqual(
 			"ordinary observation still preserves source until caller explicitly persists migration",
 			postMigrationDisposition,
