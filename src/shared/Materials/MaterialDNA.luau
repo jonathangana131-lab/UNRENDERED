@@ -121,9 +121,105 @@ export type ValidationResult = {
 	errors: { string },
 }
 
+type KeySet = { [string]: boolean }
+
 local MaterialDNA = {
 	SchemaVersion = SCHEMA_VERSION,
 }
+
+local RECIPE_KEYS: KeySet = table.freeze({
+	id = true,
+	schemaVersion = true,
+	coherenceClass = true,
+	substrate = true,
+	finish = true,
+	installation = true,
+	apparentAgeYears = true,
+	maintenance = true,
+	environment = true,
+	historyEvents = true,
+	visual = true,
+	physical = true,
+	acoustic = true,
+	response = true,
+	anomalyModifiers = true,
+})
+local STATE_KEYS: KeySet = table.freeze({
+	recipeId = true,
+	schemaVersion = true,
+	wear01 = true,
+	damage01 = true,
+	wetness01 = true,
+	soil01 = true,
+})
+local SUBSTRATE_KEYS: KeySet = table.freeze({
+	classKey = true,
+	thicknessMeters = true,
+	porosity01 = true,
+})
+local FINISH_KEYS: KeySet = table.freeze({
+	classKey = true,
+	color = true,
+	roughness01 = true,
+	metallic01 = true,
+})
+local COLOR_KEYS: KeySet = table.freeze({
+	r = true,
+	g = true,
+	b = true,
+})
+local INSTALLATION_KEYS: KeySet = table.freeze({
+	methodKey = true,
+	batchKey = true,
+	quality01 = true,
+	seamPeriodMeters = true,
+})
+local MAINTENANCE_KEYS: KeySet = table.freeze({
+	careClassKey = true,
+	frequency01 = true,
+	cleanliness01 = true,
+	repairCount = true,
+})
+local ENVIRONMENT_KEYS: KeySet = table.freeze({
+	humidity01 = true,
+	water01 = true,
+	uv01 = true,
+	grime01 = true,
+})
+local HISTORY_EVENT_KEYS: KeySet = table.freeze({
+	kindKey = true,
+	causeKey = true,
+	severity01 = true,
+	coverage01 = true,
+})
+local VISUAL_KEYS: KeySet = table.freeze({
+	familyKey = true,
+	coherenceClass = true,
+	metersPerRepeat = true,
+})
+local PHYSICAL_KEYS: KeySet = table.freeze({
+	classKey = true,
+	coherenceClass = true,
+	densityKgPerM3 = true,
+	staticFriction = true,
+	dynamicFriction = true,
+	restitution01 = true,
+})
+local ACOUSTIC_KEYS: KeySet = table.freeze({
+	classKey = true,
+	coherenceClass = true,
+	absorptionLow01 = true,
+	absorptionMid01 = true,
+	absorptionHigh01 = true,
+	impactFamilyKey = true,
+	scrapeFamilyKey = true,
+})
+local RESPONSE_KEYS: KeySet = table.freeze({
+	wetFrictionMultiplier = true,
+	wetDarkening01 = true,
+	damageResistance01 = true,
+	stainAffinity01 = true,
+})
 
 local WALL_SUBSTRATES = table.freeze({
 	["substrate.gypsum-board"] = true,
@@ -156,6 +252,16 @@ local function asTable(errors: { string }, path: string, value: unknown): any?
 		return nil
 	end
 	return value :: any
+end
+
+local function validateKnownKeys(errors: { string }, path: string, value: any, allowed: KeySet): ()
+	for key, _ in pairs(value) do
+		if type(key) ~= "string" then
+			appendError(errors, `{path} contains non-string field key {tostring(key)}`)
+		elseif not allowed[key] then
+			appendError(errors, `{path} contains unknown field {key}`)
+		end
+	end
 end
 
 local function isFinite(value: number): boolean
@@ -221,6 +327,7 @@ local function validateColor(errors: { string }, path: string, value: unknown): 
 	if color == nil then
 		return
 	end
+	validateKnownKeys(errors, path, color, COLOR_KEYS)
 	validateFiniteRange(errors, `{path}.r`, color.r, 0, 1)
 	validateFiniteRange(errors, `{path}.g`, color.g, 0, 1)
 	validateFiniteRange(errors, `{path}.b`, color.b, 0, 1)
@@ -266,6 +373,7 @@ local function validateSubstrate(errors: { string }, value: unknown): string?
 	if substrate == nil then
 		return nil
 	end
+	validateKnownKeys(errors, "substrate", substrate, SUBSTRATE_KEYS)
 	local classKey = validateProjectKey(errors, "substrate.classKey", substrate.classKey)
 	validatePositive(errors, "substrate.thicknessMeters", substrate.thicknessMeters, 5)
 	validateFiniteRange(errors, "substrate.porosity01", substrate.porosity01, 0, 1)
@@ -277,6 +385,7 @@ local function validateFinish(errors: { string }, value: unknown): string?
 	if finish == nil then
 		return nil
 	end
+	validateKnownKeys(errors, "finish", finish, FINISH_KEYS)
 	local classKey = validateProjectKey(errors, "finish.classKey", finish.classKey)
 	validateColor(errors, "finish.color", finish.color)
 	validateFiniteRange(errors, "finish.roughness01", finish.roughness01, 0, 1)
@@ -289,6 +398,7 @@ local function validateInstallation(errors: { string }, value: unknown): string?
 	if installation == nil then
 		return nil
 	end
+	validateKnownKeys(errors, "installation", installation, INSTALLATION_KEYS)
 	local methodKey = validateProjectKey(errors, "installation.methodKey", installation.methodKey)
 	validateProjectKey(errors, "installation.batchKey", installation.batchKey)
 	validateFiniteRange(errors, "installation.quality01", installation.quality01, 0, 1)
@@ -303,6 +413,7 @@ local function validateMaintenance(errors: { string }, value: unknown): ()
 	if maintenance == nil then
 		return
 	end
+	validateKnownKeys(errors, "maintenance", maintenance, MAINTENANCE_KEYS)
 	validateProjectKey(errors, "maintenance.careClassKey", maintenance.careClassKey)
 	validateFiniteRange(errors, "maintenance.frequency01", maintenance.frequency01, 0, 1)
 	validateFiniteRange(errors, "maintenance.cleanliness01", maintenance.cleanliness01, 0, 1)
@@ -314,6 +425,7 @@ local function validateEnvironment(errors: { string }, value: unknown): ()
 	if environment == nil then
 		return
 	end
+	validateKnownKeys(errors, "environment", environment, ENVIRONMENT_KEYS)
 	validateFiniteRange(errors, "environment.humidity01", environment.humidity01, 0, 1)
 	validateFiniteRange(errors, "environment.water01", environment.water01, 0, 1)
 	validateFiniteRange(errors, "environment.uv01", environment.uv01, 0, 1)
@@ -329,6 +441,7 @@ local function validateHistoryEvents(errors: { string }, value: unknown): ()
 		local path = `historyEvents[{index}]`
 		local event = asTable(errors, path, events[index])
 		if event ~= nil then
+			validateKnownKeys(errors, path, event, HISTORY_EVENT_KEYS)
 			validateProjectKey(errors, `{path}.kindKey`, event.kindKey)
 			validateProjectKey(errors, `{path}.causeKey`, event.causeKey)
 			validateFiniteRange(errors, `{path}.severity01`, event.severity01, 0, 1)
@@ -342,6 +455,7 @@ local function validateVisual(errors: { string }, value: unknown, coherenceClass
 	if visual == nil then
 		return
 	end
+	validateKnownKeys(errors, "visual", visual, VISUAL_KEYS)
 	validateProjectKey(errors, "visual.familyKey", visual.familyKey)
 	local visualCoherence = validateProjectKey(errors, "visual.coherenceClass", visual.coherenceClass)
 	if coherenceClass ~= nil and visualCoherence ~= nil and visualCoherence ~= coherenceClass then
@@ -355,16 +469,15 @@ local function validatePhysical(errors: { string }, value: unknown, coherenceCla
 	if physical == nil then
 		return
 	end
+	validateKnownKeys(errors, "physical", physical, PHYSICAL_KEYS)
 	validateProjectKey(errors, "physical.classKey", physical.classKey)
 	local physicalCoherence = validateProjectKey(errors, "physical.coherenceClass", physical.coherenceClass)
 	if coherenceClass ~= nil and physicalCoherence ~= nil and physicalCoherence ~= coherenceClass then
 		appendError(errors, "physical.coherenceClass must match MaterialRecipe.coherenceClass")
 	end
 	validatePositive(errors, "physical.densityKgPerM3", physical.densityKgPerM3, 25000)
-	local staticFriction =
-		validateFiniteRange(errors, "physical.staticFriction", physical.staticFriction, 0, 4)
-	local dynamicFriction =
-		validateFiniteRange(errors, "physical.dynamicFriction", physical.dynamicFriction, 0, 4)
+	local staticFriction = validateFiniteRange(errors, "physical.staticFriction", physical.staticFriction, 0, 4)
+	local dynamicFriction = validateFiniteRange(errors, "physical.dynamicFriction", physical.dynamicFriction, 0, 4)
 	if staticFriction ~= nil and dynamicFriction ~= nil and dynamicFriction > staticFriction then
 		appendError(errors, "physical.dynamicFriction cannot exceed physical.staticFriction")
 	end
@@ -376,6 +489,7 @@ local function validateAcoustic(errors: { string }, value: unknown, coherenceCla
 	if acoustic == nil then
 		return
 	end
+	validateKnownKeys(errors, "acoustic", acoustic, ACOUSTIC_KEYS)
 	validateProjectKey(errors, "acoustic.classKey", acoustic.classKey)
 	local acousticCoherence = validateProjectKey(errors, "acoustic.coherenceClass", acoustic.coherenceClass)
 	if coherenceClass ~= nil and acousticCoherence ~= nil and acousticCoherence ~= coherenceClass then
@@ -393,6 +507,7 @@ local function validateResponse(errors: { string }, value: unknown): ()
 	if response == nil then
 		return
 	end
+	validateKnownKeys(errors, "response", response, RESPONSE_KEYS)
 	validateFiniteRange(errors, "response.wetFrictionMultiplier", response.wetFrictionMultiplier, 0, 2)
 	validateFiniteRange(errors, "response.wetDarkening01", response.wetDarkening01, 0, 1)
 	validateFiniteRange(errors, "response.damageResistance01", response.damageResistance01, 0, 1)
@@ -449,6 +564,7 @@ function MaterialDNA.validateRecipe(value: unknown): ValidationResult
 		}
 	end
 
+	validateKnownKeys(errors, "MaterialRecipe", recipe, RECIPE_KEYS)
 	validateProjectKey(errors, "id", recipe.id)
 	if type(recipe.schemaVersion) ~= "number" or recipe.schemaVersion ~= SCHEMA_VERSION then
 		appendError(errors, `schemaVersion must be {SCHEMA_VERSION}`)
@@ -490,6 +606,7 @@ function MaterialDNA.validateState(value: unknown): ValidationResult
 		}
 	end
 
+	validateKnownKeys(errors, "MaterialState", state, STATE_KEYS)
 	validateProjectKey(errors, "recipeId", state.recipeId)
 	if type(state.schemaVersion) ~= "number" or state.schemaVersion ~= SCHEMA_VERSION then
 		appendError(errors, `schemaVersion must be {SCHEMA_VERSION}`)
