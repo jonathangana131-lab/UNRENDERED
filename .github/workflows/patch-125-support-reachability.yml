@@ -1,0 +1,55 @@
+name: Patch 125 support reachability
+
+on:
+  push:
+    branches:
+      - agent/objects/125-support-reachability-sol56u7
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/objects/125-support-reachability-sol56u7
+          fetch-depth: 0
+      - name: Apply narrow production and regression patch
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          source_path = Path('src/shared/Objects/ObjectGenome.luau')
+          source = source_path.read_text()
+          old_support = '''\tlocal supportMemo: { [string]: boolean } = {}\n\tlocal supportVisiting: { [string]: boolean } = {}\n\tlocal function reachesExternalSupport(componentKey: string): boolean\n\t\tlocal memoized = supportMemo[componentKey]\n\t\tif memoized ~= nil then\n\t\t\treturn memoized\n\t\tend\n\n\t\tlocal component = componentsByKey[componentKey]\n\t\tif component == nil then\n\t\t\treturn false\n\t\tend\n\t\tif component.externalSupport ~= "none" and EXTERNAL_SUPPORTS[component.externalSupport] then\n\t\t\tsupportMemo[componentKey] = true\n\t\t\treturn true\n\t\tend\n\t\tif supportVisiting[componentKey] then\n\t\t\treturn false\n\t\tend\n\n\t\tsupportVisiting[componentKey] = true\n\t\tlocal reachesSupport = false\n\t\tif type(component.supportKeys) == "table" then\n\t\t\tfor _, supportKey in ipairs(component.supportKeys) do\n\t\t\t\tif componentsByKey[supportKey] ~= nil and reachesExternalSupport(supportKey) then\n\t\t\t\t\treachesSupport = true\n\t\t\t\t\tbreak\n\t\t\t\tend\n\t\t\tend\n\t\tend\n\t\tsupportVisiting[componentKey] = nil\n\t\tsupportMemo[componentKey] = reachesSupport\n\t\treturn reachesSupport\n\tend\n\n\tfor componentKey in pairs(componentsByKey) do\n\t\tif not reachesExternalSupport(componentKey) then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.unsupported",\n\t\t\t\t`components.{componentKey}`,\n\t\t\t\t"component has no path to an external support"\n\t\t\t)\n\t\tend\n\tend\n'''
+          new_support = '''\tlocal externallySupported: { [string]: boolean } = {}\n\tfor _ = 1, componentCount do\n\t\tlocal changed = false\n\t\tfor _, component in ipairs(value.components) do\n\t\t\tif\n\t\t\t\ttype(component) == "table"\n\t\t\t\tand isSemanticKey(component.key)\n\t\t\t\tand componentsByKey[component.key] == component\n\t\t\t\tand not externallySupported[component.key]\n\t\t\tthen\n\t\t\t\tlocal reachesSupport = component.externalSupport ~= "none"\n\t\t\t\t\tand EXTERNAL_SUPPORTS[component.externalSupport] == true\n\t\t\t\tif not reachesSupport and type(component.supportKeys) == "table" then\n\t\t\t\t\tfor _, supportKey in ipairs(component.supportKeys) do\n\t\t\t\t\t\tif componentsByKey[supportKey] ~= nil and externallySupported[supportKey] then\n\t\t\t\t\t\t\treachesSupport = true\n\t\t\t\t\t\t\tbreak\n\t\t\t\t\t\tend\n\t\t\t\t\tend\n\t\t\t\tend\n\t\t\t\tif reachesSupport then\n\t\t\t\t\texternallySupported[component.key] = true\n\t\t\t\t\tchanged = true\n\t\t\t\tend\n\t\t\tend\n\t\tend\n\t\tif not changed then\n\t\t\tbreak\n\t\tend\n\tend\n\n\tfor _, component in ipairs(value.components) do\n\t\tif\n\t\t\ttype(component) == "table"\n\t\t\tand isSemanticKey(component.key)\n\t\t\tand componentsByKey[component.key] == component\n\t\t\tand not externallySupported[component.key]\n\t\tthen\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.unsupported",\n\t\t\t\t`components.{component.key}`,\n\t\t\t\t"component has no path to an external support"\n\t\t\t)\n\t\tend\n\tend\n'''
+          assert source.count(old_support) == 1, 'expected exactly one legacy support reachability block'
+          source_path.write_text(source.replace(old_support, new_support))
+
+          test_path = Path('tests/object_genome.luau')
+          tests = test_path.read_text()
+          old_helper = '''local function hasCode(report, code)\n\tfor _, issue in ipairs(report.issues) do\n\t\tif issue.code == code then\n\t\t\treturn true\n\t\tend\n\tend\n\treturn false\nend\n'''
+          new_helper = old_helper + '''\nlocal function hasCodeAtPath(report, code, path)\n\tfor _, issue in ipairs(report.issues) do\n\t\tif issue.code == code and issue.path == path then\n\t\t\treturn true\n\t\tend\n\tend\n\treturn false\nend\n'''
+          assert tests.count(old_helper) == 1, 'expected exactly one hasCode helper'
+          tests = tests.replace(old_helper, new_helper)
+
+          anchor = '''\texpect(\n\t\t"rejects cyclic support branch even when another branch reaches ground",\n\t\tbranchedTop ~= nil\n\t\t\tand branchedCrossbar ~= nil\n\t\t\tand hasCode(ObjectGenome.inspect(branchedCycle), "component.support_cycle")\n\t)\n'''
+          additions = anchor + '''\n\tlocal groundedReachableCycle = deepCopy(Fixtures.officeTable)\n\tlocal reachableTop = findComponent(groundedReachableCycle, "top")\n\tlocal reachableCrossbar = findComponent(groundedReachableCycle, "crossbar")\n\tlocal reachableGround = findComponent(groundedReachableCycle, "leg-front-left")\n\tif reachableTop ~= nil and reachableCrossbar ~= nil and reachableGround ~= nil then\n\t\treachableTop.supportKeys = { "crossbar", "leg-front-left" }\n\t\treachableCrossbar.supportKeys = { "top" }\n\t\treachableGround.supportKeys = {}\n\t\treachableGround.externalSupport = "ground"\n\tend\n\tlocal groundedReachableReport = ObjectGenome.inspect(groundedReachableCycle)\n\texpect(\n\t\t"ground-reachable cycle rejects cycle without false unsupported diagnostics",\n\t\treachableTop ~= nil\n\t\t\tand reachableCrossbar ~= nil\n\t\t\tand reachableGround ~= nil\n\t\t\tand hasCode(groundedReachableReport, "component.support_cycle")\n\t\t\tand not hasCodeAtPath(groundedReachableReport, "component.unsupported", "components.top")\n\t\t\tand not hasCodeAtPath(groundedReachableReport, "component.unsupported", "components.crossbar")\n\t)\n\n\tlocal reorderedGroundedReachableCycle = deepCopy(groundedReachableCycle)\n\tlocal reversedComponents = {}\n\tfor index = #reorderedGroundedReachableCycle.components, 1, -1 do\n\t\ttable.insert(reversedComponents, reorderedGroundedReachableCycle.components[index])\n\tend\n\treorderedGroundedReachableCycle.components = reversedComponents\n\tlocal reorderedGroundedReport = ObjectGenome.inspect(reorderedGroundedReachableCycle)\n\texpect(\n\t\t"ground reachability result is invariant to component traversal order",\n\t\thasCode(reorderedGroundedReport, "component.support_cycle")\n\t\t\tand not hasCodeAtPath(reorderedGroundedReport, "component.unsupported", "components.top")\n\t\t\tand not hasCodeAtPath(reorderedGroundedReport, "component.unsupported", "components.crossbar")\n\t)\n\n\tlocal ungroundedReachableCycle = deepCopy(groundedReachableCycle)\n\tlocal ungroundedRoot = findComponent(ungroundedReachableCycle, "leg-front-left")\n\tif ungroundedRoot ~= nil then\n\t\tungroundedRoot.externalSupport = "none"\n\tend\n\tlocal ungroundedReachableReport = ObjectGenome.inspect(ungroundedReachableCycle)\n\texpect(\n\t\t"genuinely ungrounded cycle reports both cycle and unsupported members",\n\t\tungroundedRoot ~= nil\n\t\t\tand hasCode(ungroundedReachableReport, "component.support_cycle")\n\t\t\tand hasCodeAtPath(ungroundedReachableReport, "component.unsupported", "components.top")\n\t\t\tand hasCodeAtPath(ungroundedReachableReport, "component.unsupported", "components.crossbar")\n\t)\n'''
+          assert tests.count(anchor) == 1, 'expected exactly one branched-cycle regression anchor'
+          test_path.write_text(tests.replace(anchor, additions))
+
+          helper = Path('.github/workflows/patch-125-support-reachability.yml')
+          helper.unlink()
+          PY
+      - name: Commit production patch and self-retire helper
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/shared/Objects/ObjectGenome.luau tests/object_genome.luau .github/workflows/patch-125-support-reachability.yml
+          git commit -m "fix(objects): make support reachability cycle-independent"
+          git push origin HEAD:agent/objects/125-support-reachability-sol56u7
