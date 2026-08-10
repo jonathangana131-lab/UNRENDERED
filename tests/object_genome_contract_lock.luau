@@ -43,10 +43,7 @@ local function run(): number
 	local sparseComponents = deepCopy(Fixtures.officeChair)
 	sparseComponents.components[3] = sparseComponents.components[2]
 	sparseComponents.components[2] = nil
-	expect(
-		"rejects sparse component arrays",
-		hasCode(ObjectGenome.inspect(sparseComponents), "array.shape")
-	)
+	expect("rejects sparse component arrays", hasCode(ObjectGenome.inspect(sparseComponents), "array.shape"))
 
 	local sparseSupportKeys = deepCopy(Fixtures.officeChair)
 	sparseSupportKeys.components[1].supportKeys = { [2] = "seat" }
@@ -57,17 +54,11 @@ local function run(): number
 
 	local keyedMechanisms = deepCopy(Fixtures.officeChair)
 	keyedMechanisms.mechanisms.debug = keyedMechanisms.mechanisms[1]
-	expect(
-		"rejects keyed mechanism entries",
-		hasCode(ObjectGenome.inspect(keyedMechanisms), "array.shape")
-	)
+	expect("rejects keyed mechanism entries", hasCode(ObjectGenome.inspect(keyedMechanisms), "array.shape"))
 
 	local keyedAffordances = deepCopy(Fixtures.officeChair)
 	keyedAffordances.affordances.debug = keyedAffordances.affordances[1]
-	expect(
-		"rejects keyed affordance entries",
-		hasCode(ObjectGenome.inspect(keyedAffordances), "array.shape")
-	)
+	expect("rejects keyed affordance entries", hasCode(ObjectGenome.inspect(keyedAffordances), "array.shape"))
 
 	local componentKey = Fixtures.officeChair.components[1].key
 	local missingComponentState = ObjectGenome.defaultState(Fixtures.officeChair)
