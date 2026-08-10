@@ -18,6 +18,7 @@ local function run(): number
 	local first = PhysicsLabRecipe.build()
 	local second = PhysicsLabRecipe.build()
 	local resolved = PhysicsLabRecipe.RESOLVED_REGION
+	local lockedVersions = PhysicsLabRecipe.RESOLVED_GENERATOR_VERSIONS
 
 	expect(
 		"Physics Lab resolved recipe uses current schema",
@@ -28,6 +29,19 @@ local function run(): number
 		"Physics Lab resolved recipe uses explicit world seed reference",
 		resolved.worldSeedRef == PhysicsLabRecipe.WORLD_SEED_REF
 	)
+	expect(
+		"Physics Lab resolved recipe pins Wave-1 generator versions",
+		lockedVersions.reality == 1
+			and lockedVersions.topology == 1
+			and lockedVersions.material == 1
+			and lockedVersions.object == 1
+			and lockedVersions.entity == 1
+			and resolved.generatorVersions.reality == lockedVersions.reality
+			and resolved.generatorVersions.topology == lockedVersions.topology
+			and resolved.generatorVersions.material == lockedVersions.material
+			and resolved.generatorVersions.object == lockedVersions.object
+			and resolved.generatorVersions.entity == lockedVersions.entity
+	)
 	expect("Physics Lab region identity comes from resolved truth", first.regionId == resolved.regionId)
 	expect("Physics Lab region identity repeats exactly", first.regionId == second.regionId)
 
@@ -35,7 +49,7 @@ local function run(): number
 		worldId = first.worldId,
 		worldSeedRef = PhysicsLabRecipe.WORLD_SEED_REF,
 		regionAddress = resolved.regionAddress,
-		generatorVersions = resolved.generatorVersions,
+		generatorVersions = lockedVersions,
 		semanticIntentKey = resolved.semanticIntentKey,
 		topologyAnchors = resolved.topologyAnchors,
 		canonicalContentKeys = resolved.canonicalContentKeys,
@@ -69,6 +83,11 @@ local function run(): number
 		resolved.regionAddress.x = 99
 	end)
 	expect("Physics Lab resolved truth remains immutable", not mutationAccepted)
+
+	local versionMutationAccepted = pcall(function()
+		lockedVersions.reality = 2
+	end)
+	expect("Physics Lab resolved generator versions remain immutable", not versionMutationAccepted)
 
 	return failures
 end
