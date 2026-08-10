@@ -8,7 +8,7 @@ Issue #7 defines the production F0-F4 selection/anti-thrashing service. `WorldEn
 - **F1 Structural** — topology/coarse route or keepalive state is required.
 - **F2 Render** — visible/cheap representation is justified.
 - **F3 Interactive** — physics, mechanisms, local audio, or similarly interactive simulation is justified.
-- **F4 Hero** — highest-cost representation for close active observation, recent interaction, or exceptionally relevant nearby state.
+- **F4 Hero** — highest-cost representation for close active observation, recent interaction, or exceptionally relevant visible state.
 
 The manager chooses a desired level and coordinates when a transition is allowed. It does **not** create, destroy, serialize, or own Roblox Instances.
 
@@ -38,7 +38,7 @@ For demotion, `WorldEntity.transition` requires fresh captured persistent state.
 
 All time is supplied explicitly by the caller. The policy contains no hidden clock and is deterministic for identical state/config/input/time sequences.
 
-Significance alone only keeps distant state at F1 by default; it does not make a far-away relic consume F4 physics. F4 requires local presentation relevance or close active demand.
+Significance alone only keeps distant state at F1 by default. Inside render range, unseen significance still does not force F4. Hero fidelity requires close active demand or exceptional relevance that is actually visible.
 
 ## Anti-thrashing
 
@@ -50,24 +50,26 @@ Three mechanisms protect fidelity from oscillation:
 
 The default values are an initial Foundation-Lock profile, not permanent world-scale tuning. Studio/device profiling may tune profiles later without changing the F0-F4 contract.
 
-## Metrics
+## Bounded state and metrics
+
+The manager has a configurable `maxRegisteredEntities` hard budget (4096 by default). Registration beyond that capacity fails closed and increments an observable rejection counter. Callers must unregister entities when their interest/streaming ownership ends.
 
 The manager exposes bounded aggregate metrics:
 
-- registered entity count,
-- current mirrored F0-F4 counts,
+- registered entity count and current mirrored F0-F4 counts,
 - manager-coordinated transitions/promotions/demotions,
 - successful transition-hook calls,
 - hold/cooldown/missing-transition blocks,
-- external authoritative synchronizations.
+- external authoritative synchronizations,
+- registration-capacity rejections.
 
-It intentionally stores no transition-history queue and no world-sized entity data beyond the explicitly registered set.
+It intentionally stores no transition-history queue and no world-sized entity data beyond the bounded registered set.
 
 ## Performance expectations
 
-Policy selection and `step` are O(1) for one registered entity. The manager stores one small temporal/diagnostic state record per registered entity plus aggregate counters.
+Policy selection and `step` are O(1) for one registered entity. The manager stores one small temporal/diagnostic state record per registered entity plus aggregate counters, with total records capped by configuration.
 
-Callers should register/evaluate only entities relevant to current streaming/interest work rather than scan the conceptual universe every frame. Later device profiling can schedule these evaluations under explicit frame budgets without changing this contract.
+Callers should register/evaluate only entities relevant to current streaming/interest work rather than scan the conceptual universe every frame. Later device profiling can tune both capacity and evaluation cadence under explicit frame/memory budgets without changing this contract.
 
 ## Integration flow
 
