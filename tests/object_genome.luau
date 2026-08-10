@@ -226,6 +226,38 @@ local function run(): number
 			and hasCode(ObjectGenome.inspect(positiveOnlySlide), "mechanism.reference_pose")
 	)
 
+	local overflowingTilt = deepCopy(Fixtures.officeChair)
+	local overflowingTiltMechanism = findMechanism(overflowingTilt, "seat-tilt")
+	if overflowingTiltMechanism ~= nil then
+		overflowingTiltMechanism.minDegrees = -1e308
+		overflowingTiltMechanism.maxDegrees = 1e308
+	end
+	local overflowingTiltDefaultOk = pcall(function()
+		ObjectGenome.defaultState(overflowingTilt)
+	end)
+	expect(
+		"rejects individually finite angular endpoints whose interpolation span overflows",
+		overflowingTiltMechanism ~= nil
+			and hasCode(ObjectGenome.inspect(overflowingTilt), "mechanism.angular_limits")
+			and not overflowingTiltDefaultOk
+	)
+
+	local overflowingSlide = deepCopy(Fixtures.filingCabinet)
+	local overflowingSlideMechanism = findMechanism(overflowingSlide, "slide-top")
+	if overflowingSlideMechanism ~= nil then
+		overflowingSlideMechanism.minTravelM = -1e308
+		overflowingSlideMechanism.maxTravelM = 1e308
+	end
+	local overflowingSlideDefaultOk = pcall(function()
+		ObjectGenome.defaultState(overflowingSlide)
+	end)
+	expect(
+		"rejects individually finite slide endpoints whose interpolation span overflows",
+		overflowingSlideMechanism ~= nil
+			and hasCode(ObjectGenome.inspect(overflowingSlide), "mechanism.linear_limits")
+			and not overflowingSlideDefaultOk
+	)
+
 	local chairMechanismState = ObjectGenome.defaultState(Fixtures.officeChair)
 	local seatTiltMechanism = findMechanism(Fixtures.officeChair, "seat-tilt")
 	local seatTiltPosition = chairMechanismState.mechanismPosition["seat-tilt"]

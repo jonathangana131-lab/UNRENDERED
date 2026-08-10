@@ -66,7 +66,7 @@ Mechanisms reference component keys and plain axes/limits. Their mutable `Object
 - `caster`: `p` is a persisted swivel turn fraction in `[0, 1)`, decoding to `p * 360` degrees. The full-turn endpoint is rejected because it duplicates zero. Wheel roll phase is transient Physical-World realization state in v1 and is not persisted by this scalar;
 - `latch`: only `0` and `1` are canonical. `0` is the authored/default disengaged reference pose and `1` is engaged.
 
-For hinge, tilt, and slide mechanisms, authored component transforms are the physical zero/reference pose. Recipe limits must include zero, and `ObjectGenome.defaultState()` derives the scalar that maps back to exactly zero physical offset (`-min / (max - min)`) instead of blindly storing `0`. `ObjectGenome.decodeMechanismPosition()` is the shared decoder boundary so Physics Lab/fidelity adapters do not invent competing formulas.
+For hinge, tilt, and slide mechanisms, authored component transforms are the physical zero/reference pose. Recipe limits must include zero **and their interpolation span (`max - min`) must itself remain finite**; individually finite endpoints are insufficient if subtraction overflows. `ObjectGenome.defaultState()` derives the scalar that maps back to exactly zero physical offset (`-min / (max - min)`) instead of blindly storing `0`, and both default derivation and decoding assert finite canonical results. `ObjectGenome.decodeMechanismPosition()` is the shared decoder boundary so Physics Lab/fidelity adapters do not invent competing formulas.
 
 A later Roblox realization adapter may choose constraints, servo settings, collision groups, fidelity simplifications, or authored meshes without changing the domain recipe or the persisted mechanism-state interpretation.
 
