@@ -180,10 +180,7 @@ local function destroyOwnedExisting(parent: Instance): ()
 	existing:Destroy()
 end
 
-function PhysicsLabRealizer.realize(
-	parent: Instance,
-	recipe: PhysicsLabRecipe.PhysicsLabRecipe?
-): RealizedLab
+function PhysicsLabRealizer.realize(parent: Instance, recipe: PhysicsLabRecipe.PhysicsLabRecipe?): RealizedLab
 	local ownedRecipe = recipe or PhysicsLabRecipe.build()
 	destroyOwnedExisting(parent)
 
