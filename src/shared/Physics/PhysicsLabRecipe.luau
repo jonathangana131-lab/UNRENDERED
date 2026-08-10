@@ -4,6 +4,7 @@ local StableId = require(script.Parent.Parent.Core.StableId)
 local MaterialDNA = require(script.Parent.Parent.Materials.MaterialDNA)
 local ObjectGenome = require(script.Parent.Parent.Objects.ObjectGenome)
 local ObjectGenomeFixtures = require(script.Parent.Parent.Objects.ObjectGenomeFixtures)
+local ResolvedRegionRecipe = require(script.Parent.Parent.Reality.ResolvedRegionRecipe)
 local WorldEntity = require(script.Parent.Parent.Reality.WorldEntity)
 local PhysicsLabObjectGenomes = require(script.Parent.PhysicsLabObjectGenomes)
 
@@ -62,11 +63,52 @@ export type PhysicsLabRecipe = {
 local PhysicsLabRecipe = {}
 
 PhysicsLabRecipe.SCHEMA_VERSION = 1
-PhysicsLabRecipe.GENERATOR_VERSION = 1
-PhysicsLabRecipe.RECIPE_KEY = "physics-lab.hero-gate.v1"
+PhysicsLabRecipe.GENERATOR_VERSION = 2
+PhysicsLabRecipe.RECIPE_KEY = "physics-lab.hero-gate.v2"
+PhysicsLabRecipe.WORLD_SEED_REF = "physics-lab.world-seed.v1"
 
 local WORLD_ID = StableId.fromParts("world", { "physics-lab", "hero-gate", "v1" })
-local REGION_ID = StableId.fromParts("region", { "physics-lab", "bay-a", "v1" })
+local REGION_ADDRESS = table.freeze({ x = 0, z = 0, layer = 0 })
+local RESOLVED_REGION = ResolvedRegionRecipe.lock({
+	worldSeedRef = PhysicsLabRecipe.WORLD_SEED_REF,
+	regionAddress = REGION_ADDRESS,
+	generatorVersions = {
+		reality = 1,
+		topology = 1,
+		material = 1,
+		object = 1,
+		entity = 1,
+	},
+	semanticIntentKey = "physics-lab.hero-gate",
+	topologyAnchors = {
+		"physics-lab/bay-a",
+		"physics-lab/front-door-opening",
+	},
+	canonicalContentKeys = {
+		"physics-lab/generator-version/2",
+		"entity/floor",
+		"entity/ceiling",
+		"entity/wall-left",
+		"entity/wall-right",
+		"entity/wall-back",
+		"entity/wall-front-left",
+		"entity/wall-front-right",
+		"entity/wall-front-header",
+		"entity/ramp",
+		"entity/ledge",
+		"entity/stair-1",
+		"entity/stair-2",
+		"entity/stair-3",
+		"entity/stair-4",
+		"entity/character-spawn-anchor",
+		"entity/door-main",
+		"entity/chair-a",
+		"entity/table-a",
+		"entity/cabinet-a",
+		"entity/cart-a",
+	},
+})
+local REGION_ID = RESOLVED_REGION.regionId
 
 local WALL_MATERIAL: MaterialReference = table.freeze({
 	id = "material.v1.office-wallpaper.yellow-vinyl",
@@ -96,7 +138,12 @@ end
 local ZERO = vec3(0, 0, 0)
 
 local function entityId(key: string): string
-	return StableId.fromParts("entity", { "physics-lab", "v1", key })
+	return StableId.fromParts("entity", {
+		REGION_ID,
+		"physics-lab.recipe",
+		tostring(PhysicsLabRecipe.GENERATOR_VERSION),
+		key,
+	})
 end
 
 local function originFor(key: string): WorldEntity.GenerationOrigin
@@ -119,7 +166,8 @@ local function primitive(
 	collidable: boolean,
 	transparency: number?
 ): PrimitiveEntityRecipe
-	MaterialDNA.validateReference(material)
+	local materialReport = MaterialDNA.validateReference(material)
+	assert(materialReport.ok, `invalid Physics Lab material reference: {material.id}`)
 	local resolvedTransparency = transparency or 0
 	assert(
 		resolvedTransparency >= 0 and resolvedTransparency <= 1,
@@ -181,6 +229,10 @@ function PhysicsLabRecipe.objectGenome(key: ObjectGenomeKey): ObjectGenome.Objec
 	local genome = OBJECT_GENOMES[key]
 	assert(genome ~= nil, `unknown Physics Lab ObjectGenome key {key}`)
 	return genome
+end
+
+function PhysicsLabRecipe.resolvedRegion(): ResolvedRegionRecipe.Recipe
+	return RESOLVED_REGION
 end
 
 function PhysicsLabRecipe.build(): PhysicsLabRecipe
