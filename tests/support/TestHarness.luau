@@ -22,10 +22,7 @@ end
 
 function Assertions:equal(actual, expected, detail)
 	if actual ~= expected then
-		error(
-			withDetail(`expected {formatValue(expected)}, got {formatValue(actual)}`, detail),
-			2
-		)
+		error(withDetail(`expected {formatValue(expected)}, got {formatValue(actual)}`, detail), 2)
 	end
 end
 
