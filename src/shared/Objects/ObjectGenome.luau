@@ -1,5 +1,7 @@
 --!strict
 
+local StableId = require(script.Parent.Parent.Core.StableId)
+
 export type Vec3 = {
 	x: number,
 	y: number,
@@ -135,6 +137,7 @@ local ObjectGenome = {}
 
 ObjectGenome.SCHEMA_VERSION = 1
 ObjectGenome.STATE_SCHEMA_VERSION = 1
+ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
 
 local MASS_TOLERANCE_FRACTION = 0.05
 local BOUNDS_TOLERANCE_M = 0.005
@@ -324,7 +327,6 @@ end
 
 function ObjectGenome.identityParts(value: ObjectGenome): { string }
 	return {
-		"object-genome",
 		tostring(value.schemaVersion),
 		value.familyId,
 		tostring(value.familyVersion),
@@ -334,7 +336,7 @@ end
 
 function ObjectGenome.identityKey(value: ObjectGenome): string
 	ObjectGenome.validate(value)
-	return table.concat(ObjectGenome.identityParts(value), ":")
+	return StableId.fromParts(ObjectGenome.STABLE_ID_NAMESPACE, ObjectGenome.identityParts(value))
 end
 
 function ObjectGenome.inspect(value: any): ValidationResult
