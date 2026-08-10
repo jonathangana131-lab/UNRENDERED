@@ -155,6 +155,30 @@ local function run(): number
 	supportCycle.components[1].supportKeys = { "top" }
 	expect("rejects cyclic load path", hasCode(ObjectGenome.inspect(supportCycle), "component.support_cycle"))
 
+	local groundedCycle = deepCopy(Fixtures.officeTable)
+	local groundedLeg = findComponent(groundedCycle, "leg-front-left")
+	if groundedLeg ~= nil then
+		groundedLeg.supportKeys = { "crossbar" }
+	end
+	expect(
+		"rejects support cycle even when the cycle contains an externally supported component",
+		groundedLeg ~= nil and hasCode(ObjectGenome.inspect(groundedCycle), "component.support_cycle")
+	)
+
+	local branchedCycle = deepCopy(Fixtures.officeTable)
+	local branchedTop = findComponent(branchedCycle, "top")
+	local branchedCrossbar = findComponent(branchedCycle, "crossbar")
+	if branchedTop ~= nil and branchedCrossbar ~= nil then
+		branchedTop.supportKeys = { "leg-front-left", "crossbar" }
+		branchedCrossbar.supportKeys = { "top", "leg-front-right" }
+	end
+	expect(
+		"rejects cyclic support branch even when another branch reaches ground",
+		branchedTop ~= nil
+			and branchedCrossbar ~= nil
+			and hasCode(ObjectGenome.inspect(branchedCycle), "component.support_cycle")
+	)
+
 	local badMechanism = deepCopy(Fixtures.filingCabinet)
 	badMechanism.mechanisms[1].frameComponentKey = "missing-frame"
 	expect(
