@@ -4,9 +4,9 @@ MaterialDNA is the canonical plain-data material recipe shared by world generati
 
 ## Ownership boundary
 
-A `MaterialRecipe` is canonical identity/history data. Call `MaterialDNA.freezeRecipe(input)` when a recipe becomes owned by the resolved world or a fixture/catalog. The function validates, deep-copies, and deep-freezes the complete recipe tree. Mutating the caller's input after that boundary cannot rewrite canonical material truth.
+A `MaterialRecipe` is canonical identity/history data. Its exact identity is `id + recipeVersion`; `schemaVersion` only versions the record shape. Call `MaterialDNA.freezeRecipe(input)` when a recipe becomes owned by the resolved world or a fixture/catalog. The function validates, deep-copies, and deep-freezes the complete recipe tree. Mutating the caller's input after that boundary cannot rewrite canonical material truth.
 
-`MaterialState` is intentionally separate and mutable. It carries runtime/durable deltas such as wear, damage, wetness, and soil. Representation demotion/persistence should capture state without modifying the immutable recipe.
+`MaterialState` is intentionally separate and mutable. It carries the exact `recipeId + recipeVersion + schemaVersion` reference alongside runtime/durable deltas such as wear, damage, wetness, and soil. `MaterialDNA.defaultState(recipe)` binds a state to a validated recipe revision, and `stateMatchesRecipe` checks that exact relationship. Representation demotion/persistence should capture state without modifying or ambiguously retargeting the immutable recipe.
 
 ## Recipe layers
 
@@ -51,7 +51,7 @@ The literal fixture definitions live in `MaterialFixtureCatalog`, a pure builder
 
 ## Versioning
 
-`MaterialDNA.SchemaVersion` is currently `1`. Unknown schema versions are rejected. Changing the meaning/shape of established recipe data is a schema migration, not an unversioned refactor. Already-resolved world truth must never silently reinterpret an old recipe under a new schema.
+`MaterialDNA.SchemaVersion` is currently `1`. Unknown schema versions are rejected. `recipeVersion` is an independent positive content revision for one stable material `id`: any canonical change to physical, visual, acoustic, history, response, or other recipe meaning increments that revision even when the schema shape is unchanged. Changing the meaning/shape of established recipe data is a schema migration. Already-resolved world truth must never silently reinterpret an old recipe or retarget mutable state to newer material content.
 
 ## Performance boundary
 
