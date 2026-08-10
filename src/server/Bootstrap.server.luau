@@ -12,9 +12,11 @@ assert(RunService:IsServer(), "server bootstrap must run on server")
 local probe = SeedStream.derive("unrendered-bootstrap", { "server", "probe" })
 local deterministicProbe = probe:nextU32()
 
-print(string.format(
-	"[UNRENDERED] server foundation online | game=%d reality=%d probe=%u",
-	Versions.Game,
-	Versions.Reality,
-	deterministicProbe
-))
+print(
+	string.format(
+		"[UNRENDERED] server foundation online | game=%d reality=%d probe=%u",
+		Versions.Game,
+		Versions.Reality,
+		deterministicProbe
+	)
+)
