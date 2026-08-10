@@ -1,6 +1,7 @@
 --!strict
 
 local StableId = require(script.Parent.Parent.Core.StableId)
+local MaterialDNA = require(script.Parent.Parent.Materials.MaterialDNA)
 
 export type Vec3 = {
 	x: number,
@@ -140,6 +141,8 @@ local ObjectGenome = {}
 ObjectGenome.SCHEMA_VERSION = 1
 ObjectGenome.STATE_SCHEMA_VERSION = 1
 ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
+ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE = "object-genome-content"
+ObjectGenome.CONTENT_FINGERPRINT_VERSION = 1
 ObjectGenome.LOCAL_ROTATION_ORDER = "XYZ"
 ObjectGenome.LOCAL_ROTATION_HANDEDNESS = "right"
 
@@ -678,6 +681,103 @@ local function formatIssues(issues: { ValidationIssue }): string
 	return table.concat(messages, "; ")
 end
 
+local function canonicalFingerprintNumber(value: number): string
+	if value == 0 then
+		return "0"
+	end
+	return string.format("%.17g", value)
+end
+
+local function appendVec3FingerprintParts(parts: { string }, value: Vec3): ()
+	table.insert(parts, canonicalFingerprintNumber(value.x))
+	table.insert(parts, canonicalFingerprintNumber(value.y))
+	table.insert(parts, canonicalFingerprintNumber(value.z))
+end
+
+local function foldFingerprintList(label: string, values: { string }): string
+	local fingerprint = StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, {
+		"list",
+		tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+		label,
+		"empty",
+	})
+	for index, value in ipairs(values) do
+		fingerprint = StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, {
+			"list-item",
+			tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+			label,
+			fingerprint,
+			tostring(index),
+			value,
+		})
+	end
+	return fingerprint
+end
+
+local function componentContentFingerprint(component: ComponentSpec): string
+	local parts = {
+		"component",
+		tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+		component.key,
+		component.role,
+		component.materialKey,
+		tostring(component.materialRecipeVersion),
+		canonicalFingerprintNumber(component.massKg),
+	}
+	appendVec3FingerprintParts(parts, component.localPositionM)
+	appendVec3FingerprintParts(parts, component.localRotationDeg)
+	appendVec3FingerprintParts(parts, component.dimensionsM)
+	table.insert(parts, foldFingerprintList("component-support-keys", component.supportKeys))
+	table.insert(parts, component.externalSupport)
+	return StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, parts)
+end
+
+local function mechanismContentFingerprint(mechanism: MechanismSpec): string
+	local value: any = mechanism
+	local parts = {
+		"mechanism",
+		tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+		value.key,
+		value.kind,
+		value.movingComponentKey,
+	}
+	if value.kind == "hinge" or value.kind == "slide" or value.kind == "tilt" then
+		table.insert(parts, value.frameComponentKey)
+		appendVec3FingerprintParts(parts, value.axis)
+		if value.kind == "slide" then
+			table.insert(parts, canonicalFingerprintNumber(value.minTravelM))
+			table.insert(parts, canonicalFingerprintNumber(value.maxTravelM))
+		else
+			table.insert(parts, canonicalFingerprintNumber(value.minDegrees))
+			table.insert(parts, canonicalFingerprintNumber(value.maxDegrees))
+		end
+	elseif value.kind == "caster" then
+		table.insert(parts, value.frameComponentKey)
+		table.insert(parts, canonicalFingerprintNumber(value.wheelRadiusM))
+		appendVec3FingerprintParts(parts, value.swivelAxis)
+		appendVec3FingerprintParts(parts, value.rollAxis)
+	elseif value.kind == "latch" then
+		table.insert(parts, value.catchComponentKey)
+		table.insert(parts, canonicalFingerprintNumber(value.engagementDistanceM))
+	else
+		error("validated ObjectGenome mechanism kind expected")
+	end
+	return StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, parts)
+end
+
+local function affordanceContentFingerprint(affordance: AffordanceSpec): string
+	local parts = {
+		"affordance",
+		tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+		affordance.key,
+		affordance.kind,
+		affordance.componentKey,
+	}
+	appendVec3FingerprintParts(parts, affordance.localPointM)
+	table.insert(parts, canonicalFingerprintNumber(affordance.radiusM))
+	return StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, parts)
+end
+
 function ObjectGenome.identityParts(value: ObjectGenome): { string }
 	return {
 		tostring(value.schemaVersion),
@@ -853,21 +953,43 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		if not isNonEmptyString(component.role) then
 			addIssue(issues, "component.role", path .. ".role", "component role required")
 		end
-		if not isSemanticKey(component.materialKey) then
-			addIssue(
-				issues,
-				"component.material_key",
-				path .. ".materialKey",
-				"materialKey must be the stable lowercase MaterialDNA recipe id"
-			)
-		end
-		if not isPositiveInteger(component.materialRecipeVersion) then
-			addIssue(
-				issues,
-				"component.material_recipe_version",
-				path .. ".materialRecipeVersion",
-				"materialRecipeVersion must be a positive integer"
-			)
+		local materialReferenceValidation = MaterialDNA.validateReference({
+			id = component.materialKey,
+			recipeVersion = component.materialRecipeVersion,
+		})
+		if not materialReferenceValidation.ok then
+			local materialKeyValidation = MaterialDNA.validateReference({
+				id = component.materialKey,
+				recipeVersion = 1,
+			})
+			local materialRecipeVersionValidation = MaterialDNA.validateReference({
+				id = "material.v1.object-genome-validation-probe",
+				recipeVersion = component.materialRecipeVersion,
+			})
+			if not materialKeyValidation.ok then
+				addIssue(
+					issues,
+					"component.material_key",
+					path .. ".materialKey",
+					"materialKey must satisfy the exact MaterialDNA v2 project-id contract"
+				)
+			end
+			if not materialRecipeVersionValidation.ok then
+				addIssue(
+					issues,
+					"component.material_recipe_version",
+					path .. ".materialRecipeVersion",
+					"materialRecipeVersion must satisfy the exact MaterialDNA v2 recipe-version contract"
+				)
+			end
+			if materialKeyValidation.ok and materialRecipeVersionValidation.ok then
+				addIssue(
+					issues,
+					"component.material_reference",
+					path,
+					"material reference must satisfy the exact MaterialDNA v2 reference contract"
+				)
+			end
 		end
 		if not isPositiveFinite(component.massKg) then
 			addIssue(
@@ -1239,6 +1361,49 @@ end
 function ObjectGenome.validate(value: ObjectGenome): ()
 	local result = ObjectGenome.inspect(value)
 	assert(result.ok, formatIssues(result.issues))
+end
+
+function ObjectGenome.contentFingerprint(value: ObjectGenome): string
+	ObjectGenome.validate(value)
+
+	local componentFingerprints: { string } = table.create(#value.components)
+	for index, component in ipairs(value.components) do
+		componentFingerprints[index] = componentContentFingerprint(component)
+	end
+
+	local mechanismFingerprints: { string } = table.create(#value.mechanisms)
+	for index, mechanism in ipairs(value.mechanisms) do
+		mechanismFingerprints[index] = mechanismContentFingerprint(mechanism)
+	end
+
+	local affordanceFingerprints: { string } = table.create(#value.affordances)
+	for index, affordance in ipairs(value.affordances) do
+		affordanceFingerprints[index] = affordanceContentFingerprint(affordance)
+	end
+
+	local parts = {
+		"genome",
+		tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+		tostring(value.schemaVersion),
+		value.familyId,
+		tostring(value.familyVersion),
+		value.variantKey,
+		value.provenance.manufacturerFamily,
+		value.provenance.productLine,
+		value.provenance.apparentEra,
+	}
+	appendVec3FingerprintParts(parts, value.dimensionsM)
+	appendVec3FingerprintParts(parts, value.dimensionLimits.minM)
+	appendVec3FingerprintParts(parts, value.dimensionLimits.maxM)
+	table.insert(parts, canonicalFingerprintNumber(value.massKg))
+	table.insert(parts, canonicalFingerprintNumber(value.massLimitsKg.min))
+	table.insert(parts, canonicalFingerprintNumber(value.massLimitsKg.max))
+	appendVec3FingerprintParts(parts, value.centerOfMassM)
+	table.insert(parts, foldFingerprintList("components", componentFingerprints))
+	table.insert(parts, foldFingerprintList("mechanisms", mechanismFingerprints))
+	table.insert(parts, foldFingerprintList("affordances", affordanceFingerprints))
+
+	return StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, parts)
 end
 
 function ObjectGenome.defaultState(value: ObjectGenome): ObjectState
