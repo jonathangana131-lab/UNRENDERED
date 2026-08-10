@@ -51,6 +51,11 @@ jobs:
           python3 scripts/check_canonical_randomness.py --self-test
           python3 scripts/check_canonical_randomness.py
 
+      - name: Shared-domain boundary audit
+        run: |
+          python3 scripts/check_domain_boundaries.py --self-test
+          python3 scripts/check_domain_boundaries.py
+
       - name: Pure Luau tests
         run: lune run tests/run
 
