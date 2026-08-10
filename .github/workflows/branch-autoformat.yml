@@ -1,0 +1,38 @@
+name: Branch Autoformat
+
+on:
+  push:
+    branches:
+      - agent/reality/9-resolved-region-lock-sol56j3
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/reality/9-resolved-region-lock-sol56j3
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+      - name: Format reviewed Luau
+        shell: bash
+        run: |
+          stylua src/shared/Spatial/RegionAddress.luau src/shared/Reality/ResolvedRegionRecipe.luau tests/resolved_region_recipe.luau tests/run.luau
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/shared/Spatial/RegionAddress.luau src/shared/Reality/ResolvedRegionRecipe.luau tests/resolved_region_recipe.luau tests/run.luau
+          git commit -m "style: format post-review resolved region contract"
+          git push origin HEAD:agent/reality/9-resolved-region-lock-sol56j3
