@@ -1,0 +1,59 @@
+name: Fix fingerprint hardening transport marker
+
+on:
+  push:
+    branches:
+      - agent/objects/100-materialref-lock-sol56s8
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/objects/100-materialref-lock-sol56s8
+          fetch-depth: 0
+
+      - name: Allow both valid frame-component branches
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('.github/workflows/harden-122-fingerprint.yml')
+          source = path.read_text()
+          old = '''          for old_text, new_text in direct_replacements.items():
+              count = source.count(old_text)
+              if count != 1:
+                  raise SystemExit(f"replacement marker expected once, got {count}: {old_text[:80]!r}")
+              source = source.replace(old_text, new_text, 1)
+          '''
+          new = '''          for old_text, new_text in direct_replacements.items():
+              expected_count = 2 if old_text == "\\t\\ttable.insert(parts, value.frameComponentKey)\\n" else 1
+              count = source.count(old_text)
+              if count != expected_count:
+                  raise SystemExit(
+                      f"replacement marker expected {expected_count}, got {count}: {old_text[:80]!r}"
+                  )
+              source = source.replace(old_text, new_text, expected_count)
+          '''
+          if source.count(old) != 1:
+              raise SystemExit('hardening loop marker not found exactly once')
+          path.write_text(source.replace(old, new, 1))
+          PY
+
+      - name: Remove fixer workflow
+        run: rm .github/workflows/fix-harden-122-marker.yml
+
+      - name: Commit corrected transport
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/harden-122-fingerprint.yml .github/workflows/fix-harden-122-marker.yml
+          git commit -m "Repair fingerprint hardening transport marker"
+          git push origin HEAD:agent/objects/100-materialref-lock-sol56s8
