@@ -8,6 +8,7 @@ local runFidelityManager = require("./fidelity_manager")
 local runFidelityManagerDeterminism = require("./fidelity_manager_determinism")
 local runFidelityManagerRejectedStepAtomicity = require("./fidelity_manager_rejected_step_atomicity")
 local runMaterialDNA = require("./materialdna_contract")
+local runStableIdHeadless = require("./stable_id_headless")
 local runWorldEntity = require("./world_entity")
 local runWorldEntityRegistryShape = require("./world_entity_registry_shape")
 
@@ -22,6 +23,7 @@ local legacyFailures = runDeterministicRng()
 	+ runFidelityManagerDeterminism()
 	+ runFidelityManagerRejectedStepAtomicity()
 	+ runMaterialDNA()
+	+ runStableIdHeadless()
 local deterministicPassed = runner:run()
 
 if legacyFailures > 0 or not deterministicPassed then
