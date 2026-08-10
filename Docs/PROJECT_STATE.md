@@ -1,6 +1,6 @@
 # Project State
 
-Current phase: **Foundation Lock — Reality-Grade Wave 1**
+Current phase: **Hero Gate — Production Physics Lab / Resolved Truth Foundation**
 
 ## Main health
 
@@ -16,62 +16,85 @@ Open issue != unlocked work. This file is the authoritative unlock board.
 
 Project-wide WIP target: **3–5 major Feature Epics maximum**. With many workers, deepen active epics through tests, fuzzing, performance, polish, integration and independent review rather than opening unrelated systems.
 
-## Unlocked Wave 1
+## Completed Wave 1 — Reality-Grade Foundation Lock
 
 ### Epic A — Deterministic Reality Foundation
-- #3 — lock StableId / scoped RNG contracts.
-- #8 — deterministic regression/repro harness.
+- #3 — StableId / scoped RNG contracts: complete.
+- #8 — deterministic regression/repro harness: complete.
 
-Exit gate:
+Locked invariants:
 - golden vectors are stable,
 - subsystem streams cannot perturb unrelated streams,
-- repro keys are clear enough that later generators can attach failures directly.
+- repro keys are explicit enough for later generators to attach failures directly.
 
 ### Epic B — WorldEntity / Fidelity Foundation
-- #4 — WorldEntity identity and representation lifecycle.
-- #7 — F0–F4 promotion/demotion manager.
+- #4 — WorldEntity identity and representation lifecycle: complete.
+- #7 — F0–F4 promotion/demotion manager: complete.
 
-Exit gate:
+Locked invariants:
 - identity survives Roblox Instance destruction/recreation,
 - duplicate IDs are detectable,
 - state capture/promotion/demotion is tested,
-- fidelity policy has metrics and anti-thrashing behavior.
+- fidelity policy has metrics and anti-thrashing behavior,
+- public fidelity boundaries enforce the WorldEntityId contract.
 
 ### Epic C — Physical Content Domain Foundation
-- #5 — MaterialDNA production contract.
-- #6 — ObjectGenome construction-grammar contract.
-- #100 — ObjectGenome↔MaterialDNA exact-reference/content-revision repair; MaterialDNA parity and v1 identity preservation landed via #121, but the deterministic recipe-drift seal boundary is reopened; **blocking Epic C exit**.
-- #101 — ObjectGenome mechanism-state/persistence semantics repair; **merged green via #117, with finite-span closure #123, and complete**.
-- #119 — post-#117 ObjectGenome mechanism-range numeric-closure repair; **merged green via #123 and complete**.
-- #125 — ObjectGenome external-support reachability must be cycle-independent and traversal-order deterministic; **blocking Epic C exit**.
+- #5 — MaterialDNA production contract: complete.
+- #6 — ObjectGenome construction-grammar contract: complete.
+- #100 — exact ObjectGenome↔MaterialDNA reference/content-revision lock: complete via #121 + #129.
+- #101 — mechanism-state/persistence semantics: complete via #117.
+- #119 — finite mechanism-range arithmetic closure: complete via #123.
+- #125 — cycle-independent deterministic support reachability: complete via #136/#137.
 
-Exit gate:
-- coherent immutable recipe vs mutable state separation,
+Locked invariants:
+- immutable recipe and mutable state are separate,
 - MaterialDNA links visual/physical/acoustic identity without asset-ID coupling,
 - ObjectGenome supports components, mechanisms, realistic dimensions/materials/mass/affordances,
-- ObjectGenome material references obey the exact landed MaterialDNA identity/revision contract and same-version canonical recipe drift is detectable without introducing an unowned cross-runtime numeric encoding contract,
-- ObjectGenome mechanism state has explicit kind-specific persistence semantics anchored to authored reference poses,
+- ObjectGenome material references obey the landed MaterialDNA reference contract,
+- same-version canonical recipe drift is caught by the separately versioned deterministic fingerprint contract without changing ObjectGenome v1 entity/state identity,
+- mechanism state has explicit kind-specific persistence semantics anchored to authored reference poses,
 - accepted hinge/tilt/slide range arithmetic stays finite through default-state derivation and canonical physical decode,
 - support-cycle rejection and external-support reachability are independent deterministic graph facts,
-- validators reject bad examples.
+- validators reject malformed and structurally nonsensical examples.
 
-## Next unlock
+Wave 1 exits green. Issue #28 may be closed once this scheduler transition is merged.
 
-### Hero Gate — Production Physics Lab / Perfect 5 Minutes foundation
-- #10 — production-contract Physics Lab.
-- #9 — first-observation/resolved-region recipe joins once deterministic contracts are ready.
+## Unlocked Hero Gate
 
-This remains a **next unlock, not current implementation permission**. Do not begin #10/#9 until the Wave 1 exit gates are green, including the remaining #100 and #125 blockers, and this file is updated to unlock the Hero Gate.
+### #10 — Production-contract Physics Lab
+Build the first permanent playable/testable Roblox lab using the exact Wave-1 contracts.
 
-Do not treat #10 as permission for ad-hoc scripts. Its objects must instantiate through the production contracts from Wave 1 as they land.
+Required direction:
+- deterministic lab recipe,
+- floor/walls/ceiling test bay plus chair, table, hinged door, rolling cart, cabinet/drawer placeholder, stairs/ramp/ledge and physical-character spawn anchor,
+- objects instantiated through production WorldEntity / MaterialDNA / ObjectGenome / fidelity boundaries rather than ad-hoc scripts,
+- development diagnostics expose IDs/fidelity state,
+- simple primitives are acceptable initially, but disposable parallel frameworks are not,
+- Studio evidence is required for engine/physics behavior that pure CI cannot prove.
 
-After the lab foundation is stable, the first Reality-Grade Hero Features should be **door, chair, and physical player movement**, not a giant procedural map.
+### #9 — First-observation lock / resolved-region recipe
+Define the first production resolved-truth recipe and observation lock on top of the deterministic foundation.
+
+Required direction:
+- plain/versioned `ResolvedRegionRecipe`,
+- region address + WorldId/seed reference + generator versions + semantic/topology anchors + canonical content keys,
+- first meaningful observation locks the recipe/version,
+- generated base + meaningful mutable deltas boundary,
+- deterministic reconstruction equality/hash tests,
+- migration hook for future generator versions,
+- no Roblox Instance serialization.
+
+## Hero Gate WIP policy
+
+#10 and #9 are the only newly unlocked major implementation lanes. Prefer finishing/integrating these two deeply before opening additional systems. Extra workers should form strike teams around them: tests/fuzz/repro, Studio physics evidence, performance/metrics, UX/diagnostics, contract review and integration.
+
+The first Reality-Grade Hero Features after the lab foundation is stable should be **door, chair, and physical player movement**. Do not compensate for weak lab physics/material/audio/movement foundations with a giant procedural map or broad content wave.
 
 ## Currently gated planned work
 
-Issues #11–#25 are planned future work. They are **not automatically implementation-ready** until this file unlocks them or they become an explicit prerequisite for an unlocked Epic.
+Issues #11–#25 remain planned future work. They are **not automatically implementation-ready** until this file explicitly unlocks them or one becomes a direct prerequisite for the two active Hero-Gate lanes.
 
-Workers may inspect/review/decompose them, but should not build those major systems yet merely because worker capacity exists.
+Workers may inspect/review/decompose them, but should not build those major systems merely because worker capacity exists.
 
 ## Known external setup gaps
 
@@ -94,10 +117,10 @@ None active.
 
 ## Next critical outcomes
 
-1. deterministic core is a golden locked contract,
-2. WorldEntity/F0–F4 lifecycle is production-safe,
-3. MaterialDNA/ObjectGenome foundations pass validators/tests, with #101/#119 mechanism-state numeric closure landed and the remaining #100 deterministic drift-seal plus #125 support-reachability repairs completed,
-4. Physics Lab begins using those exact contracts only after the Hero Gate is explicitly unlocked,
-5. the first five-minute experience can be improved deeply without replacing its foundations.
+1. #10 becomes a permanent production-contract Physics Lab rather than a disposable demo,
+2. #9 proves deterministic potential can become version-locked resolved truth without Workspace serialization,
+3. Studio evidence closes engine-only physics/realization gaps that current pure CI cannot prove,
+4. the first Reality-Grade door and chair are built through those exact contracts,
+5. physical player movement follows on finished foundations before broad world/content expansion.
 
 Keep this file concise and operational. Git history is the changelog; Project Source is the long-term vision.
