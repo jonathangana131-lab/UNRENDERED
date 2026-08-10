@@ -130,7 +130,8 @@ local function run(): number
 	local unknownTopLevelResult = MaterialDNA.validateRecipe(unknownTopLevel)
 	expect(
 		"undeclared top-level v1 field rejected",
-		not unknownTopLevelResult.ok and containsError(unknownTopLevelResult, "MaterialRecipe contains undeclared field"),
+		not unknownTopLevelResult.ok
+			and containsError(unknownTopLevelResult, "MaterialRecipe contains undeclared field"),
 		table.concat(unknownTopLevelResult.errors, "; ")
 	)
 	local freezeUnknownTopLevel = pcall(function()
@@ -147,7 +148,8 @@ local function run(): number
 	local unknownNestedResult = MaterialDNA.validateRecipe(unknownNested)
 	expect(
 		"undeclared nested v1 field rejected",
-		not unknownNestedResult.ok and containsError(unknownNestedResult, "finish.color contains undeclared field alpha"),
+		not unknownNestedResult.ok
+			and containsError(unknownNestedResult, "finish.color contains undeclared field alpha"),
 		table.concat(unknownNestedResult.errors, "; ")
 	)
 
