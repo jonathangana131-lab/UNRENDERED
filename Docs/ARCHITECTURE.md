@@ -70,6 +70,18 @@ Topology, materials, props, anomalies, and traces use separate streams so changi
 
 Promotion and demotion preserve domain identity and persistent state.
 
+### WorldEntity lifecycle boundary
+
+`src/shared/Reality/WorldEntity.luau` owns the representation-independent lifecycle contract. A `WorldEntityRecord` contains only stable identity, entity kind, deterministic generation-origin metadata, F0–F4 fidelity, a persistent-state snapshot, and a monotonic lifecycle revision. It deliberately contains no Roblox `Instance` reference.
+
+Representation adapters may realize Roblox objects for F2–F4 and destroy/recreate them as fidelity changes. Before any demotion, the adapter must explicitly capture meaningful mutable state and pass that plain-data patch into the lifecycle transition. Promotions reconstruct presentation from the same `WorldEntityId`, origin, and captured state. The lifecycle revision lets adapters reject stale representation work without changing identity.
+
+Persistent-state snapshots are deep-cloned and recursively frozen at the domain boundary. Callers cannot mutate nested durable state behind `lifecycleRevision`; state changes must arrive through an explicit transition/capture path. Snapshot inputs remain detached from their caller-owned tables.
+
+A registry detects duplicate live `WorldEntityId` values. It is an in-memory identity/lifecycle guard, not the persistence database. Fidelity policy inputs, hysteresis, cooldowns, and budgets belong to the separate Fidelity Manager (#7), which consumes this shared F0–F4 contract rather than redefining it.
+
+Persistent state is restricted to serializable plain data: finite numbers, strings, booleans, maps with string keys, and contiguous arrays. Functions, userdata/Instances, metatables, cycles, mixed map/array tables, NaN, and infinities are rejected at the domain boundary.
+
 ## Roblox-specific constraints
 
 - `Workspace.StreamingEnabled` is the engine streaming layer; our region/fidelity system sits above it.
