@@ -54,6 +54,9 @@ jobs:
       - name: Pure Luau tests
         run: lune run tests/run
 
+      - name: MaterialDNA contract tests
+        run: lune run tests/material_dna
+
       - name: Build place file
         run: |
           mkdir -p build
