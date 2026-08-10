@@ -320,7 +320,7 @@ local function validateLocalRotation(issues: { ValidationIssue }, path: string, 
 end
 
 local function rotatedHalfExtents(dimensions: Vec3, rotationDeg: Vec3): Vec3
-	-- V1 uses right-handed rotations around the object-local +X, then +Y, then +Z axes.
+	-- V1 uses right-handed fixed-axis rotations around the object-local +X, then +Y, then +Z basis axes.
 	-- For column vectors this is Rz * Ry * Rx. Absolute matrix coefficients produce
 	-- the axis-aligned half extents required for envelope validation without Roblox CFrame.
 	local x = math.rad(rotationDeg.x)
@@ -555,12 +555,12 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		if not isNonEmptyString(component.role) then
 			addIssue(issues, "component.role", path .. ".role", "component role required")
 		end
-		if not isNonEmptyString(component.materialKey) then
+		if not isSemanticKey(component.materialKey) then
 			addIssue(
 				issues,
 				"component.material_key",
 				path .. ".materialKey",
-				"opaque stable materialKey required"
+				"materialKey must be a stable lowercase project semantic key"
 			)
 		end
 		if not isPositiveFinite(component.massKg) then
