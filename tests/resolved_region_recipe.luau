@@ -31,7 +31,7 @@ local function run(): number
 	local function makeCandidate()
 		return {
 			worldId = worldId,
-			worldSeed = "world-seed:shared-canonical-world",
+			worldSeedRef = "world-seed-ref:shared-canonical-world:v1",
 			regionAddress = { x = 0, z = 0, layer = 0 },
 			generatorVersions = {
 				reality = 1,
@@ -57,7 +57,7 @@ local function run(): number
 	local locked, lockDisposition = ResolvedRegionRecipe.lock(nil, candidate)
 	expectEqual("first observation reports a new lock", lockDisposition, "locked")
 	expect("resolved recipe is frozen", not pcall(function()
-		locked.worldSeed = "changed"
+		locked.worldSeedRef = "changed"
 	end))
 	expect("nested region address is frozen", not pcall(function()
 		locked.regionAddress.x = 9
@@ -158,6 +158,21 @@ local function run(): number
 		not ResolvedRegionRecipe.needsMigration(locked, versions)
 	)
 
+	local malformedFutureCandidate = makeCandidate()
+	malformedFutureCandidate.generatorVersions.topology = math.huge
+	malformedFutureCandidate.canonicalContentKeys = { "future/content", "future/content" }
+	local malformedRelock, malformedDisposition =
+		ResolvedRegionRecipe.lock(locked, malformedFutureCandidate)
+	expectEqual(
+		"malformed future unresolved content reports conflict instead of invalidating truth",
+		malformedDisposition,
+		"existing-conflict"
+	)
+	expect(
+		"malformed future unresolved content cannot rewrite established truth",
+		ResolvedRegionRecipe.equivalent(locked, malformedRelock)
+	)
+
 	local crossRegionCandidate = makeCandidate()
 	crossRegionCandidate.regionAddress = { x = 1, z = 0, layer = 0 }
 	local crossRegionAccepted = pcall(function()
@@ -171,6 +186,13 @@ local function run(): number
 		ResolvedRegionRecipe.lock(locked, crossWorldCandidate)
 	end)
 	expect("relock rejects a different WorldId", not crossWorldAccepted)
+
+	local crossSeedCandidate = makeCandidate()
+	crossSeedCandidate.worldSeedRef = "world-seed-ref:contradiction:v1"
+	local crossSeedAccepted = pcall(function()
+		ResolvedRegionRecipe.lock(locked, crossSeedCandidate)
+	end)
+	expect("relock rejects a contradictory world seed reference", not crossSeedAccepted)
 
 	local sameSetDifferentOrder = makeCandidate()
 	sameSetDifferentOrder.topologyAnchorKeys = { "service/north", "entry/west", "exit/east" }
@@ -228,6 +250,7 @@ local function run(): number
 		local migration = ResolvedRegionRecipe.runMigration(plan, function(source, targetVersions)
 			local output = makeCandidate()
 			output.worldId = source.worldId
+			output.worldSeedRef = source.worldSeedRef
 			output.regionAddress = RegionAddress.toPlainData(source.regionAddress)
 			output.generatorVersions = {
 				reality = targetVersions.reality,
@@ -246,6 +269,7 @@ local function run(): number
 		)
 		expectEqual("migration result uses target versions", migration.target.generatorVersions.reality, 2)
 		expectEqual("migration result preserves canonical region identity", migration.target.id, locked.id)
+		expectEqual("migration result preserves world seed reference", migration.target.worldSeedRef, locked.worldSeedRef)
 		expectEqual("migration does not mutate stored source truth", locked.generatorVersions.reality, 1)
 
 		local _, postMigrationDisposition =
@@ -260,6 +284,7 @@ local function run(): number
 			ResolvedRegionRecipe.runMigration(plan, function(source, targetVersions)
 				local output = makeCandidate()
 				output.worldId = source.worldId
+				output.worldSeedRef = source.worldSeedRef
 				output.regionAddress = {
 					x = source.regionAddress.x + 1,
 					z = source.regionAddress.z,
@@ -276,6 +301,24 @@ local function run(): number
 			end)
 		end)
 		expect("migration hook rejects a changed region identity", not crossIdentityMigrationAccepted)
+
+		local crossSeedMigrationAccepted = pcall(function()
+			ResolvedRegionRecipe.runMigration(plan, function(source, targetVersions)
+				local output = makeCandidate()
+				output.worldId = source.worldId
+				output.worldSeedRef = "world-seed-ref:changed:v1"
+				output.regionAddress = RegionAddress.toPlainData(source.regionAddress)
+				output.generatorVersions = {
+					reality = targetVersions.reality,
+					topology = targetVersions.topology,
+					material = targetVersions.material,
+					object = targetVersions.object,
+					entity = targetVersions.entity,
+				}
+				return output
+			end)
+		end)
+		expect("migration hook rejects a changed world seed reference", not crossSeedMigrationAccepted)
 	end
 
 	expect(
@@ -311,6 +354,19 @@ local function run(): number
 	end)
 	expect("potential recipe rejects unknown representation fields", not unknownPotentialAccepted)
 
+	local unknownFuture = makeCandidate()
+	unknownFuture.futureGeneratorMetadata = "ignored-after-lock"
+	local unknownFutureRelock, unknownFutureDisposition = ResolvedRegionRecipe.lock(locked, unknownFuture)
+	expectEqual(
+		"future unknown unresolved fields become conflict instead of invalidating locked truth",
+		unknownFutureDisposition,
+		"existing-conflict"
+	)
+	expect(
+		"future unknown unresolved fields cannot rewrite locked truth",
+		ResolvedRegionRecipe.equivalent(locked, unknownFutureRelock)
+	)
+
 	local metatablePotential = setmetatable({}, {
 		__index = makeCandidate(),
 	})
@@ -318,6 +374,19 @@ local function run(): number
 		ResolvedRegionRecipe.new(metatablePotential)
 	end)
 	expect("potential recipe rejects metatable-backed synthetic fields", not metatablePotentialAccepted)
+
+	local metatableRelockCallbacks = 0
+	local metatableRelock = setmetatable({}, {
+		__index = function()
+			metatableRelockCallbacks += 1
+			return nil
+		end,
+	})
+	local metatableRelockAccepted = pcall(function()
+		ResolvedRegionRecipe.lock(locked, metatableRelock)
+	end)
+	expect("established truth rejects metatable-backed identity input", not metatableRelockAccepted)
+	expectEqual("relock rejection does not execute metatable callbacks", metatableRelockCallbacks, 0)
 
 	local tamperedPlain = ResolvedRegionRecipe.toPlainData(locked)
 	tamperedPlain.id = StableId.fromParts("region", { "tampered" })
