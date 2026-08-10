@@ -166,12 +166,194 @@ local MECHANISM_KINDS = {
 	latch = true,
 }
 
+local GENOME_FIELDS = {
+	schemaVersion = true,
+	familyId = true,
+	familyVersion = true,
+	variantKey = true,
+	provenance = true,
+	dimensionsM = true,
+	dimensionLimits = true,
+	massKg = true,
+	massLimitsKg = true,
+	centerOfMassM = true,
+	components = true,
+	mechanisms = true,
+	affordances = true,
+}
+
+local PROVENANCE_FIELDS = {
+	manufacturerFamily = true,
+	productLine = true,
+	apparentEra = true,
+}
+
+local VEC3_FIELDS = {
+	x = true,
+	y = true,
+	z = true,
+}
+
+local RANGE_FIELDS = {
+	min = true,
+	max = true,
+}
+
+local DIMENSION_LIMIT_FIELDS = {
+	minM = true,
+	maxM = true,
+}
+
+local COMPONENT_FIELDS = {
+	key = true,
+	role = true,
+	materialKey = true,
+	massKg = true,
+	localPositionM = true,
+	localRotationDeg = true,
+	dimensionsM = true,
+	supportKeys = true,
+	externalSupport = true,
+}
+
+local HINGE_FIELDS = {
+	key = true,
+	kind = true,
+	movingComponentKey = true,
+	frameComponentKey = true,
+	axis = true,
+	minDegrees = true,
+	maxDegrees = true,
+}
+
+local SLIDE_FIELDS = {
+	key = true,
+	kind = true,
+	movingComponentKey = true,
+	frameComponentKey = true,
+	axis = true,
+	minTravelM = true,
+	maxTravelM = true,
+}
+
+local CASTER_FIELDS = {
+	key = true,
+	kind = true,
+	movingComponentKey = true,
+	frameComponentKey = true,
+	wheelRadiusM = true,
+	swivelAxis = true,
+	rollAxis = true,
+}
+
+local TILT_FIELDS = HINGE_FIELDS
+
+local LATCH_FIELDS = {
+	key = true,
+	kind = true,
+	movingComponentKey = true,
+	catchComponentKey = true,
+	engagementDistanceM = true,
+}
+
+local MECHANISM_FIELDS_BY_KIND = {
+	hinge = HINGE_FIELDS,
+	slide = SLIDE_FIELDS,
+	caster = CASTER_FIELDS,
+	tilt = TILT_FIELDS,
+	latch = LATCH_FIELDS,
+}
+
+local AFFORDANCE_FIELDS = {
+	key = true,
+	kind = true,
+	componentKey = true,
+	localPointM = true,
+	radiusM = true,
+}
+
 local function addIssue(issues: { ValidationIssue }, code: string, path: string, message: string): ()
 	table.insert(issues, {
 		code = code,
 		path = path,
 		message = message,
 	})
+end
+
+local function validateRecordShape(
+	issues: { ValidationIssue },
+	path: string,
+	value: any,
+	allowedFields: { [string]: boolean }
+): ()
+	if type(value) ~= "table" then
+		return
+	end
+
+	for key in pairs(value) do
+		if type(key) ~= "string" or not allowedFields[key] then
+			local childPath = if path == "$" then `$.{tostring(key)}` else `{path}.{tostring(key)}`
+			addIssue(
+				issues,
+				"schema.unknown_field",
+				childPath,
+				"field is not declared by ObjectGenome schema v1"
+			)
+		end
+	end
+end
+
+local function validateGenomeShape(issues: { ValidationIssue }, value: any): ()
+	validateRecordShape(issues, "$", value, GENOME_FIELDS)
+	validateRecordShape(issues, "provenance", value.provenance, PROVENANCE_FIELDS)
+	validateRecordShape(issues, "dimensionsM", value.dimensionsM, VEC3_FIELDS)
+	validateRecordShape(issues, "dimensionLimits", value.dimensionLimits, DIMENSION_LIMIT_FIELDS)
+	if type(value.dimensionLimits) == "table" then
+		validateRecordShape(issues, "dimensionLimits.minM", value.dimensionLimits.minM, VEC3_FIELDS)
+		validateRecordShape(issues, "dimensionLimits.maxM", value.dimensionLimits.maxM, VEC3_FIELDS)
+	end
+	validateRecordShape(issues, "massLimitsKg", value.massLimitsKg, RANGE_FIELDS)
+	validateRecordShape(issues, "centerOfMassM", value.centerOfMassM, VEC3_FIELDS)
+
+	if type(value.components) == "table" then
+		for index, component in pairs(value.components) do
+			if type(index) == "number" and type(component) == "table" then
+				local path = `components[{index}]`
+				validateRecordShape(issues, path, component, COMPONENT_FIELDS)
+				validateRecordShape(issues, path .. ".localPositionM", component.localPositionM, VEC3_FIELDS)
+				validateRecordShape(issues, path .. ".localRotationDeg", component.localRotationDeg, VEC3_FIELDS)
+				validateRecordShape(issues, path .. ".dimensionsM", component.dimensionsM, VEC3_FIELDS)
+			end
+		end
+	end
+
+	if type(value.mechanisms) == "table" then
+		for index, mechanism in pairs(value.mechanisms) do
+			if type(index) == "number" and type(mechanism) == "table" then
+				local path = `mechanisms[{index}]`
+				local allowedFields = MECHANISM_FIELDS_BY_KIND[mechanism.kind]
+				if allowedFields ~= nil then
+					validateRecordShape(issues, path, mechanism, allowedFields)
+				end
+				if mechanism.kind == "hinge" or mechanism.kind == "slide" or mechanism.kind == "tilt" then
+					validateRecordShape(issues, path .. ".axis", mechanism.axis, VEC3_FIELDS)
+				elseif mechanism.kind == "caster" then
+					validateRecordShape(issues, path .. ".swivelAxis", mechanism.swivelAxis, VEC3_FIELDS)
+					validateRecordShape(issues, path .. ".rollAxis", mechanism.rollAxis, VEC3_FIELDS)
+				end
+			end
+		end
+	end
+
+	if type(value.affordances) == "table" then
+		for index, affordance in pairs(value.affordances) do
+			if type(index) == "number" and type(affordance) == "table" then
+				local path = `affordances[{index}]`
+				validateRecordShape(issues, path, affordance, AFFORDANCE_FIELDS)
+				validateRecordShape(issues, path .. ".localPointM", affordance.localPointM, VEC3_FIELDS)
+			end
+		end
+	end
 end
 
 local function isFinite(value: any): boolean
@@ -337,6 +519,8 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		addIssue(issues, "genome.type", "$", "ObjectGenome must be a plain table")
 		return reportResult(issues)
 	end
+
+	validateGenomeShape(issues, value)
 
 	if value.schemaVersion ~= ObjectGenome.SCHEMA_VERSION then
 		addIssue(
