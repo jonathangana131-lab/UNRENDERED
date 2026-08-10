@@ -69,7 +69,10 @@ local function captureEntityEvidence(
 		type(entityId) == "string" and entityId ~= "",
 		`Physics Lab representation has invalid {ENTITY_ID_ATTRIBUTE}`
 	)
-	assert(not seenEntityIds[entityId], `Physics Lab validation found duplicate represented WorldEntity id: {entityId}`)
+	assert(
+		not seenEntityIds[entityId],
+		`Physics Lab validation found duplicate represented WorldEntity id: {entityId}`
+	)
 	seenEntityIds[entityId] = true
 
 	local fidelity = instance:GetAttribute(ENTITY_FIDELITY_ATTRIBUTE)
@@ -84,11 +87,14 @@ local function captureEntityEvidence(
 		`Physics Lab representation {entityId} has invalid {ENTITY_RECIPE_ATTRIBUTE}`
 	)
 
-	table.insert(entities, table.freeze({
-		id = entityId,
-		fidelity = fidelity,
-		recipeKey = recipeKey,
-	}))
+	table.insert(
+		entities,
+		table.freeze({
+			id = entityId,
+			fidelity = fidelity,
+			recipeKey = recipeKey,
+		})
+	)
 end
 
 function PhysicsLabValidation.capture(root: Instance): Snapshot
