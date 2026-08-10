@@ -146,7 +146,7 @@ local CARPET_INSTALLATIONS = table.freeze({
 	["installation.carpet-tile-adhesive"] = true,
 })
 
-local RECIPE_FIELDS = table.freeze({
+local RECIPE_FIELDS: { [string]: boolean } = table.freeze({
 	id = true,
 	schemaVersion = true,
 	coherenceClass = true,
@@ -163,30 +163,34 @@ local RECIPE_FIELDS = table.freeze({
 	response = true,
 	anomalyModifiers = true,
 })
-local SUBSTRATE_FIELDS = table.freeze({ classKey = true, thicknessMeters = true, porosity01 = true })
-local FINISH_FIELDS = table.freeze({ classKey = true, color = true, roughness01 = true, metallic01 = true })
-local COLOR_FIELDS = table.freeze({ r = true, g = true, b = true })
-local INSTALLATION_FIELDS = table.freeze({
+local SUBSTRATE_FIELDS: { [string]: boolean } =
+	table.freeze({ classKey = true, thicknessMeters = true, porosity01 = true })
+local FINISH_FIELDS: { [string]: boolean } =
+	table.freeze({ classKey = true, color = true, roughness01 = true, metallic01 = true })
+local COLOR_FIELDS: { [string]: boolean } = table.freeze({ r = true, g = true, b = true })
+local INSTALLATION_FIELDS: { [string]: boolean } = table.freeze({
 	methodKey = true,
 	batchKey = true,
 	quality01 = true,
 	seamPeriodMeters = true,
 })
-local MAINTENANCE_FIELDS = table.freeze({
+local MAINTENANCE_FIELDS: { [string]: boolean } = table.freeze({
 	careClassKey = true,
 	frequency01 = true,
 	cleanliness01 = true,
 	repairCount = true,
 })
-local ENVIRONMENT_FIELDS = table.freeze({ humidity01 = true, water01 = true, uv01 = true, grime01 = true })
-local HISTORY_EVENT_FIELDS = table.freeze({
+local ENVIRONMENT_FIELDS: { [string]: boolean } =
+	table.freeze({ humidity01 = true, water01 = true, uv01 = true, grime01 = true })
+local HISTORY_EVENT_FIELDS: { [string]: boolean } = table.freeze({
 	kindKey = true,
 	causeKey = true,
 	severity01 = true,
 	coverage01 = true,
 })
-local VISUAL_FIELDS = table.freeze({ familyKey = true, coherenceClass = true, metersPerRepeat = true })
-local PHYSICAL_FIELDS = table.freeze({
+local VISUAL_FIELDS: { [string]: boolean } =
+	table.freeze({ familyKey = true, coherenceClass = true, metersPerRepeat = true })
+local PHYSICAL_FIELDS: { [string]: boolean } = table.freeze({
 	classKey = true,
 	coherenceClass = true,
 	densityKgPerM3 = true,
@@ -194,7 +198,7 @@ local PHYSICAL_FIELDS = table.freeze({
 	dynamicFriction = true,
 	restitution01 = true,
 })
-local ACOUSTIC_FIELDS = table.freeze({
+local ACOUSTIC_FIELDS: { [string]: boolean } = table.freeze({
 	classKey = true,
 	coherenceClass = true,
 	absorptionLow01 = true,
@@ -203,13 +207,13 @@ local ACOUSTIC_FIELDS = table.freeze({
 	impactFamilyKey = true,
 	scrapeFamilyKey = true,
 })
-local RESPONSE_FIELDS = table.freeze({
+local RESPONSE_FIELDS: { [string]: boolean } = table.freeze({
 	wetFrictionMultiplier = true,
 	wetDarkening01 = true,
 	damageResistance01 = true,
 	stainAffinity01 = true,
 })
-local STATE_FIELDS = table.freeze({
+local STATE_FIELDS: { [string]: boolean } = table.freeze({
 	recipeId = true,
 	schemaVersion = true,
 	wear01 = true,
