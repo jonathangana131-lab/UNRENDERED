@@ -382,7 +382,7 @@ local function selectDesiredLevel(
 	config: PolicyConfig?,
 	currentLevel: FidelityLevel?
 ): FidelityLevel
-	local desired = evaluatePolicy(inputs, config, currentLevel)
+	local desired: FidelityLevel = evaluatePolicy(inputs, config, currentLevel)
 	return desired
 end
 
@@ -498,7 +498,7 @@ function FidelityManager.step(
 
 	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
 
-	local desired, reason = evaluatePolicy(inputs, self.config, currentLevel)
+	local desired: FidelityLevel, reason: PolicyReason = evaluatePolicy(inputs, self.config, currentLevel)
 	if desired == currentLevel then
 		state.pendingLevel = nil
 		state.pendingSince = nil
