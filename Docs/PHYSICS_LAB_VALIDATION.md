@@ -21,6 +21,7 @@ Every evidence bundle must record enough identity to reproduce the exact build:
 - Git commit SHA under test,
 - Physics Lab recipe/schema version,
 - conceptual WorldId and resolved RegionId,
+- resolved-region schema version and world-seed provenance reference,
 - exact resolved-region fingerprint and deterministic repro key,
 - Roblox Studio version/channel,
 - OS,
@@ -28,9 +29,9 @@ Every evidence bundle must record enough identity to reproduce the exact build:
 - development diagnostics enabled/disabled state,
 - any non-default flags relevant to realization or fidelity.
 
-The realized lab root now exposes the resolved-region fingerprint and repro key, and the source-owned validation collector records them in every snapshot. If either field is missing, `PhysicsLabValidation.capture` fails rather than accepting a screenshot or place-file timestamp as a substitute.
+The realized lab root exposes the resolved-region schema version, world-seed provenance reference, fingerprint, and repro key, and the source-owned validation collector records them in every snapshot. If any required identity field is missing, `PhysicsLabValidation.capture()` / `captureFull()` fails rather than accepting a screenshot or place-file timestamp as a substitute.
 
-Before/after comparisons also reject snapshots with different schema/recipe/WorldId/RegionId/fingerprint/repro identity. Never compare measurements from different canonical lab truth as if they were one lifecycle run.
+Before/after comparisons also reject snapshots with different lab/resolved schema, recipe, WorldId, RegionId, world-seed provenance, fingerprint, or repro identity. Never compare measurements from different canonical lab truth as if they were one lifecycle run.
 
 ## Source and CI preflight
 
@@ -172,9 +173,9 @@ Record visible physics failures with the exact entity ID and resolved-region rep
 
 Resource counts are evidence, not budgets. Do not invent a permanent “allowed count” from this first shell.
 
-The canonical collector is `src/server/PhysicsLab/PhysicsLabValidation.luau`; do **not** maintain a second hand-written counting script in the Command Bar. It scopes traversal to one owned lab root, records exact canonical evidence identity, counts total Instances/Models/BaseParts/unique assemblies/Attachments/Constraints/JointInstances, and computes the world-space BasePart envelope using all eight transformed corners per part. Returned snapshots are plain/frozen data and retain no Instance references.
+The canonical collector is `src/server/PhysicsLab/PhysicsLabValidation.luau`; do **not** maintain a second hand-written counting script in the Command Bar. It scopes traversal to one owned lab root, records exact canonical evidence identity, rejects noncanonical direct representations, counts total Instances/Models/BaseParts/unique assemblies/Attachments/Constraints/JointInstances, and computes the world-space BasePart envelope using all eight transformed corners per part. Returned snapshots are plain/frozen data and retain no Instance references.
 
-In a **server-context** Studio Command Bar on the exact Rojo-synced build, capture an initial snapshot with:
+In a **server-context** Studio Command Bar on the exact Rojo-synced build, capture an initial complete-F2 snapshot with:
 
 ```luau
 local HttpService = game:GetService("HttpService")
@@ -183,19 +184,22 @@ local Validation = require(
     ServerScriptService.UNRENDERED_Server.PhysicsLab.PhysicsLabValidation
 )
 local root = workspace:WaitForChild("UNRENDERED_PhysicsLab")
-local snapshot = Validation.capture(root)
+local snapshot = Validation.captureFull(root)
 print(HttpService:JSONEncode(snapshot))
 ```
 
+Use `captureFull()` whenever the lab is expected to contain the complete canonical F2 representation set. It fails if any canonical representation is missing and rejects any present representation whose stable identity or canonical recipe/material/object metadata is wrong. Reserve `capture()` for intentional partial F0/F2 lifecycle evidence, where canonical F0 entities are expected to be absent from the Instance tree; every representation that is present is still validated fail-closed.
+
 Store the emitted JSON verbatim with the evidence bundle. It includes:
 
-- lab root name and schema/recipe identity,
+- lab root name and lab/resolved schema/recipe identity,
 - WorldId and resolved RegionId,
+- world-seed provenance reference,
 - resolved-region fingerprint and deterministic repro key,
 - total scoped resource counts,
 - full-lab world-space BasePart envelope.
 
-Using the landed source-owned Studio harness, capture snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20. A partially demoted lab is intentionally a different physical representation, so record its count delta but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt. The exact harness/rebuild command blocks live in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`.
+Using the landed source-owned Studio harness, capture complete snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20 with `captureFull()`. A partially demoted lab is intentionally a different physical representation, so use `capture()` for that partial evidence and record its count delta, but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt. The exact harness/rebuild command blocks live in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`.
 
 To compare two stored snapshots in a server-context Command Bar, paste their JSON strings into this source-owned comparison path:
 
