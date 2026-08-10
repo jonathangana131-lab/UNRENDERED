@@ -6,13 +6,13 @@
 
 - All measurements are plain-data SI units: meters, kilograms, degrees.
 - `schemaVersion` is an explicit compatibility lock. A reader rejects unknown versions instead of interpreting future schemas as v1.
-- `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityParts()` supplies those semantic parts to the locked project `StableId` contract; ObjectGenome does not duplicate hashing/canonical encoding.
+- `familyId + familyVersion + variantKey + schemaVersion` plus each component's exact material binding form the stable genome identity input. `ObjectGenome.identityParts()` supplies those semantic parts to the locked project `StableId` contract; ObjectGenome does not duplicate hashing/canonical encoding. Material bindings are sorted by component key before hashing so array presentation order does not change identity.
 - `components`, per-component `supportKeys`, `mechanisms`, and `affordances` are canonical dense 1-based arrays. Sparse arrays and map-like extra keys are rejected so accepted plain data has one unambiguous shape.
-- Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`: `materialKey` is the stable lowercase MaterialDNA recipe id and `materialRecipeVersion` is its positive content revision. ObjectGenome validates and owns those plain values but does not import MaterialDNA implementation details or Roblox asset IDs. A published component material-revision change is a canonical object recipe change and therefore requires the corresponding `familyVersion` to advance rather than silently retargeting an established genome identity.
+- Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`. Those two sibling fields are the stored form of MaterialDNA's exact `{ id, recipeVersion }` reference values; ObjectGenome delegates their validity to `MaterialDNA.validateReference()` so key grammar, length limits, numeric-only rejection, and recipe-version bounds cannot drift from the production material contract. ObjectGenome stores no Roblox asset IDs. A published component material-revision change should advance `familyVersion` as a canonical object recipe revision, and exact material bindings also participate directly in StableId input as defense in depth: accidentally forgetting that version bump still cannot preserve the old genome identity.
 - Roblox `Instance`, `Vector3`, `CFrame`, meshes, constraints, and rendering APIs are deliberately absent from the schema.
 - Mutable wear, damage, mechanism position, and detach state live in `ObjectState`, never in the immutable genome.
 - Mutable state is a complete snapshot for the referenced genome: every component/mechanism key must be present and unknown keys are rejected.
-- Every `ObjectState` stores `genomeId = ObjectGenome.identityKey(genome)`. State validation requires exact equality, so a snapshot cannot be silently reinterpreted against another family/variant revision merely because its component/mechanism keys happen to match.
+- Every `ObjectState` stores `genomeId = ObjectGenome.identityKey(genome)`. State validation requires exact equality, so a snapshot cannot be silently reinterpreted against another family/variant/material revision merely because its component/mechanism keys happen to match.
 
 ## Immutable ownership
 
@@ -74,7 +74,7 @@ Affordances describe stable interaction/grip regions (`grip`, `push`, `pull`, `s
 - `ObjectGenome.inspectState(genome, state)` validates the state identity plus mutable keys/ranges against the immutable recipe.
 - `ObjectGenome.validateState(genome, state)` is the asserting state validator.
 
-The semantic validators themselves are fail-closed plain-data boundaries, not only the ownership copier: undeclared v1 record fields are rejected before retention, metatable-backed canonical tables are rejected before metamethods can influence field reads, `ObjectState` has an exact top-level v1 shape, and its mutable maps may not carry metatables. This keeps validation/identity behavior dependent only on explicit versioned data.
+The semantic validators themselves are fail-closed plain-data boundaries, not only the ownership copier: undeclared v1 record fields are rejected before retention, metatable-backed canonical tables are rejected before metamethods can influence field reads, `ObjectState` has an exact top-level v1 shape, and its mutable maps may not carry metatables. Material-reference values are validated by the same production MaterialDNA reference validator used by the material domain. This keeps validation/identity behavior dependent only on explicit versioned data.
 
 Stable issue codes are suitable for test diagnostics and future procedural rejection/repro tooling.
 
@@ -90,4 +90,4 @@ These are contract fixtures, not final art or Hero Feature implementations. Thei
 
 ## Evolution
 
-Changing field meaning or deterministic identity inputs requires an object schema/version decision. Changing published canonical recipe content such as a component's exact material revision requires advancing `familyVersion`. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.
+Changing field meaning or deterministic identity inputs requires an object schema/version decision. Changing published canonical recipe content should advance `familyVersion`; exact component material bindings additionally participate directly in identity so a material retarget cannot collide with an already-established genome even if that explicit revision bump is accidentally missed. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.
