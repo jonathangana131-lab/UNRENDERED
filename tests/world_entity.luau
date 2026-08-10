@@ -126,6 +126,13 @@ local function run(): number
 	expectEqual("demotion increments representation revision", structural.representationRevision, 2)
 
 	local registry = WorldEntity.createRegistry()
+	expectEqual("registry records backing is private", (registry :: any)._records, nil)
+	expectEqual("registry diagnostics backing is private", (registry :: any)._duplicates, nil)
+	local registrySurfaceMutable = pcall(function()
+		(registry :: any)._records = {}
+	end)
+	expectEqual("registry public surface is frozen", registrySurfaceMutable, false)
+
 	local registered = WorldEntity.register(registry, entity)
 	expectEqual("first registration succeeds", registered, true)
 	expectEqual("registry count", WorldEntity.count(registry), 1)
@@ -146,6 +153,10 @@ local function run(): number
 	expectEqual("duplicate diagnostic exists", diagnostic ~= nil, true)
 	expectEqual("duplicate does not replace original", WorldEntity.get(registry, entity.id), entity)
 	expectEqual("duplicate diagnostic retained", #WorldEntity.duplicateDiagnostics(registry), 1)
+
+	local diagnosticSnapshot = WorldEntity.duplicateDiagnostics(registry)
+	table.clear(diagnosticSnapshot)
+	expectEqual("diagnostic snapshot cannot mutate registry history", #WorldEntity.duplicateDiagnostics(registry), 1)
 
 	local removed = WorldEntity.unregister(registry, entity.id)
 	expectEqual("unregister returns record", removed, entity)
