@@ -1,0 +1,220 @@
+name: Issue 71 Patch
+
+on:
+  push:
+    branches: [agent/reality/71-plain-boundary-sol56q8]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Harden plain-data ownership boundaries
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('src/shared/Reality/WorldEntity.luau')
+          text = path.read_text()
+
+          replacements = [
+              (
+                  '''local function assertNonEmpty(name: string, value: string): ()\n\tassert(value ~= "", `{name} must not be empty`)\n\tassert(string.find(value, "%c") == nil, `{name} must not contain control characters`)\nend\n\nlocal function assertFiniteNumber(path: string, value: number): ()\n\tassert(value == value and value > -math.huge and value < math.huge, `{path} must be finite`)\nend\n\nlocal function assertNonNegativeInteger(path: string, value: unknown): number\n\tassert(type(value) == "number", `{path} must be a number`)\n\tlocal numericValue = value :: number\n\tassertFiniteNumber(path, numericValue)''',
+                  '''local function assertNonEmpty(name: string, value: unknown): ()\n\tassert(type(value) == "string", `{name} must be a string`)\n\tlocal stringValue = value :: string\n\tassert(stringValue ~= "", `{name} must not be empty`)\n\tassert(string.find(stringValue, "%c") == nil, `{name} must not contain control characters`)\nend\n\nlocal function assertFiniteNumber(path: string, value: unknown): number\n\tassert(type(value) == "number", `{path} must be a number`)\n\tlocal numericValue = value :: number\n\tassert(numericValue == numericValue and numericValue > -math.huge and numericValue < math.huge, `{path} must be finite`)\n\treturn numericValue\nend\n\nlocal function assertNonNegativeInteger(path: string, value: unknown): number\n\tlocal numericValue = assertFiniteNumber(path, value)'''
+              ),
+              (
+                  '''local function cloneState(state: PlainData?): PlainData\n\tlocal source = state or {}\n\tfor key in pairs(source) do''',
+                  '''local function cloneState(state: PlainData?): PlainData\n\tlocal source: any\n\tif state == nil then\n\t\tsource = {}\n\telse\n\t\tsource = state :: any\n\tend\n\tassert(type(source) == "table", "persistentState must be a plain table")\n\tassert(getmetatable(source) == nil, "persistentState must not contain metatables")\n\tfor key in pairs(source) do'''
+              ),
+              (
+                  '''local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin\n\tassertNonEmpty("origin.worldId", origin.worldId)\n\tif origin.regionId ~= nil then\n\t\tassertNonEmpty("origin.regionId", origin.regionId)\n\tend\n\tassertNonEmpty("origin.generator", origin.generator)\n\tassertFiniteNumber("origin.generatorVersion", origin.generatorVersion)\n\tassert(\n\t\torigin.generatorVersion >= 1 and origin.generatorVersion == math.floor(origin.generatorVersion),\n\t\t"origin.generatorVersion must be a positive integer"\n\t)\n\tassertNonEmpty("origin.recipeKey", origin.recipeKey)\n\n\treturn table.freeze({\n\t\tworldId = origin.worldId,\n\t\tregionId = origin.regionId,\n\t\tgenerator = origin.generator,\n\t\tgeneratorVersion = origin.generatorVersion,\n\t\trecipeKey = origin.recipeKey,\n\t})\nend''',
+                  '''local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin\n\tlocal source = origin :: any\n\tassert(type(source) == "table", "origin must be a plain table")\n\tassert(getmetatable(source) == nil, "origin must not contain metatables")\n\tassertNonEmpty("origin.worldId", source.worldId)\n\tif source.regionId ~= nil then\n\t\tassertNonEmpty("origin.regionId", source.regionId)\n\tend\n\tassertNonEmpty("origin.generator", source.generator)\n\tlocal generatorVersion = assertFiniteNumber("origin.generatorVersion", source.generatorVersion)\n\tassert(\n\t\tgeneratorVersion >= 1 and generatorVersion == math.floor(generatorVersion),\n\t\t"origin.generatorVersion must be a positive integer"\n\t)\n\tassertNonEmpty("origin.recipeKey", source.recipeKey)\n\n\treturn table.freeze({\n\t\tworldId = source.worldId :: string,\n\t\tregionId = source.regionId :: string?,\n\t\tgenerator = source.generator :: string,\n\t\tgeneratorVersion = generatorVersion,\n\t\trecipeKey = source.recipeKey :: string,\n\t})\nend'''
+              ),
+              (
+                  '''local function ownRecord(record: WorldEntityRecord): WorldEntityRecord\n\tlocal source = record :: any\n\tassert(type(source) == "table", "WorldEntityRecord must be a table")\n\tassert(''',
+                  '''local function ownRecord(record: WorldEntityRecord): WorldEntityRecord\n\tlocal source = record :: any\n\tassert(type(source) == "table", "WorldEntityRecord must be a table")\n\tassert(getmetatable(source) == nil, "WorldEntityRecord must not have a metatable")\n\tassert('''
+              ),
+              (
+                  '''function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord\n\tassert(\n\t\tWorldEntity.isId(spec.id),\n\t\t"WorldEntity.id must be a non-empty stable identifier without control characters"\n\t)\n\tassertNonEmpty("WorldEntity.kind", spec.kind)\n\tlocal fidelity: Fidelity\n\tif spec.fidelity == nil then\n\t\tfidelity = "F0"\n\telse\n\t\tfidelity = spec.fidelity\n\tend\n\tassert(WorldEntity.isFidelity(fidelity), `invalid fidelity {tostring(fidelity)}`)\n\n\treturn table.freeze({\n\t\tid = spec.id,\n\t\tkind = spec.kind,\n\t\torigin = cloneOrigin(spec.origin),\n\t\tfidelity = fidelity,\n\t\tpersistentState = cloneState(spec.persistentState),\n\t\tstateRevision = 0,\n\t\trepresentationRevision = 0,\n\t})\nend''',
+                  '''function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord\n\tlocal source = spec :: any\n\tassert(type(source) == "table", "NewWorldEntity must be a table")\n\tassert(getmetatable(source) == nil, "NewWorldEntity must not have a metatable")\n\tassert(\n\t\tWorldEntity.isId(source.id),\n\t\t"WorldEntity.id must be a non-empty stable identifier without control characters"\n\t)\n\tassertNonEmpty("WorldEntity.kind", source.kind)\n\tlocal fidelity: Fidelity\n\tif source.fidelity == nil then\n\t\tfidelity = "F0"\n\telse\n\t\tfidelity = source.fidelity :: Fidelity\n\tend\n\tassert(WorldEntity.isFidelity(fidelity), `invalid fidelity {tostring(fidelity)}`)\n\n\treturn table.freeze({\n\t\tid = source.id :: WorldEntityId,\n\t\tkind = source.kind :: string,\n\t\torigin = cloneOrigin(source.origin :: GenerationOrigin),\n\t\tfidelity = fidelity,\n\t\tpersistentState = cloneState(source.persistentState :: PlainData?),\n\t\tstateRevision = 0,\n\t\trepresentationRevision = 0,\n\t})\nend'''
+              ),
+          ]
+
+          for old, new in replacements:
+              if text.count(old) != 1:
+                  raise SystemExit(f'expected exactly one replacement target, found {text.count(old)}')
+              text = text.replace(old, new)
+
+          path.write_text(text)
+          PY
+
+      - name: Add focused regressions
+        shell: bash
+        run: |
+          cat > tests/world_entity_plain_boundary.luau <<'LUA'
+          local WorldEntity = require("../src/shared/Reality/WorldEntity")
+
+          local function baseOrigin()
+          	return {
+          		worldId = "world:plain-boundary",
+          		regionId = "region:test",
+          		generator = "tests.world-entity",
+          		generatorVersion = 1,
+          		recipeKey = "plain-boundary",
+          	}
+          end
+
+          local function baseRecord()
+          	return {
+          		id = "entity:plain-boundary",
+          		kind = "test-object",
+          		origin = baseOrigin(),
+          		fidelity = "F1",
+          		persistentState = { open = false },
+          		stateRevision = 0,
+          		representationRevision = 0,
+          	}
+          end
+
+          local function run(): number
+          	local failures = 0
+
+          	local function expect(name, condition)
+          		if condition then
+          			print(`PASS world_entity_plain_boundary {name}`)
+          		else
+          			failures += 1
+          			print(`FAIL world_entity_plain_boundary {name}`)
+          		end
+          	end
+
+          	local specReads = 0
+          	local specBacking = {
+          		id = "entity:metatable-spec",
+          		kind = "test-object",
+          		origin = baseOrigin(),
+          	}
+          	local metatableSpec = setmetatable({}, {
+          		__index = function(_, key)
+          			specReads += 1
+          			return specBacking[key]
+          		end,
+          	})
+          	local specAccepted = pcall(function()
+          		WorldEntity.new(metatableSpec :: any)
+          	end)
+          	expect("new rejects metatable-backed spec", not specAccepted)
+          	expect("new rejects spec before __index", specReads == 0)
+
+          	local originReads = 0
+          	local originBacking = baseOrigin()
+          	local metatableOrigin = setmetatable({}, {
+          		__index = function(_, key)
+          			originReads += 1
+          			return originBacking[key]
+          		end,
+          	})
+          	local originAccepted = pcall(function()
+          		WorldEntity.new({
+          			id = "entity:metatable-origin",
+          			kind = "test-object",
+          			origin = metatableOrigin :: any,
+          		})
+          	end)
+          	expect("new rejects metatable-backed origin", not originAccepted)
+          	expect("origin rejected before __index", originReads == 0)
+
+          	local stateAccepted = pcall(function()
+          		WorldEntity.new({
+          			id = "entity:metatable-state",
+          			kind = "test-object",
+          			origin = baseOrigin(),
+          			persistentState = setmetatable({ open = false }, {}) :: any,
+          		})
+          	end)
+          	expect("new rejects metatable-backed persistent state", not stateAccepted)
+
+          	local falseStateAccepted = pcall(function()
+          		WorldEntity.new({
+          			id = "entity:false-state",
+          			kind = "test-object",
+          			origin = baseOrigin(),
+          			persistentState = false :: any,
+          		})
+          	end)
+          	expect("new rejects false persistent state instead of treating it as empty", not falseStateAccepted)
+
+          	local recordReads = 0
+          	local recordBacking = baseRecord()
+          	local metatableRecord = setmetatable({}, {
+          		__index = function(_, key)
+          			recordReads += 1
+          			return recordBacking[key]
+          		end,
+          	})
+          	local recordAccepted = pcall(function()
+          		WorldEntity.register(WorldEntity.createRegistry(), metatableRecord :: any)
+          	end)
+          	expect("registry rejects metatable-backed record", not recordAccepted)
+          	expect("registry rejects record before __index", recordReads == 0)
+
+          	local wrongOriginStringAccepted = pcall(function()
+          		local origin = baseOrigin()
+          		origin.worldId = 123 :: any
+          		WorldEntity.new({
+          			id = "entity:wrong-origin-string",
+          			kind = "test-object",
+          			origin = origin,
+          		})
+          	end)
+          	expect("origin rejects non-string fields intentionally", not wrongOriginStringAccepted)
+
+          	local valid = WorldEntity.new({
+          		id = "entity:plain-valid",
+          		kind = "test-object",
+          		origin = baseOrigin(),
+          		persistentState = { open = false },
+          	})
+          	local registry = WorldEntity.createRegistry()
+          	local registered = WorldEntity.register(registry, valid)
+          	expect("valid plain entity still registers", registered and WorldEntity.get(registry, valid.id) ~= nil)
+
+          	return failures
+          end
+
+          return run
+          LUA
+
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('tests/run.luau')
+          text = path.read_text()
+          old_require = 'local runWorldEntity = require("./world_entity")\n'
+          new_require = old_require + 'local runWorldEntityPlainBoundary = require("./world_entity_plain_boundary")\n'
+          if text.count(old_require) != 1:
+              raise SystemExit('unexpected world_entity require count')
+          text = text.replace(old_require, new_require)
+          old_suite = '\t+ runWorldEntity()\n\t+ runFidelityManager()'
+          new_suite = '\t+ runWorldEntity()\n\t+ runWorldEntityPlainBoundary()\n\t+ runFidelityManager()'
+          if text.count(old_suite) != 1:
+              raise SystemExit('unexpected world_entity suite count')
+          path.write_text(text.replace(old_suite, new_suite))
+          PY
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git add src/shared/Reality/WorldEntity.luau tests/world_entity_plain_boundary.luau tests/run.luau
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fix: reject metatable-backed WorldEntity boundary data"
+          git push
