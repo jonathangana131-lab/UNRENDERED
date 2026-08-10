@@ -90,10 +90,15 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 	seen[source] = true
 
 	local copy: { [any]: any } = {}
+	local stringKeyCount = 0
+	local numericKeyCount = 0
+	local maxNumericKey = 0
+
 	for key, nested in pairs(source) do
 		local keyType = type(key)
 		if keyType == "string" then
 			assert(key ~= "", `{path} contains an empty string key`)
+			stringKeyCount += 1
 		elseif keyType == "number" then
 			local numericKey = key :: number
 			assertFiniteNumber(`${path} key`, numericKey)
@@ -101,10 +106,17 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 				numericKey >= 1 and numericKey == math.floor(numericKey),
 				`{path} numeric keys must be positive integers`
 			)
+			numericKeyCount += 1
+			maxNumericKey = math.max(maxNumericKey, numericKey)
 		else
 			error(`{path} keys must be strings or positive integers, got {keyType}`)
 		end
 		copy[key] = clonePlainValue(nested, `{path}.{tostring(key)}`, seen)
+	end
+
+	assert(stringKeyCount == 0 or numericKeyCount == 0, `{path} tables cannot mix map and array keys`)
+	if numericKeyCount > 0 then
+		assert(numericKeyCount == maxNumericKey, `{path} arrays must use contiguous indices starting at 1`)
 	end
 
 	seen[source] = nil
