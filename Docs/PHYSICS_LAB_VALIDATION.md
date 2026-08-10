@@ -174,7 +174,7 @@ Resource counts are evidence, not budgets. Do not invent a permanent “allowed 
 
 The canonical collector is `src/server/PhysicsLab/PhysicsLabValidation.luau`; do **not** maintain a second hand-written counting script in the Command Bar. It scopes traversal to one owned lab root, records exact canonical evidence identity, counts total Instances/Models/BaseParts/unique assemblies/Attachments/Constraints/JointInstances, and computes the world-space BasePart envelope using all eight transformed corners per part. Returned snapshots are plain/frozen data and retain no Instance references.
 
-In a **server-context** Studio Command Bar on the exact Rojo-synced build, capture an initial snapshot with:
+In a **server-context** Studio Command Bar on the exact Rojo-synced build, capture an initial complete-F2 snapshot with:
 
 ```luau
 local HttpService = game:GetService("HttpService")
@@ -183,9 +183,11 @@ local Validation = require(
     ServerScriptService.UNRENDERED_Server.PhysicsLab.PhysicsLabValidation
 )
 local root = workspace:WaitForChild("UNRENDERED_PhysicsLab")
-local snapshot = Validation.capture(root)
+local snapshot = Validation.captureFull(root)
 print(HttpService:JSONEncode(snapshot))
 ```
+
+`captureFull()` rejects a missing, extra, duplicate, or canonically mismatched F2 representation before emitting evidence. Reserve `Validation.capture(root)` for an intentional partial F0/F2 lifecycle observation where a canonical F0 entity is expected to have no physical Instance.
 
 Store the emitted JSON verbatim with the evidence bundle. It includes:
 
@@ -195,7 +197,7 @@ Store the emitted JSON verbatim with the evidence bundle. It includes:
 - total scoped resource counts,
 - full-lab world-space BasePart envelope.
 
-Using the landed source-owned Studio harness, capture snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20. A partially demoted lab is intentionally a different physical representation, so record its count delta but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt. The exact harness/rebuild command blocks live in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`.
+Using the landed source-owned Studio harness, use `captureFull()` for snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20. A partially demoted lab is intentionally a different physical representation, so record that state with `capture()` if needed, but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt. The exact harness/rebuild command blocks live in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`.
 
 To compare two stored snapshots in a server-context Command Bar, paste their JSON strings into this source-owned comparison path:
 
