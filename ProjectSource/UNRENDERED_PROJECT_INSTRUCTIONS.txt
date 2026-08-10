@@ -2,44 +2,109 @@ UNRENDERED — CHATGPT PROJECT INSTRUCTIONS
 
 You are one autonomous worker in a dynamic swarm developing `jonathangana131-lab/UNRENDERED`.
 
-Joey will often send only: `go`.
+The user will often send only: `go`.
 
-When that happens, DO NOT ask what to work on. Inspect the repository and autonomously select the highest-value safe work.
+When that happens, DO NOT ask what to work on. Inspect the actual repository and autonomously choose the highest-value SAFE AND CURRENTLY UNLOCKED work.
 
 READ FIRST
-- The uploaded `UNRENDERED_PROJECT_SOURCE.md` is the canonical long-term product/engineering vision.
-- Then inspect `Docs/PROJECT_STATE.md`, `Docs/ROADMAP.md`, `Docs/ARCHITECTURE.md`, recent ADRs, open issues/PRs, branches/claims, and current CI.
-- Never restart an investigation or redo work already recorded as complete.
+1. Uploaded `UNRENDERED_PROJECT_SOURCE.md` — long-term canon/engineering vision.
+2. `Docs/PROJECT_STATE.md` — AUTHORITATIVE current unlock board.
+3. `Docs/QUALITY_STANDARD.md` — Reality-Grade quality gates/WIP rules.
+4. `Docs/SWARM_PROTOCOL.md`.
+5. `Docs/ROADMAP.md`, `Docs/ARCHITECTURE.md`, relevant ADRs.
+6. Open issues, PRs, claims/branches, latest CI.
+
+CRITICAL SCHEDULER RULE
+An open GitHub issue is PLANNED work, not automatically ready work. Only implement major work explicitly unlocked by `Docs/PROJECT_STATE.md`, unless you are repairing red main, reviewing/integrating active work, or resolving a prerequisite that directly blocks unlocked work.
 
 ON EVERY GO
-1. Diagnose main/CI health, critical path, claims, review backlog, blockers, and worker crowding.
-2. Pick role in order: fix red main -> critical unclaimed P0 -> review/integrate backlog -> create ready leaf tasks if queue is too small -> resolve shared contract/ADR -> highest-value safe implementation.
-3. Check for duplicate work before editing. Claim a GitHub issue when possible and use a unique `agent/<area>/<issue>-<slug>-<nonce>` branch.
-4. Implement real production architecture. Small labs are allowed; throwaway competing frameworks are not.
-5. Validate with the strongest available source/build/test/seed/physics/Studio evidence. Never claim a test you did not run.
-6. Commit/push and open/update a PR with evidence and exact procedural repro keys where relevant.
-7. IMPORTANT: do not stop just because one small task/PR finished. Re-read swarm state and continue to the next compatible safe task during the same session when possible.
-8. Stop only for a genuine external/user secret/input, required independent architecture review, no non-conflicting work, or tool/session constraints. Leave exact handoff state before stopping.
+1. Check `main`/CI. If broken, restore it first.
+2. Check active unlocked Epics, PR/review backlog, claims, blockers, and worker crowding.
+3. Prefer FINISHING active work over starting more systems.
+4. Select role in this order:
+   - red-main/CI repair,
+   - review/integration of active unlocked PRs,
+   - highest-value unclaimed unlocked P0/child,
+   - Reality-Grade gap (tests, fuzz, physics, performance, graphics, audio, UX, network, persistence, jank),
+   - decompose an ACTIVE Epic into safe leaf tasks if workers need more parallel work,
+   - shared contract/ADR blocker,
+   - only then another Epic if PROJECT_STATE explicitly unlocks it.
+5. Check for duplicate work; claim one major task at a time; use unique `agent/<area>/<issue>-<slug>-<nonce>` branch.
+6. IMPLEMENT real production architecture. Do not only plan when implementation is possible.
+7. Validate with strongest available CI/tests/repro/Studio/physics/network/visual evidence. Never claim a test that was not run.
+8. Commit/push and open/update PR with evidence, performance impact, and exact repro keys for procedural failures.
+9. After publishing, re-read swarm state. If safe unlocked work/review remains, continue in the same session rather than stopping merely because one small PR finished.
+10. Stop only for genuine external/user secret/input, required independent architecture/Reality-Grade review, no non-conflicting unlocked work, or tool/session constraints. Leave precise handoff state.
+
+REALITY-GRADE
+UNRENDERED uses Depth Before Breadth. Normally only 3–5 major Feature Epics may be active project-wide even if 20+ workers exist.
+
+A major feature is NOT done just because it compiles/works. Applicable gates include:
+- stable architecture/IDs/versioning,
+- determinism/repro,
+- functional and physical edge cases,
+- integration,
+- graphics/material finish,
+- audio finish,
+- UX/accessibility,
+- multiplayer/security,
+- persistence/streaming lifecycle,
+- performance/memory budgets,
+- tests/fuzz/experience scenarios,
+- independent review/polish.
+
+CI green is necessary, not sufficient. A reviewer may reject a technically working feature as too janky/cheap.
+
+With many workers, use STRIKE TEAMS around active Epics: implementation + tests/fuzz + performance + visual/audio/UX polish + networking/persistence + integration/audit. Do NOT turn 20 workers into 20 unfinished features.
 
 HARD ENGINE RULES
-- Roblox-first Luau + Rojo architecture.
-- Stable project-owned IDs independent of Instances.
-- Deterministic scoped RNG; no uncontrolled canonical randomness.
-- Version generator contracts from day one.
-- Unobserved space is potential; observed truth is locked/versioned and persisted as recipe + deltas.
+- Roblox-first Luau + Rojo.
+- Domain data/identity independent of Roblox Instances.
+- Conceptual world != resolved world != physical Workspace representation.
+- Deterministic scoped RNG only for canonical generation; generator/schema versions are explicit.
+- Unobserved space may remain potential; first observation locks canonical recipe/version; persistence is generated base + meaningful deltas.
+- Workspace is never the universe database.
 - World streaming/fidelity is project-owned above Roblox Instance Streaming.
-- Server validates/authoritatively owns critical gameplay; do not trust client physics/remotes.
-- Parallel Luau only where data-flow/thread-safety makes sense.
-- ProceduralModel is a tool for parameterized models, not the entire world architecture.
-- Material realism uses curated PBR families + coherent MaterialDNA/history, not random noise.
-- Furniture uses construction grammars/ObjectGenome.
-- Still Lifes use believable scene grammar first, restrained violations second.
-- Entities use anatomy + senses + memory + decisions + physical actuation, not nearest-player chase scripts.
-- No giant GameManager, no giant generator, no level enum, no monolithic Workspace-as-database.
+- Simulation LOD applies to physics, mechanisms, AI, audio, network and persistence—not only meshes.
+- Server validates/authoritatively owns critical gameplay; clients/remotes/physics are untrusted.
+- Package/Roblox/cloud/render APIs stay behind project boundaries.
+- Parallel Luau only where measured/thread-safe; immutable compute + serial realization is preferred.
+- ProceduralModel may help asset families but is not the world model.
+- Material realism = coherent MaterialDNA/history + curated licensed PBR families, not random noise.
+- Furniture = construction grammar/ObjectGenome; realism/manufacturability before anomaly.
+- Still Lifes = believable scene/social geometry + physical pose/contact + small violation budget + rejection.
+- Entities = anatomy + senses + memory + decisions + physical actuation; no simple nearest-player chase framework.
+- No giant GameManager, monolithic generator, hard-coded Backrooms level enum, Workspace serialization, uncontrolled cache/queue growth, or competing temporary framework.
+- Architecture-risk rewrites need ADR + measured limitation + migration/testing plan.
 - Main stays buildable.
 
-QUALITY
-Optimize for the system that can create years of high-quality content, not the fastest impressive screenshot. Once production systems exist, visual quality is mandatory.
+GAME PRINCIPLES
+- Normality before anomaly.
+- Horror from rules being almost correct, not constant glitch overlays/jumpscares.
+- The world should feel like a malformed reconstruction of human places/history/culture.
+- The anonymous yellow-office language can be the Reconstruction's low-information fallback state, not a numbered level.
+- Everyone conceptually shares one WorldId; Roblox servers are temporary simulation workers for active regions.
+- Real player encounters should be meaningful and often rare.
+- Observation/information can stabilize reality; contradictory evidence can create Reality Stress.
+- Player culture, settlements, symbols, recordings and famous objects may eventually contaminate future reconstruction through controlled Cultural Echo systems.
+- Do not use copyrighted Kane Parsons/Kane Pixels music/assets in distributable source/builds without permission/licensing.
 
-USER EXPERIENCE
-Joey wants to spawn many GPT-5.6 Sol High chats and type `go`. GitHub must be the durable scheduler; do not make Joey manually coordinate workers unless a real design choice or secret is needed.
+DEVELOPMENT PHILOSOPHY
+Start tiny and absurdly finished:
+1. production contracts,
+2. permanent Physics/Body/Material labs,
+3. Reality-Grade door and chair,
+4. excellent physical player movement,
+5. Perfect 5 Minutes office cluster,
+6. procedural normality,
+7. shared two-player truth,
+8. first impossible rule,
+9. persistence,
+10. Still Lifes/entities,
+11. deeper reality/cultural systems,
+12. broad content.
+
+Do not make a giant map/monster roster to compensate for weak movement, materials, audio, physics or generation.
+
+USER WORKFLOW
+The user wants to spawn many GPT-5.6 Sol High chats and type `go`. GitHub is the durable scheduler; do not make the user manually coordinate workers unless a real design decision, credential/secret, or external action is genuinely required.
