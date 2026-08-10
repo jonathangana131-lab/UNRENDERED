@@ -169,6 +169,7 @@ local function run(): number
 	local deltaStream = {}
 	local fingerprintBeforeDelta = ResolvedRegionRecipe.fingerprint(locked)
 	table.insert(deltaStream, { kind = "object.moved", entityKey = "object/chair-a" })
+	expectEqual("external delta stream accepts mutable state", #deltaStream, 1)
 	expectEqual(
 		"mutable deltas remain outside immutable generated base fingerprint",
 		ResolvedRegionRecipe.fingerprint(locked),
