@@ -53,12 +53,19 @@ local function run(): number
 		"fixture recipe id is golden locked",
 		recipe.recipeId == "resolved-region-recipe:v1:e70de5f4636c51244ba6a4e159c676ab"
 	)
-	expect("locking same draft is deterministic", ResolvedRegionRecipe.lock(fixtureDraft()).recipeId == recipe.recipeId)
-	expect("recipe fingerprint is recipe identity", ResolvedRegionRecipe.fingerprint(recipe) == recipe.recipeId)
+	expect(
+		"locking same draft is deterministic",
+		ResolvedRegionRecipe.lock(fixtureDraft()).recipeId == recipe.recipeId
+	)
+	expect(
+		"recipe fingerprint is recipe identity",
+		ResolvedRegionRecipe.fingerprint(recipe) == recipe.recipeId
+	)
 
 	expect(
 		"topology anchor keys canonicalize as a set",
-		recipe.topologyAnchorKeys[1] == "anchor.entry" and recipe.topologyAnchorKeys[2] == "anchor.service-core"
+		recipe.topologyAnchorKeys[1] == "anchor.entry"
+			and recipe.topologyAnchorKeys[2] == "anchor.service-core"
 	)
 	expect(
 		"canonical content keys canonicalize as a set",
@@ -89,10 +96,7 @@ local function run(): number
 	expect("reconstruction preserves generator versions", reconstructed.generatorVersions.topology == 1)
 
 	serialized.topologyAnchorKeys[1] = "anchor.mutated-copy"
-	expect(
-		"serialized copy cannot mutate locked recipe",
-		recipe.topologyAnchorKeys[1] == "anchor.entry"
-	)
+	expect("serialized copy cannot mutate locked recipe", recipe.topologyAnchorKeys[1] == "anchor.entry")
 	local tamperedOk = pcall(function()
 		ResolvedRegionRecipe.reconstruct(serialized)
 	end)
@@ -109,7 +113,10 @@ local function run(): number
 	newerDraft.generatorVersions.reality = 2
 	newerDraft.generatorVersions.topology = 2
 	local existingAfterObservation, didLockExisting = ResolvedRegionRecipe.resolve(recipe, newerDraft)
-	expect("existing observed truth wins later resolution", not didLockExisting and existingAfterObservation.recipeId == recipe.recipeId)
+	expect(
+		"existing observed truth wins later resolution",
+		not didLockExisting and existingAfterObservation.recipeId == recipe.recipeId
+	)
 	expect(
 		"later generator versions do not rewrite observed truth",
 		existingAfterObservation.generatorVersions.reality == 1
@@ -147,7 +154,10 @@ local function run(): number
 			and source.legacyRecipeKey == "legacy-office-a"
 		return ResolvedRegionRecipe.serialize(recipe)
 	end)
-	expect("explicit migration hook can produce current canonical recipe", migrationCalled and migrated.recipeId == recipe.recipeId)
+	expect(
+		"explicit migration hook can produce current canonical recipe",
+		migrationCalled and migrated.recipeId == recipe.recipeId
+	)
 
 	local badMigrationOk = pcall(function()
 		ResolvedRegionRecipe.reconstruct(legacy, function()
@@ -178,7 +188,10 @@ local function run(): number
 
 	local extraFieldSerialized = ResolvedRegionRecipe.serialize(recipe)
 	extraFieldSerialized.workspaceInstance = "not-canonical"
-	expect("unknown serialized fields are rejected", not ResolvedRegionRecipe.inspect(extraFieldSerialized).ok)
+	expect(
+		"unknown serialized fields are rejected",
+		not ResolvedRegionRecipe.inspect(extraFieldSerialized).ok
+	)
 
 	local nonPlainSerialized = ResolvedRegionRecipe.serialize(recipe)
 	nonPlainSerialized.canonicalContentKeys[1] = function() end
