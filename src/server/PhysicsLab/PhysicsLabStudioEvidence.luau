@@ -141,7 +141,9 @@ local function promoteToF2(lab: RealizedLab, entityId: string, baseTime: number)
 end
 
 function PhysicsLabStudioEvidence.runLifecycle20(): LifecycleEvidence
-	local lab = assert(PhysicsLabStudioHarness.get(), "Physics Lab Studio bootstrap handle is missing")
+	-- Own a fresh runtime clock for every evidence run so this remains safe after
+	-- prior manual harness steps and across repeat invocations in one Studio session.
+	local lab = PhysicsLabStudioHarness.restart()
 	local recipe = PhysicsLabRecipe.build()
 	local baseline = PhysicsLabValidation.capture(lab.model)
 	local initialStateRevisionById: { [string]: number } = {}
