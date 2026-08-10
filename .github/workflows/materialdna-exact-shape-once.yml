@@ -1,0 +1,256 @@
+name: MaterialDNA Exact Shape One-Shot
+
+on:
+  push:
+    branches:
+      - agent/materials/5-v1-exact-shape-sol7c3e
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Apply exact-shape contract hardening
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected exactly one match, found {count}")
+              return text.replace(old, new, 1)
+
+          material_path = Path("src/shared/Materials/MaterialDNA.luau")
+          text = material_path.read_text()
+
+          marker = '''local CARPET_INSTALLATIONS = table.freeze({
+          \t["installation.glued-carpet-roll"] = true,
+          \t["installation.carpet-tile-adhesive"] = true,
+          })
+          '''
+          fields = '''local CARPET_INSTALLATIONS = table.freeze({
+          \t["installation.glued-carpet-roll"] = true,
+          \t["installation.carpet-tile-adhesive"] = true,
+          })
+
+          local RECIPE_FIELDS = table.freeze({
+          \tid = true,
+          \tschemaVersion = true,
+          \tcoherenceClass = true,
+          \tsubstrate = true,
+          \tfinish = true,
+          \tinstallation = true,
+          \tapparentAgeYears = true,
+          \tmaintenance = true,
+          \tenvironment = true,
+          \thistoryEvents = true,
+          \tvisual = true,
+          \tphysical = true,
+          \tacoustic = true,
+          \tresponse = true,
+          \tanomalyModifiers = true,
+          })
+          local SUBSTRATE_FIELDS = table.freeze({ classKey = true, thicknessMeters = true, porosity01 = true })
+          local FINISH_FIELDS = table.freeze({ classKey = true, color = true, roughness01 = true, metallic01 = true })
+          local COLOR_FIELDS = table.freeze({ r = true, g = true, b = true })
+          local INSTALLATION_FIELDS = table.freeze({
+          \tmethodKey = true,
+          \tbatchKey = true,
+          \tquality01 = true,
+          \tseamPeriodMeters = true,
+          })
+          local MAINTENANCE_FIELDS = table.freeze({
+          \tcareClassKey = true,
+          \tfrequency01 = true,
+          \tcleanliness01 = true,
+          \trepairCount = true,
+          })
+          local ENVIRONMENT_FIELDS = table.freeze({ humidity01 = true, water01 = true, uv01 = true, grime01 = true })
+          local HISTORY_EVENT_FIELDS = table.freeze({
+          \tkindKey = true,
+          \tcauseKey = true,
+          \tseverity01 = true,
+          \tcoverage01 = true,
+          })
+          local VISUAL_FIELDS = table.freeze({ familyKey = true, coherenceClass = true, metersPerRepeat = true })
+          local PHYSICAL_FIELDS = table.freeze({
+          \tclassKey = true,
+          \tcoherenceClass = true,
+          \tdensityKgPerM3 = true,
+          \tstaticFriction = true,
+          \tdynamicFriction = true,
+          \trestitution01 = true,
+          })
+          local ACOUSTIC_FIELDS = table.freeze({
+          \tclassKey = true,
+          \tcoherenceClass = true,
+          \tabsorptionLow01 = true,
+          \tabsorptionMid01 = true,
+          \tabsorptionHigh01 = true,
+          \timpactFamilyKey = true,
+          \tscrapeFamilyKey = true,
+          })
+          local RESPONSE_FIELDS = table.freeze({
+          \twetFrictionMultiplier = true,
+          \twetDarkening01 = true,
+          \tdamageResistance01 = true,
+          \tstainAffinity01 = true,
+          })
+          local STATE_FIELDS = table.freeze({
+          \trecipeId = true,
+          \tschemaVersion = true,
+          \twear01 = true,
+          \tdamage01 = true,
+          \twetness01 = true,
+          \tsoil01 = true,
+          })
+          '''
+          text = replace_once(text, marker, fields, "field sets")
+
+          old_as_table = '''local function asTable(errors: { string }, path: string, value: unknown): any?
+          \tif type(value) ~= "table" then
+          \t\tappendError(errors, `{path} must be a table`)
+          \t\treturn nil
+          \tend
+          \treturn value :: any
+          end
+          '''
+          new_as_table = '''local function asTable(errors: { string }, path: string, value: unknown): any?
+          \tif type(value) ~= "table" then
+          \t\tappendError(errors, `{path} must be a table`)
+          \t\treturn nil
+          \tend
+          \tif getmetatable(value) ~= nil then
+          \t\tappendError(errors, `{path} must be a plain table with no metatable`)
+          \t\treturn nil
+          \tend
+          \treturn value :: any
+          end
+
+          local function asRecord(
+          \terrors: { string },
+          \tpath: string,
+          \tvalue: unknown,
+          \tallowedFields: { [string]: boolean }
+          ): any?
+          \tlocal record = asTable(errors, path, value)
+          \tif record == nil then
+          \t\treturn nil
+          \tend
+          \tfor key in pairs(record) do
+          \t\tif type(key) ~= "string" or not allowedFields[key] then
+          \t\t\tappendError(errors, `{path} contains unknown field {tostring(key)}`)
+          \t\tend
+          \tend
+          \treturn record
+          end
+          '''
+          text = replace_once(text, old_as_table, new_as_table, "asRecord helper")
+
+          replacements = {
+              'local color = asTable(errors, path, value)': 'local color = asRecord(errors, path, value, COLOR_FIELDS)',
+              'local substrate = asTable(errors, "substrate", value)': 'local substrate = asRecord(errors, "substrate", value, SUBSTRATE_FIELDS)',
+              'local finish = asTable(errors, "finish", value)': 'local finish = asRecord(errors, "finish", value, FINISH_FIELDS)',
+              'local installation = asTable(errors, "installation", value)': 'local installation = asRecord(errors, "installation", value, INSTALLATION_FIELDS)',
+              'local maintenance = asTable(errors, "maintenance", value)': 'local maintenance = asRecord(errors, "maintenance", value, MAINTENANCE_FIELDS)',
+              'local environment = asTable(errors, "environment", value)': 'local environment = asRecord(errors, "environment", value, ENVIRONMENT_FIELDS)',
+              'local event = asTable(errors, path, events[index])': 'local event = asRecord(errors, path, events[index], HISTORY_EVENT_FIELDS)',
+              'local visual = asTable(errors, "visual", value)': 'local visual = asRecord(errors, "visual", value, VISUAL_FIELDS)',
+              'local physical = asTable(errors, "physical", value)': 'local physical = asRecord(errors, "physical", value, PHYSICAL_FIELDS)',
+              'local acoustic = asTable(errors, "acoustic", value)': 'local acoustic = asRecord(errors, "acoustic", value, ACOUSTIC_FIELDS)',
+              'local response = asTable(errors, "response", value)': 'local response = asRecord(errors, "response", value, RESPONSE_FIELDS)',
+              'local recipe = asTable(errors, "MaterialRecipe", value)': 'local recipe = asRecord(errors, "MaterialRecipe", value, RECIPE_FIELDS)',
+              'local state = asTable(errors, "MaterialState", value)': 'local state = asRecord(errors, "MaterialState", value, STATE_FIELDS)',
+          }
+          for old, new in replacements.items():
+              text = replace_once(text, old, new, old)
+
+          material_path.write_text(text)
+
+          test_path = Path("tests/materialdna_contract.luau")
+          tests = test_path.read_text()
+          test_marker = '''\tlocal valid = MaterialDNA.validateRecipe(makeRecipe())
+          \texpect("valid recipe accepted", valid.ok, table.concat(valid.errors, "; "))
+          '''
+          test_block = '''\tlocal valid = MaterialDNA.validateRecipe(makeRecipe())
+          \texpect("valid recipe accepted", valid.ok, table.concat(valid.errors, "; "))
+
+          \tlocal unknownTopLevel: any = makeRecipe()
+          \tunknownTopLevel.futureCanonicalField = "must-not-be-silently-dropped"
+          \tlocal unknownTopLevelResult = MaterialDNA.validateRecipe(unknownTopLevel)
+          \texpect(
+          \t\t"unknown top-level v1 field rejected",
+          \t\tnot unknownTopLevelResult.ok and containsError(unknownTopLevelResult, "unknown field"),
+          \t\ttable.concat(unknownTopLevelResult.errors, "; ")
+          \t)
+
+          \tlocal unknownNested: any = makeRecipe()
+          \tunknownNested.finish.color.alpha = 1
+          \tlocal unknownNestedResult = MaterialDNA.validateRecipe(unknownNested)
+          \texpect(
+          \t\t"unknown nested v1 field rejected",
+          \t\tnot unknownNestedResult.ok and containsError(unknownNestedResult, "finish.color contains unknown field alpha"),
+          \t\ttable.concat(unknownNestedResult.errors, "; ")
+          \t)
+
+          \tlocal metatableRecipe: any = makeRecipe()
+          \tsetmetatable(metatableRecipe, { __index = {} })
+          \tlocal metatableResult = MaterialDNA.validateRecipe(metatableRecipe)
+          \texpect(
+          \t\t"metatable-backed recipe rejected",
+          \t\tnot metatableResult.ok and containsError(metatableResult, "plain table with no metatable"),
+          \t\ttable.concat(metatableResult.errors, "; ")
+          \t)
+          '''
+          tests = replace_once(tests, test_marker, test_block, "recipe exact-shape tests")
+
+          state_marker = '''\tlocal stateResult = MaterialDNA.validateState(state)
+          \texpect("mutated state remains valid", stateResult.ok, table.concat(stateResult.errors, "; "))
+          '''
+          state_block = '''\tlocal stateResult = MaterialDNA.validateState(state)
+          \texpect("mutated state remains valid", stateResult.ok, table.concat(stateResult.errors, "; "))
+
+          \tlocal unknownState: any = MaterialDNA.defaultState("material.v1.test.wallpaper")
+          \tunknownState.futureStateField = 1
+          \tlocal unknownStateResult = MaterialDNA.validateState(unknownState)
+          \texpect(
+          \t\t"unknown material-state v1 field rejected",
+          \t\tnot unknownStateResult.ok and containsError(unknownStateResult, "unknown field"),
+          \t\ttable.concat(unknownStateResult.errors, "; ")
+          \t)
+          '''
+          tests = replace_once(tests, state_marker, state_block, "state exact-shape test")
+          test_path.write_text(tests)
+          PY
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Format changed Luau
+        shell: bash
+        run: |
+          stylua src/shared/Materials/MaterialDNA.luau tests/materialdna_contract.luau
+
+      - name: Commit production patch and remove one-shot workflow
+        shell: bash
+        run: |
+          git rm .github/workflows/materialdna-exact-shape-once.yml
+          git add src/shared/Materials/MaterialDNA.luau tests/materialdna_contract.luau
+          git config user.name "unrendered-ci"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "fix(materials): enforce exact v1 record shape"
+          git push
