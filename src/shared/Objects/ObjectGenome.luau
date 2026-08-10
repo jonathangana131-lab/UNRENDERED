@@ -871,17 +871,28 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		if not isNonEmptyString(component.role) then
 			addIssue(issues, "component.role", path .. ".role", "component role required")
 		end
-		local materialReferenceValidation = MaterialDNA.validateReference({
+		local materialKeyValidation = MaterialDNA.validateReference({
 			id = component.materialKey,
-			recipeVersion = component.materialRecipeVersion,
+			recipeVersion = 1,
 		})
-		if not materialReferenceValidation.ok then
+		if not materialKeyValidation.ok then
 			addIssue(
 				issues,
-				"component.material_reference",
-				path,
-				"material reference must satisfy MaterialDNA v2: "
-					.. table.concat(materialReferenceValidation.errors, "; ")
+				"component.material_key",
+				path .. ".materialKey",
+				"materialKey must satisfy MaterialDNA v2 project id rules"
+			)
+		end
+		local materialRecipeVersionValidation = MaterialDNA.validateReference({
+			id = "material.v1.object-genome-validation-probe",
+			recipeVersion = component.materialRecipeVersion,
+		})
+		if not materialRecipeVersionValidation.ok then
+			addIssue(
+				issues,
+				"component.material_recipe_version",
+				path .. ".materialRecipeVersion",
+				"materialRecipeVersion must satisfy MaterialDNA v2 recipe revision rules"
 			)
 		end
 		if not isPositiveFinite(component.massKg) then

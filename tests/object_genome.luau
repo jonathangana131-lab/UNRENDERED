@@ -119,21 +119,21 @@ local function run(): number
 	badMaterial.components[1].materialKey = ""
 	expect(
 		"rejects missing material assignment",
-		hasCode(ObjectGenome.inspect(badMaterial), "component.material_reference")
+		hasCode(ObjectGenome.inspect(badMaterial), "component.material_key")
 	)
 
 	local badMaterialRevision = deepCopy(Fixtures.officeChair)
 	badMaterialRevision.components[1].materialRecipeVersion = 0
 	expect(
 		"rejects missing material recipe revision",
-		hasCode(ObjectGenome.inspect(badMaterialRevision), "component.material_reference")
+		hasCode(ObjectGenome.inspect(badMaterialRevision), "component.material_recipe_version")
 	)
 
 	local legacyMaterial = deepCopy(Fixtures.officeChair)
 	legacyMaterial.components[1].materialKey = "material:polymer-rubber.caster.v1"
 	expect(
 		"rejects legacy material reference syntax",
-		hasCode(ObjectGenome.inspect(legacyMaterial), "component.material_reference")
+		hasCode(ObjectGenome.inspect(legacyMaterial), "component.material_key")
 	)
 
 	local revisedMaterial = deepCopy(Fixtures.filingCabinet)
@@ -153,6 +153,20 @@ local function run(): number
 	expect(
 		"material recipe revision mechanically changes canonical genome identity",
 		ObjectGenome.identityKey(revisedMaterial) ~= ObjectGenome.identityKey(Fixtures.filingCabinet)
+	)
+
+	local publishedMaterialRevision = deepCopy(Fixtures.filingCabinet)
+	local publishedShell = findComponent(publishedMaterialRevision, "shell")
+	publishedMaterialRevision.familyVersion += 1
+	if publishedShell ~= nil then
+		publishedShell.materialRecipeVersion += 1
+	end
+	expect(
+		"published material revision with familyVersion advance is valid and changes identity",
+		publishedShell ~= nil
+			and ObjectGenome.inspect(publishedMaterialRevision).ok
+			and ObjectGenome.identityKey(publishedMaterialRevision)
+				~= ObjectGenome.identityKey(Fixtures.filingCabinet)
 	)
 
 	local materialBoundaryCases = {
