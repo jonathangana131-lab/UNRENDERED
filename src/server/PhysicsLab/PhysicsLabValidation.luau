@@ -3,13 +3,16 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("UNRENDERED")
+local PhysicsLabRecipe = require(Shared.Physics.PhysicsLabRecipe)
 local ValidationContract = require(Shared.Physics.PhysicsLabValidationContract)
+local ResolvedRegionRecipe = require(Shared.Reality.ResolvedRegionRecipe)
 
 local PhysicsLabValidation = {}
 
 export type Snapshot = ValidationContract.Snapshot
 export type Comparison = ValidationContract.Comparison
 
+local ROOT_NAME = "UNRENDERED_PhysicsLab"
 local OWNED_ATTRIBUTE = "UNRENDERED_PhysicsLabOwned"
 local SCHEMA_ATTRIBUTE = "UNRENDERED_LabSchemaVersion"
 local RECIPE_ATTRIBUTE = "UNRENDERED_LabRecipeKey"
@@ -19,6 +22,16 @@ local RESOLVED_SCHEMA_ATTRIBUTE = "UNRENDERED_ResolvedRegionSchemaVersion"
 local WORLD_SEED_REF_ATTRIBUTE = "UNRENDERED_WorldSeedRef"
 local FINGERPRINT_ATTRIBUTE = "UNRENDERED_ResolvedRegionFingerprint"
 local REPRO_KEY_ATTRIBUTE = "UNRENDERED_ResolvedRegionReproKey"
+local ENTITY_ID_ATTRIBUTE = "UNRENDERED_WorldEntityId"
+local FIDELITY_ATTRIBUTE = "UNRENDERED_Fidelity"
+local ENTITY_RECIPE_ATTRIBUTE = "UNRENDERED_RecipeKey"
+local LAB_ROLE_ATTRIBUTE = "UNRENDERED_LabRole"
+local MATERIAL_KEY_ATTRIBUTE = "UNRENDERED_MaterialKey"
+local MATERIAL_VERSION_ATTRIBUTE = "UNRENDERED_MaterialRecipeVersion"
+local OBJECT_GENOME_KEY_ATTRIBUTE = "UNRENDERED_ObjectGenomeKey"
+local OBJECT_GENOME_ID_ATTRIBUTE = "UNRENDERED_ObjectGenomeId"
+local OBJECT_FINGERPRINT_ATTRIBUTE = "UNRENDERED_ObjectRecipeFingerprint"
+local REPRESENTATION_CLASS_ATTRIBUTE = "UNRENDERED_RepresentationClass"
 
 local function requiredStringAttribute(root: Instance, name: string): string
 	local value = root:GetAttribute(name)
@@ -39,9 +52,150 @@ local function freezeVec3(x: number, y: number, z: number): ValidationContract.V
 	return table.freeze({ x = x, y = y, z = z })
 end
 
-function PhysicsLabValidation.capture(root: Instance): Snapshot
+local function assertCanonicalRootIdentity(root: Model, recipe: PhysicsLabRecipe.PhysicsLabRecipe): ()
+	assert(root.Name == ROOT_NAME, `Physics Lab validation expected root name {ROOT_NAME}`)
+	assert(
+		requiredPositiveIntegerAttribute(root, SCHEMA_ATTRIBUTE) == recipe.schemaVersion,
+		"Physics Lab root schema version does not match the canonical recipe"
+	)
+	assert(
+		requiredStringAttribute(root, RECIPE_ATTRIBUTE) == recipe.recipeKey,
+		"Physics Lab root recipe key does not match the canonical recipe"
+	)
+	assert(
+		requiredStringAttribute(root, WORLD_ATTRIBUTE) == recipe.worldId,
+		"Physics Lab root WorldId does not match the canonical recipe"
+	)
+	assert(
+		requiredStringAttribute(root, REGION_ATTRIBUTE) == recipe.regionId,
+		"Physics Lab root RegionId does not match the canonical resolved region"
+	)
+	assert(
+		requiredPositiveIntegerAttribute(root, RESOLVED_SCHEMA_ATTRIBUTE)
+			== PhysicsLabRecipe.RESOLVED_REGION.schemaVersion,
+		"Physics Lab root resolved-region schema version does not match canonical truth"
+	)
+	assert(
+		requiredStringAttribute(root, WORLD_SEED_REF_ATTRIBUTE) == PhysicsLabRecipe.WORLD_SEED_REF,
+		"Physics Lab root world-seed provenance does not match canonical truth"
+	)
+
+	local expectedFingerprint = ResolvedRegionRecipe.fingerprint(PhysicsLabRecipe.RESOLVED_REGION)
+	local expectedReproKey = ResolvedRegionRecipe.reproKey(PhysicsLabRecipe.RESOLVED_REGION)
+	assert(
+		requiredStringAttribute(root, FINGERPRINT_ATTRIBUTE) == expectedFingerprint,
+		"Physics Lab root resolved-region fingerprint does not match canonical truth"
+	)
+	assert(
+		requiredStringAttribute(root, REPRO_KEY_ATTRIBUTE) == expectedReproKey,
+		"Physics Lab root resolved-region repro key does not match canonical truth"
+	)
+end
+
+local function assertCanonicalRepresentationSet(
+	root: Model,
+	recipe: PhysicsLabRecipe.PhysicsLabRecipe,
+	requireComplete: boolean
+): ()
+	local expectedByKey: { [string]: PhysicsLabRecipe.EntityRecipe } = {}
+	local seenKeys: { [string]: boolean } = {}
+	local seenIds: { [string]: string } = {}
+
+	for _, entityRecipe in ipairs(recipe.entities) do
+		assert(
+			expectedByKey[entityRecipe.key] == nil,
+			`canonical Physics Lab recipe repeats key {entityRecipe.key}`
+		)
+		expectedByKey[entityRecipe.key] = entityRecipe
+	end
+
+	for _, child in ipairs(root:GetChildren()) do
+		local expected = expectedByKey[child.Name]
+		assert(expected ~= nil, `Physics Lab validation found unexpected direct representation {child.Name}`)
+		assert(
+			not seenKeys[child.Name],
+			`Physics Lab validation found duplicate representation key {child.Name}`
+		)
+		seenKeys[child.Name] = true
+
+		local entityId = child:GetAttribute(ENTITY_ID_ATTRIBUTE)
+		assert(
+			type(entityId) == "string" and entityId ~= "",
+			`Physics Lab representation {child.Name} is missing {ENTITY_ID_ATTRIBUTE}`
+		)
+		assert(
+			entityId == expected.entity.id,
+			`Physics Lab representation {child.Name} has the wrong WorldEntityId`
+		)
+		local priorKey = seenIds[entityId]
+		assert(
+			priorKey == nil,
+			`Physics Lab validation found duplicate WorldEntityId {entityId} on {priorKey or "?"} and {child.Name}`
+		)
+		seenIds[entityId] = child.Name
+
+		assert(
+			child:GetAttribute(FIDELITY_ATTRIBUTE) == "F2",
+			`Physics Lab representation {child.Name} is not an authoritative F2 proxy`
+		)
+		assert(
+			child:GetAttribute(ENTITY_RECIPE_ATTRIBUTE) == expected.entity.origin.recipeKey,
+			`Physics Lab representation {child.Name} has the wrong entity recipe key`
+		)
+
+		if expected.kind == "primitive" then
+			assert(child:IsA("BasePart"), `Physics Lab primitive {child.Name} must realize as a BasePart`)
+			assert(
+				child:GetAttribute(LAB_ROLE_ATTRIBUTE) == expected.role,
+				`Physics Lab primitive {child.Name} has the wrong lab role`
+			)
+			assert(
+				child:GetAttribute(MATERIAL_KEY_ATTRIBUTE) == expected.material.id,
+				`Physics Lab primitive {child.Name} has the wrong MaterialDNA identity`
+			)
+			assert(
+				child:GetAttribute(MATERIAL_VERSION_ATTRIBUTE) == expected.material.recipeVersion,
+				`Physics Lab primitive {child.Name} has the wrong MaterialDNA recipe version`
+			)
+		else
+			assert(child:IsA("Model"), `Physics Lab object {child.Name} must realize as a Model`)
+			assert(
+				child:GetAttribute(OBJECT_GENOME_KEY_ATTRIBUTE) == expected.genomeKey,
+				`Physics Lab object {child.Name} has the wrong ObjectGenome key`
+			)
+			assert(
+				child:GetAttribute(OBJECT_GENOME_ID_ATTRIBUTE) == expected.genomeId,
+				`Physics Lab object {child.Name} has the wrong ObjectGenome identity`
+			)
+			assert(
+				child:GetAttribute(OBJECT_FINGERPRINT_ATTRIBUTE) == expected.genomeRecipeFingerprint,
+				`Physics Lab object {child.Name} has the wrong ObjectGenome recipe fingerprint`
+			)
+			assert(
+				child:GetAttribute(REPRESENTATION_CLASS_ATTRIBUTE) == "F2-anchored-proxy",
+				`Physics Lab object {child.Name} has the wrong representation class`
+			)
+		end
+	end
+
+	if requireComplete then
+		for _, expected in ipairs(recipe.entities) do
+			assert(
+				seenKeys[expected.key] == true,
+				`Physics Lab full snapshot is missing canonical representation {expected.key}`
+			)
+		end
+	end
+end
+
+local function captureInternal(root: Instance, requireComplete: boolean): Snapshot
 	assert(root:IsA("Model"), "Physics Lab validation root must be the owned lab Model")
 	assert(root:GetAttribute(OWNED_ATTRIBUTE) == true, "Physics Lab validation refuses an unowned root")
+
+	local model = root :: Model
+	local recipe = PhysicsLabRecipe.build()
+	assertCanonicalRootIdentity(model, recipe)
+	assertCanonicalRepresentationSet(model, recipe, requireComplete)
 
 	local counts = {
 		instances = 0,
@@ -129,6 +283,20 @@ function PhysicsLabValidation.capture(root: Instance): Snapshot
 		`captured Physics Lab validation snapshot is invalid: {problem or "unknown validation error"}`
 	)
 	return snapshot
+end
+
+function PhysicsLabValidation.capture(root: Instance): Snapshot
+	-- Partial F0/F2 lifecycle snapshots are valid evidence. Any representation
+	-- that is present must still match canonical recipe identity/material/object
+	-- contracts, but canonical F0 entities may be absent from the Instance tree.
+	return captureInternal(root, false)
+end
+
+function PhysicsLabValidation.captureFull(root: Instance): Snapshot
+	-- Full rebuild checkpoints must contain every canonical F2 representation.
+	-- This closes the hole where a deterministically wrong shell could reproduce
+	-- the same counts/envelope across every restart and still look stable.
+	return captureInternal(root, true)
 end
 
 function PhysicsLabValidation.compare(
