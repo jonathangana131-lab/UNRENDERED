@@ -86,7 +86,7 @@ Required direction:
 
 ## Hero Gate exit direction
 
-Before opening broader content, prove that #10 uses the Wave-1 contracts without replacing them and composes cleanly with the landed #9 resolved-truth foundation. Strike-team work should deepen #10 through tests, Studio/physics evidence, diagnostics, performance, integration and Reality-Grade review.
+Before opening broader content, prove that #10 uses the Wave-1 contracts without replacing them or contradicting the landed #9 resolved-truth boundary. Strike-team work should deepen #10 through tests, Studio/physics evidence, diagnostics, performance, integration and Reality-Grade review.
 
 After the lab foundation is stable, the first Reality-Grade Hero Features should be **door, chair, and physical player movement**, not a giant procedural map.
 
@@ -119,7 +119,7 @@ None active.
 
 1. #10 becomes a permanent production-contract Physics Lab rather than a disposable demo,
 2. the lab proves Wave-1 identity/material/object/fidelity contracts survive real Roblox realization and interaction,
-3. the lab consumes the landed #9 resolved-truth foundation without creating a parallel world-state model,
+3. the lab remains compatible with the landed #9 resolved-truth boundary and does not create a parallel world-state model,
 4. door/chair/physical-player work begins only on those stable foundations,
 5. the first five-minute experience can be improved deeply without replacing its foundations.
 
