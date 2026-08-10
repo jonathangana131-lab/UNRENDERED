@@ -105,7 +105,11 @@ local function run(): number
 	serialized.semanticIntent = "mutated-copy"
 	serialized.topologyAnchors[1] = "mutated-copy"
 	expectEqual("serialized copy cannot mutate immutable base", recipe.semanticIntent, "commercial-office")
-	expectEqual("serialized nested copy cannot mutate immutable base", recipe.topologyAnchors[1], "east-corridor")
+	expectEqual(
+		"serialized nested copy cannot mutate immutable base",
+		recipe.topologyAnchors[1],
+		"east-corridor"
+	)
 
 	local tampered = ResolvedRegionRecipe.toPlainData(recipe)
 	tampered.semanticIntent = "warehouse"
@@ -125,13 +129,18 @@ local function run(): number
 
 	local firstLocked, firstCreated = ResolvedRegionRecipe.resolveFirstObservation(nil, candidate)
 	expect("first observation creates canonical truth", firstCreated)
-	expectEqual("first observation matches direct lock", firstLocked.recipeFingerprint, recipe.recipeFingerprint)
+	expectEqual(
+		"first observation matches direct lock",
+		firstLocked.recipeFingerprint,
+		recipe.recipeFingerprint
+	)
 
 	local upgradedCandidate = deepCopy(candidate)
 	upgradedCandidate.generatorVersions.reality = 2
 	upgradedCandidate.semanticIntent = "upgraded-generator-office"
 	upgradedCandidate.canonicalContentKeys = { "door.entry", "fixture.new-family" }
-	local preserved, secondCreated = ResolvedRegionRecipe.resolveFirstObservation(firstLocked, upgradedCandidate)
+	local preserved, secondCreated =
+		ResolvedRegionRecipe.resolveFirstObservation(firstLocked, upgradedCandidate)
 	expect("later observations do not relock established truth", not secondCreated)
 	expectEqual(
 		"generator upgrade cannot silently rewrite observed recipe",
@@ -165,7 +174,10 @@ local function run(): number
 	end)
 	expectEqual("explicit migration preserves stable region identity", migrated.regionId, recipe.regionId)
 	expectEqual("explicit migration records target version", migrated.generatorVersions.reality, 2)
-	expect("explicit migration produces a new recipe fingerprint", migrated.recipeFingerprint ~= recipe.recipeFingerprint)
+	expect(
+		"explicit migration produces a new recipe fingerprint",
+		migrated.recipeFingerprint ~= recipe.recipeFingerprint
+	)
 	expectEqual("migration does not mutate established source recipe", recipe.generatorVersions.reality, 1)
 
 	local deltaStream = ResolvedRegionRecipe.newDeltaStream(recipe)
@@ -183,7 +195,10 @@ local function run(): number
 	)
 	expectEqual("delta stream sequences durable changes", delta.sequence, 1)
 	expectEqual("delta stream advances sequence", deltaStream.nextSequence, 2)
-	expect("delta stream remains valid after append", ResolvedRegionRecipe.inspectDeltaStream(deltaStream, recipe).ok)
+	expect(
+		"delta stream remains valid after append",
+		ResolvedRegionRecipe.inspectDeltaStream(deltaStream, recipe).ok
+	)
 	expectEqual(
 		"mutable deltas do not alter immutable recipe fingerprint",
 		recipe.recipeFingerprint,
@@ -197,7 +212,10 @@ local function run(): number
 
 	local extraField = ResolvedRegionRecipe.toPlainData(recipe)
 	extraField.workspaceInstance = "Part"
-	expect("plain-data recipe rejects unknown representation fields", not ResolvedRegionRecipe.inspect(extraField).ok)
+	expect(
+		"plain-data recipe rejects unknown representation fields",
+		not ResolvedRegionRecipe.inspect(extraField).ok
+	)
 
 	local duplicateCandidate = deepCopy(candidate)
 	duplicateCandidate.canonicalContentKeys = { "door.entry", "door.entry" }

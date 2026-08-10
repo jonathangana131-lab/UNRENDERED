@@ -142,7 +142,10 @@ local function hasControlCharacters(value: string): boolean
 end
 
 local function isBoundedString(value: unknown, maximumBytes: number): boolean
-	return type(value) == "string" and value ~= "" and #value <= maximumBytes and not hasControlCharacters(value)
+	return type(value) == "string"
+		and value ~= ""
+		and #value <= maximumBytes
+		and not hasControlCharacters(value)
 end
 
 local function hasOnlyKeys(value: { [any]: any }, allowed: { [string]: boolean }): boolean
@@ -353,7 +356,9 @@ local function sealFromReference(
 	})
 end
 
-local function normalizedCandidate(value: Candidate): (string, string, GeneratorVersions, string, { string }, { string })
+local function normalizedCandidate(
+	value: Candidate
+): (string, string, GeneratorVersions, string, { string }, { string })
 	local raw = assertExactShape(value, CANDIDATE_KEYS, "candidate")
 	assert(
 		isBoundedString(raw.worldSeed, MAX_WORLD_SEED_BYTES),
@@ -374,16 +379,13 @@ local function normalizedCandidate(value: Candidate): (string, string, Generator
 end
 
 function ResolvedRegionRecipe.lock(candidate: Candidate): ResolvedRegionRecipe
-	local worldSeed, regionAddress, versions, semanticIntent, anchors, contentKeys = normalizedCandidate(candidate)
+	local worldSeed, regionAddress, versions, semanticIntent, anchors, contentKeys =
+		normalizedCandidate(candidate)
 	local worldSeedRef = StableId.fromParts("world-seed", { worldSeed })
 	return sealFromReference(worldSeedRef, regionAddress, versions, semanticIntent, anchors, contentKeys)
 end
 
-local function inspectCanonicalStringSet(
-	issues: { ValidationIssue },
-	value: unknown,
-	path: string
-): boolean
+local function inspectCanonicalStringSet(issues: { ValidationIssue }, value: unknown, path: string): boolean
 	local length = denseArrayLength(value)
 	if length == nil then
 		addIssue(issues, "array.shape", path, "must be a dense plain-data array")
@@ -458,7 +460,12 @@ function ResolvedRegionRecipe.inspect(value: unknown): ValidationResult
 		end
 	end
 	if raw.schemaVersion ~= SCHEMA_VERSION then
-		addIssue(issues, "recipe.schema_version", "schemaVersion", `schemaVersion must equal {SCHEMA_VERSION}`)
+		addIssue(
+			issues,
+			"recipe.schema_version",
+			"schemaVersion",
+			`schemaVersion must equal {SCHEMA_VERSION}`
+		)
 	end
 	if not StableId.is(raw.regionId, "world-region") then
 		addIssue(issues, "recipe.region_id", "regionId", "regionId must be a project world-region StableId")
@@ -467,7 +474,12 @@ function ResolvedRegionRecipe.inspect(value: unknown): ValidationResult
 		addIssue(issues, "recipe.region_address", "regionAddress", "invalid regionAddress")
 	end
 	if not StableId.is(raw.worldSeedRef, "world-seed") then
-		addIssue(issues, "recipe.world_seed_ref", "worldSeedRef", "worldSeedRef must be a project world-seed StableId")
+		addIssue(
+			issues,
+			"recipe.world_seed_ref",
+			"worldSeedRef",
+			"worldSeedRef must be a project world-seed StableId"
+		)
 	end
 	local versionsValid = inspectVersions(issues, raw.generatorVersions, "generatorVersions")
 	if not isBoundedString(raw.semanticIntent, MAX_SEMANTIC_BYTES) then
@@ -491,16 +503,16 @@ function ResolvedRegionRecipe.inspect(value: unknown): ValidationResult
 	then
 		local expectedRegionId = StableId.fromParts("world-region", { raw.worldSeedRef, raw.regionAddress })
 		if raw.regionId ~= expectedRegionId then
-			addIssue(issues, "recipe.region_identity", "regionId", "regionId does not match worldSeedRef + regionAddress")
+			addIssue(
+				issues,
+				"recipe.region_identity",
+				"regionId",
+				"regionId does not match worldSeedRef + regionAddress"
+			)
 		end
 	end
 
-	if
-		#issues == 0
-		and versionsValid
-		and anchorsValid
-		and contentValid
-	then
+	if #issues == 0 and versionsValid and anchorsValid and contentValid then
 		local expectedFingerprint = recipeFingerprint(
 			raw.regionId,
 			raw.regionAddress,
@@ -570,7 +582,8 @@ function ResolvedRegionRecipe.resolveFirstObservation(
 	existingRecipe: ResolvedRegionRecipe?,
 	candidate: Candidate
 ): (ResolvedRegionRecipe, boolean)
-	local worldSeed, regionAddress, versions, semanticIntent, anchors, contentKeys = normalizedCandidate(candidate)
+	local worldSeed, regionAddress, versions, semanticIntent, anchors, contentKeys =
+		normalizedCandidate(candidate)
 	local worldSeedRef = StableId.fromParts("world-seed", { worldSeed })
 	local incomingRegionId = StableId.fromParts("world-region", { worldSeedRef, regionAddress })
 	if existingRecipe ~= nil then
@@ -581,7 +594,8 @@ function ResolvedRegionRecipe.resolveFirstObservation(
 		)
 		return locked, false
 	end
-	return sealFromReference(worldSeedRef, regionAddress, versions, semanticIntent, anchors, contentKeys), true
+	return sealFromReference(worldSeedRef, regionAddress, versions, semanticIntent, anchors, contentKeys),
+		true
 end
 
 function ResolvedRegionRecipe.migrate(
@@ -677,13 +691,23 @@ function ResolvedRegionRecipe.inspectDeltaStream(
 			addIssue(issues, "delta.entry_fields", `entries[{index}]`, "delta entry contains unknown fields")
 		end
 		if entryRaw.sequence ~= index then
-			addIssue(issues, "delta.sequence", `entries[{index}].sequence`, "delta sequence must be contiguous")
+			addIssue(
+				issues,
+				"delta.sequence",
+				`entries[{index}].sequence`,
+				"delta sequence must be contiguous"
+			)
 		end
 		if not isBoundedString(entryRaw.deltaKey, MAX_SEMANTIC_BYTES) then
 			addIssue(issues, "delta.key", `entries[{index}].deltaKey`, "invalid delta key")
 		end
 		if not isBoundedString(entryRaw.payloadRef, MAX_DELTA_PAYLOAD_REF_BYTES) then
-			addIssue(issues, "delta.payload_ref", `entries[{index}].payloadRef`, "invalid delta payload reference")
+			addIssue(
+				issues,
+				"delta.payload_ref",
+				`entries[{index}].payloadRef`,
+				"invalid delta payload reference"
+			)
 		end
 	end
 	return reportResult(issues)
