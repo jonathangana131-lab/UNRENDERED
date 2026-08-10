@@ -4,6 +4,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("UNRENDERED")
 local PhysicsLabRecipe = require(Shared.Physics.PhysicsLabRecipe)
+local PhysicsLabScale = require(Shared.Physics.PhysicsLabScale)
 local ValidationContract = require(Shared.Physics.PhysicsLabValidationContract)
 local ResolvedRegionRecipe = require(Shared.Reality.ResolvedRegionRecipe)
 
@@ -34,6 +35,7 @@ local OBJECT_FINGERPRINT_ATTRIBUTE = "UNRENDERED_ObjectRecipeFingerprint"
 local REPRESENTATION_CLASS_ATTRIBUTE = "UNRENDERED_RepresentationClass"
 local COMPONENT_KEY_ATTRIBUTE = "UNRENDERED_ComponentKey"
 local COMPONENT_ROLE_ATTRIBUTE = "UNRENDERED_ComponentRole"
+local GEOMETRY_TOLERANCE = 1e-5
 
 local function requiredStringAttribute(root: Instance, name: string): string
 	local value = root:GetAttribute(name)
@@ -52,6 +54,64 @@ end
 
 local function freezeVec3(x: number, y: number, z: number): ValidationContract.Vec3
 	return table.freeze({ x = x, y = y, z = z })
+end
+
+local function vectorMeters(value: PhysicsLabRecipe.Vec3): Vector3
+	return Vector3.new(
+		PhysicsLabScale.metersToStuds(value.x),
+		PhysicsLabScale.metersToStuds(value.y),
+		PhysicsLabScale.metersToStuds(value.z)
+	)
+end
+
+local function rotationExtrinsicXYZ(rotationDeg: PhysicsLabRecipe.Vec3): CFrame
+	local x = math.rad(rotationDeg.x)
+	local y = math.rad(rotationDeg.y)
+	local z = math.rad(rotationDeg.z)
+
+	-- ObjectGenome v1 owns fixed-axis/extrinsic XYZ as Rz * Ry * Rx.
+	return CFrame.Angles(0, 0, z) * CFrame.Angles(0, y, 0) * CFrame.Angles(x, 0, 0)
+end
+
+local function transform(positionM: PhysicsLabRecipe.Vec3, rotationDeg: PhysicsLabRecipe.Vec3): CFrame
+	return CFrame.new(vectorMeters(positionM)) * rotationExtrinsicXYZ(rotationDeg)
+end
+
+local function assertNearVector3(actual: Vector3, expected: Vector3, label: string): ()
+	assert(
+		(actual - expected).Magnitude <= GEOMETRY_TOLERANCE,
+		`Physics Lab representation {label} geometry drifted`
+	)
+end
+
+local function assertCanonicalPartGeometry(
+	part: BasePart,
+	expectedSize: Vector3,
+	expectedCFrame: CFrame,
+	expectedCollidable: boolean,
+	expectedTouchable: boolean,
+	expectedTransparency: number,
+	label: string
+): ()
+	assert(part.Anchored, `Physics Lab representation {label} must remain anchored at F2`)
+	assert(
+		part.CanCollide == expectedCollidable,
+		`Physics Lab representation {label} has the wrong CanCollide state`
+	)
+	assert(part.CanQuery, `Physics Lab representation {label} must remain queryable at F2`)
+	assert(
+		part.CanTouch == expectedTouchable,
+		`Physics Lab representation {label} has the wrong CanTouch state`
+	)
+	assert(
+		math.abs(part.Transparency - expectedTransparency) <= GEOMETRY_TOLERANCE,
+		`Physics Lab representation {label} has the wrong transparency`
+	)
+	assertNearVector3(part.Size, expectedSize, `{label} size`)
+	assertNearVector3(part.Position, expectedCFrame.Position, `{label} position`)
+	assertNearVector3(part.CFrame.RightVector, expectedCFrame.RightVector, `{label} right-vector`)
+	assertNearVector3(part.CFrame.UpVector, expectedCFrame.UpVector, `{label} up-vector`)
+	assertNearVector3(part.CFrame.LookVector, expectedCFrame.LookVector, `{label} look-vector`)
 end
 
 local function assertCanonicalRootIdentity(root: Model, recipe: PhysicsLabRecipe.PhysicsLabRecipe): ()
@@ -97,17 +157,19 @@ end
 local function assertCanonicalObjectComponents(model: Model, recipe: PhysicsLabRecipe.ObjectEntityRecipe): ()
 	local genome = PhysicsLabRecipe.objectGenome(recipe.genomeKey)
 	local seenComponentKeys: { [string]: boolean } = {}
+	local objectTransform = transform(recipe.positionM, recipe.rotationDeg)
 
 	for _, componentInstance in ipairs(model:GetChildren()) do
 		assert(
 			componentInstance:IsA("BasePart"),
 			`Physics Lab object {recipe.key} has non-Part component representation {componentInstance.Name}`
 		)
+		local componentPart = componentInstance :: BasePart
 
-		local componentKey = componentInstance:GetAttribute(COMPONENT_KEY_ATTRIBUTE)
+		local componentKey = componentPart:GetAttribute(COMPONENT_KEY_ATTRIBUTE)
 		assert(
 			type(componentKey) == "string" and componentKey ~= "",
-			`Physics Lab object {recipe.key} component {componentInstance.Name} is missing {COMPONENT_KEY_ATTRIBUTE}`
+			`Physics Lab object {recipe.key} component {componentPart.Name} is missing {COMPONENT_KEY_ATTRIBUTE}`
 		)
 		assert(
 			not seenComponentKeys[componentKey],
@@ -120,21 +182,32 @@ local function assertCanonicalObjectComponents(model: Model, recipe: PhysicsLabR
 			if expectedComponent.key == componentKey then
 				matched = true
 				assert(
-					componentInstance.Name == expectedComponent.key,
+					componentPart.Name == expectedComponent.key,
 					`Physics Lab object {recipe.key} component {componentKey} has the wrong Instance name`
 				)
 				assert(
-					componentInstance:GetAttribute(COMPONENT_ROLE_ATTRIBUTE) == expectedComponent.role,
+					componentPart:GetAttribute(COMPONENT_ROLE_ATTRIBUTE) == expectedComponent.role,
 					`Physics Lab object {recipe.key} component {componentKey} has the wrong component role`
 				)
 				assert(
-					componentInstance:GetAttribute(MATERIAL_KEY_ATTRIBUTE) == expectedComponent.materialKey,
+					componentPart:GetAttribute(MATERIAL_KEY_ATTRIBUTE) == expectedComponent.materialKey,
 					`Physics Lab object {recipe.key} component {componentKey} has the wrong MaterialDNA identity`
 				)
 				assert(
-					componentInstance:GetAttribute(MATERIAL_VERSION_ATTRIBUTE)
+					componentPart:GetAttribute(MATERIAL_VERSION_ATTRIBUTE)
 						== expectedComponent.materialRecipeVersion,
 					`Physics Lab object {recipe.key} component {componentKey} has the wrong MaterialDNA recipe version`
+				)
+				assertCanonicalPartGeometry(
+					componentPart,
+					vectorMeters(expectedComponent.dimensionsM),
+					objectTransform
+						* CFrame.new(vectorMeters(expectedComponent.localPositionM))
+						* rotationExtrinsicXYZ(expectedComponent.localRotationDeg),
+					true,
+					true,
+					0,
+					`{recipe.key}/{componentKey}`
 				)
 				break
 			end
@@ -204,17 +277,27 @@ local function assertCanonicalRepresentationSet(
 
 		if expected.kind == "primitive" then
 			assert(child:IsA("BasePart"), `Physics Lab primitive {child.Name} must realize as a BasePart`)
+			local part = child :: BasePart
 			assert(
-				child:GetAttribute(LAB_ROLE_ATTRIBUTE) == expected.role,
-				`Physics Lab primitive {child.Name} has the wrong lab role`
+				part:GetAttribute(LAB_ROLE_ATTRIBUTE) == expected.role,
+				`Physics Lab primitive {part.Name} has the wrong lab role`
 			)
 			assert(
-				child:GetAttribute(MATERIAL_KEY_ATTRIBUTE) == expected.material.id,
-				`Physics Lab primitive {child.Name} has the wrong MaterialDNA identity`
+				part:GetAttribute(MATERIAL_KEY_ATTRIBUTE) == expected.material.id,
+				`Physics Lab primitive {part.Name} has the wrong MaterialDNA identity`
 			)
 			assert(
-				child:GetAttribute(MATERIAL_VERSION_ATTRIBUTE) == expected.material.recipeVersion,
-				`Physics Lab primitive {child.Name} has the wrong MaterialDNA recipe version`
+				part:GetAttribute(MATERIAL_VERSION_ATTRIBUTE) == expected.material.recipeVersion,
+				`Physics Lab primitive {part.Name} has the wrong MaterialDNA recipe version`
+			)
+			assertCanonicalPartGeometry(
+				part,
+				vectorMeters(expected.sizeM),
+				transform(expected.positionM, expected.rotationDeg),
+				expected.collidable,
+				expected.collidable,
+				expected.transparency,
+				expected.key
 			)
 		else
 			assert(child:IsA("Model"), `Physics Lab object {child.Name} must realize as a Model`)
@@ -348,12 +431,14 @@ end
 function PhysicsLabValidation.capture(root: Instance): Snapshot
 	-- Partial F0/F2 lifecycle snapshots are valid evidence. Any representation
 	-- that is present must still match canonical recipe identity/material/object
-	-- contracts, but canonical F0 entities may be absent from the Instance tree.
+	-- contracts and the physical F2 proxy geometry, but canonical F0 entities may
+	-- be absent from the Instance tree.
 	return captureInternal(root, false)
 end
 
 function PhysicsLabValidation.captureFull(root: Instance): Snapshot
-	-- Full rebuild checkpoints must contain every canonical F2 representation.
+	-- Full rebuild checkpoints must contain every canonical F2 representation and
+	-- each present proxy must match canonical geometry/interaction properties.
 	-- This closes the hole where a deterministically wrong shell could reproduce
 	-- the same counts/envelope across every restart and still look stable.
 	return captureInternal(root, true)
