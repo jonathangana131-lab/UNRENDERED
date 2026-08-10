@@ -42,6 +42,7 @@ Exit gate:
 - #6 — ObjectGenome construction-grammar contract.
 - #100 — post-merge ObjectGenome↔MaterialDNA exact-reference/content-revision repair; **blocking Epic C exit**.
 - #101 — ObjectGenome mechanism-state/persistence semantics repair; **merged green via #117 and complete**.
+- #119 — post-#117 ObjectGenome mechanism-range numeric-closure repair; **blocking Epic C exit**.
 
 Exit gate:
 - coherent immutable recipe vs mutable state separation,
@@ -49,6 +50,7 @@ Exit gate:
 - ObjectGenome supports components, mechanisms, realistic dimensions/materials/mass/affordances,
 - ObjectGenome material references obey the exact landed MaterialDNA identity/revision contract and same-version canonical recipe drift is detectable,
 - ObjectGenome mechanism state has explicit kind-specific persistence semantics anchored to authored reference poses,
+- accepted mechanism range arithmetic stays finite through default-state derivation and canonical physical decode,
 - validators reject bad examples.
 
 ## Next unlock
@@ -57,7 +59,7 @@ Exit gate:
 - #10 — production-contract Physics Lab.
 - #9 — first-observation/resolved-region recipe joins once deterministic contracts are ready.
 
-This remains a **next unlock, not current implementation permission**. Do not begin #10/#9 until the Wave 1 exit gates are green, including the remaining #100 blocker, and this file is updated to unlock the Hero Gate.
+This remains a **next unlock, not current implementation permission**. Do not begin #10/#9 until the Wave 1 exit gates are green, including the remaining #100 and #119 blockers, and this file is updated to unlock the Hero Gate.
 
 Do not treat #10 as permission for ad-hoc scripts. Its objects must instantiate through the production contracts from Wave 1 as they land.
 
@@ -92,7 +94,7 @@ None active.
 
 1. deterministic core is a golden locked contract,
 2. WorldEntity/F0–F4 lifecycle is production-safe,
-3. MaterialDNA/ObjectGenome foundations pass validators/tests, with #101 mechanism-state semantics landed and the remaining #100 exact-reference/content-revision repair completed,
+3. MaterialDNA/ObjectGenome foundations pass validators/tests, with #101 mechanism-state semantics landed and #100 exact-reference/content-revision plus #119 mechanism-range numeric-closure repairs completed,
 4. Physics Lab begins using those exact contracts only after the Hero Gate is explicitly unlocked,
 5. the first five-minute experience can be improved deeply without replacing its foundations.
 
