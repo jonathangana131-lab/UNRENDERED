@@ -202,7 +202,6 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(nonUnitAxis), "mechanism.axis_unit")
 	)
 
-
 	local positiveOnlyTilt = deepCopy(Fixtures.officeChair)
 	local positiveTiltMechanism = findMechanism(positiveOnlyTilt, "seat-tilt")
 	if positiveTiltMechanism ~= nil then
@@ -211,7 +210,8 @@ local function run(): number
 	end
 	expect(
 		"rejects angular mechanism range that excludes authored zero pose",
-		positiveTiltMechanism ~= nil and hasCode(ObjectGenome.inspect(positiveOnlyTilt), "mechanism.reference_pose")
+		positiveTiltMechanism ~= nil
+			and hasCode(ObjectGenome.inspect(positiveOnlyTilt), "mechanism.reference_pose")
 	)
 
 	local positiveOnlySlide = deepCopy(Fixtures.filingCabinet)
@@ -222,7 +222,8 @@ local function run(): number
 	end
 	expect(
 		"rejects slide range that excludes authored zero pose",
-		positiveSlideMechanism ~= nil and hasCode(ObjectGenome.inspect(positiveOnlySlide), "mechanism.reference_pose")
+		positiveSlideMechanism ~= nil
+			and hasCode(ObjectGenome.inspect(positiveOnlySlide), "mechanism.reference_pose")
 	)
 
 	local chairMechanismState = ObjectGenome.defaultState(Fixtures.officeChair)
@@ -264,7 +265,9 @@ local function run(): number
 	)
 
 	local slideMechanism = findMechanism(Fixtures.filingCabinet, "slide-top")
-	local decodedSlide = if slideMechanism ~= nil then ObjectGenome.decodeMechanismPosition(slideMechanism, 0.5) else nil
+	local decodedSlide = if slideMechanism ~= nil
+		then ObjectGenome.decodeMechanismPosition(slideMechanism, 0.5)
+		else nil
 	expect(
 		"slide decoder maps scalar to authored physical travel",
 		decodedSlide ~= nil and decodedSlide.kind == "slide" and math.abs(decodedSlide.travelM - 0.22) < 1e-12
@@ -284,7 +287,9 @@ local function run(): number
 		"latch accepts engaged discrete state",
 		ObjectGenome.inspectState(Fixtures.filingCabinet, latchState).ok
 	)
-	local decodedLatchEngaged = if latchMechanism ~= nil then ObjectGenome.decodeMechanismPosition(latchMechanism, 1) else nil
+	local decodedLatchEngaged = if latchMechanism ~= nil
+		then ObjectGenome.decodeMechanismPosition(latchMechanism, 1)
+		else nil
 	expect(
 		"latch decoder maps one to engaged",
 		decodedLatchEngaged ~= nil and decodedLatchEngaged.kind == "latch" and decodedLatchEngaged.engaged

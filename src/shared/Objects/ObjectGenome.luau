@@ -1284,7 +1284,10 @@ function ObjectGenome.decodeMechanismPosition(
 	mechanism: MechanismSpec,
 	position: number
 ): DecodedMechanismPosition
-	assert(mechanismPositionIsValid(mechanism, position), "mechanism position must use canonical ObjectState v1 encoding")
+	assert(
+		mechanismPositionIsValid(mechanism, position),
+		"mechanism position must use canonical ObjectState v1 encoding"
+	)
 
 	if mechanism.kind == "hinge" or mechanism.kind == "tilt" then
 		assert(
