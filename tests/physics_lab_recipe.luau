@@ -6,6 +6,40 @@ local PhysicsLabRecipe = ProductionLoader.requireShared("Physics/PhysicsLabRecip
 local StableId = ProductionLoader.requireShared("Core/StableId")
 local WorldEntity = ProductionLoader.requireShared("Reality/WorldEntity")
 
+local function findComponent(genome, key)
+	for _, component in ipairs(genome.components) do
+		if component.key == key then
+			return component
+		end
+	end
+	return nil
+end
+
+local function axisAlignedComponentsOverlap(left, right)
+	local function overlapsAxis(leftCenter, leftSize, rightCenter, rightSize)
+		return math.abs(leftCenter - rightCenter) < (leftSize + rightSize) * 0.5
+	end
+
+	return overlapsAxis(
+		left.localPositionM.x,
+		left.dimensionsM.x,
+		right.localPositionM.x,
+		right.dimensionsM.x
+	)
+		and overlapsAxis(
+			left.localPositionM.y,
+			left.dimensionsM.y,
+			right.localPositionM.y,
+			right.dimensionsM.y
+		)
+		and overlapsAxis(
+			left.localPositionM.z,
+			left.dimensionsM.z,
+			right.localPositionM.z,
+			right.dimensionsM.z
+		)
+end
+
 local function run(): number
 	local failures = 0
 
@@ -138,6 +172,32 @@ local function run(): number
 	expect("lab primitive material references satisfy MaterialDNA", allMaterialRefsValid)
 	expect("lab object placements bind valid ObjectGenome recipes and default state", allObjectContractsValid)
 	expect("lab shell starts as explicit F2 proxy fidelity", allInitialFidelityF2)
+
+	local doorGenome = PhysicsLabRecipe.objectGenome("commercialDoor")
+	local leaf = findComponent(doorGenome, "leaf")
+	local hingeJamb = findComponent(doorGenome, "hinge-jamb")
+	local strikeJamb = findComponent(doorGenome, "strike-jamb")
+	local header = findComponent(doorGenome, "header")
+	local doorConstructionComplete = leaf ~= nil and hingeJamb ~= nil and strikeJamb ~= nil and header ~= nil
+	expect("commercial door uses jamb/header frame construction", doorConstructionComplete)
+
+	if doorConstructionComplete then
+		local leafHasClearOpening = not axisAlignedComponentsOverlap(leaf, hingeJamb)
+			and not axisAlignedComponentsOverlap(leaf, strikeJamb)
+			and not axisAlignedComponentsOverlap(leaf, header)
+		expect("commercial door leaf has collision clearance from frame components", leafHasClearOpening)
+	end
+
+	local hingeUsesStructuralJamb = false
+	for _, mechanism in ipairs(doorGenome.mechanisms) do
+		if mechanism.key == "leaf-hinge" then
+			hingeUsesStructuralJamb = mechanism.kind == "hinge"
+				and mechanism.movingComponentKey == "leaf"
+				and mechanism.frameComponentKey == "hinge-jamb"
+			break
+		end
+	end
+	expect("commercial door hinge is bound to structural hinge jamb", hingeUsesStructuralJamb)
 
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
 	expect("lab duplicate identity is detectable", duplicateAccepted == false)
