@@ -229,6 +229,7 @@ local function asTable(errors: { string }, path: string, value: unknown): any?
 	local record = value :: any
 	if getmetatable(record) ~= nil then
 		appendError(errors, `{path} must be a plain table without a metatable`)
+		return nil
 	end
 	return record
 end
