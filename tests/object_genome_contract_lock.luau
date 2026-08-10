@@ -66,7 +66,10 @@ local function run(): number
 	local originalOwnedMass = ownedGenome.components[1].massKg
 	callerGenome.components[1].massKg = originalOwnedMass + 1
 	expect("ownership leaves caller input mutable", not table.isfrozen(callerGenome.components[1]))
-	expect("owned genome is detached from caller input", ownedGenome.components[1].massKg == originalOwnedMass)
+	expect(
+		"owned genome is detached from caller input",
+		ownedGenome.components[1].massKg == originalOwnedMass
+	)
 	expect("owned genome root is frozen", table.isfrozen(ownedGenome))
 	expect("owned genome component array is frozen", table.isfrozen(ownedGenome.components))
 	expect("owned genome nested component is frozen", table.isfrozen(ownedGenome.components[1]))
