@@ -8,11 +8,13 @@ local StableId = if scriptValue ~= nil
 local DeterminismContract = if scriptValue ~= nil
 	then requireAny(scriptValue.Parent.Parent.Core.DeterminismContract)
 	else requireAny("../Core/DeterminismContract")
+local RegionAddress = if scriptValue ~= nil
+	then requireAny(scriptValue.Parent.Parent.Spatial.RegionAddress)
+	else requireAny("../Spatial/RegionAddress")
 
 local SCHEMA_VERSION = 1
 local MAX_VERSION = 2147483647
 local MAX_WORLD_SEED_BYTES = 512
-local MAX_ADDRESS_BYTES = 512
 local MAX_KEY_BYTES = 160
 local MAX_ANCHORS = 256
 local MAX_CONTENT_KEYS = 4096
@@ -26,31 +28,65 @@ export type GeneratorVersions = {
 	entity: number,
 }
 
+export type RegionAddressValue = {
+	x: number,
+	z: number,
+	layer: number,
+}
+
 export type PotentialRegionRecipe = {
 	worldId: string,
 	worldSeed: string,
-	regionAddress: string,
+	regionAddress: RegionAddressValue,
 	generatorVersions: GeneratorVersions,
 	semanticIntentKey: string,
 	topologyAnchorKeys: { string },
 	canonicalContentKeys: { string },
 }
 
-export type ResolvedRegionRecipe = {
+export type ResolvedRegionBaseRecipe = {
 	schemaVersion: number,
 	id: string,
 	worldId: string,
 	worldSeed: string,
-	regionAddress: string,
+	regionAddress: RegionAddressValue,
 	generatorVersions: GeneratorVersions,
 	semanticIntentKey: string,
 	topologyAnchorKeys: { string },
 	canonicalContentKeys: { string },
 }
 
+export type ResolvedRegionRecipe = ResolvedRegionBaseRecipe
+export type LockDisposition = "locked" | "existing-match" | "existing-conflict"
+
+export type MigrationPlan = {
+	source: ResolvedRegionRecipe,
+	sourceFingerprint: string,
+	sourceVersions: GeneratorVersions,
+	targetVersions: GeneratorVersions,
+}
+
+export type MigrationResult = {
+	sourceFingerprint: string,
+	sourceVersions: GeneratorVersions,
+	target: ResolvedRegionRecipe,
+}
+
+export type Migrator = (ResolvedRegionRecipe, GeneratorVersions) -> PotentialRegionRecipe
+
 local ResolvedRegionRecipe = {
 	SchemaVersion = SCHEMA_VERSION,
 	FingerprintVersion = 1,
+}
+
+local POTENTIAL_KEYS = {
+	worldId = true,
+	worldSeed = true,
+	regionAddress = true,
+	generatorVersions = true,
+	semanticIntentKey = true,
+	topologyAnchorKeys = true,
+	canonicalContentKeys = true,
 }
 
 local TOP_LEVEL_KEYS = {
@@ -134,6 +170,14 @@ local function normalizeVersions(value: any): GeneratorVersions
 	})
 end
 
+local function versionsEqual(left: GeneratorVersions, right: GeneratorVersions): boolean
+	return left.reality == right.reality
+		and left.topology == right.topology
+		and left.material == right.material
+		and left.object == right.object
+		and left.entity == right.entity
+end
+
 local function normalizeKeyArray(value: any, label: string, maximumCount: number): { string }
 	assertPlainTable(value, label)
 	local count = #value
@@ -159,27 +203,28 @@ local function normalizeKeyArray(value: any, label: string, maximumCount: number
 	return table.freeze(normalized)
 end
 
-local function derivedRegionId(worldId: string, regionAddress: string): string
-	return StableId.fromParts("region", { worldId, regionAddress })
+local function derivedRegionId(worldId: string, address: RegionAddressValue): string
+	return StableId.fromParts("region", { worldId, RegionAddress.key(address) })
 end
 
 local function freezeRecipe(input: PotentialRegionRecipe): ResolvedRegionRecipe
+	assertExactKeys(input, POTENTIAL_KEYS, "potentialRegionRecipe")
 	assert(StableId.is(input.worldId, "world"), "worldId must be a StableId in the world namespace")
 	assertBoundedText(input.worldSeed, "worldSeed", MAX_WORLD_SEED_BYTES)
-	assertBoundedText(input.regionAddress, "regionAddress", MAX_ADDRESS_BYTES)
 	assertSemanticKey(input.semanticIntentKey, "semanticIntentKey")
 
+	local address = RegionAddress.fromPlainData(input.regionAddress)
 	local versions = normalizeVersions(input.generatorVersions)
 	local anchors = normalizeKeyArray(input.topologyAnchorKeys, "topologyAnchorKeys", MAX_ANCHORS)
 	local content = normalizeKeyArray(input.canonicalContentKeys, "canonicalContentKeys", MAX_CONTENT_KEYS)
-	local id = derivedRegionId(input.worldId, input.regionAddress)
+	local id = derivedRegionId(input.worldId, address)
 
 	return table.freeze({
 		schemaVersion = SCHEMA_VERSION,
 		id = id,
 		worldId = input.worldId,
 		worldSeed = input.worldSeed,
-		regionAddress = input.regionAddress,
+		regionAddress = address,
 		generatorVersions = versions,
 		semanticIntentKey = input.semanticIntentKey,
 		topologyAnchorKeys = anchors,
@@ -194,7 +239,7 @@ local function canonicalParts(recipe: ResolvedRegionRecipe): { string }
 		recipe.id,
 		recipe.worldId,
 		recipe.worldSeed,
-		recipe.regionAddress,
+		RegionAddress.key(recipe.regionAddress),
 		tostring(recipe.generatorVersions.reality),
 		tostring(recipe.generatorVersions.topology),
 		tostring(recipe.generatorVersions.material),
@@ -215,14 +260,13 @@ local function canonicalParts(recipe: ResolvedRegionRecipe): { string }
 	return parts
 end
 
-function ResolvedRegionRecipe.regionId(worldId: string, regionAddress: string): string
+function ResolvedRegionRecipe.regionId(worldId: string, address: RegionAddressValue): string
 	assert(StableId.is(worldId, "world"), "worldId must be a StableId in the world namespace")
-	assertBoundedText(regionAddress, "regionAddress", MAX_ADDRESS_BYTES)
-	return derivedRegionId(worldId, regionAddress)
+	local canonicalAddress = RegionAddress.fromPlainData(address)
+	return derivedRegionId(worldId, canonicalAddress)
 end
 
 function ResolvedRegionRecipe.new(input: PotentialRegionRecipe): ResolvedRegionRecipe
-	assert(type(input) == "table", "input must be a table")
 	return freezeRecipe(input)
 end
 
@@ -232,13 +276,6 @@ function ResolvedRegionRecipe.fromPlainData(value: any): ResolvedRegionRecipe
 		value.schemaVersion == SCHEMA_VERSION,
 		`resolvedRegionRecipe.schemaVersion must be {SCHEMA_VERSION}`
 	)
-	assert(
-		StableId.is(value.worldId, "world"),
-		"resolvedRegionRecipe.worldId must be a StableId in the world namespace"
-	)
-	assertBoundedText(value.worldSeed, "resolvedRegionRecipe.worldSeed", MAX_WORLD_SEED_BYTES)
-	assertBoundedText(value.regionAddress, "resolvedRegionRecipe.regionAddress", MAX_ADDRESS_BYTES)
-	assertSemanticKey(value.semanticIntentKey, "resolvedRegionRecipe.semanticIntentKey")
 	assert(type(value.id) == "string", "resolvedRegionRecipe.id must be a string")
 
 	local recipe = freezeRecipe({
@@ -261,7 +298,7 @@ function ResolvedRegionRecipe.toPlainData(recipe: ResolvedRegionRecipe): any
 		id = canonical.id,
 		worldId = canonical.worldId,
 		worldSeed = canonical.worldSeed,
-		regionAddress = canonical.regionAddress,
+		regionAddress = RegionAddress.toPlainData(canonical.regionAddress),
 		generatorVersions = {
 			reality = canonical.generatorVersions.reality,
 			topology = canonical.generatorVersions.topology,
@@ -292,12 +329,22 @@ end
 function ResolvedRegionRecipe.lock(
 	existing: ResolvedRegionRecipe?,
 	candidate: PotentialRegionRecipe
-): (ResolvedRegionRecipe, boolean)
-	if existing ~= nil then
-		local locked = ResolvedRegionRecipe.fromPlainData(existing)
-		return locked, false
+): (ResolvedRegionRecipe, LockDisposition)
+	local canonicalCandidate = ResolvedRegionRecipe.new(candidate)
+	if existing == nil then
+		return canonicalCandidate, "locked"
 	end
-	return ResolvedRegionRecipe.new(candidate), true
+
+	local locked = ResolvedRegionRecipe.fromPlainData(existing)
+	assert(locked.worldId == canonicalCandidate.worldId, "existing lock and candidate worldId must match")
+	assert(
+		RegionAddress.equal(locked.regionAddress, canonicalCandidate.regionAddress),
+		"existing lock and candidate regionAddress must match"
+	)
+	if ResolvedRegionRecipe.equivalent(locked, canonicalCandidate) then
+		return locked, "existing-match"
+	end
+	return locked, "existing-conflict"
 end
 
 function ResolvedRegionRecipe.needsMigration(
@@ -306,11 +353,48 @@ function ResolvedRegionRecipe.needsMigration(
 ): boolean
 	local canonical = ResolvedRegionRecipe.fromPlainData(recipe)
 	local target = normalizeVersions(targetVersions)
-	return canonical.generatorVersions.reality ~= target.reality
-		or canonical.generatorVersions.topology ~= target.topology
-		or canonical.generatorVersions.material ~= target.material
-		or canonical.generatorVersions.object ~= target.object
-		or canonical.generatorVersions.entity ~= target.entity
+	return not versionsEqual(canonical.generatorVersions, target)
+end
+
+function ResolvedRegionRecipe.planMigration(
+	recipe: ResolvedRegionRecipe,
+	targetVersions: GeneratorVersions
+): MigrationPlan?
+	local source = ResolvedRegionRecipe.fromPlainData(recipe)
+	local target = normalizeVersions(targetVersions)
+	if versionsEqual(source.generatorVersions, target) then
+		return nil
+	end
+	return table.freeze({
+		source = source,
+		sourceFingerprint = ResolvedRegionRecipe.fingerprint(source),
+		sourceVersions = normalizeVersions(source.generatorVersions),
+		targetVersions = target,
+	})
+end
+
+function ResolvedRegionRecipe.runMigration(plan: MigrationPlan, migrator: Migrator): MigrationResult
+	assert(type(plan) == "table", "migration plan must be a table")
+	assert(type(migrator) == "function", "migrator must be a function")
+
+	local source = ResolvedRegionRecipe.fromPlainData(plan.source)
+	local sourceFingerprint = ResolvedRegionRecipe.fingerprint(source)
+	assert(plan.sourceFingerprint == sourceFingerprint, "migration plan source fingerprint does not match source recipe")
+	local sourceVersions = normalizeVersions(plan.sourceVersions)
+	assert(versionsEqual(source.generatorVersions, sourceVersions), "migration plan source versions do not match source recipe")
+	local targetVersions = normalizeVersions(plan.targetVersions)
+	assert(not versionsEqual(sourceVersions, targetVersions), "migration plan target versions must differ from source")
+
+	local migrated = ResolvedRegionRecipe.new(migrator(source, targetVersions))
+	assert(migrated.worldId == source.worldId, "migration must preserve worldId")
+	assert(RegionAddress.equal(migrated.regionAddress, source.regionAddress), "migration must preserve regionAddress")
+	assert(versionsEqual(migrated.generatorVersions, targetVersions), "migration output must use target generator versions")
+
+	return table.freeze({
+		sourceFingerprint = sourceFingerprint,
+		sourceVersions = sourceVersions,
+		target = migrated,
+	})
 end
 
 return table.freeze(ResolvedRegionRecipe)
