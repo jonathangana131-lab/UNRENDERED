@@ -90,6 +90,13 @@ local function run(): number
 	local missingReproOk = ValidationContract.inspectSnapshot(missingRepro)
 	expect("snapshot validation rejects missing deterministic repro identity", missingReproOk == false)
 
+	local differentTruth = snapshot(counts(46, 0), -10, 10)
+	differentTruth.resolvedRegionFingerprint = "fingerprint:v2:different-truth"
+	local crossIdentityAccepted = pcall(function()
+		ValidationContract.compare(baseline, differentTruth, 0.001)
+	end)
+	expect("before/after comparison rejects a different resolved truth identity", not crossIdentityAccepted)
+
 	local badToleranceAccepted = pcall(function()
 		ValidationContract.compareFullLabEnvelope(baseline, rebuilt, -1)
 	end)
