@@ -9,12 +9,8 @@ local SeedStream = require(Shared.WorldGen.SeedStream)
 
 assert(RunService:IsServer(), "server bootstrap must run on server")
 
-local probe = SeedStream.derive(
-	"unrendered-bootstrap",
-	Versions.Reality,
-	"system.bootstrap",
-	{ "server", "probe" }
-)
+local probe =
+	SeedStream.derive("unrendered-bootstrap", Versions.Reality, "system.bootstrap", { "server", "probe" })
 local deterministicProbe = probe:nextU32()
 
 print(
