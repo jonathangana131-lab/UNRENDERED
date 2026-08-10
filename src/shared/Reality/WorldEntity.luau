@@ -194,7 +194,7 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 end
 
 local function cloneState(state: PlainData?): PlainData
-	local source = state or {}
+	local source: any = state or {}
 	assert(getmetatable(source) == nil, "persistentState must not contain metatables")
 	for key in pairs(source) do
 		assert(
