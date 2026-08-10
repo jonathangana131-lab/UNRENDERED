@@ -214,6 +214,7 @@ local COMPONENT_FIELDS = {
 	key = true,
 	role = true,
 	materialKey = true,
+	materialRecipeVersion = true,
 	massKg = true,
 	localPositionM = true,
 	localRotationDeg = true,
@@ -278,12 +279,114 @@ local AFFORDANCE_FIELDS = {
 	radiusM = true,
 }
 
+local STATE_FIELDS = {
+	stateSchemaVersion = true,
+	genomeId = true,
+	componentWear = true,
+	componentDamage = true,
+	mechanismPosition = true,
+	detachedComponents = true,
+}
+
 local function addIssue(issues: { ValidationIssue }, code: string, path: string, message: string): ()
 	table.insert(issues, {
 		code = code,
 		path = path,
 		message = message,
 	})
+end
+
+local function safeKeyLabel(key: any): string
+	local keyType = type(key)
+	if keyType == "string" then
+		return key
+	elseif keyType == "number" or keyType == "boolean" then
+		return tostring(key)
+	end
+	return `<{keyType}>`
+end
+
+local function rejectMetatable(issues: { ValidationIssue }, path: string, value: any): boolean
+	if type(value) == "table" and getmetatable(value) ~= nil then
+		addIssue(issues, "schema.metatable", path, "canonical plain-data tables must not have metatables")
+		return true
+	end
+	return false
+end
+
+local function validatePlainGenomeTables(issues: { ValidationIssue }, value: any): boolean
+	local valid = true
+
+	local function check(path: string, candidate: any): boolean
+		if rejectMetatable(issues, path, candidate) then
+			valid = false
+			return false
+		end
+		return true
+	end
+
+	if not check("$", value) then
+		return false
+	end
+
+	check("provenance", rawget(value, "provenance"))
+	check("dimensionsM", rawget(value, "dimensionsM"))
+
+	local dimensionLimits = rawget(value, "dimensionLimits")
+	if check("dimensionLimits", dimensionLimits) and type(dimensionLimits) == "table" then
+		check("dimensionLimits.minM", rawget(dimensionLimits, "minM"))
+		check("dimensionLimits.maxM", rawget(dimensionLimits, "maxM"))
+	end
+
+	check("massLimitsKg", rawget(value, "massLimitsKg"))
+	check("centerOfMassM", rawget(value, "centerOfMassM"))
+
+	local components = rawget(value, "components")
+	if check("components", components) and type(components) == "table" then
+		for index, component in next, components do
+			if type(index) == "number" and type(component) == "table" then
+				local componentPath = `components[{index}]`
+				if check(componentPath, component) then
+					check(componentPath .. ".localPositionM", rawget(component, "localPositionM"))
+					check(componentPath .. ".localRotationDeg", rawget(component, "localRotationDeg"))
+					check(componentPath .. ".dimensionsM", rawget(component, "dimensionsM"))
+					check(componentPath .. ".supportKeys", rawget(component, "supportKeys"))
+				end
+			end
+		end
+	end
+
+	local mechanisms = rawget(value, "mechanisms")
+	if check("mechanisms", mechanisms) and type(mechanisms) == "table" then
+		for index, mechanism in next, mechanisms do
+			if type(index) == "number" and type(mechanism) == "table" then
+				local mechanismPath = `mechanisms[{index}]`
+				if check(mechanismPath, mechanism) then
+					local kind = rawget(mechanism, "kind")
+					if kind == "hinge" or kind == "slide" or kind == "tilt" then
+						check(mechanismPath .. ".axis", rawget(mechanism, "axis"))
+					elseif kind == "caster" then
+						check(mechanismPath .. ".swivelAxis", rawget(mechanism, "swivelAxis"))
+						check(mechanismPath .. ".rollAxis", rawget(mechanism, "rollAxis"))
+					end
+				end
+			end
+		end
+	end
+
+	local affordances = rawget(value, "affordances")
+	if check("affordances", affordances) and type(affordances) == "table" then
+		for index, affordance in next, affordances do
+			if type(index) == "number" and type(affordance) == "table" then
+				local affordancePath = `affordances[{index}]`
+				if check(affordancePath, affordance) then
+					check(affordancePath .. ".localPointM", rawget(affordance, "localPointM"))
+				end
+			end
+		end
+	end
+
+	return valid
 end
 
 local function validateRecordShape(
@@ -298,7 +401,7 @@ local function validateRecordShape(
 
 	for key in pairs(value) do
 		if type(key) ~= "string" or not allowedFields[key] then
-			local childPath = if path == "$" then `$.{tostring(key)}` else `{path}.{tostring(key)}`
+			local childPath = if path == "$" then `$.{safeKeyLabel(key)}` else `{path}.{safeKeyLabel(key)}`
 			addIssue(
 				issues,
 				"schema.unknown_field",
@@ -327,7 +430,12 @@ local function validateGenomeShape(issues: { ValidationIssue }, value: any): ()
 				local path = `components[{index}]`
 				validateRecordShape(issues, path, component, COMPONENT_FIELDS)
 				validateRecordShape(issues, path .. ".localPositionM", component.localPositionM, VEC3_FIELDS)
-				validateRecordShape(issues, path .. ".localRotationDeg", component.localRotationDeg, VEC3_FIELDS)
+				validateRecordShape(
+					issues,
+					path .. ".localRotationDeg",
+					component.localRotationDeg,
+					VEC3_FIELDS
+				)
 				validateRecordShape(issues, path .. ".dimensionsM", component.dimensionsM, VEC3_FIELDS)
 			end
 		end
@@ -589,6 +697,10 @@ function ObjectGenome.inspect(value: any): ValidationResult
 
 	if type(value) ~= "table" then
 		addIssue(issues, "genome.type", "$", "ObjectGenome must be a plain table")
+		return reportResult(issues)
+	end
+
+	if not validatePlainGenomeTables(issues, value) then
 		return reportResult(issues)
 	end
 
@@ -1142,6 +1254,20 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 		addIssue(issues, "state.type", "$", "ObjectState must be a plain table")
 		return reportResult(issues)
 	end
+	if getmetatable(state) ~= nil then
+		addIssue(issues, "state.metatable", "$", "ObjectState must not have a metatable")
+		return reportResult(issues)
+	end
+	for key in next, state do
+		if type(key) ~= "string" or not STATE_FIELDS[key] then
+			addIssue(
+				issues,
+				"state.unknown_field",
+				`$.{safeKeyLabel(key)}`,
+				"field is not declared by ObjectState schema v1"
+			)
+		end
+	end
 	if state.stateSchemaVersion ~= ObjectGenome.STATE_SCHEMA_VERSION then
 		addIssue(
 			issues,
@@ -1175,6 +1301,10 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 			addIssue(issues, "state.collection", fieldName, `{fieldName} must be a table`)
 			return
 		end
+		if getmetatable(mapValue) ~= nil then
+			addIssue(issues, "state.metatable", fieldName, `{fieldName} must not have a metatable`)
+			return
+		end
 		for key in pairs(knownKeys) do
 			if mapValue[key] == nil then
 				addIssue(
@@ -1190,7 +1320,7 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 				addIssue(
 					issues,
 					"state.unknown_key",
-					`{fieldName}.{tostring(key)}`,
+					`{fieldName}.{safeKeyLabel(key)}`,
 					"state references an unknown genome key"
 				)
 			elseif not isUnitInterval(amount) then
@@ -1205,6 +1335,13 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 
 	if type(state.detachedComponents) ~= "table" then
 		addIssue(issues, "state.collection", "detachedComponents", "detachedComponents must be a table")
+	elseif getmetatable(state.detachedComponents) ~= nil then
+		addIssue(
+			issues,
+			"state.metatable",
+			"detachedComponents",
+			"detachedComponents must not have a metatable"
+		)
 	else
 		for key in pairs(componentKeys) do
 			if state.detachedComponents[key] == nil then
@@ -1221,7 +1358,7 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 				addIssue(
 					issues,
 					"state.unknown_key",
-					`detachedComponents.{tostring(key)}`,
+					`detachedComponents.{safeKeyLabel(key)}`,
 					"state references an unknown component"
 				)
 			elseif type(detached) ~= "boolean" then

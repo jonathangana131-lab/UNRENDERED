@@ -85,6 +85,35 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(unknownAffordanceField), "schema.unknown_field")
 	)
 
+	local metatableGenome = deepCopy(Fixtures.officeChair)
+	setmetatable(metatableGenome.provenance, {
+		__index = function()
+			return "spoofed"
+		end,
+	})
+	expect(
+		"semantic validator rejects metatable-backed canonical records",
+		hasCode(ObjectGenome.inspect(metatableGenome), "schema.metatable")
+	)
+
+	local unknownStateField = ObjectGenome.defaultState(Fixtures.officeChair)
+	unknownStateField.futureState = true
+	expect(
+		"rejects undeclared top-level ObjectState fields",
+		hasCode(ObjectGenome.inspectState(Fixtures.officeChair, unknownStateField), "state.unknown_field")
+	)
+
+	local metatableState = ObjectGenome.defaultState(Fixtures.officeChair)
+	setmetatable(metatableState.componentWear, {
+		__index = function()
+			return 0
+		end,
+	})
+	expect(
+		"rejects metatable-backed mutable state maps",
+		hasCode(ObjectGenome.inspectState(Fixtures.officeChair, metatableState), "state.metatable")
+	)
+
 	local sparseComponents = deepCopy(Fixtures.officeChair)
 	sparseComponents.components[3] = sparseComponents.components[2]
 	sparseComponents.components[2] = nil
