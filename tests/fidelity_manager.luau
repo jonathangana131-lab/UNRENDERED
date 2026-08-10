@@ -66,6 +66,42 @@ local function run(): number
 		"F2"
 	)
 
+	local infiniteDistanceAccepted = pcall(function()
+		FidelityManager.selectDesiredLevel(inputs({ distanceStuds = math.huge }))
+	end)
+	expectEqual("infinite physical distance rejected", infiniteDistanceAccepted, false)
+
+	local infiniteConfig = table.clone(FidelityManager.defaultConfig())
+	infiniteConfig.transitionCooldownSeconds = math.huge
+	local infiniteConfigAccepted = pcall(function()
+		FidelityManager.new(infiniteConfig)
+	end)
+	expectEqual("infinite timing config rejected", infiniteConfigAccepted, false)
+
+	local overflowConfig = table.clone(FidelityManager.defaultConfig())
+	overflowConfig.structuralDistanceStuds = 1e308
+	overflowConfig.distanceHysteresisStuds = 1e308
+	local overflowConfigAccepted = pcall(function()
+		FidelityManager.new(overflowConfig)
+	end)
+	expectEqual("distance plus hysteresis overflow rejected", overflowConfigAccepted, false)
+
+	local timestampManager = FidelityManager.new()
+	timestampManager:register("entity:finite-time", "F0")
+	timestampManager:step("entity:finite-time", "F0", inputs(), 1)
+	local infiniteTimestampAccepted = pcall(function()
+		timestampManager:step("entity:finite-time", "F0", inputs(), math.huge)
+	end)
+	expectEqual("infinite step timestamp rejected", infiniteTimestampAccepted, false)
+	local finiteTimestampAfterRejectionAccepted = pcall(function()
+		timestampManager:step("entity:finite-time", "F0", inputs(), 2)
+	end)
+	expectEqual(
+		"rejected infinite timestamp does not poison monotonic clock",
+		finiteTimestampAfterRejectionAccepted,
+		true
+	)
+
 	local entity = WorldEntity.new({
 		id = "entity:fidelity-test",
 		kind = "office-chair",
