@@ -5,6 +5,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("UNRENDERED")
 local FidelityManager = require(Shared.Physics.FidelityManager)
 local PhysicsLabRecipe = require(Shared.Physics.PhysicsLabRecipe)
+local ResolvedRegionRecipe = require(Shared.Reality.ResolvedRegionRecipe)
 local WorldEntity = require(Shared.Reality.WorldEntity)
 
 local PhysicsLabRealizer = {}
@@ -184,6 +185,11 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 	model:SetAttribute("UNRENDERED_LabRecipeKey", recipe.recipeKey)
 	model:SetAttribute("UNRENDERED_WorldId", recipe.worldId)
 	model:SetAttribute("UNRENDERED_RegionId", recipe.regionId)
+	model:SetAttribute("UNRENDERED_ResolvedRegionFingerprint", recipe.resolvedRegion.recipeFingerprint)
+	model:SetAttribute(
+		"UNRENDERED_ResolvedRegionReproKey",
+		ResolvedRegionRecipe.reproKey(recipe.resolvedRegion)
+	)
 
 	local registry = WorldEntity.createRegistry()
 	local fidelityManager = FidelityManager.new()

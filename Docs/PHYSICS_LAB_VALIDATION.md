@@ -19,7 +19,8 @@ Do not translate a successful Rojo build, pure-Luau test, source inspection, or 
 Every evidence bundle must record enough identity to reproduce the exact build:
 
 - Git commit SHA under test,
-- Physics Lab recipe/schema version and deterministic recipe fingerprint/repro key when the lab exposes them,
+- Physics Lab recipe/schema version,
+- locked resolved-region ID/fingerprint/repro key exposed by the lab root diagnostics,
 - Roblox Studio version/channel,
 - OS,
 - server/client topology used by the test,
