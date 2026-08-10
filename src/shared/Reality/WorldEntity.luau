@@ -68,6 +68,24 @@ local FIDELITY_RANK: { [string]: number } = table.freeze({
 	F4 = 4,
 })
 
+local WORLD_ENTITY_RECORD_KEYS: { [string]: boolean } = table.freeze({
+	id = true,
+	kind = true,
+	origin = true,
+	fidelity = true,
+	persistentState = true,
+	stateRevision = true,
+	representationRevision = true,
+})
+
+local GENERATION_ORIGIN_KEYS: { [string]: boolean } = table.freeze({
+	worldId = true,
+	regionId = true,
+	generator = true,
+	generatorVersion = true,
+	recipeKey = true,
+})
+
 local function assertNonEmpty(name: string, value: string): ()
 	assert(value ~= "", `{name} must not be empty`)
 	assert(string.find(value, "%c") == nil, `{name} must not contain control characters`)
@@ -86,6 +104,19 @@ local function assertNonNegativeInteger(path: string, value: unknown): number
 		`{path} must be a non-negative integer`
 	)
 	return numericValue
+end
+
+local function assertExactPlainRecord(path: string, value: unknown, allowedKeys: { [string]: boolean }): any
+	assert(type(value) == "table", `{path} must be a table`)
+	local source = value :: any
+	assert(getmetatable(source) == nil, `{path} must not have a metatable`)
+	for key in pairs(source) do
+		assert(
+			type(key) == "string" and allowedKeys[key] == true,
+			`{path} contains unknown field {tostring(key)}`
+		)
+	end
+	return source
 end
 
 local function clonePlainValue(value: unknown, path: string, seen: { [any]: boolean }): unknown
@@ -152,24 +183,30 @@ local function cloneState(state: PlainData?): PlainData
 end
 
 local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
-	assertNonEmpty("origin.worldId", origin.worldId)
-	if origin.regionId ~= nil then
-		assertNonEmpty("origin.regionId", origin.regionId)
+	local source = assertExactPlainRecord("GenerationOrigin", origin, GENERATION_ORIGIN_KEYS)
+	assert(type(source.worldId) == "string", "origin.worldId must be a string")
+	assertNonEmpty("origin.worldId", source.worldId)
+	if source.regionId ~= nil then
+		assert(type(source.regionId) == "string", "origin.regionId must be a string when present")
+		assertNonEmpty("origin.regionId", source.regionId)
 	end
-	assertNonEmpty("origin.generator", origin.generator)
-	assertFiniteNumber("origin.generatorVersion", origin.generatorVersion)
+	assert(type(source.generator) == "string", "origin.generator must be a string")
+	assertNonEmpty("origin.generator", source.generator)
+	assert(type(source.generatorVersion) == "number", "origin.generatorVersion must be a number")
+	assertFiniteNumber("origin.generatorVersion", source.generatorVersion)
 	assert(
-		origin.generatorVersion >= 1 and origin.generatorVersion == math.floor(origin.generatorVersion),
+		source.generatorVersion >= 1 and source.generatorVersion == math.floor(source.generatorVersion),
 		"origin.generatorVersion must be a positive integer"
 	)
-	assertNonEmpty("origin.recipeKey", origin.recipeKey)
+	assert(type(source.recipeKey) == "string", "origin.recipeKey must be a string")
+	assertNonEmpty("origin.recipeKey", source.recipeKey)
 
 	return table.freeze({
-		worldId = origin.worldId,
-		regionId = origin.regionId,
-		generator = origin.generator,
-		generatorVersion = origin.generatorVersion,
-		recipeKey = origin.recipeKey,
+		worldId = source.worldId,
+		regionId = source.regionId,
+		generator = source.generator,
+		generatorVersion = source.generatorVersion,
+		recipeKey = source.recipeKey,
 	})
 end
 
@@ -206,8 +243,7 @@ function WorldEntity.fidelityRank(fidelity: Fidelity): number
 end
 
 local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
-	local source = record :: any
-	assert(type(source) == "table", "WorldEntityRecord must be a table")
+	local source = assertExactPlainRecord("WorldEntityRecord", record, WORLD_ENTITY_RECORD_KEYS)
 	assert(
 		WorldEntity.isId(source.id),
 		"WorldEntityRecord.id must be a non-empty stable identifier without control characters"
