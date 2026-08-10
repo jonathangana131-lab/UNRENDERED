@@ -1,0 +1,47 @@
+name: Format ObjectGenome final integration
+
+on:
+  push:
+    branches:
+      - agent/integration/6-objectgenome-final-sol56q4
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/integration/6-objectgenome-final-sol56q4
+          fetch-depth: 0
+
+      - name: Install pinned toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Format final integration and remove helper
+        shell: bash
+        run: |
+          stylua src/shared/Objects/ObjectGenome.luau tests/object_genome_contract_lock.luau
+          rm .github/workflows/format-objectgenome-final.yml
+
+      - name: Commit formatter result
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/shared/Objects/ObjectGenome.luau tests/object_genome_contract_lock.luau .github/workflows/format-objectgenome-final.yml
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "style(objects): format final ObjectGenome integration"
+          git push origin HEAD:agent/integration/6-objectgenome-final-sol56q4
