@@ -36,6 +36,7 @@ local function run(): number
 		return {
 			id = "material.v1.test.wallpaper",
 			schemaVersion = MaterialDNA.SchemaVersion,
+			recipeVersion = 1,
 			coherenceClass = "interior.wallpapered-drywall",
 			substrate = {
 				classKey = "substrate.gypsum-board",
@@ -238,6 +239,15 @@ local function run(): number
 		table.concat(schemaResult.errors, "; ")
 	)
 
+	local invalidRecipeVersion = makeRecipe()
+	invalidRecipeVersion.recipeVersion = 0
+	local recipeVersionResult = MaterialDNA.validateRecipe(invalidRecipeVersion)
+	expect(
+		"non-positive recipe version rejected",
+		not recipeVersionResult.ok and containsError(recipeVersionResult, "recipeVersion"),
+		table.concat(recipeVersionResult.errors, "; ")
+	)
+
 	local metatableRecipe: any = makeRecipe()
 	setmetatable(metatableRecipe, {
 		__index = {
@@ -290,6 +300,11 @@ local function run(): number
 			and expectedFixtureIds["material.v1.office-metal.warm-gray-enamel"] == true,
 		"one or more expected fixture IDs changed"
 	)
+	expect(
+		"production fixture revisions start at one",
+		wallpaper.recipeVersion == 1 and carpet.recipeVersion == 1 and metal.recipeVersion == 1,
+		"one or more canonical fixture revisions drifted"
+	)
 	for fixtureName, fixture in
 		{
 			CommercialWallpaperDrywall = wallpaper,
@@ -324,7 +339,29 @@ local function run(): number
 		"fixture coherence classes collapsed"
 	)
 
-	local state = MaterialDNA.defaultState("material.v1.test.wallpaper")
+	local revisionOne = MaterialDNA.freezeRecipe(makeRecipe())
+	local revisionTwoSource = makeRecipe()
+	revisionTwoSource.recipeVersion = 2
+	revisionTwoSource.physical.staticFriction = 0.61
+	local revisionTwo = MaterialDNA.freezeRecipe(revisionTwoSource)
+	local revisionOneState = MaterialDNA.defaultState(revisionOne)
+	local revisionTwoState = MaterialDNA.defaultState(revisionTwo)
+	expect(
+		"state captures exact recipe revision",
+		revisionOneState.recipeId == revisionOne.id and revisionOneState.recipeVersion == 1,
+		`{revisionOneState.recipeId}@{revisionOneState.recipeVersion}`
+	)
+	expect(
+		"same material id revisions stay distinct",
+		revisionOne.id == revisionTwo.id
+			and revisionOne.recipeVersion ~= revisionTwo.recipeVersion
+			and MaterialDNA.stateMatchesRecipe(revisionOne, revisionOneState)
+			and not MaterialDNA.stateMatchesRecipe(revisionTwo, revisionOneState)
+			and MaterialDNA.stateMatchesRecipe(revisionTwo, revisionTwoState),
+		"state did not preserve exact recipe revision identity"
+	)
+
+	local state = MaterialDNA.defaultState(makeRecipe())
 	local stateMutation = pcall(function()
 		state.wear01 = 0.5
 	end)
@@ -334,6 +371,7 @@ local function run(): number
 
 	local invalidState: any = {
 		recipeId = "material.v1.test.wallpaper",
+		recipeVersion = 1,
 		schemaVersion = MaterialDNA.SchemaVersion,
 		wear01 = 0.2,
 		damage01 = -0.1,
