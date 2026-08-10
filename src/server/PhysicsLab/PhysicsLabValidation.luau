@@ -17,6 +17,19 @@ local WORLD_ATTRIBUTE = "UNRENDERED_WorldId"
 local REGION_ATTRIBUTE = "UNRENDERED_RegionId"
 local FINGERPRINT_ATTRIBUTE = "UNRENDERED_ResolvedRegionFingerprint"
 local REPRO_KEY_ATTRIBUTE = "UNRENDERED_ResolvedRegionReproKey"
+local ENTITY_COUNT_ATTRIBUTE = "UNRENDERED_EntityCount"
+local REPRESENTED_COUNT_ATTRIBUTE = "UNRENDERED_RepresentedCount"
+local ENTITY_ID_ATTRIBUTE = "UNRENDERED_WorldEntityId"
+local ENTITY_FIDELITY_ATTRIBUTE = "UNRENDERED_Fidelity"
+local ENTITY_RECIPE_ATTRIBUTE = "UNRENDERED_RecipeKey"
+
+local VALID_FIDELITIES = table.freeze({
+	F0 = true,
+	F1 = true,
+	F2 = true,
+	F3 = true,
+	F4 = true,
+})
 
 local function requiredStringAttribute(root: Instance, name: string): string
 	local value = root:GetAttribute(name)
@@ -24,17 +37,58 @@ local function requiredStringAttribute(root: Instance, name: string): string
 	return value
 end
 
-local function requiredSchemaVersion(root: Instance): number
-	local value = root:GetAttribute(SCHEMA_ATTRIBUTE)
+local function requiredNonNegativeIntegerAttribute(root: Instance, name: string): number
+	local value = root:GetAttribute(name)
 	assert(
-		type(value) == "number" and value == value and value >= 1 and value % 1 == 0,
-		`Physics Lab validation requires positive integer attribute {SCHEMA_ATTRIBUTE}`
+		type(value) == "number" and value == value and value >= 0 and value % 1 == 0,
+		`Physics Lab validation requires non-negative integer attribute {name}`
 	)
+	return value
+end
+
+local function requiredSchemaVersion(root: Instance): number
+	local value = requiredNonNegativeIntegerAttribute(root, SCHEMA_ATTRIBUTE)
+	assert(value >= 1, `Physics Lab validation requires positive integer attribute {SCHEMA_ATTRIBUTE}`)
 	return value
 end
 
 local function freezeVec3(x: number, y: number, z: number): ValidationContract.Vec3
 	return table.freeze({ x = x, y = y, z = z })
+end
+
+local function captureEntityEvidence(
+	instance: Instance,
+	seenEntityIds: { [string]: boolean },
+	entities: { ValidationContract.EntityEvidence }
+): ()
+	local entityId = instance:GetAttribute(ENTITY_ID_ATTRIBUTE)
+	if entityId == nil then
+		return
+	end
+	assert(
+		type(entityId) == "string" and entityId ~= "",
+		`Physics Lab representation has invalid {ENTITY_ID_ATTRIBUTE}`
+	)
+	assert(not seenEntityIds[entityId], `Physics Lab validation found duplicate represented WorldEntity id: {entityId}`)
+	seenEntityIds[entityId] = true
+
+	local fidelity = instance:GetAttribute(ENTITY_FIDELITY_ATTRIBUTE)
+	assert(
+		type(fidelity) == "string" and VALID_FIDELITIES[fidelity] == true,
+		`Physics Lab representation {entityId} has invalid {ENTITY_FIDELITY_ATTRIBUTE}`
+	)
+	assert(fidelity ~= "F0", `Physics Lab representation {entityId} cannot exist at F0`)
+	local recipeKey = instance:GetAttribute(ENTITY_RECIPE_ATTRIBUTE)
+	assert(
+		type(recipeKey) == "string" and recipeKey ~= "",
+		`Physics Lab representation {entityId} has invalid {ENTITY_RECIPE_ATTRIBUTE}`
+	)
+
+	table.insert(entities, table.freeze({
+		id = entityId,
+		fidelity = fidelity,
+		recipeKey = recipeKey,
+	}))
 end
 
 function PhysicsLabValidation.capture(root: Instance): Snapshot
@@ -51,12 +105,15 @@ function PhysicsLabValidation.capture(root: Instance): Snapshot
 		joints = 0,
 	}
 	local assemblyRoots: { [BasePart]: boolean } = {}
+	local seenEntityIds: { [string]: boolean } = {}
+	local entities: { ValidationContract.EntityEvidence } = {}
 	local minX, minY, minZ = math.huge, math.huge, math.huge
 	local maxX, maxY, maxZ = -math.huge, -math.huge, -math.huge
 	local hasPart = false
 
 	local function inspect(instance: Instance): ()
 		counts.instances += 1
+		captureEntityEvidence(instance, seenEntityIds, entities)
 		if instance:IsA("Model") then
 			counts.models += 1
 		elseif instance:IsA("BasePart") then
@@ -99,6 +156,9 @@ function PhysicsLabValidation.capture(root: Instance): Snapshot
 	for _ in pairs(assemblyRoots) do
 		counts.assemblies += 1
 	end
+	table.sort(entities, function(a, b)
+		return a.id < b.id
+	end)
 
 	local envelope: ValidationContract.Envelope? = nil
 	if hasPart then
@@ -108,6 +168,13 @@ function PhysicsLabValidation.capture(root: Instance): Snapshot
 		})
 	end
 
+	local fidelityCounts: ValidationContract.FidelityCounts = table.freeze({
+		F0 = requiredNonNegativeIntegerAttribute(root, "UNRENDERED_FidelityF0"),
+		F1 = requiredNonNegativeIntegerAttribute(root, "UNRENDERED_FidelityF1"),
+		F2 = requiredNonNegativeIntegerAttribute(root, "UNRENDERED_FidelityF2"),
+		F3 = requiredNonNegativeIntegerAttribute(root, "UNRENDERED_FidelityF3"),
+		F4 = requiredNonNegativeIntegerAttribute(root, "UNRENDERED_FidelityF4"),
+	})
 	local snapshot: Snapshot = table.freeze({
 		rootName = root.Name,
 		labSchemaVersion = requiredSchemaVersion(root),
@@ -116,6 +183,10 @@ function PhysicsLabValidation.capture(root: Instance): Snapshot
 		regionId = requiredStringAttribute(root, REGION_ATTRIBUTE),
 		resolvedRegionFingerprint = requiredStringAttribute(root, FINGERPRINT_ATTRIBUTE),
 		resolvedRegionReproKey = requiredStringAttribute(root, REPRO_KEY_ATTRIBUTE),
+		entityCount = requiredNonNegativeIntegerAttribute(root, ENTITY_COUNT_ATTRIBUTE),
+		representedCount = requiredNonNegativeIntegerAttribute(root, REPRESENTED_COUNT_ATTRIBUTE),
+		fidelityCounts = fidelityCounts,
+		entities = table.freeze(entities),
 		counts = table.freeze(counts),
 		envelopeStuds = envelope,
 	})
@@ -133,6 +204,13 @@ function PhysicsLabValidation.compare(
 	toleranceStuds: number?
 ): Comparison
 	return ValidationContract.compare(baseline, checkpoint, toleranceStuds)
+end
+
+function PhysicsLabValidation.assertSameEntityInventory(
+	baseline: Snapshot,
+	checkpoint: Snapshot
+): ValidationContract.EntityInventoryReport
+	return ValidationContract.assertSameEntityInventory(baseline, checkpoint)
 end
 
 function PhysicsLabValidation.assertFullLabEnvelope(
