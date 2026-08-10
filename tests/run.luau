@@ -1,5 +1,6 @@
 local process = require("@lune/process")
 local runFidelityManager = require("./fidelity_manager")
+local runFidelityManagerDeterminism = require("./fidelity_manager_determinism")
 local runWorldEntity = require("./world_entity")
 
 local failures = 0
@@ -40,6 +41,7 @@ end
 
 failures += runWorldEntity()
 failures += runFidelityManager()
+failures += runFidelityManagerDeterminism()
 
 if failures > 0 then
 	process.exit(1)
