@@ -45,17 +45,15 @@ Promotions are responsive but use a short promotion cooldown to prevent repeated
 3. the adapter must successfully capture state,
 4. only then may the authoritative transition occur.
 
-If demotion demand changes from one lower level to another, the grace window restarts. Any equal-fidelity request or promotion clears the pending demotion. Timestamps must be monotonic per entity so a bad clock cannot bypass hysteresis.
+Demotion stability is keyed by target fidelity, not diagnostic reason. A reason can change from distance to network or observation while the same lower target continues its grace window. If the lower target itself changes, the grace window restarts. Any equal-fidelity request or promotion clears the pending demotion. Timestamps must be monotonic per entity so a bad clock cannot bypass hysteresis.
 
-## Transition reasons
+## Transition reasons and bounded diagnostics
 
-Every request carries a non-empty reason. The built-in policy emits `distance`, `observation`, `interaction`, `significance`, `network`, or `idle`. Explicit callers may use a more specific reason string.
+Every request carries a non-empty reason. The built-in policy emits `distance`, `observation`, `interaction`, `significance`, `network`, or `idle`. Explicit callers may use a more specific reason string for adapter/debug context.
 
-Metrics count successful transitions by reason so diagnostics can distinguish legitimate interaction promotions from pathological distance churn.
+Metrics never retain arbitrary reason strings. Successful transitions are counted in seven fixed buckets: the six built-in reasons plus `other`. This keeps reason diagnostics bounded even if callers supply high-cardinality custom reasons.
 
-## Metrics
-
-The manager exposes a compact snapshot containing:
+The manager exposes a fixed-size snapshot containing:
 
 - tracked entity count,
 - F0–F4 counts,
@@ -63,13 +61,13 @@ The manager exposes a compact snapshot containing:
 - state captures,
 - cooldown and hysteresis blocks,
 - external authoritative resyncs,
-- successful transition counts by reason.
+- the seven fixed transition-reason counters.
 
 The manager mirrors the last synchronized authoritative fidelity only for diagnostics/control timing. Every request re-reads the adapter's authoritative fidelity, and `refresh()` can resynchronize all tracked entries if another trusted system performed transitions.
 
 ## Performance expectations
 
-Normal `update()`/`request()` work is O(1) per evaluated entity and contains no Workspace traversal, raycast, Instance creation, or persistence I/O. The hot path performs one authoritative fidelity read; capture and transition callbacks run only when a transition is actually accepted. `getMetrics()` is O(number of reason keys), not O(number of entities). `refresh()` is intentionally O(tracked entities) and is for diagnostics/reconciliation, not per-frame use.
+Normal `update()`/`request()` work is O(1) per evaluated entity and contains no Workspace traversal, raycast, Instance creation, or persistence I/O. The hot path performs one authoritative fidelity read; capture and transition callbacks run only when a transition is actually accepted. `getMetrics()` is O(1) because its output cardinality is fixed. `refresh()` is intentionally O(tracked entities) and is for diagnostics/reconciliation, not per-frame use.
 
 Callers should evaluate only entities whose relevance is being serviced by the project-owned streaming/simulation scheduler. This contract is not permission to loop over an unbounded universe each frame. Future budget schedulers may choose which entities receive updates, but they should continue to request transitions through this manager rather than bypassing hysteresis/state capture.
 
@@ -87,4 +85,4 @@ The manager deliberately does not require a furniture, character, networking, or
 
 ## Determinism
 
-For identical starting fidelity, config, policy inputs, request reasons, and timestamps, transition decisions are deterministic. Pure Lune tests cover policy selection, cooldowns, demotion grace, state-capture ordering, WorldEntity integration, metrics, external resynchronization, and repeated identical sequences.
+For identical starting fidelity, config, policy inputs, request reasons, and timestamps, transition decisions are deterministic. Pure Lune tests cover policy selection, cooldowns, target-stable demotion grace, state-capture ordering, WorldEntity integration, bounded metrics, external resynchronization, and repeated identical sequences.
