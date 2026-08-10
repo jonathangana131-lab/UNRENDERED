@@ -5,6 +5,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("UNRENDERED")
 local FidelityManager = require(Shared.Physics.FidelityManager)
 local PhysicsLabRecipe = require(Shared.Physics.PhysicsLabRecipe)
+local PhysicsLabRuntime = require(Shared.Physics.PhysicsLabRuntime)
 local WorldEntity = require(Shared.Reality.WorldEntity)
 
 local PhysicsLabRealizer = {}
@@ -15,8 +16,14 @@ local STUDS_PER_METER = 1 / 0.28
 
 export type RealizedLab = {
 	model: Model,
-	registry: WorldEntity.Registry,
-	fidelityManager: FidelityManager.Manager,
+	runtime: PhysicsLabRuntime.Runtime,
+	step: (
+		entityId: string,
+		inputs: FidelityManager.PolicyInputs,
+		nowSeconds: number
+	) -> (FidelityManager.StepResult, WorldEntity.WorldEntityRecord),
+	getRecord: (entityId: string) -> WorldEntity.WorldEntityRecord,
+	isRepresented: (entityId: string) -> boolean,
 	destroy: () -> (),
 }
 
@@ -110,9 +117,14 @@ local function setEntityAttributes(instance: Instance, record: WorldEntity.World
 	instance:SetAttribute("UNRENDERED_Fidelity", record.fidelity)
 	instance:SetAttribute("UNRENDERED_RecipeKey", record.origin.recipeKey)
 	instance:SetAttribute("UNRENDERED_RepresentationRevision", record.representationRevision)
+	instance:SetAttribute("UNRENDERED_StateRevision", record.stateRevision)
 end
 
-local function realizePrimitive(parent: Instance, recipe: PhysicsLabRecipe.PrimitiveEntityRecipe): BasePart
+local function realizePrimitive(
+	parent: Instance,
+	recipe: PhysicsLabRecipe.PrimitiveEntityRecipe,
+	record: WorldEntity.WorldEntityRecord
+): BasePart
 	local part = Instance.new("Part")
 	part.Name = recipe.key
 	part.Anchored = true
@@ -125,17 +137,21 @@ local function realizePrimitive(parent: Instance, recipe: PhysicsLabRecipe.Primi
 	part.TopSurface = Enum.SurfaceType.Smooth
 	part.BottomSurface = Enum.SurfaceType.Smooth
 	applyAppearance(part, recipe.material.id, recipe.material.recipeVersion)
-	setEntityAttributes(part, recipe.entity)
+	setEntityAttributes(part, record)
 	part:SetAttribute("UNRENDERED_LabRole", recipe.role)
 	part.Parent = parent
 	return part
 end
 
-local function realizeObject(parent: Instance, recipe: PhysicsLabRecipe.ObjectEntityRecipe): Model
+local function realizeObject(
+	parent: Instance,
+	recipe: PhysicsLabRecipe.ObjectEntityRecipe,
+	record: WorldEntity.WorldEntityRecord
+): Model
 	local genome = PhysicsLabRecipe.objectGenome(recipe.genomeKey)
 	local model = Instance.new("Model")
 	model.Name = recipe.key
-	setEntityAttributes(model, recipe.entity)
+	setEntityAttributes(model, record)
 	model:SetAttribute("UNRENDERED_ObjectGenomeKey", recipe.genomeKey)
 	model:SetAttribute("UNRENDERED_ObjectGenomeId", recipe.genomeId)
 	model:SetAttribute("UNRENDERED_ObjectRecipeFingerprint", recipe.genomeRecipeFingerprint)
@@ -166,6 +182,52 @@ local function realizeObject(parent: Instance, recipe: PhysicsLabRecipe.ObjectEn
 	return model
 end
 
+local function findEntityRecipe(
+	recipe: PhysicsLabRecipe.PhysicsLabRecipe,
+	entityId: string
+): PhysicsLabRecipe.EntityRecipe
+	for _, entityRecipe in ipairs(recipe.entities) do
+		if entityRecipe.entity.id == entityId then
+			return entityRecipe
+		end
+	end
+	error(`unknown Physics Lab recipe entity id: {entityId}`)
+end
+
+local function realizeEntity(
+	parent: Instance,
+	entityRecipe: PhysicsLabRecipe.EntityRecipe,
+	record: WorldEntity.WorldEntityRecord
+): Instance
+	if entityRecipe.kind == "primitive" then
+		return realizePrimitive(parent, entityRecipe, record)
+	end
+	return realizeObject(parent, entityRecipe, record)
+end
+
+local function representedCount(representations: { [string]: Instance }): number
+	local count = 0
+	for _ in pairs(representations) do
+		count += 1
+	end
+	return count
+end
+
+local function syncMetrics(
+	model: Model,
+	runtime: PhysicsLabRuntime.Runtime,
+	representations: { [string]: Instance }
+): ()
+	local snapshot = runtime:snapshot()
+	model:SetAttribute("UNRENDERED_EntityCount", snapshot.registered)
+	model:SetAttribute("UNRENDERED_RepresentedCount", representedCount(representations))
+	model:SetAttribute("UNRENDERED_FidelityF0", snapshot.fidelity.counts.F0)
+	model:SetAttribute("UNRENDERED_FidelityF1", snapshot.fidelity.counts.F1)
+	model:SetAttribute("UNRENDERED_FidelityF2", snapshot.fidelity.counts.F2)
+	model:SetAttribute("UNRENDERED_FidelityF3", snapshot.fidelity.counts.F3)
+	model:SetAttribute("UNRENDERED_FidelityF4", snapshot.fidelity.counts.F4)
+end
+
 function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 	local recipe = PhysicsLabRecipe.build()
 	local existing = parent:FindFirstChild(ROOT_NAME)
@@ -185,44 +247,115 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 	model:SetAttribute("UNRENDERED_WorldId", recipe.worldId)
 	model:SetAttribute("UNRENDERED_RegionId", recipe.regionId)
 
-	local registry = WorldEntity.createRegistry()
-	local fidelityManager = FidelityManager.new()
-
+	local representations: { [string]: Instance } = {}
 	for _, entityRecipe in ipairs(recipe.entities) do
-		local registered, duplicate = WorldEntity.register(registry, entityRecipe.entity)
-		assert(registered, `duplicate Physics Lab WorldEntityId: {entityRecipe.entity.id}`)
-		assert(duplicate == nil, "successful Physics Lab registration must not emit a duplicate diagnostic")
-		fidelityManager:register(entityRecipe.entity.id, entityRecipe.entity.fidelity)
-
-		if entityRecipe.kind == "primitive" then
-			realizePrimitive(model, entityRecipe)
-		else
-			realizeObject(model, entityRecipe)
-		end
+		local entityId = entityRecipe.entity.id
+		assert(representations[entityId] == nil, `duplicate Physics Lab representation id: {entityId}`)
+		representations[entityId] = realizeEntity(model, entityRecipe, entityRecipe.entity)
 	end
 
-	local metrics = fidelityManager:getMetrics()
-	model:SetAttribute("UNRENDERED_EntityCount", WorldEntity.count(registry))
-	model:SetAttribute("UNRENDERED_FidelityF0", metrics.counts.F0)
-	model:SetAttribute("UNRENDERED_FidelityF1", metrics.counts.F1)
-	model:SetAttribute("UNRENDERED_FidelityF2", metrics.counts.F2)
-	model:SetAttribute("UNRENDERED_FidelityF3", metrics.counts.F3)
-	model:SetAttribute("UNRENDERED_FidelityF4", metrics.counts.F4)
+	local runtime = PhysicsLabRuntime.new(recipe)
+	syncMetrics(model, runtime, representations)
 	model.Parent = parent
 
 	local destroyed = false
+
+	local function getRecord(entityId: string): WorldEntity.WorldEntityRecord
+		assert(not destroyed, "Physics Lab has been destroyed")
+		return runtime:getRecord(entityId)
+	end
+
+	local function isRepresented(entityId: string): boolean
+		assert(not destroyed, "Physics Lab has been destroyed")
+		local record = runtime:getRecord(entityId)
+		local represented = representations[entityId] ~= nil
+		if record.fidelity == "F0" then
+			assert(not represented, `F0 Physics Lab entity still has physical representation: {entityId}`)
+		elseif record.fidelity == "F2" then
+			assert(represented, `F2 Physics Lab entity is missing physical representation: {entityId}`)
+		else
+			error(`Physics Lab F2 adapter cannot represent authoritative fidelity {record.fidelity}`)
+		end
+		return represented
+	end
+
+	local function captureState(record: WorldEntity.WorldEntityRecord): WorldEntity.PlainData
+		assert(representations[record.id] ~= nil, `cannot capture absent Physics Lab representation: {record.id}`)
+		-- The landed F2 representation is an anchored proxy with no mutable Roblox
+		-- mechanism state. Preserve the authoritative plain domain state rather
+		-- than scraping Workspace and accidentally making Instances canonical.
+		return record.persistentState
+	end
+
+	local function observeTransition(
+		before: WorldEntity.WorldEntityRecord,
+		preview: WorldEntity.WorldEntityRecord,
+		_reason: FidelityManager.PolicyReason
+	): ()
+		if before.fidelity == "F2" and preview.fidelity == "F0" then
+			local representation = representations[before.id]
+			assert(representation ~= nil, `owned F2 representation missing before demotion: {before.id}`)
+			representation:Destroy()
+			representations[before.id] = nil
+			return
+		end
+
+		if before.fidelity == "F0" and preview.fidelity == "F2" then
+			assert(representations[before.id] == nil, `F0 entity already has a representation: {before.id}`)
+			local entityRecipe = findEntityRecipe(recipe, before.id)
+			representations[before.id] = realizeEntity(model, entityRecipe, preview)
+			return
+		end
+
+		error(`Physics Lab F2 adapter cannot realize transition {before.fidelity}->{preview.fidelity}`)
+	end
+
+	local function step(
+		entityId: string,
+		inputs: FidelityManager.PolicyInputs,
+		nowSeconds: number
+	): (FidelityManager.StepResult, WorldEntity.WorldEntityRecord)
+		assert(not destroyed, "Physics Lab has been destroyed")
+		local current = runtime:getRecord(entityId)
+		local desired = FidelityManager.selectDesiredLevel(inputs, nil, current.fidelity)
+		assert(
+			desired == current.fidelity or desired == "F0" or desired == "F2",
+			`Physics Lab F2 adapter cannot realize requested fidelity {desired}`
+		)
+
+		local result, record = runtime:step(entityId, inputs, nowSeconds, captureState, observeTransition)
+		local representation = representations[entityId]
+		if representation ~= nil then
+			setEntityAttributes(representation, record)
+		end
+
+		if record.fidelity == "F0" then
+			assert(representation == nil, `F0 transition left physical representation behind: {entityId}`)
+		elseif record.fidelity == "F2" then
+			assert(representation ~= nil, `F2 transition failed to rebuild physical representation: {entityId}`)
+		else
+			error(`Physics Lab runtime escaped F0/F2 adapter boundary at {record.fidelity}`)
+		end
+		syncMetrics(model, runtime, representations)
+		return result, record
+	end
+
 	local function destroy(): ()
 		if destroyed then
 			return
 		end
-		destroyed = true
 		model:Destroy()
+		table.clear(representations)
+		runtime:dispose()
+		destroyed = true
 	end
 
 	return table.freeze({
 		model = model,
-		registry = registry,
-		fidelityManager = fidelityManager,
+		runtime = runtime,
+		step = step,
+		getRecord = getRecord,
+		isRepresented = isRepresented,
 		destroy = destroy,
 	})
 end
