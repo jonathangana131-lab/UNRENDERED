@@ -113,7 +113,10 @@ local function assertRecordShape(value: any, allowedKeys: { [string]: boolean },
 	assert(type(value) == "table", `{path} must be a plain table`)
 	assert(getmetatable(value) == nil, `{path} must not have a metatable`)
 	for key in pairs(value) do
-		assert(type(key) == "string" and allowedKeys[key] == true, `{path} contains unknown schema key {tostring(key)}`)
+		assert(
+			type(key) == "string" and allowedKeys[key] == true,
+			`{path} contains unknown schema key {tostring(key)}`
+		)
 	end
 end
 
