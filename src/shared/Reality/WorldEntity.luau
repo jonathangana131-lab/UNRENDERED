@@ -99,9 +99,26 @@ local function clonePlain(value: any, seen: { [any]: boolean }): any
 	return copy
 end
 
+local function freezePlain(value: any): any
+	if typeof(value) ~= "table" then
+		return value
+	end
+
+	for _, child in pairs(value) do
+		if typeof(child) == "table" then
+			freezePlain(child)
+		end
+	end
+
+	return table.freeze(value)
+end
+
+local function cloneMutableState(state: PersistentState): PersistentState
+	return clonePlain(state, {}) :: PersistentState
+end
+
 local function cloneState(state: PersistentState): PersistentState
-	local copy = clonePlain(state, {})
-	return copy :: PersistentState
+	return freezePlain(cloneMutableState(state)) :: PersistentState
 end
 
 local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
@@ -145,7 +162,7 @@ end
 
 function WorldEntity.validatePersistentState(state: PersistentState): boolean
 	local ok = pcall(function()
-		cloneState(state)
+		cloneMutableState(state)
 	end)
 	return ok
 end
@@ -170,15 +187,14 @@ function WorldEntity.new(spec: WorldEntitySpec): WorldEntityRecord
 end
 
 local function mergeState(base: PersistentState, patch: PersistentState?): PersistentState
-	local merged = cloneState(base)
-	if patch == nil then
-		return merged
+	local merged = cloneMutableState(base)
+	if patch ~= nil then
+		local cleanPatch = cloneMutableState(patch)
+		for key, value in pairs(cleanPatch) do
+			merged[key] = value
+		end
 	end
-	local cleanPatch = cloneState(patch)
-	for key, value in pairs(cleanPatch) do
-		merged[key] = value
-	end
-	return merged
+	return freezePlain(merged) :: PersistentState
 end
 
 function WorldEntity.transition(
