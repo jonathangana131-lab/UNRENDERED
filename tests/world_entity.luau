@@ -32,9 +32,21 @@ local function run(): number
 
 	origin.recipeKey = "changed"
 	initialState.open = true
+	initialState.mechanism.angle = 90
 	expectEqual("new entities start at F0", entity.fidelity, "F0")
 	expectEqual("origin is copied", entity.origin.recipeKey, "chair/front-desk/01")
 	expectEqual("persistent state is copied", entity.persistentState.open, false)
+	expectEqual("nested persistent state is copied", (entity.persistentState.mechanism :: any).angle, 0)
+
+	local topLevelMutationAccepted = pcall(function()
+		entity.persistentState.open = true
+	end)
+	expectEqual("persistent state snapshot rejects mutation", topLevelMutationAccepted, false)
+
+	local nestedMutationAccepted = pcall(function()
+		(entity.persistentState.mechanism :: any).angle = 45
+	end)
+	expectEqual("nested persistent state snapshot rejects mutation", nestedMutationAccepted, false)
 
 	local infiniteVersionAccepted = pcall(function()
 		WorldEntity.new({
@@ -102,6 +114,57 @@ local function run(): number
 	end)
 	expectEqual("persistent state rejects non-finite numbers", nonFiniteStateAccepted, false)
 
+	local mixedNestedTableAccepted = pcall(function()
+		WorldEntity.new({
+			id = "entity:mixed-state",
+			kind = "office-chair",
+			origin = {
+				worldId = "world:0000000000000001",
+				generator = "objects.office",
+				generatorVersion = 1,
+				recipeKey = "chair/mixed-state",
+			},
+			persistentState = {
+				nested = { [1] = "first", named = "second" },
+			},
+		})
+	end)
+	expectEqual("persistent state rejects mixed nested table keys", mixedNestedTableAccepted, false)
+
+	local sparseNestedArrayAccepted = pcall(function()
+		WorldEntity.new({
+			id = "entity:sparse-state",
+			kind = "office-chair",
+			origin = {
+				worldId = "world:0000000000000001",
+				generator = "objects.office",
+				generatorVersion = 1,
+				recipeKey = "chair/sparse-state",
+			},
+			persistentState = {
+				nested = { [1] = "first", [3] = "third" },
+			},
+		})
+	end)
+	expectEqual("persistent state rejects sparse nested arrays", sparseNestedArrayAccepted, false)
+
+	local denseNestedArrayAccepted = pcall(function()
+		WorldEntity.new({
+			id = "entity:dense-state",
+			kind = "office-chair",
+			origin = {
+				worldId = "world:0000000000000001",
+				generator = "objects.office",
+				generatorVersion = 1,
+				recipeKey = "chair/dense-state",
+			},
+			persistentState = {
+				nested = { "first", "second" },
+			},
+		})
+	end)
+	expectEqual("persistent state accepts dense nested arrays", denseNestedArrayAccepted, true)
+
 	local interactive = WorldEntity.transition(entity, "F3")
 	expectEqual("promotion preserves identity", interactive.id, entity.id)
 	expectEqual("promotion changes fidelity", interactive.fidelity, "F3")
@@ -122,8 +185,68 @@ local function run(): number
 	captured.open = false
 	expectEqual("demotion preserves identity", structural.id, entity.id)
 	expectEqual("demotion captures state", structural.persistentState.open, true)
+	expectEqual("demotion replaces removed state keys", structural.persistentState.mechanism, nil)
 	expectEqual("demotion increments state revision", structural.stateRevision, 1)
 	expectEqual("demotion increments representation revision", structural.representationRevision, 2)
+
+	local rePromoted = WorldEntity.transition(structural, "F3")
+	expectEqual("re-promotion preserves deleted state keys", rePromoted.persistentState.mechanism, nil)
+	expectEqual("re-promotion preserves captured state revision", rePromoted.stateRevision, 1)
+
+	local sameFidelityCapture = WorldEntity.transition(structural, "F1", { open = false })
+	expectEqual("same-fidelity capture updates state", sameFidelityCapture.persistentState.open, false)
+	expectEqual("same-fidelity capture increments state revision", sameFidelityCapture.stateRevision, 2)
+	expectEqual(
+		"same-fidelity capture does not recreate representation",
+		sameFidelityCapture.representationRevision,
+		structural.representationRevision
+	)
+
+	local lifecycleRegistry = WorldEntity.createRegistry()
+	expectEqual("registry records backing is private", (lifecycleRegistry :: any)._records, nil)
+	expectEqual("registry diagnostics backing is private", (lifecycleRegistry :: any)._duplicates, nil)
+	local lifecycleRegistrySurfaceMutable = pcall(function()
+		(lifecycleRegistry :: any)._records = {}
+	end)
+	expectEqual("registry public surface is frozen", lifecycleRegistrySurfaceMutable, false)
+
+	WorldEntity.register(lifecycleRegistry, entity)
+	local registeredInteractive = WorldEntity.transitionRegistered(lifecycleRegistry, entity.id, "F3")
+	expectEqual("registered promotion returns current record", registeredInteractive.fidelity, "F3")
+	expectEqual(
+		"registered promotion updates registry lookup",
+		WorldEntity.get(lifecycleRegistry, entity.id),
+		registeredInteractive
+	)
+
+	local registeredStructural = WorldEntity.transitionRegistered(lifecycleRegistry, entity.id, "F1", {
+		open = true,
+		hingeAngle = 22.5,
+	})
+	expectEqual("registered demotion updates fidelity", registeredStructural.fidelity, "F1")
+	expectEqual("registered demotion captures state", registeredStructural.persistentState.open, true)
+	expectEqual(
+		"registered demotion updates registry lookup",
+		WorldEntity.get(lifecycleRegistry, entity.id),
+		registeredStructural
+	)
+
+	local registeredCapture = WorldEntity.captureRegistered(lifecycleRegistry, entity.id, {
+		open = false,
+		hingeAngle = 0,
+	})
+	expectEqual("registered capture preserves fidelity", registeredCapture.fidelity, "F1")
+	expectEqual("registered capture increments state revision", registeredCapture.stateRevision, 2)
+	expectEqual(
+		"registered capture updates registry lookup",
+		WorldEntity.get(lifecycleRegistry, entity.id),
+		registeredCapture
+	)
+
+	local unknownTransitionAccepted = pcall(function()
+		WorldEntity.transitionRegistered(lifecycleRegistry, "entity:missing", "F1", {})
+	end)
+	expectEqual("registered transition rejects unknown identity", unknownTransitionAccepted, false)
 
 	local registry = WorldEntity.createRegistry()
 	local registered = WorldEntity.register(registry, entity)
@@ -147,9 +270,63 @@ local function run(): number
 	expectEqual("duplicate does not replace original", WorldEntity.get(registry, entity.id), entity)
 	expectEqual("duplicate diagnostic retained", #WorldEntity.duplicateDiagnostics(registry), 1)
 
+	local diagnosticSnapshot = WorldEntity.duplicateDiagnostics(registry)
+	table.clear(diagnosticSnapshot)
+	expectEqual(
+		"diagnostic snapshot cannot mutate registry history",
+		#WorldEntity.duplicateDiagnostics(registry),
+		1
+	)
+
+	local boundedRegistry = WorldEntity.createRegistry(2)
+	WorldEntity.register(boundedRegistry, entity)
+	for index = 1, 3 do
+		WorldEntity.register(
+			boundedRegistry,
+			WorldEntity.new({
+				id = entity.id,
+				kind = "duplicate-fixture",
+				origin = {
+					worldId = "world:0000000000000001",
+					generator = "objects.office",
+					generatorVersion = 1,
+					recipeKey = `duplicate/{index}`,
+				},
+			})
+		)
+	end
+	local boundedDiagnostics = WorldEntity.duplicateDiagnostics(boundedRegistry)
+	expectEqual("duplicate diagnostics stay bounded", #boundedDiagnostics, 2)
+	expectEqual(
+		"duplicate diagnostics discard oldest",
+		boundedDiagnostics[1].incomingRecipeKey,
+		"duplicate/2"
+	)
+	expectEqual("duplicate diagnostics retain newest", boundedDiagnostics[2].incomingRecipeKey, "duplicate/3")
+
+	local disabledDiagnosticsRegistry = WorldEntity.createRegistry(0)
+	WorldEntity.register(disabledDiagnosticsRegistry, entity)
+	local rejectedWithoutRetention = WorldEntity.register(disabledDiagnosticsRegistry, duplicate)
+	expectEqual("zero-capacity registry still rejects duplicates", rejectedWithoutRetention, false)
+	expectEqual(
+		"zero-capacity registry retains no diagnostic history",
+		#WorldEntity.duplicateDiagnostics(disabledDiagnosticsRegistry),
+		0
+	)
+
+	local invalidCapacityAccepted = pcall(function()
+		WorldEntity.createRegistry(math.huge)
+	end)
+	expectEqual("duplicate diagnostic capacity rejects infinity", invalidCapacityAccepted, false)
+
 	local removed = WorldEntity.unregister(registry, entity.id)
 	expectEqual("unregister returns record", removed, entity)
 	expectEqual("registry empty after unregister", WorldEntity.count(registry), 0)
+	local reRegistered = WorldEntity.register(registry, removed :: any)
+	expectEqual("identity can be re-registered after teardown", reRegistered, true)
+	expectEqual("re-register restores same current identity", WorldEntity.get(registry, entity.id), removed)
+	WorldEntity.unregister(registry, entity.id)
+	expectEqual("registry empty after second unregister", WorldEntity.count(registry), 0)
 
 	return failures
 end
