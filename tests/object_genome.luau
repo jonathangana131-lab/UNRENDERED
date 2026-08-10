@@ -54,14 +54,20 @@ local function run(): number
 	for _, fixture in ipairs(fixtureCases) do
 		local report = ObjectGenome.inspect(fixture.genome)
 		expect(fixture.name .. " validates", report.ok)
-		expect(fixture.name .. " stable identity", ObjectGenome.identityKey(fixture.genome) == fixture.identity)
+		expect(
+			fixture.name .. " stable identity",
+			ObjectGenome.identityKey(fixture.genome) == fixture.identity
+		)
 		expect(
 			fixture.name .. " repeat identity",
 			ObjectGenome.identityKey(fixture.genome) == ObjectGenome.identityKey(fixture.genome)
 		)
 
 		local state = ObjectGenome.defaultState(fixture.genome)
-		expect(fixture.name .. " default mutable state validates", ObjectGenome.inspectState(fixture.genome, state).ok)
+		expect(
+			fixture.name .. " default mutable state validates",
+			ObjectGenome.inspectState(fixture.genome, state).ok
+		)
 	end
 
 	local badDimensions = deepCopy(Fixtures.officeTable)
@@ -73,11 +79,17 @@ local function run(): number
 
 	local badMass = deepCopy(Fixtures.officeTable)
 	badMass.components[1].massKg = 40
-	expect("rejects implausible component mass sum", hasCode(ObjectGenome.inspect(badMass), "mass.component_sum"))
+	expect(
+		"rejects implausible component mass sum",
+		hasCode(ObjectGenome.inspect(badMass), "mass.component_sum")
+	)
 
 	local badMaterial = deepCopy(Fixtures.officeChair)
 	badMaterial.components[1].materialKey = ""
-	expect("rejects missing material assignment", hasCode(ObjectGenome.inspect(badMaterial), "component.material_key"))
+	expect(
+		"rejects missing material assignment",
+		hasCode(ObjectGenome.inspect(badMaterial), "component.material_key")
+	)
 
 	local danglingSupport = deepCopy(Fixtures.filingCabinet)
 	danglingSupport.components[2].supportKeys = { "missing-shell" }
