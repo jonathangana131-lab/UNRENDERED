@@ -1,0 +1,67 @@
+name: MaterialDNA Domain Repair
+
+on:
+  push:
+    branches:
+      - agent/temp/5-materialdna-format-sol56d2
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/integration/5-materialdna-currentmain-sol56d2
+          fetch-depth: 0
+
+      - name: Remove concrete asset-scheme coupling
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("src/shared/Materials/MaterialDNA.luau")
+          source = path.read_text()
+          old = '''local function looksLikeExternalAssetReference(value: string): boolean
+          \tlocal lowered = string.lower(value)
+          \treturn string.find(lowered, "rbxassetid://", 1, true) ~= nil
+          \t\tor string.find(lowered, "http://", 1, true) ~= nil
+          \t\tor string.find(lowered, "https://", 1, true) ~= nil
+          \t\tor string.match(value, "^%d+$") ~= nil
+          end
+          '''
+          new = '''local function looksLikeExternalAssetReference(value: string): boolean
+          \treturn string.find(value, "://", 1, true) ~= nil or string.match(value, "^%d+$") ~= nil
+          end
+          '''
+          if old not in source:
+              raise SystemExit("expected MaterialDNA asset-reference validator shape not found; branch moved or was already repaired")
+          path.write_text(source.replace(old, new, 1))
+          PY
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Format and commit repair
+        shell: bash
+        run: |
+          stylua src/shared/Materials/MaterialDNA.luau
+          git config user.name "unrendered-integration-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add src/shared/Materials/MaterialDNA.luau
+          if git diff --cached --quiet; then
+            echo "No repair required"
+            exit 0
+          fi
+          git commit -m "fix(materials): keep concrete asset schemes behind adapters"
+          git push origin HEAD:agent/integration/5-materialdna-currentmain-sol56d2
