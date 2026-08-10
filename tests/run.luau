@@ -1,5 +1,6 @@
 local process = require("@lune/process")
 local Contract = require("../src/shared/Core/DeterminismContract")
+local runDeterministicRng = require("./deterministic_rng")
 local runWorldEntity = require("./world_entity")
 
 local failures = 0
@@ -55,6 +56,10 @@ expectFalse(
 	"encoding distinguishes part boundaries",
 	Contract.encodeParts({ "ab", "c" }) == Contract.encodeParts({ "a", "bc" })
 )
+expectFalse(
+	"encoding prevents delimiter alias",
+	Contract.encodeParts({ "a\30b" }) == Contract.encodeParts({ "a", "b" })
+)
 expectError("encoding rejects sparse arrays", function()
 	Contract.encodeParts({ [1] = "a", [3] = "c" })
 end)
@@ -95,6 +100,9 @@ expectFalse(
 )
 expectError("stable id rejects empty namespace", function()
 	Contract.stableId("", { "alpha" })
+end)
+expectError("stable id rejects delimiter namespace", function()
+	Contract.stableId("world:bad", { "alpha" })
 end)
 expectError("stable id rejects empty parts", function()
 	Contract.stableId("world", {})
@@ -193,6 +201,7 @@ expectError("seed stream rejects excessive scopes", function()
 	Contract.seedFor("world-alpha", 1, "worldgen.topology", tooManyScopes)
 end)
 
+failures += runDeterministicRng()
 failures += runWorldEntity()
 
 if failures > 0 then
