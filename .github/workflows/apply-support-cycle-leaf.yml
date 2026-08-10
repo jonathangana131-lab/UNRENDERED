@@ -1,0 +1,163 @@
+name: Apply support-cycle leaf
+
+on:
+  push:
+    branches:
+      - agent/objects/6-support-cycle-exhaustive-sol56j9
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Patch exhaustive support validation and regressions
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          source_path = Path('src/shared/Objects/ObjectGenome.luau')
+          source = source_path.read_text()
+          start = source.index('\tlocal supportMemo: { [string]: boolean } = {}')
+          end = source.index('\n\tlocal mechanismsByKey: { [string]: boolean } = {}', start)
+          replacement = '''\tlocal supportVisitState: { [string]: number } = {}
+\tlocal cycleEdgesReported: { [string]: boolean } = {}
+\tlocal function detectSupportCycles(componentKey: string): ()
+\t\tlocal visitState = supportVisitState[componentKey]
+\t\tif visitState == 2 then
+\t\t\treturn
+\t\tend
+\t\tif visitState == 1 then
+\t\t\treturn
+\t\tend
+
+\t\tsupportVisitState[componentKey] = 1
+\t\tlocal component = componentsByKey[componentKey]
+\t\tif component ~= nil and type(component.supportKeys) == "table" then
+\t\t\tfor _, supportKey in ipairs(component.supportKeys) do
+\t\t\t\tif supportKey ~= componentKey and componentsByKey[supportKey] ~= nil then
+\t\t\t\t\tlocal supportState = supportVisitState[supportKey]
+\t\t\t\t\tif supportState == 1 then
+\t\t\t\t\t\tlocal edgeKey = componentKey .. "->" .. supportKey
+\t\t\t\t\t\tif not cycleEdgesReported[edgeKey] then
+\t\t\t\t\t\t\taddIssue(
+\t\t\t\t\t\t\t\tissues,
+\t\t\t\t\t\t\t\t"component.support_cycle",
+\t\t\t\t\t\t\t\t`components.{componentKey}`,
+\t\t\t\t\t\t\t\t"support graph contains a cycle"
+\t\t\t\t\t\t\t)
+\t\t\t\t\t\t\tcycleEdgesReported[edgeKey] = true
+\t\t\t\t\t\tend
+\t\t\t\t\telseif supportState ~= 2 then
+\t\t\t\t\t\tdetectSupportCycles(supportKey)
+\t\t\t\t\tend
+\t\t\t\tend
+\t\t\tend
+\t\tend
+\t\tsupportVisitState[componentKey] = 2
+\tend
+
+\tfor componentKey in pairs(componentsByKey) do
+\t\tdetectSupportCycles(componentKey)
+\tend
+
+\tlocal supportMemo: { [string]: boolean } = {}
+\tlocal supportVisiting: { [string]: boolean } = {}
+\tlocal function reachesExternalSupport(componentKey: string): boolean
+\t\tlocal memoized = supportMemo[componentKey]
+\t\tif memoized ~= nil then
+\t\t\treturn memoized
+\t\tend
+
+\t\tlocal component = componentsByKey[componentKey]
+\t\tif component == nil then
+\t\t\treturn false
+\t\tend
+\t\tif component.externalSupport ~= "none" and EXTERNAL_SUPPORTS[component.externalSupport] then
+\t\t\tsupportMemo[componentKey] = true
+\t\t\treturn true
+\t\tend
+\t\tif supportVisiting[componentKey] then
+\t\t\treturn false
+\t\tend
+
+\t\tsupportVisiting[componentKey] = true
+\t\tlocal reachesSupport = false
+\t\tif type(component.supportKeys) == "table" then
+\t\t\tfor _, supportKey in ipairs(component.supportKeys) do
+\t\t\t\tif componentsByKey[supportKey] ~= nil and reachesExternalSupport(supportKey) then
+\t\t\t\t\treachesSupport = true
+\t\t\t\t\tbreak
+\t\t\t\tend
+\t\t\tend
+\t\tend
+\t\tsupportVisiting[componentKey] = nil
+\t\tsupportMemo[componentKey] = reachesSupport
+\t\treturn reachesSupport
+\tend
+
+\tfor componentKey in pairs(componentsByKey) do
+\t\tif not reachesExternalSupport(componentKey) then
+\t\t\taddIssue(
+\t\t\t\tissues,
+\t\t\t\t"component.unsupported",
+\t\t\t\t`components.{componentKey}`,
+\t\t\t\t"component has no path to an external support"
+\t\t\t)
+\t\tend
+\tend
+'''
+          source_path.write_text(source[:start] + replacement + source[end:])
+
+          test_path = Path('tests/object_genome.luau')
+          tests = test_path.read_text()
+          marker = '''\tlocal supportCycle = deepCopy(Fixtures.officeTable)
+\tsupportCycle.components[1].externalSupport = "none"
+\tsupportCycle.components[1].supportKeys = { "top" }
+\texpect("rejects cyclic load path", hasCode(ObjectGenome.inspect(supportCycle), "component.support_cycle"))
+'''
+          addition = marker + '''
+\tlocal groundedCycle = deepCopy(Fixtures.officeTable)
+\tlocal groundedLeg = findComponent(groundedCycle, "leg-front-left")
+\tif groundedLeg ~= nil then
+\t\tgroundedLeg.supportKeys = { "crossbar" }
+\tend
+\texpect(
+\t\t"rejects support cycle even when the cycle contains an externally supported component",
+\t\tgroundedLeg ~= nil and hasCode(ObjectGenome.inspect(groundedCycle), "component.support_cycle")
+\t)
+
+\tlocal branchedCycle = deepCopy(Fixtures.officeTable)
+\tlocal branchedTop = findComponent(branchedCycle, "top")
+\tlocal branchedCrossbar = findComponent(branchedCycle, "crossbar")
+\tif branchedTop ~= nil and branchedCrossbar ~= nil then
+\t\tbranchedTop.supportKeys = { "leg-front-left", "crossbar" }
+\t\tbranchedCrossbar.supportKeys = { "top", "leg-front-right" }
+\tend
+\texpect(
+\t\t"rejects cyclic support branch even when another branch reaches ground",
+\t\tbranchedTop ~= nil
+\t\t\tand branchedCrossbar ~= nil
+\t\t\tand hasCode(ObjectGenome.inspect(branchedCycle), "component.support_cycle")
+\t)
+'''
+          if marker not in tests:
+              raise SystemExit('supportCycle regression marker not found')
+          test_path.write_text(tests.replace(marker, addition, 1))
+          PY
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/apply-support-cycle-leaf.yml
+      - name: Commit leaf
+        shell: bash
+        run: |
+          git config user.name "UNRENDERED swarm"
+          git config user.email "actions@users.noreply.github.com"
+          git add src/shared/Objects/ObjectGenome.luau tests/object_genome.luau .github/workflows/apply-support-cycle-leaf.yml
+          git commit -m "Fix exhaustive ObjectGenome support cycles"
+          git push origin HEAD
