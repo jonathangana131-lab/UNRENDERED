@@ -146,6 +146,78 @@ local CARPET_INSTALLATIONS = table.freeze({
 	["installation.carpet-tile-adhesive"] = true,
 })
 
+local RECIPE_FIELDS = table.freeze({
+	id = true,
+	schemaVersion = true,
+	coherenceClass = true,
+	substrate = true,
+	finish = true,
+	installation = true,
+	apparentAgeYears = true,
+	maintenance = true,
+	environment = true,
+	historyEvents = true,
+	visual = true,
+	physical = true,
+	acoustic = true,
+	response = true,
+	anomalyModifiers = true,
+})
+local SUBSTRATE_FIELDS = table.freeze({ classKey = true, thicknessMeters = true, porosity01 = true })
+local FINISH_FIELDS = table.freeze({ classKey = true, color = true, roughness01 = true, metallic01 = true })
+local COLOR_FIELDS = table.freeze({ r = true, g = true, b = true })
+local INSTALLATION_FIELDS = table.freeze({
+	methodKey = true,
+	batchKey = true,
+	quality01 = true,
+	seamPeriodMeters = true,
+})
+local MAINTENANCE_FIELDS = table.freeze({
+	careClassKey = true,
+	frequency01 = true,
+	cleanliness01 = true,
+	repairCount = true,
+})
+local ENVIRONMENT_FIELDS = table.freeze({ humidity01 = true, water01 = true, uv01 = true, grime01 = true })
+local HISTORY_EVENT_FIELDS = table.freeze({
+	kindKey = true,
+	causeKey = true,
+	severity01 = true,
+	coverage01 = true,
+})
+local VISUAL_FIELDS = table.freeze({ familyKey = true, coherenceClass = true, metersPerRepeat = true })
+local PHYSICAL_FIELDS = table.freeze({
+	classKey = true,
+	coherenceClass = true,
+	densityKgPerM3 = true,
+	staticFriction = true,
+	dynamicFriction = true,
+	restitution01 = true,
+})
+local ACOUSTIC_FIELDS = table.freeze({
+	classKey = true,
+	coherenceClass = true,
+	absorptionLow01 = true,
+	absorptionMid01 = true,
+	absorptionHigh01 = true,
+	impactFamilyKey = true,
+	scrapeFamilyKey = true,
+})
+local RESPONSE_FIELDS = table.freeze({
+	wetFrictionMultiplier = true,
+	wetDarkening01 = true,
+	damageResistance01 = true,
+	stainAffinity01 = true,
+})
+local STATE_FIELDS = table.freeze({
+	recipeId = true,
+	schemaVersion = true,
+	wear01 = true,
+	damage01 = true,
+	wetness01 = true,
+	soil01 = true,
+})
+
 local function appendError(errors: { string }, message: string): ()
 	table.insert(errors, message)
 end
@@ -155,7 +227,29 @@ local function asTable(errors: { string }, path: string, value: unknown): any?
 		appendError(errors, `{path} must be a table`)
 		return nil
 	end
+	if getmetatable(value) ~= nil then
+		appendError(errors, `{path} must be a plain table with no metatable`)
+		return nil
+	end
 	return value :: any
+end
+
+local function asRecord(
+	errors: { string },
+	path: string,
+	value: unknown,
+	allowedFields: { [string]: boolean }
+): any?
+	local record = asTable(errors, path, value)
+	if record == nil then
+		return nil
+	end
+	for key in pairs(record) do
+		if type(key) ~= "string" or not allowedFields[key] then
+			appendError(errors, `{path} contains unknown field {tostring(key)}`)
+		end
+	end
+	return record
 end
 
 local function isFinite(value: number): boolean
@@ -217,7 +311,7 @@ local function validateProjectKey(errors: { string }, path: string, value: unkno
 end
 
 local function validateColor(errors: { string }, path: string, value: unknown): ()
-	local color = asTable(errors, path, value)
+	local color = asRecord(errors, path, value, COLOR_FIELDS)
 	if color == nil then
 		return
 	end
@@ -262,7 +356,7 @@ local function validateDenseArray(errors: { string }, path: string, value: unkno
 end
 
 local function validateSubstrate(errors: { string }, value: unknown): string?
-	local substrate = asTable(errors, "substrate", value)
+	local substrate = asRecord(errors, "substrate", value, SUBSTRATE_FIELDS)
 	if substrate == nil then
 		return nil
 	end
@@ -273,7 +367,7 @@ local function validateSubstrate(errors: { string }, value: unknown): string?
 end
 
 local function validateFinish(errors: { string }, value: unknown): string?
-	local finish = asTable(errors, "finish", value)
+	local finish = asRecord(errors, "finish", value, FINISH_FIELDS)
 	if finish == nil then
 		return nil
 	end
@@ -285,7 +379,7 @@ local function validateFinish(errors: { string }, value: unknown): string?
 end
 
 local function validateInstallation(errors: { string }, value: unknown): string?
-	local installation = asTable(errors, "installation", value)
+	local installation = asRecord(errors, "installation", value, INSTALLATION_FIELDS)
 	if installation == nil then
 		return nil
 	end
@@ -299,7 +393,7 @@ local function validateInstallation(errors: { string }, value: unknown): string?
 end
 
 local function validateMaintenance(errors: { string }, value: unknown): ()
-	local maintenance = asTable(errors, "maintenance", value)
+	local maintenance = asRecord(errors, "maintenance", value, MAINTENANCE_FIELDS)
 	if maintenance == nil then
 		return
 	end
@@ -310,7 +404,7 @@ local function validateMaintenance(errors: { string }, value: unknown): ()
 end
 
 local function validateEnvironment(errors: { string }, value: unknown): ()
-	local environment = asTable(errors, "environment", value)
+	local environment = asRecord(errors, "environment", value, ENVIRONMENT_FIELDS)
 	if environment == nil then
 		return
 	end
@@ -327,7 +421,7 @@ local function validateHistoryEvents(errors: { string }, value: unknown): ()
 	end
 	for index = 1, #events do
 		local path = `historyEvents[{index}]`
-		local event = asTable(errors, path, events[index])
+		local event = asRecord(errors, path, events[index], HISTORY_EVENT_FIELDS)
 		if event ~= nil then
 			validateProjectKey(errors, `{path}.kindKey`, event.kindKey)
 			validateProjectKey(errors, `{path}.causeKey`, event.causeKey)
@@ -338,7 +432,7 @@ local function validateHistoryEvents(errors: { string }, value: unknown): ()
 end
 
 local function validateVisual(errors: { string }, value: unknown, coherenceClass: string?): ()
-	local visual = asTable(errors, "visual", value)
+	local visual = asRecord(errors, "visual", value, VISUAL_FIELDS)
 	if visual == nil then
 		return
 	end
@@ -351,7 +445,7 @@ local function validateVisual(errors: { string }, value: unknown, coherenceClass
 end
 
 local function validatePhysical(errors: { string }, value: unknown, coherenceClass: string?): ()
-	local physical = asTable(errors, "physical", value)
+	local physical = asRecord(errors, "physical", value, PHYSICAL_FIELDS)
 	if physical == nil then
 		return
 	end
@@ -372,7 +466,7 @@ local function validatePhysical(errors: { string }, value: unknown, coherenceCla
 end
 
 local function validateAcoustic(errors: { string }, value: unknown, coherenceClass: string?): ()
-	local acoustic = asTable(errors, "acoustic", value)
+	local acoustic = asRecord(errors, "acoustic", value, ACOUSTIC_FIELDS)
 	if acoustic == nil then
 		return
 	end
@@ -389,7 +483,7 @@ local function validateAcoustic(errors: { string }, value: unknown, coherenceCla
 end
 
 local function validateResponse(errors: { string }, value: unknown): ()
-	local response = asTable(errors, "response", value)
+	local response = asRecord(errors, "response", value, RESPONSE_FIELDS)
 	if response == nil then
 		return
 	end
@@ -441,7 +535,7 @@ end
 
 function MaterialDNA.validateRecipe(value: unknown): ValidationResult
 	local errors: { string } = {}
-	local recipe = asTable(errors, "MaterialRecipe", value)
+	local recipe = asRecord(errors, "MaterialRecipe", value, RECIPE_FIELDS)
 	if recipe == nil then
 		return {
 			ok = false,
@@ -482,7 +576,7 @@ end
 
 function MaterialDNA.validateState(value: unknown): ValidationResult
 	local errors: { string } = {}
-	local state = asTable(errors, "MaterialState", value)
+	local state = asRecord(errors, "MaterialState", value, STATE_FIELDS)
 	if state == nil then
 		return {
 			ok = false,

@@ -113,6 +113,34 @@ local function run(): number
 	local valid = MaterialDNA.validateRecipe(makeRecipe())
 	expect("valid recipe accepted", valid.ok, table.concat(valid.errors, "; "))
 
+	local unknownTopLevel: any = makeRecipe()
+	unknownTopLevel.futureCanonicalField = "must-not-be-silently-dropped"
+	local unknownTopLevelResult = MaterialDNA.validateRecipe(unknownTopLevel)
+	expect(
+		"unknown top-level v1 field rejected",
+		not unknownTopLevelResult.ok and containsError(unknownTopLevelResult, "unknown field"),
+		table.concat(unknownTopLevelResult.errors, "; ")
+	)
+
+	local unknownNested: any = makeRecipe()
+	unknownNested.finish.color.alpha = 1
+	local unknownNestedResult = MaterialDNA.validateRecipe(unknownNested)
+	expect(
+		"unknown nested v1 field rejected",
+		not unknownNestedResult.ok
+			and containsError(unknownNestedResult, "finish.color contains unknown field alpha"),
+		table.concat(unknownNestedResult.errors, "; ")
+	)
+
+	local metatableRecipe: any = makeRecipe()
+	setmetatable(metatableRecipe, { __index = {} })
+	local metatableResult = MaterialDNA.validateRecipe(metatableRecipe)
+	expect(
+		"metatable-backed recipe rejected",
+		not metatableResult.ok and containsError(metatableResult, "plain table with no metatable"),
+		table.concat(metatableResult.errors, "; ")
+	)
+
 	local malformedAccepted, malformedResult = pcall(function()
 		return MaterialDNA.validateRecipe({ schemaVersion = MaterialDNA.SchemaVersion })
 	end)
@@ -244,6 +272,15 @@ local function run(): number
 	expect("material state remains mutable", stateMutation and state.wear01 == 0.5, "state mutation failed")
 	local stateResult = MaterialDNA.validateState(state)
 	expect("mutated state remains valid", stateResult.ok, table.concat(stateResult.errors, "; "))
+
+	local unknownState: any = MaterialDNA.defaultState("material.v1.test.wallpaper")
+	unknownState.futureStateField = 1
+	local unknownStateResult = MaterialDNA.validateState(unknownState)
+	expect(
+		"unknown material-state v1 field rejected",
+		not unknownStateResult.ok and containsError(unknownStateResult, "unknown field"),
+		table.concat(unknownStateResult.errors, "; ")
+	)
 
 	local invalidState: any = {
 		recipeId = "material.v1.test.wallpaper",
