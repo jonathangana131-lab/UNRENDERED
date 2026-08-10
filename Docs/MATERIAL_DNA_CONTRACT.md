@@ -35,6 +35,8 @@ The validator also rejects direct URLs/Roblox asset IDs in project-owned semanti
 
 Compatibility checks are intentionally conservative. Adding a new material family should add an explicit production rule or remain unconstrained until its construction semantics are defined; do not infer arbitrary compatibility from string similarity.
 
+V1 record shapes are closed: undeclared top-level or nested fields are validation errors. This prevents a generated or persisted field from validating and then being silently discarded by `freezeRecipe`. New canonical fields therefore require an explicit schema migration (or a future versioned extension mechanism with preservation semantics).
+
 ## Fixtures
 
 `MaterialFixtures` provides three deliberately ordinary commercial materials:
@@ -44,6 +46,8 @@ Compatibility checks are intentionally conservative. Adding a new material famil
 - warm-gray baked-enamel sheet metal.
 
 They are fallback/project semantic families, not licensed PBR asset references. Rendering adapters may map those family keys to approved project-owned assets later.
+
+The literal fixture definitions live in `MaterialFixtureCatalog`, a pure builder shared by the Roblox `MaterialFixtures` wrapper and headless Lune regression tests. This keeps one production source of fixture truth while allowing CI to execute the exact same validation/freezing path without emulating Roblox `script.Parent` lookup.
 
 ## Versioning
 
