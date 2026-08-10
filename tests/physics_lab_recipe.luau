@@ -102,10 +102,8 @@ local function run(): number
 		end
 
 		if entityRecipe.kind == "primitive" then
-			local materialAccepted = pcall(function()
-				MaterialDNA.validateReference(entityRecipe.material)
-			end)
-			if not materialAccepted then
+			local materialReport = MaterialDNA.validateReference(entityRecipe.material)
+			if not materialReport.ok then
 				allMaterialRefsValid = false
 			end
 		else

@@ -33,7 +33,7 @@ The first Roblox representation is deliberately `F2-anchored-proxy`. Object comp
    - `UNRENDERED_EntityCount` should be `20`.
    - all initial fidelity should be represented by `UNRENDERED_FidelityF2 = 20` with F0/F1/F3/F4 at zero.
 5. Inspect `door-main`, `chair-a`, `table-a`, `cabinet-a`, and `cart-a`. Each Model should expose `UNRENDERED_WorldEntityId`, `UNRENDERED_ObjectGenomeId`, `UNRENDERED_ObjectRecipeFingerprint`, and `UNRENDERED_RepresentationClass = F2-anchored-proxy`.
-6. Inspect component Parts. They should expose `UNRENDERED_ComponentKey`, `UNRENDERED_ComponentRole`, `UNRENDERED_ComponentMassKg`, and `UNRENDERED_MaterialKey`.
+6. Inspect component Parts. They should expose `UNRENDERED_ComponentKey`, `UNRENDERED_ComponentRole`, `UNRENDERED_ComponentMassKg`, `UNRENDERED_MaterialKey`, and `UNRENDERED_MaterialRecipeVersion`.
 7. Stop/start Studio again and confirm the same recipe/entity IDs recur. The realizer owns only a model marked `UNRENDERED_PhysicsLabOwned`; it refuses to delete an unrelated Instance that merely has the same name.
 
 ## Automated evidence
