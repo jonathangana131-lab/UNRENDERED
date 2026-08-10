@@ -1,6 +1,7 @@
 --!strict
 
 local MaterialDNA = require("../src/shared/Materials/MaterialDNA")
+local MaterialFixtureCatalog = require("../src/shared/Materials/MaterialFixtureCatalog")
 
 local function run(): number
 	local failures = 0
@@ -235,6 +236,92 @@ local function run(): number
 		"unknown schema rejected",
 		not schemaResult.ok and containsError(schemaResult, "schemaVersion must be"),
 		table.concat(schemaResult.errors, "; ")
+	)
+
+	local metatableRecipe: any = makeRecipe()
+	setmetatable(metatableRecipe, {
+		__index = {
+			futureMeaning = "synthesized",
+		},
+	})
+	local metatableResult = MaterialDNA.validateRecipe(metatableRecipe)
+	expect(
+		"metatable-backed canonical recipe rejected",
+		not metatableResult.ok and containsError(metatableResult, "without a metatable"),
+		table.concat(metatableResult.errors, "; ")
+	)
+
+	local unknownTopLevel: any = makeRecipe()
+	unknownTopLevel.futureMeaning = "must-not-disappear"
+	local unknownTopLevelResult = MaterialDNA.validateRecipe(unknownTopLevel)
+	expect(
+		"unknown top-level v1 field rejected",
+		not unknownTopLevelResult.ok and containsError(unknownTopLevelResult, "unknown field futureMeaning"),
+		table.concat(unknownTopLevelResult.errors, "; ")
+	)
+
+	local unknownNested: any = makeRecipe()
+	unknownNested.finish.color.gamma = 2.2
+	local unknownNestedResult = MaterialDNA.validateRecipe(unknownNested)
+	expect(
+		"unknown nested v1 field rejected",
+		not unknownNestedResult.ok and containsError(unknownNestedResult, "unknown field gamma"),
+		table.concat(unknownNestedResult.errors, "; ")
+	)
+
+	local fixtures = MaterialFixtureCatalog.build(MaterialDNA)
+	local wallpaper = fixtures.CommercialWallpaperDrywall
+	local carpet = fixtures.LowPileCarpet
+	local metal = fixtures.PaintedMetal
+	local expectedFixtureIds = {
+		[wallpaper.id] = true,
+		[carpet.id] = true,
+		[metal.id] = true,
+	}
+	expect(
+		"production fixture IDs remain distinct",
+		wallpaper.id ~= carpet.id and wallpaper.id ~= metal.id and carpet.id ~= metal.id,
+		"fixture IDs collided"
+	)
+	expect(
+		"production fixture IDs remain stable",
+		expectedFixtureIds["material.v1.office-wallpaper.yellow-vinyl"] == true
+			and expectedFixtureIds["material.v1.office-carpet.low-pile-beige"] == true
+			and expectedFixtureIds["material.v1.office-metal.warm-gray-enamel"] == true,
+		"one or more expected fixture IDs changed"
+	)
+	for fixtureName, fixture in
+		{
+			CommercialWallpaperDrywall = wallpaper,
+			LowPileCarpet = carpet,
+			PaintedMetal = metal,
+		}
+	do
+		local fixtureResult = MaterialDNA.validateRecipe(fixture)
+		expect(
+			`production fixture {fixtureName} validates`,
+			fixtureResult.ok,
+			table.concat(fixtureResult.errors, "; ")
+		)
+		local mutateFixture = pcall(function()
+			fixture.apparentAgeYears = 0
+		end)
+		local mutateNestedFixture = pcall(function()
+			fixture.finish.color.r = 0
+		end)
+		expect(`production fixture {fixtureName} is frozen`, not mutateFixture, "fixture accepted mutation")
+		expect(
+			`production fixture {fixtureName} is deeply frozen`,
+			not mutateNestedFixture,
+			"fixture nested color accepted mutation"
+		)
+	end
+	expect(
+		"production fixtures preserve distinct coherence classes",
+		wallpaper.coherenceClass ~= carpet.coherenceClass
+			and wallpaper.coherenceClass ~= metal.coherenceClass
+			and carpet.coherenceClass ~= metal.coherenceClass,
+		"fixture coherence classes collapsed"
 	)
 
 	local state = MaterialDNA.defaultState("material.v1.test.wallpaper")
