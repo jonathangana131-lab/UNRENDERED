@@ -43,7 +43,11 @@ local function run(): number
 	})
 	nestedRecipe.substrate = metatableSubstrate
 	local nestedResult = MaterialDNA.validateRecipe(nestedRecipe)
-	expect("metatable-backed nested record rejected", not nestedResult.ok, "nested record unexpectedly validated")
+	expect(
+		"metatable-backed nested record rejected",
+		not nestedResult.ok,
+		"nested record unexpectedly validated"
+	)
 	expect(
 		"metatable-backed nested record is not indexed",
 		nestedReads == 0,
@@ -60,11 +64,7 @@ local function run(): number
 	})
 	local stateResult = MaterialDNA.validateState(metatableState)
 	expect("metatable-backed state rejected", not stateResult.ok, "state unexpectedly validated")
-	expect(
-		"metatable-backed state is not indexed",
-		stateReads == 0,
-		`__index executed {stateReads} times`
-	)
+	expect("metatable-backed state is not indexed", stateReads == 0, `__index executed {stateReads} times`)
 
 	return failures
 end
