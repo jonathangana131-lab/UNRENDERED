@@ -31,17 +31,21 @@ Visual, physical, and acoustic profiles share a `coherenceClass`. They are diffe
 
 `validateRecipe` accepts `unknown` plain data and returns a `ValidationResult`; structurally malformed persisted/generated input must report errors instead of crashing through missing nested fields. Canonical history/anomaly lists must be dense 1-based arrays with no keyed entries. Numeric plausibility ranges are finite and bounded.
 
+Schema version 1 is a closed canonical shape. The recipe, mutable state, and every nested record reject undeclared fields so validation cannot accept data that the ownership/freezing boundary would later discard. New canonical fields require an explicit schema migration or a future deliberately preserved extension contract.
+
 The validator also rejects direct URLs/Roblox asset IDs in project-owned semantic keys and checks known semantic compatibility families. V1 examples include vinyl wallcovering on wall-compatible substrates with pasted-wallpaper installation, low-pile carpet on carpet backing with a supported carpet install method, and baked enamel on sheet metal with factory-coated-panel installation.
 
 Compatibility checks are intentionally conservative. Adding a new material family should add an explicit production rule or remain unconstrained until its construction semantics are defined; do not infer arbitrary compatibility from string similarity.
 
 ## Fixtures
 
-`MaterialFixtures` provides three deliberately ordinary commercial materials:
+`MaterialFixtures` owns the single source of truth for three deliberately ordinary commercial materials:
 
 - yellow vinyl wallcovering over gypsum board,
 - beige low-pile commercial carpet,
 - warm-gray baked-enamel sheet metal.
+
+The module is a plain dependency-injected builder: pass the `MaterialDNA` contract to construct and freeze the catalog. This keeps the exact production fixture definitions executable in headless Lune tests without a Roblox `script.Parent` dependency, while preserving the same validation/freezing ownership boundary used by runtime callers.
 
 They are fallback/project semantic families, not licensed PBR asset references. Rendering adapters may map those family keys to approved project-owned assets later.
 
