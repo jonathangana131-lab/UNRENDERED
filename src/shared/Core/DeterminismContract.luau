@@ -201,7 +201,11 @@ function DeterminismContract.nextRngState(state: number): number
 	return x
 end
 
-function DeterminismContract.nextIntegerState(state: number, minimum: number, maximum: number): (number, number)
+function DeterminismContract.nextIntegerState(
+	state: number,
+	minimum: number,
+	maximum: number
+): (number, number)
 	assert(isSafeInteger(minimum) and isSafeInteger(maximum), "minimum and maximum must be safe integers")
 	assert(minimum <= maximum, "minimum must be <= maximum")
 	local width = maximum - minimum + 1
