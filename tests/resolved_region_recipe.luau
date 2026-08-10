@@ -46,9 +46,17 @@ local function run(): number
 	expect("anchor array is frozen", not pcall(function()
 		table.insert(locked.topologyAnchorKeys, "extra")
 	end))
-	expectEqual("region id derives from world + address", locked.id, ResolvedRegionRecipe.regionId(worldId, "office/0/0/0"))
+	expectEqual(
+		"region id derives from world + address",
+		locked.id,
+		ResolvedRegionRecipe.regionId(worldId, "office/0/0/0")
+	)
 	expectEqual("anchors canonicalize into lexical order", locked.topologyAnchorKeys[1], "entry/west")
-	expectEqual("content keys canonicalize into lexical order", locked.canonicalContentKeys[1], "fixture/light-row-a")
+	expectEqual(
+		"content keys canonicalize into lexical order",
+		locked.canonicalContentKeys[1],
+		"fixture/light-row-a"
+	)
 
 	candidate.regionAddress = "mutated/outside"
 	candidate.generatorVersions.topology = 99
@@ -59,14 +67,29 @@ local function run(): number
 
 	local plain = ResolvedRegionRecipe.toPlainData(locked)
 	local reconstructed = ResolvedRegionRecipe.fromPlainData(plain)
-	expect("plain-data round trip is reconstruction-equivalent", ResolvedRegionRecipe.equivalent(locked, reconstructed))
-	expectEqual("plain-data round trip preserves fingerprint", ResolvedRegionRecipe.fingerprint(reconstructed), ResolvedRegionRecipe.fingerprint(locked))
+	expect(
+		"plain-data round trip is reconstruction-equivalent",
+		ResolvedRegionRecipe.equivalent(locked, reconstructed)
+	)
+	expectEqual(
+		"plain-data round trip preserves fingerprint",
+		ResolvedRegionRecipe.fingerprint(reconstructed),
+		ResolvedRegionRecipe.fingerprint(locked)
+	)
 
 	plain.regionAddress = "mutated/serialized-copy"
 	plain.generatorVersions.reality = 12
 	table.insert(plain.canonicalContentKeys, "object/new")
-	expectEqual("serialized copy mutation cannot rewrite locked address", locked.regionAddress, "office/0/0/0")
-	expectEqual("serialized copy mutation cannot rewrite locked versions", locked.generatorVersions.reality, 1)
+	expectEqual(
+		"serialized copy mutation cannot rewrite locked address",
+		locked.regionAddress,
+		"office/0/0/0"
+	)
+	expectEqual(
+		"serialized copy mutation cannot rewrite locked versions",
+		locked.generatorVersions.reality,
+		1
+	)
 	expectEqual("serialized copy mutation cannot rewrite locked content", #locked.canonicalContentKeys, 3)
 
 	local futureCandidate = {
@@ -86,13 +109,23 @@ local function run(): number
 	}
 	local relocked, relockChanged = ResolvedRegionRecipe.lock(locked, futureCandidate)
 	expect("already observed region does not relock", not relockChanged)
-	expect("already observed truth survives generator upgrade candidate", ResolvedRegionRecipe.equivalent(locked, relocked))
-	expectEqual("generator upgrade candidate cannot change semantic intent", relocked.semanticIntentKey, "commercial.office.fallback")
+	expect(
+		"already observed truth survives generator upgrade candidate",
+		ResolvedRegionRecipe.equivalent(locked, relocked)
+	)
+	expectEqual(
+		"generator upgrade candidate cannot change semantic intent",
+		relocked.semanticIntentKey,
+		"commercial.office.fallback"
+	)
 	expect(
 		"version mismatch is exposed through explicit migration hook",
 		ResolvedRegionRecipe.needsMigration(locked, futureCandidate.generatorVersions)
 	)
-	expect("matching versions do not request migration", not ResolvedRegionRecipe.needsMigration(locked, versions))
+	expect(
+		"matching versions do not request migration",
+		not ResolvedRegionRecipe.needsMigration(locked, versions)
+	)
 
 	local sameSetDifferentOrder = {
 		worldId = worldId,
@@ -104,8 +137,15 @@ local function run(): number
 		canonicalContentKeys = { "object/chair-a", "object/front-desk", "fixture/light-row-a" },
 	}
 	local normalized = ResolvedRegionRecipe.new(sameSetDifferentOrder)
-	expect("set-like key order cannot perturb canonical reconstruction", ResolvedRegionRecipe.equivalent(locked, normalized))
-	expectEqual("set-like key order cannot perturb fingerprint", ResolvedRegionRecipe.fingerprint(locked), ResolvedRegionRecipe.fingerprint(normalized))
+	expect(
+		"set-like key order cannot perturb canonical reconstruction",
+		ResolvedRegionRecipe.equivalent(locked, normalized)
+	)
+	expectEqual(
+		"set-like key order cannot perturb fingerprint",
+		ResolvedRegionRecipe.fingerprint(locked),
+		ResolvedRegionRecipe.fingerprint(normalized)
+	)
 
 	local changedContent = {
 		worldId = worldId,
@@ -117,8 +157,14 @@ local function run(): number
 		canonicalContentKeys = { "object/front-desk", "fixture/light-row-a", "object/chair-b" },
 	}
 	local changed = ResolvedRegionRecipe.new(changedContent)
-	expect("canonical content change changes exact reconstruction", not ResolvedRegionRecipe.equivalent(locked, changed))
-	expect("canonical content change changes diagnostic fingerprint", ResolvedRegionRecipe.fingerprint(locked) ~= ResolvedRegionRecipe.fingerprint(changed))
+	expect(
+		"canonical content change changes exact reconstruction",
+		not ResolvedRegionRecipe.equivalent(locked, changed)
+	)
+	expect(
+		"canonical content change changes diagnostic fingerprint",
+		ResolvedRegionRecipe.fingerprint(locked) ~= ResolvedRegionRecipe.fingerprint(changed)
+	)
 
 	local deltaStream = {}
 	local fingerprintBeforeDelta = ResolvedRegionRecipe.fingerprint(locked)

@@ -91,7 +91,10 @@ end
 local function assertExactKeys(value: any, expected: { [string]: boolean }, label: string)
 	assertPlainTable(value, label)
 	for key in pairs(value) do
-		assert(type(key) == "string" and expected[key] == true, `{label} contains unsupported key {tostring(key)}`)
+		assert(
+			type(key) == "string" and expected[key] == true,
+			`{label} contains unsupported key {tostring(key)}`
+		)
 	end
 	for key in pairs(expected) do
 		assert(value[key] ~= nil, `{label}.{key} is required`)
@@ -106,7 +109,10 @@ end
 
 local function assertSemanticKey(value: any, label: string)
 	assertBoundedText(value, label, MAX_KEY_BYTES)
-	assert(string.match(value, "^[A-Za-z0-9][A-Za-z0-9._/-]*$") ~= nil, `{label} contains unsupported characters`)
+	assert(
+		string.match(value, "^[A-Za-z0-9][A-Za-z0-9._/-]*$") ~= nil,
+		`{label} contains unsupported characters`
+	)
 	assert(string.sub(value, -1) ~= "/", `{label} must not end with /`)
 	assert(string.find(value, "//", 1, true) == nil, `{label} must not contain //`)
 end
@@ -114,7 +120,10 @@ end
 local function normalizeVersions(value: any): GeneratorVersions
 	assertExactKeys(value, VERSION_KEYS, "generatorVersions")
 	for key in pairs(VERSION_KEYS) do
-		assert(isIntegerInRange(value[key], 1, MAX_VERSION), `generatorVersions.{key} must be an integer in 1..{MAX_VERSION}`)
+		assert(
+			isIntegerInRange(value[key], 1, MAX_VERSION),
+			`generatorVersions.{key} must be an integer in 1..{MAX_VERSION}`
+		)
 	end
 	return table.freeze({
 		reality = value.reality,
@@ -219,8 +228,14 @@ end
 
 function ResolvedRegionRecipe.fromPlainData(value: any): ResolvedRegionRecipe
 	assertExactKeys(value, TOP_LEVEL_KEYS, "resolvedRegionRecipe")
-	assert(value.schemaVersion == SCHEMA_VERSION, `resolvedRegionRecipe.schemaVersion must be {SCHEMA_VERSION}`)
-	assert(StableId.is(value.worldId, "world"), "resolvedRegionRecipe.worldId must be a StableId in the world namespace")
+	assert(
+		value.schemaVersion == SCHEMA_VERSION,
+		`resolvedRegionRecipe.schemaVersion must be {SCHEMA_VERSION}`
+	)
+	assert(
+		StableId.is(value.worldId, "world"),
+		"resolvedRegionRecipe.worldId must be a StableId in the world namespace"
+	)
 	assertBoundedText(value.worldSeed, "resolvedRegionRecipe.worldSeed", MAX_WORLD_SEED_BYTES)
 	assertBoundedText(value.regionAddress, "resolvedRegionRecipe.regionAddress", MAX_ADDRESS_BYTES)
 	assertSemanticKey(value.semanticIntentKey, "resolvedRegionRecipe.semanticIntentKey")
@@ -285,7 +300,10 @@ function ResolvedRegionRecipe.lock(
 	return ResolvedRegionRecipe.new(candidate), true
 end
 
-function ResolvedRegionRecipe.needsMigration(recipe: ResolvedRegionRecipe, targetVersions: GeneratorVersions): boolean
+function ResolvedRegionRecipe.needsMigration(
+	recipe: ResolvedRegionRecipe,
+	targetVersions: GeneratorVersions
+): boolean
 	local canonical = ResolvedRegionRecipe.fromPlainData(recipe)
 	local target = normalizeVersions(targetVersions)
 	return canonical.generatorVersions.reality ~= target.reality
