@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, agent/integration/28-worldentity-registry-opaque-sol9c6e]
+    branches: [main]
   pull_request:
 
 permissions:
