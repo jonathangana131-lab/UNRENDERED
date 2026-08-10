@@ -20,8 +20,8 @@ type DrawerPosition = {
 	y: number,
 }
 
--- Production-contract examples. Material keys are opaque references on purpose:
--- ObjectGenome must not own MaterialDNA's schema or Roblox asset bindings.
+-- Production-contract examples use project-owned semantic material keys only.
+-- ObjectGenome does not own MaterialDNA's schema implementation or Roblox asset bindings.
 local zero: Vec3 = { x = 0, y = 0, z = 0 }
 
 local chairComponents: { ComponentSpec } = {}
@@ -38,7 +38,7 @@ for _, caster in ipairs(casterPositions) do
 	table.insert(chairComponents, {
 		key = key,
 		role = "floor-contact caster",
-		materialKey = "material:polymer-rubber.caster.v1",
+		materialKey = "material.v1.chair-caster.polymer-rubber",
 		massKg = 0.35,
 		localPositionM = { x = caster.x, y = -0.49, z = caster.z },
 		localRotationDeg = zero,
@@ -60,7 +60,7 @@ end
 table.insert(chairComponents, {
 	key = "base",
 	role = "five-star load-bearing base",
-	materialKey = "material:painted-steel.black.v1",
+	materialKey = "material.v1.office-metal.black-painted-steel",
 	massKg = 1.8,
 	localPositionM = { x = 0, y = -0.42, z = 0 },
 	localRotationDeg = zero,
@@ -77,7 +77,7 @@ table.insert(chairComponents, {
 table.insert(chairComponents, {
 	key = "lift-column",
 	role = "height and tilt support column",
-	materialKey = "material:steel-mechanism.dark.v1",
+	materialKey = "material.v1.mechanism-steel.dark",
 	massKg = 1.4,
 	localPositionM = { x = 0, y = -0.23, z = 0 },
 	localRotationDeg = zero,
@@ -88,7 +88,7 @@ table.insert(chairComponents, {
 table.insert(chairComponents, {
 	key = "seat",
 	role = "upholstered seat pan",
-	materialKey = "material:fabric-foam.charcoal.v1",
+	materialKey = "material.v1.upholstery.charcoal-fabric-foam",
 	massKg = 3.4,
 	localPositionM = { x = 0, y = 0, z = -0.01 },
 	localRotationDeg = zero,
@@ -99,7 +99,7 @@ table.insert(chairComponents, {
 table.insert(chairComponents, {
 	key = "back",
 	role = "upholstered back rest",
-	materialKey = "material:fabric-foam.charcoal.v1",
+	materialKey = "material.v1.upholstery.charcoal-fabric-foam",
 	massKg = 2.0,
 	localPositionM = { x = 0, y = 0.28, z = 0.20 },
 	localRotationDeg = zero,
@@ -111,7 +111,7 @@ for _, side in ipairs({ -1, 1 }) do
 	table.insert(chairComponents, {
 		key = if side < 0 then "arm-left" else "arm-right",
 		role = "arm support",
-		materialKey = "material:polypropylene.black.v1",
+		materialKey = "material.v1.polypropylene.black",
 		massKg = 0.75,
 		localPositionM = { x = side * 0.27, y = 0.12, z = 0.02 },
 		localRotationDeg = zero,
@@ -180,7 +180,7 @@ for _, leg in ipairs(tableLegPositions) do
 	table.insert(tableComponents, {
 		key = `leg-{leg.name}`,
 		role = "load-bearing leg",
-		materialKey = "material:painted-steel.gray.v1",
+		materialKey = "material.v1.office-metal.gray-painted-steel",
 		massKg = 2.4,
 		localPositionM = { x = leg.x, y = -0.03, z = leg.z },
 		localRotationDeg = zero,
@@ -193,7 +193,7 @@ local allLegs: { string } = { "leg-front-left", "leg-front-right", "leg-rear-lef
 table.insert(tableComponents, {
 	key = "crossbar",
 	role = "anti-racking brace",
-	materialKey = "material:painted-steel.gray.v1",
+	materialKey = "material.v1.office-metal.gray-painted-steel",
 	massKg = 2.0,
 	localPositionM = { x = 0, y = 0.15, z = 0 },
 	localRotationDeg = zero,
@@ -204,7 +204,7 @@ table.insert(tableComponents, {
 table.insert(tableComponents, {
 	key = "top",
 	role = "laminated work surface",
-	materialKey = "material:laminate-particleboard.beige.v1",
+	materialKey = "material.v1.laminate-particleboard.beige",
 	massKg = 15.4,
 	localPositionM = { x = 0, y = 0.33, z = 0 },
 	localRotationDeg = zero,
@@ -247,7 +247,7 @@ local cabinetComponents: { ComponentSpec } = {
 	{
 		key = "shell",
 		role = "load-bearing folded steel carcass",
-		materialKey = "material:painted-steel.warm-gray.v1",
+		materialKey = "material.v1.office-metal.warm-gray-enamel",
 		massKg = 24.0,
 		localPositionM = zero,
 		localRotationDeg = zero,
@@ -268,7 +268,7 @@ for _, drawer in ipairs(drawerPositions) do
 	table.insert(cabinetComponents, {
 		key = key,
 		role = "document drawer",
-		materialKey = "material:painted-steel.warm-gray.v1",
+		materialKey = "material.v1.office-metal.warm-gray-enamel",
 		massKg = 4.2,
 		localPositionM = { x = 0, y = drawer.y, z = -0.01 },
 		localRotationDeg = zero,
