@@ -138,6 +138,13 @@ local function run(): number
 	expectEqual("demotion increments representation revision", structural.representationRevision, 2)
 
 	local lifecycleRegistry = WorldEntity.createRegistry()
+	expectEqual("registry records backing is private", (lifecycleRegistry :: any)._records, nil)
+	expectEqual("registry diagnostics backing is private", (lifecycleRegistry :: any)._duplicates, nil)
+	local lifecycleRegistrySurfaceMutable = pcall(function()
+		(lifecycleRegistry :: any)._records = {}
+	end)
+	expectEqual("registry public surface is frozen", lifecycleRegistrySurfaceMutable, false)
+
 	WorldEntity.register(lifecycleRegistry, entity)
 	local registeredInteractive = WorldEntity.transitionRegistered(lifecycleRegistry, entity.id, "F3")
 	expectEqual("registered promotion returns current record", registeredInteractive.fidelity, "F3")
@@ -197,6 +204,10 @@ local function run(): number
 	expectEqual("duplicate diagnostic exists", diagnostic ~= nil, true)
 	expectEqual("duplicate does not replace original", WorldEntity.get(registry, entity.id), entity)
 	expectEqual("duplicate diagnostic retained", #WorldEntity.duplicateDiagnostics(registry), 1)
+
+	local diagnosticSnapshot = WorldEntity.duplicateDiagnostics(registry)
+	table.clear(diagnosticSnapshot)
+	expectEqual("diagnostic snapshot cannot mutate registry history", #WorldEntity.duplicateDiagnostics(registry), 1)
 
 	local boundedRegistry = WorldEntity.createRegistry(2)
 	WorldEntity.register(boundedRegistry, entity)
