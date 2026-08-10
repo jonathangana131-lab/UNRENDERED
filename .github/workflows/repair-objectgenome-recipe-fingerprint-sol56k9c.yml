@@ -1,0 +1,248 @@
+name: Repair ObjectGenome Recipe Fingerprint
+
+on:
+  push:
+    branches:
+      - agent/scratch/100-recipe-fingerprint-sol56k9c
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/scratch/100-recipe-fingerprint-sol56k9c
+          fetch-depth: 0
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Apply reviewed #100 contract repair
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text()
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected exactly one marker, found {count}")
+              p.write_text(text.replace(old, new, 1))
+
+          # Production: exact MaterialDNA validator parity while preserving v1 identity inputs.
+          replace_once(
+              "src/shared/Objects/ObjectGenome.luau",
+              'local StableId = require(script.Parent.Parent.Core.StableId)\n',
+              'local StableId = require(script.Parent.Parent.Core.StableId)\nlocal MaterialDNA = require(script.Parent.Parent.Materials.MaterialDNA)\n',
+          )
+          replace_once(
+              "src/shared/Objects/ObjectGenome.luau",
+              'ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"\n',
+              'ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"\nObjectGenome.RECIPE_FINGERPRINT_NAMESPACE = "object-genome-recipe"\nObjectGenome.RECIPE_FINGERPRINT_VERSION = 1\n',
+          )
+          replace_once(
+              "src/shared/Objects/ObjectGenome.luau",
+              '''\t\tif not isSemanticKey(component.materialKey) then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_key",\n\t\t\t\tpath .. ".materialKey",\n\t\t\t\t"materialKey must be the stable lowercase MaterialDNA recipe id"\n\t\t\t)\n\t\tend\n\t\tif not isPositiveInteger(component.materialRecipeVersion) then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_recipe_version",\n\t\t\t\tpath .. ".materialRecipeVersion",\n\t\t\t\t"materialRecipeVersion must be a positive integer"\n\t\t\t)\n\t\tend\n''',
+              '''\t\tlocal materialKeyValidation = MaterialDNA.validateReference({\n\t\t\tid = component.materialKey,\n\t\t\trecipeVersion = 1,\n\t\t})\n\t\tif not materialKeyValidation.ok then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_key",\n\t\t\t\tpath .. ".materialKey",\n\t\t\t\t"materialKey must satisfy MaterialDNA v2 project id rules"\n\t\t\t)\n\t\tend\n\t\tlocal materialRecipeVersionValidation = MaterialDNA.validateReference({\n\t\t\tid = "material.v1.object-genome-validation-probe",\n\t\t\trecipeVersion = component.materialRecipeVersion,\n\t\t})\n\t\tif not materialRecipeVersionValidation.ok then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_recipe_version",\n\t\t\t\tpath .. ".materialRecipeVersion",\n\t\t\t\t"materialRecipeVersion must satisfy MaterialDNA v2 recipe revision rules"\n\t\t\t)\n\t\tend\n''',
+          )
+
+          fingerprint_helpers = r'''local RECIPE_FINGERPRINT_CHUNK_BYTES = 384
+
+local function canonicalFingerprintNumber(value: number): string
+	if value == 0 then
+		return "0"
+	end
+	return string.format("%.17g", value)
+end
+
+local function foldFingerprintToken(signature: string, kind: string, payload: string): string
+	local nextSignature = StableId.fromParts(ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE, {
+		signature,
+		kind,
+		tostring(#payload),
+	})
+	local offset = 1
+	while offset <= #payload do
+		local chunk = string.sub(payload, offset, offset + RECIPE_FINGERPRINT_CHUNK_BYTES - 1)
+		nextSignature = StableId.fromParts(ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE, {
+			nextSignature,
+			"chunk",
+			chunk,
+		})
+		offset += RECIPE_FINGERPRINT_CHUNK_BYTES
+	end
+	return nextSignature
+end
+
+local function sortedFingerprintKeys(value: { [any]: any }): { any }
+	local keys: { any } = {}
+	for key in pairs(value) do
+		table.insert(keys, key)
+	end
+	table.sort(keys, function(left: any, right: any): boolean
+		local leftType = type(left)
+		local rightType = type(right)
+		if leftType ~= rightType then
+			return leftType < rightType
+		end
+		if leftType == "number" then
+			return (left :: number) < (right :: number)
+		end
+		assert(leftType == "string", "validated ObjectGenome keys must be strings or array indices")
+		return (left :: string) < (right :: string)
+	end)
+	return keys
+end
+
+local function fingerprintValue(signature: string, value: any): string
+	local valueType = type(value)
+	if valueType == "string" then
+		return foldFingerprintToken(signature, "string", value)
+	elseif valueType == "number" then
+		return foldFingerprintToken(signature, "number", canonicalFingerprintNumber(value))
+	elseif valueType == "boolean" then
+		return foldFingerprintToken(signature, "boolean", if value then "true" else "false")
+	elseif valueType == "table" then
+		local keys = sortedFingerprintKeys(value)
+		local nextSignature = foldFingerprintToken(signature, "table", tostring(#keys))
+		for _, key in ipairs(keys) do
+			nextSignature = fingerprintValue(nextSignature, key)
+			nextSignature = fingerprintValue(nextSignature, value[key])
+		end
+		return foldFingerprintToken(nextSignature, "end-table", tostring(#keys))
+	end
+	error(`unsupported validated ObjectGenome fingerprint value type: {valueType}`)
+end
+
+function ObjectGenome.recipeFingerprint(value: ObjectGenome): string
+	ObjectGenome.validate(value)
+	local signature = StableId.fromParts(ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE, {
+		tostring(ObjectGenome.RECIPE_FINGERPRINT_VERSION),
+		"root",
+	})
+	return fingerprintValue(signature, value)
+end
+
+'''
+          replace_once(
+              "src/shared/Objects/ObjectGenome.luau",
+              'function ObjectGenome.identityParts(value: ObjectGenome): { string }\n',
+              fingerprint_helpers + 'function ObjectGenome.identityParts(value: ObjectGenome): { string }\n',
+          )
+
+          # Documentation: StableId remains unchanged; full-recipe fingerprint is a separate drift seal.
+          replace_once(
+              "Docs/OBJECT_GENOME.md",
+              '- `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityParts()` supplies those semantic parts to the locked project `StableId` contract; ObjectGenome does not duplicate hashing/canonical encoding.\n',
+              '- `familyId + familyVersion + variantKey + schemaVersion` remain the complete ObjectGenome v1 stable identity input. `ObjectGenome.identityParts()` supplies exactly those semantic parts to the locked project `StableId` contract; the Foundation repair does not rewrite established v1 IDs.\n- `ObjectGenome.recipeFingerprint()` is a separate versioned deterministic seal over the entire validated immutable v1 recipe table. It is not an entity/state/persistence identity. Fixture fingerprint goldens make same-version canonical recipe drift visible in tests, including nested provenance, geometry, mass, support, mechanism, affordance, and exact material-reference changes.\n',
+          )
+          replace_once(
+              "Docs/OBJECT_GENOME.md",
+              '- Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`: `materialKey` is the stable lowercase MaterialDNA recipe id and `materialRecipeVersion` is its positive content revision. ObjectGenome validates and owns those plain values but does not import MaterialDNA implementation details or Roblox asset IDs. A published component material-revision change is a canonical object recipe change and therefore requires the corresponding `familyVersion` to advance rather than silently retargeting an established genome identity.\n',
+              '- Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`. ObjectGenome keeps those values flat in its own schema and validates their value domains through production `MaterialDNA.validateReference()` semantics while preserving ObjectGenome\'s stable field-specific diagnostics. A published component material-revision change is canonical object recipe content and therefore requires the corresponding `familyVersion` to advance; the separate recipe fingerprint catches an accidental same-version retarget.\n',
+          )
+          replace_once(
+              "Docs/OBJECT_GENOME.md",
+              'Changing field meaning or deterministic identity inputs requires an object schema/version decision. Changing published canonical recipe content such as a component\'s exact material revision requires advancing `familyVersion`. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.\n',
+              'Changing field meaning or deterministic identity inputs requires an object schema/version decision. Changing published canonical recipe content such as a component\'s exact material revision requires advancing `familyVersion`; the full immutable recipe fingerprint is the CI/golden guard against forgetting that revision. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.\n',
+          )
+
+          # Tests: cross-contract MaterialDNA parity + full recipe fingerprint goldens/drift coverage.
+          replace_once(
+              "tests/object_genome.luau",
+              'local StableId = ProductionLoader.requireShared("Core/StableId")\nlocal ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")\n',
+              'local StableId = ProductionLoader.requireShared("Core/StableId")\nlocal MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")\nlocal ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")\n',
+          )
+          replace_once(
+              "tests/object_genome.luau",
+              '''\t\t{\n\t\t\tname = "office chair",\n\t\t\tgenome = Fixtures.officeChair,\n\t\t\tidentity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",\n\t\t},\n''',
+              '''\t\t{\n\t\t\tname = "office chair",\n\t\t\tgenome = Fixtures.officeChair,\n\t\t\tidentity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",\n\t\t\tfingerprint = "__CHAIR_FINGERPRINT__",\n\t\t},\n''',
+          )
+          replace_once(
+              "tests/object_genome.luau",
+              '''\t\t{\n\t\t\tname = "office table",\n\t\t\tgenome = Fixtures.officeTable,\n\t\t\tidentity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",\n\t\t},\n''',
+              '''\t\t{\n\t\t\tname = "office table",\n\t\t\tgenome = Fixtures.officeTable,\n\t\t\tidentity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",\n\t\t\tfingerprint = "__TABLE_FINGERPRINT__",\n\t\t},\n''',
+          )
+          replace_once(
+              "tests/object_genome.luau",
+              '''\t\t{\n\t\t\tname = "filing cabinet",\n\t\t\tgenome = Fixtures.filingCabinet,\n\t\t\tidentity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",\n\t\t},\n''',
+              '''\t\t{\n\t\t\tname = "filing cabinet",\n\t\t\tgenome = Fixtures.filingCabinet,\n\t\t\tidentity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",\n\t\t\tfingerprint = "__CABINET_FINGERPRINT__",\n\t\t},\n''',
+          )
+          replace_once(
+              "tests/object_genome.luau",
+              '''\t\texpect(fixture.name .. " repeat identity", identity == ObjectGenome.identityKey(fixture.genome))\n\n\t\tfor _, component in ipairs(fixture.genome.components) do\n''',
+              '''\t\texpect(fixture.name .. " repeat identity", identity == ObjectGenome.identityKey(fixture.genome))\n\n\t\tlocal fingerprint = ObjectGenome.recipeFingerprint(fixture.genome)\n\t\texpect(fixture.name .. " locked full recipe fingerprint", fingerprint == fixture.fingerprint)\n\t\texpect(\n\t\t\tfixture.name .. " uses separate recipe fingerprint namespace",\n\t\t\tStableId.is(fingerprint, ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE)\n\t\t)\n\t\texpect(\n\t\t\tfixture.name .. " repeat recipe fingerprint",\n\t\t\tfingerprint == ObjectGenome.recipeFingerprint(fixture.genome)\n\t\t)\n\n\t\tfor _, component in ipairs(fixture.genome.components) do\n''',
+          )
+          replace_once(
+              "tests/object_genome.luau",
+              '''\t\t\texpect(\n\t\t\t\tfixture.name .. " component pins a material recipe revision",\n\t\t\t\tcomponent.materialRecipeVersion == 1\n\t\t\t)\n\t\tend\n''',
+              '''\t\t\texpect(\n\t\t\t\tfixture.name .. " component pins a material recipe revision",\n\t\t\t\tcomponent.materialRecipeVersion == 1\n\t\t\t)\n\t\t\texpect(\n\t\t\t\tfixture.name .. " component reference satisfies production MaterialDNA",\n\t\t\t\tMaterialDNA.validateReference({\n\t\t\t\t\tid = component.materialKey,\n\t\t\t\t\trecipeVersion = component.materialRecipeVersion,\n\t\t\t\t}).ok\n\t\t\t)\n\t\tend\n''',
+          )
+          replace_once(
+              "tests/object_genome.luau",
+              '''\texpect(\n\t\t"material recipe revision is retained as canonical object recipe input",\n\t\trevisedShell ~= nil\n\t\t\tand canonicalShell ~= nil\n\t\t\tand revisedShell.materialKey == canonicalShell.materialKey\n\t\t\tand revisedShell.materialRecipeVersion ~= canonicalShell.materialRecipeVersion\n\t\t\tand ObjectGenome.inspect(revisedMaterial).ok\n\t)\n\n''',
+              '''\texpect(\n\t\t"material recipe revision is retained as canonical object recipe input",\n\t\trevisedShell ~= nil\n\t\t\tand canonicalShell ~= nil\n\t\t\tand revisedShell.materialKey == canonicalShell.materialKey\n\t\t\tand revisedShell.materialRecipeVersion ~= canonicalShell.materialRecipeVersion\n\t\t\tand ObjectGenome.inspect(revisedMaterial).ok\n\t)\n\texpect(\n\t\t"same-version material drift preserves established v1 identity",\n\t\tObjectGenome.identityKey(revisedMaterial) == ObjectGenome.identityKey(Fixtures.filingCabinet)\n\t)\n\texpect(\n\t\t"same-version material drift changes full recipe fingerprint",\n\t\tObjectGenome.recipeFingerprint(revisedMaterial) ~= ObjectGenome.recipeFingerprint(Fixtures.filingCabinet)\n\t)\n\n\tlocal publishedMaterialRevision = deepCopy(Fixtures.filingCabinet)\n\tlocal publishedShell = findComponent(publishedMaterialRevision, "shell")\n\tpublishedMaterialRevision.familyVersion += 1\n\tif publishedShell ~= nil then\n\t\tpublishedShell.materialRecipeVersion += 1\n\tend\n\texpect(\n\t\t"published material revision with familyVersion advance is valid and changes identity",\n\t\tpublishedShell ~= nil\n\t\t\tand ObjectGenome.inspect(publishedMaterialRevision).ok\n\t\t\tand ObjectGenome.identityKey(publishedMaterialRevision)\n\t\t\t\t~= ObjectGenome.identityKey(Fixtures.filingCabinet)\n\t)\n\n\tlocal materialBoundaryCases = {\n\t\t{ name = "slash id", id = "material.v1/reference-probe", recipeVersion = 1 },\n\t\t{ name = "numeric-only id", id = "123", recipeVersion = 1 },\n\t\t{ name = "overlong id", id = "material.v1." .. string.rep("a", 151), recipeVersion = 1 },\n\t\t{ name = "max recipe version", id = "material.v1.reference-probe", recipeVersion = 2147483647 },\n\t\t{ name = "above max recipe version", id = "material.v1.reference-probe", recipeVersion = 2147483648 },\n\t}\n\tfor _, materialCase in ipairs(materialBoundaryCases) do\n\t\tlocal reference = {\n\t\t\tid = materialCase.id,\n\t\t\trecipeVersion = materialCase.recipeVersion,\n\t\t}\n\t\tlocal expectedReferenceValidity = MaterialDNA.validateReference(reference).ok\n\t\tlocal boundaryGenome = deepCopy(Fixtures.officeChair)\n\t\tboundaryGenome.components[1].materialKey = reference.id\n\t\tboundaryGenome.components[1].materialRecipeVersion = reference.recipeVersion\n\t\texpect(\n\t\t\t"ObjectGenome matches MaterialDNA reference boundary: " .. materialCase.name,\n\t\t\tObjectGenome.inspect(boundaryGenome).ok == expectedReferenceValidity\n\t\t)\n\tend\n\n\tlocal function expectSameVersionFingerprintDrift(name, mutate)\n\t\tlocal genome = deepCopy(Fixtures.officeChair)\n\t\tmutate(genome)\n\t\texpect(name .. " remains a valid v1 recipe", ObjectGenome.inspect(genome).ok)\n\t\texpect(\n\t\t\tname .. " does not rewrite established v1 identity inputs",\n\t\t\tObjectGenome.identityKey(genome) == ObjectGenome.identityKey(Fixtures.officeChair)\n\t\t)\n\t\texpect(\n\t\t\tname .. " changes full immutable recipe fingerprint",\n\t\t\tObjectGenome.recipeFingerprint(genome) ~= ObjectGenome.recipeFingerprint(Fixtures.officeChair)\n\t\t)\n\tend\n\n\texpectSameVersionFingerprintDrift("provenance drift", function(genome)\n\t\tgenome.provenance.productLine ..= " Revised"\n\tend)\n\texpectSameVersionFingerprintDrift("dimension drift", function(genome)\n\t\tgenome.dimensionsM.x += 0.01\n\tend)\n\texpectSameVersionFingerprintDrift("mass drift", function(genome)\n\t\tgenome.massKg += 0.01\n\tend)\n\texpectSameVersionFingerprintDrift("component drift", function(genome)\n\t\tgenome.components[1].role ..= " revised"\n\tend)\n\texpectSameVersionFingerprintDrift("support-order drift", function(genome)\n\t\tlocal base = findComponent(genome, "base")\n\t\tif base ~= nil then\n\t\t\tbase.supportKeys[1], base.supportKeys[2] = base.supportKeys[2], base.supportKeys[1]\n\t\tend\n\tend)\n\texpectSameVersionFingerprintDrift("mechanism drift", function(genome)\n\t\tgenome.mechanisms[#genome.mechanisms].maxDegrees -= 1\n\tend)\n\texpectSameVersionFingerprintDrift("affordance drift", function(genome)\n\t\tgenome.affordances[1].radiusM -= 0.01\n\tend)\n\n''',
+          )
+          PY
+
+          stylua src tests
+
+          cat > tests/.print_objectgenome_fingerprints.luau <<'LUA'
+          local ProductionLoader = require("./support/ProductionLoader")
+          local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
+          local Fixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
+
+          print(ObjectGenome.recipeFingerprint(Fixtures.officeChair))
+          print(ObjectGenome.recipeFingerprint(Fixtures.officeTable))
+          print(ObjectGenome.recipeFingerprint(Fixtures.filingCabinet))
+          LUA
+
+          python3 <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          output = subprocess.check_output(["lune", "run", "tests/.print_objectgenome_fingerprints"], text=True)
+          values = [line.strip() for line in output.splitlines() if line.strip().startswith("object-genome-recipe:v1:")]
+          if len(values) != 3:
+              raise SystemExit(f"expected three recipe fingerprints, got {values!r}\n{output}")
+          path = Path("tests/object_genome.luau")
+          text = path.read_text()
+          for marker, value in zip(
+              ["__CHAIR_FINGERPRINT__", "__TABLE_FINGERPRINT__", "__CABINET_FINGERPRINT__"],
+              values,
+          ):
+              if text.count(marker) != 1:
+                  raise SystemExit(f"expected exactly one fingerprint marker {marker}")
+              text = text.replace(marker, value)
+          path.write_text(text)
+          PY
+
+          rm tests/.print_objectgenome_fingerprints.luau
+          stylua src tests
+          stylua --check src tests
+          selene src tests
+          lune run tests/run
+          rojo build default.project.json -o /tmp/unrendered.rbxlx
+
+      - name: Commit reviewed repair and retire helper
+        shell: bash
+        run: |
+          git rm .github/workflows/repair-objectgenome-recipe-fingerprint-sol56k9c.yml
+          git add Docs/OBJECT_GENOME.md src/shared/Objects/ObjectGenome.luau tests/object_genome.luau
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fix(objects): add full immutable recipe fingerprint"
+          git push origin HEAD:agent/scratch/100-recipe-fingerprint-sol56k9c
