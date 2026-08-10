@@ -40,6 +40,48 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(futureSchema), "genome.schema_version")
 	)
 
+	local unknownTopLevel = deepCopy(Fixtures.officeChair)
+	unknownTopLevel.futureField = true
+	expect(
+		"rejects undeclared top-level genome fields",
+		hasCode(ObjectGenome.inspect(unknownTopLevel), "schema.unknown_field")
+	)
+
+	local unknownProvenance = deepCopy(Fixtures.officeChair)
+	unknownProvenance.provenance.legacySku = "x"
+	expect(
+		"rejects undeclared provenance fields",
+		hasCode(ObjectGenome.inspect(unknownProvenance), "schema.unknown_field")
+	)
+
+	local unknownVectorField = deepCopy(Fixtures.officeChair)
+	unknownVectorField.dimensionsM.w = 1
+	expect(
+		"rejects undeclared vector fields",
+		hasCode(ObjectGenome.inspect(unknownVectorField), "schema.unknown_field")
+	)
+
+	local unknownComponentField = deepCopy(Fixtures.officeChair)
+	unknownComponentField.components[1].debugName = "seat"
+	expect(
+		"rejects undeclared component fields",
+		hasCode(ObjectGenome.inspect(unknownComponentField), "schema.unknown_field")
+	)
+
+	local unknownMechanismField = deepCopy(Fixtures.officeChair)
+	unknownMechanismField.mechanisms[1].futureLimit = 1
+	expect(
+		"rejects undeclared mechanism fields",
+		hasCode(ObjectGenome.inspect(unknownMechanismField), "schema.unknown_field")
+	)
+
+	local unknownAffordanceField = deepCopy(Fixtures.officeChair)
+	unknownAffordanceField.affordances[1].priority = 1
+	expect(
+		"rejects undeclared affordance fields",
+		hasCode(ObjectGenome.inspect(unknownAffordanceField), "schema.unknown_field")
+	)
+
 	local sparseComponents = deepCopy(Fixtures.officeChair)
 	sparseComponents.components[3] = sparseComponents.components[2]
 	sparseComponents.components[2] = nil
