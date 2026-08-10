@@ -13,6 +13,7 @@ export type PolicyInputs = {
 }
 
 export type PolicyConfig = {
+	maxRegisteredEntities: number,
 	structuralDistanceStuds: number,
 	renderDistanceStuds: number,
 	interactiveDistanceStuds: number,
@@ -47,6 +48,7 @@ export type Metrics = {
 	blockedByCooldown: number,
 	blockedByMissingTransition: number,
 	externalSynchronizations: number,
+	registrationCapacityRejections: number,
 }
 
 export type TransitionHook = (entityId: string, fromLevel: FidelityLevel, toLevel: FidelityLevel) -> ()
@@ -70,6 +72,7 @@ type MutableMetrics = {
 	blockedByCooldown: number,
 	blockedByMissingTransition: number,
 	externalSynchronizations: number,
+	registrationCapacityRejections: number,
 }
 
 local FidelityManager = {}
@@ -93,6 +96,7 @@ local LEVEL_INDEX: { [FidelityLevel]: number } = {
 table.freeze(LEVEL_INDEX)
 
 local DEFAULT_CONFIG: PolicyConfig = {
+	maxRegisteredEntities = 4096,
 	structuralDistanceStuds = 512,
 	renderDistanceStuds = 240,
 	interactiveDistanceStuds = 48,
@@ -125,6 +129,10 @@ local function validateNonNegative(name: string, value: number): ()
 end
 
 local function validateConfig(config: PolicyConfig): ()
+	assert(
+		config.maxRegisteredEntities >= 1 and config.maxRegisteredEntities == math.floor(config.maxRegisteredEntities),
+		"maxRegisteredEntities must be a positive integer"
+	)
 	validateNonNegative("heroDistanceStuds", config.heroDistanceStuds)
 	validateNonNegative("interactiveDistanceStuds", config.interactiveDistanceStuds)
 	validateNonNegative("renderDistanceStuds", config.renderDistanceStuds)
@@ -153,6 +161,7 @@ end
 
 local function copyConfig(config: PolicyConfig): PolicyConfig
 	return {
+		maxRegisteredEntities = config.maxRegisteredEntities,
 		structuralDistanceStuds = config.structuralDistanceStuds,
 		renderDistanceStuds = config.renderDistanceStuds,
 		interactiveDistanceStuds = config.interactiveDistanceStuds,
@@ -203,10 +212,14 @@ function FidelityManager.selectDesiredLevel(
 	currentLevel: FidelityLevel?
 ): FidelityLevel
 	local resolvedConfig = config or DEFAULT_CONFIG
-	local resolvedCurrent = currentLevel or "F0"
+	local resolvedCurrent: FidelityLevel
+	if currentLevel == nil then
+		resolvedCurrent = "F0"
+	else
+		resolvedCurrent = currentLevel
+	end
 	validateConfig(resolvedConfig)
 	validateInputs(inputs)
-	assert(isLevel(resolvedCurrent), "currentLevel must be F0-F4")
 
 	local currentIndex = levelIndex(resolvedCurrent)
 	local hysteresis = resolvedConfig.distanceHysteresisStuds
@@ -244,9 +257,9 @@ function FidelityManager.selectDesiredLevel(
 	end
 
 	local heroRelevance = math.max(inputs.significance, inputs.networkRelevance, inputs.entityRelevance)
-	local locallyPresent = inputs.visible or inputs.directlyObserved or inputs.distanceStuds <= renderLimit
 	local closeHeroDemand = inputs.distanceStuds <= heroLimit and (inputs.directlyObserved or recentlyInteracted)
-	if closeHeroDemand or (heroRelevance >= resolvedConfig.heroRelevanceThreshold and locallyPresent) then
+	local visibleHeroDemand = inputs.visible and heroRelevance >= resolvedConfig.heroRelevanceThreshold
+	if closeHeroDemand or visibleHeroDemand then
 		desired = "F4"
 	end
 
@@ -271,6 +284,7 @@ function FidelityManager.new(config: PolicyConfig?): Manager
 			blockedByCooldown = 0,
 			blockedByMissingTransition = 0,
 			externalSynchronizations = 0,
+			registrationCapacityRejections = 0,
 		},
 	}
 
@@ -280,8 +294,17 @@ end
 function FidelityManager.register(self: Manager, entityId: string, currentLevel: FidelityLevel?): ()
 	assert(entityId ~= "", "entityId required")
 	assert(self._states[entityId] == nil, `entity already registered: {entityId}`)
-	local level = currentLevel or "F0"
-	assert(isLevel(level), "currentLevel must be F0-F4")
+	if self._metrics.registered >= self.config.maxRegisteredEntities then
+		self._metrics.registrationCapacityRejections += 1
+		error(`fidelity registration capacity reached: {self.config.maxRegisteredEntities}`)
+	end
+
+	local level: FidelityLevel
+	if currentLevel == nil then
+		level = "F0"
+	else
+		level = currentLevel
+	end
 
 	self._states[entityId] = {
 		observedLevel = level,
@@ -428,6 +451,7 @@ function FidelityManager.getMetrics(self: Manager): Metrics
 		blockedByCooldown = self._metrics.blockedByCooldown,
 		blockedByMissingTransition = self._metrics.blockedByMissingTransition,
 		externalSynchronizations = self._metrics.externalSynchronizations,
+		registrationCapacityRejections = self._metrics.registrationCapacityRejections,
 	})
 end
 
