@@ -20,7 +20,7 @@ jobs:
       - name: Install Rokit
         run: |
           cargo install rokit --version 1.2.0 --locked
-          rokit install
+          rokit install --no-trust-check
 
       - name: Generate Rojo sourcemap
         run: rojo sourcemap default.project.json --output sourcemap.json
