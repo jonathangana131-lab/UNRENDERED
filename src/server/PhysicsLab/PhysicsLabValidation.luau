@@ -32,6 +32,8 @@ local OBJECT_GENOME_KEY_ATTRIBUTE = "UNRENDERED_ObjectGenomeKey"
 local OBJECT_GENOME_ID_ATTRIBUTE = "UNRENDERED_ObjectGenomeId"
 local OBJECT_FINGERPRINT_ATTRIBUTE = "UNRENDERED_ObjectRecipeFingerprint"
 local REPRESENTATION_CLASS_ATTRIBUTE = "UNRENDERED_RepresentationClass"
+local COMPONENT_KEY_ATTRIBUTE = "UNRENDERED_ComponentKey"
+local COMPONENT_ROLE_ATTRIBUTE = "UNRENDERED_ComponentRole"
 
 local function requiredStringAttribute(root: Instance, name: string): string
 	local value = root:GetAttribute(name)
@@ -90,6 +92,69 @@ local function assertCanonicalRootIdentity(root: Model, recipe: PhysicsLabRecipe
 		requiredStringAttribute(root, REPRO_KEY_ATTRIBUTE) == expectedReproKey,
 		"Physics Lab root resolved-region repro key does not match canonical truth"
 	)
+end
+
+local function assertCanonicalObjectComponents(
+	representation: Model,
+	objectRecipe: PhysicsLabRecipe.ObjectEntityRecipe
+): ()
+	local genome = PhysicsLabRecipe.objectGenome(objectRecipe.genomeKey)
+	local expectedByKey = {}
+	local seenKeys: { [string]: boolean } = {}
+
+	for _, component in ipairs(genome.components) do
+		assert(
+			expectedByKey[component.key] == nil,
+			`canonical ObjectGenome {objectRecipe.genomeKey} repeats component key {component.key}`
+		)
+		expectedByKey[component.key] = component
+	end
+
+	for _, child in ipairs(representation:GetChildren()) do
+		assert(
+			child:IsA("BasePart"),
+			`Physics Lab object {representation.Name} has unexpected direct child {child.Name}`
+		)
+		local componentKey = child:GetAttribute(COMPONENT_KEY_ATTRIBUTE)
+		assert(
+			type(componentKey) == "string" and componentKey ~= "",
+			`Physics Lab object {representation.Name} component {child.Name} is missing {COMPONENT_KEY_ATTRIBUTE}`
+		)
+		local expected = expectedByKey[componentKey]
+		assert(
+			expected ~= nil,
+			`Physics Lab object {representation.Name} has unknown component key {componentKey}`
+		)
+		assert(
+			not seenKeys[componentKey],
+			`Physics Lab object {representation.Name} repeats component key {componentKey}`
+		)
+		seenKeys[componentKey] = true
+
+		assert(
+			child.Name == expected.key,
+			`Physics Lab object {representation.Name} component {componentKey} has the wrong Instance name`
+		)
+		assert(
+			child:GetAttribute(COMPONENT_ROLE_ATTRIBUTE) == expected.role,
+			`Physics Lab object {representation.Name} component {componentKey} has the wrong role`
+		)
+		assert(
+			child:GetAttribute(MATERIAL_KEY_ATTRIBUTE) == expected.materialKey,
+			`Physics Lab object {representation.Name} component {componentKey} has the wrong MaterialDNA identity`
+		)
+		assert(
+			child:GetAttribute(MATERIAL_VERSION_ATTRIBUTE) == expected.materialRecipeVersion,
+			`Physics Lab object {representation.Name} component {componentKey} has the wrong MaterialDNA recipe version`
+		)
+	end
+
+	for _, component in ipairs(genome.components) do
+		assert(
+			seenKeys[component.key] == true,
+			`Physics Lab object {representation.Name} is missing canonical component {component.key}`
+		)
+	end
 end
 
 local function assertCanonicalRepresentationSet(
@@ -175,6 +240,7 @@ local function assertCanonicalRepresentationSet(
 				child:GetAttribute(REPRESENTATION_CLASS_ATTRIBUTE) == "F2-anchored-proxy",
 				`Physics Lab object {child.Name} has the wrong representation class`
 			)
+			assertCanonicalObjectComponents(child :: Model, expected)
 		end
 	end
 
