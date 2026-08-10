@@ -1,0 +1,73 @@
+name: Restage resolved-region clean branch
+
+on:
+  push:
+    branches:
+      - agent/reality/9-resolved-region-lock-clean-sol56g7
+
+permissions:
+  contents: write
+
+jobs:
+  restage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/reality/9-resolved-region-lock-clean-sol56g7
+          fetch-depth: 0
+
+      - name: Copy reviewed #160 tree
+        shell: bash
+        run: |
+          git fetch origin agent/reality/9-resolved-region-lock-sol56g7
+          git show FETCH_HEAD:src/shared/Reality/ResolvedRegionRecipe.luau > src/shared/Reality/ResolvedRegionRecipe.luau
+          git show FETCH_HEAD:tests/resolved_region_recipe.luau > tests/resolved_region_recipe.luau
+          git show FETCH_HEAD:tests/run.luau > tests/run.luau
+          git show FETCH_HEAD:Docs/RESOLVED_REGION_RECIPE.md > Docs/RESOLVED_REGION_RECIPE.md
+
+      - name: Add initial transition regression
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('tests/resolved_region_recipe.luau')
+          text = path.read_text()
+          marker = '\tlocal exactRepeat = ResolvedRegionRecipe.resolveFirstObservation(locked, baseInput())\n'
+          insertion = '''\tlocal initiallyResolved = ResolvedRegionRecipe.resolveFirstObservation(nil, baseInput())
+          \texpectEqual(
+          \t\t"empty first-observation state locks the candidate",
+          \t\tinitiallyResolved.fingerprint,
+          \t\tlocked.fingerprint
+          \t)
+
+          '''
+          if insertion not in text:
+              if marker not in text:
+                  raise SystemExit('initial transition marker not found')
+              text = text.replace(marker, insertion + marker, 1)
+              path.write_text(text)
+          PY
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Format source and tests
+        run: stylua src tests
+
+      - name: Commit clean production tree
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/shared/Reality/ResolvedRegionRecipe.luau tests/resolved_region_recipe.luau tests/run.luau Docs/RESOLVED_REGION_RECIPE.md
+          git commit -m "feat(reality): lock first-observation resolved region truth"
+          git push origin HEAD:agent/reality/9-resolved-region-lock-clean-sol56g7
