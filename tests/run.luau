@@ -36,6 +36,9 @@ else
 	print("PASS hash distinguishes nearby input")
 end
 
+local runFidelityManagerTests = require("./FidelityManagerTests")
+failures += runFidelityManagerTests()
+
 if failures > 0 then
 	process.exit(1)
 end
