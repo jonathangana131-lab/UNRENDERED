@@ -23,8 +23,8 @@ CANONICAL_ROOTS = (
     REPO_ROOT / "src/shared/Materials",
     REPO_ROOT / "src/shared/Objects",
 )
-FORBIDDEN_CALL = re.compile(
-    r"\b(?:math\s*\.\s*random(?:seed)?|Random\s*\.\s*new)\s*\("
+FORBIDDEN_REFERENCE = re.compile(
+    r"\b(?:math\s*\.\s*random(?:seed)?|Random\s*\.\s*new)\b"
 )
 
 
@@ -127,7 +127,7 @@ def _find_violations(source: str) -> list[tuple[int, str]]:
     lines = source.splitlines()
     violations: list[tuple[int, str]] = []
 
-    for match in FORBIDDEN_CALL.finditer(code):
+    for match in FORBIDDEN_REFERENCE.finditer(code):
         line_number = source.count("\n", 0, match.start()) + 1
         snippet = lines[line_number - 1].strip() if line_number <= len(lines) else ""
         violations.append((line_number, snippet))
@@ -144,13 +144,16 @@ local longText = [[math.randomseed(1) inside a long string]]
 local a = math.random()
 local b = Random.new(123)
 local c = math.randomseed(5)
+local roll = math.random
+local seed = math.randomseed
+local constructor = Random.new
 '''.lstrip()
 
     actual_lines = [line for line, _ in _find_violations(sample)]
-    expected_lines = [5, 6, 7]
+    expected_lines = [5, 6, 7, 8, 9, 10]
     if actual_lines != expected_lines:
         raise AssertionError(
-            f"guard self-test failed: expected forbidden calls on {expected_lines}, got {actual_lines}"
+            f"guard self-test failed: expected forbidden references on {expected_lines}, got {actual_lines}"
         )
 
     print("Canonical randomness guard self-test passed")
@@ -182,7 +185,7 @@ def _audit_repository() -> int:
             violations.append((path, line_number, snippet))
 
     if violations:
-        print("Forbidden direct RNG calls found in canonical source:", file=sys.stderr)
+        print("Forbidden direct RNG references found in canonical source:", file=sys.stderr)
         for path, line_number, snippet in violations:
             relative = path.relative_to(REPO_ROOT)
             print(f"  {relative}:{line_number}: {snippet}", file=sys.stderr)
@@ -201,7 +204,7 @@ def main() -> int:
     parser.add_argument(
         "--self-test",
         action="store_true",
-        help="verify the audit detects code calls while ignoring comments and strings",
+        help="verify the audit detects code references while ignoring comments and strings",
     )
     args = parser.parse_args()
 
