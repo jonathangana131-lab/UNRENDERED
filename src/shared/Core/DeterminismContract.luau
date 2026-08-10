@@ -201,6 +201,21 @@ function DeterminismContract.nextRngState(state: number): number
 	return x
 end
 
+function DeterminismContract.nextIntegerState(state: number, minimum: number, maximum: number): (number, number)
+	assert(isSafeInteger(minimum) and isSafeInteger(maximum), "minimum and maximum must be safe integers")
+	assert(minimum <= maximum, "minimum must be <= maximum")
+	local width = maximum - minimum + 1
+	assert(width <= UINT32, "integer range width must be <= 2^32")
+
+	local acceptanceLimit = UINT32 - (UINT32 % width)
+	local nextState = DeterminismContract.nextRngState(state)
+	while nextState >= acceptanceLimit do
+		nextState = DeterminismContract.nextRngState(nextState)
+	end
+
+	return nextState, minimum + (nextState % width)
+end
+
 function DeterminismContract.seedFor(
 	worldSeed: string,
 	generationVersion: number,
