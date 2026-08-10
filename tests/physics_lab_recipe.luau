@@ -139,6 +139,58 @@ local function run(): number
 	expect("lab object placements bind valid ObjectGenome recipes and default state", allObjectContractsValid)
 	expect("lab shell starts as explicit F2 proxy fidelity", allInitialFidelityF2)
 
+	local doorGenome = PhysicsLabRecipe.objectGenome("commercialDoor")
+	local doorComponents = {}
+	for _, component in ipairs(doorGenome.components) do
+		doorComponents[component.key] = component
+	end
+	local hingeJamb = doorComponents["hinge-jamb"]
+	local latchJamb = doorComponents["latch-jamb"]
+	local header = doorComponents.header
+	local leaf = doorComponents.leaf
+	local frameIsHollow = doorComponents.frame == nil
+		and hingeJamb ~= nil
+		and latchJamb ~= nil
+		and header ~= nil
+		and leaf ~= nil
+		and hingeJamb.dimensionsM.x < doorGenome.dimensionsM.x / 4
+		and latchJamb.dimensionsM.x < doorGenome.dimensionsM.x / 4
+		and header.dimensionsM.y < doorGenome.dimensionsM.y / 4
+	local leafHasPositiveClearance = false
+	if frameIsHollow then
+		local leafLeft = leaf.localPositionM.x - leaf.dimensionsM.x / 2
+		local leafRight = leaf.localPositionM.x + leaf.dimensionsM.x / 2
+		local leafBottom = leaf.localPositionM.y - leaf.dimensionsM.y / 2
+		local leafTop = leaf.localPositionM.y + leaf.dimensionsM.y / 2
+		local hingeInner = hingeJamb.localPositionM.x + hingeJamb.dimensionsM.x / 2
+		local latchInner = latchJamb.localPositionM.x - latchJamb.dimensionsM.x / 2
+		local headerBottom = header.localPositionM.y - header.dimensionsM.y / 2
+		local frameBottom = -doorGenome.dimensionsM.y / 2
+		local hingeClearance = leafLeft - hingeInner
+		local latchClearance = latchInner - leafRight
+		local floorClearance = leafBottom - frameBottom
+		local headerClearance = headerBottom - leafTop
+		local maximumProxyGap = 0.01
+		leafHasPositiveClearance = hingeClearance > 0
+			and hingeClearance <= maximumProxyGap
+			and latchClearance > 0
+			and latchClearance <= maximumProxyGap
+			and floorClearance > 0
+			and floorClearance <= maximumProxyGap
+			and headerClearance > 0
+			and headerClearance <= maximumProxyGap
+	end
+	local hingeUsesJamb = false
+	for _, mechanism in ipairs(doorGenome.mechanisms) do
+		if mechanism.key == "leaf-hinge" then
+			hingeUsesJamb = mechanism.kind == "hinge" and mechanism.frameComponentKey == "hinge-jamb"
+		end
+	end
+	expect("lab commercial door frame revision is explicit", doorGenome.familyVersion == 2)
+	expect("lab commercial door F2 frame leaves a real aperture", frameIsHollow)
+	expect("lab commercial door F2 leaf has positive proxy clearance", leafHasPositiveClearance)
+	expect("lab commercial door hinge references the structural jamb", hingeUsesJamb)
+
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
 	expect("lab duplicate identity is detectable", duplicateAccepted == false)
 

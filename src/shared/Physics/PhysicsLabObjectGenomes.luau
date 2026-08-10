@@ -11,18 +11,46 @@ type Genome = ObjectGenome.ObjectGenome
 
 local zero: Vec3 = table.freeze({ x = 0, y = 0, z = 0 })
 
+-- Keep the F2 door frame physically hollow. A single full-width/full-height
+-- collidable frame component would seal the wall opening before the door can
+-- ever promote to an articulated representation. The proxy also keeps a small
+-- positive clearance around the leaf so anchored F2 parts do not interpenetrate.
 local doorComponents: { ComponentSpec } = {
 	{
-		key = "frame",
-		role = "ground-supported commercial door frame",
+		key = "hinge-jamb",
+		role = "ground-supported commercial door hinge jamb",
 		materialKey = "material.v1.office-metal.warm-gray-enamel",
 		materialRecipeVersion = 1,
-		massKg = 18,
-		localPositionM = zero,
+		massKg = 7,
+		localPositionM = { x = -0.525, y = 0, z = 0 },
 		localRotationDeg = zero,
-		dimensionsM = { x = 1.18, y = 2.16, z = 0.12 },
+		dimensionsM = { x = 0.12, y = 2.16, z = 0.12 },
 		supportKeys = {},
 		externalSupport = "ground",
+	},
+	{
+		key = "latch-jamb",
+		role = "ground-supported commercial door latch jamb",
+		materialKey = "material.v1.office-metal.warm-gray-enamel",
+		materialRecipeVersion = 1,
+		massKg = 7,
+		localPositionM = { x = 0.525, y = 0, z = 0 },
+		localRotationDeg = zero,
+		dimensionsM = { x = 0.12, y = 2.16, z = 0.12 },
+		supportKeys = {},
+		externalSupport = "ground",
+	},
+	{
+		key = "header",
+		role = "commercial door frame head",
+		materialKey = "material.v1.office-metal.warm-gray-enamel",
+		materialRecipeVersion = 1,
+		massKg = 4,
+		localPositionM = { x = 0, y = 1.015, z = 0 },
+		localRotationDeg = zero,
+		dimensionsM = { x = 1.18, y = 0.13, z = 0.12 },
+		supportKeys = { "hinge-jamb", "latch-jamb" },
+		externalSupport = "none",
 	},
 	{
 		key = "leaf",
@@ -30,10 +58,10 @@ local doorComponents: { ComponentSpec } = {
 		materialKey = "material.v1.office-metal.gray-painted-steel",
 		materialRecipeVersion = 1,
 		massKg = 26,
-		localPositionM = { x = 0, y = 0, z = -0.025 },
+		localPositionM = { x = 0, y = -0.065, z = -0.025 },
 		localRotationDeg = zero,
 		dimensionsM = { x = 0.92, y = 2.02, z = 0.045 },
-		supportKeys = { "frame" },
+		supportKeys = { "hinge-jamb" },
 		externalSupport = "none",
 	},
 }
@@ -43,7 +71,7 @@ local doorMechanisms: { MechanismSpec } = {
 		key = "leaf-hinge",
 		kind = "hinge",
 		movingComponentKey = "leaf",
-		frameComponentKey = "frame",
+		frameComponentKey = "hinge-jamb",
 		axis = { x = 0, y = 1, z = 0 },
 		minDegrees = 0,
 		maxDegrees = 105,
@@ -63,7 +91,7 @@ local doorAffordances: { AffordanceSpec } = {
 local commercialDoor: Genome = {
 	schemaVersion = ObjectGenome.SCHEMA_VERSION,
 	familyId = "lab-door.commercial",
-	familyVersion = 1,
+	familyVersion = 2,
 	variantKey = "single-leaf",
 	provenance = {
 		manufacturerFamily = "Northfield Architectural Hardware",
