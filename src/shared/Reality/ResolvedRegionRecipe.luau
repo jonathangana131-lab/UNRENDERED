@@ -14,7 +14,7 @@ local RegionAddress = if scriptValue ~= nil
 
 local SCHEMA_VERSION = 1
 local MAX_VERSION = 2147483647
-local MAX_WORLD_SEED_BYTES = 512
+local MAX_WORLD_SEED_REF_BYTES = 512
 local MAX_KEY_BYTES = 160
 local MAX_ANCHORS = 256
 local MAX_CONTENT_KEYS = 4096
@@ -36,7 +36,7 @@ export type RegionAddressValue = {
 
 export type PotentialRegionRecipe = {
 	worldId: string,
-	worldSeed: string,
+	worldSeedRef: string,
 	regionAddress: RegionAddressValue,
 	generatorVersions: GeneratorVersions,
 	semanticIntentKey: string,
@@ -48,7 +48,7 @@ export type ResolvedRegionBaseRecipe = {
 	schemaVersion: number,
 	id: string,
 	worldId: string,
-	worldSeed: string,
+	worldSeedRef: string,
 	regionAddress: RegionAddressValue,
 	generatorVersions: GeneratorVersions,
 	semanticIntentKey: string,
@@ -81,7 +81,7 @@ local ResolvedRegionRecipe = {
 
 local POTENTIAL_KEYS = {
 	worldId = true,
-	worldSeed = true,
+	worldSeedRef = true,
 	regionAddress = true,
 	generatorVersions = true,
 	semanticIntentKey = true,
@@ -93,7 +93,7 @@ local TOP_LEVEL_KEYS = {
 	schemaVersion = true,
 	id = true,
 	worldId = true,
-	worldSeed = true,
+	worldSeedRef = true,
 	regionAddress = true,
 	generatorVersions = true,
 	semanticIntentKey = true,
@@ -207,23 +207,31 @@ local function derivedRegionId(worldId: string, address: RegionAddressValue): st
 	return StableId.fromParts("region", { worldId, RegionAddress.key(address) })
 end
 
+local function candidateIdentity(input: any): (string, string, RegionAddressValue)
+	assertPlainTable(input, "potentialRegionRecipe")
+	local worldId = rawget(input, "worldId")
+	local worldSeedRef = rawget(input, "worldSeedRef")
+	local regionAddress = rawget(input, "regionAddress")
+	assert(StableId.is(worldId, "world"), "worldId must be a StableId in the world namespace")
+	assertBoundedText(worldSeedRef, "worldSeedRef", MAX_WORLD_SEED_REF_BYTES)
+	return worldId, worldSeedRef, RegionAddress.fromPlainData(regionAddress)
+end
+
 local function freezeRecipe(input: PotentialRegionRecipe): ResolvedRegionRecipe
 	assertExactKeys(input, POTENTIAL_KEYS, "potentialRegionRecipe")
-	assert(StableId.is(input.worldId, "world"), "worldId must be a StableId in the world namespace")
-	assertBoundedText(input.worldSeed, "worldSeed", MAX_WORLD_SEED_BYTES)
+	local worldId, worldSeedRef, address = candidateIdentity(input)
 	assertSemanticKey(input.semanticIntentKey, "semanticIntentKey")
 
-	local address = RegionAddress.fromPlainData(input.regionAddress)
 	local versions = normalizeVersions(input.generatorVersions)
 	local anchors = normalizeKeyArray(input.topologyAnchorKeys, "topologyAnchorKeys", MAX_ANCHORS)
 	local content = normalizeKeyArray(input.canonicalContentKeys, "canonicalContentKeys", MAX_CONTENT_KEYS)
-	local id = derivedRegionId(input.worldId, address)
+	local id = derivedRegionId(worldId, address)
 
 	return table.freeze({
 		schemaVersion = SCHEMA_VERSION,
 		id = id,
-		worldId = input.worldId,
-		worldSeed = input.worldSeed,
+		worldId = worldId,
+		worldSeedRef = worldSeedRef,
 		regionAddress = address,
 		generatorVersions = versions,
 		semanticIntentKey = input.semanticIntentKey,
@@ -238,7 +246,7 @@ local function canonicalParts(recipe: ResolvedRegionRecipe): { string }
 		tostring(SCHEMA_VERSION),
 		recipe.id,
 		recipe.worldId,
-		recipe.worldSeed,
+		recipe.worldSeedRef,
 		RegionAddress.key(recipe.regionAddress),
 		tostring(recipe.generatorVersions.reality),
 		tostring(recipe.generatorVersions.topology),
@@ -280,7 +288,7 @@ function ResolvedRegionRecipe.fromPlainData(value: any): ResolvedRegionRecipe
 
 	local recipe = freezeRecipe({
 		worldId = value.worldId,
-		worldSeed = value.worldSeed,
+		worldSeedRef = value.worldSeedRef,
 		regionAddress = value.regionAddress,
 		generatorVersions = value.generatorVersions,
 		semanticIntentKey = value.semanticIntentKey,
@@ -297,7 +305,7 @@ function ResolvedRegionRecipe.toPlainData(recipe: ResolvedRegionRecipe): any
 		schemaVersion = canonical.schemaVersion,
 		id = canonical.id,
 		worldId = canonical.worldId,
-		worldSeed = canonical.worldSeed,
+		worldSeedRef = canonical.worldSeedRef,
 		regionAddress = RegionAddress.toPlainData(canonical.regionAddress),
 		generatorVersions = {
 			reality = canonical.generatorVersions.reality,
@@ -330,19 +338,21 @@ function ResolvedRegionRecipe.lock(
 	existing: ResolvedRegionRecipe?,
 	candidate: PotentialRegionRecipe
 ): (ResolvedRegionRecipe, LockDisposition)
-	local canonicalCandidate = ResolvedRegionRecipe.new(candidate)
 	if existing == nil then
-		return canonicalCandidate, "locked"
+		return ResolvedRegionRecipe.new(candidate), "locked"
 	end
 
 	local locked = ResolvedRegionRecipe.fromPlainData(existing)
-	assert(locked.worldId == canonicalCandidate.worldId, "existing lock and candidate worldId must match")
-	assert(locked.worldSeed == canonicalCandidate.worldSeed, "existing lock and candidate worldSeed must match")
+	local candidateWorldId, candidateWorldSeedRef, candidateAddress = candidateIdentity(candidate)
+	assert(locked.worldId == candidateWorldId, "existing lock and candidate worldId must match")
+	assert(locked.worldSeedRef == candidateWorldSeedRef, "existing lock and candidate worldSeedRef must match")
 	assert(
-		RegionAddress.equal(locked.regionAddress, canonicalCandidate.regionAddress),
+		RegionAddress.equal(locked.regionAddress, candidateAddress),
 		"existing lock and candidate regionAddress must match"
 	)
-	if ResolvedRegionRecipe.equivalent(locked, canonicalCandidate) then
+
+	local ok, canonicalCandidate = pcall(ResolvedRegionRecipe.new, candidate)
+	if ok and ResolvedRegionRecipe.equivalent(locked, canonicalCandidate :: ResolvedRegionRecipe) then
 		return locked, "existing-match"
 	end
 	return locked, "existing-conflict"
@@ -397,7 +407,7 @@ function ResolvedRegionRecipe.runMigration(plan: MigrationPlan, migrator: Migrat
 
 	local migrated = ResolvedRegionRecipe.new(migrator(source, targetVersions))
 	assert(migrated.worldId == source.worldId, "migration must preserve worldId")
-	assert(migrated.worldSeed == source.worldSeed, "migration must preserve worldSeed")
+	assert(migrated.worldSeedRef == source.worldSeedRef, "migration must preserve worldSeedRef")
 	assert(
 		RegionAddress.equal(migrated.regionAddress, source.regionAddress),
 		"migration must preserve regionAddress"
