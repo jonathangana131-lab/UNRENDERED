@@ -1,0 +1,39 @@
+name: Temporary #183 formatter
+
+on:
+  push:
+    branches:
+      - agent/reality/9-worldid-region-identity-sol56s2
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/reality/9-worldid-region-identity-sol56s2
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+      - name: Apply pinned StyLua to #183
+        shell: bash
+        run: |
+          stylua tests/resolved_region_recipe.luau
+          if git diff --quiet -- tests/resolved_region_recipe.luau; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/resolved_region_recipe.luau
+          git commit -m "style(reality): apply pinned StyLua"
+          git push origin HEAD:agent/reality/9-worldid-region-identity-sol56s2
