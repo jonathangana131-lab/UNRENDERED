@@ -25,10 +25,16 @@ local function validatePlainShape(value: any)
 
 	local seen = 0
 	for key in pairs(value) do
-		assert(key == "x" or key == "z" or key == "layer", `region address contains unsupported key {tostring(key)}`)
+		assert(
+			key == "x" or key == "z" or key == "layer",
+			`region address contains unsupported key {tostring(key)}`
+		)
 		seen += 1
 	end
-	assert(seen == 3 and value.x ~= nil and value.z ~= nil and value.layer ~= nil, "region address requires x, z, and layer")
+	assert(
+		seen == 3 and value.x ~= nil and value.z ~= nil and value.layer ~= nil,
+		"region address requires x, z, and layer"
+	)
 	assert(isSafeInteger(value.x) and isSafeInteger(value.z), "region coordinates must be safe integers")
 	assert(isSafeInteger(value.layer), "layer must be a safe integer")
 end

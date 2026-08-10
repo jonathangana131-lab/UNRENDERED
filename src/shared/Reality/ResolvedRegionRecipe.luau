@@ -379,16 +379,31 @@ function ResolvedRegionRecipe.runMigration(plan: MigrationPlan, migrator: Migrat
 
 	local source = ResolvedRegionRecipe.fromPlainData(plan.source)
 	local sourceFingerprint = ResolvedRegionRecipe.fingerprint(source)
-	assert(plan.sourceFingerprint == sourceFingerprint, "migration plan source fingerprint does not match source recipe")
+	assert(
+		plan.sourceFingerprint == sourceFingerprint,
+		"migration plan source fingerprint does not match source recipe"
+	)
 	local sourceVersions = normalizeVersions(plan.sourceVersions)
-	assert(versionsEqual(source.generatorVersions, sourceVersions), "migration plan source versions do not match source recipe")
+	assert(
+		versionsEqual(source.generatorVersions, sourceVersions),
+		"migration plan source versions do not match source recipe"
+	)
 	local targetVersions = normalizeVersions(plan.targetVersions)
-	assert(not versionsEqual(sourceVersions, targetVersions), "migration plan target versions must differ from source")
+	assert(
+		not versionsEqual(sourceVersions, targetVersions),
+		"migration plan target versions must differ from source"
+	)
 
 	local migrated = ResolvedRegionRecipe.new(migrator(source, targetVersions))
 	assert(migrated.worldId == source.worldId, "migration must preserve worldId")
-	assert(RegionAddress.equal(migrated.regionAddress, source.regionAddress), "migration must preserve regionAddress")
-	assert(versionsEqual(migrated.generatorVersions, targetVersions), "migration output must use target generator versions")
+	assert(
+		RegionAddress.equal(migrated.regionAddress, source.regionAddress),
+		"migration must preserve regionAddress"
+	)
+	assert(
+		versionsEqual(migrated.generatorVersions, targetVersions),
+		"migration output must use target generator versions"
+	)
 
 	return table.freeze({
 		sourceFingerprint = sourceFingerprint,

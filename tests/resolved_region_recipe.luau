@@ -61,7 +61,11 @@ local function run(): number
 	expect("anchor array is frozen", not pcall(function()
 		table.insert(locked.topologyAnchorKeys, "extra")
 	end))
-	expectEqual("canonical spatial key comes from RegionAddress", RegionAddress.key(locked.regionAddress), "r:0:0:0")
+	expectEqual(
+		"canonical spatial key comes from RegionAddress",
+		RegionAddress.key(locked.regionAddress),
+		"r:0:0:0"
+	)
 	expectEqual(
 		"region id derives from world + canonical RegionAddress",
 		locked.id,
@@ -107,7 +111,10 @@ local function run(): number
 	local exactCandidate = makeCandidate()
 	local exactRelock, exactDisposition = ResolvedRegionRecipe.lock(locked, exactCandidate)
 	expectEqual("same observed candidate reports an existing match", exactDisposition, "existing-match")
-	expect("same observed candidate preserves locked truth", ResolvedRegionRecipe.equivalent(locked, exactRelock))
+	expect(
+		"same observed candidate preserves locked truth",
+		ResolvedRegionRecipe.equivalent(locked, exactRelock)
+	)
 
 	local futureCandidate = makeCandidate()
 	futureCandidate.generatorVersions = {
@@ -121,7 +128,11 @@ local function run(): number
 	futureCandidate.topologyAnchorKeys = { "future/anchor" }
 	futureCandidate.canonicalContentKeys = { "future/content" }
 	local relocked, conflictDisposition = ResolvedRegionRecipe.lock(locked, futureCandidate)
-	expectEqual("same identity with changed generation reports conflict", conflictDisposition, "existing-conflict")
+	expectEqual(
+		"same identity with changed generation reports conflict",
+		conflictDisposition,
+		"existing-conflict"
+	)
 	expect(
 		"already observed truth survives generator upgrade candidate",
 		ResolvedRegionRecipe.equivalent(locked, relocked)
@@ -230,7 +241,8 @@ local function run(): number
 		expectEqual("migration result preserves canonical region identity", migration.target.id, locked.id)
 		expectEqual("migration does not mutate stored source truth", locked.generatorVersions.reality, 1)
 
-		local _, postMigrationDisposition = ResolvedRegionRecipe.lock(locked, ResolvedRegionRecipe.toPlainData(migration.target))
+		local _, postMigrationDisposition =
+			ResolvedRegionRecipe.lock(locked, ResolvedRegionRecipe.toPlainData(migration.target))
 		expectEqual(
 			"ordinary observation still preserves source until caller explicitly persists migration",
 			postMigrationDisposition,
@@ -241,7 +253,11 @@ local function run(): number
 			ResolvedRegionRecipe.runMigration(plan, function(source, targetVersions)
 				local output = makeCandidate()
 				output.worldId = source.worldId
-				output.regionAddress = { x = source.regionAddress.x + 1, z = source.regionAddress.z, layer = source.regionAddress.layer }
+				output.regionAddress = {
+					x = source.regionAddress.x + 1,
+					z = source.regionAddress.z,
+					layer = source.regionAddress.layer,
+				}
 				output.generatorVersions = {
 					reality = targetVersions.reality,
 					topology = targetVersions.topology,
@@ -255,7 +271,10 @@ local function run(): number
 		expect("migration hook rejects a changed region identity", not crossIdentityMigrationAccepted)
 	end
 
-	expect("matching versions create no migration plan", ResolvedRegionRecipe.planMigration(locked, versions) == nil)
+	expect(
+		"matching versions create no migration plan",
+		ResolvedRegionRecipe.planMigration(locked, versions) == nil
+	)
 
 	local duplicateCandidate = makeCandidate()
 	duplicateCandidate.topologyAnchorKeys = { "entry/a", "entry/a" }
