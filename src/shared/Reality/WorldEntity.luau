@@ -68,6 +68,24 @@ local FIDELITY_RANK: { [string]: number } = table.freeze({
 	F4 = 4,
 })
 
+local WORLD_ENTITY_RECORD_KEYS: { [string]: boolean } = table.freeze({
+	id = true,
+	kind = true,
+	origin = true,
+	fidelity = true,
+	persistentState = true,
+	stateRevision = true,
+	representationRevision = true,
+})
+
+local GENERATION_ORIGIN_KEYS: { [string]: boolean } = table.freeze({
+	worldId = true,
+	regionId = true,
+	generator = true,
+	generatorVersion = true,
+	recipeKey = true,
+})
+
 local function assertNonEmpty(name: string, value: string): ()
 	assert(value ~= "", `{name} must not be empty`)
 	assert(string.find(value, "%c") == nil, `{name} must not contain control characters`)
@@ -86,6 +104,17 @@ local function assertNonNegativeInteger(path: string, value: unknown): number
 		`{path} must be a non-negative integer`
 	)
 	return numericValue
+end
+
+local function assertExactRecordShape(path: string, value: any, allowedKeys: { [string]: boolean }): ()
+	assert(type(value) == "table", `{path} must be a table`)
+	assert(getmetatable(value) == nil, `{path} must not have a metatable`)
+	for key in pairs(value) do
+		assert(
+			type(key) == "string" and allowedKeys[key] == true,
+			`{path} contains unknown schema key {tostring(key)}`
+		)
+	end
 end
 
 local function clonePlainValue(value: unknown, path: string, seen: { [any]: boolean }): unknown
@@ -152,6 +181,7 @@ local function cloneState(state: PlainData?): PlainData
 end
 
 local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
+	assertExactRecordShape("GenerationOrigin", origin, GENERATION_ORIGIN_KEYS)
 	assertNonEmpty("origin.worldId", origin.worldId)
 	if origin.regionId ~= nil then
 		assertNonEmpty("origin.regionId", origin.regionId)
@@ -207,7 +237,7 @@ end
 
 local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
 	local source = record :: any
-	assert(type(source) == "table", "WorldEntityRecord must be a table")
+	assertExactRecordShape("WorldEntityRecord", source, WORLD_ENTITY_RECORD_KEYS)
 	assert(
 		WorldEntity.isId(source.id),
 		"WorldEntityRecord.id must be a non-empty stable identifier without control characters"
