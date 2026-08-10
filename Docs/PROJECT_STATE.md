@@ -75,28 +75,40 @@ Landed direction:
 
 Do not reopen competing #9 frameworks. Future incompatible identity/fingerprint changes require an explicit ADR/version/compatibility path and preservation of accepted historical truth.
 
-## Unlocked Hero Gate
+### #10 — Production-contract Physics Lab: source-contract closure landed
+The permanent Physics Lab shell and its source-level validation strike team are closed. Do not reopen broad #10/#151 source-validation work unless a concrete regression, red-main repair, or newly gathered engine evidence exposes a specific defect.
 
-Finish this foundation before broadening into planned P1 systems.
-
-### #10 — Production-contract Physics Lab
-Build and deepen the permanent test/lab shell using the landed WorldEntity, Fidelity, MaterialDNA, ObjectGenome, and corrected resolved-region contracts. This is not permission for ad-hoc gameplay scripts or a competing framework.
-
-Required direction:
-- deterministic lab recipe and stable IDs,
-- production-contract realization boundaries,
-- floor/walls/ceiling plus door/chair/table/cart/cabinet/stairs/ramp/ledge test geometry,
-- development diagnostics for IDs/fidelity state,
+Landed source evidence:
+- deterministic lab recipe and stable WorldEntity IDs,
+- schema-v2 `ResolvedRegionRecipe` identity/provenance with exact fingerprint and repro key,
+- production-owned F2/F0 lifecycle transitions without making Workspace canonical state,
+- MaterialDNA/ObjectGenome-backed representations through project boundaries,
+- bounded development diagnostics and a server-only Studio harness,
+- source-owned 20-cycle F2 -> F0 -> F2 lifecycle evidence with exact revision/resource/envelope checks,
+- full-F2 evidence fails closed against canonical recipe/provenance/representation metadata rather than trusting a prior Instance snapshot,
 - clear Studio validation/repro instructions,
-- keep Roblox Instances as physical representation, never canonical world state,
-- consume schema-v2 `ResolvedRegionRecipe` for permanent lab region identity rather than minting a competing formula,
-- keep F2/F3/F4 claims honest and require actual Studio/engine evidence for physical behavior that pure CI cannot prove.
+- green source/pure CI and Rojo build evidence.
+
+This closure does **not** claim Roblox Studio physics/contact/constraint/server-authority PASS. Those observations remain external engine evidence and must stay explicitly UNVERIFIED until actually run.
+
+## Current unlock status
+
+**No new major Feature Epic is unlocked yet.** Issues #11–#25 remain gated until this file explicitly unlocks one after the Hero Gate evidence is strong enough.
+
+Workers may still:
+- repair red `main`,
+- review/integrate active work,
+- repair a concrete regression in the landed #10 contracts,
+- prepare or consume real Roblox Studio evidence for the permanent lab without inventing PASS results,
+- perform scheduler/contract maintenance needed to keep the swarm state accurate.
+
+Do not start a Reality-Grade door, chair, physical-player controller, world generator, or another major system merely because worker capacity is available.
 
 ## Hero Gate exit direction
 
-Before opening broader content, prove that #10 uses the Wave-1 and landed #9 contracts without replacing them. Strike-team work should deepen #10 through tests, Studio/physics evidence, diagnostics, performance, integration and Reality-Grade review.
+The source-contract portion of the Physics Lab gate is established. The remaining gate is actual Roblox Studio/engine evidence where pure CI cannot prove behavior: contact/traversability, constraints/mechanisms as they become applicable, diagnostics behavior, server/two-client authority behavior, and device/performance observations.
 
-After the lab foundation is stable, the first Reality-Grade Hero Features should be **door, chair, and physical player movement**, not a giant procedural map.
+After that evidence is gathered and reviewed, update this file to explicitly unlock the next narrow Hero Feature. The intended order remains **door, chair, then physical player movement**, not a giant procedural map.
 
 ## Currently gated planned work
 
@@ -127,10 +139,10 @@ Compatibility note: historical `ResolvedRegionRecipe` schema v1 remains replay-o
 
 ## Next critical outcomes
 
-1. #10 becomes a permanent production-contract Physics Lab rather than a disposable demo,
-2. the lab consumes schema-v2 resolved-region identity and the landed WorldEntity/Fidelity/MaterialDNA/ObjectGenome contracts without competing replacements,
-3. the lab proves source-level lifecycle/repro/ownership contracts in CI and gathers real Studio physics/contact/constraint evidence separately,
-4. door/chair/physical-player work begins only on those stable foundations,
-5. the first five-minute experience can be improved deeply without replacing its foundations.
+1. gather real Studio physics/contact/constraint evidence for the permanent #10 lab without weakening source truth,
+2. keep source-owned lifecycle/repro/ownership evidence green and fail closed on regressions,
+3. explicitly update this scheduler before opening the next major Hero Feature,
+4. when unlocked, deepen door/chair/physical-player work on these foundations rather than replacing them,
+5. improve the first five-minute experience only after the relevant foundations are actually unlocked and proven.
 
 Keep this file concise and operational. Git history is the changelog; Project Source is the long-term vision.
