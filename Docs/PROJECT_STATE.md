@@ -1,19 +1,24 @@
 # Project State
 
-Current phase: **Phase 0 — production foundation**
+Current phase: **Phase 0 foundation, entering Phase 1**
 
-Last known green main commit: initial repository commit; bootstrap branch pending CI.
+Bootstrap status:
+- PR #1 is merged to `main`.
+- Its final PR validation passed tool installation, Rojo sourcemap, StyLua, Selene, Roblox Luau analysis, pure deterministic tests, Rojo build, and artifact upload.
+- Every worker must inspect the latest `main` Actions status before feature work. If main is failing, restoring it is the first priority.
 
 Current P0:
-1. Land the Roblox/Rojo production foundation and green CI.
-2. Prove deterministic core IDs / scoped RNG / generation version contracts.
-3. Establish the production Physics Lab shell without throwaway frameworks.
-4. Establish MaterialDNA and WorldEntity contracts.
-5. Establish test harnesses that future generators can reproduce by seed.
+1. Keep `main` reproducibly green.
+2. Lock deterministic IDs, scoped RNG, and generation-version contracts with golden tests.
+3. Define WorldEntity identity and the F0-F4 representation lifecycle.
+4. Expand MaterialDNA and ObjectGenome into production contracts.
+5. Establish the production Physics Lab shell without throwaway frameworks.
+6. Establish deterministic regression and seed-repro tooling.
 
-Known blockers:
+Known external setup gaps:
 - No published Roblox universe/place is connected to automated publishing yet.
-- Real Studio engine tests, graphics validation, server-authority tests, and device profiling require a Roblox Studio/test-place workflow; CI currently validates source, pure Luau logic, and Rojo builds only.
+- Studio engine tests, graphics validation, server-authority tests, and device profiling still require a Roblox Studio/test-place workflow. Current GitHub CI validates source, pure Luau logic, deterministic contracts, and Rojo builds.
+- Approved production PBR, audio, and model libraries do not exist yet; use project-owned fallback references and do not add unlicensed content.
 
 Architecture migrations: none.
 
@@ -26,10 +31,11 @@ Generation versions:
 - persistence: 1
 
 Next critical outcomes:
-- CI green on `main`.
+- deterministic core golden contract is locked.
+- WorldEntity can promote and demote representations without losing identity/state.
 - Physics Lab uses production IDs/contracts.
-- deterministic region recipe can unload/recreate identically.
-- first believable MaterialDNA surface family.
-- first construction-grammar furniture family.
+- a resolved region recipe can unload and recreate identically.
+- first believable MaterialDNA surface families exist.
+- first construction-grammar furniture family exists.
 
 Keep this file concise. Git history is the changelog.
