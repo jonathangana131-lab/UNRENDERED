@@ -13,7 +13,8 @@ local zero: Vec3 = table.freeze({ x = 0, y = 0, z = 0 })
 
 -- Keep the F2 door frame physically hollow. A single full-width/full-height
 -- collidable frame component would seal the wall opening before the door can
--- ever promote to an articulated representation.
+-- ever promote to an articulated representation. The proxy also keeps a small
+-- positive clearance around the leaf so anchored F2 parts do not interpenetrate.
 local doorComponents: { ComponentSpec } = {
 	{
 		key = "hinge-jamb",
@@ -21,9 +22,9 @@ local doorComponents: { ComponentSpec } = {
 		materialKey = "material.v1.office-metal.warm-gray-enamel",
 		materialRecipeVersion = 1,
 		massKg = 7,
-		localPositionM = { x = -0.55, y = 0, z = 0 },
+		localPositionM = { x = -0.525, y = 0, z = 0 },
 		localRotationDeg = zero,
-		dimensionsM = { x = 0.08, y = 2.16, z = 0.12 },
+		dimensionsM = { x = 0.12, y = 2.16, z = 0.12 },
 		supportKeys = {},
 		externalSupport = "ground",
 	},
@@ -33,9 +34,9 @@ local doorComponents: { ComponentSpec } = {
 		materialKey = "material.v1.office-metal.warm-gray-enamel",
 		materialRecipeVersion = 1,
 		massKg = 7,
-		localPositionM = { x = 0.55, y = 0, z = 0 },
+		localPositionM = { x = 0.525, y = 0, z = 0 },
 		localRotationDeg = zero,
-		dimensionsM = { x = 0.08, y = 2.16, z = 0.12 },
+		dimensionsM = { x = 0.12, y = 2.16, z = 0.12 },
 		supportKeys = {},
 		externalSupport = "ground",
 	},
@@ -45,9 +46,9 @@ local doorComponents: { ComponentSpec } = {
 		materialKey = "material.v1.office-metal.warm-gray-enamel",
 		materialRecipeVersion = 1,
 		massKg = 4,
-		localPositionM = { x = 0, y = 1.04, z = 0 },
+		localPositionM = { x = 0, y = 1.015, z = 0 },
 		localRotationDeg = zero,
-		dimensionsM = { x = 1.18, y = 0.08, z = 0.12 },
+		dimensionsM = { x = 1.18, y = 0.13, z = 0.12 },
 		supportKeys = { "hinge-jamb", "latch-jamb" },
 		externalSupport = "none",
 	},
@@ -57,7 +58,7 @@ local doorComponents: { ComponentSpec } = {
 		materialKey = "material.v1.office-metal.gray-painted-steel",
 		materialRecipeVersion = 1,
 		massKg = 26,
-		localPositionM = { x = 0, y = 0, z = -0.025 },
+		localPositionM = { x = 0, y = -0.065, z = -0.025 },
 		localRotationDeg = zero,
 		dimensionsM = { x = 0.92, y = 2.02, z = 0.045 },
 		supportKeys = { "hinge-jamb" },
