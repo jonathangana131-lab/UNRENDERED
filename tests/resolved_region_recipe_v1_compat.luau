@@ -1,6 +1,6 @@
 local ProductionLoader = require("./support/ProductionLoader")
 
-local ResolvedRegionRecipe = ProductionLoader.requireShared("Reality/ResolvedRegionRecipe")
+local ResolvedRegionRecipeV1 = ProductionLoader.requireShared("Reality/ResolvedRegionRecipeV1")
 local RegionAddress = ProductionLoader.requireShared("Spatial/RegionAddress")
 
 local GOLDEN_REGION_ID = "region:v1:7cd90883b952e7534e6f3ffdd71d66a7"
@@ -42,10 +42,10 @@ local function run(): number
 		end
 	end
 
-	-- This fixture models already-observed v1 truth. It intentionally does not
-	-- read RealityVersions.current(), so later generator-version bumps cannot
-	-- change the compatibility vector being protected here.
-	local locked = ResolvedRegionRecipe.lock(historicalV1Candidate())
+	-- This fixture models already-observed historical v1 truth through the
+	-- explicitly legacy decoder. New canonical locks use ResolvedRegionRecipe
+	-- v2 and must never infer WorldId from v1 seed provenance.
+	local locked = ResolvedRegionRecipeV1.lock(historicalV1Candidate())
 
 	expect("historical v1 region identity remains compatible", locked.regionId == GOLDEN_REGION_ID)
 	expect(
@@ -53,10 +53,10 @@ local function run(): number
 		locked.recipeFingerprint == GOLDEN_RECIPE_FINGERPRINT
 	)
 
-	local reconstructed = ResolvedRegionRecipe.deserialize(ResolvedRegionRecipe.serialize(locked))
+	local reconstructed = ResolvedRegionRecipeV1.deserialize(ResolvedRegionRecipeV1.serialize(locked))
 	expect(
 		"historical v1 serialized truth remains reconstructable",
-		ResolvedRegionRecipe.equal(locked, reconstructed)
+		ResolvedRegionRecipeV1.equal(locked, reconstructed)
 	)
 
 	local syntheticFuture = historicalV1Candidate()
@@ -67,10 +67,10 @@ local function run(): number
 		object = 2,
 		entity = 2,
 	}
-	local futureLocked = ResolvedRegionRecipe.lock(syntheticFuture)
-	expect("generator-version drift preserves region identity", futureLocked.regionId == GOLDEN_REGION_ID)
+	local futureLocked = ResolvedRegionRecipeV1.lock(syntheticFuture)
+	expect("generator-version drift preserves historical v1 region identity", futureLocked.regionId == GOLDEN_REGION_ID)
 	expect(
-		"generator-version drift changes exact recipe fingerprint",
+		"generator-version drift changes historical v1 exact recipe fingerprint",
 		futureLocked.recipeFingerprint ~= GOLDEN_RECIPE_FINGERPRINT
 	)
 	expect(
