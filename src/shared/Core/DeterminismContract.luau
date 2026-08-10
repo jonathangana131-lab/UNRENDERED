@@ -30,7 +30,10 @@ local function isSafeInteger(value: number): boolean
 end
 
 local function assertU32(value: number, label: string)
-	assert(isSafeInteger(value) and value >= 0 and value < UINT32, `{label} must be an unsigned 32-bit integer`)
+	assert(
+		isSafeInteger(value) and value >= 0 and value < UINT32,
+		`{label} must be an unsigned 32-bit integer`
+	)
 end
 
 local function u32(value: number): number
@@ -216,7 +219,10 @@ function DeterminismContract.seedFor(
 	)
 	local scopeCount = validateStringArray(scopes, "scopes", false)
 	assert(scopeCount > 0, "scopes must contain at least one semantic scope")
-	assert(scopeCount <= MAX_SEMANTIC_PARTS, `scopes must contain at most {MAX_SEMANTIC_PARTS} semantic scopes`)
+	assert(
+		scopeCount <= MAX_SEMANTIC_PARTS,
+		`scopes must contain at most {MAX_SEMANTIC_PARTS} semantic scopes`
+	)
 	for index = 1, scopeCount do
 		assert(#scopes[index] <= MAX_SEMANTIC_PART_BYTES, `scopes[{index}] exceeds semantic-scope byte limit`)
 	end
