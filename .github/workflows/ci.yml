@@ -17,6 +17,12 @@ jobs:
         with:
           lfs: false
 
+      - name: Self-test canonical randomness guard
+        run: bash tests/ci/canonical_randomness_guard_test.sh
+
+      - name: Enforce canonical deterministic RNG
+        run: bash scripts/check-canonical-randomness.sh
+
       - name: Install pinned Roblox toolchain
         shell: bash
         run: |
