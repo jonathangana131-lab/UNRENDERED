@@ -14,7 +14,7 @@ type RealizedLab = PhysicsLabRealizer.RealizedLab
 type EntityEvidence = {
 	key: string,
 	entityId: string,
-	kind: string,
+	kind: "object" | "primitive",
 	initialStateRevision: number,
 	finalStateRevision: number,
 	initialRepresentationRevision: number,
