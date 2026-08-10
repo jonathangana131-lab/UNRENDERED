@@ -38,10 +38,7 @@ local function run(): number
 	end
 
 	local locked = ResolvedRegionRecipe.new(makeCandidate())
-	expect(
-		"v1 WorldId fixture stays deterministic",
-		worldId == "world:v1:c2e094b5e477eeb7c4b3566ebb9dee22"
-	)
+	expect("v1 WorldId fixture stays deterministic", worldId == "world:v1:c2e094b5e477eeb7c4b3566ebb9dee22")
 	expect(
 		"v1 resolved region identity stays deterministic",
 		locked.id == "region:v1:10b42978018aaf8203977a384f9438c8"

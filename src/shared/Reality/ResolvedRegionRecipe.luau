@@ -345,7 +345,10 @@ function ResolvedRegionRecipe.lock(
 	local locked = ResolvedRegionRecipe.fromPlainData(existing)
 	local candidateWorldId, candidateWorldSeedRef, candidateAddress = candidateIdentity(candidate)
 	assert(locked.worldId == candidateWorldId, "existing lock and candidate worldId must match")
-	assert(locked.worldSeedRef == candidateWorldSeedRef, "existing lock and candidate worldSeedRef must match")
+	assert(
+		locked.worldSeedRef == candidateWorldSeedRef,
+		"existing lock and candidate worldSeedRef must match"
+	)
 	assert(
 		RegionAddress.equal(locked.regionAddress, candidateAddress),
 		"existing lock and candidate regionAddress must match"

@@ -161,8 +161,7 @@ local function run(): number
 	local malformedFutureCandidate = makeCandidate()
 	malformedFutureCandidate.generatorVersions.topology = math.huge
 	malformedFutureCandidate.canonicalContentKeys = { "future/content", "future/content" }
-	local malformedRelock, malformedDisposition =
-		ResolvedRegionRecipe.lock(locked, malformedFutureCandidate)
+	local malformedRelock, malformedDisposition = ResolvedRegionRecipe.lock(locked, malformedFutureCandidate)
 	expectEqual(
 		"malformed future unresolved content reports conflict instead of invalidating truth",
 		malformedDisposition,
@@ -269,7 +268,11 @@ local function run(): number
 		)
 		expectEqual("migration result uses target versions", migration.target.generatorVersions.reality, 2)
 		expectEqual("migration result preserves canonical region identity", migration.target.id, locked.id)
-		expectEqual("migration result preserves world seed reference", migration.target.worldSeedRef, locked.worldSeedRef)
+		expectEqual(
+			"migration result preserves world seed reference",
+			migration.target.worldSeedRef,
+			locked.worldSeedRef
+		)
 		expectEqual("migration does not mutate stored source truth", locked.generatorVersions.reality, 1)
 
 		local _, postMigrationDisposition =
