@@ -1,6 +1,7 @@
 --!strict
 
 local MaterialDNA = require("../src/shared/Materials/MaterialDNA")
+local buildMaterialFixtures = require("../src/shared/Materials/MaterialFixtures")
 
 local function run(): number
 	local failures = 0
@@ -29,6 +30,21 @@ local function run(): number
 			end
 		end
 		return false
+	end
+
+	local function isRecursivelyFrozen(value: any): boolean
+		if type(value) ~= "table" then
+			return true
+		end
+		if not table.isfrozen(value) then
+			return false
+		end
+		for _, nested in pairs(value) do
+			if type(nested) == "table" and not isRecursivelyFrozen(nested) then
+				return false
+			end
+		end
+		return true
 	end
 
 	local function makeRecipe(): MaterialDNA.MaterialRecipe
@@ -124,6 +140,24 @@ local function run(): number
 			table.concat(malformedResult.errors, "; ")
 		)
 	end
+
+	local unknownTopLevel: any = makeRecipe()
+	unknownTopLevel.generatorVersion = 99
+	local unknownTopLevelResult = MaterialDNA.validateRecipe(unknownTopLevel)
+	expect(
+		"unknown top-level v1 field rejected",
+		not unknownTopLevelResult.ok and containsError(unknownTopLevelResult, "unknown field generatorVersion"),
+		table.concat(unknownTopLevelResult.errors, "; ")
+	)
+
+	local unknownNested: any = makeRecipe()
+	unknownNested.finish.vendorHint = "vendor.example"
+	local unknownNestedResult = MaterialDNA.validateRecipe(unknownNested)
+	expect(
+		"unknown nested v1 field rejected",
+		not unknownNestedResult.ok and containsError(unknownNestedResult, "unknown field vendorHint"),
+		table.concat(unknownNestedResult.errors, "; ")
+	)
 
 	local frozenSource = makeRecipe()
 	local frozen = MaterialDNA.freezeRecipe(frozenSource)
@@ -237,6 +271,57 @@ local function run(): number
 		table.concat(schemaResult.errors, "; ")
 	)
 
+	local fixturesLoaded, fixturesOrError = pcall(function()
+		return buildMaterialFixtures(MaterialDNA)
+	end)
+	expect("production fixture catalog loads headlessly", fixturesLoaded, tostring(fixturesOrError))
+	if fixturesLoaded then
+		local fixtures = fixturesOrError
+		local fixtureCases = {
+			{
+				name = "commercial wallpaper/drywall",
+				value = fixtures.CommercialWallpaperDrywall,
+				expectedId = "material.v1.office-wallpaper.yellow-vinyl",
+			},
+			{
+				name = "low-pile carpet",
+				value = fixtures.LowPileCarpet,
+				expectedId = "material.v1.office-carpet.low-pile-beige",
+			},
+			{
+				name = "painted metal",
+				value = fixtures.PaintedMetal,
+				expectedId = "material.v1.office-metal.warm-gray-enamel",
+			},
+		}
+		local seenIds: { [string]: boolean } = {}
+		local distinctIds = 0
+		for _, fixtureCase in fixtureCases do
+			local fixture = fixtureCase.value
+			local fixtureResult = MaterialDNA.validateRecipe(fixture)
+			expect(
+				`production fixture {fixtureCase.name} validates`,
+				fixtureResult.ok,
+				table.concat(fixtureResult.errors, "; ")
+			)
+			expect(
+				`production fixture {fixtureCase.name} stable id`,
+				fixture.id == fixtureCase.expectedId,
+				tostring(fixture.id)
+			)
+			expect(
+				`production fixture {fixtureCase.name} recursively frozen`,
+				isRecursivelyFrozen(fixture),
+				"fixture contains a mutable canonical table"
+			)
+			if not seenIds[fixture.id] then
+				seenIds[fixture.id] = true
+				distinctIds += 1
+			end
+		end
+		expect("production fixture ids are distinct", distinctIds == 3, tostring(distinctIds))
+	end
+
 	local state = MaterialDNA.defaultState("material.v1.test.wallpaper")
 	local stateMutation = pcall(function()
 		state.wear01 = 0.5
@@ -244,6 +329,15 @@ local function run(): number
 	expect("material state remains mutable", stateMutation and state.wear01 == 0.5, "state mutation failed")
 	local stateResult = MaterialDNA.validateState(state)
 	expect("mutated state remains valid", stateResult.ok, table.concat(stateResult.errors, "; "))
+
+	local unknownStateField: any = MaterialDNA.defaultState("material.v1.test.wallpaper")
+	unknownStateField.backendRevision = 2
+	local unknownStateResult = MaterialDNA.validateState(unknownStateField)
+	expect(
+		"unknown state v1 field rejected",
+		not unknownStateResult.ok and containsError(unknownStateResult, "unknown field backendRevision"),
+		table.concat(unknownStateResult.errors, "; ")
+	)
 
 	local invalidState: any = {
 		recipeId = "material.v1.test.wallpaper",
