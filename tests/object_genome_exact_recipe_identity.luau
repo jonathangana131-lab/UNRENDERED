@@ -56,7 +56,10 @@ local function run(): number
 			name .. " exact recipe id uses project StableId",
 			StableId.is(recipeId, ObjectGenome.RECIPE_ID_NAMESPACE)
 		)
-		expect(name .. " exact recipe id repeats deterministically", recipeId == ObjectGenome.recipeIdentityKey(genome))
+		expect(
+			name .. " exact recipe id repeats deterministically",
+			recipeId == ObjectGenome.recipeIdentityKey(genome)
+		)
 
 		local state = ObjectGenome.defaultState(genome)
 		expect(name .. " default state binds exact recipe id", state.genomeId == recipeId)
@@ -89,7 +92,10 @@ local function run(): number
 	if changedShell ~= nil then
 		changedShell.materialRecipeVersion += 1
 	end
-	expect("material-revision variant remains a valid recipe", changedShell ~= nil and ObjectGenome.inspect(materialChanged).ok)
+	expect(
+		"material-revision variant remains a valid recipe",
+		changedShell ~= nil and ObjectGenome.inspect(materialChanged).ok
+	)
 	expect(
 		"exact recipe identity changes with material revision",
 		changedShell ~= nil and ObjectGenome.recipeIdentityKey(materialChanged) ~= baseRecipeId
@@ -100,7 +106,10 @@ local function run(): number
 	if changedDrawer ~= nil then
 		changedDrawer.localPositionM.z += 0.005
 	end
-	expect("transform variant remains a valid recipe", changedDrawer ~= nil and ObjectGenome.inspect(transformChanged).ok)
+	expect(
+		"transform variant remains a valid recipe",
+		changedDrawer ~= nil and ObjectGenome.inspect(transformChanged).ok
+	)
 	expect(
 		"exact recipe identity changes with transform",
 		changedDrawer ~= nil and ObjectGenome.recipeIdentityKey(transformChanged) ~= baseRecipeId
