@@ -24,15 +24,14 @@ print(
 )
 
 if RunService:IsStudio() then
-	local PhysicsLabRecipe = require(Shared.Physics.PhysicsLabRecipe)
-	local PhysicsLabRealizer = require(script.Parent.PhysicsLab.PhysicsLabRealizer)
-	local recipe = PhysicsLabRecipe.build()
-	PhysicsLabRealizer.realize(recipe, Workspace)
+	local PhysicsLabController = require(script.Parent.PhysicsLab.PhysicsLabController)
+	local root = PhysicsLabController.start(Workspace)
+	local snapshot = PhysicsLabController.snapshot()
 	print(
 		string.format(
 			"[UNRENDERED] Physics Lab realized | recipe=%s elements=%d",
-			recipe.recipeId,
-			#recipe.elements
+			tostring(root:GetAttribute("RecipeId")),
+			snapshot.registered
 		)
 	)
 end
