@@ -31,7 +31,11 @@ local function run(): number
 	local first = DeterministicRng.new(0x12345678)
 	local second = DeterministicRng.new(0x12345678)
 	for index = 1, 16 do
-		expectEqual(`same seed bounded sequence #{index}`, first:nextInteger(-17, 29), second:nextInteger(-17, 29))
+		expectEqual(
+			`same seed bounded sequence #{index}`,
+			first:nextInteger(-17, 29),
+			second:nextInteger(-17, 29)
+		)
 	end
 
 	local rejection = DeterministicRng.new(0x80000000)
