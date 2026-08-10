@@ -1,0 +1,27 @@
+name: Restage Physics Lab resolved-region integration
+
+on:
+  push:
+    branches:
+      - agent/physicslab/10-resolved-region-integration-clean-sol56g7
+
+permissions:
+  contents: write
+
+jobs:
+  restage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/physicslab/10-resolved-region-integration-clean-sol56g7
+          fetch-depth: 0
+
+      - name: Cherry-pick reviewed integration delta
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git cherry-pick acccfc65b2e4c2989b5bca36acbe6a72e8974f8b
+          git push origin HEAD:agent/physicslab/10-resolved-region-integration-clean-sol56g7
