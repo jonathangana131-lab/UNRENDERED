@@ -20,7 +20,7 @@ local lab = assert(Harness.get(), "Physics Lab bootstrap handle is missing")
 print(HttpService:JSONEncode(Validation.capture(lab.model)))
 ```
 
-The snapshot is source-owned evidence. It includes lab/world/region identity, the exact resolved-region fingerprint and repro key, authoritative entity/fidelity summary counts, a deterministic represented-WorldEntity inventory (`id`, `fidelity`, `recipeKey`), scoped Instance/resource counts, and the full physical envelope. `Validation.compare()` rejects snapshots from different canonical resolved truth before producing deltas/reports; partial demotions remain measurable, while complete rebuilds can additionally require an exact entity inventory match.
+The snapshot is source-owned evidence. It includes lab/world/region identity, the exact resolved-region fingerprint and repro key, authoritative entity/fidelity summary counts, a deterministic represented-WorldEntity inventory (`id`, `fidelity`, `recipeKey`), scoped Instance/resource counts, and the full physical envelope. `Validation.compare()` rejects snapshots from different canonical resolved truth before producing deltas/reports; deliberate partial demotions remain measurable as explicit non-OK entity-inventory reports rather than being misclassified as different truth.
 
 ## Exact evidence identity
 
@@ -40,16 +40,36 @@ print("PHYSICS_LAB_BASELINE=" .. HttpService:JSONEncode(snapshot))
 
 Record the tested Git commit SHA, Studio version/channel, OS, server/client topology and flags next to that JSON output.
 
+## Source-owned 20-cycle lifecycle sweep
+
+`PhysicsLabStudioEvidence` drives every canonical lab WorldEntity through the existing representation-safe `RealizedLab.step` boundary. It performs 20 complete F2 -> F0 -> F2 cycles, checks that all representations disappear and return, verifies identity/revision progression, and captures the source-owned resource/envelope/entity-inventory evidence at cycles 1, 5, 10 and 20.
+
+Run it from the **server** Command Bar:
+
+```luau
+local ServerScriptService = game:GetService("ServerScriptService")
+local HttpService = game:GetService("HttpService")
+local PhysicsLab = ServerScriptService.UNRENDERED_Server.PhysicsLab
+local Evidence = require(PhysicsLab.PhysicsLabStudioEvidence)
+
+local evidence = Evidence.runLifecycle20()
+print("PHYSICS_LAB_LIFECYCLE_20=" .. HttpService:JSONEncode(evidence))
+```
+
+The runner fails immediately if a production hold/transition behaves differently than expected, an F0 representation survives, an F2 representation fails to rebuild, canonical identity changes, a represented WorldEntity ID/recipe/fidelity drifts, resource counts drift at a checkpoint, or the complete F2 envelope moves beyond the recorded `0.001` stud tolerance. The returned value is frozen plain evidence and does not retain Instances or the runtime.
+
+A successful run is strong lifecycle/resource/identity evidence for the exact Studio session, but it is not a substitute for visible physical inspection. Record the emitted JSON with commit/Studio/OS/topology identity and still inspect at least one structural entity and one ObjectGenome-backed entity before marking the lifecycle row PASS.
+
 ## Production F2 -> F0 -> F2 lifecycle
 
-The landed lab adapter intentionally realizes only F0/F2. The following inputs exercise the production FidelityManager policy without introducing lab-only transition rules. Run the block separately for one structural entity such as `floor` and one ObjectGenome-backed entity such as `door-main`.
+The landed lab adapter intentionally realizes only F0/F2. The following inputs exercise the production FidelityManager policy without introducing lab-only transition rules. Use this focused block when inspecting one structural entity such as `floor` and one ObjectGenome-backed entity such as `door-main`, or when diagnosing a failure from the source-owned 20-cycle sweep. The block intentionally restarts the harness first so its fixed synthetic timestamps own a fresh monotonic FidelityManager clock.
 
 ```luau
 local ServerScriptService = game:GetService("ServerScriptService")
 local PhysicsLab = ServerScriptService.UNRENDERED_Server.PhysicsLab
 local Harness = require(PhysicsLab.PhysicsLabStudioHarness)
 
-local lab = assert(Harness.get(), "Physics Lab bootstrap handle is missing")
+local lab = Harness.restart(workspace)
 local target = assert(lab.model:FindFirstChild("door-main"), "target representation missing")
 local entityId = assert(target:GetAttribute("UNRENDERED_WorldEntityId"), "target has no WorldEntityId") :: string
 
@@ -136,7 +156,7 @@ for cycle = 1, 20 do
 end
 ```
 
-The entity-inventory assertion catches rebuilds that preserve the same aggregate Instance totals and physical bounds but silently swap a represented WorldEntity ID, recipe key, or fidelity. `Validation.compare()` still returns a non-OK entity report for a deliberate partial demotion instead of rejecting the snapshot as cross-truth; only complete rebuild checkpoints should require `comparison.entities.ok` / `Validation.assertSameEntityInventory`.
+The entity-inventory assertion catches rebuilds that preserve the same aggregate Instance totals and physical bounds but silently swap a represented WorldEntity ID, recipe key, or fidelity. Only complete rebuild checkpoints should require an exact inventory match; deliberate partial demotions are valid measurements and should instead be inspected through the returned non-OK entity report.
 
 These zero deltas are an exact-rebuild check for this deterministic shell, not a permanent project-wide resource budget. If a later intentionally versioned lab recipe changes its physical content, establish a new baseline for that exact recipe identity instead of weakening cross-truth comparison.
 
