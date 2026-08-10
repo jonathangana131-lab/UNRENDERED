@@ -49,7 +49,7 @@ Golden vectors are compatibility contracts, not convenience snapshots. Current s
 - xorshift32 v1 sequences including zero-seed normalization,
 - SeedStream v1 output, generation-version sensitivity, scope ordering, and subsystem isolation.
 
-The separate bounded-integer RNG suite also locks rejection-sampling behavior. If an intentional architecture change requires a golden vector to change, treat that as a deterministic contract migration: document the reason, assess already-resolved-world consequences, and update the vector in the same reviewed change. Do not regenerate expected values merely to make CI green.
+The separate bounded-integer RNG suite locks rejection sampling against xorshift32's corrected `2^32 - 1` reachable nonzero-state domain, including remainder rejection and the maximum exactly uniform one-draw width. If an intentional architecture change requires a golden vector to change, treat that as a deterministic contract migration: document the reason, assess already-resolved-world consequences, and update the vector in the same reviewed change. Do not regenerate expected values merely to make CI green.
 
 ## Adding a regression
 
