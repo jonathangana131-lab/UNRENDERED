@@ -6,7 +6,7 @@
 
 - All measurements are plain-data SI units: meters, kilograms, degrees.
 - `schemaVersion` is an explicit compatibility lock. A reader rejects unknown versions instead of interpreting future schemas as v1.
-- `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityParts()` is intended to feed the project StableId contract; ObjectGenome does not duplicate hashing/canonical encoding.
+- `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityParts()` supplies those semantic parts to the locked project `StableId` contract; ObjectGenome does not duplicate hashing/canonical encoding.
 - `components`, per-component `supportKeys`, `mechanisms`, and `affordances` are canonical dense 1-based arrays. Sparse arrays and map-like extra keys are rejected so accepted plain data has one unambiguous shape.
 - `materialKey` is an opaque stable reference. Objects do not import MaterialDNA implementation details or Roblox asset IDs.
 - Roblox `Instance`, `Vector3`, `CFrame`, meshes, constraints, and rendering APIs are deliberately absent from the schema.
@@ -39,8 +39,8 @@ The component mass sum must remain within 5% of the declared object mass. The ge
 Schema v1 uses one explicit plain-data local basis and rotation convention so independent realization adapters resolve identical geometry without relying on Roblox types:
 
 - object-local `+X` is right, `+Y` is up, and `+Z` is back; the basis is right-handed;
-- `localRotationDeg = { x, y, z }` stores intrinsic local-axis rotations in degrees, applied around local `+X`, then local `+Y`, then local `+Z`;
-- equivalently for column-vector math, the composed matrix is `Rz * Ry * Rx`;
+- `localRotationDeg = { x, y, z }` stores **fixed-axis (extrinsic) XYZ** rotations in degrees about that object-local basis: rotate about basis `+X`, then basis `+Y`, then basis `+Z`;
+- for column-vector math, the composed matrix is therefore `Rz * Ry * Rx`;
 - every stored Euler component must be canonical in `[-180, 180]` degrees. Equivalent turns outside that range are rejected rather than silently normalized;
 - component-envelope validation evaluates the rotated component AABB using `abs(R) * halfDimensions`, then applies the component's local translation. Rotation is therefore part of the v1 bounds invariant rather than an adapter-specific afterthought.
 
@@ -56,7 +56,7 @@ The first production mechanism vocabulary is intentionally small and semantic:
 - `tilt`
 - `latch`
 
-Mechanism `axis`, caster `swivelAxis`, and caster `rollAxis` values are canonical unit direction vectors in the same local basis. Their magnitude must be within `0.0001` of `1.0`; scale-bearing alternatives such as `{ x = 0, y = 2, z = 0 }` are invalid recipes. This prevents equivalent directions from acquiring multiple persistent encodings or requiring adapter-specific normalization.
+Mechanism `axis`, caster `swivelAxis`, and caster `rollAxis` values are canonical unit direction vectors in the same object-local basis. Their magnitude must be within `0.0001` of `1.0`; scale-bearing alternatives such as `{ x = 0, y = 2, z = 0 }` are invalid recipes. This prevents equivalent directions from acquiring multiple persistent encodings or requiring adapter-specific normalization.
 
 Mechanisms reference component keys and plain axes/limits. A later Roblox realization adapter may choose constraints, servo settings, collision groups, fidelity simplifications, or authored meshes without changing the domain recipe.
 
