@@ -1,6 +1,6 @@
 local ProductionLoader = require("./support/ProductionLoader")
 
-local StableId = ProductionLoader.requireShared("Core/StableId")
+local DeterminismContract = ProductionLoader.requireShared("Core/DeterminismContract")
 local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
 local Fixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
 
@@ -22,6 +22,10 @@ local function hasCode(report, code)
 		end
 	end
 	return false
+end
+
+local function stableIdentity(genome)
+	return DeterminismContract.stableId(ObjectGenome.STABLE_ID_NAMESPACE, ObjectGenome.identityParts(genome))
 end
 
 local function run(): number
@@ -58,13 +62,13 @@ local function run(): number
 		local report = ObjectGenome.inspect(fixture.genome)
 		expect(fixture.name .. " validates", report.ok)
 
-		local identity = ObjectGenome.identityKey(fixture.genome)
+		local identity = stableIdentity(fixture.genome)
 		expect(fixture.name .. " locked stable identity", identity == fixture.identity)
 		expect(
 			fixture.name .. " uses project StableId",
-			StableId.is(identity, ObjectGenome.STABLE_ID_NAMESPACE)
+			DeterminismContract.isStableId(identity, ObjectGenome.STABLE_ID_NAMESPACE)
 		)
-		expect(fixture.name .. " repeat identity", identity == ObjectGenome.identityKey(fixture.genome))
+		expect(fixture.name .. " repeat identity", identity == stableIdentity(fixture.genome))
 
 		local state = ObjectGenome.defaultState(fixture.genome)
 		expect(
