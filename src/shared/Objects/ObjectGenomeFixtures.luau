@@ -1,28 +1,30 @@
 --!strict
 
+local ObjectGenome = require(script.Parent.ObjectGenome)
+
 -- Production-contract examples. Material keys are opaque references on purpose:
 -- ObjectGenome must not own MaterialDNA's schema or Roblox asset bindings.
-local Fixtures = {}
+local Fixtures: { [string]: ObjectGenome.ObjectGenome } = {}
 
-local zero = { x = 0, y = 0, z = 0 }
+local zero: ObjectGenome.Vec3 = { x = 0, y = 0, z = 0 }
 
-local chairComponents = {}
-local chairMechanisms = {}
+local chairComponents: { ObjectGenome.ComponentSpec } = {}
+local chairMechanisms: { ObjectGenome.MechanismSpec } = {}
 local casterPositions = {
-	{ "front-left", -0.27, -0.22 },
-	{ "front-right", 0.27, -0.22 },
-	{ "rear-left", -0.27, 0.22 },
-	{ "rear-right", 0.27, 0.22 },
-	{ "center-rear", 0, 0.28 },
+	{ suffix = "front-left", x = -0.27, z = -0.22 },
+	{ suffix = "front-right", x = 0.27, z = -0.22 },
+	{ suffix = "rear-left", x = -0.27, z = 0.22 },
+	{ suffix = "rear-right", x = 0.27, z = 0.22 },
+	{ suffix = "center-rear", x = 0, z = 0.28 },
 }
 for _, caster in ipairs(casterPositions) do
-	local key = `caster-{caster[1]}`
+	local key = `caster-{caster.suffix}`
 	table.insert(chairComponents, {
 		key = key,
 		role = "floor-contact caster",
 		materialKey = "material:polymer-rubber.caster.v1",
 		massKg = 0.35,
-		localPositionM = { x = caster[2], y = -0.49, z = caster[3] },
+		localPositionM = { x = caster.x, y = -0.49, z = caster.z },
 		localRotationDeg = zero,
 		dimensionsM = { x = 0.09, y = 0.08, z = 0.04 },
 		supportKeys = {},
@@ -151,26 +153,27 @@ Fixtures.officeChair = {
 	},
 }
 
-local tableComponents = {}
-for _, leg in ipairs({
-	{ "front-left", -0.68, -0.30 },
-	{ "front-right", 0.68, -0.30 },
-	{ "rear-left", -0.68, 0.30 },
-	{ "rear-right", 0.68, 0.30 },
-}) do
+local tableComponents: { ObjectGenome.ComponentSpec } = {}
+local tableLegs = {
+	{ suffix = "front-left", x = -0.68, z = -0.30 },
+	{ suffix = "front-right", x = 0.68, z = -0.30 },
+	{ suffix = "rear-left", x = -0.68, z = 0.30 },
+	{ suffix = "rear-right", x = 0.68, z = 0.30 },
+}
+for _, leg in ipairs(tableLegs) do
 	table.insert(tableComponents, {
-		key = `leg-{leg[1]}`,
+		key = `leg-{leg.suffix}`,
 		role = "load-bearing leg",
 		materialKey = "material:painted-steel.gray.v1",
 		massKg = 2.4,
-		localPositionM = { x = leg[2], y = -0.03, z = leg[3] },
+		localPositionM = { x = leg.x, y = -0.03, z = leg.z },
 		localRotationDeg = zero,
 		dimensionsM = { x = 0.06, y = 0.70, z = 0.06 },
 		supportKeys = {},
 		externalSupport = "ground",
 	})
 end
-local allLegs = { "leg-front-left", "leg-front-right", "leg-rear-left", "leg-rear-right" }
+local allLegs: { string } = { "leg-front-left", "leg-front-right", "leg-rear-left", "leg-rear-right" }
 table.insert(tableComponents, {
 	key = "crossbar",
 	role = "anti-racking brace",
@@ -224,7 +227,7 @@ Fixtures.officeTable = {
 	},
 }
 
-local cabinetComponents = {
+local cabinetComponents: { ObjectGenome.ComponentSpec } = {
 	{
 		key = "shell",
 		role = "load-bearing folded steel carcass",
@@ -237,27 +240,28 @@ local cabinetComponents = {
 		externalSupport = "ground",
 	},
 }
-local cabinetMechanisms = {}
-local cabinetAffordances = {}
-for _, drawer in ipairs({
-	{ "top", 0.38 },
-	{ "middle", 0.05 },
-	{ "bottom", -0.28 },
-}) do
-	local key = `drawer-{drawer[1]}`
+local cabinetMechanisms: { ObjectGenome.MechanismSpec } = {}
+local cabinetAffordances: { ObjectGenome.AffordanceSpec } = {}
+local drawerPositions = {
+	{ suffix = "top", y = 0.38 },
+	{ suffix = "middle", y = 0.05 },
+	{ suffix = "bottom", y = -0.28 },
+}
+for _, drawer in ipairs(drawerPositions) do
+	local key = `drawer-{drawer.suffix}`
 	table.insert(cabinetComponents, {
 		key = key,
 		role = "document drawer",
 		materialKey = "material:painted-steel.warm-gray.v1",
 		massKg = 4.2,
-		localPositionM = { x = 0, y = drawer[2], z = -0.01 },
+		localPositionM = { x = 0, y = drawer.y, z = -0.01 },
 		localRotationDeg = zero,
 		dimensionsM = { x = 0.42, y = 0.28, z = 0.52 },
 		supportKeys = { "shell" },
 		externalSupport = "none",
 	})
 	table.insert(cabinetMechanisms, {
-		key = `slide-{drawer[1]}`,
+		key = `slide-{drawer.suffix}`,
 		kind = "slide",
 		movingComponentKey = key,
 		frameComponentKey = "shell",
@@ -266,7 +270,7 @@ for _, drawer in ipairs({
 		maxTravelM = 0.44,
 	})
 	table.insert(cabinetAffordances, {
-		key = `pull-{drawer[1]}`,
+		key = `pull-{drawer.suffix}`,
 		kind = "pull",
 		componentKey = key,
 		localPointM = { x = 0, y = 0, z = -0.25 },
