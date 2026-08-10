@@ -1,0 +1,80 @@
+name: ObjectGenome Compose
+
+on:
+  push:
+    branches: [agent/integration/6-objectgenome-final-4c7a]
+
+permissions:
+  contents: write
+
+jobs:
+  compose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Compose reviewed ObjectGenome lanes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          OWNERSHIP=agent/integration/6-objectgenome-contract-lock-8d2a
+          STABLE=agent/integration/6-objectgenome-stableid-sol56b7
+          TRANSFORM=agent/integration/6-objectgenome-transform-sol56c8
+          git fetch origin "$OWNERSHIP" "$STABLE" "$TRANSFORM"
+
+          git restore --source="origin/$OWNERSHIP" -- \
+            Docs/OBJECT_GENOME.md \
+            src/shared/Objects/ObjectGenome.luau \
+            src/shared/Objects/ObjectGenomeFixtures.luau \
+            src/shared/Objects/ObjectGenomeOwnership.luau \
+            tests/object_genome.luau \
+            tests/object_genome_contract_lock.luau
+          git add Docs/OBJECT_GENOME.md src/shared/Objects tests/object_genome.luau tests/object_genome_contract_lock.luau
+          git commit -m "stage: import ownership-hardened ObjectGenome contract"
+
+          STABLE_BASE=$(git merge-base "origin/$OWNERSHIP" "origin/$STABLE")
+          git diff --binary "$STABLE_BASE".."origin/$STABLE" -- \
+            Docs/OBJECT_GENOME.md \
+            src/shared/Objects/ObjectGenome.luau \
+            src/shared/Objects/ObjectGenomeFixtures.luau \
+            tests/object_genome.luau > /tmp/stable.patch
+          git apply --3way --index /tmp/stable.patch
+          git commit -m "stage: integrate locked StableId v1 for ObjectGenome"
+
+          TRANSFORM_BASE=$(git merge-base "origin/$OWNERSHIP" "origin/$TRANSFORM")
+          git diff --binary "$TRANSFORM_BASE".."origin/$TRANSFORM" -- \
+            Docs/OBJECT_GENOME.md \
+            src/shared/Objects/ObjectGenome.luau \
+            tests/object_genome_contract_lock.luau > /tmp/transform.patch
+          git apply --3way --index /tmp/transform.patch
+          git commit -m "stage: integrate ObjectGenome transform semantics"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('tests/run.luau')
+          s = p.read_text()
+          anchor = 'local runMaterialDNA = require("./materialdna_contract")\n'
+          insert = anchor + 'local runObjectGenome = require("./object_genome")\nlocal runObjectGenomeContractLock = require("./object_genome_contract_lock")\n'
+          if 'local runObjectGenome = require("./object_genome")' not in s:
+              if s.count(anchor) != 1:
+                  raise SystemExit('runner MaterialDNA require anchor not unique')
+              s = s.replace(anchor, insert)
+          call_anchor = '\t+ runMaterialDNA()\n'
+          call_insert = call_anchor + '\t+ runObjectGenome()\n\t+ runObjectGenomeContractLock()\n'
+          if '\t+ runObjectGenome()' not in s:
+              if s.count(call_anchor) != 1:
+                  raise SystemExit('runner MaterialDNA call anchor not unique')
+              s = s.replace(call_anchor, call_insert)
+          p.write_text(s)
+          PY
+
+          git rm .github/workflows/objectgenome-compose.yml
+          git add tests/run.luau
+          git commit -m "test: preserve all Foundation Lock contract suites"
+          git push origin HEAD:agent/integration/6-objectgenome-final-4c7a
