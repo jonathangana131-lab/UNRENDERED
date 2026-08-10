@@ -12,18 +12,15 @@ local function run(): number
 		end
 	end
 
-	local fidelity = "F3"
 	local captures = 0
+	local transitions = 0
 	local adapter = {
-		getFidelity = function(_)
-			return fidelity
-		end,
 		captureState = function(_, from, to, reason)
 			captures += 1
 			return { from = from, to = to, reason = reason }
 		end,
-		transition = function(_, target, _capturedState, _reason)
-			fidelity = target
+		transition = function(_, _from, _target, _capturedState, _reason)
+			transitions += 1
 		end,
 	}
 
@@ -32,6 +29,7 @@ local function run(): number
 	config.demotionCooldownSeconds = 0
 	config.demotionGraceSeconds = 2
 	local manager = FidelityManager.new(adapter, config)
+	FidelityManager.track(manager, "entity:audit", "F3")
 
 	local first = FidelityManager.request(manager, "entity:audit", "F2", "distance", 0)
 	expectEqual("target-stable demotion starts hysteresis", first.status, "blocked_hysteresis")
@@ -59,6 +57,7 @@ local function run(): number
 	end
 	expectEqual("reason diagnostics have fixed bucket count", reasonBucketCount, 7)
 	expectEqual("audit demotions capture state", captures, 3)
+	expectEqual("audit successful transitions are applied", transitions, 5)
 
 	return failures
 end
