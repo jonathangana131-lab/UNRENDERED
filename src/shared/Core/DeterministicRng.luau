@@ -3,7 +3,6 @@
 local DeterminismContract = require(script.Parent.DeterminismContract)
 
 local UINT32 = 4294967296
-local MAX_SAFE_INTEGER = 9007199254740991
 
 local Generator = {}
 Generator.__index = Generator
@@ -13,13 +12,6 @@ export type Generator = typeof(setmetatable({} :: { state: number }, Generator))
 local DeterministicRng = {
 	ContractVersion = DeterminismContract.RngVersion,
 }
-
-local function isSafeInteger(value: number): boolean
-	if value ~= value or value == math.huge or value == -math.huge then
-		return false
-	end
-	return value % 1 == 0 and math.abs(value) <= MAX_SAFE_INTEGER
-end
 
 function DeterministicRng.new(seed: number): Generator
 	return setmetatable({ state = DeterminismContract.normalizeRngSeed(seed) }, Generator)
@@ -36,18 +28,9 @@ function Generator.nextNumber(self: Generator): number
 end
 
 function Generator.nextInteger(self: Generator, minimum: number, maximum: number): number
-	assert(isSafeInteger(minimum) and isSafeInteger(maximum), "minimum and maximum must be safe integers")
-	assert(minimum <= maximum, "minimum must be <= maximum")
-	local width = maximum - minimum + 1
-	assert(width <= UINT32, "integer range width must be <= 2^32")
-
-	local acceptanceLimit = UINT32 - (UINT32 % width)
-	local sample = Generator.nextU32(self)
-	while sample >= acceptanceLimit do
-		sample = Generator.nextU32(self)
-	end
-
-	return minimum + (sample % width)
+	local nextState, value = DeterminismContract.nextIntegerState(self.state, minimum, maximum)
+	self.state = nextState
+	return value
 end
 
 function Generator.chance(self: Generator, probability: number): boolean
