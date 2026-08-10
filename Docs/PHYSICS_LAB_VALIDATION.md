@@ -52,6 +52,8 @@ rojo build default.project.json --output build/UNRENDERED.rbxlx
 
 The ordinary synthetic-merge GitHub Actions run is the integration gate for code/test changes. A green CI run proves only those automated checks.
 
+For executable server-Command-Bar lifecycle, teardown/rebuild, snapshot, and recovery procedures, use `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`. That runbook drives the landed Studio/server-only `PhysicsLabStudioHarness` and its representation-safe `RealizedLab` handle; it does not expose the raw runtime or create a second lifecycle system.
+
 ## Contract audit matrix
 
 The primary lab recipe must account for all required #10 content. Audit the canonical recipe and its realization path before judging appearance.
@@ -114,13 +116,13 @@ Pass conditions:
 - promotion does not register duplicate WorldEntityIds,
 - repeated cycles return to a stable full-lab physical envelope instead of monotonically leaking descendants/constraints/registrations.
 
-**Current Studio-access limitation:** the production bootstrap intentionally keeps the `RealizedLab` handle private. Do not bypass that protection by requiring the raw `PhysicsLabRuntime`, mutating Instance attributes, or manually deleting representations. Until a source-owned Studio/test harness can drive the public representation-aware `lab.step` boundary, lifecycle cycling from the Command Bar remains **UNVERIFIED** and should be reported as a #10/#151 blocker. The collector can still capture initial/bootstrap evidence safely.
+**Current Studio access:** #210 landed `PhysicsLabStudioHarness`, a Studio/server-only owner of the existing representation-safe `RealizedLab` handle. Use `Harness.get()` for entity lifecycle checks and `Harness.stop()/start()/restart()` for whole-lab teardown/rebuild exactly as documented in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`. Do not require the raw `PhysicsLabRuntime`, mutate Instance attributes as authority, manually delete representations, or invent a second validation lifecycle. The procedures remain **UNVERIFIED** until somebody actually runs them in Studio and records the observations.
 
 ## Fidelity ownership
 
 For each lab entity, prove the displayed/diagnosed fidelity is the authoritative WorldEntity fidelity coordinated through the production Fidelity Manager, not a local Physics Lab enum or Instance attribute that becomes a second truth source.
 
-Exercise at least one promotion and one demotion where a source-owned Studio/test path can invoke the representation-aware lifecycle without bypassing the realizer. Capture:
+Exercise at least one promotion and one demotion through the source-owned `PhysicsLabStudioHarness`/`RealizedLab` path. Capture:
 
 - WorldEntityId,
 - authoritative fidelity before/after,
@@ -128,7 +130,7 @@ Exercise at least one promotion and one demotion where a source-owned Studio/tes
 - whether state capture was required,
 - representation before/after.
 
-A local lab-only fidelity state machine is an architecture failure even if the visual transition looks correct. If no safe Studio driver exists yet, leave this row UNVERIFIED rather than using the raw runtime as a shortcut.
+A local lab-only fidelity state machine is an architecture failure even if the visual transition looks correct. A harness-driven transition is still UNVERIFIED until it is actually run and observed in Studio; do not promote source inspection or CI expectations to PASS.
 
 ## MaterialDNA / ObjectGenome boundary
 
@@ -193,7 +195,7 @@ Store the emitted JSON verbatim with the evidence bundle. It includes:
 - total scoped resource counts,
 - full-lab world-space BasePart envelope.
 
-When a safe production lifecycle driver exists, capture snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20. A partially demoted lab is intentionally a different physical representation, so record its count delta but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt.
+Using the landed source-owned Studio harness, capture snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20. A partially demoted lab is intentionally a different physical representation, so record its count delta but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt. The exact harness/rebuild command blocks live in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`.
 
 To compare two stored snapshots in a server-context Command Bar, paste their JSON strings into this source-owned comparison path:
 
@@ -271,4 +273,4 @@ Blockers/findings:
 Unverified items:
 ```
 
-A #151 closeout must contain concrete findings or focused tests against the primary Physics Lab shell. This protocol and its source-owned collector are preparation, not proof that #10 has passed Reality-Grade validation.
+A #151 closeout must contain concrete findings or focused tests against the primary Physics Lab shell. This protocol and its source-owned collector/harness are preparation, not proof that #10 has passed Reality-Grade validation.
