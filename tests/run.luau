@@ -1,6 +1,8 @@
 local process = require("@lune/process")
 local Contract = require("../src/shared/Core/DeterminismContract")
 local runDeterministicRng = require("./deterministic_rng")
+local runFidelityManager = require("./fidelity_manager")
+local runFidelityManagerDeterminism = require("./fidelity_manager_determinism")
 local runWorldEntity = require("./world_entity")
 
 local failures = 0
@@ -209,6 +211,8 @@ end)
 
 failures += runDeterministicRng()
 failures += runWorldEntity()
+failures += runFidelityManager()
+failures += runFidelityManagerDeterminism()
 
 if failures > 0 then
 	process.exit(1)
