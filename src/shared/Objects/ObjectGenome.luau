@@ -1160,47 +1160,48 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		detectSupportCycles(componentKey)
 	end
 
-	local supportMemo: { [string]: boolean } = {}
-	local supportVisiting: { [string]: boolean } = {}
-	local function reachesExternalSupport(componentKey: string): boolean
-		local memoized = supportMemo[componentKey]
-		if memoized ~= nil then
-			return memoized
-		end
-
-		local component = componentsByKey[componentKey]
-		if component == nil then
-			return false
-		end
-		if component.externalSupport ~= "none" and EXTERNAL_SUPPORTS[component.externalSupport] then
-			supportMemo[componentKey] = true
-			return true
-		end
-		if supportVisiting[componentKey] then
-			return false
-		end
-
-		supportVisiting[componentKey] = true
-		local reachesSupport = false
-		if type(component.supportKeys) == "table" then
-			for _, supportKey in ipairs(component.supportKeys) do
-				if componentsByKey[supportKey] ~= nil and reachesExternalSupport(supportKey) then
-					reachesSupport = true
-					break
+	local externallySupported: { [string]: boolean } = {}
+	for _ = 1, componentCount do
+		local changed = false
+		for _, component in ipairs(value.components) do
+			if
+				type(component) == "table"
+				and isSemanticKey(component.key)
+				and componentsByKey[component.key] == component
+				and not externallySupported[component.key]
+			then
+				local reachesSupport = component.externalSupport ~= "none"
+					and EXTERNAL_SUPPORTS[component.externalSupport] == true
+				if not reachesSupport and type(component.supportKeys) == "table" then
+					for _, supportKey in ipairs(component.supportKeys) do
+						if componentsByKey[supportKey] ~= nil and externallySupported[supportKey] then
+							reachesSupport = true
+							break
+						end
+					end
+				end
+				if reachesSupport then
+					externallySupported[component.key] = true
+					changed = true
 				end
 			end
 		end
-		supportVisiting[componentKey] = nil
-		supportMemo[componentKey] = reachesSupport
-		return reachesSupport
+		if not changed then
+			break
+		end
 	end
 
-	for componentKey in pairs(componentsByKey) do
-		if not reachesExternalSupport(componentKey) then
+	for _, component in ipairs(value.components) do
+		if
+			type(component) == "table"
+			and isSemanticKey(component.key)
+			and componentsByKey[component.key] == component
+			and not externallySupported[component.key]
+		then
 			addIssue(
 				issues,
 				"component.unsupported",
-				`components.{componentKey}`,
+				`components.{component.key}`,
 				"component has no path to an external support"
 			)
 		end
