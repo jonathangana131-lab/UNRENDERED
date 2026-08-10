@@ -511,10 +511,7 @@ function FidelityManager.request(
 	assert(entityId ~= "", "entityId required")
 	assertFidelity(target)
 	assert(reason ~= "", "transition reason required")
-	assert(
-		isFiniteNumber(nowSeconds) and nowSeconds >= 0,
-		"nowSeconds must be a finite non-negative number"
-	)
+	assert(isFiniteNumber(nowSeconds) and nowSeconds >= 0, "nowSeconds must be a finite non-negative number")
 
 	local entry = getOrTrack(manager, entityId)
 	local current = syncEntry(manager, entityId, entry)
