@@ -27,7 +27,7 @@ Never replace this with delimiter concatenation. Length-prefixing is what makes 
 
 `Hash32.jenkins` is the existing 32-bit Jenkins one-at-a-time implementation, now locked by golden vectors. Seeds are explicit unsigned 32-bit integers. `Hash32.combine(seed, ...)` hashes the v1 canonical list encoding once with that seed.
 
-Hash32 is a deterministic primitive, not a security primitive. Do not use it for signatures, passwords, authentication, adversarial content addressing, or proof that two untrusted payloads are equal.
+Hash32 is a 32-bit deterministic primitive, so collisions are an expected mathematical possibility at scale. It must not be used as the sole persistent identity. It is also not a security primitive: do not use it for signatures, passwords, authentication, adversarial content addressing, or proof that two untrusted payloads are equal.
 
 ## StableId v1
 
@@ -35,7 +35,7 @@ Format:
 
 `<namespace>:v1:<32 lowercase hex digits>`
 
-The digest is 128 bits assembled from four independently seeded Hash32 passes over the same canonical payload:
+The digest is 128 bits assembled from four fixed, differently seeded Hash32 passes over the same canonical payload:
 
 `{ "stable-id", "1", namespace, semanticPart1, ... }`
 
@@ -45,7 +45,7 @@ Namespace rules:
 - starts with `a-z`,
 - remaining characters are `a-z`, `0-9`, `_`, `.`, or `-`.
 
-StableId semantic parts are a non-empty dense array of non-empty strings. Callers must use stable semantic identity such as WorldId/RegionId/object-family/local key, never Roblox Instance names, creation order, memory addresses, or transient Workspace paths.
+StableId semantic parts are a non-empty dense array of at most 32 non-empty strings, each at most 512 bytes. Callers must use stable semantic identity such as WorldId/RegionId/object-family/local key, never Roblox Instance names, creation order, memory addresses, or transient Workspace paths.
 
 StableId v1 is designed to make accidental collisions extremely unlikely, but it is still non-cryptographic. Persistent registries should detect duplicate IDs whose canonical identity differs and treat that as a hard diagnostic rather than silently aliasing two entities. StableId is not suitable for authentication, secrecy, anti-cheat trust, or hostile user-controlled collision resistance.
 
@@ -68,10 +68,10 @@ The seed hashes:
 with root seed `0x9e3779b9` and the v1 canonical list encoding.
 
 Rules:
-- `worldSeed` is non-empty.
-- `generationVersion` is an explicit positive integer. Use the version of the generator/schema whose result the stream controls.
-- `subsystemSalt` uses lowercase dotted components such as `worldgen.topology`, `worldgen.material`, `objects.chair`, or `system.bootstrap`.
-- At least one semantic scope is required, and each scope is a non-empty stable semantic key.
+- `worldSeed` is 1-512 bytes.
+- `generationVersion` is an explicit integer in `[1, 2147483647]`. Use the version of the generator/schema whose result the stream controls.
+- `subsystemSalt` is 3-128 bytes, uses at least two lowercase dotted components, and may use `a-z`, `0-9`, `_`, and `-` within each component; examples include `worldgen.topology`, `worldgen.material`, `objects.chair`, and `system.bootstrap`.
+- 1-32 semantic scopes are required; each is a non-empty stable semantic key of at most 512 bytes.
 - Scope order is meaningful and must proceed from broad/stable identity toward local identity.
 
 Recommended shape:

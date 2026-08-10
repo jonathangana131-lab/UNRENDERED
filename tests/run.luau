@@ -102,6 +102,16 @@ end)
 expectError("stable id rejects empty semantic part", function()
 	Contract.stableId("world", { "alpha", "" })
 end)
+expectError("stable id rejects oversized semantic part", function()
+	Contract.stableId("world", { string.rep("a", 513) })
+end)
+local tooManyParts = {}
+for index = 1, 33 do
+	tooManyParts[index] = tostring(index)
+end
+expectError("stable id rejects excessive semantic parts", function()
+	Contract.stableId("world", tooManyParts)
+end)
 
 -- Xorshift32 v1 golden sequence. Seed zero maps to the documented fallback state.
 local state = Contract.normalizeRngSeed(1)
@@ -168,6 +178,19 @@ expectError("seed stream rejects empty scopes", function()
 end)
 expectError("seed stream rejects empty scope", function()
 	Contract.seedFor("world-alpha", 1, "worldgen.topology", { "" })
+end)
+expectError("seed stream rejects oversized world seed", function()
+	Contract.seedFor(string.rep("w", 513), 1, "worldgen.topology", { "region" })
+end)
+expectError("seed stream rejects oversized scope", function()
+	Contract.seedFor("world-alpha", 1, "worldgen.topology", { string.rep("s", 513) })
+end)
+local tooManyScopes = {}
+for index = 1, 33 do
+	tooManyScopes[index] = tostring(index)
+end
+expectError("seed stream rejects excessive scopes", function()
+	Contract.seedFor("world-alpha", 1, "worldgen.topology", tooManyScopes)
 end)
 
 failures += runWorldEntity()

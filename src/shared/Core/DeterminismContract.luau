@@ -4,6 +4,9 @@ local UINT32 = 4294967296
 local MAX_SAFE_INTEGER = 9007199254740991
 local RNG_ZERO_FALLBACK = 0x6d2b79f5
 local SEED_STREAM_ROOT = 0x9e3779b9
+local MAX_SEMANTIC_PARTS = 32
+local MAX_SEMANTIC_PART_BYTES = 512
+local MAX_WORLD_SEED_BYTES = 512
 local STABLE_ID_HASH_SEEDS = {
 	0x243f6a88,
 	0x85a308d3,
@@ -132,6 +135,10 @@ function DeterminismContract.stableId(namespace: string, parts: { string }): str
 	)
 	local length = validateStringArray(parts, "parts", false)
 	assert(length > 0, "parts must contain at least one semantic part")
+	assert(length <= MAX_SEMANTIC_PARTS, `parts must contain at most {MAX_SEMANTIC_PARTS} semantic parts`)
+	for index = 1, length do
+		assert(#parts[index] <= MAX_SEMANTIC_PART_BYTES, `parts[{index}] exceeds semantic-part byte limit`)
+	end
 
 	local payload = {
 		"stable-id",
@@ -198,6 +205,7 @@ function DeterminismContract.seedFor(
 	scopes: { string }
 ): number
 	assert(type(worldSeed) == "string" and worldSeed ~= "", "worldSeed must not be empty")
+	assert(#worldSeed <= MAX_WORLD_SEED_BYTES, `worldSeed must be <= {MAX_WORLD_SEED_BYTES} bytes`)
 	assert(
 		isSafeInteger(generationVersion) and generationVersion >= 1 and generationVersion <= 2147483647,
 		"generationVersion must be an integer in [1, 2147483647]"
@@ -208,6 +216,10 @@ function DeterminismContract.seedFor(
 	)
 	local scopeCount = validateStringArray(scopes, "scopes", false)
 	assert(scopeCount > 0, "scopes must contain at least one semantic scope")
+	assert(scopeCount <= MAX_SEMANTIC_PARTS, `scopes must contain at most {MAX_SEMANTIC_PARTS} semantic scopes`)
+	for index = 1, scopeCount do
+		assert(#scopes[index] <= MAX_SEMANTIC_PART_BYTES, `scopes[{index}] exceeds semantic-scope byte limit`)
+	end
 
 	local payload = {
 		"seed-stream",
