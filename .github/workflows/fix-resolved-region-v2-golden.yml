@@ -1,0 +1,102 @@
+name: Pin resolved-region v2 compatibility vector
+
+on:
+  push:
+    branches:
+      - agent/reality/9-worldid-region-identity-sol56s2
+
+permissions:
+  contents: write
+
+jobs:
+  pin-v2-golden:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/reality/9-worldid-region-identity-sol56s2
+
+      - name: Pin v2 golden versions independently of current versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("tests/resolved_region_recipe.luau")
+          text = path.read_text()
+          old = '''local function makeVersions()
+          \tlocal current = RealityVersions.current()
+          \treturn {
+          \t\treality = current.reality,
+          \t\ttopology = current.topology,
+          \t\tmaterial = current.material,
+          \t\tobject = current.object,
+          \t\tentity = current.entity,
+          \t}
+          end
+          '''
+          new = '''local function makeVersions()
+          \t-- Historical schema-v2 compatibility vector. Keep literal generator
+          \t-- versions here so a future project-version bump cannot move the goldens.
+          \treturn {
+          \t\treality = 1,
+          \t\ttopology = 1,
+          \t\tmaterial = 1,
+          \t\tobject = 1,
+          \t\tentity = 1,
+          \t}
+          end
+          '''
+          if old not in text:
+              raise SystemExit("v2 makeVersions marker not found")
+          text = text.replace(old, new, 1)
+
+          marker = '''\tlocal candidate = makeCandidate()
+          \tlocal locked = ResolvedRegionRecipe.resolveOnObservation(nil, candidate)
+
+          \texpect("first observation creates schema-v2 locked recipe", locked.schemaVersion == 2)
+          '''
+          replacement = '''\tlocal candidate = makeCandidate()
+          \tlocal locked = ResolvedRegionRecipe.resolveOnObservation(nil, candidate)
+          \tlocal currentVersions = ResolvedRegionRecipe.currentGeneratorVersions()
+          \tlocal projectVersions = RealityVersions.current()
+
+          \texpect(
+          \t\t"current generator-version API tracks RealityVersions independently of v2 goldens",
+          \t\tcurrentVersions.reality == projectVersions.reality
+          \t\t\tand currentVersions.topology == projectVersions.topology
+          \t\t\tand currentVersions.material == projectVersions.material
+          \t\t\tand currentVersions.object == projectVersions.object
+          \t\t\tand currentVersions.entity == projectVersions.entity
+          \t)
+          \texpect("first observation creates schema-v2 locked recipe", locked.schemaVersion == 2)
+          '''
+          if marker not in text:
+              raise SystemExit("v2 first-observation marker not found")
+          path.write_text(text.replace(marker, replacement, 1))
+          PY
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Format test
+        run: stylua tests/resolved_region_recipe.luau
+
+      - name: Commit repaired golden and remove helper
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/fix-resolved-region-v2-golden.yml
+          git add tests/resolved_region_recipe.luau
+          git commit -m "test(reality): pin schema-v2 compatibility versions"
+          git push origin HEAD:agent/reality/9-worldid-region-identity-sol56s2
