@@ -53,31 +53,31 @@ local function run(): number
 	expect("delta boundary schema is explicit", reference.boundarySchemaVersion == 1)
 	expect("delta boundary snapshots recipe schema", reference.recipeSchemaVersion == base.schemaVersion)
 	expect("delta boundary snapshots stable region identity", reference.regionId == base.regionId)
-	expect("delta boundary snapshots exact immutable fingerprint", reference.recipeFingerprint == base.recipeFingerprint)
 	expect(
-		"exact immutable base accepts its delta binding",
-		not rejects(function()
-			ResolvedRegionDeltaBoundary.assertMatches(base, reference)
-		end)
+		"delta boundary snapshots exact immutable fingerprint",
+		reference.recipeFingerprint == base.recipeFingerprint
 	)
+	expect("exact immutable base accepts its delta binding", not rejects(function()
+		ResolvedRegionDeltaBoundary.assertMatches(base, reference)
+	end))
 
 	local callerOwnedStream = {
 		base = reference,
 		entries = {},
 	}
 	table.insert(callerOwnedStream.entries, { key = "door:open", payloadRef = "payload:0001" })
-	expect(
-		"caller-owned mutable stream stays bound without entering recipe schema",
-		not rejects(function()
-			ResolvedRegionDeltaBoundary.assertMatches(base, callerOwnedStream.base)
-		end)
-	)
+	expect("caller-owned mutable stream stays bound without entering recipe schema", not rejects(function()
+		ResolvedRegionDeltaBoundary.assertMatches(base, callerOwnedStream.base)
+	end))
 
 	local changedCandidate = makeCandidate()
 	changedCandidate.canonicalContentKeys = { "object:door-b" }
 	local changedBase = ResolvedRegionRecipe.lock(changedCandidate)
 	expect("content revision keeps region identity", changedBase.regionId == base.regionId)
-	expect("content revision changes immutable fingerprint", changedBase.recipeFingerprint ~= base.recipeFingerprint)
+	expect(
+		"content revision changes immutable fingerprint",
+		changedBase.recipeFingerprint ~= base.recipeFingerprint
+	)
 	expect(
 		"delta binding rejects same-region different-base replay",
 		rejects(function()

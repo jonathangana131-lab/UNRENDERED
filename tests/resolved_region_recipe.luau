@@ -57,10 +57,7 @@ local function run(): number
 
 	expect("first observation creates schema-v1 locked recipe", locked.schemaVersion == 1)
 	expect("v1 region identity stays golden-locked", locked.regionId == GOLDEN_REGION_ID)
-	expect(
-		"v1 recipe fingerprint stays golden-locked",
-		locked.recipeFingerprint == GOLDEN_RECIPE_FINGERPRINT
-	)
+	expect("v1 recipe fingerprint stays golden-locked", locked.recipeFingerprint == GOLDEN_RECIPE_FINGERPRINT)
 	expect(
 		"lock snapshots current reality version",
 		locked.generatorVersions.reality == candidate.generatorVersions.reality
@@ -188,10 +185,8 @@ local function run(): number
 		topologyAnchors = { "anchor:duplicate", "anchor:duplicate" },
 		canonicalContentKeys = "not-an-array",
 	}
-	local observedThroughMalformedFuture = ResolvedRegionRecipe.resolveOnObservation(
-		locked,
-		malformedFutureCandidate
-	)
+	local observedThroughMalformedFuture =
+		ResolvedRegionRecipe.resolveOnObservation(locked, malformedFutureCandidate)
 	expect(
 		"established truth ignores malformed future generator content",
 		ResolvedRegionRecipe.equal(observedThroughMalformedFuture, locked)
