@@ -4,8 +4,12 @@ local ResolvedRegionRecipe = ProductionLoader.requireShared("Reality/ResolvedReg
 local RegionAddress = ProductionLoader.requireShared("Spatial/RegionAddress")
 local RealityVersions = ProductionLoader.requireShared("Reality/RealityVersions")
 
-local GOLDEN_REGION_ID = "region:v1:7cd90883b952e7534e6f3ffdd71d66a7"
-local GOLDEN_RECIPE_FINGERPRINT = "resolved-region:v1:6448a82dcdebe20b03d9a6a98847bdd7"
+local GOLDEN_WORLD_ID = "world:v1:b2eccb898b0d09866a4df94d651fda4f"
+local OTHER_WORLD_ID = "world:v1:dcac2b768af90b35d13b961727e32ac0"
+local GOLDEN_REGION_ID = "region:v1:1841ffe5f321ed0511919940bd21a6ff"
+local GOLDEN_RECIPE_FINGERPRINT = "resolved-region:v2:c7e170974f1459509fadc3e829d4d8e4"
+local LEGACY_V1_REGION_ID = "region:v1:7cd90883b952e7534e6f3ffdd71d66a7"
+local LEGACY_V1_FINGERPRINT = "resolved-region:v1:6448a82dcdebe20b03d9a6a98847bdd7"
 
 local function makeVersions()
 	local current = RealityVersions.current()
@@ -20,6 +24,7 @@ end
 
 local function makeCandidate()
 	return {
+		worldId = GOLDEN_WORLD_ID,
 		worldSeedRef = "world-seed:office-alpha",
 		regionAddress = RegionAddress.new(12, -4, 1),
 		generatorVersions = makeVersions(),
@@ -55,9 +60,13 @@ local function run(): number
 	local candidate = makeCandidate()
 	local locked = ResolvedRegionRecipe.resolveOnObservation(nil, candidate)
 
-	expect("first observation creates schema-v1 locked recipe", locked.schemaVersion == 1)
-	expect("v1 region identity stays golden-locked", locked.regionId == GOLDEN_REGION_ID)
-	expect("v1 recipe fingerprint stays golden-locked", locked.recipeFingerprint == GOLDEN_RECIPE_FINGERPRINT)
+	expect("first observation creates schema-v2 locked recipe", locked.schemaVersion == 2)
+	expect("world identity stays independently locked", locked.worldId == GOLDEN_WORLD_ID)
+	expect("v2 region identity stays golden-locked", locked.regionId == GOLDEN_REGION_ID)
+	expect(
+		"v2 recipe fingerprint stays golden-locked",
+		locked.recipeFingerprint == GOLDEN_RECIPE_FINGERPRINT
+	)
 	expect(
 		"lock snapshots current reality version",
 		locked.generatorVersions.reality == candidate.generatorVersions.reality
@@ -122,12 +131,33 @@ local function run(): number
 		not ResolvedRegionRecipe.equal(changedLocked, locked)
 	)
 
+	local changedSeed = makeCandidate()
+	changedSeed.worldSeedRef = "world-seed:office-alpha-reseeded"
+	local changedSeedLocked = ResolvedRegionRecipe.lock(changedSeed)
+	expect(
+		"seed provenance does not define stable region identity",
+		changedSeedLocked.regionId == locked.regionId
+	)
+	expect(
+		"seed provenance remains part of exact recipe truth",
+		changedSeedLocked.recipeFingerprint ~= locked.recipeFingerprint
+	)
+
+	local otherWorld = makeCandidate()
+	otherWorld.worldId = OTHER_WORLD_ID
+	local otherWorldLocked = ResolvedRegionRecipe.lock(otherWorld)
+	expect(
+		"different WorldIds cannot collide at the same seed and address",
+		otherWorldLocked.regionId ~= locked.regionId
+	)
+
 	local serialized = ResolvedRegionRecipe.serialize(locked)
 	local reconstructed = ResolvedRegionRecipe.deserialize(serialized)
 	expect(
 		"serialize-deserialize reconstructs equal recipe",
 		ResolvedRegionRecipe.equal(locked, reconstructed)
 	)
+	expect("round trip preserves WorldId", reconstructed.worldId == locked.worldId)
 	expect("round trip preserves region identity", reconstructed.regionId == locked.regionId)
 	expect("round trip preserves fingerprint", reconstructed.recipeFingerprint == locked.recipeFingerprint)
 
@@ -157,6 +187,35 @@ local function run(): number
 		end)
 	)
 
+	local legacyV1 = {
+		schemaVersion = 1,
+		regionId = LEGACY_V1_REGION_ID,
+		worldSeedRef = "world-seed:office-alpha",
+		regionAddress = {
+			x = 12,
+			z = -4,
+			layer = 1,
+		},
+		generatorVersions = makeVersions(),
+		semanticIntentKey = "intent:commercial-office.late-90s",
+		topologyAnchors = {
+			"anchor:east-primary-threshold",
+			"anchor:west-service-threshold",
+		},
+		canonicalContentKeys = {
+			"fixture:fluorescent-row-a",
+			"material:carpet-batch-a",
+			"object:chair-a",
+		},
+		recipeFingerprint = LEGACY_V1_FINGERPRINT,
+	}
+	expect(
+		"legacy v1 seed-derived identity is never silently reinterpreted as v2",
+		rejects(function()
+			ResolvedRegionRecipe.deserialize(legacyV1)
+		end)
+	)
+
 	local nextGeneratorCandidate = makeCandidate()
 	nextGeneratorCandidate.generatorVersions.reality += 1
 	nextGeneratorCandidate.semanticIntentKey = "intent:new-generator-output"
@@ -176,6 +235,7 @@ local function run(): number
 	)
 
 	local malformedFutureCandidate = {
+		worldId = candidate.worldId,
 		worldSeedRef = candidate.worldSeedRef,
 		regionAddress = candidate.regionAddress,
 		generatorVersions = {
@@ -202,11 +262,29 @@ local function run(): number
 	)
 
 	local wrongWorldCandidate = makeCandidate()
-	wrongWorldCandidate.worldSeedRef = "world-seed:other-world"
+	wrongWorldCandidate.worldId = OTHER_WORLD_ID
 	expect(
-		"locked recipe cannot be reused for a different world seed reference",
+		"locked recipe cannot be reused for a different WorldId",
 		rejects(function()
 			ResolvedRegionRecipe.resolveOnObservation(locked, wrongWorldCandidate)
+		end)
+	)
+
+	local wrongSeedCandidate = makeCandidate()
+	wrongSeedCandidate.worldSeedRef = "world-seed:other-provenance"
+	expect(
+		"locked recipe cannot silently change world seed provenance",
+		rejects(function()
+			ResolvedRegionRecipe.resolveOnObservation(locked, wrongSeedCandidate)
+		end)
+	)
+
+	local malformedWorldId = makeCandidate()
+	malformedWorldId.worldId = "world:office-alpha"
+	expect(
+		"candidate rejects non-StableId WorldId",
+		rejects(function()
+			ResolvedRegionRecipe.lock(malformedWorldId)
 		end)
 	)
 
@@ -253,6 +331,7 @@ local function run(): number
 		"migration:reality-v1-to-v2",
 		function(source, target)
 			return {
+				worldId = source.worldId,
 				worldSeedRef = source.worldSeedRef,
 				regionAddress = source.regionAddress,
 				generatorVersions = target,
@@ -266,6 +345,7 @@ local function run(): number
 			}
 		end
 	)
+	expect("explicit migration preserves WorldId", migrated.worldId == locked.worldId)
 	expect("explicit migration preserves stable region identity", migrated.regionId == locked.regionId)
 	expect(
 		"explicit migration advances exact target version",
@@ -279,6 +359,7 @@ local function run(): number
 		"explicit migration clears migration requirement",
 		not ResolvedRegionRecipe.requiresMigration(migrated, targetVersions)
 	)
+	expect("migration receipt records WorldId", receipt.worldId == locked.worldId)
 	expect(
 		"migration receipt records source fingerprint",
 		receipt.sourceFingerprint == locked.recipeFingerprint
@@ -297,6 +378,7 @@ local function run(): number
 		rejects(function()
 			ResolvedRegionRecipe.migrate(locked, makeVersions(), "migration:no-op", function(source, target)
 				return {
+					worldId = source.worldId,
 					worldSeedRef = source.worldSeedRef,
 					regionAddress = source.regionAddress,
 					generatorVersions = target,
@@ -309,7 +391,29 @@ local function run(): number
 	)
 
 	expect(
-		"migration builder cannot redirect stable region identity",
+		"migration builder cannot redirect WorldId",
+		rejects(function()
+			ResolvedRegionRecipe.migrate(
+				locked,
+				targetVersions,
+				"migration:bad-world",
+				function(source, target)
+					return {
+						worldId = OTHER_WORLD_ID,
+						worldSeedRef = source.worldSeedRef,
+						regionAddress = source.regionAddress,
+						generatorVersions = target,
+						semanticIntentKey = source.semanticIntentKey,
+						topologyAnchors = source.topologyAnchors,
+						canonicalContentKeys = source.canonicalContentKeys,
+					}
+				end
+			)
+		end)
+	)
+
+	expect(
+		"migration builder cannot redirect stable region address",
 		rejects(function()
 			ResolvedRegionRecipe.migrate(
 				locked,
@@ -317,6 +421,7 @@ local function run(): number
 				"migration:bad-address",
 				function(source, target)
 					return {
+						worldId = source.worldId,
 						worldSeedRef = source.worldSeedRef,
 						regionAddress = RegionAddress.new(99, 99, 0),
 						generatorVersions = target,
@@ -330,7 +435,12 @@ local function run(): number
 	)
 
 	local reproKey = ResolvedRegionRecipe.reproKey(locked)
+	expect("repro key carries WorldId", string.find(reproKey, locked.worldId, 1, true) ~= nil)
 	expect("repro key carries region identity", string.find(reproKey, locked.regionId, 1, true) ~= nil)
+	expect(
+		"repro key carries seed provenance",
+		string.find(reproKey, locked.worldSeedRef, 1, true) ~= nil
+	)
 	expect(
 		"repro key carries exact recipe fingerprint",
 		string.find(reproKey, locked.recipeFingerprint, 1, true) ~= nil
