@@ -19,14 +19,18 @@ Do not translate a successful Rojo build, pure-Luau test, source inspection, or 
 Every evidence bundle must record enough identity to reproduce the exact build:
 
 - Git commit SHA under test,
-- Physics Lab recipe/schema version and deterministic recipe fingerprint/repro key when the lab exposes them,
+- Physics Lab recipe/schema version,
+- conceptual WorldId and resolved RegionId,
+- exact resolved-region fingerprint and deterministic repro key,
 - Roblox Studio version/channel,
 - OS,
 - server/client topology used by the test,
 - development diagnostics enabled/disabled state,
 - any non-default flags relevant to realization or fidelity.
 
-If the lab cannot expose an exact deterministic recipe identity once its contract lands, report that as a #10 blocker rather than substituting a screenshot or place-file timestamp.
+The realized lab root now exposes the resolved-region fingerprint and repro key, and the source-owned validation collector records them in every snapshot. If either field is missing, `PhysicsLabValidation.capture` fails rather than accepting a screenshot or place-file timestamp as a substitute.
+
+Before/after comparisons also reject snapshots with different schema/recipe/WorldId/RegionId/fingerprint/repro identity. Never compare measurements from different canonical lab truth as if they were one lifecycle run.
 
 ## Source and CI preflight
 
@@ -88,7 +92,7 @@ Pass conditions:
 - no unrelated subsystem activity changes those IDs,
 - reconstruction does not require reading a previously serialized Workspace tree.
 
-Any procedural failure report must include the deterministic repro key once the lab exposes one.
+Every procedural failure report must include the deterministic repro key exposed on the lab root and captured by the validation artifact.
 
 ## Representation lifecycle / state survival
 
@@ -101,22 +105,22 @@ For at least one structural entity and one interactive ObjectGenome-backed place
 3. Verify the old physical representation is gone and there is no duplicate live representation for the same WorldEntityId.
 4. Promote/re-realize through the production lifecycle boundary.
 5. Verify the same WorldEntityId returns and captured meaningful mutable state is preserved according to the landed WorldEntity/ObjectGenome contract.
-6. Repeat the lifecycle cycle 20 times while recording lab-root counts described below.
+6. Repeat the lifecycle cycle 20 times while recording the source-owned validation snapshots described below.
 
 Pass conditions:
 
 - identity never changes because an Instance was destroyed/recreated,
 - demotion cannot silently discard required state,
 - promotion does not register duplicate WorldEntityIds,
-- repeated cycles return to a stable resource-count envelope instead of monotonically leaking descendants/constraints/registrations.
+- repeated cycles return to a stable full-lab physical envelope instead of monotonically leaking descendants/constraints/registrations.
 
-If the first shell has no safe development path to trigger lifecycle teardown/rebuild, record that as a validation blocker rather than manually deleting Instances and calling the result representative.
+**Current Studio-access limitation:** the production bootstrap intentionally keeps the `RealizedLab` handle private. Do not bypass that protection by requiring the raw `PhysicsLabRuntime`, mutating Instance attributes, or manually deleting representations. Until a source-owned Studio/test harness can drive the public representation-aware `lab.step` boundary, lifecycle cycling from the Command Bar remains **UNVERIFIED** and should be reported as a #10/#151 blocker. The collector can still capture initial/bootstrap evidence safely.
 
 ## Fidelity ownership
 
 For each lab entity, prove the displayed/diagnosed fidelity is the authoritative WorldEntity fidelity coordinated through the production Fidelity Manager, not a local Physics Lab enum or Instance attribute that becomes a second truth source.
 
-Exercise at least one promotion and one demotion where the existing policy can do so without inventing lab-specific rules. Capture:
+Exercise at least one promotion and one demotion where a source-owned Studio/test path can invoke the representation-aware lifecycle without bypassing the realizer. Capture:
 
 - WorldEntityId,
 - authoritative fidelity before/after,
@@ -124,7 +128,7 @@ Exercise at least one promotion and one demotion where the existing policy can d
 - whether state capture was required,
 - representation before/after.
 
-A local lab-only fidelity state machine is an architecture failure even if the visual transition looks correct.
+A local lab-only fidelity state machine is an architecture failure even if the visual transition looks correct. If no safe Studio driver exists yet, leave this row UNVERIFIED rather than using the raw runtime as a shortcut.
 
 ## MaterialDNA / ObjectGenome boundary
 
@@ -145,92 +149,71 @@ Run the matrix in a real Roblox Studio test session on the exact commit. The fir
 | --- | --- | --- |
 | initial bootstrap | exactly one canonical lab root/realization; all required content appears | UNVERIFIED |
 | floor/walls/ceiling | contiguous usable test bay; no obvious spawn-through or missing collision surfaces | UNVERIFIED |
-| door placeholder | hinge representation is physically valid for the authored placeholder; no detached/exploding assembly on start | UNVERIFIED |
+| door placeholder | F2 anchored proxy matches the authored ObjectGenome construction; no detached/exploding representation on start | UNVERIFIED |
 | chair placeholder | realizes as the intended ObjectGenome placeholder with stable identity; no spontaneous instability | UNVERIFIED |
 | table placeholder | stable support/contact and canonical identity | UNVERIFIED |
-| rolling cart placeholder | realizes with intended rolling/mechanism proxy without orphaned pieces | UNVERIFIED |
-| cabinet/drawer placeholder | authored mechanism proxy realizes without invalid constraint state | UNVERIFIED |
-| stairs | traversable collision geometry at expected scale | UNVERIFIED |
-| ramp | traversable collision geometry at expected scale | UNVERIFIED |
+| rolling cart placeholder | realizes with intended F2 proxy construction without orphaned pieces | UNVERIFIED |
+| cabinet/drawer placeholder | authored F2 proxy realizes without malformed component state | UNVERIFIED |
+| stairs | traversable collision geometry at expected SI→stud scale | UNVERIFIED |
+| ramp | traversable collision geometry at expected SI→stud scale | UNVERIFIED |
 | ledge | collision/edge geometry exists and is usable for later body tests | UNVERIFIED |
 | spawn anchor | present as production-identified lab content; does not introduce a parallel character controller | UNVERIFIED |
 | teardown/rebuild | production teardown removes old representation; rebuild restores same IDs without duplicates | UNVERIFIED |
 | diagnostics off | release/default path does not create unbounded development labels/log spam | UNVERIFIED |
-| diagnostics on | WorldEntityId and fidelity are inspectable for lab entities | UNVERIFIED |
+| diagnostics on | WorldEntityId, fidelity, resolved fingerprint, and repro key are inspectable | UNVERIFIED |
 
-Record visible physics failures with the exact entity ID and recipe/repro identity. Screenshots/video may support the observation but do not replace the textual repro.
+Do not describe the current F2 anchored door/cart/cabinet proxies as validated hinges, casters, or drawers. F3/F4 mechanism behavior requires actual articulated realization plus Studio evidence.
 
-## Lab-root resource counts
+Record visible physics failures with the exact entity ID and resolved-region repro identity. Screenshots/video may support the observation but do not replace the textual repro.
+
+## Source-owned lab snapshot / resource deltas
 
 Resource counts are evidence, not budgets. Do not invent a permanent “allowed count” from this first shell.
 
-In Studio, select exactly one Physics Lab physical root in Explorer and run this in the Command Bar to capture a scoped snapshot:
+The canonical collector is `src/server/PhysicsLab/PhysicsLabValidation.luau`; do **not** maintain a second hand-written counting script in the Command Bar. It scopes traversal to one owned lab root, records exact canonical evidence identity, counts total Instances/Models/BaseParts/unique assemblies/Attachments/Constraints/JointInstances, and computes the world-space BasePart envelope using all eight transformed corners per part. Returned snapshots are plain/frozen data and retain no Instance references.
+
+In a **server-context** Studio Command Bar on the exact Rojo-synced build, capture an initial snapshot with:
 
 ```luau
-local Selection = game:GetService("Selection")
-local selected = Selection:Get()
-assert(#selected == 1, "select exactly one Physics Lab physical root")
-
-local root = selected[1]
-local counts = {
-    instances = 1,
-    models = if root:IsA("Model") then 1 else 0,
-    parts = if root:IsA("BasePart") then 1 else 0,
-    attachments = if root:IsA("Attachment") then 1 else 0,
-    constraints = if root:IsA("Constraint") then 1 else 0,
-    joints = if root:IsA("JointInstance") then 1 else 0,
-}
-local assemblies = {}
-
-local function inspect(instance: Instance)
-    counts.instances += 1
-    if instance:IsA("Model") then
-        counts.models += 1
-    elseif instance:IsA("BasePart") then
-        counts.parts += 1
-    elseif instance:IsA("Attachment") then
-        counts.attachments += 1
-    elseif instance:IsA("Constraint") then
-        counts.constraints += 1
-    elseif instance:IsA("JointInstance") then
-        counts.joints += 1
-    end
-
-    if instance:IsA("BasePart") then
-        local assemblyRoot = instance.AssemblyRootPart
-        if assemblyRoot ~= nil then
-            assemblies[assemblyRoot] = true
-        end
-    end
-end
-
-for _, descendant in root:GetDescendants() do
-    inspect(descendant)
-end
-if root:IsA("BasePart") and root.AssemblyRootPart ~= nil then
-    assemblies[root.AssemblyRootPart] = true
-end
-
-local assemblyCount = 0
-for _ in pairs(assemblies) do
-    assemblyCount += 1
-end
-
-print(string.format(
-    "PhysicsLab counts: instances=%d models=%d parts=%d assemblies=%d attachments=%d constraints=%d joints=%d",
-    counts.instances,
-    counts.models,
-    counts.parts,
-    assemblyCount,
-    counts.attachments,
-    counts.constraints,
-    counts.joints
-))
+local HttpService = game:GetService("HttpService")
+local ServerScriptService = game:GetService("ServerScriptService")
+local Validation = require(
+    ServerScriptService.UNRENDERED_Server.PhysicsLab.PhysicsLabValidation
+)
+local root = workspace:WaitForChild("UNRENDERED_PhysicsLab")
+local snapshot = Validation.capture(root)
+print(HttpService:JSONEncode(snapshot))
 ```
 
-Capture the snapshot after initial settle, after a production teardown, and after rebuild cycles 1, 5, 10, and 20. Compare only the selected lab root plus production registration/diagnostic metrics; unrelated Studio/plugin/player Instances are noise.
+Store the emitted JSON verbatim with the evidence bundle. It includes:
 
-A monotonic increase tied to each teardown/rebuild is a blocker until explained or fixed. A one-time warm-up allocation is not automatically a leak; report measurements instead of guessing.
+- lab root name and schema/recipe identity,
+- WorldId and resolved RegionId,
+- resolved-region fingerprint and deterministic repro key,
+- total scoped resource counts,
+- full-lab world-space BasePart envelope.
+
+When a safe production lifecycle driver exists, capture snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20. A partially demoted lab is intentionally a different physical representation, so record its count delta but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt.
+
+To compare two stored snapshots in a server-context Command Bar, paste their JSON strings into this source-owned comparison path:
+
+```luau
+local HttpService = game:GetService("HttpService")
+local ServerScriptService = game:GetService("ServerScriptService")
+local Validation = require(
+    ServerScriptService.UNRENDERED_Server.PhysicsLab.PhysicsLabValidation
+)
+
+local baseline = HttpService:JSONDecode([[PASTE_BASELINE_JSON_HERE]])
+local checkpoint = HttpService:JSONDecode([[PASTE_CHECKPOINT_JSON_HERE]])
+local comparison = Validation.compare(baseline, checkpoint, 0.001)
+print(HttpService:JSONEncode(comparison))
+Validation.assertFullLabEnvelope(baseline, checkpoint, 0.001)
+```
+
+The comparison fails closed if the snapshots describe different canonical lab truth. The signed count delta is measurement only; `assertFullLabEnvelope` is specifically the complete-rebuild envelope check. Keep the explicit tolerance in the evidence report rather than silently changing it until project policy establishes a measured tolerance.
+
+A monotonic resource increase tied to each complete teardown/rebuild is a blocker until explained or fixed. A one-time warm-up allocation is not automatically a leak; report measurements instead of guessing.
 
 ## Diagnostics / boundedness
 
@@ -240,7 +223,7 @@ Audit that:
 
 - diagnostics read production state rather than owning a second state copy,
 - repeated rebuilds do not accumulate duplicate labels/connections/registrations,
-- logs include stable IDs/repro identity where useful,
+- logs/evidence include stable IDs and exact repro identity,
 - diagnostics can be disabled for the normal path,
 - no world-sized queue/cache/history is introduced by the lab.
 
@@ -264,7 +247,8 @@ Use this template in #151/#10 or the integrating PR:
 ```text
 Commit:
 Lab recipe/schema version:
-Recipe fingerprint / repro key:
+WorldId / RegionId:
+Resolved fingerprint / repro key:
 Studio version/channel:
 OS:
 Topology (server + clients):
@@ -280,9 +264,11 @@ Studio realization matrix: PASS | FAIL | UNVERIFIED
 Resource-count/rebuild check: PASS | FAIL | UNVERIFIED
 Two-client smoke: PASS | FAIL | UNVERIFIED
 
-Measured counts/repro evidence:
+Baseline snapshot JSON:
+Checkpoint snapshot JSON / signed resource delta:
+Full-lab envelope tolerance + result:
 Blockers/findings:
 Unverified items:
 ```
 
-A #151 closeout must contain concrete findings or focused tests against the primary Physics Lab shell. This protocol alone is preparation, not proof that #10 has passed Reality-Grade validation.
+A #151 closeout must contain concrete findings or focused tests against the primary Physics Lab shell. This protocol and its source-owned collector are preparation, not proof that #10 has passed Reality-Grade validation.
