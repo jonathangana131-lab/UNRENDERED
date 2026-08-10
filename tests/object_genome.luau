@@ -25,6 +25,15 @@ local function hasCode(report, code)
 	return false
 end
 
+local function hasCodeAtPath(report, code, path)
+	for _, issue in ipairs(report.issues) do
+		if issue.code == code and issue.path == path then
+			return true
+		end
+	end
+	return false
+end
+
 local function findComponent(genome, key)
 	for _, component in ipairs(genome.components) do
 		if component.key == key then
@@ -292,6 +301,55 @@ local function run(): number
 		branchedTop ~= nil
 			and branchedCrossbar ~= nil
 			and hasCode(ObjectGenome.inspect(branchedCycle), "component.support_cycle")
+	)
+
+	local groundedReachableCycle = deepCopy(Fixtures.officeTable)
+	local reachableTop = findComponent(groundedReachableCycle, "top")
+	local reachableCrossbar = findComponent(groundedReachableCycle, "crossbar")
+	local reachableGround = findComponent(groundedReachableCycle, "leg-front-left")
+	if reachableTop ~= nil and reachableCrossbar ~= nil and reachableGround ~= nil then
+		reachableTop.supportKeys = { "crossbar", "leg-front-left" }
+		reachableCrossbar.supportKeys = { "top" }
+		reachableGround.supportKeys = {}
+		reachableGround.externalSupport = "ground"
+	end
+	local groundedReachableReport = ObjectGenome.inspect(groundedReachableCycle)
+	expect(
+		"ground-reachable cycle rejects cycle without false unsupported diagnostics",
+		reachableTop ~= nil
+			and reachableCrossbar ~= nil
+			and reachableGround ~= nil
+			and hasCode(groundedReachableReport, "component.support_cycle")
+			and not hasCodeAtPath(groundedReachableReport, "component.unsupported", "components.top")
+			and not hasCodeAtPath(groundedReachableReport, "component.unsupported", "components.crossbar")
+	)
+
+	local reorderedGroundedReachableCycle = deepCopy(groundedReachableCycle)
+	local reversedComponents = {}
+	for index = #reorderedGroundedReachableCycle.components, 1, -1 do
+		table.insert(reversedComponents, reorderedGroundedReachableCycle.components[index])
+	end
+	reorderedGroundedReachableCycle.components = reversedComponents
+	local reorderedGroundedReport = ObjectGenome.inspect(reorderedGroundedReachableCycle)
+	expect(
+		"ground reachability result is invariant to component traversal order",
+		hasCode(reorderedGroundedReport, "component.support_cycle")
+			and not hasCodeAtPath(reorderedGroundedReport, "component.unsupported", "components.top")
+			and not hasCodeAtPath(reorderedGroundedReport, "component.unsupported", "components.crossbar")
+	)
+
+	local ungroundedReachableCycle = deepCopy(groundedReachableCycle)
+	local ungroundedRoot = findComponent(ungroundedReachableCycle, "leg-front-left")
+	if ungroundedRoot ~= nil then
+		ungroundedRoot.externalSupport = "none"
+	end
+	local ungroundedReachableReport = ObjectGenome.inspect(ungroundedReachableCycle)
+	expect(
+		"genuinely ungrounded cycle reports both cycle and unsupported members",
+		ungroundedRoot ~= nil
+			and hasCode(ungroundedReachableReport, "component.support_cycle")
+			and hasCodeAtPath(ungroundedReachableReport, "component.unsupported", "components.top")
+			and hasCodeAtPath(ungroundedReachableReport, "component.unsupported", "components.crossbar")
 	)
 
 	local badMechanism = deepCopy(Fixtures.filingCabinet)
