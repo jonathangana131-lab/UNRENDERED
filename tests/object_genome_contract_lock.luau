@@ -109,6 +109,57 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(rotatedBack), "component.outside_bounds")
 	)
 
+	-- Independent golden for fixed-parent XYZ order. For dimensions (0.6, 0.4, 0.2)
+	-- at (30, 45, 60) degrees, Rz * Ry * Rx gives half-extents approximately
+	-- (0.29463057, 0.35958452, 0.34407996). The alternative intrinsic XYZ
+	-- composition gives (0.29925118, 0.33875364, 0.25535121), so these two
+	-- envelopes intentionally distinguish the two non-commuting conventions.
+	local mixedRotationGenome = {
+		schemaVersion = ObjectGenome.SCHEMA_VERSION,
+		familyId = "transform-golden",
+		familyVersion = 1,
+		variantKey = "fixed-xyz",
+		provenance = {
+			manufacturerFamily = "Contract Test",
+			productLine = "Rotation Golden",
+			apparentEra = "v1",
+		},
+		dimensionsM = { x = 0.58, y = 0.72, z = 0.69 },
+		dimensionLimits = {
+			minM = { x = 0.50, y = 0.50, z = 0.50 },
+			maxM = { x = 0.80, y = 0.80, z = 0.80 },
+		},
+		massKg = 1,
+		massLimitsKg = { min = 0.5, max = 2 },
+		centerOfMassM = { x = 0, y = 0, z = 0 },
+		components = {
+			{
+				key = "golden-box",
+				role = "rotation-order probe",
+				materialKey = "material:test.rotation-golden.v1",
+				massKg = 1,
+				localPositionM = { x = 0, y = 0, z = 0 },
+				localRotationDeg = { x = 30, y = 45, z = 60 },
+				dimensionsM = { x = 0.6, y = 0.4, z = 0.2 },
+				supportKeys = {},
+				externalSupport = "ground",
+			},
+		},
+		mechanisms = {},
+		affordances = {},
+	}
+	expect(
+		"mixed-axis golden accepts fixed-parent XYZ extents",
+		not hasCode(ObjectGenome.inspect(mixedRotationGenome), "component.outside_bounds")
+	)
+
+	local mixedRotationOrderProbe = deepCopy(mixedRotationGenome)
+	mixedRotationOrderProbe.dimensionsM = { x = 0.61, y = 0.70, z = 0.70 }
+	expect(
+		"mixed-axis golden rejects alternate rotation order",
+		hasCode(ObjectGenome.inspect(mixedRotationOrderProbe), "component.outside_bounds")
+	)
+
 	local fixtureCases = {
 		{ name = "office chair", genome = Fixtures.officeChair },
 		{ name = "office table", genome = Fixtures.officeTable },
