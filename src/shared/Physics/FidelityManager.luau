@@ -82,6 +82,14 @@ export type TransitionResult = {
 	reason: string,
 }
 
+export type DebugState = {
+	currentFidelity: Fidelity,
+	lastTransitionAt: number?,
+	lastEvaluationAt: number?,
+	pendingDemotionTarget: Fidelity?,
+	pendingDemotionSince: number?,
+}
+
 type Entry = {
 	currentFidelity: Fidelity,
 	lastTransitionAt: number?,
@@ -316,7 +324,7 @@ local function isCooldownActive(lastTransitionAt: number?, nowSeconds: number, d
 end
 
 local function syncEntry(manager: Manager, entityId: string, entry: Entry): Fidelity
-	local authoritative = manager.adapter.getFidelity(entityId)
+	local authoritative = manager.adapter.getFidelity(entityId) :: Fidelity
 	assertFidelity(authoritative)
 	if authoritative ~= entry.currentFidelity then
 		adjustFidelityCount(manager.metrics.fidelityCounts, entry.currentFidelity, -1)
@@ -331,7 +339,7 @@ end
 local function trackEntry(manager: Manager, entityId: string)
 	assert(entityId ~= "", "entityId required")
 	assert(manager.entries[entityId] == nil, `entity already tracked: {entityId}`)
-	local current = manager.adapter.getFidelity(entityId)
+	local current = manager.adapter.getFidelity(entityId) :: Fidelity
 	assertFidelity(current)
 	manager.entries[entityId] = {
 		currentFidelity = current,
@@ -366,7 +374,7 @@ local function performTransition(
 	capturedState: PersistentState?
 ): TransitionResult
 	manager.adapter.transition(entityId, target, capturedState, reason)
-	local authoritative = manager.adapter.getFidelity(entityId)
+	local authoritative = manager.adapter.getFidelity(entityId) :: Fidelity
 	assertFidelity(authoritative)
 	assert(
 		authoritative == target,
@@ -601,7 +609,7 @@ function FidelityManager.getMetrics(manager: Manager): Metrics
 	})
 end
 
-function FidelityManager.getDebugState(manager: Manager, entityId: string)
+function FidelityManager.getDebugState(manager: Manager, entityId: string): DebugState?
 	local entry = manager.entries[entityId]
 	if entry == nil then
 		return nil
