@@ -6,6 +6,8 @@ local registerReproKey = require("./specs/ReproKeySpec")
 local runDeterministicRng = require("./deterministic_rng")
 local runFidelityManager = require("./fidelity_manager")
 local runFidelityManagerDeterminism = require("./fidelity_manager_determinism")
+local runObjectGenome = require("./object_genome")
+local runObjectGenomeContractLock = require("./object_genome_contract_lock")
 local runWorldEntity = require("./world_entity")
 
 local runner = TestHarness.new()
@@ -16,6 +18,8 @@ local legacyFailures = runDeterministicRng()
 	+ runWorldEntity()
 	+ runFidelityManager()
 	+ runFidelityManagerDeterminism()
+	+ runObjectGenome()
+	+ runObjectGenomeContractLock()
 local deterministicPassed = runner:run()
 
 if legacyFailures > 0 or not deterministicPassed then
