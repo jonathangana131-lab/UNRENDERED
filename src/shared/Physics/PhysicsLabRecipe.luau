@@ -119,7 +119,11 @@ local function primitive(
 	collidable: boolean,
 	transparency: number?
 ): PrimitiveEntityRecipe
-	MaterialDNA.validateReference(material)
+	local materialValidation = MaterialDNA.validateReference(material)
+	assert(
+		materialValidation.ok,
+		`invalid Physics Lab primitive material reference: {table.concat(materialValidation.errors, "; ")}`
+	)
 	local resolvedTransparency = transparency or 0
 	assert(
 		resolvedTransparency >= 0 and resolvedTransparency <= 1,
