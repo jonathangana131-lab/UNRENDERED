@@ -64,6 +64,8 @@ local function applyEntityDiagnostics(target: Instance, element: LabElement): ()
 	target:SetAttribute("RegionId", element.entity.origin.regionId)
 	target:SetAttribute("Fidelity", element.entity.fidelity)
 	target:SetAttribute("RecipeKey", element.entity.origin.recipeKey)
+	target:SetAttribute("StateRevision", element.entity.stateRevision)
+	target:SetAttribute("RepresentationRevision", element.entity.representationRevision)
 	if element.objectGenomeId ~= nil then
 		target:SetAttribute("ObjectGenomeId", element.objectGenomeId)
 	end
@@ -340,7 +342,7 @@ function PhysicsLabRealizer.destroy(parent: Instance): ()
 	end
 end
 
-function PhysicsLabRealizer.realize(recipe: Recipe, parent: Instance): Folder
+function PhysicsLabRealizer.realize(recipe: Recipe, parent: Instance): (Folder, { [string]: Instance })
 	PhysicsLabRecipe.validate(recipe)
 	PhysicsLabRealizer.destroy(parent)
 
@@ -353,11 +355,16 @@ function PhysicsLabRealizer.realize(recipe: Recipe, parent: Instance): Folder
 	root:SetAttribute("PhysicalRepresentationOnly", true)
 	root.Parent = parent
 
+	local representations: { [string]: Instance } = {}
 	for _, element in recipe.elements do
 		realizeElement(element, root)
+		local representation = root:FindFirstChild(element.key)
+		assert(representation ~= nil, `Physics Lab realization missing model: {element.key}`)
+		assert(representations[element.entity.id] == nil, `duplicate realized WorldEntityId: {element.entity.id}`)
+		representations[element.entity.id] = representation
 	end
 
-	return root
+	return root, representations
 end
 
 return table.freeze(PhysicsLabRealizer)
