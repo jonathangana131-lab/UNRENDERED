@@ -146,8 +146,134 @@ local CARPET_INSTALLATIONS = table.freeze({
 	["installation.carpet-tile-adhesive"] = true,
 })
 
+local RECIPE_KEYS: { [string]: boolean } = table.freeze({
+	id = true,
+	schemaVersion = true,
+	coherenceClass = true,
+	substrate = true,
+	finish = true,
+	installation = true,
+	apparentAgeYears = true,
+	maintenance = true,
+	environment = true,
+	historyEvents = true,
+	visual = true,
+	physical = true,
+	acoustic = true,
+	response = true,
+	anomalyModifiers = true,
+})
+
+local SUBSTRATE_KEYS: { [string]: boolean } = table.freeze({
+	classKey = true,
+	thicknessMeters = true,
+	porosity01 = true,
+})
+
+local FINISH_KEYS: { [string]: boolean } = table.freeze({
+	classKey = true,
+	color = true,
+	roughness01 = true,
+	metallic01 = true,
+})
+
+local COLOR_KEYS: { [string]: boolean } = table.freeze({
+	r = true,
+	g = true,
+	b = true,
+})
+
+local INSTALLATION_KEYS: { [string]: boolean } = table.freeze({
+	methodKey = true,
+	batchKey = true,
+	quality01 = true,
+	seamPeriodMeters = true,
+})
+
+local MAINTENANCE_KEYS: { [string]: boolean } = table.freeze({
+	careClassKey = true,
+	frequency01 = true,
+	cleanliness01 = true,
+	repairCount = true,
+})
+
+local ENVIRONMENT_KEYS: { [string]: boolean } = table.freeze({
+	humidity01 = true,
+	water01 = true,
+	uv01 = true,
+	grime01 = true,
+})
+
+local HISTORY_EVENT_KEYS: { [string]: boolean } = table.freeze({
+	kindKey = true,
+	causeKey = true,
+	severity01 = true,
+	coverage01 = true,
+})
+
+local VISUAL_KEYS: { [string]: boolean } = table.freeze({
+	familyKey = true,
+	coherenceClass = true,
+	metersPerRepeat = true,
+})
+
+local PHYSICAL_KEYS: { [string]: boolean } = table.freeze({
+	classKey = true,
+	coherenceClass = true,
+	densityKgPerM3 = true,
+	staticFriction = true,
+	dynamicFriction = true,
+	restitution01 = true,
+})
+
+local ACOUSTIC_KEYS: { [string]: boolean } = table.freeze({
+	classKey = true,
+	coherenceClass = true,
+	absorptionLow01 = true,
+	absorptionMid01 = true,
+	absorptionHigh01 = true,
+	impactFamilyKey = true,
+	scrapeFamilyKey = true,
+})
+
+local RESPONSE_KEYS: { [string]: boolean } = table.freeze({
+	wetFrictionMultiplier = true,
+	wetDarkening01 = true,
+	damageResistance01 = true,
+	stainAffinity01 = true,
+})
+
 local function appendError(errors: { string }, message: string): ()
 	table.insert(errors, message)
+end
+
+local function allowedRecordKeys(path: string): { [string]: boolean }?
+	if path == "MaterialRecipe" then
+		return RECIPE_KEYS
+	elseif path == "substrate" then
+		return SUBSTRATE_KEYS
+	elseif path == "finish" then
+		return FINISH_KEYS
+	elseif path == "finish.color" then
+		return COLOR_KEYS
+	elseif path == "installation" then
+		return INSTALLATION_KEYS
+	elseif path == "maintenance" then
+		return MAINTENANCE_KEYS
+	elseif path == "environment" then
+		return ENVIRONMENT_KEYS
+	elseif path == "visual" then
+		return VISUAL_KEYS
+	elseif path == "physical" then
+		return PHYSICAL_KEYS
+	elseif path == "acoustic" then
+		return ACOUSTIC_KEYS
+	elseif path == "response" then
+		return RESPONSE_KEYS
+	elseif string.match(path, "^historyEvents%[%d+%]$") ~= nil then
+		return HISTORY_EVENT_KEYS
+	end
+	return nil
 end
 
 local function asTable(errors: { string }, path: string, value: unknown): any?
@@ -155,7 +281,23 @@ local function asTable(errors: { string }, path: string, value: unknown): any?
 		appendError(errors, `{path} must be a table`)
 		return nil
 	end
-	return value :: any
+
+	local source = value :: any
+	if getmetatable(source) ~= nil then
+		appendError(errors, `{path} must be a plain table with no metatable`)
+		return nil
+	end
+
+	local allowedKeys = allowedRecordKeys(path)
+	if allowedKeys ~= nil then
+		for key in pairs(source) do
+			if type(key) ~= "string" or allowedKeys[key] ~= true then
+				appendError(errors, `{path} contains unknown schema key {tostring(key)}`)
+			end
+		end
+	end
+
+	return source
 end
 
 local function isFinite(value: number): boolean
