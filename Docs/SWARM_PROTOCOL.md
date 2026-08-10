@@ -23,7 +23,8 @@ Opening many future issues is useful for planning; it must not create uncontroll
 Read/inspect in this order:
 1. uploaded Project Source,
 2. `Docs/PROJECT_STATE.md`,
-3. `Docs/QUALITY_STANDARD.md`,
+3. `Docs/STUDIO_EXECUTOR.md`,
+4. `Docs/QUALITY_STANDARD.md`,
 4. `Docs/ROADMAP.md`,
 5. `Docs/ARCHITECTURE.md`,
 6. relevant recent ADRs,
