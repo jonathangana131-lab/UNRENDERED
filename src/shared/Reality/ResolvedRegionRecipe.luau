@@ -1,16 +1,8 @@
 --!strict
 
-local requireAny = require :: any
-local scriptValue = script :: any
-local StableId = if scriptValue ~= nil
-	then requireAny(scriptValue.Parent.Parent.Core.StableId)
-	else requireAny("../Core/StableId")
-local DeterminismContract = if scriptValue ~= nil
-	then requireAny(scriptValue.Parent.Parent.Core.DeterminismContract)
-	else requireAny("../Core/DeterminismContract")
-local RegionAddress = if scriptValue ~= nil
-	then requireAny(scriptValue.Parent.Parent.Spatial.RegionAddress)
-	else requireAny("../Spatial/RegionAddress")
+local StableId = require(script.Parent.Parent.Core.StableId)
+local DeterminismContract = require(script.Parent.Parent.Core.DeterminismContract)
+local RegionAddress = require(script.Parent.Parent.Spatial.RegionAddress)
 
 local SCHEMA_VERSION = 1
 local MAX_VERSION = 2147483647
