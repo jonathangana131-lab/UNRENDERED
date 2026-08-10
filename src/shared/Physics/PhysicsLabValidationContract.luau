@@ -48,6 +48,14 @@ local COUNT_KEYS = table.freeze({
 	"joints",
 })
 
+local IDENTITY_KEYS = table.freeze({
+	"labRecipeKey",
+	"worldId",
+	"regionId",
+	"resolvedRegionFingerprint",
+	"resolvedRegionReproKey",
+})
+
 local function isFinite(value: any): boolean
 	return type(value) == "number" and value == value and value ~= math.huge and value ~= -math.huge
 end
@@ -98,13 +106,7 @@ function PhysicsLabValidationContract.inspectSnapshot(snapshot: any): (boolean, 
 	if not isNonNegativeInteger(snapshot.labSchemaVersion) or snapshot.labSchemaVersion < 1 then
 		return false, "snapshot.labSchemaVersion must be a positive integer"
 	end
-	for _, field in ipairs({
-		"labRecipeKey",
-		"worldId",
-		"regionId",
-		"resolvedRegionFingerprint",
-		"resolvedRegionReproKey",
-	}) do
+	for _, field in ipairs(IDENTITY_KEYS) do
 		if type(snapshot[field]) ~= "string" or snapshot[field] == "" then
 			return false, `snapshot.{field} must be a non-empty string`
 		end
@@ -134,6 +136,19 @@ local function assertSnapshot(snapshot: Snapshot, label: string): ()
 	assert(ok, `{label} validation snapshot is invalid: {problem or "unknown validation error"}`)
 end
 
+local function assertSameIdentity(baseline: Snapshot, checkpoint: Snapshot): ()
+	assert(
+		baseline.labSchemaVersion == checkpoint.labSchemaVersion,
+		"Physics Lab validation snapshots use different lab schema versions"
+	)
+	for _, key in ipairs(IDENTITY_KEYS) do
+		assert(
+			baseline[key] == checkpoint[key],
+			`Physics Lab validation snapshots differ at identity field {key}`
+		)
+	end
+end
+
 local function freezeVec3(value: Vec3): Vec3
 	return table.freeze({ x = value.x, y = value.y, z = value.z })
 end
@@ -153,6 +168,7 @@ end
 function PhysicsLabValidationContract.delta(before: Snapshot, after: Snapshot): ResourceDelta
 	assertSnapshot(before, "before")
 	assertSnapshot(after, "after")
+	assertSameIdentity(before, after)
 	return resourceDelta(before.counts, after.counts)
 end
 
@@ -163,6 +179,7 @@ function PhysicsLabValidationContract.compareFullLabEnvelope(
 ): EnvelopeReport
 	assertSnapshot(baseline, "baseline")
 	assertSnapshot(checkpoint, "checkpoint")
+	assertSameIdentity(baseline, checkpoint)
 
 	local tolerance = toleranceStuds or 0.001
 	assert(
