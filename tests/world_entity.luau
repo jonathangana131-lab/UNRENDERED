@@ -151,6 +151,15 @@ local function run(): number
 	end)
 	expectEqual("persistent state rejects sparse arrays", sparseArrayAccepted, false)
 
+	local contiguousArrayState = WorldEntity.captureState(entity, {
+		contacts = { "front-left", "front-right", "rear-left" },
+	})
+	expectEqual(
+		"persistent state preserves contiguous arrays",
+		(contiguousArrayState.persistentState.contacts :: any)[2],
+		"front-right"
+	)
+
 	local interactive = WorldEntity.transition(entity, "F3")
 	expectEqual("promotion preserves identity", interactive.id, entity.id)
 	expectEqual("promotion changes fidelity", interactive.fidelity, "F3")
@@ -178,7 +187,11 @@ local function run(): number
 	local refreshed = WorldEntity.transition(structural, "F1", { open = false })
 	expectEqual("same-fidelity capture updates state", refreshed.persistentState.open, false)
 	expectEqual("same-fidelity capture increments state revision", refreshed.stateRevision, 2)
-	expectEqual("same-fidelity capture preserves representation revision", refreshed.representationRevision, 2)
+	expectEqual(
+		"same-fidelity capture preserves representation revision",
+		refreshed.representationRevision,
+		2
+	)
 
 	local registry = WorldEntity.createRegistry()
 	local registered = WorldEntity.register(registry, entity)
@@ -222,7 +235,11 @@ local function run(): number
 	end
 	local boundedDiagnostics = WorldEntity.duplicateDiagnostics(boundedRegistry)
 	expectEqual("duplicate diagnostics stay bounded", #boundedDiagnostics, 2)
-	expectEqual("duplicate diagnostics discard oldest", boundedDiagnostics[1].incomingRecipeKey, "duplicate/2")
+	expectEqual(
+		"duplicate diagnostics discard oldest",
+		boundedDiagnostics[1].incomingRecipeKey,
+		"duplicate/2"
+	)
 	expectEqual("duplicate diagnostics retain newest", boundedDiagnostics[2].incomingRecipeKey, "duplicate/3")
 
 	local removed = WorldEntity.unregister(registry, entity.id)
