@@ -26,24 +26,92 @@ local function join(root, relativePath)
 	return `{root}/{relativePath}`
 end
 
+local function childPath(directory, entryName)
+	if directory == "." then
+		return entryName
+	end
+	return `{directory}/{entryName}`
+end
+
 function ProductionLoader.new(root)
-	return setmetatable({
+	local loader = setmetatable({
 		root = root or ".",
 		cache = {},
 		loading = {},
+		nodes = {},
+		sources = {},
+		children = {
+			["."] = {},
+		},
 	}, Loader)
+
+	loader.children["."].src = {
+		path = "src",
+		kind = "directory",
+	}
+	loader:_indexDirectory("src")
+	return loader
+end
+
+function Loader:_indexDirectory(relativeDirectory)
+	if self.children[relativeDirectory] ~= nil then
+		return
+	end
+
+	local indexedChildren = {}
+	self.children[relativeDirectory] = indexedChildren
+
+	for _, entryName in fs.readDir(join(self.root, relativeDirectory)) do
+		local relativePath = childPath(relativeDirectory, entryName)
+		local fullPath = join(self.root, relativePath)
+
+		if fs.isFile(fullPath) then
+			if string.match(entryName, "%.luau$") ~= nil then
+				local name = moduleName(entryName)
+				assert(
+					indexedChildren[name] == nil,
+					`duplicate production module tree child: {relativeDirectory}/{name}`
+				)
+				indexedChildren[name] = {
+					path = relativePath,
+					kind = "module",
+				}
+				self.sources[relativePath] = fs.readFile(fullPath)
+			end
+		elseif fs.isDir(fullPath) then
+			assert(
+				indexedChildren[entryName] == nil,
+				`duplicate production module tree child: {relativeDirectory}/{entryName}`
+			)
+			indexedChildren[entryName] = {
+				path = relativePath,
+				kind = "directory",
+			}
+			self:_indexDirectory(relativePath)
+		end
+	end
 end
 
 function Loader:_makeNode(relativePath, kind)
+	local cacheKey = `{kind}:{relativePath}`
+	local cached = self.nodes[cacheKey]
+	if cached ~= nil then
+		return cached
+	end
+
 	local loader = self
 	local node = {
 		_path = relativePath,
 		_kind = kind,
 	}
+	self.nodes[cacheKey] = node
 
 	return setmetatable(node, {
 		__index = function(_, key)
 			if key == "Parent" then
+				if relativePath == "." then
+					return nil
+				end
 				return loader:_makeNode(dirname(relativePath), "directory")
 			elseif key == "Name" then
 				return moduleName(relativePath)
@@ -56,38 +124,15 @@ function Loader:_makeNode(relativePath, kind)
 				directory = dirname(relativePath)
 			end
 
-			-- Lune filesystem calls can yield. Roblox-style property lookup is a
-			-- metamethod here, so probing the filesystem inside __index can cross
-			-- a non-yieldable metamethod/C-call boundary. Keep navigation pure and
-			-- defer existence checks until the explicit require call below.
-			return loader:_makeNode(`{directory}/{key}`, "unresolved")
+			local directoryChildren = loader.children[directory]
+			local child = if directoryChildren == nil then nil else directoryChildren[key]
+			if child ~= nil then
+				return loader:_makeNode(child.path, child.kind)
+			end
+
+			error(`unable to resolve production module child {directory}/{key}`, 2)
 		end,
 	})
-end
-
-function Loader:_resolveRequireTarget(target)
-	if type(target) ~= "table" then
-		return nil
-	end
-
-	local targetPath = rawget(target, "_path")
-	local targetKind = rawget(target, "_kind")
-	if type(targetPath) ~= "string" then
-		return nil
-	end
-
-	if targetKind == "module" then
-		return targetPath
-	end
-	if targetKind == "unresolved" then
-		local candidateModule = `{targetPath}.luau`
-		if fs.isFile(join(self.root, candidateModule)) then
-			return candidateModule
-		end
-		error(`unable to resolve production module {targetPath}`, 3)
-	end
-
-	return nil
 end
 
 function Loader:_requirePath(relativePath)
@@ -97,8 +142,8 @@ function Loader:_requirePath(relativePath)
 	end
 
 	assert(not self.loading[relativePath], `circular production require detected at {relativePath}`)
-	local fullPath = join(self.root, relativePath)
-	assert(fs.isFile(fullPath), `production module does not exist: {relativePath}`)
+	local source = self.sources[relativePath]
+	assert(source ~= nil, `production module does not exist: {relativePath}`)
 
 	self.loading[relativePath] = true
 
@@ -106,15 +151,18 @@ function Loader:_requirePath(relativePath)
 		script = self:_makeNode(relativePath, "module"),
 	}
 	environment.require = function(target)
-		local targetPath = self:_resolveRequireTarget(target)
-		if targetPath ~= nil then
-			return self:_requirePath(targetPath)
+		if type(target) == "table" then
+			local targetPath = rawget(target, "_path")
+			local targetKind = rawget(target, "_kind")
+			if type(targetPath) == "string" and targetKind == "module" then
+				return self:_requirePath(targetPath)
+			end
 		end
 		return hostRequire(target)
 	end
 
 	local okLoad, chunkOrFailure = pcall(function()
-		return luau.load(fs.readFile(fullPath), {
+		return luau.load(source, {
 			debugName = relativePath,
 			environment = environment,
 			injectGlobals = true,
