@@ -4,6 +4,7 @@ local StableId = require(script.Parent.Parent.Core.StableId)
 local MaterialDNA = require(script.Parent.Parent.Materials.MaterialDNA)
 local ObjectGenome = require(script.Parent.Parent.Objects.ObjectGenome)
 local ObjectGenomeFixtures = require(script.Parent.Parent.Objects.ObjectGenomeFixtures)
+local ResolvedRegionRecipe = require(script.Parent.Parent.Reality.ResolvedRegionRecipe)
 local WorldEntity = require(script.Parent.Parent.Reality.WorldEntity)
 local PhysicsLabObjectGenomes = require(script.Parent.PhysicsLabObjectGenomes)
 
@@ -56,17 +57,60 @@ export type PhysicsLabRecipe = {
 	recipeKey: string,
 	worldId: string,
 	regionId: string,
+	resolvedRegion: ResolvedRegionRecipe.Recipe,
 	entities: { EntityRecipe },
 }
 
 local PhysicsLabRecipe = {}
 
-PhysicsLabRecipe.SCHEMA_VERSION = 1
-PhysicsLabRecipe.GENERATOR_VERSION = 1
-PhysicsLabRecipe.RECIPE_KEY = "physics-lab.hero-gate.v1"
+PhysicsLabRecipe.SCHEMA_VERSION = 2
+PhysicsLabRecipe.GENERATOR_VERSION = 2
+PhysicsLabRecipe.RECIPE_KEY = "physics-lab.hero-gate.v2"
 
 local WORLD_ID = StableId.fromParts("world", { "physics-lab", "hero-gate", "v1" })
-local REGION_ID = StableId.fromParts("region", { "physics-lab", "bay-a", "v1" })
+-- This is established lab truth, so generator versions are pinned explicitly instead of
+-- consulting currentGeneratorVersions() and silently drifting when future generators land.
+local RESOLVED_REGION = ResolvedRegionRecipe.lock({
+	worldSeedRef = "physics-lab.hero-gate.world-seed.v1",
+	regionAddress = {
+		x = 0,
+		z = 0,
+		layer = 0,
+	},
+	generatorVersions = {
+		reality = 1,
+		topology = 1,
+		material = 1,
+		object = 1,
+		entity = 1,
+	},
+	semanticIntentKey = "physics-lab.hero-gate.office-bay.v1",
+	topologyAnchors = {
+		"front-threshold/door-main",
+	},
+	canonicalContentKeys = {
+		"floor",
+		"ceiling",
+		"wall-left",
+		"wall-right",
+		"wall-back",
+		"wall-front-left",
+		"wall-front-right",
+		"wall-front-header",
+		"ramp",
+		"ledge",
+		"stair-1",
+		"stair-2",
+		"stair-3",
+		"stair-4",
+		"character-spawn-anchor",
+		"door-main",
+		"chair-a",
+		"table-a",
+		"cabinet-a",
+		"cart-a",
+	},
+})
 
 local WALL_MATERIAL: MaterialReference = table.freeze({
 	id = "material.v1.office-wallpaper.yellow-vinyl",
@@ -102,7 +146,7 @@ end
 local function originFor(key: string): WorldEntity.GenerationOrigin
 	return {
 		worldId = WORLD_ID,
-		regionId = REGION_ID,
+		regionId = RESOLVED_REGION.regionId,
 		generator = "physics-lab.recipe",
 		generatorVersion = PhysicsLabRecipe.GENERATOR_VERSION,
 		recipeKey = `{PhysicsLabRecipe.RECIPE_KEY}/{key}`,
@@ -336,7 +380,8 @@ function PhysicsLabRecipe.build(): PhysicsLabRecipe
 		schemaVersion = PhysicsLabRecipe.SCHEMA_VERSION,
 		recipeKey = PhysicsLabRecipe.RECIPE_KEY,
 		worldId = WORLD_ID,
-		regionId = REGION_ID,
+		regionId = RESOLVED_REGION.regionId,
+		resolvedRegion = RESOLVED_REGION,
 		entities = table.freeze(entities),
 	})
 end

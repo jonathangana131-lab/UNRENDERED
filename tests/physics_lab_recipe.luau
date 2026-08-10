@@ -3,6 +3,7 @@ local ProductionLoader = require("./support/ProductionLoader")
 local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
 local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
 local PhysicsLabRecipe = ProductionLoader.requireShared("Physics/PhysicsLabRecipe")
+local ResolvedRegionRecipe = ProductionLoader.requireShared("Reality/ResolvedRegionRecipe")
 local StableId = ProductionLoader.requireShared("Core/StableId")
 local WorldEntity = ProductionLoader.requireShared("Reality/WorldEntity")
 
@@ -31,6 +32,30 @@ local function run(): number
 		"lab region id is deterministic",
 		first.regionId == second.regionId and StableId.is(first.regionId, "region")
 	)
+	expect("lab region id is owned by resolved-region truth", first.regionId == first.resolvedRegion.regionId)
+	expect(
+		"lab resolved-region recipe is deterministic",
+		ResolvedRegionRecipe.equal(first.resolvedRegion, second.resolvedRegion)
+	)
+	local reconstructedRegion =
+		ResolvedRegionRecipe.deserialize(ResolvedRegionRecipe.serialize(first.resolvedRegion))
+	expect(
+		"lab resolved-region recipe reconstructs exactly",
+		ResolvedRegionRecipe.equal(first.resolvedRegion, reconstructedRegion)
+	)
+	expect(
+		"lab resolved-region repro identity is deterministic",
+		ResolvedRegionRecipe.reproKey(first.resolvedRegion)
+			== ResolvedRegionRecipe.reproKey(second.resolvedRegion)
+	)
+	expect(
+		"lab resolved-region versions are explicitly locked",
+		first.resolvedRegion.generatorVersions.reality == 1
+			and first.resolvedRegion.generatorVersions.topology == 1
+			and first.resolvedRegion.generatorVersions.material == 1
+			and first.resolvedRegion.generatorVersions.object == 1
+			and first.resolvedRegion.generatorVersions.entity == 1
+	)
 	expect("lab entity count is deterministic", #first.entities == #second.entities and #first.entities == 20)
 
 	local requiredKeys = {
@@ -57,6 +82,11 @@ local function run(): number
 	}
 	local seenKeys = {}
 	local seenIds = {}
+	local resolvedContentKeys = {}
+	for _, key in ipairs(first.resolvedRegion.canonicalContentKeys) do
+		resolvedContentKeys[key] = true
+	end
+	local allEntitiesBelongToResolvedBase = true
 	local registry = WorldEntity.createRegistry()
 	local deterministicEntries = true
 	local allEntityIdsValid = true
@@ -77,6 +107,9 @@ local function run(): number
 		end
 
 		seenKeys[entityRecipe.key] = true
+		if not resolvedContentKeys[entityRecipe.key] then
+			allEntitiesBelongToResolvedBase = false
+		end
 		if seenIds[entityRecipe.entity.id] then
 			allEntityIdsValid = false
 		end
@@ -130,6 +163,10 @@ local function run(): number
 
 	expect("lab entity sequence is deterministic", deterministicEntries)
 	expect("lab includes every required shell/object key", allRequiredKeysPresent)
+	expect(
+		"lab resolved-region base accounts for every placed entity",
+		allEntitiesBelongToResolvedBase and #first.resolvedRegion.canonicalContentKeys == #first.entities
+	)
 	expect("lab WorldEntity ids are unique StableIds", allEntityIdsValid)
 	expect(
 		"lab WorldEntity registry accepts every entity once",
