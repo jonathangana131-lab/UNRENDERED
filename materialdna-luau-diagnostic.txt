@@ -1,0 +1,6 @@
+[INFO] Loading definitions file: @roblox - globalTypes.d.luau
+[WARN] client does not allow didChangeWatchedFiles registration - automatic updating on sourcemap changes disabled
+[INFO] Loading Luau configuration from /home/runner/work/UNRENDERED/UNRENDERED/.luaurc
+/home/runner/work/UNRENDERED/UNRENDERED/src/shared/Materials/MaterialDNA.luau [game/ReplicatedStorage/UNRENDERED/Materials/MaterialDNA](234,18): TypeError: Expected this to be '{ @metatable 'a, {-  -} }', but got 'unknown'
+/home/runner/work/UNRENDERED/UNRENDERED/src/shared/Materials/MaterialDNA.luau [game/ReplicatedStorage/UNRENDERED/Materials/MaterialDNA](234,18): TypeError: Expected this to be '{ @metatable 'a, {-  -} }', but got 'unknown'
+exit_code=1
