@@ -43,78 +43,154 @@ def _long_bracket_level(source: str, start: int) -> tuple[int, int] | None:
 
 
 def _mask_noncode(source: str) -> str:
-    """Replace comments and string contents with spaces while preserving newlines."""
+    """Mask Luau comments/string literal chunks while preserving interpolation code."""
 
     masked = list(source)
     length = len(source)
-    cursor = 0
 
     def blank(index: int) -> None:
         if masked[index] != "\n":
             masked[index] = " "
 
-    while cursor < length:
-        char = source[cursor]
+    def mask_quoted(start: int) -> int:
+        quote = source[start]
+        blank(start)
+        cursor = start + 1
+        while cursor < length:
+            current = source[cursor]
+            blank(cursor)
+            if current == "\\" and cursor + 1 < length:
+                cursor += 1
+                blank(cursor)
+            elif current == quote:
+                return cursor + 1
+            cursor += 1
+        return cursor
 
-        if char in ('"', "'"):
-            quote = char
+    def mask_long_bracket(start: int) -> int | None:
+        long_string = _long_bracket_level(source, start)
+        if long_string is None:
+            return None
+
+        level, content_start = long_string
+        close = "]" + ("=" * level) + "]"
+        for index in range(start, content_start):
+            blank(index)
+
+        cursor = content_start
+        while cursor < length:
+            if source.startswith(close, cursor):
+                for index in range(cursor, min(cursor + len(close), length)):
+                    blank(index)
+                return cursor + len(close)
             blank(cursor)
             cursor += 1
-            while cursor < length:
-                current = source[cursor]
-                blank(cursor)
-                if current == "\\" and cursor + 1 < length:
-                    cursor += 1
-                    blank(cursor)
-                elif current == quote:
-                    cursor += 1
-                    break
-                cursor += 1
-            continue
+        return cursor
 
-        if char == "[":
-            long_string = _long_bracket_level(source, cursor)
-            if long_string is not None:
-                level, content_start = long_string
-                close = "]" + ("=" * level) + "]"
-                for index in range(cursor, content_start):
-                    blank(index)
-                cursor = content_start
-                while cursor < length:
-                    if source.startswith(close, cursor):
-                        for index in range(cursor, min(cursor + len(close), length)):
-                            blank(index)
-                        cursor += len(close)
-                        break
+    def mask_comment(start: int) -> int:
+        blank(start)
+        if start + 1 < length:
+            blank(start + 1)
+        cursor = start + 2
+
+        long_end = mask_long_bracket(cursor)
+        if long_end is not None:
+            return long_end
+
+        while cursor < length and source[cursor] != "\n":
+            blank(cursor)
+            cursor += 1
+        return cursor
+
+    def mask_interpolated(start: int) -> int:
+        blank(start)
+        cursor = start + 1
+        while cursor < length:
+            current = source[cursor]
+
+            if current == "\\":
+                blank(cursor)
+                cursor += 1
+                if cursor < length:
                     blank(cursor)
                     cursor += 1
                 continue
+
+            if current == "`":
+                blank(cursor)
+                return cursor + 1
+
+            if current == "{":
+                blank(cursor)
+                cursor = scan_interpolation(cursor + 1)
+                continue
+
+            blank(cursor)
+            cursor += 1
+
+        return cursor
+
+    def scan_interpolation(start: int) -> int:
+        depth = 1
+        cursor = start
+        while cursor < length:
+            current = source[cursor]
+
+            if source.startswith("--", cursor):
+                cursor = mask_comment(cursor)
+                continue
+
+            if current in ('"', "'"):
+                cursor = mask_quoted(cursor)
+                continue
+
+            if current == "[":
+                long_end = mask_long_bracket(cursor)
+                if long_end is not None:
+                    cursor = long_end
+                    continue
+
+            if current == "`":
+                cursor = mask_interpolated(cursor)
+                continue
+
+            if current == "{":
+                depth += 1
+                cursor += 1
+                continue
+
+            if current == "}":
+                depth -= 1
+                if depth == 0:
+                    blank(cursor)
+                    return cursor + 1
+                cursor += 1
+                continue
+
+            cursor += 1
+
+        return cursor
+
+    cursor = 0
+    while cursor < length:
+        current = source[cursor]
 
         if source.startswith("--", cursor):
-            blank(cursor)
-            blank(cursor + 1)
-            cursor += 2
+            cursor = mask_comment(cursor)
+            continue
 
-            long_comment = _long_bracket_level(source, cursor)
-            if long_comment is not None:
-                level, content_start = long_comment
-                close = "]" + ("=" * level) + "]"
-                for index in range(cursor, content_start):
-                    blank(index)
-                cursor = content_start
-                while cursor < length:
-                    if source.startswith(close, cursor):
-                        for index in range(cursor, min(cursor + len(close), length)):
-                            blank(index)
-                        cursor += len(close)
-                        break
-                    blank(cursor)
-                    cursor += 1
+        if current in ('"', "'"):
+            cursor = mask_quoted(cursor)
+            continue
+
+        if current == "[":
+            long_end = mask_long_bracket(cursor)
+            if long_end is not None:
+                cursor = long_end
                 continue
 
-            while cursor < length and source[cursor] != "\n":
-                blank(cursor)
-                cursor += 1
+        if current == "`":
+            cursor = mask_interpolated(cursor)
             continue
 
         cursor += 1
@@ -136,18 +212,23 @@ def _find_violations(source: str) -> list[tuple[int, str]]:
 
 
 def _self_test() -> None:
-    sample = '''
+    sample = r'''
 -- math.random() in a comment is harmless
 local text = "Random.new(4) inside a string"
 local longText = [[math.randomseed(1) inside a long string]]
 --[[ Random.new() inside a block comment ]]
+local backtickText = `math.random() and Random.new(4) are literal text`
+local escapedInterpolation = `\{math.random() is still literal text}`
+local interpolated = `value = {math.random()}`
+local nested = `value = {({ x = 1, y = math.randomseed(5) }).y}`
+local nestedBacktick = `value = {`inner = {Random.new(9)}`}`
 local a = math.random()
 local b = Random.new(123)
 local c = math.randomseed(5)
 '''.lstrip()
 
     actual_lines = [line for line, _ in _find_violations(sample)]
-    expected_lines = [5, 6, 7]
+    expected_lines = [7, 8, 9, 10, 11, 12]
     if actual_lines != expected_lines:
         raise AssertionError(
             f"guard self-test failed: expected forbidden calls on {expected_lines}, got {actual_lines}"
@@ -174,9 +255,10 @@ def _iter_luau_files() -> list[Path]:
 
 
 def _audit_repository() -> int:
+    files = _iter_luau_files()
     violations: list[tuple[Path, int, str]] = []
 
-    for path in _iter_luau_files():
+    for path in files:
         source = path.read_text(encoding="utf-8")
         for line_number, snippet in _find_violations(source):
             violations.append((path, line_number, snippet))
@@ -192,7 +274,7 @@ def _audit_repository() -> int:
         )
         return 1
 
-    print(f"Canonical randomness audit passed ({len(_iter_luau_files())} Luau files checked)")
+    print(f"Canonical randomness audit passed ({len(files)} Luau files checked)")
     return 0
 
 
@@ -201,7 +283,7 @@ def main() -> int:
     parser.add_argument(
         "--self-test",
         action="store_true",
-        help="verify the audit detects code calls while ignoring comments and strings",
+        help="verify the audit detects code calls while ignoring non-code source text",
     )
     args = parser.parse_args()
 
