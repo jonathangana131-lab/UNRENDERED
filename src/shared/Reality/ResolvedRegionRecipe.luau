@@ -18,6 +18,7 @@ ResolvedRegionRecipe.MaxTopologyAnchors = 256
 ResolvedRegionRecipe.MaxCanonicalContentKeys = 1024
 ResolvedRegionRecipe.MaxDeltaPayloadDepth = 16
 ResolvedRegionRecipe.MaxDeltaPayloadNodes = 4096
+ResolvedRegionRecipe.MaxDeltaStringBytes = 4096
 
 export type GeneratorVersions = {
 	reality: number,
@@ -59,6 +60,9 @@ export type ResolvedRegionRecipe = {
 export type PlainData = { [string]: unknown }
 
 export type RegionDelta = {
+	baseSchemaVersion: number,
+	baseRegionId: string,
+	baseFingerprint: string,
 	sequence: number,
 	kind: string,
 	targetKey: string?,
@@ -262,6 +266,7 @@ end
 local function canonicalizeLockInput(value: unknown): LockInput
 	local source = assertExactShape(value, LOCK_INPUT_KEYS, "lockInput")
 	local worldId = checkedString("lockInput.worldId", source.worldId, ResolvedRegionRecipe.MaxKeyBytes)
+	assert(StableId.is(worldId, "world"), "lockInput.worldId must be a canonical world StableId")
 	local worldSeedRef =
 		checkedString("lockInput.worldSeedRef", source.worldSeedRef, ResolvedRegionRecipe.MaxSeedRefBytes)
 	local address = cloneRegionAddress(source.regionAddress)
@@ -342,8 +347,15 @@ local function clonePlainValue(
 	)
 
 	local valueType = type(value)
-	if valueType == "nil" or valueType == "boolean" or valueType == "string" then
+	if valueType == "nil" or valueType == "boolean" then
 		return value
+	elseif valueType == "string" then
+		local stringValue = value :: string
+		assert(
+			#stringValue <= ResolvedRegionRecipe.MaxDeltaStringBytes,
+			`{path} string value exceeds {ResolvedRegionRecipe.MaxDeltaStringBytes} bytes`
+		)
+		return stringValue
 	elseif valueType == "number" then
 		local numericValue = value :: number
 		assert(
@@ -406,6 +418,25 @@ end
 
 function ResolvedRegionRecipe.lockFirstObservation(value: LockInput): ResolvedRegionRecipe
 	return buildRecipe(canonicalizeLockInput(value))
+end
+
+function ResolvedRegionRecipe.resolveFirstObservation(
+	existing: ResolvedRegionRecipe?,
+	value: LockInput
+): ResolvedRegionRecipe
+	local candidate = buildRecipe(canonicalizeLockInput(value))
+	if existing == nil then
+		return candidate
+	end
+
+	local canonicalExisting = ResolvedRegionRecipe.deserialize(existing :: any)
+	assert(canonicalExisting.worldId == candidate.worldId, "existing truth belongs to a different world")
+	assert(
+		canonicalExisting.worldSeedRef == candidate.worldSeedRef,
+		"existing truth belongs to a different world seed"
+	)
+	assert(canonicalExisting.regionId == candidate.regionId, "existing truth belongs to a different region")
+	return canonicalExisting
 end
 
 function ResolvedRegionRecipe.serialize(recipe: ResolvedRegionRecipe): PlainData
@@ -503,11 +534,13 @@ function ResolvedRegionRecipe.migrationPlan(
 end
 
 function ResolvedRegionRecipe.newDelta(
+	recipe: ResolvedRegionRecipe,
 	sequence: number,
 	kind: string,
 	targetKey: string?,
 	payload: PlainData?
 ): RegionDelta
+	local canonicalRecipe = ResolvedRegionRecipe.deserialize(recipe :: any)
 	local canonicalSequence = checkedPositiveInteger("delta.sequence", sequence, MAX_SAFE_INTEGER)
 	local canonicalKind = checkedString("delta.kind", kind, ResolvedRegionRecipe.MaxKeyBytes)
 	local canonicalTarget: string? = nil
@@ -520,11 +553,23 @@ function ResolvedRegionRecipe.newDelta(
 	end
 	local canonicalPayload = clonePlainMap(payloadValue, "delta.payload")
 	return table.freeze({
+		baseSchemaVersion = canonicalRecipe.schemaVersion,
+		baseRegionId = canonicalRecipe.regionId,
+		baseFingerprint = canonicalRecipe.fingerprint,
 		sequence = canonicalSequence,
 		kind = canonicalKind,
 		targetKey = canonicalTarget,
 		payload = canonicalPayload,
 	})
+end
+
+function ResolvedRegionRecipe.assertDeltaMatchesBase(recipe: ResolvedRegionRecipe, delta: RegionDelta): ()
+	local canonicalRecipe = ResolvedRegionRecipe.deserialize(recipe :: any)
+	assert(type(delta) == "table", "delta must be a table")
+	assert(getmetatable(delta) == nil, "delta must not have a metatable")
+	assert(delta.baseSchemaVersion == canonicalRecipe.schemaVersion, "delta base schema version mismatch")
+	assert(delta.baseRegionId == canonicalRecipe.regionId, "delta base region mismatch")
+	assert(delta.baseFingerprint == canonicalRecipe.fingerprint, "delta base fingerprint mismatch")
 end
 
 function ResolvedRegionRecipe.lockInput(recipe: ResolvedRegionRecipe): LockInput

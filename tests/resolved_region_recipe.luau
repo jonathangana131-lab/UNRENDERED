@@ -1,4 +1,7 @@
 local ResolvedRegionRecipe = require("../src/shared/Reality/ResolvedRegionRecipe")
+local StableId = require("../src/shared/Core/StableId")
+
+local WORLD_ID = StableId.fromParts("world", { "shared-alpha" })
 
 local function deepCopy(value, seen)
 	if type(value) ~= "table" then
@@ -18,7 +21,7 @@ end
 
 local function baseInput()
 	return {
-		worldId = "world:shared-alpha",
+		worldId = WORLD_ID,
 		worldSeedRef = "seed-ref:shared-alpha:v1",
 		regionAddress = { x = -12, z = 44, layer = 0 },
 		generatorVersions = {
@@ -77,7 +80,7 @@ local function run(): number
 	source.generatorVersions.reality = 99
 	source.topologyAnchorKeys[1] = "mutated"
 	source.canonicalContentKeys[1] = "mutated"
-	expectEqual("lock defensively copies world identity", locked.worldId, "world:shared-alpha")
+	expectEqual("lock defensively copies world identity", locked.worldId, WORLD_ID)
 	expectEqual("lock defensively copies address", locked.regionAddress.x, -12)
 	expectEqual("lock defensively copies versions", locked.generatorVersions.reality, 1)
 	expectEqual("lock defensively copies anchor set", locked.topologyAnchorKeys[1], "entry:west/reception")
@@ -115,6 +118,42 @@ local function run(): number
 	local changedContent = ResolvedRegionRecipe.lockFirstObservation(changedContentInput)
 	expectEqual("content changes do not change region identity", changedContent.regionId, locked.regionId)
 	expect("content changes alter recipe fingerprint", changedContent.fingerprint ~= locked.fingerprint)
+
+	local exactRepeat = ResolvedRegionRecipe.resolveFirstObservation(locked, baseInput())
+	expectEqual(
+		"exact repeat preserves first observed fingerprint",
+		exactRepeat.fingerprint,
+		locked.fingerprint
+	)
+
+	local futureCandidateInput = baseInput()
+	futureCandidateInput.generatorVersions.reality = 2
+	futureCandidateInput.canonicalContentKeys[1] = "object:future-chair"
+	local futureResolved = ResolvedRegionRecipe.resolveFirstObservation(locked, futureCandidateInput)
+	expectEqual(
+		"later generator/content candidate cannot rewrite observed truth",
+		futureResolved.fingerprint,
+		locked.fingerprint
+	)
+	expectEqual(
+		"later candidate cannot rewrite locked reality version",
+		futureResolved.generatorVersions.reality,
+		1
+	)
+
+	local wrongSeedInput = baseInput()
+	wrongSeedInput.worldSeedRef = "seed-ref:different:v1"
+	local wrongSeedAccepted = pcall(function()
+		ResolvedRegionRecipe.resolveFirstObservation(locked, wrongSeedInput)
+	end)
+	expectEqual("relock rejects a different world seed", wrongSeedAccepted, false)
+
+	local wrongRegionInput = baseInput()
+	wrongRegionInput.regionAddress.x += 1
+	local wrongRegionAccepted = pcall(function()
+		ResolvedRegionRecipe.resolveFirstObservation(locked, wrongRegionInput)
+	end)
+	expectEqual("relock rejects a different region", wrongRegionAccepted, false)
 
 	local serialized = ResolvedRegionRecipe.serialize(locked)
 	local reconstructed = ResolvedRegionRecipe.deserialize(serialized)
@@ -177,6 +216,13 @@ local function run(): number
 		nil
 	)
 
+	local invalidWorldInput = baseInput()
+	invalidWorldInput.worldId = "world:shared-alpha"
+	local invalidWorldAccepted = pcall(function()
+		ResolvedRegionRecipe.lockFirstObservation(invalidWorldInput)
+	end)
+	expectEqual("resolved truth requires canonical WorldId StableId", invalidWorldAccepted, false)
+
 	local duplicateAnchorInput = baseInput()
 	duplicateAnchorInput.topologyAnchorKeys = { "same", "same" }
 	local duplicateAnchorAccepted = pcall(function()
@@ -212,7 +258,18 @@ local function run(): number
 		},
 		tags = { "player-moved", "durable" },
 	}
-	local delta = ResolvedRegionRecipe.newDelta(1, "mechanism-state", "door:service-a", deltaPayload)
+	local delta = ResolvedRegionRecipe.newDelta(locked, 1, "mechanism-state", "door:service-a", deltaPayload)
+	expectEqual("delta binds exact base schema", delta.baseSchemaVersion, locked.schemaVersion)
+	expectEqual("delta binds exact base region", delta.baseRegionId, locked.regionId)
+	expectEqual("delta binds exact base fingerprint", delta.baseFingerprint, locked.fingerprint)
+	local matchingBaseAccepted = pcall(function()
+		ResolvedRegionRecipe.assertDeltaMatchesBase(locked, delta)
+	end)
+	expectEqual("delta validates against its exact base", matchingBaseAccepted, true)
+	local wrongBaseAccepted = pcall(function()
+		ResolvedRegionRecipe.assertDeltaMatchesBase(changedContent, delta)
+	end)
+	expectEqual("delta rejects replay onto a different recipe fingerprint", wrongBaseAccepted, false)
 	deltaPayload.door.open = false
 	deltaPayload.tags[1] = "mutated"
 	expectEqual("delta payload is defensively copied", delta.payload.door.open, true)
@@ -228,33 +285,40 @@ local function run(): number
 	expectEqual("delta payload snapshot rejects mutation", deltaMutationAccepted, false)
 
 	local falsePayloadAccepted = pcall(function()
-		ResolvedRegionRecipe.newDelta(2, "invalid-payload-type", nil, false)
+		ResolvedRegionRecipe.newDelta(locked, 2, "invalid-payload-type", nil, false)
 	end)
 	expectEqual("delta payload rejects false instead of treating it as missing", falsePayloadAccepted, false)
+
+	local oversizedStringAccepted = pcall(function()
+		ResolvedRegionRecipe.newDelta(locked, 2, "invalid-string-size", nil, {
+			note = string.rep("x", ResolvedRegionRecipe.MaxDeltaStringBytes + 1),
+		})
+	end)
+	expectEqual("delta payload rejects oversized string values", oversizedStringAccepted, false)
 
 	local cyclicPayload = {}
 	cyclicPayload.self = cyclicPayload
 	local cyclicDeltaAccepted = pcall(function()
-		ResolvedRegionRecipe.newDelta(2, "invalid-cycle", nil, cyclicPayload)
+		ResolvedRegionRecipe.newDelta(locked, 2, "invalid-cycle", nil, cyclicPayload)
 	end)
 	expectEqual("delta payload rejects cycles", cyclicDeltaAccepted, false)
 
 	local functionDeltaAccepted = pcall(function()
-		ResolvedRegionRecipe.newDelta(2, "invalid-function", nil, {
+		ResolvedRegionRecipe.newDelta(locked, 2, "invalid-function", nil, {
 			callback = function() end,
 		})
 	end)
 	expectEqual("delta payload rejects functions", functionDeltaAccepted, false)
 
 	local nonFiniteDeltaAccepted = pcall(function()
-		ResolvedRegionRecipe.newDelta(2, "invalid-number", nil, {
+		ResolvedRegionRecipe.newDelta(locked, 2, "invalid-number", nil, {
 			energy = math.huge,
 		})
 	end)
 	expectEqual("delta payload rejects non-finite numbers", nonFiniteDeltaAccepted, false)
 
 	local zeroSequenceAccepted = pcall(function()
-		ResolvedRegionRecipe.newDelta(0, "invalid-sequence", nil, {})
+		ResolvedRegionRecipe.newDelta(locked, 0, "invalid-sequence", nil, {})
 	end)
 	expectEqual("delta sequence starts at one", zeroSequenceAccepted, false)
 
