@@ -89,16 +89,17 @@ Landed source evidence:
 - clear Studio validation/repro instructions,
 - green source/pure CI and Rojo build evidence.
 
-This source-contract closure does **not** claim Roblox Studio physics/contact/constraint/server-authority PASS. Those observations remain external engine evidence and must stay explicitly UNVERIFIED until actually run.
+This source-contract closure does **not** itself claim Roblox Studio physics/contact/constraint/server-authority PASS; engine observations are tracked separately below.
 
 ### Mac ↔ GitHub Roblox Studio Execution Bridge: operational; Hero Gate evidence incomplete
 The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational; its existence does **not** itself satisfy #151. See `Docs/STUDIO_EXECUTOR.md`.
 - Private bridge repo: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`.
 - Mac self-hosted runner: `UNRENDERED-STUDIO-MAC`.
-- The bridge uses fixed repository-owned drivers, a managed Studio RunMode executor plugin, exact source-SHA validation, request-bound log provenance, bounded CreatorOutput evidence transport, and job-specific fail-closed evaluation.
+- The bridge uses fixed repository-owned drivers, a managed Studio RunMode executor plugin, source-SHA validation, request-bound log provenance, bounded CreatorOutput evidence transport, and job-specific fail-closed evaluation.
+- **Server simulation row: PASS** on exact public source SHA `d225b3fe9f6da0a389bd8e14ddbe0f4cead26efe` via bridge request `20260810-018-server-smoke-managed-only-sol56j8`: evaluator accepted `driver=driver_two_client`, `isServer=true`, `isRunning=true`, `labModelValid=true`, `baselineOk=true`, `playerCount=0`. This proves authoritative server-side Physics Lab initialization/validation only; `playerCount=0` explicitly does not prove two-client authority.
 - Historical request `20260810-005-reality-hero-gate` produced a lifecycle-style simulation signal but was incorrectly promoted to a composite Hero Gate `PASS`; that durable bridge result has been corrected to `FAIL`. It does not prove contact/traversability, diagnostics behavior, two-client authority, or device/performance rows.
-- A later managed-plugin server-smoke request (`20260810-015-server-smoke-managed-plugin-n7`) never reached Studio because its requested source SHA was stale after public `main` advanced. It provides no engine evidence and must not be counted.
-- Future engine evidence requests must target the exact current canonical `main` SHA and satisfy the job-specific evaluator. No single lifecycle result may unlock the Hero Gate.
+- A managed-plugin server-smoke request (`20260810-015-server-smoke-managed-plugin-n7`) never reached Studio because its requested source SHA was stale after public `main` advanced. It provides no engine evidence and must not be counted.
+- Future engine evidence requests must pin canonical `main` truth and satisfy the job-specific evaluator. No single lifecycle or server-smoke result may unlock the Hero Gate.
 
 ## Current unlock status
 
@@ -115,7 +116,7 @@ Do not start a Reality-Grade door, chair, physical-player controller, world gene
 
 ## Hero Gate exit direction
 
-The source-contract portion of the Physics Lab gate is established. The remaining gate is actual Roblox Studio/engine evidence where pure CI cannot prove behavior: contact/traversability, constraints/mechanisms as they become applicable, diagnostics behavior, server/two-client authority behavior, and device/performance observations.
+The source-contract portion of the Physics Lab gate is established, and the narrow authoritative server-simulation smoke row is now proven. The remaining gate is actual Roblox Studio/engine evidence where pure CI cannot prove behavior: contact/traversability, constraints/mechanisms as they become applicable, diagnostics behavior, **two-client authority behavior**, and device/performance observations.
 
 After that evidence is gathered and reviewed, update this file to explicitly unlock the next narrow Hero Feature. The intended order remains **door, chair, then physical player movement**, not a giant procedural map.
 
@@ -128,7 +129,7 @@ Workers may inspect/review/decompose them, but should not build those major syst
 ## Known external setup gaps
 
 - No published Roblox universe/place is connected to automated publishing yet.
-- Studio engine tests, graphics validation, server-authority tests, and device profiling require a Roblox Studio/test-place workflow; current GitHub CI covers source/pure deterministic logic/Rojo builds.
+- Studio contact/constraint, two-client authority, graphics validation, and device profiling still require explicit engine/test-place evidence beyond source CI.
 - Approved production PBR, audio and model libraries do not exist yet. Use project-owned fallbacks and do not add unlicensed content.
 
 ## Architecture migrations
@@ -148,10 +149,10 @@ Compatibility note: historical `ResolvedRegionRecipe` schema v1 remains replay-o
 
 ## Next critical outcomes
 
-1. gather real Studio physics/contact/constraint evidence for the permanent #10 lab without weakening source truth,
+1. gather real Studio physics/contact/constraint and two-client evidence for the permanent #10 lab without weakening source truth,
 2. keep source-owned lifecycle/repro/ownership evidence green and fail closed on regressions,
-3. explicitly update this scheduler before opening the next major Hero Feature,
-4. when unlocked, deepen door/chair/physical-player work on these foundations rather than replacing them,
-5. improve the first five-minute experience only after the relevant foundations are actually unlocked and proven.
+3. gather diagnostics and device/performance observations required by #151,
+4. explicitly update this scheduler before opening the next major Hero Feature,
+5. when unlocked, deepen door/chair/physical-player work on these foundations rather than replacing them.
 
 Keep this file concise and operational. Git history is the changelog; Project Source is the long-term vision.
