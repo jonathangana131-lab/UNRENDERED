@@ -71,7 +71,11 @@ export type ValidationIssue = {
 	message: string,
 }
 
-local MaterialDNA = {}
+local SCHEMA_VERSION = 1
+
+local MaterialDNA = {
+	SchemaVersion = SCHEMA_VERSION,
+}
 
 local WALL_SUBSTRATES = table.freeze({
 	gypsum_board = true,
@@ -340,8 +344,17 @@ function MaterialDNA.validateRecipe(value: unknown): { ValidationIssue }
 	end
 
 	local schemaVersion = validateFiniteNumber("schemaVersion", recipe.schemaVersion, issues)
-	if schemaVersion ~= nil and (schemaVersion < 1 or schemaVersion % 1 ~= 0) then
-		addIssue(issues, "schemaVersion", "invalid_version", "schemaVersion must be a positive integer")
+	if schemaVersion ~= nil then
+		if schemaVersion < 1 or schemaVersion % 1 ~= 0 then
+			addIssue(issues, "schemaVersion", "invalid_version", "schemaVersion must be a positive integer")
+		elseif schemaVersion ~= SCHEMA_VERSION then
+			addIssue(
+				issues,
+				"schemaVersion",
+				"unsupported_version",
+				`schemaVersion {schemaVersion} is unsupported; expected {SCHEMA_VERSION}`
+			)
+		end
 	end
 
 	validateSubstrate(recipe.substrate, issues)
