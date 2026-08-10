@@ -10,6 +10,7 @@ local runFidelityManagerRejectedStepAtomicity = require("./fidelity_manager_reje
 local runMaterialDNA = require("./materialdna_contract")
 local runObjectGenome = require("./object_genome")
 local runObjectGenomeContractLock = require("./object_genome_contract_lock")
+local runObjectGenomeExactRecipeIdentity = require("./object_genome_exact_recipe_identity")
 local runStableIdHeadless = require("./stable_id_headless")
 local runWorldEntity = require("./world_entity")
 local runWorldEntityRegistryShape = require("./world_entity_registry_shape")
@@ -28,6 +29,7 @@ local legacyFailures = runDeterministicRng()
 	+ runStableIdHeadless()
 	+ runObjectGenome()
 	+ runObjectGenomeContractLock()
+	+ runObjectGenomeExactRecipeIdentity()
 local deterministicPassed = runner:run()
 
 if legacyFailures > 0 or not deterministicPassed then
