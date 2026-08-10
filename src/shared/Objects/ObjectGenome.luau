@@ -149,7 +149,7 @@ ObjectGenome.SCHEMA_VERSION = 1
 ObjectGenome.STATE_SCHEMA_VERSION = 1
 ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
 ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE = "object-genome-recipe"
-ObjectGenome.RECIPE_FINGERPRINT_VERSION = 1
+ObjectGenome.RECIPE_FINGERPRINT_VERSION = 2
 ObjectGenome.LOCAL_ROTATION_ORDER = "XYZ"
 ObjectGenome.LOCAL_ROTATION_HANDEDNESS = "right"
 
@@ -741,10 +741,11 @@ end
 local RECIPE_FINGERPRINT_CHUNK_BYTES = 384
 
 local function canonicalFingerprintNumber(value: number): string
-	if value == 0 then
-		return "0"
-	end
-	return string.format("%.17g", value)
+	-- ObjectGenome validation rejects non-finite numbers before fingerprinting. Encode
+	-- finite values as endian-stable double bytes rather than host-CRT formatted text.
+	-- Normalize both signed zeros to the same canonical payload.
+	local canonicalValue = if value == 0 then 0 else value
+	return string.pack(">d", canonicalValue)
 end
 
 local function foldFingerprintToken(signature: string, kind: string, payload: string): string
@@ -990,29 +991,45 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		if not isNonEmptyString(component.role) then
 			addIssue(issues, "component.role", path .. ".role", "component role required")
 		end
-		local materialKeyValidation = MaterialDNA.validateReference({
+		local materialReferenceValidation = MaterialDNA.validateReference({
 			id = component.materialKey,
-			recipeVersion = 1,
-		})
-		if not materialKeyValidation.ok then
-			addIssue(
-				issues,
-				"component.material_key",
-				path .. ".materialKey",
-				"materialKey must satisfy MaterialDNA v2 project id rules"
-			)
-		end
-		local materialRecipeVersionValidation = MaterialDNA.validateReference({
-			id = "material.v1.object-genome-validation-probe",
 			recipeVersion = component.materialRecipeVersion,
 		})
-		if not materialRecipeVersionValidation.ok then
-			addIssue(
-				issues,
-				"component.material_recipe_version",
-				path .. ".materialRecipeVersion",
-				"materialRecipeVersion must satisfy MaterialDNA v2 recipe revision rules"
-			)
+		if not materialReferenceValidation.ok then
+			-- The actual pair is the source of truth. Independent probes only preserve
+			-- ObjectGenome's landed field-specific diagnostics when one field is invalid.
+			local materialKeyValidation = MaterialDNA.validateReference({
+				id = component.materialKey,
+				recipeVersion = 1,
+			})
+			local materialRecipeVersionValidation = MaterialDNA.validateReference({
+				id = "material.v1.object-genome-validation-probe",
+				recipeVersion = component.materialRecipeVersion,
+			})
+			if not materialKeyValidation.ok then
+				addIssue(
+					issues,
+					"component.material_key",
+					path .. ".materialKey",
+					"materialKey must satisfy MaterialDNA v2 project id rules"
+				)
+			end
+			if not materialRecipeVersionValidation.ok then
+				addIssue(
+					issues,
+					"component.material_recipe_version",
+					path .. ".materialRecipeVersion",
+					"materialRecipeVersion must satisfy MaterialDNA v2 recipe revision rules"
+				)
+			end
+			if materialKeyValidation.ok and materialRecipeVersionValidation.ok then
+				addIssue(
+					issues,
+					"component.material_reference",
+					path,
+					"materialKey and materialRecipeVersion must satisfy the exact MaterialDNA v2 reference contract"
+				)
+			end
 		end
 		if not isPositiveFinite(component.massKg) then
 			addIssue(

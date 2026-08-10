@@ -60,21 +60,23 @@ local function run(): number
 			name = "office chair",
 			genome = Fixtures.officeChair,
 			identity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",
-			fingerprint = "object-genome-recipe:v1:1d5bb9a8ca475743a26663e492e22d56",
+			fingerprint = "object-genome-recipe:v1:a5612083f6e2c89bd042f0825d507f87",
 		},
 		{
 			name = "office table",
 			genome = Fixtures.officeTable,
 			identity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",
-			fingerprint = "object-genome-recipe:v1:a7c8f49674cc01c57d91c0cb770c17fa",
+			fingerprint = "object-genome-recipe:v1:869dd383324b32d2bdd705df792560bc",
 		},
 		{
 			name = "filing cabinet",
 			genome = Fixtures.filingCabinet,
 			identity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",
-			fingerprint = "object-genome-recipe:v1:e67dcf0b6b6563ef9bb5efa0f6086ddc",
+			fingerprint = "object-genome-recipe:v1:eaeab1cf27fe6e1866a395736bca4e71",
 		},
 	}
+
+	expect("recipe fingerprint contract version is explicit", ObjectGenome.RECIPE_FINGERPRINT_VERSION == 2)
 
 	for _, fixture in ipairs(fixtureCases) do
 		local report = ObjectGenome.inspect(fixture.genome)
@@ -218,6 +220,32 @@ local function run(): number
 			ObjectGenome.inspect(boundaryGenome).ok == expectedReferenceValidity
 		)
 	end
+
+	local longContentGenome = deepCopy(Fixtures.officeChair)
+	longContentGenome.provenance.productLine = string.rep("x", 1025)
+	local longContentReport = ObjectGenome.inspect(longContentGenome)
+	local longFingerprintOk, longFingerprint = pcall(ObjectGenome.recipeFingerprint, longContentGenome)
+	expect("otherwise-valid >512-byte recipe content remains valid", longContentReport.ok)
+	expect(
+		">512-byte recipe content fingerprints without exceeding StableId semantic-part limits",
+		longFingerprintOk
+			and type(longFingerprint) == "string"
+			and StableId.is(longFingerprint, ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE)
+	)
+	expect(
+		">512-byte recipe content fingerprint is deterministic",
+		longFingerprintOk and longFingerprint == ObjectGenome.recipeFingerprint(longContentGenome)
+	)
+
+	local positiveZeroGenome = deepCopy(Fixtures.officeChair)
+	local negativeZeroGenome = deepCopy(Fixtures.officeChair)
+	positiveZeroGenome.centerOfMassM.x = 0
+	negativeZeroGenome.centerOfMassM.x = -0.0
+	expect(
+		"recipe fingerprint normalizes signed zero",
+		ObjectGenome.recipeFingerprint(positiveZeroGenome)
+			== ObjectGenome.recipeFingerprint(negativeZeroGenome)
+	)
 
 	local function expectSameVersionFingerprintDrift(name, mutate)
 		local genome = deepCopy(Fixtures.officeChair)
