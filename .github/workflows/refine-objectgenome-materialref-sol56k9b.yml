@@ -1,0 +1,86 @@
+name: Refine ObjectGenome MaterialRef
+
+on:
+  push:
+    branches:
+      - agent/scratch/100-materialref-diagnostics-sol56k9b
+
+permissions:
+  contents: write
+
+jobs:
+  refine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/scratch/100-materialref-diagnostics-sol56k9b
+          fetch-depth: 0
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Preserve stable diagnostics and explicit published revision regression
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text()
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected exactly one marker, found {count}")
+              p.write_text(text.replace(old, new, 1))
+
+          replace_once(
+              "src/shared/Objects/ObjectGenome.luau",
+              '''\t\tlocal materialReferenceValidation = MaterialDNA.validateReference({\n\t\t\tid = component.materialKey,\n\t\t\trecipeVersion = component.materialRecipeVersion,\n\t\t})\n\t\tif not materialReferenceValidation.ok then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_reference",\n\t\t\t\tpath,\n\t\t\t\t"material reference must satisfy MaterialDNA v2: "\n\t\t\t\t\t.. table.concat(materialReferenceValidation.errors, "; ")\n\t\t\t)\n\t\tend\n''',
+              '''\t\tlocal materialKeyValidation = MaterialDNA.validateReference({\n\t\t\tid = component.materialKey,\n\t\t\trecipeVersion = 1,\n\t\t})\n\t\tif not materialKeyValidation.ok then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_key",\n\t\t\t\tpath .. ".materialKey",\n\t\t\t\t"materialKey must satisfy MaterialDNA v2 project id rules"\n\t\t\t)\n\t\tend\n\t\tlocal materialRecipeVersionValidation = MaterialDNA.validateReference({\n\t\t\tid = "material.v1.object-genome-validation-probe",\n\t\t\trecipeVersion = component.materialRecipeVersion,\n\t\t})\n\t\tif not materialRecipeVersionValidation.ok then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_recipe_version",\n\t\t\t\tpath .. ".materialRecipeVersion",\n\t\t\t\t"materialRecipeVersion must satisfy MaterialDNA v2 recipe revision rules"\n\t\t\t)\n\t\tend\n''',
+          )
+
+          replace_once(
+              "tests/object_genome.luau",
+              '''\texpect(\n\t\t"rejects missing material assignment",\n\t\thasCode(ObjectGenome.inspect(badMaterial), "component.material_reference")\n\t)\n''',
+              '''\texpect(\n\t\t"rejects missing material assignment",\n\t\thasCode(ObjectGenome.inspect(badMaterial), "component.material_key")\n\t)\n''',
+          )
+          replace_once(
+              "tests/object_genome.luau",
+              '''\texpect(\n\t\t"rejects missing material recipe revision",\n\t\thasCode(ObjectGenome.inspect(badMaterialRevision), "component.material_reference")\n\t)\n''',
+              '''\texpect(\n\t\t"rejects missing material recipe revision",\n\t\thasCode(ObjectGenome.inspect(badMaterialRevision), "component.material_recipe_version")\n\t)\n''',
+          )
+          replace_once(
+              "tests/object_genome.luau",
+              '''\texpect(\n\t\t"rejects legacy material reference syntax",\n\t\thasCode(ObjectGenome.inspect(legacyMaterial), "component.material_reference")\n\t)\n''',
+              '''\texpect(\n\t\t"rejects legacy material reference syntax",\n\t\thasCode(ObjectGenome.inspect(legacyMaterial), "component.material_key")\n\t)\n''',
+          )
+          replace_once(
+              "tests/object_genome.luau",
+              '''\texpect(\n\t\t"material recipe revision mechanically changes canonical genome identity",\n\t\tObjectGenome.identityKey(revisedMaterial) ~= ObjectGenome.identityKey(Fixtures.filingCabinet)\n\t)\n\n\tlocal materialBoundaryCases = {\n''',
+              '''\texpect(\n\t\t"material recipe revision mechanically changes canonical genome identity",\n\t\tObjectGenome.identityKey(revisedMaterial) ~= ObjectGenome.identityKey(Fixtures.filingCabinet)\n\t)\n\n\tlocal publishedMaterialRevision = deepCopy(Fixtures.filingCabinet)\n\tlocal publishedShell = findComponent(publishedMaterialRevision, "shell")\n\tpublishedMaterialRevision.familyVersion += 1\n\tif publishedShell ~= nil then\n\t\tpublishedShell.materialRecipeVersion += 1\n\tend\n\texpect(\n\t\t"published material revision with familyVersion advance is valid and changes identity",\n\t\tpublishedShell ~= nil\n\t\t\tand ObjectGenome.inspect(publishedMaterialRevision).ok\n\t\t\tand ObjectGenome.identityKey(publishedMaterialRevision)\n\t\t\t\t~= ObjectGenome.identityKey(Fixtures.filingCabinet)\n\t)\n\n\tlocal materialBoundaryCases = {\n''',
+          )
+          PY
+
+          stylua src tests
+          stylua --check src tests
+          selene src tests
+          lune run tests/run
+
+      - name: Commit refined blobs and retire helper
+        shell: bash
+        run: |
+          git rm .github/workflows/refine-objectgenome-materialref-sol56k9b.yml
+          git add src/shared/Objects/ObjectGenome.luau tests/object_genome.luau
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "test(objects): preserve MaterialRef diagnostic contract"
+          git push origin HEAD:agent/scratch/100-materialref-diagnostics-sol56k9b
