@@ -1,6 +1,6 @@
 # UNRENDERED Studio Executor Protocol
 
-This document defines the protocol for submitting automated Roblox Studio test requests and consuming real engine evidence via the private Mac ↔ GitHub execution bridge.
+This document defines the protocol for submitting automated Roblox Studio test requests, capturing screenshots, executing custom Luau scripts, dumping DataModel trees, and consuming real engine evidence via the private Mac ↔ GitHub execution bridge.
 
 ## Overview
 
@@ -9,45 +9,53 @@ This document defines the protocol for submitting automated Roblox Studio test r
 - **Runner Machine**: Dedicated local Mac running Roblox Studio and pinned project tools (`rojo 7.6.1`).
 - **Steady-State Transport**: ChatGPT "Go" Worker -> GitHub Push (`requests/*.json`) -> Mac Self-Hosted Runner -> Real Roblox Studio Execution -> GitHub Push (`results/<requestId>/result.json`).
 
-> [!IMPORTANT]
-> Self-hosted runners are **never** attached directly to the public repository. All Studio requests are processed through the private bridge repository.
-
 ---
 
 ## Submitting a Studio Test Request
 
-To request a Roblox Studio test run, commit a JSON file under `requests/` in `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`:
+To request a Roblox Studio test run, commit a single JSON file under `requests/` in `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`:
 
 ### Request File Path
 `requests/YYYYMMDD-HHMMSS-<jobType>-<nonce>.json`
 
-### Fixed Request Schema
+### Complete Request Schema
 
 ```json
 {
   "schemaVersion": 1,
-  "requestId": "20260810-002-hero-gate",
+  "requestId": "20260810-003-custom-inspection",
   "sourceRepo": "jonathangana131-lab/UNRENDERED",
   "sourceRef": "main",
-  "sourceSha": "71523fcdc82e44b485c46a0fd0e6759b83d8ff6f",
-  "jobType": "physics-lab-hero-gate",
-  "requestedBy": "chatgpt-go-worker",
-  "notes": "Full Studio Physics Lab 20-cycle lifecycle sweep"
+  "sourceSha": "e035306c301d93cd1162282a6c5bb5d373b4657e",
+  "jobType": "studio-custom-luau",
+  "captureScreenshot": true,
+  "dumpDataModel": true,
+  "customScript": "local Workspace = game:GetService('Workspace'); print('PARTS_COUNT=' .. tostring(#Workspace:GetDescendants()))",
+  "requestedBy": "chatgpt-developer",
+  "notes": "Custom Luau execution with screenshot capture and DataModel dump"
 }
 ```
 
-### Schema Rules & Validation
+---
 
-1. `sourceRepo` MUST equal `jonathangana131-lab/UNRENDERED`.
-2. `sourceSha` MUST be an exact 40-character hex commit SHA.
-3. `sourceRef` MUST be `main` or an allowed `agent/...` branch on the canonical repository.
-4. `jobType` MUST be one of the allowlisted types:
-   - `studio-smoke`: DataModel & Rojo build sanity check.
-   - `physics-lab-lifecycle`: 20-cycle F2 -> F0 -> F2 sweep.
-   - `physics-lab-server-smoke`: Server realizer and harness check.
-   - `physics-lab-two-client`: Multi-client topology check.
-   - `physics-lab-hero-gate`: Full physical envelope & lifecycle validation.
-5. Path traversal, shell metacharacters, or arbitrary executable options are strictly rejected.
+## Supported Job Types & Developer Capabilities
+
+1. **`studio-smoke`**: DataModel & Rojo build sanity check.
+2. **`studio-screenshot`**: Captures a full high-resolution PNG screenshot of the Roblox Studio viewport during execution and embeds it in `summary.md`.
+3. **`studio-datamodel-dump`**: Serializes the DataModel instance hierarchy (`Workspace`, `ReplicatedStorage`, `ServerScriptService`) into structured JSON.
+4. **`studio-custom-luau`**: Executes custom developer Luau code passed in `customScript` inside Roblox Studio's server environment.
+5. **`physics-lab-lifecycle`**: Drives the source-owned 20-cycle F2 -> F0 -> F2 lifecycle sweep inside Roblox Studio.
+6. **`physics-lab-server-smoke`**: Verifies server realizer and harness check.
+7. **`physics-lab-two-client`**: Launches multi-client topology checks via `StudioTestService`.
+8. **`physics-lab-hero-gate`**: Full physical envelope & lifecycle evidence validation for Hero Gate #151.
+
+---
+
+## Developer Abilities & Controls
+
+- **`captureScreenshot` (boolean)**: Set `true` to take a real macOS window screenshot (`screencapture -x`) of Roblox Studio during execution. The image is published as `results/<requestId>/screenshot.png` and embedded directly in `summary.md`.
+- **`customScript` (string)**: Supply arbitrary Luau code to inspect instance states, query properties, trigger events, or run bespoke diagnostic checks inside Roblox Studio.
+- **`dumpDataModel` (boolean)**: Set `true` to extract an instance tree dump of the open place DataModel.
 
 ---
 
@@ -55,16 +63,10 @@ To request a Roblox Studio test run, commit a JSON file under `requests/` in `jo
 
 Upon completion, the bridge automatically commits the machine-readable result to `results/<requestId>/`:
 
-- `results/<requestId>/result.json`: Machine-readable evidence payload and environment metadata.
-- `results/<requestId>/summary.md`: Human/LLM-readable summary.
+- `results/<requestId>/result.json`: Machine-readable evidence payload, environment metadata, and screenshot flag.
+- `results/<requestId>/summary.md`: Markdown summary with embedded viewport screenshots (`![Roblox Studio Viewport](screenshot.png)`).
+- `results/<requestId>/screenshot.png`: High-resolution PNG screenshot (when requested).
 - GitHub Actions Artifact: `studio-execution-log-<run_id>` contains full raw Roblox Studio console logs.
-
-### Result Status Values
-
-- `PASS`: Roblox Studio executed successfully and all Luau driver assertions passed.
-- `FAIL`: Luau driver assertion failed or game evidence check failed.
-- `INFRA_ERROR`: Build failure, invalid request, or Studio launch error.
-- `TIMEOUT`: Execution exceeded the maximum allowed time limit.
 
 ---
 
