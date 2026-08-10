@@ -62,7 +62,12 @@ export type Metrics = {
 }
 
 export type CaptureHook = (entityId: string, fromLevel: FidelityLevel, toLevel: FidelityLevel) -> ()
-export type ApplyHook = (entityId: string, fromLevel: FidelityLevel, toLevel: FidelityLevel, reason: string) -> ()
+export type ApplyHook = (
+	entityId: string,
+	fromLevel: FidelityLevel,
+	toLevel: FidelityLevel,
+	reason: string
+) -> ()
 
 export type TransitionAdapter = {
 	captureBeforeDemotion: CaptureHook?,
@@ -217,7 +222,12 @@ local function promote(
 	return currentLevel, currentReason
 end
 
-local function distanceLimit(base: number, currentLevel: FidelityLevel, retainedLevel: FidelityLevel, hysteresis: number): number
+local function distanceLimit(
+	base: number,
+	currentLevel: FidelityLevel,
+	retainedLevel: FidelityLevel,
+	hysteresis: number
+): number
 	if LEVEL_INDEX[currentLevel] >= LEVEL_INDEX[retainedLevel] then
 		return base + hysteresis
 	end
@@ -254,7 +264,12 @@ function FidelityManager.evaluate(
 	request: FidelityRequest?
 ): PolicyDecision
 	local resolvedConfig = config or DEFAULT_CONFIG
-	local resolvedCurrent = currentLevel or "F0"
+	local resolvedCurrent: FidelityLevel
+	if currentLevel == nil then
+		resolvedCurrent = "F0"
+	else
+		resolvedCurrent = currentLevel
+	end
 	validateConfig(resolvedConfig)
 	validateInputs(inputs)
 	assert(isLevel(resolvedCurrent), "currentLevel must be F0-F4")
@@ -316,13 +331,22 @@ function FidelityManager.evaluate(
 
 	local locallyPresented = inputs.distanceStuds <= renderLimit
 		or inputs.observationStrength >= resolvedConfig.renderObservationStrength
-	local highRelevance = math.max(inputs.significance, inputs.networkRelevance) >= resolvedConfig.heroRelevanceThreshold
-	if inputs.distanceStuds <= heroLimit and (recentlyInteracted or inputs.observationStrength >= resolvedConfig.interactiveObservationStrength) then
+	local highRelevance = math.max(inputs.significance, inputs.networkRelevance)
+		>= resolvedConfig.heroRelevanceThreshold
+	if
+		inputs.distanceStuds <= heroLimit
+		and (
+			recentlyInteracted
+			or inputs.observationStrength >= resolvedConfig.interactiveObservationStrength
+		)
+	then
 		level = "F4"
 		reason = if recentlyInteracted then "recent-interaction" else "observation"
 	elseif highRelevance and locallyPresented then
 		level = "F4"
-		reason = if inputs.networkRelevance >= inputs.significance then "network-relevance" else "significance"
+		reason = if inputs.networkRelevance >= inputs.significance
+			then "network-relevance"
+			else "significance"
 	end
 
 	return applyRequest({ level = level, reason = reason }, request)
@@ -362,7 +386,12 @@ end
 function FidelityManager.register(self: Manager, entityId: string, initialLevel: FidelityLevel?): ()
 	assert(entityId ~= "", "entityId required")
 	assert(self._states[entityId] == nil, `entity already registered: {entityId}`)
-	local level = initialLevel or "F0"
+	local level: FidelityLevel
+	if initialLevel == nil then
+		level = "F0"
+	else
+		level = initialLevel
+	end
 	assert(isLevel(level), "initialLevel must be F0-F4")
 	self._states[entityId] = {
 		level = level,
@@ -426,7 +455,9 @@ function FidelityManager.step(
 
 	local pendingSince = state.pendingSince :: number
 	local isPromotion = LEVEL_INDEX[desired] > LEVEL_INDEX[state.level]
-	local holdSeconds = if isPromotion then self.config.promotionHoldSeconds else self.config.demotionHoldSeconds
+	local holdSeconds = if isPromotion
+		then self.config.promotionHoldSeconds
+		else self.config.demotionHoldSeconds
 	if nowSeconds - pendingSince < holdSeconds then
 		self._metrics.blockedByHold += 1
 		return {
