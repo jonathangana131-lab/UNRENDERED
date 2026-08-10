@@ -1,9 +1,11 @@
-local StableId = require("../src/shared/Core/StableId")
-local MaterialDNA = require("../src/shared/Materials/MaterialDNA")
-local ObjectGenome = require("../src/shared/Objects/ObjectGenome")
-local Fixtures = require("../src/shared/Objects/ObjectGenomeFixtures")
-local FidelityManager = require("../src/shared/Physics/FidelityManager")
-local WorldEntity = require("../src/shared/Reality/WorldEntity")
+local ProductionLoader = require("./support/ProductionLoader")
+
+local StableId = ProductionLoader.requireShared("Core/StableId")
+local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
+local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
+local Fixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
+local FidelityManager = ProductionLoader.requireShared("Physics/FidelityManager")
+local WorldEntity = ProductionLoader.requireShared("Reality/WorldEntity")
 
 local function run(): number
 	local failures = 0
