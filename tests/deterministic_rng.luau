@@ -1,4 +1,4 @@
-local DeterministicRng = require("../src/shared/Core/DeterministicRng")
+local Contract = require("../src/shared/Core/DeterminismContract")
 
 local function run(): number
 	local failures = 0
@@ -22,44 +22,46 @@ local function run(): number
 		end
 	end
 
-	local die = DeterministicRng.new(1)
+	local dieState = 1
 	local expectedDieRolls = { 4, 2, 4, 6, 6, 5, 5, 1 }
 	for index, expected in expectedDieRolls do
-		expectEqual(`bounded integer golden #{index}`, die:nextInteger(1, 6), expected)
+		local value
+		dieState, value = Contract.nextIntegerState(dieState, 1, 6)
+		expectEqual(`bounded integer golden #{index}`, value, expected)
 	end
 
-	local first = DeterministicRng.new(0x12345678)
-	local second = DeterministicRng.new(0x12345678)
+	local firstState = 0x12345678
+	local secondState = 0x12345678
 	for index = 1, 16 do
-		expectEqual(
-			`same seed bounded sequence #{index}`,
-			first:nextInteger(-17, 29),
-			second:nextInteger(-17, 29)
-		)
+		local firstValue
+		local secondValue
+		firstState, firstValue = Contract.nextIntegerState(firstState, -17, 29)
+		secondState, secondValue = Contract.nextIntegerState(secondState, -17, 29)
+		expectEqual(`same seed bounded sequence #{index}`, firstValue, secondValue)
 	end
 
-	local rejection = DeterministicRng.new(0x80000000)
-	expectEqual(
-		"rejection sampling skips out-of-band states",
-		rejection:nextInteger(0, 2147483648),
-		1756881985
-	)
-	expectEqual("rejection sampling leaves accepted state current", rejection.state, 1756881985)
+	local rejectionState, rejectionValue = Contract.nextIntegerState(0x80000000, 0, 2147483648)
+	expectEqual("rejection sampling skips out-of-band states", rejectionValue, 1756881985)
+	expectEqual("rejection sampling leaves accepted state current", rejectionState, 1756881985)
 
-	local fullWidth = DeterministicRng.new(1)
-	expectEqual("full u32-width range is supported", fullWidth:nextInteger(0, 4294967295), 270369)
+	local fullWidthState, fullWidthValue = Contract.nextIntegerState(1, 0, 4294967295)
+	expectEqual("full u32-width range is supported", fullWidthValue, 270369)
+	expectEqual("full u32-width range returns next state", fullWidthState, 270369)
 
 	expectError("bounded integer rejects fractional minimum", function()
-		DeterministicRng.new(1):nextInteger(1.5, 10)
+		Contract.nextIntegerState(1, 1.5, 10)
 	end)
 	expectError("bounded integer rejects fractional maximum", function()
-		DeterministicRng.new(1):nextInteger(1, 10.5)
+		Contract.nextIntegerState(1, 1, 10.5)
 	end)
 	expectError("bounded integer rejects reversed range", function()
-		DeterministicRng.new(1):nextInteger(10, 1)
+		Contract.nextIntegerState(1, 10, 1)
 	end)
 	expectError("bounded integer rejects width above u32", function()
-		DeterministicRng.new(1):nextInteger(0, 4294967296)
+		Contract.nextIntegerState(1, 0, 4294967296)
+	end)
+	expectError("bounded integer rejects invalid RNG state", function()
+		Contract.nextIntegerState(4294967296, 1, 6)
 	end)
 
 	return failures
