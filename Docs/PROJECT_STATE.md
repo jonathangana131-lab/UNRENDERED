@@ -76,7 +76,7 @@ Landed direction:
 Do not reopen competing #9 frameworks. Future incompatible identity/fingerprint changes require an explicit ADR/version/compatibility path and preservation of accepted historical truth.
 
 ### #10 — Production-contract Physics Lab: source-contract closure landed
-The permanent Physics Lab shell is closed at the source-contract level. #151 remains open as the Roblox Studio/engine evidence gate. Do not reopen broad #10 source work or redundant #151 source-validation slices unless a concrete regression, red-main repair, or newly gathered engine evidence exposes a specific defect.
+The permanent Physics Lab shell is closed at the source-contract level, and the #151 source-validation strike team is closed/completed. Real Roblox Studio/engine evidence remains outstanding. Do not reopen broad #10 source work or redundant #151 source-validation slices unless a concrete regression, red-main repair, or newly gathered engine evidence exposes a specific defect.
 
 Landed source evidence:
 - deterministic lab recipe and stable WorldEntity IDs,
