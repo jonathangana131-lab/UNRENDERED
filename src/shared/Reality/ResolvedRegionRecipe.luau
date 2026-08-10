@@ -337,6 +337,7 @@ function ResolvedRegionRecipe.lock(
 
 	local locked = ResolvedRegionRecipe.fromPlainData(existing)
 	assert(locked.worldId == canonicalCandidate.worldId, "existing lock and candidate worldId must match")
+	assert(locked.worldSeed == canonicalCandidate.worldSeed, "existing lock and candidate worldSeed must match")
 	assert(
 		RegionAddress.equal(locked.regionAddress, canonicalCandidate.regionAddress),
 		"existing lock and candidate regionAddress must match"
@@ -396,6 +397,7 @@ function ResolvedRegionRecipe.runMigration(plan: MigrationPlan, migrator: Migrat
 
 	local migrated = ResolvedRegionRecipe.new(migrator(source, targetVersions))
 	assert(migrated.worldId == source.worldId, "migration must preserve worldId")
+	assert(migrated.worldSeed == source.worldSeed, "migration must preserve worldSeed")
 	assert(
 		RegionAddress.equal(migrated.regionAddress, source.regionAddress),
 		"migration must preserve regionAddress"
