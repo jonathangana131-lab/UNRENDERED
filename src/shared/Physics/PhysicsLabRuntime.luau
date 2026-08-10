@@ -117,7 +117,10 @@ function PhysicsLabRuntime.step(
 			toLevel: FidelityLevel,
 			reason: PolicyReason
 		): ()
-			assert(transitionEntityId == entityId, "FidelityManager transitioned the wrong Physics Lab entity")
+			assert(
+				transitionEntityId == entityId,
+				"FidelityManager transitioned the wrong Physics Lab entity"
+			)
 			assert(fromLevel == current.fidelity, "Physics Lab transition source fidelity drifted")
 
 			local capturedState: PlainData? = nil
