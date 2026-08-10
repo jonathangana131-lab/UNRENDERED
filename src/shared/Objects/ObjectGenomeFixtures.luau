@@ -2,23 +2,38 @@
 
 local ObjectGenome = require(script.Parent.ObjectGenome)
 
+type Vec3 = ObjectGenome.Vec3
+type ComponentSpec = ObjectGenome.ComponentSpec
+type MechanismSpec = ObjectGenome.MechanismSpec
+type AffordanceSpec = ObjectGenome.AffordanceSpec
+type Genome = ObjectGenome.ObjectGenome
+
+type PlanarPosition = {
+	name: string,
+	x: number,
+	z: number,
+}
+
+type DrawerPosition = {
+	name: string,
+	y: number,
+}
+
 -- Production-contract examples. Material keys are opaque references on purpose:
 -- ObjectGenome must not own MaterialDNA's schema or Roblox asset bindings.
-local Fixtures: { [string]: ObjectGenome.ObjectGenome } = {}
+local zero: Vec3 = { x = 0, y = 0, z = 0 }
 
-local zero: ObjectGenome.Vec3 = { x = 0, y = 0, z = 0 }
-
-local chairComponents: { ObjectGenome.ComponentSpec } = {}
-local chairMechanisms: { ObjectGenome.MechanismSpec } = {}
-local casterPositions = {
-	{ suffix = "front-left", x = -0.27, z = -0.22 },
-	{ suffix = "front-right", x = 0.27, z = -0.22 },
-	{ suffix = "rear-left", x = -0.27, z = 0.22 },
-	{ suffix = "rear-right", x = 0.27, z = 0.22 },
-	{ suffix = "center-rear", x = 0, z = 0.28 },
+local chairComponents: { ComponentSpec } = {}
+local chairMechanisms: { MechanismSpec } = {}
+local casterPositions: { PlanarPosition } = {
+	{ name = "front-left", x = -0.27, z = -0.22 },
+	{ name = "front-right", x = 0.27, z = -0.22 },
+	{ name = "rear-left", x = -0.27, z = 0.22 },
+	{ name = "rear-right", x = 0.27, z = 0.22 },
+	{ name = "center-rear", x = 0, z = 0.28 },
 }
 for _, caster in ipairs(casterPositions) do
-	local key = `caster-{caster.suffix}`
+	local key = `caster-{caster.name}`
 	table.insert(chairComponents, {
 		key = key,
 		role = "floor-contact caster",
@@ -115,7 +130,7 @@ table.insert(chairMechanisms, {
 	maxDegrees = 14,
 })
 
-Fixtures.officeChair = {
+local officeChair: Genome = {
 	schemaVersion = 1,
 	familyId = "office-chair.task",
 	familyVersion = 1,
@@ -153,16 +168,16 @@ Fixtures.officeChair = {
 	},
 }
 
-local tableComponents: { ObjectGenome.ComponentSpec } = {}
-local tableLegs = {
-	{ suffix = "front-left", x = -0.68, z = -0.30 },
-	{ suffix = "front-right", x = 0.68, z = -0.30 },
-	{ suffix = "rear-left", x = -0.68, z = 0.30 },
-	{ suffix = "rear-right", x = 0.68, z = 0.30 },
+local tableComponents: { ComponentSpec } = {}
+local tableLegPositions: { PlanarPosition } = {
+	{ name = "front-left", x = -0.68, z = -0.30 },
+	{ name = "front-right", x = 0.68, z = -0.30 },
+	{ name = "rear-left", x = -0.68, z = 0.30 },
+	{ name = "rear-right", x = 0.68, z = 0.30 },
 }
-for _, leg in ipairs(tableLegs) do
+for _, leg in ipairs(tableLegPositions) do
 	table.insert(tableComponents, {
-		key = `leg-{leg.suffix}`,
+		key = `leg-{leg.name}`,
 		role = "load-bearing leg",
 		materialKey = "material:painted-steel.gray.v1",
 		massKg = 2.4,
@@ -196,7 +211,7 @@ table.insert(tableComponents, {
 	supportKeys = allLegs,
 	externalSupport = "none",
 })
-Fixtures.officeTable = {
+local officeTable: Genome = {
 	schemaVersion = 1,
 	familyId = "office-table.utility",
 	familyVersion = 1,
@@ -227,7 +242,7 @@ Fixtures.officeTable = {
 	},
 }
 
-local cabinetComponents: { ObjectGenome.ComponentSpec } = {
+local cabinetComponents: { ComponentSpec } = {
 	{
 		key = "shell",
 		role = "load-bearing folded steel carcass",
@@ -240,15 +255,15 @@ local cabinetComponents: { ObjectGenome.ComponentSpec } = {
 		externalSupport = "ground",
 	},
 }
-local cabinetMechanisms: { ObjectGenome.MechanismSpec } = {}
-local cabinetAffordances: { ObjectGenome.AffordanceSpec } = {}
-local drawerPositions = {
-	{ suffix = "top", y = 0.38 },
-	{ suffix = "middle", y = 0.05 },
-	{ suffix = "bottom", y = -0.28 },
+local cabinetMechanisms: { MechanismSpec } = {}
+local cabinetAffordances: { AffordanceSpec } = {}
+local drawerPositions: { DrawerPosition } = {
+	{ name = "top", y = 0.38 },
+	{ name = "middle", y = 0.05 },
+	{ name = "bottom", y = -0.28 },
 }
 for _, drawer in ipairs(drawerPositions) do
-	local key = `drawer-{drawer.suffix}`
+	local key = `drawer-{drawer.name}`
 	table.insert(cabinetComponents, {
 		key = key,
 		role = "document drawer",
@@ -261,7 +276,7 @@ for _, drawer in ipairs(drawerPositions) do
 		externalSupport = "none",
 	})
 	table.insert(cabinetMechanisms, {
-		key = `slide-{drawer.suffix}`,
+		key = `slide-{drawer.name}`,
 		kind = "slide",
 		movingComponentKey = key,
 		frameComponentKey = "shell",
@@ -270,7 +285,7 @@ for _, drawer in ipairs(drawerPositions) do
 		maxTravelM = 0.44,
 	})
 	table.insert(cabinetAffordances, {
-		key = `pull-{drawer.suffix}`,
+		key = `pull-{drawer.name}`,
 		kind = "pull",
 		componentKey = key,
 		localPointM = { x = 0, y = 0, z = -0.25 },
@@ -285,7 +300,7 @@ table.insert(cabinetMechanisms, {
 	catchComponentKey = "shell",
 	engagementDistanceM = 0.008,
 })
-Fixtures.filingCabinet = {
+local filingCabinet: Genome = {
 	schemaVersion = 1,
 	familyId = "filing-cabinet.vertical",
 	familyVersion = 1,
@@ -308,4 +323,8 @@ Fixtures.filingCabinet = {
 	affordances = cabinetAffordances,
 }
 
-return table.freeze(Fixtures)
+return table.freeze({
+	officeChair = officeChair,
+	officeTable = officeTable,
+	filingCabinet = filingCabinet,
+})
