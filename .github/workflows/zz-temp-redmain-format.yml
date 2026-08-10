@@ -1,0 +1,37 @@
+name: Temporary red-main formatter
+
+on:
+  push:
+    branches:
+      - agent/ci/191-main-format-sol56red1
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/ci/191-main-format-sol56red1
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+      - name: Format runtime and publish
+        shell: bash
+        run: |
+          stylua src/shared/Physics/PhysicsLabRuntime.luau
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/zz-temp-redmain-format.yml
+          git add src/shared/Physics/PhysicsLabRuntime.luau
+          git commit -m "style(physicslab): restore runtime formatting"
+          git push origin HEAD:agent/ci/191-main-format-sol56red1
