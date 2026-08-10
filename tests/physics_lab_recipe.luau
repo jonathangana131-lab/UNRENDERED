@@ -4,6 +4,7 @@ local FidelityManager = ProductionLoader.requireShared("Physics/FidelityManager"
 local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
 local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
 local ObjectGenomeFixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
+local PhysicsLabObjectGenomes = ProductionLoader.requireShared("Physics/PhysicsLabObjectGenomes")
 local PhysicsLabRecipe = ProductionLoader.requireShared("Physics/PhysicsLabRecipe")
 local StableId = ProductionLoader.requireShared("Core/StableId")
 local WorldEntity = ProductionLoader.requireShared("Reality/WorldEntity")
@@ -66,12 +67,14 @@ local function run(): number
 		expect(`element {index} region origin bound`, element.entity.origin.regionId == first.regionId)
 		expect(`element {index} recipe key bound`, element.entity.origin.recipeKey == element.key)
 		if element.objectGenomeId ~= nil then
+			local genome = PhysicsLabRecipe.objectGenomeForElement(element)
+			expect(`element {index} ObjectGenome catalog binding exists`, genome ~= nil)
 			expect(
-				`element {index} fixture ObjectState binds genome identity`,
+				`element {index} ObjectState binds genome identity`,
 				element.entity.persistentState.genomeId == element.objectGenomeId
 			)
 		else
-			expect(`element {index} proxy state begins empty`, next(element.entity.persistentState) == nil)
+			expect(`element {index} structural state begins empty`, next(element.entity.persistentState) == nil)
 		end
 		expect(`element {index} state revision begins zero`, element.entity.stateRevision == 0)
 		expect(
@@ -95,8 +98,10 @@ local function run(): number
 	end
 
 	local expectedGenomeByRole = {
+		door = ObjectGenome.identityKey(PhysicsLabObjectGenomes.commercialDoor),
 		chair = ObjectGenome.identityKey(ObjectGenomeFixtures.officeChair),
 		table = ObjectGenome.identityKey(ObjectGenomeFixtures.officeTable),
+		cart = ObjectGenome.identityKey(PhysicsLabObjectGenomes.rollingCart),
 		cabinet = ObjectGenome.identityKey(ObjectGenomeFixtures.filingCabinet),
 	}
 	for role, expectedGenomeId in pairs(expectedGenomeByRole) do
@@ -107,9 +112,9 @@ local function run(): number
 				break
 			end
 		end
-		expect(`${role} lab proxy exists`, matched ~= nil)
+		expect(`${role} lab object exists`, matched ~= nil)
 		expect(
-			`${role} uses landed ObjectGenome identity and state`,
+			`${role} uses production ObjectGenome identity and state`,
 			matched ~= nil
 				and matched.objectGenomeId == expectedGenomeId
 				and StableId.is(matched.objectGenomeId, ObjectGenome.STABLE_ID_NAMESPACE)
@@ -117,6 +122,24 @@ local function run(): number
 				and matched.entity.persistentState.genomeId == expectedGenomeId
 		)
 	end
+
+	local doorHingeCount = 0
+	for _, mechanism in ipairs(PhysicsLabObjectGenomes.commercialDoor.mechanisms) do
+		if mechanism.kind == "hinge" then
+			doorHingeCount += 1
+			expect("door hinge range comes from ObjectGenome", mechanism.minDegrees == 0 and mechanism.maxDegrees == 105)
+		end
+	end
+	expect("door defines exactly one ObjectGenome hinge", doorHingeCount == 1)
+
+	local casterCount = 0
+	for _, mechanism in ipairs(PhysicsLabObjectGenomes.rollingCart.mechanisms) do
+		if mechanism.kind == "caster" then
+			casterCount += 1
+			expect("cart caster has physical wheel radius", mechanism.wheelRadiusM > 0)
+		end
+	end
+	expect("cart defines four ObjectGenome caster mechanisms", casterCount == 4)
 
 	local hasHingedDoor = false
 	local hasDrawerProxy = false
@@ -135,7 +158,7 @@ local function run(): number
 	end
 	expect("lab includes a hinged door representation contract", hasHingedDoor)
 	expect("lab includes a drawer mechanism representation contract", hasDrawerProxy)
-	expect("lab includes a four-wheel rolling-cart representation contract", hasRollingCart)
+	expect("lab includes a four-caster rolling-cart representation contract", hasRollingCart)
 	expect("lab stairs are actual stepped geometry", stairCount >= 4)
 
 	local mutationAccepted = pcall(function()

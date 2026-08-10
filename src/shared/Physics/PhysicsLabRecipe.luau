@@ -7,6 +7,7 @@ local ObjectGenome = require(script.Parent.Parent.Objects.ObjectGenome)
 local ObjectGenomeFixtures = require(script.Parent.Parent.Objects.ObjectGenomeFixtures)
 local WorldEntity = require(script.Parent.Parent.Reality.WorldEntity)
 local FidelityManager = require(script.Parent.FidelityManager)
+local PhysicsLabObjectGenomes = require(script.Parent.PhysicsLabObjectGenomes)
 
 local PhysicsLabRecipe = {}
 
@@ -102,6 +103,22 @@ local WALL_MATERIAL = materialReference(MaterialFixtures.CommercialWallpaperDryw
 local FLOOR_MATERIAL = materialReference(MaterialFixtures.LowPileCarpet)
 local METAL_MATERIAL = materialReference(MaterialFixtures.PaintedMetal)
 
+local GENOMES: { Genome } = table.freeze({
+	ObjectGenomeFixtures.officeChair,
+	ObjectGenomeFixtures.officeTable,
+	ObjectGenomeFixtures.filingCabinet,
+	PhysicsLabObjectGenomes.commercialDoor,
+	PhysicsLabObjectGenomes.rollingCart,
+})
+local GENOMES_BY_ID: { [string]: Genome } = {}
+for _, genome in ipairs(GENOMES) do
+	ObjectGenome.validate(genome)
+	local genomeId = ObjectGenome.identityKey(genome)
+	assert(GENOMES_BY_ID[genomeId] == nil, `duplicate Physics Lab ObjectGenome id: {genomeId}`)
+	GENOMES_BY_ID[genomeId] = genome
+end
+GENOMES_BY_ID = table.freeze(GENOMES_BY_ID)
+
 local function worldEntityId(key: string): string
 	return StableId.fromParts("world-entity", {
 		PhysicsLabRecipe.WorldId,
@@ -160,6 +177,7 @@ local function objectElement(
 	representationKind: RepresentationKind
 ): LabElement
 	local size = genomeSizeStuds(genome)
+	local genomeId = ObjectGenome.identityKey(genome)
 	return frozenElement({
 		key = key,
 		role = role,
@@ -169,7 +187,7 @@ local function objectElement(
 		yawDegrees = 0,
 		material = METAL_MATERIAL,
 		representationKind = representationKind,
-		objectGenomeId = ObjectGenome.identityKey(genome),
+		objectGenomeId = genomeId,
 	})
 end
 
@@ -203,6 +221,13 @@ end
 
 local function assertFinite(path: string, value: number): ()
 	assert(value == value and value > -math.huge and value < math.huge, `{path} must be finite`)
+end
+
+function PhysicsLabRecipe.objectGenomeForElement(element: LabElement): Genome?
+	if element.objectGenomeId == nil then
+		return nil
+	end
+	return GENOMES_BY_ID[element.objectGenomeId]
 end
 
 function PhysicsLabRecipe.validate(recipe: Recipe): ()
@@ -268,6 +293,8 @@ function PhysicsLabRecipe.validate(recipe: Recipe): ()
 				StableId.is(element.objectGenomeId, ObjectGenome.STABLE_ID_NAMESPACE),
 				`{element.key} objectGenomeId must satisfy ObjectGenome identity contract`
 			)
+			local genome = GENOMES_BY_ID[element.objectGenomeId]
+			assert(genome ~= nil, `{element.key} ObjectGenome is not in the Physics Lab catalog`)
 			assert(element.entity.kind == "object", `{element.key} fixture-backed entity kind must be object`)
 			local objectState = element.entity.persistentState :: any
 			assert(
@@ -286,7 +313,6 @@ end
 function PhysicsLabRecipe.build(): Recipe
 	local elements: { LabElement } = {}
 
-	-- Structural shell: the south wall is split around a physical door opening.
 	add(
 		elements,
 		"floor",
@@ -384,17 +410,15 @@ function PhysicsLabRecipe.build(): Recipe
 		"F2"
 	)
 
-	add(
+	table.insert(
 		elements,
-		"door",
-		"door",
-		"physics-lab.door-proxy",
-		vec3(-8, 4, -18),
-		vec3(4, 8, 0.45),
-		0,
-		METAL_MATERIAL,
-		"hinged-panel",
-		"F3"
+		objectElement(
+			"door",
+			"door",
+			vec3(-8, 0, -18),
+			PhysicsLabObjectGenomes.commercialDoor,
+			"hinged-panel"
+		)
 	)
 	table.insert(
 		elements,
@@ -414,17 +438,15 @@ function PhysicsLabRecipe.build(): Recipe
 			"sliding-drawer-proxy"
 		)
 	)
-	add(
+	table.insert(
 		elements,
-		"cart",
-		"cart",
-		"physics-lab.cart-proxy",
-		vec3(11, 1.6, -6),
-		vec3(3.5, 3.2, 2.5),
-		0,
-		METAL_MATERIAL,
-		"rolling-cart-proxy",
-		"F3"
+		objectElement(
+			"cart",
+			"cart",
+			vec3(11, 0, -6),
+			PhysicsLabObjectGenomes.rollingCart,
+			"rolling-cart-proxy"
+		)
 	)
 
 	for stepIndex = 1, 4 do
