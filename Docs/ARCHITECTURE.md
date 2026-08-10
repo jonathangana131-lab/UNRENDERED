@@ -80,6 +80,7 @@ Promotion and demotion preserve domain identity and persistent state.
 - Promotion reuses the latest captured persistent state. Demotion requires a fresh plain-data capture before representation teardown so physical state cannot disappear with Instances.
 - `stateRevision` tracks durable-state captures independently from `representationRevision`, which tracks fidelity representation changes.
 - Captured state is recursively checked for plain finite data and defensively copied/frozen. Instance/userdata/function/thread values, metatables, cycles, and non-finite numbers are rejected at the boundary.
+- Nested captured-state tables have one portable shape: either a string-keyed map or a contiguous 1..N array. Mixed map/array tables and sparse arrays are rejected.
 - The domain registry rejects duplicate live IDs, keeps the first registration authoritative, and emits a diagnostic describing both origins instead of silently replacing one entity with another.
 
 The registry is an identity diagnostic/index, not the universe database and not a persistence repository.
