@@ -4,13 +4,16 @@ Issue #7 defines the first production F0–F4 promotion/demotion policy. The man
 
 ## Responsibility boundary
 
-`WorldEntity` remains the domain source of truth for stable identity, current fidelity, state/representation revisions, and persistent state. `FidelityManager` coordinates policy-driven transitions through an adapter:
+`WorldEntity` remains the domain source of truth for stable identity, current fidelity, state/representation revisions, and persistent state. `FidelityManager` keeps only a bounded control-plane mirror needed for cooldowns, hysteresis, and metrics.
 
-- `getFidelity(entityId)` reads the authoritative current level.
-- `captureState(entityId, from, to, reason)` captures meaningful durable state before a demotion.
-- `transition(entityId, target, capturedState, reason)` applies the domain transition and performs/queues representation work behind the adapter boundary.
+Authority crosses the boundary explicitly:
 
-The manager never serializes an Instance and never scans Workspace.
+- `track(entityId, initialFidelity)` registers the current authoritative WorldEntity fidelity.
+- `captureState(entityId, from, to, reason)` captures meaningful durable state before an accepted demotion.
+- `transition(entityId, from, target, capturedState, reason)` applies the authoritative WorldEntity transition and performs/queues representation work behind the adapter boundary.
+- `resync(entityId, authoritativeFidelity, nowSeconds)` reconciles the manager when another trusted subsystem changed WorldEntity fidelity outside the manager.
+
+Requests for untracked entities are rejected. The manager never discovers authority by scanning Workspace, never serializes an Instance, and never owns a second entity registry.
 
 ## Fidelity levels
 
@@ -47,6 +50,8 @@ Promotions are responsive but use a short promotion cooldown to prevent repeated
 
 Demotion stability is keyed by target fidelity, not diagnostic reason. A reason can change from distance to network or observation while the same lower target continues its grace window. If the lower target itself changes, the grace window restarts. Any equal-fidelity request or promotion clears the pending demotion. Timestamps must be monotonic per entity so a bad clock cannot bypass hysteresis.
 
+A trusted external fidelity change must call `resync` with its authoritative fidelity and timestamp. Resync resets pending demotion state and treats that external change as the latest transition for cooldown purposes.
+
 ## Transition reasons and bounded diagnostics
 
 Every request carries a non-empty reason. The built-in policy emits `distance`, `observation`, `interaction`, `significance`, `network`, or `idle`. Explicit callers may use a more specific reason string for adapter/debug context.
@@ -63,11 +68,9 @@ The manager exposes a fixed-size snapshot containing:
 - external authoritative resyncs,
 - the seven fixed transition-reason counters.
 
-The manager mirrors the last synchronized authoritative fidelity only for diagnostics/control timing. Every request re-reads the adapter's authoritative fidelity, and `refresh()` can resynchronize all tracked entries if another trusted system performed transitions.
-
 ## Performance expectations
 
-Normal `update()`/`request()` work is O(1) per evaluated entity and contains no Workspace traversal, raycast, Instance creation, or persistence I/O. The hot path performs one authoritative fidelity read; capture and transition callbacks run only when a transition is actually accepted. `getMetrics()` is O(1) because its output cardinality is fixed. `refresh()` is intentionally O(tracked entities) and is for diagnostics/reconciliation, not per-frame use.
+`track`, `request`, `update`, `resync`, `untrack`, and `getMetrics` are O(1). Normal policy/update work contains no Workspace traversal, raycast, Instance creation, persistence I/O, registry scan, or authoritative read callback. Capture and transition callbacks run only when a transition is actually accepted.
 
 Callers should evaluate only entities whose relevance is being serviced by the project-owned streaming/simulation scheduler. This contract is not permission to loop over an unbounded universe each frame. Future budget schedulers may choose which entities receive updates, but they should continue to request transitions through this manager rather than bypassing hysteresis/state capture.
 
@@ -75,14 +78,15 @@ Callers should evaluate only entities whose relevance is being serviced by the p
 
 The adapter maps directly to the production WorldEntity lifecycle contract:
 
-- `getFidelity` reads the record's authoritative F0–F4 value,
+- registration supplies `record.fidelity` to `track`,
 - `captureState` extracts meaningful mechanism/physics state from the current physical representation,
-- `transition` calls `WorldEntity.transition`, passing fresh captured state on demotion and no capture on promotion, then realizes/destroys Roblox representation through a separate renderer/physics adapter.
+- `transition` verifies its `from` value against the authoritative record, calls `WorldEntity.transition`, passes fresh captured state on demotion and no capture on promotion, then realizes/destroys Roblox representation through a separate renderer/physics adapter,
+- a trusted direct WorldEntity transition is followed by `resync(record.fidelity, timestamp)`.
 
-The integration regression test uses the real `WorldEntity` module and verifies that accepted promotion/demotion requests preserve identity semantics while updating `representationRevision` and `stateRevision` through the authoritative contract.
+The manager updates its mirror only after the transition adapter returns successfully. A production adapter should throw rather than silently ignore a failed authoritative transition. The integration regression test uses the real `WorldEntity` module and verifies the mirror's `from` fidelity against the authoritative record before every transition, plus `representationRevision` and `stateRevision` changes.
 
 The manager deliberately does not require a furniture, character, networking, or persistence implementation. Those systems provide relevance signals and adapters without changing the core policy.
 
 ## Determinism
 
-For identical starting fidelity, config, policy inputs, request reasons, and timestamps, transition decisions are deterministic. Pure Lune tests cover policy selection, cooldowns, target-stable demotion grace, state-capture ordering, WorldEntity integration, bounded metrics, external resynchronization, and repeated identical sequences.
+For identical starting fidelity, config, policy inputs, request reasons, and timestamps, transition decisions are deterministic. Pure Lune tests cover policy selection, cooldowns, target-stable demotion grace, state-capture ordering, WorldEntity integration, explicit resynchronization, bounded metrics, rejection of untracked requests, and repeated identical sequences.
