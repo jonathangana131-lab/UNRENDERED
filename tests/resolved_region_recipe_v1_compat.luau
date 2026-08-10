@@ -68,7 +68,10 @@ local function run(): number
 		entity = 2,
 	}
 	local futureLocked = ResolvedRegionRecipeV1.lock(syntheticFuture)
-	expect("generator-version drift preserves historical v1 region identity", futureLocked.regionId == GOLDEN_REGION_ID)
+	expect(
+		"generator-version drift preserves historical v1 region identity",
+		futureLocked.regionId == GOLDEN_REGION_ID
+	)
 	expect(
 		"generator-version drift changes historical v1 exact recipe fingerprint",
 		futureLocked.recipeFingerprint ~= GOLDEN_RECIPE_FINGERPRINT
