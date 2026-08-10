@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, "agent/validation/5-metatable-failclosed-2f8c"]
   pull_request:
 
 permissions:
