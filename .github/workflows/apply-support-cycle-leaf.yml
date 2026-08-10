@@ -1,0 +1,34 @@
+name: Apply support-cycle repair
+
+on:
+  push:
+    branches:
+      - agent/objects/6-support-cycle-main-sol56j9
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/objects/6-support-cycle-main-sol56j9
+          fetch-depth: 0
+
+      - name: Apply repair
+        run: python3 .github/scripts/apply_support_cycle_leaf.py
+
+      - name: Remove one-shot patch machinery
+        run: rm .github/scripts/apply_support_cycle_leaf.py .github/workflows/apply-support-cycle-leaf.yml
+
+      - name: Commit support-cycle repair
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Fix exhaustive ObjectGenome support cycles"
+          git push origin HEAD:agent/objects/6-support-cycle-main-sol56j9
