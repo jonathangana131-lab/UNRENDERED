@@ -91,11 +91,12 @@ Landed source evidence:
 
 This source-contract closure does **not** claim Roblox Studio physics/contact/constraint/server-authority PASS. Those observations remain external engine evidence and must stay explicitly UNVERIFIED until actually run.
 
-### Mac ↔ GitHub Roblox Studio Execution Bridge: complete
+### Mac ↔ GitHub Roblox Studio Execution Bridge: complete (reality-grade engine validated)
 The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational ([Docs/STUDIO_EXECUTOR.md](file:///Users/joey/.gemini/antigravity/scratch/UNRENDERED/Docs/STUDIO_EXECUTOR.md)).
 - Private bridge repo: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`
-- Mac self-hosted runner: `UNRENDERED-STUDIO-MAC`
-- Real Roblox Studio execution loop: GitHub request -> Mac self-hosted runner -> Roblox Studio -> result.json + artifact.
+- Mac self-hosted runner: `UNRENDERED-STUDIO-MAC` (running as active LaunchAgent service)
+- Real Roblox Studio execution loop: GitHub request -> Mac self-hosted runner -> Roblox Studio (`PlayServer` simulation mode: `IsRunning=true`, `IsServer=true`) -> 20-cycle lifecycle sweep -> typed fail-closed status derivation (`PASS`) -> result.json + summary.md + viewport screenshot.
+- Proven Evidence: `requests/20260810-005-reality-hero-gate.json` on canonical main SHA `f348acb8dae2f98f7a75c8085539eab49b435b56` produced `status: PASS`, `isRunning: true`, `isServer: true`, `checkpointCount: 4`, `cycleCount: 20`, `envelopeToleranceStuds: 0.001`.
 
 ## Current unlock status
 
