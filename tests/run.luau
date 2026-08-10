@@ -3,15 +3,18 @@ local process = require("@lune/process")
 local TestHarness = require("./support/TestHarness")
 local registerDeterministicCore = require("./specs/DeterministicCoreSpec")
 local registerReproKey = require("./specs/ReproKeySpec")
+local runDeterministicRng = require("./deterministic_rng")
 local runWorldEntity = require("./world_entity")
 
 local runner = TestHarness.new()
 registerDeterministicCore(runner)
 registerReproKey(runner)
 
-local worldEntityFailures = runWorldEntity()
+local legacyFailures = runDeterministicRng() + runWorldEntity()
 local deterministicPassed = runner:run()
 
-if worldEntityFailures > 0 or not deterministicPassed then
+if legacyFailures > 0 or not deterministicPassed then
 	process.exit(1)
 end
+
+print("UNRENDERED pure test suite passed")
