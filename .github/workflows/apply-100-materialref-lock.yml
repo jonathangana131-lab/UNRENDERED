@@ -1,0 +1,466 @@
+name: Apply issue 100 contract lock
+
+on:
+  push:
+    branches:
+      - agent/objects/100-materialref-lock-sol56s7
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/objects/100-materialref-lock-sol56s7
+          fetch-depth: 0
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Patch ObjectGenome material contract and content fingerprint
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          source_path = Path("src/shared/Objects/ObjectGenome.luau")
+          source = source_path.read_text()
+
+          old = 'local StableId = require(script.Parent.Parent.Core.StableId)\n'
+          new = old + 'local MaterialDNA = require(script.Parent.Parent.Materials.MaterialDNA)\n'
+          if source.count(old) != 1:
+              raise SystemExit("StableId require marker not found exactly once")
+          source = source.replace(old, new, 1)
+
+          old = '''ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
+          ObjectGenome.LOCAL_ROTATION_ORDER = "XYZ"
+          '''
+          new = '''ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
+          ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE = "object-genome-content"
+          ObjectGenome.CONTENT_FINGERPRINT_VERSION = 1
+          ObjectGenome.LOCAL_ROTATION_ORDER = "XYZ"
+          '''
+          if source.count(old) != 1:
+              raise SystemExit("ObjectGenome constant marker not found exactly once")
+          source = source.replace(old, new, 1)
+
+          marker = 'function ObjectGenome.identityParts(value: ObjectGenome): { string }\n'
+          helpers = r'''local function canonicalFingerprintNumber(value: number): string
+          	if value == 0 then
+          		return "0"
+          	end
+          	return string.format("%.17g", value)
+          end
+
+          local function appendVec3FingerprintParts(parts: { string }, value: Vec3): ()
+          	table.insert(parts, canonicalFingerprintNumber(value.x))
+          	table.insert(parts, canonicalFingerprintNumber(value.y))
+          	table.insert(parts, canonicalFingerprintNumber(value.z))
+          end
+
+          local function foldFingerprintList(label: string, values: { string }): string
+          	local fingerprint = StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, {
+          		"list",
+          		tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+          		label,
+          		"empty",
+          	})
+          	for index, value in ipairs(values) do
+          		fingerprint = StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, {
+          			"list-item",
+          			tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+          			label,
+          			fingerprint,
+          			tostring(index),
+          			value,
+          		})
+          	end
+          	return fingerprint
+          end
+
+          local function componentContentFingerprint(component: ComponentSpec): string
+          	local parts = {
+          		"component",
+          		tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+          		component.key,
+          		component.role,
+          		component.materialKey,
+          		tostring(component.materialRecipeVersion),
+          		canonicalFingerprintNumber(component.massKg),
+          	}
+          	appendVec3FingerprintParts(parts, component.localPositionM)
+          	appendVec3FingerprintParts(parts, component.localRotationDeg)
+          	appendVec3FingerprintParts(parts, component.dimensionsM)
+          	table.insert(parts, foldFingerprintList("component-support-keys", component.supportKeys))
+          	table.insert(parts, component.externalSupport)
+          	return StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, parts)
+          end
+
+          local function mechanismContentFingerprint(mechanism: MechanismSpec): string
+          	local value: any = mechanism
+          	local parts = {
+          		"mechanism",
+          		tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+          		value.key,
+          		value.kind,
+          		value.movingComponentKey,
+          	}
+          	if value.kind == "hinge" or value.kind == "slide" or value.kind == "tilt" then
+          		table.insert(parts, value.frameComponentKey)
+          		appendVec3FingerprintParts(parts, value.axis)
+          		if value.kind == "slide" then
+          			table.insert(parts, canonicalFingerprintNumber(value.minTravelM))
+          			table.insert(parts, canonicalFingerprintNumber(value.maxTravelM))
+          		else
+          			table.insert(parts, canonicalFingerprintNumber(value.minDegrees))
+          			table.insert(parts, canonicalFingerprintNumber(value.maxDegrees))
+          		end
+          	elseif value.kind == "caster" then
+          		table.insert(parts, value.frameComponentKey)
+          		table.insert(parts, canonicalFingerprintNumber(value.wheelRadiusM))
+          		appendVec3FingerprintParts(parts, value.swivelAxis)
+          		appendVec3FingerprintParts(parts, value.rollAxis)
+          	elseif value.kind == "latch" then
+          		table.insert(parts, value.catchComponentKey)
+          		table.insert(parts, canonicalFingerprintNumber(value.engagementDistanceM))
+          	else
+          		error("validated ObjectGenome mechanism kind expected")
+          	end
+          	return StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, parts)
+          end
+
+          local function affordanceContentFingerprint(affordance: AffordanceSpec): string
+          	local parts = {
+          		"affordance",
+          		tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+          		affordance.key,
+          		affordance.kind,
+          		affordance.componentKey,
+          	}
+          	appendVec3FingerprintParts(parts, affordance.localPointM)
+          	table.insert(parts, canonicalFingerprintNumber(affordance.radiusM))
+          	return StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, parts)
+          end
+
+          '''
+          if source.count(marker) != 1:
+              raise SystemExit("identityParts marker not found exactly once")
+          source = source.replace(marker, helpers + marker, 1)
+
+          old = '''		if not isSemanticKey(component.materialKey) then
+          			addIssue(
+          				issues,
+          				"component.material_key",
+          				path .. ".materialKey",
+          				"materialKey must be the stable lowercase MaterialDNA recipe id"
+          			)
+          		end
+          		if not isPositiveInteger(component.materialRecipeVersion) then
+          			addIssue(
+          				issues,
+          				"component.material_recipe_version",
+          				path .. ".materialRecipeVersion",
+          				"materialRecipeVersion must be a positive integer"
+          			)
+          		end
+          '''
+          new = '''		local materialReferenceValidation = MaterialDNA.validateReference({
+          			id = component.materialKey,
+          			recipeVersion = component.materialRecipeVersion,
+          		})
+          		if not materialReferenceValidation.ok then
+          			local materialKeyValidation = MaterialDNA.validateReference({
+          				id = component.materialKey,
+          				recipeVersion = 1,
+          			})
+          			local materialRecipeVersionValidation = MaterialDNA.validateReference({
+          				id = "material.v1.object-genome-validation-probe",
+          				recipeVersion = component.materialRecipeVersion,
+          			})
+          			if not materialKeyValidation.ok then
+          				addIssue(
+          					issues,
+          					"component.material_key",
+          					path .. ".materialKey",
+          					"materialKey must satisfy the exact MaterialDNA v2 project-id contract"
+          				)
+          			end
+          			if not materialRecipeVersionValidation.ok then
+          				addIssue(
+          					issues,
+          					"component.material_recipe_version",
+          					path .. ".materialRecipeVersion",
+          					"materialRecipeVersion must satisfy the exact MaterialDNA v2 recipe-version contract"
+          				)
+          			end
+          			if materialKeyValidation.ok and materialRecipeVersionValidation.ok then
+          				addIssue(
+          					issues,
+          					"component.material_reference",
+          					path,
+          					"material reference must satisfy the exact MaterialDNA v2 reference contract"
+          				)
+          			end
+          		end
+          '''
+          if source.count(old) != 1:
+              raise SystemExit("material validation marker not found exactly once")
+          source = source.replace(old, new, 1)
+
+          marker = '''function ObjectGenome.defaultState(value: ObjectGenome): ObjectState
+          '''
+          fingerprint = r'''function ObjectGenome.contentFingerprint(value: ObjectGenome): string
+          	ObjectGenome.validate(value)
+
+          	local componentFingerprints: { string } = table.create(#value.components)
+          	for index, component in ipairs(value.components) do
+          		componentFingerprints[index] = componentContentFingerprint(component)
+          	end
+
+          	local mechanismFingerprints: { string } = table.create(#value.mechanisms)
+          	for index, mechanism in ipairs(value.mechanisms) do
+          		mechanismFingerprints[index] = mechanismContentFingerprint(mechanism)
+          	end
+
+          	local affordanceFingerprints: { string } = table.create(#value.affordances)
+          	for index, affordance in ipairs(value.affordances) do
+          		affordanceFingerprints[index] = affordanceContentFingerprint(affordance)
+          	end
+
+          	local parts = {
+          		"genome",
+          		tostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+          		tostring(value.schemaVersion),
+          		value.familyId,
+          		tostring(value.familyVersion),
+          		value.variantKey,
+          		value.provenance.manufacturerFamily,
+          		value.provenance.productLine,
+          		value.provenance.apparentEra,
+          	}
+          	appendVec3FingerprintParts(parts, value.dimensionsM)
+          	appendVec3FingerprintParts(parts, value.dimensionLimits.minM)
+          	appendVec3FingerprintParts(parts, value.dimensionLimits.maxM)
+          	table.insert(parts, canonicalFingerprintNumber(value.massKg))
+          	table.insert(parts, canonicalFingerprintNumber(value.massLimitsKg.min))
+          	table.insert(parts, canonicalFingerprintNumber(value.massLimitsKg.max))
+          	appendVec3FingerprintParts(parts, value.centerOfMassM)
+          	table.insert(parts, foldFingerprintList("components", componentFingerprints))
+          	table.insert(parts, foldFingerprintList("mechanisms", mechanismFingerprints))
+          	table.insert(parts, foldFingerprintList("affordances", affordanceFingerprints))
+
+          	return StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, parts)
+          end
+
+          '''
+          if source.count(marker) != 1:
+              raise SystemExit("defaultState marker not found exactly once")
+          source = source.replace(marker, fingerprint + marker, 1)
+          source_path.write_text(source)
+
+          test_path = Path("tests/object_genome.luau")
+          tests = test_path.read_text()
+          old = 'local StableId = ProductionLoader.requireShared("Core/StableId")\n'
+          new = old + 'local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")\n'
+          if tests.count(old) != 1:
+              raise SystemExit("test StableId marker not found exactly once")
+          tests = tests.replace(old, new, 1)
+
+          replacements = {
+              'identity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",': 'identity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",\n\t\t\tfingerprint = "__CHAIR_FP__",',
+              'identity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",': 'identity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",\n\t\t\tfingerprint = "__TABLE_FP__",',
+              'identity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",': 'identity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",\n\t\t\tfingerprint = "__CABINET_FP__",',
+          }
+          for old, new in replacements.items():
+              if tests.count(old) != 1:
+                  raise SystemExit(f"fixture marker missing: {old}")
+              tests = tests.replace(old, new, 1)
+
+          marker = '''		expect(fixture.name .. " repeat identity", identity == ObjectGenome.identityKey(fixture.genome))
+          '''
+          addition = marker + '''
+          		local fingerprint = ObjectGenome.contentFingerprint(fixture.genome)
+          		expect(fixture.name .. " locked content fingerprint", fingerprint == fixture.fingerprint)
+          		expect(
+          			fixture.name .. " uses project content fingerprint namespace",
+          			StableId.is(fingerprint, ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE)
+          		)
+          		expect(
+          			fixture.name .. " repeat content fingerprint",
+          			fingerprint == ObjectGenome.contentFingerprint(fixture.genome)
+          		)
+          '''
+          if tests.count(marker) != 1:
+              raise SystemExit("fixture assertion marker not found exactly once")
+          tests = tests.replace(marker, addition, 1)
+
+          marker = '''	local revisedMaterial = deepCopy(Fixtures.filingCabinet)
+          '''
+          parity = r'''	local materialReferenceCases = {
+          		{
+          			name = "slash project id",
+          			id = "material.v1/office.carpet",
+          			recipeVersion = 1,
+          		},
+          		{
+          			name = "numeric-only id",
+          			id = "123456",
+          			recipeVersion = 1,
+          		},
+          		{
+          			name = "overlong id",
+          			id = "m" .. string.rep("a", 160),
+          			recipeVersion = 1,
+          		},
+          		{
+          			name = "maximum recipe version",
+          			id = "material.v1.office.carpet",
+          			recipeVersion = 2147483647,
+          		},
+          		{
+          			name = "recipe version above maximum",
+          			id = "material.v1.office.carpet",
+          			recipeVersion = 2147483648,
+          		},
+          	}
+          	for _, case in ipairs(materialReferenceCases) do
+          		local materialReferenceOk = MaterialDNA.validateReference({
+          			id = case.id,
+          			recipeVersion = case.recipeVersion,
+          		}).ok
+          		local candidate = deepCopy(Fixtures.officeChair)
+          		candidate.components[1].materialKey = case.id
+          		candidate.components[1].materialRecipeVersion = case.recipeVersion
+          		expect(
+          			case.name .. " ObjectGenome/MaterialDNA reference parity",
+          			ObjectGenome.inspect(candidate).ok == materialReferenceOk
+          		)
+          	end
+
+          '''
+          if tests.count(marker) != 1:
+              raise SystemExit("revisedMaterial marker not found exactly once")
+          tests = tests.replace(marker, parity + marker, 1)
+
+          marker = '''	expect(
+          		"material recipe revision is retained as canonical object recipe input",
+          		revisedShell ~= nil
+          			and canonicalShell ~= nil
+          			and revisedShell.materialKey == canonicalShell.materialKey
+          			and revisedShell.materialRecipeVersion ~= canonicalShell.materialRecipeVersion
+          			and ObjectGenome.inspect(revisedMaterial).ok
+          	)
+          '''
+          addition = marker + '''
+          	expect(
+          		"same-version material drift preserves the published v1 StableId law",
+          		ObjectGenome.identityKey(revisedMaterial) == ObjectGenome.identityKey(Fixtures.filingCabinet)
+          	)
+          	expect(
+          		"content fingerprint detects same-version material drift",
+          		ObjectGenome.contentFingerprint(revisedMaterial)
+          			~= ObjectGenome.contentFingerprint(Fixtures.filingCabinet)
+          	)
+          	local versionedMaterial = deepCopy(revisedMaterial)
+          	versionedMaterial.familyVersion += 1
+          	expect("material revision plus required familyVersion advance validates", ObjectGenome.inspect(versionedMaterial).ok)
+          	expect(
+          		"material revision plus required familyVersion advance changes identity",
+          		ObjectGenome.identityKey(versionedMaterial) ~= ObjectGenome.identityKey(Fixtures.filingCabinet)
+          	)
+          '''
+          if tests.count(marker) != 1:
+              raise SystemExit("revisedMaterial assertion marker not found exactly once")
+          tests = tests.replace(marker, addition, 1)
+          test_path.write_text(tests)
+
+          docs_path = Path("Docs/OBJECT_GENOME.md")
+          docs = docs_path.read_text()
+          old = '- `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityParts()` supplies those semantic parts to the locked project `StableId` contract; ObjectGenome does not duplicate hashing/canonical encoding.\n'
+          new = old + '- `ObjectGenome.contentFingerprint()` is a separate versioned deterministic digest over the complete immutable recipe. It is a drift/review lock, not a replacement for the published v1 StableId inputs; changing fingerprint inputs does not silently rewrite `genomeId`.\n'
+          if docs.count(old) != 1:
+              raise SystemExit("docs identity marker not found exactly once")
+          docs = docs.replace(old, new, 1)
+          old = '- Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`: `materialKey` is the stable lowercase MaterialDNA recipe id and `materialRecipeVersion` is its positive content revision. ObjectGenome validates and owns those plain values but does not import MaterialDNA implementation details or Roblox asset IDs. A published component material-revision change is a canonical object recipe change and therefore requires the corresponding `familyVersion` to advance rather than silently retargeting an established genome identity.\n'
+          new = '- Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`. ObjectGenome reconstructs that plain `{ id, recipeVersion }` pair and delegates validation to the production MaterialDNA v2 reference contract, while remaining asset-agnostic and free of Roblox representation data. A published component material-revision change is a canonical object recipe change and therefore requires the corresponding `familyVersion` to advance rather than silently retargeting an established genome identity.\n'
+          if docs.count(old) != 1:
+              raise SystemExit("docs material marker not found exactly once")
+          docs = docs.replace(old, new, 1)
+          old = '- `ObjectGenome.validate(genome)` asserts when the report is invalid.\n'
+          new = old + '- `ObjectGenome.contentFingerprint(genome)` returns the versioned full immutable-recipe drift fingerprint without changing `identityParts()` / `genomeId` semantics.\n'
+          if docs.count(old) != 1:
+              raise SystemExit("docs validation marker not found exactly once")
+          docs = docs.replace(old, new, 1)
+          old = 'Changing field meaning or deterministic identity inputs requires an object schema/version decision. Changing published canonical recipe content such as a component\'s exact material revision requires advancing `familyVersion`. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.\n'
+          new = 'Changing field meaning or deterministic identity inputs requires an object schema/version decision. Changing published canonical recipe content such as a component\'s exact material revision requires advancing `familyVersion`; fixture content fingerprints must change only alongside that intentional revision. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.\n'
+          if docs.count(old) != 1:
+              raise SystemExit("docs evolution marker not found exactly once")
+          docs = docs.replace(old, new, 1)
+          docs_path.write_text(docs)
+          PY
+
+          stylua src/shared/Objects/ObjectGenome.luau tests/object_genome.luau
+
+      - name: Generate locked fixture content fingerprints
+        shell: bash
+        run: |
+          cat > tests/print_object_genome_fingerprint.luau <<'LUA'
+          local ProductionLoader = require("./support/ProductionLoader")
+          local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
+          local Fixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
+
+          print("FP_CHAIR=" .. ObjectGenome.contentFingerprint(Fixtures.officeChair))
+          print("FP_TABLE=" .. ObjectGenome.contentFingerprint(Fixtures.officeTable))
+          print("FP_CABINET=" .. ObjectGenome.contentFingerprint(Fixtures.filingCabinet))
+          LUA
+          OUTPUT="$(lune run tests/print_object_genome_fingerprint)"
+          printf '%s\n' "$OUTPUT"
+          CHAIR="$(printf '%s\n' "$OUTPUT" | sed -n 's/^FP_CHAIR=//p')"
+          TABLE="$(printf '%s\n' "$OUTPUT" | sed -n 's/^FP_TABLE=//p')"
+          CABINET="$(printf '%s\n' "$OUTPUT" | sed -n 's/^FP_CABINET=//p')"
+          test -n "$CHAIR" && test -n "$TABLE" && test -n "$CABINET"
+          CHAIR="$CHAIR" TABLE="$TABLE" CABINET="$CABINET" python3 - <<'PY'
+          import os
+          from pathlib import Path
+          path = Path("tests/object_genome.luau")
+          source = path.read_text()
+          replacements = {
+              "__CHAIR_FP__": os.environ["CHAIR"],
+              "__TABLE_FP__": os.environ["TABLE"],
+              "__CABINET_FP__": os.environ["CABINET"],
+          }
+          for old, new in replacements.items():
+              if source.count(old) != 1:
+                  raise SystemExit(f"fingerprint token missing: {old}")
+              source = source.replace(old, new, 1)
+          path.write_text(source)
+          PY
+          rm tests/print_object_genome_fingerprint.luau
+          stylua src/shared/Objects/ObjectGenome.luau tests/object_genome.luau
+
+      - name: Run focused pure suite before publishing
+        run: lune run tests/run
+
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/apply-100-materialref-lock.yml
+
+      - name: Commit production repair
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Lock ObjectGenome material reference content"
+          git push origin HEAD:agent/objects/100-materialref-lock-sol56s7
