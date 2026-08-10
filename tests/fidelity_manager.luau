@@ -66,6 +66,17 @@ local function run(): number
 		"F2"
 	)
 
+	expectEqual(
+		"visible policy reason is explicit",
+		FidelityManager.selectDecision(inputs({ visible = true })).reason,
+		"visibility"
+	)
+	expectEqual(
+		"network policy reason is explicit",
+		FidelityManager.selectDecision(inputs({ networkRelevance = 0.9 })).reason,
+		"network-relevance"
+	)
+
 	local entity = WorldEntity.new({
 		id = "entity:fidelity-test",
 		kind = "office-chair",
@@ -108,15 +119,24 @@ local function run(): number
 	)
 	expectEqual("failed authoritative transition leaves entity at F3", entity.fidelity, "F3")
 
-	result = manager:step(entity.id, entity.fidelity, demotionInputs, 1.5, function(_, fromLevel, toLevel)
-		expectEqual(
-			"transition runs before manager cache commit",
-			manager:getObservedLevel(entity.id),
-			fromLevel
-		)
-		entity = WorldEntity.transition(entity, toLevel, { hingeAngle = 17.5 })
-	end)
+	local demotionReason
+	result = manager:step(
+		entity.id,
+		entity.fidelity,
+		demotionInputs,
+		1.5,
+		function(_, fromLevel, toLevel, reason)
+			demotionReason = reason
+			expectEqual(
+				"transition runs before manager cache commit",
+				manager:getObservedLevel(entity.id),
+				fromLevel
+			)
+			entity = WorldEntity.transition(entity, toLevel, { hingeAngle = 17.5 })
+		end
+	)
 	expectEqual("captured demotion commits", result.transitioned, true)
+	expectEqual("demotion callback receives reason", demotionReason, "distance")
 	expectEqual("WorldEntity becomes authoritative F2", entity.fidelity, "F2")
 	expectEqual("manager mirrors committed F2", manager:getObservedLevel(entity.id), "F2")
 	expectEqual("demotion captured durable state", entity.persistentState.hingeAngle, 17.5)
@@ -176,6 +196,13 @@ local function run(): number
 		1
 	)
 
+	local infiniteCapacityConfig = table.clone(FidelityManager.defaultConfig())
+	infiniteCapacityConfig.maxRegisteredEntities = math.huge
+	local infiniteCapacityAccepted = pcall(function()
+		FidelityManager.new(infiniteCapacityConfig)
+	end)
+	expectEqual("infinite registration capacity rejected", infiniteCapacityAccepted, false)
+
 	local stableTargetEntity = WorldEntity.new({
 		id = "entity:stable-target",
 		kind = "office-chair",
@@ -197,6 +224,7 @@ local function run(): number
 		0
 	)
 	expectEqual("stable target starts promotion hold", stableResult.blockedReason, "hold")
+	expectEqual("first stable-target reason", stableResult.reason, "network-relevance")
 
 	stableResult = stableTargetManager:step(
 		stableTargetEntity.id,
@@ -205,6 +233,7 @@ local function run(): number
 		0.05
 	)
 	expectEqual("changed cause preserves same target hold", stableResult.blockedReason, "hold")
+	expectEqual("reason can change without resetting hold", stableResult.reason, "observation")
 
 	stableResult = stableTargetManager:step(
 		stableTargetEntity.id,
@@ -216,7 +245,45 @@ local function run(): number
 		end
 	)
 	expectEqual("same target matures despite changed causes", stableResult.transitioned, true)
+	expectEqual("matured transition reports current reason", stableResult.reason, "network-relevance")
 	expectEqual("stable target reaches interactive", stableTargetEntity.fidelity, "F3")
+
+	local infiniteTimeAccepted = pcall(function()
+		stableTargetManager:step(stableTargetEntity.id, stableTargetEntity.fidelity, inputs(), math.huge)
+	end)
+	expectEqual("non-finite evaluation time rejected", infiniteTimeAccepted, false)
+
+	local deterministicConfig = table.clone(FidelityManager.defaultConfig())
+	deterministicConfig.promotionHoldSeconds = 0
+	deterministicConfig.demotionHoldSeconds = 0
+	deterministicConfig.transitionCooldownSeconds = 0
+	local deterministicA = FidelityManager.new(deterministicConfig)
+	local deterministicB = FidelityManager.new(deterministicConfig)
+	deterministicA:register("entity:deterministic", "F0")
+	deterministicB:register("entity:deterministic", "F0")
+	local deterministicInputs = inputs({ distanceStuds = 100 })
+	local resultA = deterministicA:step(
+		"entity:deterministic",
+		"F0",
+		deterministicInputs,
+		10,
+		function() end
+	)
+	local resultB = deterministicB:step(
+		"entity:deterministic",
+		"F0",
+		deterministicInputs,
+		10,
+		function() end
+	)
+	expectEqual("identical transition target is deterministic", resultA.desiredLevel, resultB.desiredLevel)
+	expectEqual("identical transition reason is deterministic", resultA.reason, resultB.reason)
+	expectEqual("identical transition outcome is deterministic", resultA.transitioned, resultB.transitioned)
+	expectEqual(
+		"identical transition metrics are deterministic",
+		deterministicA:getMetrics().transitions,
+		deterministicB:getMetrics().transitions
+	)
 
 	return failures
 end
