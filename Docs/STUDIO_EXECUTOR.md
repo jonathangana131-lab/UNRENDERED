@@ -1,13 +1,13 @@
-# UNRENDERED Studio Executor Protocol
+# UNRENDERED Studio Executor Protocol — Reality-Grade Specification
 
-This document defines the protocol for submitting automated Roblox Studio test requests, capturing native 3D engine renders, taking targeted window screenshots, executing custom Luau scripts, dumping DataModel trees, and consuming real engine evidence via the private Mac ↔ GitHub execution bridge.
+This document defines the production protocol for submitting automated Roblox Studio test requests, capturing native engine renders, executing fixed drivers in real simulation mode, and consuming typed fail-closed evidence via the private Mac ↔ GitHub execution bridge.
 
 ## Overview
 
-- **Public Repository**: `jonathangana131-lab/UNRENDERED` (canonical content & source CI).
-- **Private Bridge Repository**: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE` (hosts the dedicated macOS self-hosted runner `UNRENDERED-STUDIO-MAC`).
-- **Runner Machine**: Dedicated local Mac running Roblox Studio and pinned project tools (`rojo 7.6.1`).
-- **Steady-State Transport**: ChatGPT "Go" Worker -> GitHub Push (`requests/*.json`) -> Mac Self-Hosted Runner -> Real Roblox Studio Execution -> GitHub Push (`results/<requestId>/result.json`).
+- **Public Repository**: `jonathangana131-lab/UNRENDERED` (canonical source code & public CI).
+- **Private Control Repository**: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE` (hosts the dedicated macOS self-hosted runner `UNRENDERED-STUDIO-MAC`).
+- **Runner Machine**: Dedicated local Mac running Roblox Studio (`0.732.0`) and pinned project tools (`rojo 7.6.1`).
+- **Security Boundary**: Zero remote code execution. Requests carry pure DATA (`jobType`, SHA, ref). No executable text, shell commands, or arbitrary paths are permitted.
 
 ---
 
@@ -23,58 +23,62 @@ To request a Roblox Studio test run, commit a single JSON file under `requests/`
 ```json
 {
   "schemaVersion": 1,
-  "requestId": "20260810-004-native-viewport",
+  "requestId": "20260810-005-reality-hero-gate",
   "sourceRepo": "jonathangana131-lab/UNRENDERED",
   "sourceRef": "main",
-  "sourceSha": "766c5b05defbfe505cab61c0ff87cc984464e8de",
-  "jobType": "studio-render-viewport",
+  "sourceSha": "f348acb8dae2f98f7a75c8085539eab49b435b56",
+  "jobType": "physics-lab-hero-gate",
   "captureScreenshot": true,
-  "dumpDataModel": true,
-  "customScript": "local Workspace = game:GetService('Workspace'); print('PARTS_COUNT=' .. tostring(#Workspace:GetDescendants()))",
   "requestedBy": "chatgpt-developer",
-  "notes": "Native 3D engine viewport rendering test"
+  "notes": "Full Physics Lab Hero Gate reality-grade engine execution"
 }
 ```
 
 ---
 
-## Supported Job Types & Developer Capabilities
+## Supported Job Types (Fixed Presets)
+
+Every allowed `jobType` maps to a fixed, versioned driver implementation stored in the private bridge repository:
 
 1. **`studio-smoke`**: DataModel & Rojo build sanity check.
-2. **`studio-render-viewport`**: Uses Roblox's native `ThumbnailGenerator` engine renderer to generate a 1080p 3D Viewport PNG directly from the graphics pipeline, completely independent of OS window focus, z-order, or occlusion.
-3. **`studio-screenshot`**: Captures a targeted screenshot of Roblox Studio and embeds it in `summary.md`.
-4. **`studio-datamodel-dump`**: Serializes the DataModel instance hierarchy (`Workspace`, `ReplicatedStorage`, `ServerScriptService`) into structured JSON.
-5. **`studio-custom-luau`**: Executes custom developer Luau code passed in `customScript` inside Roblox Studio's server environment.
-6. **`physics-lab-lifecycle`**: Drives the source-owned 20-cycle F2 -> F0 -> F2 lifecycle sweep inside Roblox Studio.
-7. **`physics-lab-server-smoke`**: Verifies server realizer and harness check.
+2. **`studio-render-viewport`**: Uses Roblox's native `ThumbnailGenerator` engine renderer to generate a 1080p 3D Viewport PNG directly from the graphics pipeline, completely independent of OS window focus or occlusion.
+3. **`studio-screenshot`**: Captures a targeted screenshot of Roblox Studio.
+4. **`studio-datamodel-dump`**: Serializes the DataModel instance hierarchy (`Workspace`, `ReplicatedStorage`, `ServerScriptService`) and memory stats into structured JSON.
+5. **`physics-lab-hero-gate`**: Drives the source-owned 20-cycle F2 -> F0 -> F2 lifecycle sweep inside Roblox Studio in real simulation mode (`RunService:IsRunning() == true`, `RunService:IsServer() == true`).
+6. **`physics-lab-lifecycle`**: Standalone 20-cycle representation & envelope sweep.
+7. **`physics-lab-server-smoke`**: Verifies server realizer and harness check in simulation mode.
 8. **`physics-lab-two-client`**: Launches multi-client topology checks via `StudioTestService`.
-9. **`physics-lab-hero-gate`**: Full physical envelope & lifecycle evidence validation for Hero Gate #151.
 
 ---
 
-## Occlusion-Free Screenshot & Rendering Engine
+## Fail-Closed Status Derivation Engine
 
-The bridge implements a **3-layer screenshot capture pipeline** so developers get clear visual feedback even while you are actively working on your Mac:
+Top-level status is mathematically derived from mandatory typed evidence. A sentinel string alone **never** produces `PASS`.
 
-- **Layer 1 (Native Engine 3D Viewport Render)**: Luau driver calls `ThumbnailGenerator:Click("PNG", 1920, 1080, false)` inside Roblox Studio to capture a 1080p render directly from Roblox's graphics engine. It is **100% independent of OS windowing or focus** — Roblox Studio does not need to be on top or visible.
-- **Layer 2 (Targeted macOS CGWindowID Capture)**: `get_roblox_window_id.py` queries macOS Quartz for Roblox Studio's specific window ID (`screencapture -x -l <window_id>`) to capture ONLY the Roblox Studio window without capturing overlapping applications.
-- **Layer 3 (Display Fallback)**: Full desktop screen capture (`screencapture -x`).
+| Job Type | Status Derivation Rule |
+|---|---|
+| **`physics-lab-hero-gate`** | Requires `lifecycleOk == true`, `isRunning == true`, `isServer == true`, `baselineCaptured == true`, and `checkpointCount == 4`. If any condition fails, status is `FAIL`. |
+| **`physics-lab-server-smoke`** | Requires `baselineCaptured == true`, `isRunning == true`, and `isServer == true`. |
+| **`physics-lab-two-client`** | Returns `PASS` if `twoClientOk == true`; returns `UNVERIFIED` if `partiallySupported == true`. |
+| **`studio-smoke` / `studio-screenshot` / `studio-render-viewport`** | Requires valid sentinel or `baselineCaptured == true`. |
 
 ---
 
-## Developer Abilities & Controls
+## Truthful Capture Mode Reporting
 
-- **`captureScreenshot` (boolean)**: Set `true` to capture and embed `screenshot.png` in `summary.md`.
-- **`customScript` (string)**: Supply arbitrary Luau code to inspect instance states, query properties, trigger events, or run bespoke diagnostic checks inside Roblox Studio.
-- **`dumpDataModel` (boolean)**: Set `true` to extract an instance tree dump of the open place DataModel.
+Results explicitly declare `captureMode` in `result.json` and `summary.md`:
+
+- **`NATIVE_ENGINE_RENDER`**: Base64 3D Viewport PNG generated directly by Roblox's internal `ThumbnailGenerator` engine pipeline (occlusion-free).
+- **`STUDIO_WINDOW_CAPTURE`**: Targeted macOS Quartz CGWindowID window capture (`screencapture -x -l <window_id>`) capturing only the Roblox Studio window.
+- **`DISPLAY_FALLBACK`**: Full desktop screen capture.
+- **`NO_CAPTURE`**: No image requested or captured.
 
 ---
 
 ## Consuming Execution Results
 
-Upon completion, the bridge automatically commits the machine-readable result to `results/<requestId>/`:
+Results are published back to `results/<requestId>/` in `UNRENDERED-STUDIO-BRIDGE`:
 
-- `results/<requestId>/result.json`: Machine-readable evidence payload, environment metadata, and screenshot flag.
-- `results/<requestId>/summary.md`: Markdown summary with embedded viewport screenshots (`![Roblox Studio Viewport](screenshot.png)`).
-- `results/<requestId>/screenshot.png`: High-resolution PNG screenshot / native 3D engine render.
-- GitHub Actions Artifact: `studio-execution-log-<run_id>` contains full raw Roblox Studio console logs.
+- `results/<requestId>/result.json`: Machine-readable evidence payload, environment metadata, `captureMode`, and derived `status`.
+- `results/<requestId>/summary.md`: Human-readable summary with embedded viewport screenshots.
+- `results/<requestId>/screenshot.png`: High-resolution PNG image.
