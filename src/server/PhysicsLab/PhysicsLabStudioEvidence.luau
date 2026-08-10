@@ -71,13 +71,28 @@ local F2_DEMAND: FidelityManager.PolicyInputs = table.freeze({
 
 local function assertZeroResourceDelta(comparison: PhysicsLabValidation.Comparison, cycle: number): ()
 	local delta = comparison.delta
-	assert(delta.instances == 0, `Physics Lab lifecycle cycle {cycle} changed Instance count by {delta.instances}`)
+	assert(
+		delta.instances == 0,
+		`Physics Lab lifecycle cycle {cycle} changed Instance count by {delta.instances}`
+	)
 	assert(delta.models == 0, `Physics Lab lifecycle cycle {cycle} changed Model count by {delta.models}`)
 	assert(delta.parts == 0, `Physics Lab lifecycle cycle {cycle} changed BasePart count by {delta.parts}`)
-	assert(delta.assemblies == 0, `Physics Lab lifecycle cycle {cycle} changed assembly count by {delta.assemblies}`)
-	assert(delta.attachments == 0, `Physics Lab lifecycle cycle {cycle} changed Attachment count by {delta.attachments}`)
-	assert(delta.constraints == 0, `Physics Lab lifecycle cycle {cycle} changed Constraint count by {delta.constraints}`)
-	assert(delta.joints == 0, `Physics Lab lifecycle cycle {cycle} changed JointInstance count by {delta.joints}`)
+	assert(
+		delta.assemblies == 0,
+		`Physics Lab lifecycle cycle {cycle} changed assembly count by {delta.assemblies}`
+	)
+	assert(
+		delta.attachments == 0,
+		`Physics Lab lifecycle cycle {cycle} changed Attachment count by {delta.attachments}`
+	)
+	assert(
+		delta.constraints == 0,
+		`Physics Lab lifecycle cycle {cycle} changed Constraint count by {delta.constraints}`
+	)
+	assert(
+		delta.joints == 0,
+		`Physics Lab lifecycle cycle {cycle} changed JointInstance count by {delta.joints}`
+	)
 end
 
 local function demoteToF0(lab: RealizedLab, entityId: string, baseTime: number): ()
@@ -93,13 +108,19 @@ local function demoteToF0(lab: RealizedLab, entityId: string, baseTime: number):
 
 	local result, demoted = lab.step(entityId, NO_DEMAND, baseTime + 2)
 	assert(result.transitioned and demoted.fidelity == "F0", `F2->F0 lifecycle transition failed: {entityId}`)
-	assert(not lab.isRepresented(entityId), `F0 lifecycle transition left a representation behind: {entityId}`)
+	assert(
+		not lab.isRepresented(entityId),
+		`F0 lifecycle transition left a representation behind: {entityId}`
+	)
 end
 
 local function promoteToF2(lab: RealizedLab, entityId: string, baseTime: number): ()
 	local before = lab.getRecord(entityId)
 	assert(before.fidelity == "F0", `expected F0 before lifecycle promotion: {entityId}`)
-	assert(not lab.isRepresented(entityId), `F0 entity was unexpectedly represented before promotion: {entityId}`)
+	assert(
+		not lab.isRepresented(entityId),
+		`F0 entity was unexpectedly represented before promotion: {entityId}`
+	)
 
 	local pending = lab.step(entityId, F2_DEMAND, baseTime + 3)
 	assert(
@@ -108,8 +129,14 @@ local function promoteToF2(lab: RealizedLab, entityId: string, baseTime: number)
 	)
 
 	local result, promoted = lab.step(entityId, F2_DEMAND, baseTime + 3.2)
-	assert(result.transitioned and promoted.fidelity == "F2", `F0->F2 lifecycle transition failed: {entityId}`)
-	assert(lab.isRepresented(entityId), `F2 lifecycle transition failed to rebuild representation: {entityId}`)
+	assert(
+		result.transitioned and promoted.fidelity == "F2",
+		`F0->F2 lifecycle transition failed: {entityId}`
+	)
+	assert(
+		lab.isRepresented(entityId),
+		`F2 lifecycle transition failed to rebuild representation: {entityId}`
+	)
 	assert(promoted.id == before.id, `WorldEntity identity changed during lifecycle promotion: {entityId}`)
 end
 
@@ -133,7 +160,10 @@ function PhysicsLabStudioEvidence.runLifecycle20(): LifecycleEvidence
 		local entityId = entityRecipe.entity.id
 		local record = lab.getRecord(entityId)
 		assert(record.fidelity == "F2", `Physics Lab lifecycle evidence requires initial F2: {entityId}`)
-		assert(lab.isRepresented(entityId), `Physics Lab lifecycle evidence requires representation: {entityId}`)
+		assert(
+			lab.isRepresented(entityId),
+			`Physics Lab lifecycle evidence requires representation: {entityId}`
+		)
 		initialStateRevisionById[entityId] = record.stateRevision
 		initialRepresentationRevisionById[entityId] = record.representationRevision
 	end
@@ -163,11 +193,14 @@ function PhysicsLabStudioEvidence.runLifecycle20(): LifecycleEvidence
 			local comparison = PhysicsLabValidation.compare(baseline, snapshot, ENVELOPE_TOLERANCE_STUDS)
 			assertZeroResourceDelta(comparison, cycle)
 			PhysicsLabValidation.assertFullLabEnvelope(baseline, snapshot, ENVELOPE_TOLERANCE_STUDS)
-			table.insert(checkpoints, table.freeze({
-				cycle = cycle,
-				snapshot = snapshot,
-				comparison = comparison,
-			}))
+			table.insert(
+				checkpoints,
+				table.freeze({
+					cycle = cycle,
+					snapshot = snapshot,
+					comparison = comparison,
+				})
+			)
 		end
 	end
 
@@ -177,7 +210,10 @@ function PhysicsLabStudioEvidence.runLifecycle20(): LifecycleEvidence
 		local final = lab.getRecord(entityId)
 		local initialStateRevision = initialStateRevisionById[entityId]
 		local initialRepresentationRevision = initialRepresentationRevisionById[entityId]
-		assert(initialStateRevision ~= nil, `missing initial state revision for lifecycle evidence: {entityId}`)
+		assert(
+			initialStateRevision ~= nil,
+			`missing initial state revision for lifecycle evidence: {entityId}`
+		)
 		assert(
 			initialRepresentationRevision ~= nil,
 			`missing initial representation revision for lifecycle evidence: {entityId}`
@@ -194,15 +230,18 @@ function PhysicsLabStudioEvidence.runLifecycle20(): LifecycleEvidence
 			`Physics Lab representation revision count drifted across lifecycle evidence: {entityId}`
 		)
 
-		table.insert(entities, table.freeze({
-			key = entityRecipe.key,
-			entityId = entityId,
-			kind = entityRecipe.kind,
-			initialStateRevision = initialStateRevision,
-			finalStateRevision = final.stateRevision,
-			initialRepresentationRevision = initialRepresentationRevision,
-			finalRepresentationRevision = final.representationRevision,
-		}))
+		table.insert(
+			entities,
+			table.freeze({
+				key = entityRecipe.key,
+				entityId = entityId,
+				kind = entityRecipe.kind,
+				initialStateRevision = initialStateRevision,
+				finalStateRevision = final.stateRevision,
+				initialRepresentationRevision = initialRepresentationRevision,
+				finalRepresentationRevision = final.representationRevision,
+			})
+		)
 	end
 
 	return table.freeze({
