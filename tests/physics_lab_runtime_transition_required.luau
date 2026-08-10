@@ -41,7 +41,10 @@ local function run(): number
 	end)
 	local after = runtime:getRecord(entityId)
 
-	expect("runtime blocks committed fidelity transition without representation observer", not blocked.transitioned)
+	expect(
+		"runtime blocks committed fidelity transition without representation observer",
+		not blocked.transitioned
+	)
 	expect("runtime exposes transition-required block reason", blocked.blockedReason == "transition-required")
 	expect("missing observer is rejected before demotion capture side effects", captureCalls == 0)
 	expect("missing observer preserves WorldEntity fidelity", after.fidelity == before.fidelity)
