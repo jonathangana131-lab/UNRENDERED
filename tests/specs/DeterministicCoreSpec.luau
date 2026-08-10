@@ -59,25 +59,29 @@ return function(runner)
 		end
 	end)
 
-	runner:test("DeterministicRng zero-seed fallback", repro("core.rng", "xorshift32-seed-0"), function(expect)
-		local rng = DeterministicRng.new(0)
-		local expected = {
-			0x40aec71f,
-			0x91e00c19,
-			0x9c0fe128,
-			0x6570f69d,
-		}
-		for index, value in expected do
-			expect:equal(rng:nextU32(), value, `draw {index}`)
-		end
+	runner:test(
+		"DeterministicRng zero-seed fallback",
+		repro("core.rng", "xorshift32-seed-0"),
+		function(expect)
+			local rng = DeterministicRng.new(0)
+			local expected = {
+				0x40aec71f,
+				0x91e00c19,
+				0x9c0fe128,
+				0x6570f69d,
+			}
+			for index, value in expected do
+				expect:equal(rng:nextU32(), value, `draw {index}`)
+			end
 
-		expect:throws(function()
-			rng:nextInteger(4, 3)
-		end, "minimum must be <= maximum", "invalid integer range")
-		expect:throws(function()
-			rng:chance(1.1)
-		end, "probability must be in [0, 1]", "invalid probability")
-	end)
+			expect:throws(function()
+				rng:nextInteger(4, 3)
+			end, "minimum must be <= maximum", "invalid integer range")
+			expect:throws(function()
+				rng:chance(1.1)
+			end, "probability must be in [0, 1]", "invalid probability")
+		end
+	)
 
 	runner:test("SeedStream scoped golden sequence", repro("worldgen.topology", "hall-A"), function(expect)
 		local topology = SeedStream.derive("world-7", {
@@ -96,35 +100,39 @@ return function(runner)
 		end
 	end)
 
-	runner:test("SeedStream subsystem isolation", repro("worldgen.stream-isolation", "topology-vs-materials"), function(expect)
-		local topologyA = SeedStream.derive("world-7", {
-			"region:4,-2,9",
-			"topology",
-			"hall-A",
-		})
-		local materials = SeedStream.derive("world-7", {
-			"region:4,-2,9",
-			"materials",
-			"hall-A",
-		})
+	runner:test(
+		"SeedStream subsystem isolation",
+		repro("worldgen.stream-isolation", "topology-vs-materials"),
+		function(expect)
+			local topologyA = SeedStream.derive("world-7", {
+				"region:4,-2,9",
+				"topology",
+				"hall-A",
+			})
+			local materials = SeedStream.derive("world-7", {
+				"region:4,-2,9",
+				"materials",
+				"hall-A",
+			})
 
-		local topologyFirst = topologyA:nextU32()
-		for _ = 1, 32 do
-			materials:nextU32()
+			local topologyFirst = topologyA:nextU32()
+			for _ = 1, 32 do
+				materials:nextU32()
+			end
+
+			local topologyB = SeedStream.derive("world-7", {
+				"region:4,-2,9",
+				"topology",
+				"hall-A",
+			})
+			expect:equal(topologyB:nextU32(), topologyFirst, "unrelated stream consumption")
+
+			local differentScope = SeedStream.derive("world-7", {
+				"region:4,-2,9",
+				"materials",
+				"hall-A",
+			})
+			expect:notEqual(differentScope:nextU32(), topologyFirst, "subsystem salt")
 		end
-
-		local topologyB = SeedStream.derive("world-7", {
-			"region:4,-2,9",
-			"topology",
-			"hall-A",
-		})
-		expect:equal(topologyB:nextU32(), topologyFirst, "unrelated stream consumption")
-
-		local differentScope = SeedStream.derive("world-7", {
-			"region:4,-2,9",
-			"materials",
-			"hall-A",
-		})
-		expect:notEqual(differentScope:nextU32(), topologyFirst, "subsystem salt")
-	end)
+	)
 end
