@@ -4,6 +4,8 @@ Issue #151 is the validation strike-team child of the unlocked production Physic
 
 The goal is to prove that the first playable room exercises the landed Wave-1 contracts instead of hiding an ad-hoc demo behind convincing Roblox Instances.
 
+Executable server Command Bar procedures that drive the landed representation-safe Studio lifecycle path live in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`. This protocol defines what evidence means and which gates must be satisfied; the runbook defines how to collect that evidence through production boundaries.
+
 ## Evidence rule
 
 Every reported check has one of three states:
@@ -114,13 +116,13 @@ Pass conditions:
 - promotion does not register duplicate WorldEntityIds,
 - repeated cycles return to a stable full-lab physical envelope instead of monotonically leaking descendants/constraints/registrations.
 
-**Current Studio-access limitation:** the production bootstrap intentionally keeps the `RealizedLab` handle private. Do not bypass that protection by requiring the raw `PhysicsLabRuntime`, mutating Instance attributes, or manually deleting representations. Until a source-owned Studio/test harness can drive the public representation-aware `lab.step` boundary, lifecycle cycling from the Command Bar remains **UNVERIFIED** and should be reported as a #10/#151 blocker. The collector can still capture initial/bootstrap evidence safely.
+The safe Studio/server lifecycle driver now exists: `PhysicsLabStudioHarness` owns the current public `PhysicsLabRealizer.RealizedLab` handle, and `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md` drives `lab.step`, `stop`, and `restart` through that representation-safe surface. Use that source-owned path for lifecycle evidence. Do not require the raw `PhysicsLabRuntime`, mutate Instance attributes to fake authoritative state, or manually delete representations. Lifecycle rows remain **UNVERIFIED** until the runbook procedure is actually executed in Studio and its observations are recorded.
 
 ## Fidelity ownership
 
 For each lab entity, prove the displayed/diagnosed fidelity is the authoritative WorldEntity fidelity coordinated through the production Fidelity Manager, not a local Physics Lab enum or Instance attribute that becomes a second truth source.
 
-Exercise at least one promotion and one demotion where a source-owned Studio/test path can invoke the representation-aware lifecycle without bypassing the realizer. Capture:
+Exercise at least one promotion and one demotion through the source-owned Studio/test path while preserving the representation-aware lifecycle. Capture:
 
 - WorldEntityId,
 - authoritative fidelity before/after,
@@ -128,7 +130,7 @@ Exercise at least one promotion and one demotion where a source-owned Studio/tes
 - whether state capture was required,
 - representation before/after.
 
-A local lab-only fidelity state machine is an architecture failure even if the visual transition looks correct. If no safe Studio driver exists yet, leave this row UNVERIFIED rather than using the raw runtime as a shortcut.
+A local lab-only fidelity state machine is an architecture failure even if the visual transition looks correct. Use the harness-backed F2→F0→F2 procedure in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`; if that procedure cannot run on the exact build under test, leave the row UNVERIFIED and record the blocker rather than bypassing the realizer.
 
 ## MaterialDNA / ObjectGenome boundary
 
@@ -193,7 +195,7 @@ Store the emitted JSON verbatim with the evidence bundle. It includes:
 - total scoped resource counts,
 - full-lab world-space BasePart envelope.
 
-When a safe production lifecycle driver exists, capture snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20. A partially demoted lab is intentionally a different physical representation, so record its count delta but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt.
+Use the harness-backed 20-cycle rebuild loop in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md` to capture snapshots after initial settle and at rebuild checkpoints 1, 5, 10, and 20. A partially demoted lab is intentionally a different physical representation, so record its count delta but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt.
 
 To compare two stored snapshots in a server-context Command Bar, paste their JSON strings into this source-owned comparison path:
 
