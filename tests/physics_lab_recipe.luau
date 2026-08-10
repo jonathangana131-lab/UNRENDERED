@@ -6,6 +6,40 @@ local PhysicsLabRecipe = ProductionLoader.requireShared("Physics/PhysicsLabRecip
 local StableId = ProductionLoader.requireShared("Core/StableId")
 local WorldEntity = ProductionLoader.requireShared("Reality/WorldEntity")
 
+local function componentByKey(genome, key)
+	for _, component in ipairs(genome.components) do
+		if component.key == key then
+			return component
+		end
+	end
+	return nil
+end
+
+local function overlapsStrictlyOnAxis(positionA, sizeA, positionB, sizeB)
+	return math.abs(positionA - positionB) * 2 < sizeA + sizeB - 1e-9
+end
+
+local function componentsVolumetricallyOverlap(left, right)
+	return overlapsStrictlyOnAxis(
+		left.localPositionM.x,
+		left.dimensionsM.x,
+		right.localPositionM.x,
+		right.dimensionsM.x
+	)
+		and overlapsStrictlyOnAxis(
+			left.localPositionM.y,
+			left.dimensionsM.y,
+			right.localPositionM.y,
+			right.dimensionsM.y
+		)
+		and overlapsStrictlyOnAxis(
+			left.localPositionM.z,
+			left.dimensionsM.z,
+			right.localPositionM.z,
+			right.dimensionsM.z
+		)
+end
+
 local function run(): number
 	local failures = 0
 
@@ -141,6 +175,50 @@ local function run(): number
 
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
 	expect("lab duplicate identity is detectable", duplicateAccepted == false)
+
+	local door = PhysicsLabRecipe.objectGenome("commercialDoor")
+	local hingeJamb = componentByKey(door, "hinge-jamb")
+	local strikeJamb = componentByKey(door, "strike-jamb")
+	local header = componentByKey(door, "header")
+	local leaf = componentByKey(door, "leaf")
+	expect(
+		"door uses jamb/header construction instead of a solid frame slab",
+		hingeJamb ~= nil and strikeJamb ~= nil and header ~= nil and leaf ~= nil and componentByKey(door, "frame") == nil
+	)
+
+	if hingeJamb ~= nil and strikeJamb ~= nil and header ~= nil and leaf ~= nil then
+		local openingWidth = (strikeJamb.localPositionM.x - strikeJamb.dimensionsM.x * 0.5)
+			- (hingeJamb.localPositionM.x + hingeJamb.dimensionsM.x * 0.5)
+		local headerBottom = header.localPositionM.y - header.dimensionsM.y * 0.5
+		local leafTop = leaf.localPositionM.y + leaf.dimensionsM.y * 0.5
+		expect("door jambs preserve horizontal leaf clearance", openingWidth > leaf.dimensionsM.x)
+		expect("door header preserves vertical leaf clearance", headerBottom - leafTop >= 0.005)
+
+		local frameClearsLeaf = true
+		for _, component in ipairs(door.components) do
+			if component.key ~= "leaf" and componentsVolumetricallyOverlap(component, leaf) then
+				frameClearsLeaf = false
+				break
+			end
+		end
+		expect("door closed leaf does not volumetrically overlap its frame", frameClearsLeaf)
+	end
+
+	local hingeUsesStructuralJamb = false
+	for _, mechanism in ipairs(door.mechanisms) do
+		if mechanism.kind == "hinge" and mechanism.key == "leaf-hinge" then
+			hingeUsesStructuralJamb = mechanism.movingComponentKey == "leaf"
+				and mechanism.frameComponentKey == "hinge-jamb"
+			break
+		end
+	end
+	expect("door hinge binds leaf to the structural hinge jamb", hingeUsesStructuralJamb)
+
+	local authoredDoorMass = 0
+	for _, component in ipairs(door.components) do
+		authoredDoorMass += component.massKg
+	end
+	expect("door component masses preserve the authored total mass", math.abs(authoredDoorMass - door.massKg) < 1e-9)
 
 	return failures
 end
