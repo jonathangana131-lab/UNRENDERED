@@ -81,7 +81,7 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 		error(`{path} must contain plain data, got {valueType}`)
 	end
 
-	local source = value :: { [any]: any }
+	local source = value :: any
 	assert(getmetatable(source) == nil, `{path} must not contain metatables`)
 	assert(not seen[source], `{path} must not contain cycles`)
 	seen[source] = true
@@ -125,6 +125,7 @@ local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
 		assertNonEmpty("origin.regionId", origin.regionId)
 	end
 	assertNonEmpty("origin.generator", origin.generator)
+	assertFiniteNumber("origin.generatorVersion", origin.generatorVersion)
 	assert(
 		origin.generatorVersion >= 1 and origin.generatorVersion == math.floor(origin.generatorVersion),
 		"origin.generatorVersion must be a positive integer"
@@ -178,7 +179,12 @@ function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord
 		"WorldEntity.id must be a non-empty stable identifier without control characters"
 	)
 	assertNonEmpty("WorldEntity.kind", spec.kind)
-	local fidelity = spec.fidelity or "F0"
+	local fidelity: Fidelity
+	if spec.fidelity == nil then
+		fidelity = "F0"
+	else
+		fidelity = spec.fidelity
+	end
 	assert(WorldEntity.isFidelity(fidelity), `invalid fidelity {tostring(fidelity)}`)
 
 	return table.freeze({
