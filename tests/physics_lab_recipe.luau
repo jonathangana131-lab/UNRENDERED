@@ -45,7 +45,8 @@ local function run(): number
 		ResolvedRegionRecipe.equal(first.resolvedRegion, second.resolvedRegion)
 			and first.resolvedRegion.recipeFingerprint == second.resolvedRegion.recipeFingerprint
 	)
-	local reconstructedRegion = ResolvedRegionRecipe.deserialize(ResolvedRegionRecipe.serialize(first.resolvedRegion))
+	local reconstructedRegion =
+		ResolvedRegionRecipe.deserialize(ResolvedRegionRecipe.serialize(first.resolvedRegion))
 	expect(
 		"lab resolved-region truth reconstructs through production contract",
 		ResolvedRegionRecipe.equal(first.resolvedRegion, reconstructedRegion)
