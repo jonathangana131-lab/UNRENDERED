@@ -22,10 +22,14 @@ local function run(): number
 	local first = PhysicsLabRecipe.build()
 	local second = PhysicsLabRecipe.build()
 	local resolvedRegion = PhysicsLabRecipe.resolvedRegion()
-	local reconstructedRegion = ResolvedRegionRecipe.deserialize(ResolvedRegionRecipe.serialize(resolvedRegion))
+	local reconstructedRegion =
+		ResolvedRegionRecipe.deserialize(ResolvedRegionRecipe.serialize(resolvedRegion))
 
 	expect("lab schema is explicit", first.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION)
-	expect("lab generator version advances resolved-region integration", PhysicsLabRecipe.GENERATOR_VERSION == 2)
+	expect(
+		"lab generator version advances resolved-region integration",
+		PhysicsLabRecipe.GENERATOR_VERSION == 2
+	)
 	expect("lab recipe key is explicit", first.recipeKey == PhysicsLabRecipe.RECIPE_KEY)
 	expect(
 		"lab world id is deterministic",
