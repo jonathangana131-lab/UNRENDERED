@@ -1,0 +1,120 @@
+name: Apply MaterialDNA recipe revision repair
+
+on:
+  push:
+    branches:
+      - agent/materials/74-materialdna-exact-revision-sol56x7
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Apply narrow revision contract repair
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text()
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected one target, found {count}: {old[:100]!r}")
+              p.write_text(text.replace(old, new, 1))
+
+          material = "src/shared/Materials/MaterialDNA.luau"
+          replace_once(material,
+              "\tid: MaterialId,\n\tschemaVersion: number,\n\tcoherenceClass: string,",
+              "\tid: MaterialId,\n\tschemaVersion: number,\n\trecipeRevision: number,\n\tcoherenceClass: string,")
+          replace_once(material,
+              "\trecipeId: MaterialId,\n\tschemaVersion: number,\n\twear01: number,",
+              "\trecipeId: MaterialId,\n\tschemaVersion: number,\n\trecipeRevision: number,\n\twear01: number,")
+          replace_once(material,
+              '''\t"schemaVersion",\n\t"coherenceClass",''',
+              '''\t"schemaVersion",\n\t"recipeRevision",\n\t"coherenceClass",''')
+          replace_once(material,
+              'local STATE_FIELDS = fieldSet({ "recipeId", "schemaVersion", "wear01", "damage01", "wetness01", "soil01" })',
+              '''local STATE_FIELDS = fieldSet({\n\t"recipeId",\n\t"schemaVersion",\n\t"recipeRevision",\n\t"wear01",\n\t"damage01",\n\t"wetness01",\n\t"soil01",\n})''')
+          replace_once(material,
+              '''local function validateNonNegativeInteger(errors: { string }, path: string, value: unknown): number?\n\tif type(value) ~= "number" or not isFinite(value) or value < 0 or math.floor(value) ~= value then\n\t\tappendError(errors, `{path} must be a finite non-negative integer`)\n\t\treturn nil\n\tend\n\treturn value\nend''',
+              '''local function validateNonNegativeInteger(errors: { string }, path: string, value: unknown): number?\n\tif type(value) ~= "number" or not isFinite(value) or value < 0 or math.floor(value) ~= value then\n\t\tappendError(errors, `{path} must be a finite non-negative integer`)\n\t\treturn nil\n\tend\n\treturn value\nend\n\nlocal function validatePositiveInteger(errors: { string }, path: string, value: unknown): number?\n\tif type(value) ~= "number" or not isFinite(value) or value < 1 or math.floor(value) ~= value then\n\t\tappendError(errors, `{path} must be a finite positive integer`)\n\t\treturn nil\n\tend\n\treturn value\nend''')
+          replace_once(material,
+              '''\tif type(recipe.schemaVersion) ~= "number" or recipe.schemaVersion ~= SCHEMA_VERSION then\n\t\tappendError(errors, `schemaVersion must be {SCHEMA_VERSION}`)\n\tend\n\tlocal coherenceClass = validateProjectKey(errors, "coherenceClass", recipe.coherenceClass)''',
+              '''\tif type(recipe.schemaVersion) ~= "number" or recipe.schemaVersion ~= SCHEMA_VERSION then\n\t\tappendError(errors, `schemaVersion must be {SCHEMA_VERSION}`)\n\tend\n\tvalidatePositiveInteger(errors, "recipeRevision", recipe.recipeRevision)\n\tlocal coherenceClass = validateProjectKey(errors, "coherenceClass", recipe.coherenceClass)''')
+          replace_once(material,
+              '''\tif type(state.schemaVersion) ~= "number" or state.schemaVersion ~= SCHEMA_VERSION then\n\t\tappendError(errors, `schemaVersion must be {SCHEMA_VERSION}`)\n\tend\n\tvalidateFiniteRange(errors, "wear01", state.wear01, 0, 1)''',
+              '''\tif type(state.schemaVersion) ~= "number" or state.schemaVersion ~= SCHEMA_VERSION then\n\t\tappendError(errors, `schemaVersion must be {SCHEMA_VERSION}`)\n\tend\n\tvalidatePositiveInteger(errors, "recipeRevision", state.recipeRevision)\n\tvalidateFiniteRange(errors, "wear01", state.wear01, 0, 1)''')
+          replace_once(material,
+              '''function MaterialDNA.assertValidState(value: unknown): MaterialState\n\tlocal result = MaterialDNA.validateState(value)\n\tassert(result.ok, table.concat(result.errors, "; "))\n\treturn value :: MaterialState\nend\n''',
+              '''function MaterialDNA.assertValidState(value: unknown): MaterialState\n\tlocal result = MaterialDNA.validateState(value)\n\tassert(result.ok, table.concat(result.errors, "; "))\n\treturn value :: MaterialState\nend\n\nfunction MaterialDNA.validateStateForRecipe(recipeValue: unknown, stateValue: unknown): ValidationResult\n\tlocal errors: { string } = {}\n\tlocal recipeResult = MaterialDNA.validateRecipe(recipeValue)\n\tlocal stateResult = MaterialDNA.validateState(stateValue)\n\n\tfor _, message in recipeResult.errors do\n\t\tappendError(errors, `recipe: {message}`)\n\tend\n\tfor _, message in stateResult.errors do\n\t\tappendError(errors, `state: {message}`)\n\tend\n\n\tif recipeResult.ok and stateResult.ok then\n\t\tlocal recipe = recipeValue :: MaterialRecipe\n\t\tlocal state = stateValue :: MaterialState\n\t\tif state.recipeId ~= recipe.id then\n\t\t\tappendError(errors, "state.recipeId must match MaterialRecipe.id")\n\t\tend\n\t\tif state.recipeRevision ~= recipe.recipeRevision then\n\t\t\tappendError(errors, "state.recipeRevision must match MaterialRecipe.recipeRevision")\n\t\tend\n\tend\n\n\treturn {\n\t\tok = #errors == 0,\n\t\terrors = errors,\n\t}\nend\n''')
+          replace_once(material,
+              '''\t\tid = source.id,\n\t\tschemaVersion = source.schemaVersion,\n\t\tcoherenceClass = source.coherenceClass,''',
+              '''\t\tid = source.id,\n\t\tschemaVersion = source.schemaVersion,\n\t\trecipeRevision = source.recipeRevision,\n\t\tcoherenceClass = source.coherenceClass,''')
+          replace_once(material,
+              '''function MaterialDNA.defaultState(recipeId: MaterialId): MaterialState\n\tlocal state: MaterialState = {\n\t\trecipeId = recipeId,\n\t\tschemaVersion = SCHEMA_VERSION,\n\t\twear01 = 0,''',
+              '''function MaterialDNA.defaultState(recipeId: MaterialId, recipeRevision: number): MaterialState\n\tlocal state: MaterialState = {\n\t\trecipeId = recipeId,\n\t\tschemaVersion = SCHEMA_VERSION,\n\t\trecipeRevision = recipeRevision,\n\t\twear01 = 0,''')
+
+          catalog = Path("src/shared/Materials/MaterialFixtureCatalog.luau")
+          catalog_text = catalog.read_text()
+          target = "\t\tschemaVersion = MaterialDNA.SchemaVersion,\n"
+          if catalog_text.count(target) != 3:
+              raise SystemExit(f"fixture catalog: expected 3 schema sites, found {catalog_text.count(target)}")
+          catalog.write_text(catalog_text.replace(target, target + "\t\trecipeRevision = 1,\n"))
+
+          tests = "tests/materialdna_contract.luau"
+          replace_once(tests,
+              '''\t\t\tid = "material.v1.test.wallpaper",\n\t\t\tschemaVersion = MaterialDNA.SchemaVersion,\n\t\t\tcoherenceClass = "interior.wallpapered-drywall",''',
+              '''\t\t\tid = "material.v1.test.wallpaper",\n\t\t\tschemaVersion = MaterialDNA.SchemaVersion,\n\t\t\trecipeRevision = 1,\n\t\t\tcoherenceClass = "interior.wallpapered-drywall",''')
+          replace_once(tests,
+              '''\tlocal invalidSchema = makeRecipe()\n\tinvalidSchema.schemaVersion = MaterialDNA.SchemaVersion + 1\n\tlocal schemaResult = MaterialDNA.validateRecipe(invalidSchema)\n\texpect(\n\t\t"unknown schema rejected",\n\t\tnot schemaResult.ok and containsError(schemaResult, "schemaVersion must be"),\n\t\ttable.concat(schemaResult.errors, "; ")\n\t)\n''',
+              '''\tlocal invalidSchema = makeRecipe()\n\tinvalidSchema.schemaVersion = MaterialDNA.SchemaVersion + 1\n\tlocal schemaResult = MaterialDNA.validateRecipe(invalidSchema)\n\texpect(\n\t\t"unknown schema rejected",\n\t\tnot schemaResult.ok and containsError(schemaResult, "schemaVersion must be"),\n\t\ttable.concat(schemaResult.errors, "; ")\n\t)\n\n\tlocal invalidRevision = makeRecipe()\n\tinvalidRevision.recipeRevision = 0\n\tlocal revisionResult = MaterialDNA.validateRecipe(invalidRevision)\n\texpect(\n\t\t"non-positive recipe revision rejected",\n\t\tnot revisionResult.ok and containsError(revisionResult, "recipeRevision"),\n\t\ttable.concat(revisionResult.errors, "; ")\n\t)\n''')
+          replace_once(tests,
+              '''\tlocal state = MaterialDNA.defaultState("material.v1.test.wallpaper")\n\tlocal stateMutation = pcall(function()''',
+              '''\tlocal revisionOne = makeRecipe()\n\tlocal state = MaterialDNA.defaultState(revisionOne.id, revisionOne.recipeRevision)\n\tlocal stateMutation = pcall(function()''')
+          replace_once(tests,
+              '''\tlocal stateResult = MaterialDNA.validateState(state)\n\texpect("mutated state remains valid", stateResult.ok, table.concat(stateResult.errors, "; "))\n\n\tlocal invalidState: any = {''',
+              '''\tlocal stateResult = MaterialDNA.validateState(state)\n\texpect("mutated state remains valid", stateResult.ok, table.concat(stateResult.errors, "; "))\n\tlocal matchingStateResult = MaterialDNA.validateStateForRecipe(revisionOne, state)\n\texpect(\n\t\t"state matches its exact recipe revision",\n\t\tmatchingStateResult.ok,\n\t\ttable.concat(matchingStateResult.errors, "; ")\n\t)\n\n\tlocal revisionTwo = makeRecipe()\n\trevisionTwo.recipeRevision = 2\n\trevisionTwo.finish.roughness01 = 0.71\n\tlocal revisionTwoResult = MaterialDNA.validateRecipe(revisionTwo)\n\texpect("second content revision accepted", revisionTwoResult.ok, table.concat(revisionTwoResult.errors, "; "))\n\tlocal mismatchedRevisionResult = MaterialDNA.validateStateForRecipe(revisionTwo, state)\n\texpect(\n\t\t"same material ID cannot confuse state across content revisions",\n\t\tnot mismatchedRevisionResult.ok and containsError(mismatchedRevisionResult, "recipeRevision must match"),\n\t\ttable.concat(mismatchedRevisionResult.errors, "; ")\n\t)\n\n\tlocal invalidState: any = {''')
+          replace_once(tests,
+              '''\t\trecipeId = "material.v1.test.wallpaper",\n\t\tschemaVersion = MaterialDNA.SchemaVersion,\n\t\twear01 = 0.2,''',
+              '''\t\trecipeId = "material.v1.test.wallpaper",\n\t\tschemaVersion = MaterialDNA.SchemaVersion,\n\t\trecipeRevision = 1,\n\t\twear01 = 0.2,''')
+          replace_once(tests,
+              '''\t\texpect(\n\t\t\t`production fixture {fixtureName} validates`,\n\t\t\tfixtureResult.ok,\n\t\t\ttable.concat(fixtureResult.errors, "; ")\n\t\t)''',
+              '''\t\texpect(\n\t\t\t`production fixture {fixtureName} validates`,\n\t\t\tfixtureResult.ok,\n\t\t\ttable.concat(fixtureResult.errors, "; ")\n\t\t)\n\t\texpect(\n\t\t\t`production fixture {fixtureName} has locked content revision`,\n\t\t\tfixture.recipeRevision == 1,\n\t\t\ttostring(fixture.recipeRevision)\n\t\t)''')
+
+          docs = "Docs/MATERIAL_DNA_CONTRACT.md"
+          replace_once(docs,
+              '''`MaterialState` is intentionally separate and mutable. It carries runtime/durable deltas such as wear, damage, wetness, and soil. Representation demotion/persistence should capture state without modifying the immutable recipe.''',
+              '''`MaterialState` is intentionally separate and mutable. It carries runtime/durable deltas such as wear, damage, wetness, and soil plus the exact `recipeId + recipeRevision` those deltas belong to. `validateStateForRecipe` rejects state from a different semantic material or content revision. Representation demotion/persistence should capture state without modifying the immutable recipe.''')
+          replace_once(docs,
+              '''`MaterialDNA.SchemaVersion` is currently `1`. Unknown schema versions are rejected. Changing the meaning/shape of established recipe data is a schema migration, not an unversioned refactor. Already-resolved world truth must never silently reinterpret an old recipe under a new schema.''',
+              '''`MaterialDNA.SchemaVersion` is currently `1`. Unknown schema versions are rejected. `recipeRevision` is a separate positive integer for canonical content changes that keep the same schema and semantic material ID. Changing the meaning/shape of established recipe data is a schema migration; changing established recipe values requires a new recipe revision. Persisted mutable state records that exact revision so already-resolved world truth cannot silently reinterpret old deltas under newer material content.''')
+          PY
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Format changed Luau
+        run: stylua src/shared/Materials/MaterialDNA.luau src/shared/Materials/MaterialFixtureCatalog.luau tests/materialdna_contract.luau
+
+      - name: Remove temporary workflow and commit
+        shell: bash
+        run: |
+          git rm .github/workflows/apply-materialdna-revision-74.yml
+          git config user.name "unrendered-ci"
+          git config user.email "actions@users.noreply.github.com"
+          git add Docs/MATERIAL_DNA_CONTRACT.md src/shared/Materials/MaterialDNA.luau src/shared/Materials/MaterialFixtureCatalog.luau tests/materialdna_contract.luau
+          git commit -m "fix(materials): version canonical recipe content"
+          git push
