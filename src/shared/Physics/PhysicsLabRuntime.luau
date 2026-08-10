@@ -61,7 +61,10 @@ function PhysicsLabRuntime.new(recipe: Recipe): Runtime
 	for _, entityRecipe in ipairs(recipe.entities) do
 		local record = entityRecipe.entity
 		local registered, duplicate = registry.register(record)
-		assert(registered, `duplicate Physics Lab WorldEntityId: {duplicate and duplicate.entityId or record.id}`)
+		assert(
+			registered,
+			`duplicate Physics Lab WorldEntityId: {duplicate and duplicate.entityId or record.id}`
+		)
 		fidelity:register(record.id, record.fidelity)
 		table.insert(entityIds, record.id)
 	end
@@ -130,7 +133,10 @@ function PhysicsLabRuntime.step(
 
 		local committed = self._registry.transitionRegistered(entityId, toLevel, capturedState)
 		assert(committed.fidelity == preview.fidelity, "Physics Lab transition commit fidelity mismatch")
-		assert(committed.stateRevision == preview.stateRevision, "Physics Lab transition commit state mismatch")
+		assert(
+			committed.stateRevision == preview.stateRevision,
+			"Physics Lab transition commit state mismatch"
+		)
 		assert(
 			committed.representationRevision == preview.representationRevision,
 			"Physics Lab transition commit representation mismatch"
