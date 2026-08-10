@@ -25,19 +25,17 @@ local function componentsVolumetricallyOverlap(left, right)
 		left.dimensionsM.x,
 		right.localPositionM.x,
 		right.dimensionsM.x
+	) and overlapsStrictlyOnAxis(
+		left.localPositionM.y,
+		left.dimensionsM.y,
+		right.localPositionM.y,
+		right.dimensionsM.y
+	) and overlapsStrictlyOnAxis(
+		left.localPositionM.z,
+		left.dimensionsM.z,
+		right.localPositionM.z,
+		right.dimensionsM.z
 	)
-		and overlapsStrictlyOnAxis(
-			left.localPositionM.y,
-			left.dimensionsM.y,
-			right.localPositionM.y,
-			right.dimensionsM.y
-		)
-		and overlapsStrictlyOnAxis(
-			left.localPositionM.z,
-			left.dimensionsM.z,
-			right.localPositionM.z,
-			right.dimensionsM.z
-		)
 end
 
 local function run(): number
@@ -183,7 +181,11 @@ local function run(): number
 	local leaf = componentByKey(door, "leaf")
 	expect(
 		"door uses jamb/header construction instead of a solid frame slab",
-		hingeJamb ~= nil and strikeJamb ~= nil and header ~= nil and leaf ~= nil and componentByKey(door, "frame") == nil
+		hingeJamb ~= nil
+			and strikeJamb ~= nil
+			and header ~= nil
+			and leaf ~= nil
+			and componentByKey(door, "frame") == nil
 	)
 
 	if hingeJamb ~= nil and strikeJamb ~= nil and header ~= nil and leaf ~= nil then
@@ -218,7 +220,10 @@ local function run(): number
 	for _, component in ipairs(door.components) do
 		authoredDoorMass += component.massKg
 	end
-	expect("door component masses preserve the authored total mass", math.abs(authoredDoorMass - door.massKg) < 1e-9)
+	expect(
+		"door component masses preserve the authored total mass",
+		math.abs(authoredDoorMass - door.massKg) < 1e-9
+	)
 
 	return failures
 end
