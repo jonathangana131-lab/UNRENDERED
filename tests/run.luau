@@ -1,5 +1,7 @@
 local process = require("@lune/process")
 
+require("./object_genome")
+
 local failures = 0
 
 local function expectEqual(name, actual, expected)
