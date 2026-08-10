@@ -46,6 +46,19 @@ local function run(): number
 		resolved.recipeFingerprint == replay.recipeFingerprint
 	)
 
+	local resolvedReproKey = ResolvedRegionRecipe.reproKey(resolved)
+	local replayReproKey = ResolvedRegionRecipe.reproKey(replay)
+	expect("Physics Lab resolved repro key replays exactly", resolvedReproKey == replayReproKey)
+	expect(
+		"Physics Lab repro key carries exact resolved fingerprint",
+		string.find(resolvedReproKey, resolved.recipeFingerprint, 1, true) ~= nil
+	)
+	expect(
+		"Physics Lab repro key carries canonical WorldId and RegionId",
+		string.find(resolvedReproKey, resolved.worldId, 1, true) ~= nil
+			and string.find(resolvedReproKey, resolved.regionId, 1, true) ~= nil
+	)
+
 	local allOriginsBound = true
 	for _, entityRecipe in ipairs(first.entities) do
 		if
@@ -63,6 +76,10 @@ local function run(): number
 	expect(
 		"Physics Lab resolved truth survives canonical round trip",
 		ResolvedRegionRecipe.equal(resolved, restored)
+	)
+	expect(
+		"Physics Lab repro key survives canonical round trip",
+		ResolvedRegionRecipe.reproKey(restored) == resolvedReproKey
 	)
 
 	local mutationAccepted = pcall(function()
