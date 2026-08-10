@@ -20,7 +20,7 @@ local lab = assert(Harness.get(), "Physics Lab bootstrap handle is missing")
 print(HttpService:JSONEncode(Validation.capture(lab.model)))
 ```
 
-The snapshot is source-owned evidence. It includes lab/world/region identity, the exact resolved-region fingerprint and repro key, scoped Instance/resource counts, and the full physical envelope. `Validation.compare()` rejects snapshots from different canonical resolved truth before producing a delta.
+The snapshot is source-owned evidence. It includes lab/world/region identity, the exact resolved-region fingerprint and repro key, authoritative entity/fidelity summary counts, a deterministic represented-WorldEntity inventory (`id`, `fidelity`, `recipeKey`), scoped Instance/resource counts, and the full physical envelope. `Validation.compare()` rejects snapshots from different canonical resolved truth before producing deltas/reports; partial demotions remain measurable, while complete rebuilds can additionally require an exact entity inventory match.
 
 ## Exact evidence identity
 
@@ -98,7 +98,7 @@ The printed line is only a candidate observation. Record the before/after author
 
 ## Whole-lab teardown/rebuild envelope
 
-This procedure uses the harness rather than deleting Workspace Instances. It proves deterministic rebuild identity/count/envelope behavior at checkpoints 1, 5, 10 and 20.
+This procedure uses the harness rather than deleting Workspace Instances. It proves deterministic rebuild identity/entity-inventory/count/envelope behavior at checkpoints 1, 5, 10 and 20.
 
 ```luau
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -123,6 +123,7 @@ for cycle = 1, 20 do
     assert(comparison.delta.attachments == 0, "Attachment count drifted")
     assert(comparison.delta.constraints == 0, "Constraint count drifted")
     assert(comparison.delta.joints == 0, "joint count drifted")
+    assert(comparison.entities.ok, comparison.entities.reason or "WorldEntity inventory drifted")
     assert(comparison.envelope.ok, comparison.envelope.reason or "lab envelope drifted")
 
     if checkpoints[cycle] then
@@ -134,6 +135,8 @@ for cycle = 1, 20 do
     end
 end
 ```
+
+The entity-inventory assertion catches rebuilds that preserve the same aggregate Instance totals and physical bounds but silently swap a represented WorldEntity ID, recipe key, or fidelity. `Validation.compare()` still returns a non-OK entity report for a deliberate partial demotion instead of rejecting the snapshot as cross-truth; only complete rebuild checkpoints should require `comparison.entities.ok` / `Validation.assertSameEntityInventory`.
 
 These zero deltas are an exact-rebuild check for this deterministic shell, not a permanent project-wide resource budget. If a later intentionally versioned lab recipe changes its physical content, establish a new baseline for that exact recipe identity instead of weakening cross-truth comparison.
 
