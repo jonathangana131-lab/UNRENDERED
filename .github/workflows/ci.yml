@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, agent/core/3-deterministic-contract-a9f3]
   pull_request:
 
 permissions:
