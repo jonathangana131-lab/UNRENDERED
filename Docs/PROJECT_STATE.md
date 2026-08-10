@@ -57,22 +57,21 @@ Exit evidence:
 
 ## Hero Gate foundations
 
-### #9 — First-observation lock / resolved-region recipe: complete via #163
-The plain/versioned `ResolvedRegionRecipe` boundary is landed and post-merge `main` CI is green.
+### #9 — First-observation lock / resolved-region recipe: post-merge identity repair active
+#163 landed the plain/versioned first-observation, exact-content fingerprint, explicit migration, and immutable generated-base semantics. A post-merge audit found one canonical identity defect: v1 derives `regionId` from `worldSeedRef + RegionAddress`, conflating conceptual `WorldId` with generation-seed provenance.
 
-Landed direction:
-- deterministic potential -> canonical observed truth stays independent of Workspace serialization,
-- first meaningful observation locks recipe/version truth,
-- reconstruction equality/repro and v1 identity/fingerprint goldens are testable,
-- later generator output cannot silently rewrite established observed truth,
-- generator-version migration is explicit rather than automatic,
-- mutable deltas/runtime representation remain outside the immutable generated base.
+Required repair direction:
+- stable regional identity is `WorldId + canonical RegionAddress`,
+- `worldSeedRef` remains separate generation provenance and exact recipe content,
+- the compatibility correction is explicit/versioned; do not silently rewrite the v1 fingerprint law,
+- first-observation/content-seal/migration/no-embedded-delta guarantees from #163 must remain intact,
+- no persistence/worldgen/#10 scope expansion.
 
-Do not open competing #9 implementations. Any future contract change must be a narrowly justified repair/migration with compatibility evidence.
+Until this repair lands, #10 may continue lab realization, physics, diagnostics, lifecycle evidence, and Studio validation, but must not bind a permanent region identity or repro contract to the seed-derived v1 RegionId.
 
 ## Unlocked Hero Gate
 
-Finish this foundation before broadening into planned P1 systems.
+Finish these foundations before broadening into planned P1 systems.
 
 ### #10 — Production-contract Physics Lab
 Build the permanent test/lab shell using the landed WorldEntity, Fidelity, MaterialDNA, ObjectGenome, and resolved-region contracts. This is not permission for ad-hoc gameplay scripts or a competing framework.
@@ -84,11 +83,11 @@ Required direction:
 - development diagnostics for IDs/fidelity state,
 - clear Studio validation/repro instructions,
 - keep Roblox Instances as physical representation, never canonical world state,
-- consume the landed #9 resolved-region identity boundary rather than minting a competing permanent region identity formula.
+- after the #9 identity repair lands, consume that corrected resolved-region boundary rather than minting a competing permanent region identity formula.
 
 ## Hero Gate exit direction
 
-Before opening broader content, prove that #10 uses the Wave-1 and landed #9 contracts without replacing them. Strike-team work should deepen #10 through tests, Studio/physics evidence, diagnostics, performance, integration and Reality-Grade review.
+Before opening broader content, prove that #10 uses the Wave-1 and corrected #9 contracts without replacing them. Strike-team work should deepen #10 through tests, Studio/physics evidence, diagnostics, performance, integration and Reality-Grade review.
 
 After the lab foundation is stable, the first Reality-Grade Hero Features should be **door, chair, and physical player movement**, not a giant procedural map.
 
@@ -106,7 +105,7 @@ Workers may inspect/review/decompose them, but should not build those major syst
 
 ## Architecture migrations
 
-None active.
+- ResolvedRegionRecipe v1 -> v2 identity correction is active under ADR 0003. No persisted v1 migration path exists because persistence remains gated; never infer WorldId from a seed reference.
 
 ## Generation/schema versions
 
@@ -119,10 +118,10 @@ None active.
 
 ## Next critical outcomes
 
-1. #10 becomes a permanent production-contract Physics Lab rather than a disposable demo,
-2. the lab consumes the landed resolved-region boundary instead of inventing a second region identity contract,
-3. the lab proves Wave-1 identity/material/object/fidelity contracts survive real Roblox realization and interaction,
-4. door/chair/physical-player work begins only on those stable foundations,
-5. the first five-minute experience can be improved deeply without replacing its foundations.
+1. land the #9 WorldId/RegionAddress identity repair without regressing first-observation or exact-content guarantees,
+2. #10 becomes a permanent production-contract Physics Lab rather than a disposable demo,
+3. the lab consumes the corrected resolved-region boundary instead of inventing a second region identity contract,
+4. the lab proves Wave-1 identity/material/object/fidelity contracts survive real Roblox realization and interaction,
+5. door/chair/physical-player work begins only on those stable foundations.
 
 Keep this file concise and operational. Git history is the changelog; Project Source is the long-term vision.
