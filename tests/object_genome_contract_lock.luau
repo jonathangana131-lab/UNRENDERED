@@ -61,6 +61,54 @@ local function run(): number
 	keyedAffordances.affordances.debug = keyedAffordances.affordances[1]
 	expect("rejects keyed affordance entries", hasCode(ObjectGenome.inspect(keyedAffordances), "array.shape"))
 
+	expect(
+		"locks local rotation convention",
+		ObjectGenome.LOCAL_ROTATION_CONVENTION == "v1-right-handed-fixed-xyz-degrees"
+	)
+	expect(
+		"locks mechanism axis convention",
+		ObjectGenome.MECHANISM_AXIS_CONVENTION == "v1-object-local-unit-vector"
+	)
+
+	local nonUnitAxis = deepCopy(Fixtures.officeChair)
+	local foundTilt = false
+	for _, mechanism in ipairs(nonUnitAxis.mechanisms) do
+		if mechanism.key == "seat-tilt" then
+			mechanism.axis = { x = 2, y = 0, z = 0 }
+			foundTilt = true
+			break
+		end
+	end
+	expect("fixture exposes seat tilt for axis regression", foundTilt)
+	expect("rejects non-unit mechanism axis", hasCode(ObjectGenome.inspect(nonUnitAxis), "mechanism.axis"))
+
+	local unrotatedBack = deepCopy(Fixtures.officeChair)
+	local foundBack = false
+	for _, component in ipairs(unrotatedBack.components) do
+		if component.key == "back" then
+			component.localRotationDeg = { x = 0, y = 0, z = 0 }
+			foundBack = true
+			break
+		end
+	end
+	expect("fixture exposes non-cubic back for rotation regression", foundBack)
+	expect(
+		"unrotated back remains inside object envelope",
+		not hasCode(ObjectGenome.inspect(unrotatedBack), "component.outside_bounds")
+	)
+
+	local rotatedBack = deepCopy(unrotatedBack)
+	for _, component in ipairs(rotatedBack.components) do
+		if component.key == "back" then
+			component.localRotationDeg = { x = 0, y = 90, z = 0 }
+			break
+		end
+	end
+	expect(
+		"rotation-aware bounds reject back extending outside envelope",
+		hasCode(ObjectGenome.inspect(rotatedBack), "component.outside_bounds")
+	)
+
 	local fixtureCases = {
 		{ name = "office chair", genome = Fixtures.officeChair },
 		{ name = "office table", genome = Fixtures.officeTable },
