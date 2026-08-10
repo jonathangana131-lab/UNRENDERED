@@ -46,12 +46,18 @@ local function run(): number
 	expect("runtime rejects committed fidelity transition without representation observer", not accepted)
 	expect("missing observer is rejected before demotion capture side effects", captureCalls == 0)
 	expect("missing observer preserves WorldEntity fidelity", after.fidelity == before.fidelity)
-	expect("missing observer preserves WorldEntity state revision", after.stateRevision == before.stateRevision)
+	expect(
+		"missing observer preserves WorldEntity state revision",
+		after.stateRevision == before.stateRevision
+	)
 	expect(
 		"missing observer preserves WorldEntity representation revision",
 		after.representationRevision == before.representationRevision
 	)
-	expect("missing observer preserves FidelityManager observed fidelity", runtime:getFidelity(entityId) == before.fidelity)
+	expect(
+		"missing observer preserves FidelityManager observed fidelity",
+		runtime:getFidelity(entityId) == before.fidelity
+	)
 
 	runtime:dispose()
 	return failures
