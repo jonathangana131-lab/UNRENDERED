@@ -957,51 +957,80 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		end
 	end
 
+	local supportVisitState: { [string]: number } = {}
+	local cycleEdgesReported: { [string]: boolean } = {}
+	local function detectSupportCycles(componentKey: string): ()
+		local visitState = supportVisitState[componentKey]
+		if visitState == 2 then
+			return
+		end
+		if visitState == 1 then
+			return
+		end
+
+		supportVisitState[componentKey] = 1
+		local component = componentsByKey[componentKey]
+		if component ~= nil and type(component.supportKeys) == "table" then
+			for _, supportKey in ipairs(component.supportKeys) do
+				if supportKey ~= componentKey and componentsByKey[supportKey] ~= nil then
+					local supportState = supportVisitState[supportKey]
+					if supportState == 1 then
+						local edgeKey = componentKey .. "->" .. supportKey
+						if not cycleEdgesReported[edgeKey] then
+							addIssue(
+								issues,
+								"component.support_cycle",
+								`components.{componentKey}`,
+								"support graph contains a cycle"
+							)
+							cycleEdgesReported[edgeKey] = true
+						end
+					elseif supportState ~= 2 then
+						detectSupportCycles(supportKey)
+					end
+				end
+			end
+		end
+		supportVisitState[componentKey] = 2
+	end
+
+	for componentKey in pairs(componentsByKey) do
+		detectSupportCycles(componentKey)
+	end
+
 	local supportMemo: { [string]: boolean } = {}
-	local visiting: { [string]: boolean } = {}
-	local cycleReported: { [string]: boolean } = {}
+	local supportVisiting: { [string]: boolean } = {}
 	local function reachesExternalSupport(componentKey: string): boolean
 		local memoized = supportMemo[componentKey]
 		if memoized ~= nil then
 			return memoized
-		end
-		if visiting[componentKey] then
-			if not cycleReported[componentKey] then
-				addIssue(
-					issues,
-					"component.support_cycle",
-					`components.{componentKey}`,
-					"support graph contains a cycle"
-				)
-				cycleReported[componentKey] = true
-			end
-			return false
 		end
 
 		local component = componentsByKey[componentKey]
 		if component == nil then
 			return false
 		end
-		visiting[componentKey] = true
 		if component.externalSupport ~= "none" and EXTERNAL_SUPPORTS[component.externalSupport] then
-			visiting[componentKey] = nil
 			supportMemo[componentKey] = true
 			return true
 		end
+		if supportVisiting[componentKey] then
+			return false
+		end
 
+		supportVisiting[componentKey] = true
+		local reachesSupport = false
 		if type(component.supportKeys) == "table" then
 			for _, supportKey in ipairs(component.supportKeys) do
 				if componentsByKey[supportKey] ~= nil and reachesExternalSupport(supportKey) then
-					visiting[componentKey] = nil
-					supportMemo[componentKey] = true
-					return true
+					reachesSupport = true
+					break
 				end
 			end
 		end
-
-		visiting[componentKey] = nil
-		supportMemo[componentKey] = false
-		return false
+		supportVisiting[componentKey] = nil
+		supportMemo[componentKey] = reachesSupport
+		return reachesSupport
 	end
 
 	for componentKey in pairs(componentsByKey) do
