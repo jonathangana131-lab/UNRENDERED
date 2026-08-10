@@ -68,8 +68,10 @@ return function(): number
 	expectEqual("at-most request caps policy result", decision.level, "F1")
 	expectEqual("cap request reason preserved", decision.reason, "explicit-budget-cap")
 
-	local repeatA = FidelityManager.evaluate(inputs({ distanceStuds = 17, observationStrength = 0.8 }), nil, "F3")
-	local repeatB = FidelityManager.evaluate(inputs({ distanceStuds = 17, observationStrength = 0.8 }), nil, "F3")
+	local repeatA =
+		FidelityManager.evaluate(inputs({ distanceStuds = 17, observationStrength = 0.8 }), nil, "F3")
+	local repeatB =
+		FidelityManager.evaluate(inputs({ distanceStuds = 17, observationStrength = 0.8 }), nil, "F3")
 	expectEqual("policy level deterministic for identical input", repeatA.level, repeatB.level)
 	expectEqual("policy reason deterministic for identical input", repeatA.reason, repeatB.reason)
 
