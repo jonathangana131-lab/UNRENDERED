@@ -1,4 +1,5 @@
 local ObjectGenome = require("../src/shared/Objects/ObjectGenome")
+local ObjectGenomeOwnership = require("../src/shared/Objects/ObjectGenomeOwnership")
 local Fixtures = require("../src/shared/Objects/ObjectGenomeFixtures")
 
 local function deepCopy(value)
@@ -90,6 +91,34 @@ local function run(): number
 	expect(
 		"rejects missing detached-component state",
 		hasCode(ObjectGenome.inspectState(Fixtures.officeChair, missingDetachedState), "state.missing_key")
+	)
+
+	local mutableState = ObjectGenome.defaultState(Fixtures.officeChair)
+	local mutableStateOk = pcall(function()
+		mutableState.componentWear[componentKey] = 0.25
+	end)
+	expect(
+		"keeps ObjectState intentionally mutable",
+		mutableStateOk
+			and mutableState.componentWear[componentKey] == 0.25
+			and ObjectGenome.inspectState(Fixtures.officeChair, mutableState).ok
+	)
+
+	local sourceGenome = deepCopy(Fixtures.officeChair)
+	local sealedGenome = ObjectGenomeOwnership.seal(sourceGenome)
+	local sealedMass = sealedGenome.components[1].massKg
+	sourceGenome.components[1].massKg = sealedMass + 1
+	expect(
+		"ownership boundary defensively copies source recipe",
+		sealedGenome.components[1].massKg == sealedMass
+	)
+
+	local nestedMutationOk = pcall(function()
+		Fixtures.officeChair.components[1].massKg = sealedMass + 1
+	end)
+	expect(
+		"production fixture nested recipe is immutable",
+		not nestedMutationOk and Fixtures.officeChair.components[1].massKg == sealedMass
 	)
 
 	return failures
