@@ -65,6 +65,7 @@ local function run(): number
 		expect(fixture.name .. " repeat identity", identity == ObjectGenome.identityKey(fixture.genome))
 
 		local state = ObjectGenome.defaultState(fixture.genome)
+		expect(fixture.name .. " state binds exact genome identity", state.genomeId == identity)
 		expect(
 			fixture.name .. " default mutable state validates",
 			ObjectGenome.inspectState(fixture.genome, state).ok
@@ -130,6 +131,20 @@ local function run(): number
 	expect(
 		"rejects mutable state for unknown component",
 		hasCode(ObjectGenome.inspectState(Fixtures.filingCabinet, unknownStateKey), "state.unknown_key")
+	)
+
+	local originalGenome = Fixtures.officeChair
+	local revisedGenome = deepCopy(originalGenome)
+	revisedGenome.familyVersion += 1
+	local originalState = ObjectGenome.defaultState(originalGenome)
+	expect("same-shape revised genome remains valid", ObjectGenome.inspect(revisedGenome).ok)
+	expect(
+		"different genome revision has different stable identity",
+		ObjectGenome.identityKey(revisedGenome) ~= originalState.genomeId
+	)
+	expect(
+		"rejects state bound to different genome revision",
+		hasCode(ObjectGenome.inspectState(revisedGenome, originalState), "state.genome_id")
 	)
 
 	local invalidForAssert = deepCopy(Fixtures.officeTable)
