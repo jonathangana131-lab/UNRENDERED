@@ -30,20 +30,22 @@ local function run(): number
 	local captureCalls = 0
 
 	-- Establish the default demotion hold without committing a transition.
-	runtime:step(entityId, noDemand, 0, function(record)
+	local held = runtime:step(entityId, noDemand, 0, function(record)
+		captureCalls += 1
+		return record.persistentState
+	end)
+	expect("missing observer may establish demotion hold without committing", held.blockedReason == "hold")
+
+	local blocked, after = runtime:step(entityId, noDemand, 2, function(record)
 		captureCalls += 1
 		return record.persistentState
 	end)
 
-	local accepted = pcall(function()
-		runtime:step(entityId, noDemand, 2, function(record)
-			captureCalls += 1
-			return record.persistentState
-		end)
-	end)
-	local after = runtime:getRecord(entityId)
-
-	expect("runtime rejects committed fidelity transition without representation observer", not accepted)
+	expect("missing observer blocks committed fidelity transition", not blocked.transitioned)
+	expect(
+		"missing observer uses FidelityManager transition-required contract",
+		blocked.blockedReason == "transition-required"
+	)
 	expect("missing observer is rejected before demotion capture side effects", captureCalls == 0)
 	expect("missing observer preserves WorldEntity fidelity", after.fidelity == before.fidelity)
 	expect(
@@ -58,6 +60,23 @@ local function run(): number
 		"missing observer preserves FidelityManager observed fidelity",
 		runtime:getFidelity(entityId) == before.fidelity
 	)
+	expect(
+		"missing observer is observable in bounded runtime diagnostics",
+		runtime:snapshot().fidelity.blockedByMissingTransition == 1
+	)
+
+	local observerCalls = 0
+	local retried, demoted = runtime:step(entityId, noDemand, 2, function(record)
+		captureCalls += 1
+		return record.persistentState
+	end, function(_current, _preview, _reason)
+		observerCalls += 1
+	end)
+	expect("supplying observer can retry the blocked transition", retried.transitioned)
+	expect("retry captures demotion state exactly once", captureCalls == 1)
+	expect("retry observes representation transition exactly once", observerCalls == 1)
+	expect("retry commits WorldEntity fidelity", demoted.fidelity == "F0")
+	expect("retry keeps both fidelity authorities synchronized", runtime:getFidelity(entityId) == "F0")
 
 	runtime:dispose()
 	return failures
