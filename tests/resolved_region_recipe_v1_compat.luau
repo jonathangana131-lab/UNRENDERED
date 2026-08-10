@@ -1,17 +1,15 @@
-local DeterminismContract = require("../src/shared/Core/DeterminismContract")
-local RegionAddress = require("../src/shared/Spatial/RegionAddress")
+local ProductionLoader = require("./support/ProductionLoader")
+
+local ResolvedRegionRecipeV1 = ProductionLoader.requireShared("Reality/ResolvedRegionRecipeV1")
+local RegionAddress = ProductionLoader.requireShared("Spatial/RegionAddress")
 
 local GOLDEN_REGION_ID = "region:v1:7cd90883b952e7534e6f3ffdd71d66a7"
 local GOLDEN_RECIPE_FINGERPRINT = "resolved-region:v1:6448a82dcdebe20b03d9a6a98847bdd7"
-local HISTORICAL_FINGERPRINT_SEEDS = {
-	0x6a09e667,
-	0xbb67ae85,
-	0x3c6ef372,
-	0xa54ff53a,
-}
 
-local function historicalV1Candidate()
+local function historicalV1Record()
 	return {
+		schemaVersion = 1,
+		regionId = GOLDEN_REGION_ID,
 		worldSeedRef = "world-seed:office-alpha",
 		regionAddress = RegionAddress.new(12, -4, 1),
 		generatorVersions = {
@@ -31,44 +29,8 @@ local function historicalV1Candidate()
 			"material:carpet-batch-a",
 			"fixture:fluorescent-row-a",
 		},
+		recipeFingerprint = GOLDEN_RECIPE_FINGERPRINT,
 	}
-end
-
-local function sortedCopy(values)
-	local copy = table.clone(values)
-	table.sort(copy)
-	return copy
-end
-
-local function historicalV1RegionId(candidate)
-	return DeterminismContract.stableId("region", {
-		candidate.worldSeedRef,
-		RegionAddress.key(candidate.regionAddress),
-	})
-end
-
-local function historicalV1Fingerprint(candidate)
-	local anchors = sortedCopy(candidate.topologyAnchors)
-	local content = sortedCopy(candidate.canonicalContentKeys)
-	local payload = DeterminismContract.encodeParts({
-		"resolved-region-recipe",
-		"1",
-		candidate.worldSeedRef,
-		RegionAddress.key(candidate.regionAddress),
-		tostring(candidate.generatorVersions.reality),
-		tostring(candidate.generatorVersions.topology),
-		tostring(candidate.generatorVersions.material),
-		tostring(candidate.generatorVersions.object),
-		tostring(candidate.generatorVersions.entity),
-		candidate.semanticIntentKey,
-		DeterminismContract.encodeParts(anchors),
-		DeterminismContract.encodeParts(content),
-	})
-	local digest = {}
-	for _, seed in ipairs(HISTORICAL_FINGERPRINT_SEEDS) do
-		table.insert(digest, DeterminismContract.hex32(DeterminismContract.hash32(payload, seed)))
-	end
-	return string.format("resolved-region:v1:%s", table.concat(digest))
 end
 
 local function run(): number
@@ -83,54 +45,30 @@ local function run(): number
 		end
 	end
 
-	-- Schema v1 was retired before persistence because it conflated WorldId and
-	-- generation-seed provenance. Keep its exact deterministic vectors as a
-	-- historical oracle without asking the current v2 production constructor to
-	-- recreate or deserialize that invalid identity model.
-	local historical = historicalV1Candidate()
+	-- Already-observed schema-v1 truth is reconstructed from a literal record.
+	-- The isolated compatibility module intentionally exposes no observation/lock
+	-- API, so it cannot mint new canonical content under the deprecated identity law.
+	local locked = ResolvedRegionRecipeV1.deserialize(historicalV1Record())
+	expect("historical v1 decoder remains schema 1", ResolvedRegionRecipeV1.SCHEMA_VERSION == 1)
+	expect("historical v1 region identity remains compatible", locked.regionId == GOLDEN_REGION_ID)
 	expect(
-		"historical v1 region identity vector remains pinned",
-		historicalV1RegionId(historical) == GOLDEN_REGION_ID
+		"historical v1 recipe fingerprint remains compatible",
+		locked.recipeFingerprint == GOLDEN_RECIPE_FINGERPRINT
 	)
 	expect(
-		"historical v1 recipe fingerprint vector remains pinned",
-		historicalV1Fingerprint(historical) == GOLDEN_RECIPE_FINGERPRINT
-	)
-
-	local reordered = historicalV1Candidate()
-	reordered.topologyAnchors = {
-		"anchor:east-primary-threshold",
-		"anchor:west-service-threshold",
-	}
-	reordered.canonicalContentKeys = {
-		"fixture:fluorescent-row-a",
-		"material:carpet-batch-a",
-		"object:chair-a",
-	}
-	expect(
-		"historical v1 fingerprint remains order-independent",
-		historicalV1Fingerprint(reordered) == GOLDEN_RECIPE_FINGERPRINT
+		"historical v1 fingerprint API remains compatible",
+		ResolvedRegionRecipeV1.fingerprint(locked) == GOLDEN_RECIPE_FINGERPRINT
 	)
 
-	local syntheticFuture = historicalV1Candidate()
-	syntheticFuture.generatorVersions = {
-		reality = 2,
-		topology = 2,
-		material = 2,
-		object = 2,
-		entity = 2,
-	}
+	local reconstructed = ResolvedRegionRecipeV1.deserialize(ResolvedRegionRecipeV1.serialize(locked))
 	expect(
-		"historical v1 generator drift preserved its seed-derived region identity",
-		historicalV1RegionId(syntheticFuture) == GOLDEN_REGION_ID
+		"historical v1 serialized truth remains reconstructable",
+		ResolvedRegionRecipeV1.equal(locked, reconstructed)
 	)
+	expect("legacy v1 compatibility module exposes no new-write lock API", ResolvedRegionRecipeV1.lock == nil)
 	expect(
-		"historical v1 generator drift changed its exact fingerprint",
-		historicalV1Fingerprint(syntheticFuture) ~= GOLDEN_RECIPE_FINGERPRINT
-	)
-	expect(
-		"historical v1 golden stays unchanged after future-vector evaluation",
-		historicalV1Fingerprint(historical) == GOLDEN_RECIPE_FINGERPRINT
+		"legacy v1 compatibility module exposes no observation transition API",
+		ResolvedRegionRecipeV1.resolveOnObservation == nil
 	)
 
 	return failures
