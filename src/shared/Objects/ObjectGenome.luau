@@ -1,6 +1,7 @@
 --!strict
 
 local StableId = require(script.Parent.Parent.Core.StableId)
+local MaterialDNA = require(script.Parent.Parent.Materials.MaterialDNA)
 
 export type Vec3 = {
 	x: number,
@@ -678,12 +679,29 @@ local function formatIssues(issues: { ValidationIssue }): string
 	return table.concat(messages, "; ")
 end
 
+local function materialIdentitySignature(value: ObjectGenome): string
+	-- MaterialDNA recipe revisions are independent content versions. Fold the ordered
+	-- exact references into identity so a material retarget cannot preserve genomeId
+	-- even if an author forgets to advance the broader familyVersion.
+	local signature = StableId.fromParts("object-genome-materials", { "v1", "empty" })
+	for index, component in ipairs(value.components) do
+		signature = StableId.fromParts("object-genome-materials", {
+			signature,
+			tostring(index),
+			component.materialKey,
+			tostring(component.materialRecipeVersion),
+		})
+	end
+	return signature
+end
+
 function ObjectGenome.identityParts(value: ObjectGenome): { string }
 	return {
 		tostring(value.schemaVersion),
 		value.familyId,
 		tostring(value.familyVersion),
 		value.variantKey,
+		materialIdentitySignature(value),
 	}
 end
 
@@ -853,20 +871,28 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		if not isNonEmptyString(component.role) then
 			addIssue(issues, "component.role", path .. ".role", "component role required")
 		end
-		if not isSemanticKey(component.materialKey) then
+		local materialKeyValidation = MaterialDNA.validateReference({
+			id = component.materialKey,
+			recipeVersion = 1,
+		})
+		if not materialKeyValidation.ok then
 			addIssue(
 				issues,
 				"component.material_key",
 				path .. ".materialKey",
-				"materialKey must be the stable lowercase MaterialDNA recipe id"
+				"materialKey must satisfy MaterialDNA v2 project id rules"
 			)
 		end
-		if not isPositiveInteger(component.materialRecipeVersion) then
+		local materialRecipeVersionValidation = MaterialDNA.validateReference({
+			id = "material.v1.object-genome-validation-probe",
+			recipeVersion = component.materialRecipeVersion,
+		})
+		if not materialRecipeVersionValidation.ok then
 			addIssue(
 				issues,
 				"component.material_recipe_version",
 				path .. ".materialRecipeVersion",
-				"materialRecipeVersion must be a positive integer"
+				"materialRecipeVersion must satisfy MaterialDNA v2 recipe revision rules"
 			)
 		end
 		if not isPositiveFinite(component.massKg) then

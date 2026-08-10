@@ -1,6 +1,7 @@
 local ProductionLoader = require("./support/ProductionLoader")
 
 local StableId = ProductionLoader.requireShared("Core/StableId")
+local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
 local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
 local Fixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
 
@@ -49,17 +50,17 @@ local function run(): number
 		{
 			name = "office chair",
 			genome = Fixtures.officeChair,
-			identity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",
+			identity = "object-genome:v1:3eb84b8e4e34773f3b23b044f63b9166",
 		},
 		{
 			name = "office table",
 			genome = Fixtures.officeTable,
-			identity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",
+			identity = "object-genome:v1:708d218fae658150bbaa0dfa4436be5d",
 		},
 		{
 			name = "filing cabinet",
 			genome = Fixtures.filingCabinet,
-			identity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",
+			identity = "object-genome:v1:97e4e25c11f73d49300c4ad7bc0a30a2",
 		},
 	}
 
@@ -83,6 +84,13 @@ local function run(): number
 			expect(
 				fixture.name .. " component pins a material recipe revision",
 				component.materialRecipeVersion == 1
+			)
+			expect(
+				fixture.name .. " component reference satisfies production MaterialDNA",
+				MaterialDNA.validateReference({
+					id = component.materialKey,
+					recipeVersion = component.materialRecipeVersion,
+				}).ok
 			)
 		end
 
@@ -142,6 +150,46 @@ local function run(): number
 			and revisedShell.materialRecipeVersion ~= canonicalShell.materialRecipeVersion
 			and ObjectGenome.inspect(revisedMaterial).ok
 	)
+	expect(
+		"material recipe revision mechanically changes canonical genome identity",
+		ObjectGenome.identityKey(revisedMaterial) ~= ObjectGenome.identityKey(Fixtures.filingCabinet)
+	)
+
+	local publishedMaterialRevision = deepCopy(Fixtures.filingCabinet)
+	local publishedShell = findComponent(publishedMaterialRevision, "shell")
+	publishedMaterialRevision.familyVersion += 1
+	if publishedShell ~= nil then
+		publishedShell.materialRecipeVersion += 1
+	end
+	expect(
+		"published material revision with familyVersion advance is valid and changes identity",
+		publishedShell ~= nil
+			and ObjectGenome.inspect(publishedMaterialRevision).ok
+			and ObjectGenome.identityKey(publishedMaterialRevision)
+				~= ObjectGenome.identityKey(Fixtures.filingCabinet)
+	)
+
+	local materialBoundaryCases = {
+		{ name = "slash id", id = "material.v1/reference-probe", recipeVersion = 1 },
+		{ name = "numeric-only id", id = "123", recipeVersion = 1 },
+		{ name = "overlong id", id = "material.v1." .. string.rep("a", 151), recipeVersion = 1 },
+		{ name = "max recipe version", id = "material.v1.reference-probe", recipeVersion = 2147483647 },
+		{ name = "above max recipe version", id = "material.v1.reference-probe", recipeVersion = 2147483648 },
+	}
+	for _, materialCase in ipairs(materialBoundaryCases) do
+		local reference = {
+			id = materialCase.id,
+			recipeVersion = materialCase.recipeVersion,
+		}
+		local expectedReferenceValidity = MaterialDNA.validateReference(reference).ok
+		local boundaryGenome = deepCopy(Fixtures.officeChair)
+		boundaryGenome.components[1].materialKey = reference.id
+		boundaryGenome.components[1].materialRecipeVersion = reference.recipeVersion
+		expect(
+			"ObjectGenome matches MaterialDNA reference boundary: " .. materialCase.name,
+			ObjectGenome.inspect(boundaryGenome).ok == expectedReferenceValidity
+		)
+	end
 
 	local danglingSupport = deepCopy(Fixtures.filingCabinet)
 	danglingSupport.components[2].supportKeys = { "missing-shell" }
