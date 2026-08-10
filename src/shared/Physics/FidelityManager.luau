@@ -37,7 +37,13 @@ export type PersistentState = { [string]: unknown }
 
 export type Adapter = {
 	captureState: (entityId: string, from: Fidelity, to: Fidelity, reason: string) -> PersistentState,
-	transition: (entityId: string, from: Fidelity, target: Fidelity, capturedState: PersistentState?, reason: string) -> (),
+	transition: (
+		entityId: string,
+		from: Fidelity,
+		target: Fidelity,
+		capturedState: PersistentState?,
+		reason: string
+	) -> (),
 }
 
 export type FidelityCounts = {
