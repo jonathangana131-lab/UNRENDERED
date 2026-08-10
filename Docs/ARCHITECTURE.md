@@ -82,6 +82,7 @@ Promotion and demotion preserve domain identity and persistent state.
 - Captured state is recursively checked for plain finite data and defensively copied/frozen. Instance/userdata/function/thread values, metatables, cycles, and non-finite numbers are rejected at the boundary.
 - The domain registry rejects duplicate live IDs, keeps bounded recent duplicate diagnostics, and exposes the current registered record for each identity.
 - Registered lifecycle changes use `captureRegistered` / `transitionRegistered` so the registry lookup advances atomically with the immutable record. The pure `captureState` / `transition` functions remain available for detached records and tests; callers must not use them as a second current-state owner for a registered entity.
+- Registry backing records and diagnostic history are closure-private. Callers can observe snapshots/current records but cannot mutate the registry behind duplicate detection or lifecycle revision boundaries.
 
 The registry is an in-memory identity/lifecycle index and diagnostic guard, not the universe database and not a persistence repository. It owns no fidelity-selection policy: #7 chooses target fidelity and reasons, then applies that decision through the lifecycle boundary.
 
