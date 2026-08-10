@@ -18,6 +18,8 @@ local SCHEMA_ATTRIBUTE = "UNRENDERED_LabSchemaVersion"
 local RECIPE_ATTRIBUTE = "UNRENDERED_LabRecipeKey"
 local WORLD_ATTRIBUTE = "UNRENDERED_WorldId"
 local REGION_ATTRIBUTE = "UNRENDERED_RegionId"
+local RESOLVED_SCHEMA_ATTRIBUTE = "UNRENDERED_ResolvedRegionSchemaVersion"
+local WORLD_SEED_REF_ATTRIBUTE = "UNRENDERED_WorldSeedRef"
 local FINGERPRINT_ATTRIBUTE = "UNRENDERED_ResolvedRegionFingerprint"
 local REPRO_KEY_ATTRIBUTE = "UNRENDERED_ResolvedRegionReproKey"
 local ENTITY_ID_ATTRIBUTE = "UNRENDERED_WorldEntityId"
@@ -37,11 +39,11 @@ local function requiredStringAttribute(root: Instance, name: string): string
 	return value
 end
 
-local function requiredSchemaVersion(root: Instance): number
-	local value = root:GetAttribute(SCHEMA_ATTRIBUTE)
+local function requiredPositiveIntegerAttribute(root: Instance, name: string): number
+	local value = root:GetAttribute(name)
 	assert(
 		type(value) == "number" and value == value and value >= 1 and value % 1 == 0,
-		`Physics Lab validation requires positive integer attribute {SCHEMA_ATTRIBUTE}`
+		`Physics Lab validation requires positive integer attribute {name}`
 	)
 	return value
 end
@@ -53,7 +55,7 @@ end
 local function assertCanonicalRootIdentity(root: Model, recipe: PhysicsLabRecipe.PhysicsLabRecipe): ()
 	assert(root.Name == ROOT_NAME, `Physics Lab validation expected root name {ROOT_NAME}`)
 	assert(
-		requiredSchemaVersion(root) == recipe.schemaVersion,
+		requiredPositiveIntegerAttribute(root, SCHEMA_ATTRIBUTE) == recipe.schemaVersion,
 		"Physics Lab root schema version does not match the canonical recipe"
 	)
 	assert(
@@ -67,6 +69,14 @@ local function assertCanonicalRootIdentity(root: Model, recipe: PhysicsLabRecipe
 	assert(
 		requiredStringAttribute(root, REGION_ATTRIBUTE) == recipe.regionId,
 		"Physics Lab root RegionId does not match the canonical resolved region"
+	)
+	assert(
+		requiredPositiveIntegerAttribute(root, RESOLVED_SCHEMA_ATTRIBUTE) == PhysicsLabRecipe.RESOLVED_REGION.schemaVersion,
+		"Physics Lab root resolved-region schema version does not match canonical truth"
+	)
+	assert(
+		requiredStringAttribute(root, WORLD_SEED_REF_ATTRIBUTE) == PhysicsLabRecipe.WORLD_SEED_REF,
+		"Physics Lab root world-seed provenance does not match canonical truth"
 	)
 
 	local expectedFingerprint = ResolvedRegionRecipe.fingerprint(PhysicsLabRecipe.RESOLVED_REGION)
@@ -255,10 +265,12 @@ local function captureInternal(root: Instance, requireComplete: boolean): Snapsh
 
 	local snapshot: Snapshot = table.freeze({
 		rootName = root.Name,
-		labSchemaVersion = requiredSchemaVersion(root),
+		labSchemaVersion = requiredPositiveIntegerAttribute(root, SCHEMA_ATTRIBUTE),
 		labRecipeKey = requiredStringAttribute(root, RECIPE_ATTRIBUTE),
 		worldId = requiredStringAttribute(root, WORLD_ATTRIBUTE),
 		regionId = requiredStringAttribute(root, REGION_ATTRIBUTE),
+		resolvedRegionSchemaVersion = requiredPositiveIntegerAttribute(root, RESOLVED_SCHEMA_ATTRIBUTE),
+		worldSeedRef = requiredStringAttribute(root, WORLD_SEED_REF_ATTRIBUTE),
 		resolvedRegionFingerprint = requiredStringAttribute(root, FINGERPRINT_ATTRIBUTE),
 		resolvedRegionReproKey = requiredStringAttribute(root, REPRO_KEY_ATTRIBUTE),
 		counts = table.freeze(counts),
