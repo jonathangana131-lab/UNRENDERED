@@ -73,11 +73,18 @@ local REGION_ADDRESS: ResolvedRegionRecipe.RegionAddressData = table.freeze({
 	z = 0,
 	layer = 0,
 })
+local LOCKED_GENERATOR_VERSIONS: ResolvedRegionRecipe.GeneratorVersions = table.freeze({
+	reality = 1,
+	topology = 1,
+	material = 1,
+	object = 1,
+	entity = 1,
+})
 local RESOLVED_REGION = ResolvedRegionRecipe.lock({
 	worldId = WORLD_ID,
 	worldSeedRef = PhysicsLabRecipe.WORLD_SEED_REF,
 	regionAddress = REGION_ADDRESS,
-	generatorVersions = ResolvedRegionRecipe.currentGeneratorVersions(),
+	generatorVersions = LOCKED_GENERATOR_VERSIONS,
 	semanticIntentKey = "physics-lab.hero-gate",
 	topologyAnchors = {
 		"character-spawn-anchor",
@@ -109,6 +116,7 @@ local RESOLVED_REGION = ResolvedRegionRecipe.lock({
 local REGION_ID = RESOLVED_REGION.regionId
 
 PhysicsLabRecipe.WORLD_ID = WORLD_ID
+PhysicsLabRecipe.RESOLVED_GENERATOR_VERSIONS = LOCKED_GENERATOR_VERSIONS
 PhysicsLabRecipe.RESOLVED_REGION = RESOLVED_REGION
 
 local WALL_MATERIAL: MaterialReference = table.freeze({
