@@ -22,7 +22,7 @@ local function run(): number
 	local function makeCandidate()
 		return {
 			worldId = worldId,
-			worldSeed = "world-seed:shared-canonical-world",
+			worldSeedRef = "world-seed:shared-canonical-world",
 			regionAddress = { x = 0, z = 0, layer = 0 },
 			generatorVersions = {
 				reality = 1,
@@ -52,9 +52,9 @@ local function run(): number
 	)
 
 	local wrongSeed = makeCandidate()
-	wrongSeed.worldSeed = "world-seed:contradictory-global-truth"
+	wrongSeed.worldSeedRef = "world-seed:contradictory-global-truth"
 	expect(
-		"first-observation relock rejects a contradictory world seed",
+		"first-observation relock rejects a contradictory world seed reference",
 		rejects(function()
 			ResolvedRegionRecipe.lock(locked, wrongSeed)
 		end)
@@ -76,7 +76,7 @@ local function run(): number
 				ResolvedRegionRecipe.runMigration(plan, function(source, versions)
 					return {
 						worldId = source.worldId,
-						worldSeed = "world-seed:contradictory-global-truth",
+						worldSeedRef = "world-seed:contradictory-global-truth",
 						regionAddress = RegionAddress.toPlainData(source.regionAddress),
 						generatorVersions = versions,
 						semanticIntentKey = source.semanticIntentKey,
