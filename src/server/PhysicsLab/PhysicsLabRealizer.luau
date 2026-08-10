@@ -17,7 +17,6 @@ local STUDS_PER_METER = 1 / 0.28
 
 export type RealizedLab = {
 	model: Model,
-	runtime: PhysicsLabRuntime.Runtime,
 	step: (
 		entityId: string,
 		inputs: FidelityManager.PolicyInputs,
@@ -249,7 +248,8 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 
 	-- Establish and validate canonical domain authority before allocating any
 	-- physical representation. From this point onward, Instances are disposable
-	-- views of the runtime-owned WorldEntity records.
+	-- views of the runtime-owned WorldEntity records. Keep runtime ownership local
+	-- so callers cannot bypass representation-aware transition hooks.
 	local runtime = PhysicsLabRuntime.new(recipe)
 	local model = Instance.new("Model")
 	local representations: RepresentationMap = {}
@@ -383,7 +383,6 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 
 	return table.freeze({
 		model = model,
-		runtime = runtime,
 		step = step,
 		getRecord = getRecord,
 		isRepresented = isRepresented,
