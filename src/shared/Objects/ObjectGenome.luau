@@ -210,11 +210,7 @@ local function vectorMagnitude(value: any): number
 	return math.sqrt(value.x * value.x + value.y * value.y + value.z * value.z)
 end
 
-local function validateDenseArray(
-	issues: { ValidationIssue },
-	path: string,
-	value: any
-): (boolean, number)
+local function validateDenseArray(issues: { ValidationIssue }, path: string, value: any): (boolean, number)
 	if type(value) ~= "table" then
 		addIssue(issues, "array.shape", path, "collection must be a dense 1-based array")
 		return false, 0
@@ -237,12 +233,7 @@ local function validateDenseArray(
 	end
 
 	if not validShape then
-		addIssue(
-			issues,
-			"array.shape",
-			path,
-			"collection must contain only contiguous 1-based integer keys"
-		)
+		addIssue(issues, "array.shape", path, "collection must contain only contiguous 1-based integer keys")
 		return false, 0
 	end
 
@@ -564,11 +555,7 @@ function ObjectGenome.inspect(value: any): ValidationResult
 	end
 
 	for index, component in ipairs(value.components) do
-		if
-			type(component) == "table"
-			and supportArraysValid[index]
-			and isSemanticKey(component.key)
-		then
+		if type(component) == "table" and supportArraysValid[index] and isSemanticKey(component.key) then
 			local seenSupport: { [string]: boolean } = {}
 			for supportIndex, supportKey in ipairs(component.supportKeys) do
 				local path = `components[{index}].supportKeys[{supportIndex}]`
