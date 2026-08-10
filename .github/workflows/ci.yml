@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - agent/integration/7-fidelity-manager-sol7a2d
   pull_request:
 
 permissions:
