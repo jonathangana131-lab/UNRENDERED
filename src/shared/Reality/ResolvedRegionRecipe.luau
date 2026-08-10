@@ -59,6 +59,19 @@ export type ResolvedRegionRecipe = {
 
 export type PlainData = { [string]: unknown }
 
+export type SerializedRecipe = {
+	schemaVersion: number,
+	regionId: string,
+	fingerprint: string,
+	worldId: string,
+	worldSeedRef: string,
+	regionAddress: RegionAddress,
+	generatorVersions: GeneratorVersions,
+	semanticIntent: string,
+	topologyAnchorKeys: { string },
+	canonicalContentKeys: { string },
+}
+
 export type RegionDelta = {
 	baseSchemaVersion: number,
 	baseRegionId: string,
@@ -439,7 +452,7 @@ function ResolvedRegionRecipe.resolveFirstObservation(
 	return canonicalExisting
 end
 
-function ResolvedRegionRecipe.serialize(recipe: ResolvedRegionRecipe): PlainData
+function ResolvedRegionRecipe.serialize(recipe: ResolvedRegionRecipe): SerializedRecipe
 	local canonical = ResolvedRegionRecipe.deserialize(recipe :: any)
 	return table.freeze({
 		schemaVersion = canonical.schemaVersion,
@@ -566,7 +579,7 @@ end
 function ResolvedRegionRecipe.assertDeltaMatchesBase(recipe: ResolvedRegionRecipe, delta: RegionDelta): ()
 	local canonicalRecipe = ResolvedRegionRecipe.deserialize(recipe :: any)
 	assert(type(delta) == "table", "delta must be a table")
-	assert(getmetatable(delta) == nil, "delta must not have a metatable")
+	assert(getmetatable(delta :: any) == nil, "delta must not have a metatable")
 	assert(delta.baseSchemaVersion == canonicalRecipe.schemaVersion, "delta base schema version mismatch")
 	assert(delta.baseRegionId == canonicalRecipe.regionId, "delta base region mismatch")
 	assert(delta.baseFingerprint == canonicalRecipe.fingerprint, "delta base fingerprint mismatch")
