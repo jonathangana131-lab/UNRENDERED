@@ -1,0 +1,49 @@
+name: MaterialDNA Format Repair
+
+on:
+  push:
+    branches:
+      - agent/temp/5-materialdna-format-sol56d2
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/temp/5-materialdna-format-sol56d2
+          fetch-depth: 0
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Format MaterialDNA delta
+        run: |
+          stylua src/shared/Materials/MaterialDNA.luau \
+            src/shared/Materials/MaterialFixtures.luau \
+            tests/materialdna_contract.luau \
+            tests/run.luau
+
+      - name: Commit formatter output
+        shell: bash
+        run: |
+          if git diff --quiet -- src/shared/Materials/MaterialDNA.luau src/shared/Materials/MaterialFixtures.luau tests/materialdna_contract.luau tests/run.luau; then
+            echo "Already formatted"
+            exit 0
+          fi
+          git config user.name "unrendered-format-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add src/shared/Materials/MaterialDNA.luau src/shared/Materials/MaterialFixtures.luau tests/materialdna_contract.luau tests/run.luau
+          git commit -m "chore: apply pinned StyLua to MaterialDNA"
+          git push origin HEAD:agent/temp/5-materialdna-format-sol56d2
