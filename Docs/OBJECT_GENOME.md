@@ -12,12 +12,13 @@
 - Roblox `Instance`, `Vector3`, `CFrame`, meshes, constraints, and rendering APIs are deliberately absent from the schema.
 - Mutable wear, damage, mechanism position, and detach state live in `ObjectState`, never in the immutable genome.
 - Mutable state is a complete snapshot for the referenced genome: every component/mechanism key must be present and unknown keys are rejected.
+- Every `ObjectState` stores `genomeId = ObjectGenome.identityKey(genome)`. State validation requires exact equality, so a snapshot cannot be silently reinterpreted against another family/variant revision merely because its component/mechanism keys happen to match.
 
 ## Immutable ownership
 
 Validation alone does not mutate or freeze caller-owned data. Production code that retains a generated/decoded genome calls `ObjectGenomeOwnership.own(genome)`. The ownership boundary first applies the semantic validator, then requires the exact v1 record shape at every canonical table, rejects metatables/unknown schema keys, copies only explicitly versioned fields into a detached data graph, validates the owned copy, and recursively freezes it.
 
-This prevents unversioned fields, runtime objects, representation state, caller aliases, and later mutation from entering or rewriting resolved ObjectGenome truth. Unknown top-level or nested fields are rejected rather than silently retained or silently dropped. `ObjectGenome.defaultState()` remains intentionally separate and mutable for wear, damage, mechanism position, and detach state.
+This prevents unversioned fields, runtime objects, representation state, caller aliases, and later mutation from entering or rewriting resolved ObjectGenome truth. Unknown top-level or nested fields are rejected rather than silently retained or silently dropped. `ObjectGenome.defaultState()` remains intentionally separate and mutable for wear, damage, mechanism position, and detach state; mutability does not remove its required exact `genomeId` reference.
 
 ## Construction graph
 
@@ -55,8 +56,8 @@ Affordances describe stable interaction/grip regions (`grip`, `push`, `pull`, `s
 - `ObjectGenome.inspect(genome)` returns a structured deterministic report with stable issue codes.
 - `ObjectGenome.validate(genome)` asserts when the report is invalid.
 - `ObjectGenomeOwnership.own(genome)` validates exact canonical shape, defensively copies, and recursively freezes a production-owned recipe.
-- `ObjectGenome.defaultState(genome)` creates separate zeroed mutable state.
-- `ObjectGenome.inspectState(genome, state)` validates mutable state keys/ranges against the immutable recipe.
+- `ObjectGenome.defaultState(genome)` creates separate zeroed mutable state bound to the exact canonical genome identity.
+- `ObjectGenome.inspectState(genome, state)` validates the state identity plus mutable keys/ranges against the immutable recipe.
 - `ObjectGenome.validateState(genome, state)` is the asserting state validator.
 
 Stable issue codes are suitable for test diagnostics and future procedural rejection/repro tooling.
