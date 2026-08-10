@@ -10,6 +10,7 @@ local WorldEntity = require(Shared.Reality.WorldEntity)
 local PhysicsLabRealizer = {}
 
 local ROOT_NAME = "UNRENDERED_PhysicsLab"
+-- Roblox standard physics units: 1 stud = 0.28 meters.
 local STUDS_PER_METER = 1 / 0.28
 
 export type RealizedLab = {
@@ -82,16 +83,26 @@ local function vectorMeters(value: PhysicsLabRecipe.Vec3): Vector3
 	return Vector3.new(meters(value.x), meters(value.y), meters(value.z))
 end
 
-local function transform(positionM: PhysicsLabRecipe.Vec3, rotationDeg: PhysicsLabRecipe.Vec3): CFrame
-	return CFrame.new(vectorMeters(positionM))
-		* CFrame.Angles(math.rad(rotationDeg.x), math.rad(rotationDeg.y), math.rad(rotationDeg.z))
+local function rotationExtrinsicXYZ(rotationDeg: PhysicsLabRecipe.Vec3): CFrame
+	local x = math.rad(rotationDeg.x)
+	local y = math.rad(rotationDeg.y)
+	local z = math.rad(rotationDeg.z)
+
+	-- ObjectGenome v1 owns fixed-axis/extrinsic XYZ as Rz * Ry * Rx. Do not
+	-- replace this with CFrame.Angles(x, y, z), whose engine order is Rx * Ry * Rz.
+	return CFrame.Angles(0, 0, z) * CFrame.Angles(0, y, 0) * CFrame.Angles(x, 0, 0)
 end
 
-local function applyAppearance(part: BasePart, materialKey: string): ()
+local function transform(positionM: PhysicsLabRecipe.Vec3, rotationDeg: PhysicsLabRecipe.Vec3): CFrame
+	return CFrame.new(vectorMeters(positionM)) * rotationExtrinsicXYZ(rotationDeg)
+end
+
+local function applyAppearance(part: BasePart, materialKey: string, materialRecipeVersion: number): ()
 	local appearance = APPEARANCE_BY_MATERIAL[materialKey] or DEFAULT_APPEARANCE
 	part.Material = appearance.material
 	part.Color = appearance.color
 	part:SetAttribute("UNRENDERED_MaterialKey", materialKey)
+	part:SetAttribute("UNRENDERED_MaterialRecipeVersion", materialRecipeVersion)
 end
 
 local function setEntityAttributes(instance: Instance, record: WorldEntity.WorldEntityRecord): ()
@@ -113,7 +124,7 @@ local function realizePrimitive(parent: Instance, recipe: PhysicsLabRecipe.Primi
 	part.Transparency = recipe.transparency
 	part.TopSurface = Enum.SurfaceType.Smooth
 	part.BottomSurface = Enum.SurfaceType.Smooth
-	applyAppearance(part, recipe.material.id)
+	applyAppearance(part, recipe.material.id, recipe.material.recipeVersion)
 	setEntityAttributes(part, recipe.entity)
 	part:SetAttribute("UNRENDERED_LabRole", recipe.role)
 	part.Parent = parent
@@ -141,14 +152,10 @@ local function realizeObject(parent: Instance, recipe: PhysicsLabRecipe.ObjectEn
 		part.Size = vectorMeters(component.dimensionsM)
 		part.CFrame = objectTransform
 			* CFrame.new(vectorMeters(component.localPositionM))
-			* CFrame.Angles(
-				math.rad(component.localRotationDeg.x),
-				math.rad(component.localRotationDeg.y),
-				math.rad(component.localRotationDeg.z)
-			)
+			* rotationExtrinsicXYZ(component.localRotationDeg)
 		part.TopSurface = Enum.SurfaceType.Smooth
 		part.BottomSurface = Enum.SurfaceType.Smooth
-		applyAppearance(part, component.materialKey)
+		applyAppearance(part, component.materialKey, component.materialRecipeVersion)
 		part:SetAttribute("UNRENDERED_ComponentKey", component.key)
 		part:SetAttribute("UNRENDERED_ComponentRole", component.role)
 		part:SetAttribute("UNRENDERED_ComponentMassKg", component.massKg)
