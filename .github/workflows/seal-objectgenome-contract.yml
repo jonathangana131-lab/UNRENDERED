@@ -1,0 +1,198 @@
+name: Seal ObjectGenome contract
+
+on:
+  push:
+    branches:
+      - agent/integration/6-objectgenome-final-sol56q4
+
+permissions:
+  contents: write
+
+jobs:
+  seal:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/integration/6-objectgenome-final-sol56q4
+          fetch-depth: 0
+
+      - name: Install pinned toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Reconcile exact material refs and Euler endpoint
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          def replace_once(source: str, old: str, new: str, label: str) -> str:
+              count = source.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected one marker, found {count}")
+              return source.replace(old, new, 1)
+
+          og_path = Path("src/shared/Objects/ObjectGenome.luau")
+          source = og_path.read_text()
+
+          source = replace_once(
+              source,
+              '''export type ComponentSpec = {\n\tkey: string,\n\trole: string,\n\tmaterialKey: string,\n\tmaterialRecipeVersion: number,''',
+              '''export type MaterialRef = {\n\tid: string,\n\trecipeVersion: number,\n}\n\nexport type ComponentSpec = {\n\tkey: string,\n\trole: string,\n\tmaterialRef: MaterialRef,''',
+              "ComponentSpec",
+          )
+
+          source = replace_once(
+              source,
+              '''local COMPONENT_FIELDS = {\n\tkey = true,\n\trole = true,\n\tmaterialKey = true,\n\tmaterialRecipeVersion = true,''',
+              '''local MATERIAL_REF_FIELDS = {\n\tid = true,\n\trecipeVersion = true,\n}\n\nlocal COMPONENT_FIELDS = {\n\tkey = true,\n\trole = true,\n\tmaterialRef = true,''',
+              "component fields",
+          )
+
+          source = replace_once(
+              source,
+              '''\t\t\t\tif check(componentPath, component) then\n\t\t\t\t\tcheck(componentPath .. ".localPositionM", rawget(component, "localPositionM"))''',
+              '''\t\t\t\tif check(componentPath, component) then\n\t\t\t\t\tcheck(componentPath .. ".materialRef", rawget(component, "materialRef"))\n\t\t\t\t\tcheck(componentPath .. ".localPositionM", rawget(component, "localPositionM"))''',
+              "plain material ref preflight",
+          )
+
+          source = replace_once(
+              source,
+              '''\t\t\t\tvalidateRecordShape(issues, path, component, COMPONENT_FIELDS)\n\t\t\t\tvalidateRecordShape(issues, path .. ".localPositionM", component.localPositionM, VEC3_FIELDS)''',
+              '''\t\t\t\tvalidateRecordShape(issues, path, component, COMPONENT_FIELDS)\n\t\t\t\tvalidateRecordShape(issues, path .. ".materialRef", component.materialRef, MATERIAL_REF_FIELDS)\n\t\t\t\tvalidateRecordShape(issues, path .. ".localPositionM", component.localPositionM, VEC3_FIELDS)''',
+              "material ref shape",
+          )
+
+          source = replace_once(
+              source,
+              '''\t\tif not isSemanticKey(component.materialKey) then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_key",\n\t\t\t\tpath .. ".materialKey",\n\t\t\t\t"materialKey must be the stable lowercase MaterialDNA recipe id"\n\t\t\t)\n\t\tend\n\t\tif not isPositiveInteger(component.materialRecipeVersion) then\n\t\t\taddIssue(\n\t\t\t\tissues,\n\t\t\t\t"component.material_recipe_version",\n\t\t\t\tpath .. ".materialRecipeVersion",\n\t\t\t\t"materialRecipeVersion must be a positive integer"\n\t\t\t)\n\t\tend''',
+              '''\t\tif type(component.materialRef) ~= "table" then\n\t\t\taddIssue(issues, "component.material_ref", path .. ".materialRef", "materialRef is required")\n\t\telse\n\t\t\tif not isSemanticKey(component.materialRef.id) then\n\t\t\t\taddIssue(\n\t\t\t\t\tissues,\n\t\t\t\t\t"component.material_ref_id",\n\t\t\t\t\tpath .. ".materialRef.id",\n\t\t\t\t\t"materialRef.id must be the stable lowercase MaterialDNA recipe id"\n\t\t\t\t)\n\t\t\tend\n\t\t\tif not isPositiveInteger(component.materialRef.recipeVersion) then\n\t\t\t\taddIssue(\n\t\t\t\t\tissues,\n\t\t\t\t\t"component.material_ref_version",\n\t\t\t\t\tpath .. ".materialRef.recipeVersion",\n\t\t\t\t\t"materialRef.recipeVersion must be a positive integer"\n\t\t\t\t)\n\t\t\tend\n\t\tend''',
+              "material ref semantic validation",
+          )
+
+          rotation_old = '''\tif\n\t\tmath.abs(value.x) > ROTATION_LIMIT_DEG\n\t\tor math.abs(value.y) > ROTATION_LIMIT_DEG\n\t\tor math.abs(value.z) > ROTATION_LIMIT_DEG\n\tthen'''
+          rotation_new = '''\tif\n\t\tvalue.x < -ROTATION_LIMIT_DEG\n\t\tor value.x >= ROTATION_LIMIT_DEG\n\t\tor value.y < -ROTATION_LIMIT_DEG\n\t\tor value.y >= ROTATION_LIMIT_DEG\n\t\tor value.z < -ROTATION_LIMIT_DEG\n\t\tor value.z >= ROTATION_LIMIT_DEG\n\tthen'''
+          source = replace_once(source, rotation_old, rotation_new, "rotation range")
+          source = source.replace(
+              '"localRotationDeg components must be within [-180, 180] degrees"',
+              '"localRotationDeg components must be within [-180, 180) degrees"',
+          )
+
+          if "materialKey" in source or "materialRecipeVersion" in source:
+              raise SystemExit("legacy flattened material fields remain in ObjectGenome.luau")
+          og_path.write_text(source)
+
+          ownership_path = Path("src/shared/Objects/ObjectGenomeOwnership.luau")
+          ownership = ownership_path.read_text()
+          ownership = replace_once(
+              ownership,
+              '''type Vec3 = ObjectGenome.Vec3\ntype NumberRange = ObjectGenome.NumberRange''',
+              '''type Vec3 = ObjectGenome.Vec3\ntype MaterialRef = ObjectGenome.MaterialRef\ntype NumberRange = ObjectGenome.NumberRange''',
+              "ownership type alias",
+          )
+          ownership = replace_once(
+              ownership,
+              '''local COMPONENT_KEYS = {\n\tkey = true,\n\trole = true,\n\tmaterialKey = true,\n\tmaterialRecipeVersion = true,''',
+              '''local MATERIAL_REF_KEYS = {\n\tid = true,\n\trecipeVersion = true,\n}\n\nlocal COMPONENT_KEYS = {\n\tkey = true,\n\trole = true,\n\tmaterialRef = true,''',
+              "ownership component keys",
+          )
+          ownership = replace_once(
+              ownership,
+              '''\t\tassertRecordShape(component, COMPONENT_KEYS, path)\n\t\tassertVec3Shape(component.localPositionM, path .. ".localPositionM")''',
+              '''\t\tassertRecordShape(component, COMPONENT_KEYS, path)\n\t\tassertRecordShape(component.materialRef, MATERIAL_REF_KEYS, path .. ".materialRef")\n\t\tassertVec3Shape(component.localPositionM, path .. ".localPositionM")''',
+              "ownership material ref shape",
+          )
+          ownership = replace_once(
+              ownership,
+              '''local function cloneComponent(value: ComponentSpec): ComponentSpec\n\tlocal supportKeys: { string } = {}''',
+              '''local function cloneMaterialRef(value: MaterialRef): MaterialRef\n\treturn {\n\t\tid = value.id,\n\t\trecipeVersion = value.recipeVersion,\n\t}\nend\n\nlocal function cloneComponent(value: ComponentSpec): ComponentSpec\n\tlocal supportKeys: { string } = {}''',
+              "clone material ref helper",
+          )
+          ownership = replace_once(
+              ownership,
+              '''\t\tkey = value.key,\n\t\trole = value.role,\n\t\tmaterialKey = value.materialKey,\n\t\tmaterialRecipeVersion = value.materialRecipeVersion,''',
+              '''\t\tkey = value.key,\n\t\trole = value.role,\n\t\tmaterialRef = cloneMaterialRef(value.materialRef),''',
+              "clone component material ref",
+          )
+          if "materialKey" in ownership or "materialRecipeVersion" in ownership:
+              raise SystemExit("legacy flattened material fields remain in ObjectGenomeOwnership.luau")
+          ownership_path.write_text(ownership)
+
+          fixtures_path = Path("src/shared/Objects/ObjectGenomeFixtures.luau")
+          fixtures = fixtures_path.read_text()
+          pattern = re.compile(r'(?m)^(\s*)materialKey = ("[^"]+"),\n\1materialRecipeVersion = (\d+),$')
+          fixtures, count = pattern.subn(r'\1materialRef = { id = \2, recipeVersion = \3 },', fixtures)
+          if count < 10:
+              raise SystemExit(f"expected many fixture material refs, converted {count}")
+          if "materialKey" in fixtures or "materialRecipeVersion" in fixtures:
+              raise SystemExit("legacy flattened material fields remain in fixtures")
+          fixtures_path.write_text(fixtures)
+
+          test_path = Path("tests/object_genome.luau")
+          tests = test_path.read_text()
+          tests = tests.replace("component.materialKey", "component.materialRef.id")
+          tests = tests.replace("component.materialRecipeVersion", "component.materialRef.recipeVersion")
+          tests = tests.replace("badMaterial.components[1].materialRef.id", "badMaterial.components[1].materialRef.id")
+          tests = tests.replace('"component.material_key"', '"component.material_ref_id"')
+          tests = tests.replace('"component.material_recipe_version"', '"component.material_ref_version"')
+          tests = tests.replace("revisedShell.materialRef.recipeVersion", "revisedShell.materialRef.recipeVersion")
+          tests = tests.replace("canonicalShell.materialRef.id", "canonicalShell.materialRef.id")
+          # The global field replacements above leave assignment/comparison syntax valid.
+          if "materialKey" in tests or "materialRecipeVersion" in tests:
+              raise SystemExit("legacy flattened material fields remain in object_genome tests")
+
+          insertion = '''\n\tlocal positiveEndpointRotation = deepCopy(Fixtures.officeTable)\n\tlocal positiveEndpointTop = findComponent(positiveEndpointRotation, "top")\n\tif positiveEndpointTop ~= nil then\n\t\tpositiveEndpointTop.localRotationDeg = { x = 0, y = 180, z = 0 }\n\tend\n\texpect(\n\t\t"rejects +180 endpoint to keep the v1 Euler interval half-open",\n\t\tpositiveEndpointTop ~= nil\n\t\t\tand hasCode(ObjectGenome.inspect(positiveEndpointRotation), "component.rotation_range")\n\t)\n\n\tlocal negativeEndpointRotation = deepCopy(Fixtures.officeTable)\n\tlocal negativeEndpointTop = findComponent(negativeEndpointRotation, "top")\n\tif negativeEndpointTop ~= nil then\n\t\tnegativeEndpointTop.localRotationDeg = { x = 0, y = -180, z = 0 }\n\tend\n\texpect(\n\t\t"accepts -180 endpoint in the v1 half-open Euler interval",\n\t\tnegativeEndpointTop ~= nil\n\t\t\tand not hasCode(ObjectGenome.inspect(negativeEndpointRotation), "component.rotation_range")\n\t)\n'''
+          marker = '\n\tlocal badAffordance = deepCopy(Fixtures.officeChair)\n'
+          if marker not in tests:
+              raise SystemExit("rotation test insertion marker changed")
+          tests = tests.replace(marker, insertion + marker, 1)
+          test_path.write_text(tests)
+
+          lock_path = Path("tests/object_genome_contract_lock.luau")
+          lock = lock_path.read_text()
+          lock = lock.replace("ownedGenome.components[1].materialRecipeVersion", "ownedGenome.components[1].materialRef.recipeVersion")
+          lock = lock.replace("callerGenome.components[1].materialRecipeVersion", "callerGenome.components[1].materialRef.recipeVersion")
+          marker = '''\tlocal unknownComponentField = deepCopy(Fixtures.officeChair)\n'''
+          addition = '''\tlocal unknownMaterialRefField = deepCopy(Fixtures.officeChair)\n\tunknownMaterialRefField.components[1].materialRef.schemaVersion = 2\n\texpect(\n\t\t"rejects undeclared MaterialRef fields",\n\t\thasCode(ObjectGenome.inspect(unknownMaterialRefField), "schema.unknown_field")\n\t)\n\n'''
+          if marker not in lock:
+              raise SystemExit("material ref shape test insertion marker changed")
+          lock = lock.replace(marker, addition + marker, 1)
+          if "materialKey" in lock or "materialRecipeVersion" in lock:
+              raise SystemExit("legacy flattened material fields remain in contract-lock tests")
+          lock_path.write_text(lock)
+
+          doc_path = Path("Docs/OBJECT_GENOME.md")
+          doc = doc_path.read_text()
+          doc = doc.replace(
+              "Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`: `materialKey` is the stable lowercase MaterialDNA recipe id and `materialRecipeVersion` is its positive content revision. ObjectGenome validates and owns those plain values but does not import MaterialDNA implementation details or Roblox asset IDs.",
+              "Each component pins the exact MaterialDNA v2 plain reference shape `materialRef = { id, recipeVersion }`, matching `MaterialDNA.reference(recipe)`. ObjectGenome validates and owns that small value but does not import MaterialDNA implementation details or Roblox asset IDs.",
+          )
+          doc = doc.replace(
+              "every stored Euler component uses the bounded v1 representation `[-180, 180]` degrees. Equivalent turns outside that range are rejected rather than silently normalized; the inclusive endpoints are bounded representations, not a claim of globally unique Euler encoding;",
+              "every stored Euler component uses the half-open v1 representation `[-180, 180)` degrees. `-180` is accepted and `+180` is rejected, removing the duplicate half-turn endpoint; equivalent turns outside the interval are rejected rather than silently normalized. This bounds one representation choice without claiming global Euler uniqueness across singularities;",
+          )
+          doc = doc.replace("exact material recipe id/revision,", "exact MaterialDNA `{ id, recipeVersion }` reference,")
+          doc_path.write_text(doc)
+          PY
+
+          stylua src/shared/Objects/ObjectGenome.luau src/shared/Objects/ObjectGenomeFixtures.luau src/shared/Objects/ObjectGenomeOwnership.luau tests/object_genome.luau tests/object_genome_contract_lock.luau
+          lune run tests/run
+          rm .github/workflows/seal-objectgenome-contract.yml
+
+      - name: Commit validated seal
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Seal exact ObjectGenome material and rotation refs"
+          git push origin HEAD:agent/integration/6-objectgenome-final-sol56q4
