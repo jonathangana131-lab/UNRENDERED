@@ -30,7 +30,7 @@ A generated apparent-history event such as old water staining belongs to the imm
 
 ## Validation
 
-`MaterialDNA.validateRecipe` returns structured issues instead of throwing on malformed input. `assertValidRecipe` is available at trusted construction boundaries.
+`MaterialDNA.validateRecipe` returns structured issues instead of throwing on malformed input. `assertValidRecipe` is available at trusted construction boundaries. `MaterialDNA.SchemaVersion` names the one schema understood by this validator; a recipe declaring a different positive schema version is rejected as `unsupported_version` rather than being interpreted with v1 semantics.
 
 The first production compatibility rules cover the Wave 1 fixtures:
 
@@ -54,4 +54,4 @@ These are contract fixtures and development fallbacks, not final art assets. The
 
 ## Versioning rule
 
-Changing the meaning of existing fields, compatibility semantics, or reconstruction behavior requires an explicit schema-version decision. Already-resolved world content must never silently acquire new MaterialDNA meaning merely because implementation code changed.
+Changing the meaning of existing fields, compatibility semantics, or reconstruction behavior requires an explicit schema-version decision. Already-resolved world content must never silently acquire new MaterialDNA meaning merely because implementation code changed. The v1 validator therefore accepts schema version `1` only; support for a later schema requires an explicit validator/migration change rather than falling through to v1 behavior.
