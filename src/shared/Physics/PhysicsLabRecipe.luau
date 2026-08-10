@@ -180,21 +180,142 @@ end
 
 function PhysicsLabRecipe.build(): PhysicsLabRecipe
 	local entities: { EntityRecipe } = {
-		primitive("floor", "collidable carpeted floor", vec3(12, 0.20, 10), vec3(0, -0.10, 0), ZERO, FLOOR_MATERIAL, true),
-		primitive("ceiling", "ceiling collision/reference plane", vec3(12, 0.16, 10), vec3(0, 4.08, 0), ZERO, WALL_MATERIAL, true),
-		primitive("wall-left", "left perimeter wall", vec3(0.18, 4, 10), vec3(-6.09, 2, 0), ZERO, WALL_MATERIAL, true),
-		primitive("wall-right", "right perimeter wall", vec3(0.18, 4, 10), vec3(6.09, 2, 0), ZERO, WALL_MATERIAL, true),
-		primitive("wall-back", "rear perimeter wall", vec3(12, 4, 0.18), vec3(0, 2, 5.09), ZERO, WALL_MATERIAL, true),
-		primitive("wall-front-left", "front wall left of door opening", vec3(5.40, 4, 0.18), vec3(-3.30, 2, -5.09), ZERO, WALL_MATERIAL, true),
-		primitive("wall-front-right", "front wall right of door opening", vec3(5.40, 4, 0.18), vec3(3.30, 2, -5.09), ZERO, WALL_MATERIAL, true),
-		primitive("wall-front-header", "front wall header over door opening", vec3(1.20, 1.75, 0.18), vec3(0, 3.125, -5.09), ZERO, WALL_MATERIAL, true),
-		primitive("ramp", "incline contact test", vec3(3.0, 0.20, 1.25), vec3(-3.6, 0.42, 2.3), vec3(0, 0, -14), METAL_MATERIAL, true),
-		primitive("ledge", "step-off and collision ledge", vec3(2.2, 0.65, 1.8), vec3(3.6, 0.325, 2.8), ZERO, METAL_MATERIAL, true),
-		primitive("stair-1", "stair contact test step 1", vec3(1.5, 0.18, 0.42), vec3(2.5, 0.09, -1.9), ZERO, METAL_MATERIAL, true),
-		primitive("stair-2", "stair contact test step 2", vec3(1.5, 0.36, 0.42), vec3(2.5, 0.18, -1.48), ZERO, METAL_MATERIAL, true),
-		primitive("stair-3", "stair contact test step 3", vec3(1.5, 0.54, 0.42), vec3(2.5, 0.27, -1.06), ZERO, METAL_MATERIAL, true),
-		primitive("stair-4", "stair contact test step 4", vec3(1.5, 0.72, 0.42), vec3(2.5, 0.36, -0.64), ZERO, METAL_MATERIAL, true),
-		primitive("character-spawn-anchor", "physical-character test spawn anchor", vec3(0.50, 0.04, 0.50), vec3(0, 0.02, 3.7), ZERO, METAL_MATERIAL, false, 0.55),
+		primitive(
+			"floor",
+			"collidable carpeted floor",
+			vec3(12, 0.20, 10),
+			vec3(0, -0.10, 0),
+			ZERO,
+			FLOOR_MATERIAL,
+			true
+		),
+		primitive(
+			"ceiling",
+			"ceiling collision/reference plane",
+			vec3(12, 0.16, 10),
+			vec3(0, 4.08, 0),
+			ZERO,
+			WALL_MATERIAL,
+			true
+		),
+		primitive(
+			"wall-left",
+			"left perimeter wall",
+			vec3(0.18, 4, 10),
+			vec3(-6.09, 2, 0),
+			ZERO,
+			WALL_MATERIAL,
+			true
+		),
+		primitive(
+			"wall-right",
+			"right perimeter wall",
+			vec3(0.18, 4, 10),
+			vec3(6.09, 2, 0),
+			ZERO,
+			WALL_MATERIAL,
+			true
+		),
+		primitive(
+			"wall-back",
+			"rear perimeter wall",
+			vec3(12, 4, 0.18),
+			vec3(0, 2, 5.09),
+			ZERO,
+			WALL_MATERIAL,
+			true
+		),
+		primitive(
+			"wall-front-left",
+			"front wall left of door opening",
+			vec3(5.40, 4, 0.18),
+			vec3(-3.30, 2, -5.09),
+			ZERO,
+			WALL_MATERIAL,
+			true
+		),
+		primitive(
+			"wall-front-right",
+			"front wall right of door opening",
+			vec3(5.40, 4, 0.18),
+			vec3(3.30, 2, -5.09),
+			ZERO,
+			WALL_MATERIAL,
+			true
+		),
+		primitive(
+			"wall-front-header",
+			"front wall header over door opening",
+			vec3(1.20, 1.75, 0.18),
+			vec3(0, 3.125, -5.09),
+			ZERO,
+			WALL_MATERIAL,
+			true
+		),
+		primitive(
+			"ramp",
+			"incline contact test",
+			vec3(3.0, 0.20, 1.25),
+			vec3(-3.6, 0.42, 2.3),
+			vec3(0, 0, -14),
+			METAL_MATERIAL,
+			true
+		),
+		primitive(
+			"ledge",
+			"step-off and collision ledge",
+			vec3(2.2, 0.65, 1.8),
+			vec3(3.6, 0.325, 2.8),
+			ZERO,
+			METAL_MATERIAL,
+			true
+		),
+		primitive(
+			"stair-1",
+			"stair contact test step 1",
+			vec3(1.5, 0.18, 0.42),
+			vec3(2.5, 0.09, -1.9),
+			ZERO,
+			METAL_MATERIAL,
+			true
+		),
+		primitive(
+			"stair-2",
+			"stair contact test step 2",
+			vec3(1.5, 0.36, 0.42),
+			vec3(2.5, 0.18, -1.48),
+			ZERO,
+			METAL_MATERIAL,
+			true
+		),
+		primitive(
+			"stair-3",
+			"stair contact test step 3",
+			vec3(1.5, 0.54, 0.42),
+			vec3(2.5, 0.27, -1.06),
+			ZERO,
+			METAL_MATERIAL,
+			true
+		),
+		primitive(
+			"stair-4",
+			"stair contact test step 4",
+			vec3(1.5, 0.72, 0.42),
+			vec3(2.5, 0.36, -0.64),
+			ZERO,
+			METAL_MATERIAL,
+			true
+		),
+		primitive(
+			"character-spawn-anchor",
+			"physical-character test spawn anchor",
+			vec3(0.50, 0.04, 0.50),
+			vec3(0, 0.02, 3.7),
+			ZERO,
+			METAL_MATERIAL,
+			false,
+			0.55
+		),
 		objectEntity("door-main", "commercialDoor", vec3(0, 1.08, -4.96), ZERO),
 		objectEntity("chair-a", "officeChair", vec3(-2.25, 0.54, 0.65), vec3(0, 22, 0)),
 		objectEntity("table-a", "officeTable", vec3(-0.60, 0.38, 0.80), ZERO),
