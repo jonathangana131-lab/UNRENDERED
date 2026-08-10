@@ -6,13 +6,14 @@
 
 - All measurements are plain-data SI units: meters, kilograms, degrees.
 - `schemaVersion` is an explicit compatibility lock. A reader rejects unknown versions instead of interpreting future schemas as v1.
-- `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityParts()` supplies those semantic parts to the locked project `StableId` contract; ObjectGenome does not duplicate hashing/canonical encoding.
+- `familyId + familyVersion + variantKey + schemaVersion` form the stable family/version identity input. `ObjectGenome.identityParts()` supplies those semantic parts to the locked project `StableId` contract; `ObjectGenome.identityKey()` is suitable for published family/version tracking, but it is intentionally not an exact hash of every immutable recipe field.
+- `ObjectGenome.recipeIdentityKey()` is the exact immutable-content identity used by `ObjectState`. Recipe-identity encoding is independently versioned by `RECIPE_ID_VERSION`, uses the project `StableId` contract, and covers every declared ObjectGenome v1 recipe field. Keyed component/mechanism/affordance collections and component support references are canonicalized by semantic key so source array ordering cannot churn identity when the accepted recipe is otherwise equivalent.
 - `components`, per-component `supportKeys`, `mechanisms`, and `affordances` are canonical dense 1-based arrays. Sparse arrays and map-like extra keys are rejected so accepted plain data has one unambiguous shape.
-- Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`: `materialKey` is the stable lowercase MaterialDNA recipe id and `materialRecipeVersion` is its positive content revision. ObjectGenome validates and owns those plain values but does not import MaterialDNA implementation details or Roblox asset IDs. A published component material-revision change is a canonical object recipe change and therefore requires the corresponding `familyVersion` to advance rather than silently retargeting an established genome identity.
+- Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`: `materialKey` is the stable lowercase MaterialDNA recipe id and `materialRecipeVersion` is its positive content revision. ObjectGenome validates and owns those plain values but does not import MaterialDNA implementation details or Roblox asset IDs. A published component material-revision change is a canonical object recipe change and therefore should advance the corresponding `familyVersion`; independently, the exact recipe identity changes even if publication metadata is accidentally left unchanged, so old mutable state cannot silently replay against changed immutable content.
 - Roblox `Instance`, `Vector3`, `CFrame`, meshes, constraints, and rendering APIs are deliberately absent from the schema.
 - Mutable wear, damage, mechanism position, and detach state live in `ObjectState`, never in the immutable genome.
 - Mutable state is a complete snapshot for the referenced genome: every component/mechanism key must be present and unknown keys are rejected.
-- Every `ObjectState` stores `genomeId = ObjectGenome.identityKey(genome)`. State validation requires exact equality, so a snapshot cannot be silently reinterpreted against another family/variant revision merely because its component/mechanism keys happen to match.
+- Every `ObjectState` stores `genomeId = ObjectGenome.recipeIdentityKey(genome)`. State validation requires exact equality, so changing provenance, dimensions, mass, component transforms/materials/supports, mechanism parameters, affordances, or any other declared immutable v1 recipe content invalidates an older snapshot even when family/version metadata and runtime keys happen to match.
 
 ## Immutable ownership
 
@@ -69,8 +70,10 @@ Affordances describe stable interaction/grip regions (`grip`, `push`, `pull`, `s
 
 - `ObjectGenome.inspect(genome)` returns a structured deterministic report with stable issue codes.
 - `ObjectGenome.validate(genome)` asserts when the report is invalid.
+- `ObjectGenome.identityKey(genome)` returns the stable family/version identity.
+- `ObjectGenome.recipeIdentityKey(genome)` returns the exact, versioned immutable recipe identity used for state binding.
 - `ObjectGenomeOwnership.own(genome)` validates exact canonical shape, defensively copies, and recursively freezes a production-owned recipe.
-- `ObjectGenome.defaultState(genome)` creates separate zeroed mutable state bound to the exact canonical genome identity.
+- `ObjectGenome.defaultState(genome)` creates separate zeroed mutable state bound to the exact canonical recipe identity.
 - `ObjectGenome.inspectState(genome, state)` validates the state identity plus mutable keys/ranges against the immutable recipe.
 - `ObjectGenome.validateState(genome, state)` is the asserting state validator.
 
@@ -90,4 +93,4 @@ These are contract fixtures, not final art or Hero Feature implementations. Thei
 
 ## Evolution
 
-Changing field meaning or deterministic identity inputs requires an object schema/version decision. Changing published canonical recipe content such as a component's exact material revision requires advancing `familyVersion`. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.
+Changing field meaning or the stable family/version identity inputs requires an object schema/version decision. Changing the exact recipe-identity encoding rules requires advancing `RECIPE_ID_VERSION`; already-established recipe identities must not silently change under the same version. Changing published canonical recipe content such as a component's exact material revision should advance `familyVersion`, while the exact recipe identity independently protects state/persistence from accidental metadata omissions. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.
