@@ -6,14 +6,13 @@ local Shared = ReplicatedStorage:WaitForChild("UNRENDERED")
 local FidelityManager = require(Shared.Physics.FidelityManager)
 local PhysicsLabRecipe = require(Shared.Physics.PhysicsLabRecipe)
 local PhysicsLabRuntime = require(Shared.Physics.PhysicsLabRuntime)
+local PhysicsLabScale = require(Shared.Physics.PhysicsLabScale)
 local ResolvedRegionRecipe = require(Shared.Reality.ResolvedRegionRecipe)
 local WorldEntity = require(Shared.Reality.WorldEntity)
 
 local PhysicsLabRealizer = {}
 
 local ROOT_NAME = "UNRENDERED_PhysicsLab"
--- Roblox standard physics units: 1 stud = 0.28 meters.
-local STUDS_PER_METER = 1 / 0.28
 
 export type RealizedLab = {
 	model: Model,
@@ -84,12 +83,12 @@ local DEFAULT_APPEARANCE: Appearance = table.freeze({
 	color = Color3.fromRGB(140, 140, 140),
 })
 
-local function meters(value: number): number
-	return value * STUDS_PER_METER
-end
-
 local function vectorMeters(value: PhysicsLabRecipe.Vec3): Vector3
-	return Vector3.new(meters(value.x), meters(value.y), meters(value.z))
+	return Vector3.new(
+		PhysicsLabScale.metersToStuds(value.x),
+		PhysicsLabScale.metersToStuds(value.y),
+		PhysicsLabScale.metersToStuds(value.z)
+	)
 end
 
 local function rotationExtrinsicXYZ(rotationDeg: PhysicsLabRecipe.Vec3): CFrame
