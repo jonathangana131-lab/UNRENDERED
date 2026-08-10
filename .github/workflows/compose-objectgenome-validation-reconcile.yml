@@ -28,95 +28,87 @@ jobs:
           export PATH="$HOME/.rokit/bin:$PATH"
           rokit install --no-trust-check
 
-      - name: Reconcile exact-shape validation
+      - name: Reconcile and validate
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
 
-          def replace_once(source: str, old: str, new: str, label: str) -> str:
+          def once(source, old, new, label):
               count = source.count(old)
               if count != 1:
-                  raise SystemExit(f"{label}: expected exactly one match, got {count}")
+                  raise SystemExit(f"{label}: expected 1 match, got {count}")
               return source.replace(old, new, 1)
 
-          core_path = Path("src/shared/Objects/ObjectGenome.luau")
-          core = core_path.read_text()
+          p = Path("src/shared/Objects/ObjectGenome.luau")
+          s = p.read_text()
+          replacements = [
+              (
+                  '\tmaterialKey = true,\n\tmassKg = true,\n',
+                  '\tmaterialKey = true,\n\tmaterialRecipeVersion = true,\n\tmassKg = true,\n',
+                  'material revision allowlist',
+              ),
+              (
+                  'local AFFORDANCE_FIELDS = {\n\tkey = true,\n\tkind = true,\n\tcomponentKey = true,\n\tlocalPointM = true,\n\tradiusM = true,\n}\n',
+                  'local AFFORDANCE_FIELDS = {\n\tkey = true,\n\tkind = true,\n\tcomponentKey = true,\n\tlocalPointM = true,\n\tradiusM = true,\n}\n\nlocal STATE_FIELDS = {\n\tstateSchemaVersion = true,\n\tgenomeId = true,\n\tcomponentWear = true,\n\tcomponentDamage = true,\n\tmechanismPosition = true,\n\tdetachedComponents = true,\n}\n',
+                  'state allowlist',
+              ),
+              (
+                  '\tif type(value) ~= "table" then\n\t\treturn\n\tend\n\n\tfor key in pairs(value) do\n',
+                  '\tif type(value) ~= "table" then\n\t\treturn\n\tend\n\tif getmetatable(value) ~= nil then\n\t\taddIssue(issues, "schema.metatable", path, "canonical plain-data records must not have metatables")\n\t\treturn\n\tend\n\n\tfor key in pairs(value) do\n',
+                  'record metatable guard',
+              ),
+              (
+                  '\tif type(value) ~= "table" then\n\t\taddIssue(issues, "array.shape", path, "collection must be a dense 1-based array")\n\t\treturn false, 0\n\tend\n\n\tlocal numericKeyCount = 0\n',
+                  '\tif type(value) ~= "table" then\n\t\taddIssue(issues, "array.shape", path, "collection must be a dense 1-based array")\n\t\treturn false, 0\n\tend\n\tif getmetatable(value) ~= nil then\n\t\taddIssue(issues, "schema.metatable", path, "canonical plain-data arrays must not have metatables")\n\t\treturn false, 0\n\tend\n\n\tlocal numericKeyCount = 0\n',
+                  'array metatable guard',
+              ),
+              (
+                  '\tif type(value) ~= "table" then\n\t\taddIssue(issues, "genome.type", "$", "ObjectGenome must be a plain table")\n\t\treturn reportResult(issues)\n\tend\n\n\tvalidateGenomeShape(issues, value)\n',
+                  '\tif type(value) ~= "table" then\n\t\taddIssue(issues, "genome.type", "$", "ObjectGenome must be a plain table")\n\t\treturn reportResult(issues)\n\tend\n\tif getmetatable(value) ~= nil then\n\t\taddIssue(issues, "schema.metatable", "$", "ObjectGenome must be a plain table without a metatable")\n\t\treturn reportResult(issues)\n\tend\n\n\tvalidateGenomeShape(issues, value)\n',
+                  'root genome metatable guard',
+              ),
+              (
+                  '\tif type(state) ~= "table" then\n\t\taddIssue(issues, "state.type", "$", "ObjectState must be a plain table")\n\t\treturn reportResult(issues)\n\tend\n\tif state.stateSchemaVersion ~= ObjectGenome.STATE_SCHEMA_VERSION then\n',
+                  '\tif type(state) ~= "table" then\n\t\taddIssue(issues, "state.type", "$", "ObjectState must be a plain table")\n\t\treturn reportResult(issues)\n\tend\n\tif getmetatable(state) ~= nil then\n\t\taddIssue(issues, "state.metatable", "$", "ObjectState must be a plain table without a metatable")\n\t\treturn reportResult(issues)\n\tend\n\tvalidateRecordShape(issues, "$state", state, STATE_FIELDS)\n\tif state.stateSchemaVersion ~= ObjectGenome.STATE_SCHEMA_VERSION then\n',
+                  'state root shape',
+              ),
+              (
+                  '\t\tif type(mapValue) ~= "table" then\n\t\t\taddIssue(issues, "state.collection", fieldName, `{fieldName} must be a table`)\n\t\t\treturn\n\t\tend\n\t\tfor key in pairs(knownKeys) do\n',
+                  '\t\tif type(mapValue) ~= "table" then\n\t\t\taddIssue(issues, "state.collection", fieldName, `{fieldName} must be a table`)\n\t\t\treturn\n\t\tend\n\t\tif getmetatable(mapValue) ~= nil then\n\t\t\taddIssue(issues, "state.metatable", fieldName, `{fieldName} must not have a metatable`)\n\t\t\treturn\n\t\tend\n\t\tfor key in pairs(knownKeys) do\n',
+                  'state map metatable guard',
+              ),
+              (
+                  '\tif type(state.detachedComponents) ~= "table" then\n\t\taddIssue(issues, "state.collection", "detachedComponents", "detachedComponents must be a table")\n\telse\n\t\tfor key in pairs(componentKeys) do\n',
+                  '\tif type(state.detachedComponents) ~= "table" then\n\t\taddIssue(issues, "state.collection", "detachedComponents", "detachedComponents must be a table")\n\telseif getmetatable(state.detachedComponents) ~= nil then\n\t\taddIssue(issues, "state.metatable", "detachedComponents", "detachedComponents must not have a metatable")\n\telse\n\t\tfor key in pairs(componentKeys) do\n',
+                  'detached map metatable guard',
+              ),
+          ]
+          for old, new, label in replacements:
+              s = once(s, old, new, label)
+          p.write_text(s)
 
-          core = replace_once(
-              core,
-              '\tmaterialKey = true,\n\tmassKg = true,\n',
-              '\tmaterialKey = true,\n\tmaterialRecipeVersion = true,\n\tmassKg = true,\n',
-              "component material revision allowlist",
+          p = Path("tests/object_genome_contract_lock.luau")
+          s = p.read_text()
+          s = once(
+              s,
+              '\texpect(\n\t\t"rejects undeclared affordance fields",\n\t\thasCode(ObjectGenome.inspect(unknownAffordanceField), "schema.unknown_field")\n\t)\n\n\tlocal sparseComponents = deepCopy(Fixtures.officeChair)\n',
+              '\texpect(\n\t\t"rejects undeclared affordance fields",\n\t\thasCode(ObjectGenome.inspect(unknownAffordanceField), "schema.unknown_field")\n\t)\n\n\tlocal metatableRootGenome = deepCopy(Fixtures.officeChair)\n\tsetmetatable(metatableRootGenome, {})\n\texpect(\n\t\t"semantic validator rejects metatable-backed genome root",\n\t\thasCode(ObjectGenome.inspect(metatableRootGenome), "schema.metatable")\n\t)\n\n\tlocal metatableNestedGenome = deepCopy(Fixtures.officeChair)\n\tsetmetatable(metatableNestedGenome.provenance, {})\n\texpect(\n\t\t"semantic validator rejects metatable-backed nested records",\n\t\thasCode(ObjectGenome.inspect(metatableNestedGenome), "schema.metatable")\n\t)\n\n\tlocal sparseComponents = deepCopy(Fixtures.officeChair)\n',
+              'genome metatable regressions',
           )
-
-          core = replace_once(
-              core,
-              '''local AFFORDANCE_FIELDS = {\n\tkey = true,\n\tkind = true,\n\tcomponentKey = true,\n\tlocalPointM = true,\n\tradiusM = true,\n}\n''',
-              '''local AFFORDANCE_FIELDS = {\n\tkey = true,\n\tkind = true,\n\tcomponentKey = true,\n\tlocalPointM = true,\n\tradiusM = true,\n}\n\nlocal STATE_FIELDS = {\n\tstateSchemaVersion = true,\n\tgenomeId = true,\n\tcomponentWear = true,\n\tcomponentDamage = true,\n\tmechanismPosition = true,\n\tdetachedComponents = true,\n}\n''',
-              "ObjectState allowlist",
+          s = once(
+              s,
+              '\tlocal unknownTopLevel = deepCopy(Fixtures.officeChair)\n\tunknownTopLevel.debugRuntime = function() end\n\tlocal unknownTopLevelOk = pcall(function()\n\t\tObjectGenomeOwnership.own(unknownTopLevel)\n\tend)\n\texpect("ownership rejects unknown non-plain top-level field", not unknownTopLevelOk)\n',
+              '\tlocal ownershipUnknownTopLevel = deepCopy(Fixtures.officeChair)\n\townershipUnknownTopLevel.debugRuntime = function() end\n\tlocal unknownTopLevelOk = pcall(function()\n\t\tObjectGenomeOwnership.own(ownershipUnknownTopLevel)\n\tend)\n\texpect("ownership rejects unknown non-plain top-level field", not unknownTopLevelOk)\n',
+              'existing shadowed ownership test variable',
           )
-
-          core = replace_once(
-              core,
-              '''\tif type(value) ~= "table" then\n\t\treturn\n\tend\n\n\tfor key in pairs(value) do\n''',
-              '''\tif type(value) ~= "table" then\n\t\treturn\n\tend\n\tif getmetatable(value) ~= nil then\n\t\taddIssue(issues, "schema.metatable", path, "canonical plain-data records must not have metatables")\n\t\treturn\n\tend\n\n\tfor key in pairs(value) do\n''',
-              "record metatable rejection",
+          s = once(
+              s,
+              '\tlocal missingGenomeIdState = ObjectGenome.defaultState(Fixtures.officeChair)\n',
+              '\tlocal stateWithUnknownField = ObjectGenome.defaultState(Fixtures.officeChair)\n\tstateWithUnknownField.debugRuntime = true\n\texpect(\n\t\t"rejects undeclared ObjectState top-level fields",\n\t\thasCode(ObjectGenome.inspectState(Fixtures.officeChair, stateWithUnknownField), "schema.unknown_field")\n\t)\n\n\tlocal metatableState = ObjectGenome.defaultState(Fixtures.officeChair)\n\tsetmetatable(metatableState, {})\n\texpect(\n\t\t"rejects metatable-backed ObjectState root",\n\t\thasCode(ObjectGenome.inspectState(Fixtures.officeChair, metatableState), "state.metatable")\n\t)\n\n\tlocal metatableStateMap = ObjectGenome.defaultState(Fixtures.officeChair)\n\tsetmetatable(metatableStateMap.componentWear, {})\n\texpect(\n\t\t"rejects metatable-backed ObjectState maps",\n\t\thasCode(ObjectGenome.inspectState(Fixtures.officeChair, metatableStateMap), "state.metatable")\n\t)\n\n\tlocal missingGenomeIdState = ObjectGenome.defaultState(Fixtures.officeChair)\n',
+              'state shape/metatable regressions',
           )
-
-          core = replace_once(
-              core,
-              '''\tif type(value) ~= "table" then\n\t\taddIssue(issues, "array.shape", path, "collection must be a dense 1-based array")\n\t\treturn false, 0\n\tend\n\n\tlocal numericKeyCount = 0\n''',
-              '''\tif type(value) ~= "table" then\n\t\taddIssue(issues, "array.shape", path, "collection must be a dense 1-based array")\n\t\treturn false, 0\n\tend\n\tif getmetatable(value) ~= nil then\n\t\taddIssue(issues, "schema.metatable", path, "canonical plain-data arrays must not have metatables")\n\t\treturn false, 0\n\tend\n\n\tlocal numericKeyCount = 0\n''',
-              "array metatable rejection",
-          )
-
-          core = replace_once(
-              core,
-              '''\tif type(value) ~= "table" then\n\t\taddIssue(issues, "genome.type", "$", "ObjectGenome must be a plain table")\n\t\treturn reportResult(issues)\n\tend\n\n\tvalidateGenomeShape(issues, value)\n''',
-              '''\tif type(value) ~= "table" then\n\t\taddIssue(issues, "genome.type", "$", "ObjectGenome must be a plain table")\n\t\treturn reportResult(issues)\n\tend\n\tif getmetatable(value) ~= nil then\n\t\taddIssue(issues, "schema.metatable", "$", "ObjectGenome must be a plain table without a metatable")\n\t\treturn reportResult(issues)\n\tend\n\n\tvalidateGenomeShape(issues, value)\n''',
-              "root genome metatable rejection",
-          )
-
-          core = replace_once(
-              core,
-              '''\tif type(state) ~= "table" then\n\t\taddIssue(issues, "state.type", "$", "ObjectState must be a plain table")\n\t\treturn reportResult(issues)\n\tend\n\tif state.stateSchemaVersion ~= ObjectGenome.STATE_SCHEMA_VERSION then\n''',
-              '''\tif type(state) ~= "table" then\n\t\taddIssue(issues, "state.type", "$", "ObjectState must be a plain table")\n\t\treturn reportResult(issues)\n\tend\n\tif getmetatable(state) ~= nil then\n\t\taddIssue(issues, "state.metatable", "$", "ObjectState must be a plain table without a metatable")\n\t\treturn reportResult(issues)\n\tend\n\tvalidateRecordShape(issues, "$state", state, STATE_FIELDS)\n\tif state.stateSchemaVersion ~= ObjectGenome.STATE_SCHEMA_VERSION then\n''',
-              "ObjectState root shape",
-          )
-
-          core = replace_once(
-              core,
-              '''\t\tif type(mapValue) ~= "table" then\n\t\t\taddIssue(issues, "state.collection", fieldName, `{fieldName} must be a table`)\n\t\t\treturn\n\t\tend\n\t\tfor key in pairs(knownKeys) do\n''',
-              '''\t\tif type(mapValue) ~= "table" then\n\t\t\taddIssue(issues, "state.collection", fieldName, `{fieldName} must be a table`)\n\t\t\treturn\n\t\tend\n\t\tif getmetatable(mapValue) ~= nil then\n\t\t\taddIssue(issues, "state.metatable", fieldName, `{fieldName} must not have a metatable`)\n\t\t\treturn\n\t\tend\n\t\tfor key in pairs(knownKeys) do\n''',
-              "ObjectState unit-map metatable rejection",
-          )
-
-          core = replace_once(
-              core,
-              '''\tif type(state.detachedComponents) ~= "table" then\n\t\taddIssue(issues, "state.collection", "detachedComponents", "detachedComponents must be a table")\n\telse\n\t\tfor key in pairs(componentKeys) do\n''',
-              '''\tif type(state.detachedComponents) ~= "table" then\n\t\taddIssue(issues, "state.collection", "detachedComponents", "detachedComponents must be a table")\n\telseif getmetatable(state.detachedComponents) ~= nil then\n\t\taddIssue(issues, "state.metatable", "detachedComponents", "detachedComponents must not have a metatable")\n\telse\n\t\tfor key in pairs(componentKeys) do\n''',
-              "detached map metatable rejection",
-          )
-
-          core_path.write_text(core)
-
-          test_path = Path("tests/object_genome_contract_lock.luau")
-          test = test_path.read_text()
-          test = replace_once(
-              test,
-              '''\texpect(\n\t\t"rejects undeclared affordance fields",\n\t\thasCode(ObjectGenome.inspect(unknownAffordanceField), "schema.unknown_field")\n\t)\n\n\tlocal sparseComponents = deepCopy(Fixtures.officeChair)\n''',
-              '''\texpect(\n\t\t"rejects undeclared affordance fields",\n\t\thasCode(ObjectGenome.inspect(unknownAffordanceField), "schema.unknown_field")\n\t)\n\n\tlocal metatableRootGenome = deepCopy(Fixtures.officeChair)\n\tsetmetatable(metatableRootGenome, {})\n\texpect(\n\t\t"semantic validator rejects metatable-backed genome root",\n\t\thasCode(ObjectGenome.inspect(metatableRootGenome), "schema.metatable")\n\t)\n\n\tlocal metatableNestedGenome = deepCopy(Fixtures.officeChair)\n\tsetmetatable(metatableNestedGenome.provenance, {})\n\texpect(\n\t\t"semantic validator rejects metatable-backed nested records",\n\t\thasCode(ObjectGenome.inspect(metatableNestedGenome), "schema.metatable")\n\t)\n\n\tlocal sparseComponents = deepCopy(Fixtures.officeChair)\n''',
-              "genome metatable regressions",
-          )
-
-          test = replace_once(
-              test,
-              '''\tlocal missingGenomeIdState = ObjectGenome.defaultState(Fixtures.officeChair)\n''',
-              '''\tlocal stateWithUnknownField = ObjectGenome.defaultState(Fixtures.officeChair)\n\tstateWithUnknownField.debugRuntime = true\n\texpect(\n\t\t"rejects undeclared ObjectState top-level fields",\n\t\thasCode(ObjectGenome.inspectState(Fixtures.officeChair, stateWithUnknownField), "schema.unknown_field")\n\t)\n\n\tlocal metatableState = ObjectGenome.defaultState(Fixtures.officeChair)\n\tsetmetatable(metatableState, {})\n\texpect(\n\t\t"rejects metatable-backed ObjectState root",\n\t\thasCode(ObjectGenome.inspectState(Fixtures.officeChair, metatableState), "state.metatable")\n\t)\n\n\tlocal metatableStateMap = ObjectGenome.defaultState(Fixtures.officeChair)\n\tsetmetatable(metatableStateMap.componentWear, {})\n\texpect(\n\t\t"rejects metatable-backed ObjectState maps",\n\t\thasCode(ObjectGenome.inspectState(Fixtures.officeChair, metatableStateMap), "state.metatable")\n\t)\n\n\tlocal missingGenomeIdState = ObjectGenome.defaultState(Fixtures.officeChair)\n''',
-              "ObjectState shape/metatable regressions",
-          )
-          test_path.write_text(test)
+          p.write_text(s)
           PY
 
           stylua src/shared/Objects/ObjectGenome.luau tests/object_genome_contract_lock.luau
