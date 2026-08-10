@@ -563,7 +563,16 @@ function FidelityManager.update(
 	nowSeconds: number
 ): TransitionResult
 	local target, reason = FidelityManager.evaluatePolicy(inputs, manager.config)
-	return FidelityManager.request(manager, entityId, target, reason, nowSeconds)
+	if target == "F0" then
+		return FidelityManager.request(manager, entityId, "F0", reason, nowSeconds)
+	elseif target == "F1" then
+		return FidelityManager.request(manager, entityId, "F1", reason, nowSeconds)
+	elseif target == "F2" then
+		return FidelityManager.request(manager, entityId, "F2", reason, nowSeconds)
+	elseif target == "F3" then
+		return FidelityManager.request(manager, entityId, "F3", reason, nowSeconds)
+	end
+	return FidelityManager.request(manager, entityId, "F4", reason, nowSeconds)
 end
 
 function FidelityManager.getMetrics(manager: Manager): Metrics
