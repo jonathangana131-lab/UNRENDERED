@@ -102,10 +102,8 @@ local function run(): number
 		end
 
 		if entityRecipe.kind == "primitive" then
-			local materialAccepted = pcall(function()
-				MaterialDNA.validateReference(entityRecipe.material)
-			end)
-			if not materialAccepted then
+			local materialReport = MaterialDNA.validateReference(entityRecipe.material)
+			if not materialReport.ok then
 				allMaterialRefsValid = false
 			end
 		else
@@ -138,8 +136,41 @@ local function run(): number
 		allRegistrationsValid and WorldEntity.count(registry) == 20
 	)
 	expect("lab primitive material references satisfy MaterialDNA", allMaterialRefsValid)
+	expect(
+		"MaterialDNA reports malformed lab-style references invalid",
+		not MaterialDNA.validateReference({ id = "", recipeVersion = 0 }).ok
+	)
 	expect("lab object placements bind valid ObjectGenome recipes and default state", allObjectContractsValid)
 	expect("lab shell starts as explicit F2 proxy fidelity", allInitialFidelityF2)
+
+	local doorGenome = PhysicsLabRecipe.objectGenome("commercialDoor")
+	local requiredDoorComponents = {
+		["hinge-jamb"] = false,
+		["strike-jamb"] = false,
+		header = false,
+		leaf = false,
+	}
+	local frameLeavesOpening = true
+	for _, component in ipairs(doorGenome.components) do
+		if requiredDoorComponents[component.key] ~= nil then
+			requiredDoorComponents[component.key] = true
+		end
+		if component.key ~= "leaf" then
+			local spansWidth = component.dimensionsM.x >= doorGenome.dimensionsM.x * 0.9
+			local spansHeight = component.dimensionsM.y >= doorGenome.dimensionsM.y * 0.9
+			if spansWidth and spansHeight then
+				frameLeavesOpening = false
+			end
+		end
+	end
+	local hasManufacturableFramePieces = true
+	for _, present in pairs(requiredDoorComponents) do
+		if not present then
+			hasManufacturableFramePieces = false
+		end
+	end
+	expect("commercial door frame uses jamb/header construction", hasManufacturableFramePieces)
+	expect("commercial door frame does not fill the aperture with a solid slab", frameLeavesOpening)
 
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
 	expect("lab duplicate identity is detectable", duplicateAccepted == false)
