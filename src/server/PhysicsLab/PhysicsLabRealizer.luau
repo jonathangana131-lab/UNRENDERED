@@ -148,72 +148,191 @@ local function newEntityModel(element: LabElement, parent: Instance): Model
 	return model
 end
 
+local function componentSize(component: any): Vector3
+	local scale = PhysicsLabRecipe.StudsPerMeter
+	return Vector3.new(
+		component.dimensionsM.x * scale,
+		component.dimensionsM.y * scale,
+		component.dimensionsM.z * scale
+	)
+end
+
+local function componentCFrame(objectCFrame: CFrame, component: any): CFrame
+	local scale = PhysicsLabRecipe.StudsPerMeter
+	return objectCFrame
+		* CFrame.new(
+			component.localPositionM.x * scale,
+			component.localPositionM.y * scale,
+			component.localPositionM.z * scale
+		)
+		* CFrame.Angles(
+			math.rad(component.localRotationDeg.x),
+			math.rad(component.localRotationDeg.y),
+			math.rad(component.localRotationDeg.z)
+		)
+end
+
+local function findComponent(genome: Genome, componentKey: string): any
+	for _, component in ipairs(genome.components) do
+		if component.key == componentKey then
+			return component
+		end
+	end
+	error(`Physics Lab ObjectGenome references missing component {componentKey}`)
+end
+
+local function findMovingComponent(genome: Genome, mechanism: MechanismSpec): any
+	local movingComponentKey = (mechanism :: any).movingComponentKey
+	assert(type(movingComponentKey) == "string", "Physics Lab mechanism must identify a moving component")
+	return findComponent(genome, movingComponentKey)
+end
+
+local function objectAxisInPart(objectCFrame: CFrame, part: BasePart, axis: any): Vector3
+	local localAxis = Vector3.new(axis.x, axis.y, axis.z)
+	assert(localAxis.Magnitude > 0, "Physics Lab mechanism axis must be non-zero")
+	local worldAxis = objectCFrame:VectorToWorldSpace(localAxis.Unit)
+	return part.CFrame:VectorToObjectSpace(worldAxis).Unit
+end
+
 local function realizeBox(element: LabElement, parent: Instance, anchored: boolean): ()
 	local model = newEntityModel(element, parent)
 	local part =
 		newPart("Body", vector3(element.sizeStuds), cframeFor(element), anchored, element.material, model)
 	applyEntityDiagnostics(part, element)
+	if not anchored then
+		part:SetNetworkOwner(nil)
+	end
 	model.PrimaryPart = part
 	addStudioDiagnostic(part, element)
 end
 
 local function realizeRollingCart(element: LabElement, parent: Instance): ()
+	local genome = PhysicsLabRecipe.objectGenomeFor(element)
+	assert(genome ~= nil, "Physics Lab rolling cart requires a bound ObjectGenome")
+	local objectCFrame = cframeFor(element)
 	local model = newEntityModel(element, parent)
-	local size = vector3(element.sizeStuds)
-	local bodyCFrame = cframeFor(element)
-	local chassisSize = Vector3.new(size.X, math.max(0.45, size.Y * 0.42), size.Z)
-	local chassis = newPart("Chassis", chassisSize, bodyCFrame, false, element.material, model)
+
+	local casterComponents: { [string]: MechanismSpec } = {}
+	for _, mechanism in ipairs(genome.mechanisms) do
+		assert(mechanism.kind == "caster", "Physics Lab cart supports only authored caster mechanisms")
+		casterComponents[mechanism.movingComponentKey] = mechanism
+	end
+
+	local chassisComponent = findComponent(genome, "chassis")
+	local chassis = newPart(
+		"chassis",
+		componentSize(chassisComponent),
+		componentCFrame(objectCFrame, chassisComponent),
+		false,
+		element.material,
+		model
+	)
 	applyEntityDiagnostics(chassis, element)
 	chassis:SetNetworkOwner(nil)
 
-	local wheelDiameter = math.max(0.65, math.min(size.X, size.Z) * 0.28)
-	local wheelWidth = math.max(0.32, wheelDiameter * 0.42)
-	local halfX = math.max(0.1, size.X * 0.5 - wheelWidth * 0.55)
-	local halfZ = math.max(0.1, size.Z * 0.5 - wheelDiameter * 0.55)
-	local wheelY = -chassisSize.Y * 0.5 + wheelDiameter * 0.15
+	for _, component in ipairs(genome.components) do
+		if component.key ~= "chassis" and casterComponents[component.key] == nil then
+			local part = newPart(
+				component.key,
+				componentSize(component),
+				componentCFrame(objectCFrame, component),
+				false,
+				element.material,
+				model
+			)
+			applyEntityDiagnostics(part, element)
+			part:SetNetworkOwner(nil)
 
-	local wheelOffsets = {
-		Vector3.new(-halfX, wheelY, -halfZ),
-		Vector3.new(halfX, wheelY, -halfZ),
-		Vector3.new(-halfX, wheelY, halfZ),
-		Vector3.new(halfX, wheelY, halfZ),
-	}
-	for index, offset in ipairs(wheelOffsets) do
-		local wheelCFrame = bodyCFrame * CFrame.new(offset)
+			local weld = Instance.new("WeldConstraint")
+			weld.Name = `{component.key}-weld`
+			weld.Part0 = chassis
+			weld.Part1 = part
+			weld.Parent = model
+		end
+	end
+
+	for componentKey, mechanism in pairs(casterComponents) do
+		assert(mechanism.kind == "caster", "Physics Lab caster mechanism type drifted")
+		local component = findComponent(genome, componentKey)
+		local wheelCFrame = componentCFrame(objectCFrame, component)
 		local wheel = newPart(
-			`Wheel{index}`,
-			Vector3.new(wheelWidth, wheelDiameter, wheelDiameter),
+			component.key,
+			componentSize(component),
 			wheelCFrame,
 			false,
 			element.material,
 			model
 		)
 		wheel.Shape = Enum.PartType.Cylinder
-		wheel:SetNetworkOwner(nil)
 		applyEntityDiagnostics(wheel, element)
+		wheel:SetNetworkOwner(nil)
 
-		local chassisAttachment = Instance.new("Attachment")
-		chassisAttachment.Name = `WheelMount{index}`
-		chassisAttachment.Position = offset
-		chassisAttachment.Axis = Vector3.new(1, 0, 0)
-		chassisAttachment.Parent = chassis
+		local pivot = newPart(
+			`{component.key}-swivel-pivot`,
+			Vector3.new(0.05, 0.05, 0.05),
+			wheelCFrame,
+			false,
+			element.material,
+			model
+		)
+		pivot.Transparency = 1
+		pivot.CanCollide = false
+		pivot.CanQuery = false
+		pivot.CanTouch = false
+		pivot.Massless = true
+		applyEntityDiagnostics(pivot, element)
+		pivot:SetNetworkOwner(nil)
 
-		local wheelAttachment = Instance.new("Attachment")
-		wheelAttachment.Name = `WheelAxle{index}`
-		wheelAttachment.Axis = Vector3.new(1, 0, 0)
-		wheelAttachment.Parent = wheel
+		local chassisSwivel = Instance.new("Attachment")
+		chassisSwivel.Name = `{component.key}-chassis-swivel`
+		chassisSwivel.Position = chassis.CFrame:PointToObjectSpace(wheelCFrame.Position)
+		chassisSwivel.Axis = objectAxisInPart(objectCFrame, chassis, mechanism.swivelAxis)
+		chassisSwivel.Parent = chassis
 
-		local hinge = Instance.new("HingeConstraint")
-		hinge.Name = `WheelHinge{index}`
-		hinge.Attachment0 = chassisAttachment
-		hinge.Attachment1 = wheelAttachment
-		hinge.Parent = model
+		local pivotSwivel = Instance.new("Attachment")
+		pivotSwivel.Name = `{component.key}-pivot-swivel`
+		pivotSwivel.Axis = objectAxisInPart(objectCFrame, pivot, mechanism.swivelAxis)
+		pivotSwivel.Parent = pivot
 
-		local noCollision = Instance.new("NoCollisionConstraint")
-		noCollision.Name = `WheelNoCollision{index}`
-		noCollision.Part0 = chassis
-		noCollision.Part1 = wheel
-		noCollision.Parent = model
+		local swivel = Instance.new("HingeConstraint")
+		swivel.Name = `{component.key}-swivel`
+		swivel.Attachment0 = chassisSwivel
+		swivel.Attachment1 = pivotSwivel
+		swivel.Parent = model
+
+		local pivotRoll = Instance.new("Attachment")
+		pivotRoll.Name = `{component.key}-pivot-roll`
+		pivotRoll.Axis = objectAxisInPart(objectCFrame, pivot, mechanism.rollAxis)
+		pivotRoll.Parent = pivot
+
+		local wheelRoll = Instance.new("Attachment")
+		wheelRoll.Name = `{component.key}-wheel-roll`
+		wheelRoll.Axis = objectAxisInPart(objectCFrame, wheel, mechanism.rollAxis)
+		wheelRoll.Parent = wheel
+
+		local roll = Instance.new("HingeConstraint")
+		roll.Name = `{component.key}-roll`
+		roll.Attachment0 = pivotRoll
+		roll.Attachment1 = wheelRoll
+		roll.Parent = model
+
+		local chassisWheelNoCollision = Instance.new("NoCollisionConstraint")
+		chassisWheelNoCollision.Name = `{component.key}-chassis-wheel-no-collision`
+		chassisWheelNoCollision.Part0 = chassis
+		chassisWheelNoCollision.Part1 = wheel
+		chassisWheelNoCollision.Parent = model
+
+		local chassisPivotNoCollision = Instance.new("NoCollisionConstraint")
+		chassisPivotNoCollision.Name = `{component.key}-chassis-pivot-no-collision`
+		chassisPivotNoCollision.Part0 = chassis
+		chassisPivotNoCollision.Part1 = pivot
+		chassisPivotNoCollision.Parent = model
+
+		local pivotWheelNoCollision = Instance.new("NoCollisionConstraint")
+		pivotWheelNoCollision.Name = `{component.key}-pivot-wheel-no-collision`
+		pivotWheelNoCollision.Part0 = pivot
+		pivotWheelNoCollision.Part1 = wheel
+		pivotWheelNoCollision.Parent = model
 	end
 
 	model.PrimaryPart = chassis
@@ -229,60 +348,78 @@ local function realizeWedge(element: LabElement, parent: Instance): ()
 end
 
 local function realizeHingedPanel(element: LabElement, parent: Instance): ()
-	local model = newEntityModel(element, parent)
-	local size = vector3(element.sizeStuds)
-	local panelCFrame = cframeFor(element)
-	local panel = newPart("Panel", size, panelCFrame, false, element.material, model)
-	applyEntityDiagnostics(panel, element)
-	panel:SetNetworkOwner(nil)
+	local genome = PhysicsLabRecipe.objectGenomeFor(element)
+	assert(genome ~= nil, "Physics Lab door proxy requires a bound ObjectGenome")
+	local mechanism = PhysicsLabRecipe.mechanismFor(element)
+	assert(mechanism ~= nil and mechanism.kind == "hinge", "Physics Lab door proxy requires a hinge mechanism")
 
-	local anchor = newPart(
-		"HingeAnchor",
-		Vector3.new(0.2, size.Y, 0.2),
-		panelCFrame * CFrame.new(-size.X * 0.5, 0, 0),
-		true,
+	local movingComponent = findMovingComponent(genome, mechanism)
+	local frameComponent = findComponent(genome, mechanism.frameComponentKey)
+	local objectCFrame = cframeFor(element)
+	local model = newEntityModel(element, parent)
+	local framePart: BasePart? = nil
+
+	for _, component in ipairs(genome.components) do
+		if component.key ~= movingComponent.key then
+			local part = newPart(
+				component.key,
+				componentSize(component),
+				componentCFrame(objectCFrame, component),
+				true,
+				element.material,
+				model
+			)
+			applyEntityDiagnostics(part, element)
+			if component.key == frameComponent.key then
+				framePart = part
+			end
+		end
+	end
+	assert(framePart ~= nil, "Physics Lab door realization is missing hinge frame component")
+
+	local panel = newPart(
+		movingComponent.key,
+		componentSize(movingComponent),
+		componentCFrame(objectCFrame, movingComponent),
+		false,
 		element.material,
 		model
 	)
-	anchor.Transparency = 1
-	anchor.CanCollide = false
-	anchor.CanQuery = false
-	anchor.CanTouch = false
-	applyEntityDiagnostics(anchor, element)
+	applyEntityDiagnostics(panel, element)
+	panel:SetNetworkOwner(nil)
+
+	local hingeSide = if frameComponent.localPositionM.x < movingComponent.localPositionM.x then -1 else 1
+	local scale = PhysicsLabRecipe.StudsPerMeter
+	local hingeLocal = Vector3.new(
+		(movingComponent.localPositionM.x + hingeSide * movingComponent.dimensionsM.x * 0.5) * scale,
+		movingComponent.localPositionM.y * scale,
+		movingComponent.localPositionM.z * scale
+	)
+	local hingeWorld = objectCFrame:PointToWorldSpace(hingeLocal)
 
 	local frameAttachment = Instance.new("Attachment")
 	frameAttachment.Name = "FrameAttachment"
-	frameAttachment.Axis = Vector3.new(0, 1, 0)
-	frameAttachment.Parent = anchor
+	frameAttachment.Position = framePart.CFrame:PointToObjectSpace(hingeWorld)
+	frameAttachment.Axis = objectAxisInPart(objectCFrame, framePart, mechanism.axis)
+	frameAttachment.Parent = framePart
 
 	local panelAttachment = Instance.new("Attachment")
 	panelAttachment.Name = "PanelAttachment"
-	panelAttachment.Position = Vector3.new(-size.X * 0.5, 0, 0)
-	panelAttachment.Axis = Vector3.new(0, 1, 0)
+	panelAttachment.Position = panel.CFrame:PointToObjectSpace(hingeWorld)
+	panelAttachment.Axis = objectAxisInPart(objectCFrame, panel, mechanism.axis)
 	panelAttachment.Parent = panel
 
 	local hinge = Instance.new("HingeConstraint")
-	hinge.Name = "DoorHinge"
+	hinge.Name = mechanism.key
 	hinge.Attachment0 = frameAttachment
 	hinge.Attachment1 = panelAttachment
 	hinge.LimitsEnabled = true
-	hinge.LowerAngle = 0
-	hinge.UpperAngle = 105
+	hinge.LowerAngle = mechanism.minDegrees
+	hinge.UpperAngle = mechanism.maxDegrees
 	hinge.Parent = model
 
 	model.PrimaryPart = panel
 	addStudioDiagnostic(panel, element)
-end
-
-local function findMovingComponent(genome: Genome, mechanism: MechanismSpec): any
-	local movingComponentKey = (mechanism :: any).movingComponentKey
-	assert(type(movingComponentKey) == "string", "Physics Lab mechanism must identify a moving component")
-	for _, component in ipairs(genome.components) do
-		if component.key == movingComponentKey then
-			return component
-		end
-	end
-	error(`Physics Lab mechanism references missing component {movingComponentKey}`)
 end
 
 local function realizeDrawerProxy(element: LabElement, parent: Instance): ()
@@ -296,21 +433,11 @@ local function realizeDrawerProxy(element: LabElement, parent: Instance): ()
 	local model = newEntityModel(element, parent)
 	local size = vector3(element.sizeStuds)
 	local shellCFrame = cframeFor(element)
-	local drawerSize = Vector3.new(
-		movingComponent.dimensionsM.x * scale,
-		movingComponent.dimensionsM.y * scale,
-		movingComponent.dimensionsM.z * scale
-	)
-	local drawerOffset = Vector3.new(
-		movingComponent.localPositionM.x * scale,
-		movingComponent.localPositionM.y * scale,
-		movingComponent.localPositionM.z * scale
-	)
-	local drawerCFrame = shellCFrame * CFrame.new(drawerOffset)
+	local drawerSize = componentSize(movingComponent)
+	local drawerCFrame = componentCFrame(shellCFrame, movingComponent)
 
-	-- The cabinet carcass is deliberately decomposed instead of represented by
-	-- one solid box. A full collidable shell would begin by interpenetrating the
-	-- dynamic drawer and normalize an unstable mechanism test.
+	-- A full collidable shell would begin by interpenetrating the dynamic drawer.
+	-- Decompose the F3 carcass so the authored mechanism starts from a sane contact state.
 	local wallThickness = math.min(
 		0.08,
 		math.max(0.05, (size.X - drawerSize.X) * 0.4),
@@ -319,7 +446,6 @@ local function realizeDrawerProxy(element: LabElement, parent: Instance): ()
 	local halfX = size.X * 0.5
 	local halfY = size.Y * 0.5
 	local halfZ = size.Z * 0.5
-
 	local carcassSpecs = {
 		{
 			name = "SideLeft",
@@ -350,7 +476,14 @@ local function realizeDrawerProxy(element: LabElement, parent: Instance): ()
 
 	local primaryPart: BasePart? = nil
 	for _, spec in ipairs(carcassSpecs) do
-		local part = newPart(spec.name, spec.size, shellCFrame * CFrame.new(spec.offset), true, element.material, model)
+		local part = newPart(
+			spec.name,
+			spec.size,
+			shellCFrame * CFrame.new(spec.offset),
+			true,
+			element.material,
+			model
+		)
 		applyEntityDiagnostics(part, element)
 		if spec.name == "Back" then
 			primaryPart = part
@@ -369,21 +502,18 @@ local function realizeDrawerProxy(element: LabElement, parent: Instance): ()
 	guide.CanTouch = false
 	applyEntityDiagnostics(guide, element)
 
-	local slideAxis = Vector3.new(mechanism.axis.x, mechanism.axis.y, mechanism.axis.z)
-	assert(slideAxis.Magnitude > 0, "Physics Lab slide axis must be non-zero")
-
 	local guideAttachment = Instance.new("Attachment")
 	guideAttachment.Name = "ShellSlideAttachment"
-	guideAttachment.Axis = slideAxis.Unit
+	guideAttachment.Axis = objectAxisInPart(shellCFrame, guide, mechanism.axis)
 	guideAttachment.Parent = guide
 
 	local drawerAttachment = Instance.new("Attachment")
 	drawerAttachment.Name = "DrawerSlideAttachment"
-	drawerAttachment.Axis = slideAxis.Unit
+	drawerAttachment.Axis = objectAxisInPart(shellCFrame, drawer, mechanism.axis)
 	drawerAttachment.Parent = drawer
 
 	local slide = Instance.new("PrismaticConstraint")
-	slide.Name = "DrawerSlide"
+	slide.Name = mechanism.key
 	slide.Attachment0 = guideAttachment
 	slide.Attachment1 = drawerAttachment
 	slide.LimitsEnabled = true
