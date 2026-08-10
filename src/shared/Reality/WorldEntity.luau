@@ -81,7 +81,10 @@ local function assertNonNegativeInteger(path: string, value: unknown): number
 	assert(type(value) == "number", `{path} must be a number`)
 	local numericValue = value :: number
 	assertFiniteNumber(path, numericValue)
-	assert(numericValue >= 0 and numericValue == math.floor(numericValue), `{path} must be a non-negative integer`)
+	assert(
+		numericValue >= 0 and numericValue == math.floor(numericValue),
+		`{path} must be a non-negative integer`
+	)
 	return numericValue
 end
 
@@ -216,10 +219,8 @@ local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
 	assert(type(source.persistentState) == "table", "WorldEntityRecord.persistentState must be a table")
 
 	local stateRevision = assertNonNegativeInteger("WorldEntityRecord.stateRevision", source.stateRevision)
-	local representationRevision = assertNonNegativeInteger(
-		"WorldEntityRecord.representationRevision",
-		source.representationRevision
-	)
+	local representationRevision =
+		assertNonNegativeInteger("WorldEntityRecord.representationRevision", source.representationRevision)
 
 	return table.freeze({
 		id = source.id,

@@ -278,7 +278,11 @@ local function run(): number
 	mutableRecord.stateRevision = 99
 	mutableRecord.representationRevision = 100
 
-	expectEqual("caller id mutation cannot move registry identity", ownedRecord.id, "entity:mutable-registration")
+	expectEqual(
+		"caller id mutation cannot move registry identity",
+		ownedRecord.id,
+		"entity:mutable-registration"
+	)
 	expectEqual("caller kind mutation cannot rewrite registry truth", ownedRecord.kind, "office-chair")
 	expectEqual(
 		"caller origin mutation cannot rewrite registry truth",
@@ -347,7 +351,11 @@ local function run(): number
 	local fractionalRepresentationRevisionAccepted = pcall(function()
 		WorldEntity.register(WorldEntity.createRegistry(), fractionalRepresentationRevision :: any)
 	end)
-	expectEqual("registry rejects fractional representation revision", fractionalRepresentationRevisionAccepted, false)
+	expectEqual(
+		"registry rejects fractional representation revision",
+		fractionalRepresentationRevisionAccepted,
+		false
+	)
 
 	local malformedOrigin = mutableRegistrationFixture()
 	malformedOrigin.origin.generatorVersion = 0
@@ -387,7 +395,11 @@ local function run(): number
 	local duplicateRegistered, diagnostic = WorldEntity.register(registry, duplicate)
 	expectEqual("duplicate registration is rejected", duplicateRegistered, false)
 	expectEqual("duplicate diagnostic exists", diagnostic ~= nil, true)
-	expectEqual("duplicate does not replace authoritative identity", WorldEntity.get(registry, entity.id), authoritativeRecord)
+	expectEqual(
+		"duplicate does not replace authoritative identity",
+		WorldEntity.get(registry, entity.id),
+		authoritativeRecord
+	)
 	expectEqual("duplicate diagnostic retained", #WorldEntity.duplicateDiagnostics(registry), 1)
 
 	local diagnosticSnapshot = WorldEntity.duplicateDiagnostics(registry)
