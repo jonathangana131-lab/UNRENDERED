@@ -1,0 +1,100 @@
+name: Temporary legacy observation fix
+
+on:
+  push:
+    branches:
+      - agent/reality/9-worldid-region-identity-sol56s2
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/reality/9-worldid-region-identity-sol56s2
+
+      - name: Apply fail-closed compatibility boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          module = Path('src/shared/Reality/ResolvedRegionRecipe.luau')
+          text = module.read_text()
+          old = '''\tlocal locked = ownRecipe(existing)
+          \tlocal incomingWorldId, incomingWorldSeedRef, incomingAddress = ownObservationIdentity(candidate)
+          \tif locked.schemaVersion == ResolvedRegionRecipe.LEGACY_SCHEMA_VERSION then
+          \t\tassert(
+          \t\t\tlocked.worldSeedRef == incomingWorldSeedRef,
+          \t\t\t"observation candidate worldSeedRef does not match locked legacy region"
+          \t\t)
+          \t\tassert(
+          \t\t\tsameAddress(locked.regionAddress, incomingAddress),
+          \t\t\t"observation candidate address does not match locked legacy region"
+          \t\t)
+          \t\treturn locked
+          \tend
+
+          \tassert(locked.worldId == incomingWorldId, "observation candidate worldId does not match locked region")
+          '''
+          new = '''\tlocal locked = ownRecipe(existing)
+          \tassert(
+          \t\tlocked.schemaVersion ~= ResolvedRegionRecipe.LEGACY_SCHEMA_VERSION,
+          \t\t"schema-v1 observed truth requires upgradeLegacyV1 with an explicit WorldId before v2 observation"
+          \t)
+          \tlocal incomingWorldId, incomingWorldSeedRef, incomingAddress = ownObservationIdentity(candidate)
+
+          \tassert(locked.worldId == incomingWorldId, "observation candidate worldId does not match locked region")
+          '''
+          if old not in text:
+              raise SystemExit('resolveOnObservation legacy block marker not found')
+          module.write_text(text.replace(old, new, 1))
+
+          test = Path('tests/resolved_region_recipe_v1_compat.luau')
+          text = test.read_text()
+          old = '''\tlocal observedAgain = ResolvedRegionRecipe.resolveOnObservation(
+          \t\tlocked,
+          \t\tcurrentV2Candidate(GOLDEN_WORLD_ID)
+          \t)
+          \texpect(
+          \t\t"later v2-capable observation cannot silently rewrite locked v1 truth",
+          \t\tResolvedRegionRecipe.equal(locked, observedAgain)
+          \t)
+          '''
+          new = '''\texpect(
+          \t\t"legacy truth cannot participate in v2 observation before explicit WorldId upgrade",
+          \t\trejects(function()
+          \t\t\tResolvedRegionRecipe.resolveOnObservation(locked, currentV2Candidate(GOLDEN_WORLD_ID))
+          \t\tend)
+          \t)
+          '''
+          if old not in text:
+              raise SystemExit('legacy observation test marker not found')
+          test.write_text(text.replace(old, new, 1))
+          PY
+
+      - name: Install pinned toolchain and format touched Luau
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+          stylua src/shared/Reality/ResolvedRegionRecipe.luau tests/resolved_region_recipe_v1_compat.luau
+
+      - name: Commit final source and remove helper
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/zz-temp-failclose-v1-183.yml
+          git add src/shared/Reality/ResolvedRegionRecipe.luau tests/resolved_region_recipe_v1_compat.luau
+          git commit -m "fix(reality): require explicit legacy WorldId upgrade"
+          git push origin HEAD:agent/reality/9-worldid-region-identity-sol56s2
