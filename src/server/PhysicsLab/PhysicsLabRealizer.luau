@@ -168,6 +168,7 @@ end
 
 function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 	local recipe = PhysicsLabRecipe.build()
+	local resolvedRegion = PhysicsLabRecipe.resolvedRegion()
 	local existing = parent:FindFirstChild(ROOT_NAME)
 	if existing ~= nil then
 		assert(
@@ -184,15 +185,15 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 	model:SetAttribute("UNRENDERED_LabRecipeKey", recipe.recipeKey)
 	model:SetAttribute("UNRENDERED_WorldId", recipe.worldId)
 	model:SetAttribute("UNRENDERED_RegionId", recipe.regionId)
-	model:SetAttribute("UNRENDERED_ResolvedRegionFingerprint", recipe.resolvedRegion.recipeFingerprint)
-	model:SetAttribute("UNRENDERED_ResolvedRegionWorldSeedRef", recipe.resolvedRegion.worldSeedRef)
+	model:SetAttribute("UNRENDERED_ResolvedRegionFingerprint", resolvedRegion.recipeFingerprint)
+	model:SetAttribute("UNRENDERED_ResolvedRegionWorldSeedRef", resolvedRegion.worldSeedRef)
 	model:SetAttribute(
 		"UNRENDERED_ResolvedRegionAddress",
 		string.format(
 			"%d,%d,%d",
-			recipe.resolvedRegion.regionAddress.x,
-			recipe.resolvedRegion.regionAddress.z,
-			recipe.resolvedRegion.regionAddress.layer
+			resolvedRegion.regionAddress.x,
+			resolvedRegion.regionAddress.z,
+			resolvedRegion.regionAddress.layer
 		)
 	)
 
