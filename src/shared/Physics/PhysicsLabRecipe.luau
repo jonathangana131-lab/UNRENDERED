@@ -125,7 +125,7 @@ local function primitive(
 		resolvedTransparency >= 0 and resolvedTransparency <= 1,
 		"Physics Lab primitive transparency must be in [0, 1]"
 	)
-	return table.freeze({
+	local recipe: PrimitiveEntityRecipe = {
 		kind = "primitive",
 		key = key,
 		entity = WorldEntity.new({
@@ -142,7 +142,8 @@ local function primitive(
 		material = material,
 		collidable = collidable,
 		transparency = resolvedTransparency,
-	})
+	}
+	return table.freeze(recipe)
 end
 
 local function objectEntity(
@@ -154,7 +155,8 @@ local function objectEntity(
 	local genome = OBJECT_GENOMES[genomeKey]
 	assert(genome ~= nil, `unknown Physics Lab ObjectGenome key {genomeKey}`)
 	ObjectGenome.validate(genome)
-	return table.freeze({
+	local defaultState = ObjectGenome.defaultState(genome)
+	local recipe: ObjectEntityRecipe = {
 		kind = "object",
 		key = key,
 		entity = WorldEntity.new({
@@ -162,14 +164,17 @@ local function objectEntity(
 			kind = `object/{genome.familyId}`,
 			origin = originFor(key),
 			fidelity = "F2",
-			persistentState = ObjectGenome.defaultState(genome),
+			-- WorldEntity.new owns and runtime-validates this plain ObjectGenome state.
+			-- ObjectState's static shape is intentionally richer than PlainData's alias.
+			persistentState = defaultState :: any,
 		}),
 		genomeKey = genomeKey,
 		genomeId = ObjectGenome.identityKey(genome),
 		genomeRecipeFingerprint = ObjectGenome.recipeFingerprint(genome),
 		positionM = positionM,
 		rotationDeg = rotationDeg,
-	})
+	}
+	return table.freeze(recipe)
 end
 
 function PhysicsLabRecipe.objectGenome(key: ObjectGenomeKey): ObjectGenome.ObjectGenome
