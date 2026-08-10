@@ -63,10 +63,7 @@ local function run(): number
 	expect("first observation creates schema-v2 locked recipe", locked.schemaVersion == 2)
 	expect("world identity stays independently locked", locked.worldId == GOLDEN_WORLD_ID)
 	expect("v2 region identity stays golden-locked", locked.regionId == GOLDEN_REGION_ID)
-	expect(
-		"v2 recipe fingerprint stays golden-locked",
-		locked.recipeFingerprint == GOLDEN_RECIPE_FINGERPRINT
-	)
+	expect("v2 recipe fingerprint stays golden-locked", locked.recipeFingerprint == GOLDEN_RECIPE_FINGERPRINT)
 	expect(
 		"lock snapshots current reality version",
 		locked.generatorVersions.reality == candidate.generatorVersions.reality
@@ -437,10 +434,7 @@ local function run(): number
 	local reproKey = ResolvedRegionRecipe.reproKey(locked)
 	expect("repro key carries WorldId", string.find(reproKey, locked.worldId, 1, true) ~= nil)
 	expect("repro key carries region identity", string.find(reproKey, locked.regionId, 1, true) ~= nil)
-	expect(
-		"repro key carries seed provenance",
-		string.find(reproKey, locked.worldSeedRef, 1, true) ~= nil
-	)
+	expect("repro key carries seed provenance", string.find(reproKey, locked.worldSeedRef, 1, true) ~= nil)
 	expect(
 		"repro key carries exact recipe fingerprint",
 		string.find(reproKey, locked.recipeFingerprint, 1, true) ~= nil
