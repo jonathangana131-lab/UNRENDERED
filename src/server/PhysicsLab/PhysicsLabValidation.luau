@@ -91,14 +91,20 @@ local function assertCanonicalRepresentationSet(
 	local seenIds: { [string]: string } = {}
 
 	for _, entityRecipe in ipairs(recipe.entities) do
-		assert(expectedByKey[entityRecipe.key] == nil, `canonical Physics Lab recipe repeats key {entityRecipe.key}`)
+		assert(
+			expectedByKey[entityRecipe.key] == nil,
+			`canonical Physics Lab recipe repeats key {entityRecipe.key}`
+		)
 		expectedByKey[entityRecipe.key] = entityRecipe
 	end
 
 	for _, child in ipairs(root:GetChildren()) do
 		local expected = expectedByKey[child.Name]
 		assert(expected ~= nil, `Physics Lab validation found unexpected direct representation {child.Name}`)
-		assert(not seenKeys[child.Name], `Physics Lab validation found duplicate representation key {child.Name}`)
+		assert(
+			not seenKeys[child.Name],
+			`Physics Lab validation found duplicate representation key {child.Name}`
+		)
 		seenKeys[child.Name] = true
 
 		local entityId = child:GetAttribute(ENTITY_ID_ATTRIBUTE)
