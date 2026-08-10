@@ -7,6 +7,7 @@ local ObjectGenome = require(script.Parent.Parent.Objects.ObjectGenome)
 local ObjectGenomeFixtures = require(script.Parent.Parent.Objects.ObjectGenomeFixtures)
 local WorldEntity = require(script.Parent.Parent.Reality.WorldEntity)
 local FidelityManager = require(script.Parent.FidelityManager)
+local PhysicsLabObjectGenomes = require(script.Parent.PhysicsLabObjectGenomes)
 
 local PhysicsLabRecipe = {}
 
@@ -108,6 +109,8 @@ local GENOMES_BY_ID: { [string]: Genome } = table.freeze({
 	[ObjectGenome.identityKey(ObjectGenomeFixtures.officeChair)] = ObjectGenomeFixtures.officeChair,
 	[ObjectGenome.identityKey(ObjectGenomeFixtures.officeTable)] = ObjectGenomeFixtures.officeTable,
 	[ObjectGenome.identityKey(ObjectGenomeFixtures.filingCabinet)] = ObjectGenomeFixtures.filingCabinet,
+	[ObjectGenome.identityKey(PhysicsLabObjectGenomes.commercialDoor)] = PhysicsLabObjectGenomes.commercialDoor,
+	[ObjectGenome.identityKey(PhysicsLabObjectGenomes.rollingCart)] = PhysicsLabObjectGenomes.rollingCart,
 })
 
 local function worldEntityId(key: string): string
@@ -296,14 +299,15 @@ function PhysicsLabRecipe.validate(recipe: Recipe): ()
 			assert(value > 0, `{element.key}.sizeStuds.{axis} must be positive`)
 		end
 		assertFinite(`{element.key}.yawDegrees`, element.yawDegrees)
+
 		if element.objectGenomeId ~= nil then
 			assert(
 				StableId.is(element.objectGenomeId, ObjectGenome.STABLE_ID_NAMESPACE),
 				`{element.key} objectGenomeId must satisfy ObjectGenome identity contract`
 			)
 			local genome = PhysicsLabRecipe.objectGenomeFor(element)
-			assert(genome ~= nil, `{element.key} objectGenomeId must resolve through the production lab catalog`)
-			assert(element.entity.kind == "object", `{element.key} fixture-backed entity kind must be object`)
+			assert(genome ~= nil, `{element.key} objectGenomeId must resolve through the lab ObjectGenome catalog`)
+			assert(element.entity.kind == "object", `{element.key} ObjectGenome-backed entity kind must be object`)
 			local objectState = element.entity.persistentState :: any
 			assert(
 				objectState.genomeId == element.objectGenomeId,
@@ -337,32 +341,213 @@ end
 function PhysicsLabRecipe.build(): Recipe
 	local elements: { LabElement } = {}
 
-	add(elements, "floor", "floor", "physics-lab.structure", vec3(0, -0.5, 0), vec3(48, 1, 36), 0, FLOOR_MATERIAL, "static-box", "F2")
-	add(elements, "ceiling", "ceiling", "physics-lab.structure", vec3(0, 12.5, 0), vec3(48, 1, 36), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-north", "wall", "physics-lab.structure", vec3(0, 6, 18.5), vec3(48, 13, 1), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-west", "wall", "physics-lab.structure", vec3(-24.5, 6, 0), vec3(1, 13, 36), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-east", "wall", "physics-lab.structure", vec3(24.5, 6, 0), vec3(1, 13, 36), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-south-left", "wall", "physics-lab.structure", vec3(-17, 6, -18.5), vec3(14, 13, 1), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-south-right", "wall", "physics-lab.structure", vec3(9, 6, -18.5), vec3(30, 13, 1), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-south-lintel", "wall", "physics-lab.structure", vec3(-8, 10.5, -18.5), vec3(4, 4, 1), 0, WALL_MATERIAL, "static-box", "F2")
+	add(
+		elements,
+		"floor",
+		"floor",
+		"physics-lab.structure",
+		vec3(0, -0.5, 0),
+		vec3(48, 1, 36),
+		0,
+		FLOOR_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"ceiling",
+		"ceiling",
+		"physics-lab.structure",
+		vec3(0, 12.5, 0),
+		vec3(48, 1, 36),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"wall-north",
+		"wall",
+		"physics-lab.structure",
+		vec3(0, 6, 18.5),
+		vec3(48, 13, 1),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"wall-west",
+		"wall",
+		"physics-lab.structure",
+		vec3(-24.5, 6, 0),
+		vec3(1, 13, 36),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"wall-east",
+		"wall",
+		"physics-lab.structure",
+		vec3(24.5, 6, 0),
+		vec3(1, 13, 36),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
 
-	-- The 4-stud structural opening retains explicit jamb/floor clearance so the
-	-- hinged proxy begins without penetrating the wall or scraping the floor.
-	add(elements, "door", "door", "physics-lab.door-proxy", vec3(-8, 4, -18), vec3(3.8, 7.8, 0.35), 0, METAL_MATERIAL, "hinged-panel", "F3")
+	-- The south wall keeps a 4.4-stud opening around the ObjectGenome-authored
+	-- commercial frame. The frame itself is realized from its jamb/header components.
+	add(
+		elements,
+		"wall-south-left",
+		"wall",
+		"physics-lab.structure",
+		vec3(-17.1, 6, -18.5),
+		vec3(13.8, 13, 1),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"wall-south-right",
+		"wall",
+		"physics-lab.structure",
+		vec3(9.1, 6, -18.5),
+		vec3(29.8, 13, 1),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"wall-south-lintel",
+		"wall",
+		"physics-lab.structure",
+		vec3(-8, 10.5, -18.5),
+		vec3(4.4, 4, 1),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
 
-	table.insert(elements, objectElement("chair", "chair", vec3(-5, 0, -2), ObjectGenomeFixtures.officeChair, "dynamic-box", nil))
-	table.insert(elements, objectElement("table", "table", vec3(2, 0, -3), ObjectGenomeFixtures.officeTable, "dynamic-box", nil))
-	table.insert(elements, objectElement("cabinet", "cabinet", vec3(19, 0, -12), ObjectGenomeFixtures.filingCabinet, "sliding-drawer-proxy", "slide-top"))
-
-	add(elements, "cart", "cart", "physics-lab.cart-proxy", vec3(11, 1.6, -6), vec3(3.5, 3.2, 2.5), 0, METAL_MATERIAL, "rolling-cart-proxy", "F3")
+	table.insert(
+		elements,
+		objectElement(
+			"door",
+			"door",
+			vec3(-8, 0, -18.5),
+			PhysicsLabObjectGenomes.commercialDoor,
+			"hinged-panel",
+			"leaf-hinge"
+		)
+	)
+	table.insert(
+		elements,
+		objectElement(
+			"chair",
+			"chair",
+			vec3(-5, 0, -2),
+			ObjectGenomeFixtures.officeChair,
+			"dynamic-box",
+			nil
+		)
+	)
+	table.insert(
+		elements,
+		objectElement(
+			"table",
+			"table",
+			vec3(2, 0, -3),
+			ObjectGenomeFixtures.officeTable,
+			"dynamic-box",
+			nil
+		)
+	)
+	table.insert(
+		elements,
+		objectElement(
+			"cabinet",
+			"cabinet",
+			vec3(19, 0, -12),
+			ObjectGenomeFixtures.filingCabinet,
+			"sliding-drawer-proxy",
+			"slide-top"
+		)
+	)
+	table.insert(
+		elements,
+		objectElement(
+			"cart",
+			"cart",
+			vec3(11, 0, -6),
+			PhysicsLabObjectGenomes.rollingCart,
+			"rolling-cart-proxy",
+			nil
+		)
+	)
 
 	for stepIndex = 1, 4 do
 		local height = stepIndex * 0.75
-		add(elements, `stair-{stepIndex}`, "stairs", "physics-lab.structure", vec3(-16 + (stepIndex - 1) * 2, height / 2, 9), vec3(2, height, 6), 0, METAL_MATERIAL, "static-box", "F2")
+		add(
+			elements,
+			`stair-{stepIndex}`,
+			"stairs",
+			"physics-lab.structure",
+			vec3(-16 + (stepIndex - 1) * 2, height / 2, 9),
+			vec3(2, height, 6),
+			0,
+			METAL_MATERIAL,
+			"static-box",
+			"F2"
+		)
 	end
-	add(elements, "ramp", "ramp", "physics-lab.structure", vec3(10, 1.5, 9), vec3(8, 3, 6), 0, METAL_MATERIAL, "static-wedge", "F2")
-	add(elements, "ledge", "ledge", "physics-lab.structure", vec3(19, 3.25, 8), vec3(4, 0.5, 8), 0, METAL_MATERIAL, "static-box", "F2")
-	add(elements, "character-spawn", "spawn-anchor", "physics-lab.spawn-anchor", vec3(0, 0.05, 12), vec3(2, 0.1, 2), 0, FLOOR_MATERIAL, "spawn-anchor", "F1")
+	add(
+		elements,
+		"ramp",
+		"ramp",
+		"physics-lab.structure",
+		vec3(10, 1.5, 9),
+		vec3(8, 3, 6),
+		0,
+		METAL_MATERIAL,
+		"static-wedge",
+		"F2"
+	)
+	add(
+		elements,
+		"ledge",
+		"ledge",
+		"physics-lab.structure",
+		vec3(19, 3.25, 8),
+		vec3(4, 0.5, 8),
+		0,
+		METAL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"character-spawn",
+		"spawn-anchor",
+		"physics-lab.spawn-anchor",
+		vec3(0, 0.05, 12),
+		vec3(2, 0.1, 2),
+		0,
+		FLOOR_MATERIAL,
+		"spawn-anchor",
+		"F1"
+	)
 
 	local recipe: Recipe = table.freeze({
 		schemaVersion = PhysicsLabRecipe.SchemaVersion,
