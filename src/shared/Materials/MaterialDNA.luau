@@ -455,8 +455,10 @@ local function validatePhysical(errors: { string }, value: unknown, coherenceCla
 		appendError(errors, "physical.coherenceClass must match MaterialRecipe.coherenceClass")
 	end
 	validatePositive(errors, "physical.densityKgPerM3", physical.densityKgPerM3, 25000)
-	local staticFriction = validateFiniteRange(errors, "physical.staticFriction", physical.staticFriction, 0, 4)
-	local dynamicFriction = validateFiniteRange(errors, "physical.dynamicFriction", physical.dynamicFriction, 0, 4)
+	local staticFriction =
+		validateFiniteRange(errors, "physical.staticFriction", physical.staticFriction, 0, 4)
+	local dynamicFriction =
+		validateFiniteRange(errors, "physical.dynamicFriction", physical.dynamicFriction, 0, 4)
 	if staticFriction ~= nil and dynamicFriction ~= nil and dynamicFriction > staticFriction then
 		appendError(errors, "physical.dynamicFriction cannot exceed physical.staticFriction")
 	end
