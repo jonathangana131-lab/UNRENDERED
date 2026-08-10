@@ -1,6 +1,6 @@
 # Project State
 
-Current phase: **Hero Gate — Production Physics Lab / Resolved Reality Foundation**
+Current phase: **Hero Gate — Production Physics Lab depth / Resolved Reality Foundation**
 
 ## Main health
 
@@ -70,25 +70,32 @@ Landed direction:
 
 Do not open competing #9 implementations. Any future contract change must be a narrowly justified repair/migration with compatibility evidence.
 
+### #10 — Production-contract Physics Lab: active depth lane
+The initial deterministic F2 anchored-proxy shell landed via #165. It is a production-contract foothold, not Hero-Gate completion.
+
+Landed shell evidence:
+- plain deterministic lab recipe and stable project IDs,
+- Wave-1 WorldEntity/Fidelity/MaterialDNA/ObjectGenome contracts are consumed,
+- required room/object fixture coverage exists as disposable Roblox representation,
+- development diagnostics and Studio repro instructions exist,
+- ordinary CI is green,
+- `Docs/PHYSICS_LAB_VALIDATION.md` defines the engine-evidence protocol.
+
+Remaining unlocked #10 direction:
+- consume the landed #9 resolved-region identity boundary rather than treating the lab-only region formula as a second permanent region identity contract,
+- add measured F3/F4 physical bodies/constraints through the landed ObjectGenome mechanism/state semantics,
+- exercise authoritative WorldEntity/Fidelity promotion/demotion with state capture before teardown and state survival after re-realization,
+- keep runtime ownership/diagnostics bounded and fail closed on duplicate representation/identity,
+- gather actual Studio physics/contact/constraint/resource evidence under the validation protocol; unrun engine checks stay UNVERIFIED,
+- deepen the existing lab rather than merge or create another competing full-shell framework.
+
 ## Unlocked Hero Gate
 
-Finish this foundation before broadening into planned P1 systems.
-
-### #10 — Production-contract Physics Lab
-Build the permanent test/lab shell using the landed WorldEntity, Fidelity, MaterialDNA, ObjectGenome, and resolved-region contracts. This is not permission for ad-hoc gameplay scripts or a competing framework.
-
-Required direction:
-- deterministic lab recipe and stable IDs,
-- production-contract realization boundaries,
-- floor/walls/ceiling plus door/chair/table/cart/cabinet/stairs/ramp/ledge test geometry,
-- development diagnostics for IDs/fidelity state,
-- clear Studio validation/repro instructions,
-- keep Roblox Instances as physical representation, never canonical world state,
-- consume the landed #9 resolved-region identity boundary rather than minting a competing permanent region identity formula.
+**#10 is the sole major implementation lane.** Strike-team work may add focused tests, lifecycle/runtime integration, physics quality, diagnostics, performance/resource evidence, Studio validation and Reality-Grade review around the landed shell.
 
 ## Hero Gate exit direction
 
-Before opening broader content, prove that #10 uses the Wave-1 and landed #9 contracts without replacing them. Strike-team work should deepen #10 through tests, Studio/physics evidence, diagnostics, performance, integration and Reality-Grade review.
+Before opening broader content, prove that #10 uses the Wave-1 and landed #9 contracts without replacing them. The lab must demonstrate real Roblox realization/interaction while preserving domain identity/state and bounded lifecycle ownership.
 
 After the lab foundation is stable, the first Reality-Grade Hero Features should be **door, chair, and physical player movement**, not a giant procedural map.
 
@@ -119,10 +126,10 @@ None active.
 
 ## Next critical outcomes
 
-1. #10 becomes a permanent production-contract Physics Lab rather than a disposable demo,
-2. the lab consumes the landed resolved-region boundary instead of inventing a second region identity contract,
-3. the lab proves Wave-1 identity/material/object/fidelity contracts survive real Roblox realization and interaction,
-4. door/chair/physical-player work begins only on those stable foundations,
-5. the first five-minute experience can be improved deeply without replacing its foundations.
+1. deepen the landed F2 Physics Lab into a bounded authoritative F3/F4 lifecycle path,
+2. bind the lab to the landed resolved-region identity boundary instead of preserving a second permanent region formula,
+3. prove identity/material/object/fidelity state survives real Roblox realization, demotion, teardown and promotion,
+4. collect honest Studio physics/resource evidence under `Docs/PHYSICS_LAB_VALIDATION.md`,
+5. begin door/chair/physical-player Hero work only after the lab foundation clears Reality-Grade review.
 
 Keep this file concise and operational. Git history is the changelog; Project Source is the long-term vision.
