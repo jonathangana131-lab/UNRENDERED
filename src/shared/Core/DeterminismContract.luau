@@ -1,6 +1,7 @@
 --!strict
 
 local UINT32 = 4294967296
+local RNG_STATE_CARDINALITY = UINT32 - 1
 local MAX_SAFE_INTEGER = 9007199254740991
 local RNG_ZERO_FALLBACK = 0x6d2b79f5
 local SEED_STREAM_ROOT = 0x9e3779b9
@@ -209,15 +210,17 @@ function DeterminismContract.nextIntegerState(
 	assert(isSafeInteger(minimum) and isSafeInteger(maximum), "minimum and maximum must be safe integers")
 	assert(minimum <= maximum, "minimum must be <= maximum")
 	local width = maximum - minimum + 1
-	assert(width <= UINT32, "integer range width must be <= 2^32")
+	assert(width <= RNG_STATE_CARDINALITY, "integer range width must be <= 2^32 - 1")
 
-	local acceptanceLimit = UINT32 - (UINT32 % width)
+	local acceptanceLimit = RNG_STATE_CARDINALITY - (RNG_STATE_CARDINALITY % width)
 	local nextState = DeterminismContract.nextRngState(state)
-	while nextState >= acceptanceLimit do
+	local sample = nextState - 1
+	while sample >= acceptanceLimit do
 		nextState = DeterminismContract.nextRngState(nextState)
+		sample = nextState - 1
 	end
 
-	return nextState, minimum + (nextState % width)
+	return nextState, minimum + (sample % width)
 end
 
 function DeterminismContract.seedFor(
