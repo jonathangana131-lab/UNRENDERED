@@ -2,11 +2,11 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local Workspace = game:GetService("Workspace")
 
 local Shared = ReplicatedStorage:WaitForChild("UNRENDERED")
 local Versions = require(Shared.Core.Versions)
 local SeedStream = require(Shared.WorldGen.SeedStream)
+local PhysicsLabRealizer = require(script.Parent.PhysicsLab.PhysicsLabRealizer)
 
 assert(RunService:IsServer(), "server bootstrap must run on server")
 
@@ -24,14 +24,12 @@ print(
 )
 
 if RunService:IsStudio() then
-	local PhysicsLabController = require(script.Parent.PhysicsLab.PhysicsLabController)
-	local root = PhysicsLabController.start(Workspace)
-	local snapshot = PhysicsLabController.snapshot()
+	local lab = PhysicsLabRealizer.realize(workspace)
 	print(
 		string.format(
-			"[UNRENDERED] Physics Lab realized | recipe=%s elements=%d",
-			tostring(root:GetAttribute("RecipeId")),
-			snapshot.registered
+			"[UNRENDERED] Physics Lab realized | entities=%d recipe=%s",
+			lab.model:GetAttribute("UNRENDERED_EntityCount") :: number,
+			lab.model:GetAttribute("UNRENDERED_LabRecipeKey") :: string
 		)
 	)
 end

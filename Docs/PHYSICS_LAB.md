@@ -1,51 +1,62 @@
 # Production Physics Lab
 
-Issue: #10
-
-The Physics Lab is the permanent Hero-Gate experience harness for physical systems. It is deliberately small. It uses production identity/material/object/fidelity contracts and a narrow Roblox realization adapter; it is not a second world model or a manually authored canonical Workspace.
+The Physics Lab is a permanent development experience for exercising UNRENDERED production contracts before the main world grows. It is not a disposable showcase place and it is not a separate gameplay framework.
 
 ## Contract boundary
 
-`src/shared/Physics/PhysicsLabRecipe.luau` is the deterministic plain-data source for the lab shell. It owns the lab recipe/version, stable WorldId/RegionId, WorldEntity records, transforms, production MaterialDNA references, fidelity targets, and optional landed ObjectGenome identity bindings.
+`src/shared/Physics/PhysicsLabRecipe.luau` is the deterministic, headless lab recipe. It owns stable lab/world/entity identity, semantic material references, ObjectGenome references, placement data and initial WorldEntity state. It contains no Roblox Instances.
 
-`src/server/PhysicsLab/PhysicsLabRealizer.luau` is the Roblox adapter. It consumes the recipe and creates temporary physical representation under `Workspace/UNRENDERED_PhysicsLab`. Workspace attributes are development diagnostics only; deleting the folder does not delete canonical lab truth. Re-running realization reconstructs it from the recipe.
+`src/server/PhysicsLab/PhysicsLabRealizer.luau` is a Roblox representation adapter. In Studio it realizes the recipe into `Workspace/UNRENDERED_PhysicsLab`, registers every entity with the landed WorldEntity registry and FidelityManager, and exposes development diagnostics as attributes.
 
-The server bootstrap realizes the lab only in Studio. A published/live server does not automatically spawn this development harness.
+Workspace remains representation only. Destroying the realized model does not destroy or redefine the recipe/identity contract.
 
-## Current lab content
+## Current v1 shell
 
-The deterministic shell contains:
+The deterministic bay contains:
 
-- carpeted floor, ceiling, and split walls with a real door opening;
-- a physical hinged-panel door proxy;
-- chair and table proxies bound to the landed production ObjectGenome fixture identities and their default ObjectState snapshots;
-- a filing-cabinet proxy bound to the landed ObjectGenome fixture identity plus a prismatic drawer mechanism placeholder;
-- a four-wheel rolling-cart proxy whose chassis and wheels are server-owned rigidbodies connected by hinge constraints;
-- four actual stair steps;
-- a wedge ramp and raised ledge;
-- a physical-character spawn anchor for later body work.
+- carpeted floor, ceiling and perimeter walls with a real door opening;
+- four-step contact staircase, incline ramp and raised ledge;
+- physical-character test spawn anchor;
+- the landed office-chair, office-table and filing-cabinet ObjectGenome fixtures;
+- a lab commercial-door ObjectGenome with a canonical hinge mechanism;
+- a lab two-shelf rolling-cart ObjectGenome with four canonical caster mechanisms.
 
-Primitive geometry is intentional at this gate. The door/cart mechanism proxies are WorldEntities with production material/fidelity identity, but they are **not** new permanent ObjectGenome families. Reality-Grade door/chair/cart construction belongs in their later explicitly unlocked work, not in this lab bootstrap.
+The first Roblox representation is deliberately `F2-anchored-proxy`. Object components are materialized at real ObjectGenome dimensions and carry their stable entity/component/material metadata, but they are anchored. This prevents an unreviewed pile of unstable constraints from being normalized as the production physics implementation. F3/F4 promotion work should replace that representation through the same entity/genome/state contracts.
 
 ## Studio repro
 
-1. Install the Rokit-pinned toolchain with `rokit install --no-trust-check`.
-2. Start Rojo with `rojo serve default.project.json` (configured port: 34872).
-3. Open a Roblox Studio place and connect the Rojo plugin to the project.
-4. Press **Play** so the server bootstrap runs.
-5. Inspect `Workspace/UNRENDERED_PhysicsLab`.
-6. In Studio, each realized entity gets a visible diagnostic billboard and attributes including `WorldEntityId`, `WorldId`, `RegionId`, `Fidelity`, `RecipeKey`, exact material recipe id/revision, and `ObjectGenomeId` where one exists.
-7. Stop and Play again. The same recipe keys and WorldEntityIds should be reconstructed; Workspace itself is not read back as truth.
-
-Useful interaction checks in Studio:
-
-- push the unanchored chair/table proxies and roll the cart to confirm the cart wheels remain axle-constrained to the server-owned chassis;
-- push the door panel and confirm the hinge constrains it to the frame anchor and limits travel;
-- pull/push the filing-cabinet drawer proxy and confirm the prismatic constraint retains it on its slide axis;
-- walk the four steps, wedge ramp, and ledge to expose contact/controller problems once the physical-character work is unlocked.
+1. Install the pinned tools from `rokit.toml` and run the normal Rojo workflow for `default.project.json`.
+2. Open the synced place in Roblox Studio and start a server/play session.
+3. Confirm `Workspace/UNRENDERED_PhysicsLab` exists. The server bootstrap only realizes the lab when `RunService:IsStudio()` is true.
+4. Inspect the lab model attributes:
+   - `UNRENDERED_LabRecipeKey` should be `physics-lab.hero-gate.v1`.
+   - `UNRENDERED_EntityCount` should be `20`.
+   - all initial fidelity should be represented by `UNRENDERED_FidelityF2 = 20` with F0/F1/F3/F4 at zero.
+5. Inspect `door-main`, `chair-a`, `table-a`, `cabinet-a`, and `cart-a`. Each Model should expose `UNRENDERED_WorldEntityId`, `UNRENDERED_ObjectGenomeId`, `UNRENDERED_ObjectRecipeFingerprint`, and `UNRENDERED_RepresentationClass = F2-anchored-proxy`.
+6. Inspect component Parts. They should expose `UNRENDERED_ComponentKey`, `UNRENDERED_ComponentRole`, `UNRENDERED_ComponentMassKg`, `UNRENDERED_MaterialKey`, and `UNRENDERED_MaterialRecipeVersion`.
+7. Stop/start Studio again and confirm the same recipe/entity IDs recur. The realizer owns only a model marked `UNRENDERED_PhysicsLabOwned`; it refuses to delete an unrelated Instance that merely has the same name.
 
 ## Automated evidence
 
-`tests/physics_lab_recipe.luau` is headless and verifies that repeated recipe builds produce the same ordered keys/IDs/transforms, every entity passes WorldEntity/FidelityManager boundaries, material references pass MaterialDNA, chair/table/cabinet use the landed ObjectGenome identities, all required lab roles exist, and nested resolved data is immutable.
+`tests/physics_lab_recipe.luau` stays headless and verifies:
 
-CI additionally runs format/lint/Luau analysis, architecture/randomness audits, the complete pure-Luau suite, and a Rojo build. CI cannot replace Studio physics/contact/constraint inspection; record Studio evidence separately when that environment is available.
+- stable world/region/entity IDs and deterministic entity order;
+- the complete required bay/object key set;
+- duplicate identity detection through WorldEntity;
+- exact MaterialDNA reference acceptance for structural primitives;
+- valid ObjectGenome recipes, recipe fingerprints and default mutable state;
+- explicit initial F2 fidelity.
+
+The normal repository CI remains the acceptance path for format, lint, strict Luau analysis, canonical-randomness/domain audits, pure tests and Rojo build.
+
+## Next Reality-Grade work inside #10
+
+Do not replace this shell. Deepen it in place:
+
+- add a measured F3/F4 representation/promotion adapter for movable bodies and mechanisms;
+- implement the door hinge, cabinet slides/latch and cart/chair caster physics with state capture on demotion;
+- add Studio evidence for masses, collision stability, contact behavior and repeated promotion/demotion;
+- add performance/rigidbody/constraint diagnostics;
+- add physical-player test spawn/actuation only through the later physical-character contract.
+
+Fallback primitive materials are adapter-owned and intentionally unlicensed/asset-free. Approved PBR families can replace them later without changing MaterialDNA or lab recipe identity.

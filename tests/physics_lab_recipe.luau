@@ -1,10 +1,7 @@
 local ProductionLoader = require("./support/ProductionLoader")
 
-local FidelityManager = ProductionLoader.requireShared("Physics/FidelityManager")
 local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
 local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
-local ObjectGenomeFixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
-local PhysicsLabObjectGenomes = ProductionLoader.requireShared("Physics/PhysicsLabObjectGenomes")
 local PhysicsLabRecipe = ProductionLoader.requireShared("Physics/PhysicsLabRecipe")
 local StableId = ProductionLoader.requireShared("Core/StableId")
 local WorldEntity = ProductionLoader.requireShared("Reality/WorldEntity")
@@ -24,210 +21,178 @@ local function run(): number
 	local first = PhysicsLabRecipe.build()
 	local second = PhysicsLabRecipe.build()
 
-	expect("recipe validates through production contracts", pcall(PhysicsLabRecipe.validate, first))
-	expect("recipe id uses dedicated stable namespace", StableId.is(first.recipeId, "physics-lab"))
-	expect("world id is stable", StableId.is(first.worldId, "world"))
-	expect("region id is stable", StableId.is(first.regionId, "region"))
-	expect("recipe build has deterministic element count", #first.elements == #second.elements)
-	expect("recipe includes substantial lab geometry", #first.elements >= 19)
-	expect("lab door ObjectGenome validates", ObjectGenome.inspect(PhysicsLabObjectGenomes.commercialDoor).ok)
-	expect("lab cart ObjectGenome validates", ObjectGenome.inspect(PhysicsLabObjectGenomes.rollingCart).ok)
+	expect("lab schema is explicit", first.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION)
+	expect("lab recipe key is explicit", first.recipeKey == PhysicsLabRecipe.RECIPE_KEY)
+	expect(
+		"lab world id is deterministic",
+		first.worldId == second.worldId and StableId.is(first.worldId, "world")
+	)
+	expect(
+		"lab region id is deterministic",
+		first.regionId == second.regionId and StableId.is(first.regionId, "region")
+	)
+	expect("lab entity count is deterministic", #first.entities == #second.entities and #first.entities == 20)
 
-	local requiredRoles = {}
-	for role in pairs(PhysicsLabRecipe.RequiredRoles) do
-		requiredRoles[role] = false
-	end
+	local requiredKeys = {
+		floor = true,
+		ceiling = true,
+		["wall-left"] = true,
+		["wall-right"] = true,
+		["wall-back"] = true,
+		["wall-front-left"] = true,
+		["wall-front-right"] = true,
+		["wall-front-header"] = true,
+		ramp = true,
+		ledge = true,
+		["stair-1"] = true,
+		["stair-2"] = true,
+		["stair-3"] = true,
+		["stair-4"] = true,
+		["character-spawn-anchor"] = true,
+		["door-main"] = true,
+		["chair-a"] = true,
+		["table-a"] = true,
+		["cabinet-a"] = true,
+		["cart-a"] = true,
+	}
+	local seenKeys = {}
+	local seenIds = {}
+	local registry = WorldEntity.createRegistry()
+	local deterministicEntries = true
+	local allEntityIdsValid = true
+	local allRegistrationsValid = true
+	local allMaterialRefsValid = true
+	local allObjectContractsValid = true
+	local allInitialFidelityF2 = true
 
-	local ids = {}
-	local manager = FidelityManager.new()
-	for index, element in first.elements do
-		local repeated = second.elements[index]
-		expect(`element {index} key deterministic`, repeated ~= nil and element.key == repeated.key)
-		expect(
-			`element {index} id deterministic`,
-			repeated ~= nil and element.entity.id == repeated.entity.id
-		)
-		expect(
-			`element {index} transform deterministic`,
-			repeated ~= nil
-				and element.positionStuds.x == repeated.positionStuds.x
-				and element.positionStuds.y == repeated.positionStuds.y
-				and element.positionStuds.z == repeated.positionStuds.z
-				and element.sizeStuds.x == repeated.sizeStuds.x
-				and element.sizeStuds.y == repeated.sizeStuds.y
-				and element.sizeStuds.z == repeated.sizeStuds.z
-				and element.yawDegrees == repeated.yawDegrees
-				and element.mechanismKey == repeated.mechanismKey
-		)
-		expect(`element {index} WorldEntityId valid`, WorldEntity.isId(element.entity.id))
-		expect(`element {index} WorldEntityId unique`, ids[element.entity.id] == nil)
-		ids[element.entity.id] = true
-		expect(
-			`element {index} exact MaterialDNA ref valid`,
-			MaterialDNA.validateReference(element.material).ok
-		)
-		expect(`element {index} world origin bound`, element.entity.origin.worldId == first.worldId)
-		expect(`element {index} region origin bound`, element.entity.origin.regionId == first.regionId)
-		expect(`element {index} recipe key bound`, element.entity.origin.recipeKey == element.key)
-		if element.objectGenomeId ~= nil then
-			local genome = PhysicsLabRecipe.objectGenomeFor(element)
-			expect(`element {index} fixture ObjectGenome resolves`, genome ~= nil)
-			expect(
-				`element {index} fixture ObjectState binds genome identity`,
-				element.entity.persistentState.genomeId == element.objectGenomeId
-			)
-			expect(
-				`element {index} fixture ObjectState validates`,
-				genome ~= nil and ObjectGenome.inspectState(genome, element.entity.persistentState).ok
-			)
-			if genome ~= nil then
-				local componentMaterialsValid = true
-				for _, component in ipairs(genome.components) do
-					if
-						not MaterialDNA.validateReference({
-							id = component.materialKey,
-							recipeVersion = component.materialRecipeVersion,
-						}).ok
-					then
-						componentMaterialsValid = false
-						break
-					end
-				end
-				expect(`element {index} ObjectGenome material refs validate`, componentMaterialsValid)
+	for index, entityRecipe in ipairs(first.entities) do
+		local comparison = second.entities[index]
+		if
+			comparison == nil
+			or comparison.kind ~= entityRecipe.kind
+			or comparison.key ~= entityRecipe.key
+			or comparison.entity.id ~= entityRecipe.entity.id
+		then
+			deterministicEntries = false
+		end
+
+		seenKeys[entityRecipe.key] = true
+		if seenIds[entityRecipe.entity.id] then
+			allEntityIdsValid = false
+		end
+		seenIds[entityRecipe.entity.id] = true
+		if not StableId.is(entityRecipe.entity.id, "entity") then
+			allEntityIdsValid = false
+		end
+		if entityRecipe.entity.fidelity ~= "F2" then
+			allInitialFidelityF2 = false
+		end
+		if
+			entityRecipe.entity.origin.worldId ~= first.worldId
+			or entityRecipe.entity.origin.regionId ~= first.regionId
+			or entityRecipe.entity.origin.generator ~= "physics-lab.recipe"
+			or entityRecipe.entity.origin.generatorVersion ~= PhysicsLabRecipe.GENERATOR_VERSION
+		then
+			allEntityIdsValid = false
+		end
+
+		local registered, duplicate = WorldEntity.register(registry, entityRecipe.entity)
+		if not registered or duplicate ~= nil then
+			allRegistrationsValid = false
+		end
+
+		if entityRecipe.kind == "primitive" then
+			local materialReport = MaterialDNA.validateReference(entityRecipe.material)
+			if not materialReport.ok then
+				allMaterialRefsValid = false
 			end
 		else
-			expect(`element {index} proxy state begins empty`, next(element.entity.persistentState) == nil)
-		end
-		expect(`element {index} state revision begins zero`, element.entity.stateRevision == 0)
-		expect(
-			`element {index} representation revision begins zero`,
-			element.entity.representationRevision == 0
-		)
-
-		manager:register(element.entity.id, element.entity.fidelity)
-		expect(
-			`element {index} FidelityManager accepts WorldEntity contract`,
-			manager:getObservedLevel(element.entity.id) == element.entity.fidelity
-		)
-
-		if requiredRoles[element.role] ~= nil then
-			requiredRoles[element.role] = true
-		end
-	end
-
-	for role, present in pairs(requiredRoles) do
-		expect(`required lab role present: {role}`, present)
-	end
-
-	local expectedGenomeByRole = {
-		door = ObjectGenome.identityKey(PhysicsLabObjectGenomes.commercialDoor),
-		chair = ObjectGenome.identityKey(ObjectGenomeFixtures.officeChair),
-		table = ObjectGenome.identityKey(ObjectGenomeFixtures.officeTable),
-		cart = ObjectGenome.identityKey(PhysicsLabObjectGenomes.rollingCart),
-		cabinet = ObjectGenome.identityKey(ObjectGenomeFixtures.filingCabinet),
-	}
-	for role, expectedGenomeId in pairs(expectedGenomeByRole) do
-		local matched = nil
-		for _, element in first.elements do
-			if element.role == role then
-				matched = element
-				break
+			local genome = PhysicsLabRecipe.objectGenome(entityRecipe.genomeKey)
+			local genomeReport = ObjectGenome.inspect(genome)
+			local stateReport = ObjectGenome.inspectState(genome, entityRecipe.entity.persistentState)
+			if
+				not genomeReport.ok
+				or not stateReport.ok
+				or entityRecipe.genomeId ~= ObjectGenome.identityKey(genome)
+				or entityRecipe.genomeRecipeFingerprint ~= ObjectGenome.recipeFingerprint(genome)
+			then
+				allObjectContractsValid = false
 			end
 		end
-		expect(`${role} lab proxy exists`, matched ~= nil)
-		expect(
-			`${role} uses landed ObjectGenome identity and state`,
-			matched ~= nil
-				and matched.objectGenomeId == expectedGenomeId
-				and StableId.is(matched.objectGenomeId, ObjectGenome.STABLE_ID_NAMESPACE)
-				and matched.entity.kind == "object"
-				and matched.entity.persistentState.genomeId == expectedGenomeId
-		)
 	end
 
-	local door = nil
-	local cabinet = nil
-	local cart = nil
-	local stairCount = 0
-	for _, element in first.elements do
-		if element.role == "door" and element.representationKind == "hinged-panel" then
-			door = element
-		elseif element.role == "cabinet" and element.representationKind == "sliding-drawer-proxy" then
-			cabinet = element
-		elseif element.role == "cart" and element.representationKind == "rolling-cart-proxy" then
-			cart = element
-		elseif element.role == "stairs" then
-			stairCount += 1
+	local allRequiredKeysPresent = true
+	for key in pairs(requiredKeys) do
+		if not seenKeys[key] then
+			allRequiredKeysPresent = false
 		end
 	end
 
-	expect("lab includes a hinged door representation contract", door ~= nil)
+	expect("lab entity sequence is deterministic", deterministicEntries)
+	expect("lab includes every required shell/object key", allRequiredKeysPresent)
+	expect("lab WorldEntity ids are unique StableIds", allEntityIdsValid)
 	expect(
-		"door ObjectGenome frame has positive clearance inside authored 4.4-stud opening",
-		door ~= nil and door.sizeStuds.x < 4.4 and door.sizeStuds.y < 8
+		"lab WorldEntity registry accepts every entity once",
+		allRegistrationsValid and WorldEntity.count(registry) == 20
 	)
-	if door ~= nil then
-		local mechanism = PhysicsLabRecipe.mechanismFor(door)
-		expect("door proxy binds the production leaf hinge", door.mechanismKey == "leaf-hinge")
-		expect("door hinge resolves through ObjectGenome", mechanism ~= nil and mechanism.kind == "hinge")
-		if mechanism ~= nil and mechanism.kind == "hinge" then
-			expect(
-				"door proxy keeps authored hinge axis and limits",
-				mechanism.axis.x == 0
-					and mechanism.axis.y == 1
-					and mechanism.axis.z == 0
-					and mechanism.minDegrees == 0
-					and mechanism.maxDegrees == 105
-			)
+	expect("lab primitive material references satisfy MaterialDNA", allMaterialRefsValid)
+	expect("lab object placements bind valid ObjectGenome recipes and default state", allObjectContractsValid)
+	expect("lab shell starts as explicit F2 proxy fidelity", allInitialFidelityF2)
+
+	local doorGenome = PhysicsLabRecipe.objectGenome("commercialDoor")
+	local doorComponents = {}
+	for _, component in ipairs(doorGenome.components) do
+		doorComponents[component.key] = component
+	end
+	local hingeJamb = doorComponents["hinge-jamb"]
+	local latchJamb = doorComponents["latch-jamb"]
+	local header = doorComponents.header
+	local leaf = doorComponents.leaf
+	local frameIsHollow = doorComponents.frame == nil
+		and hingeJamb ~= nil
+		and latchJamb ~= nil
+		and header ~= nil
+		and leaf ~= nil
+		and hingeJamb.dimensionsM.x < doorGenome.dimensionsM.x / 4
+		and latchJamb.dimensionsM.x < doorGenome.dimensionsM.x / 4
+		and header.dimensionsM.y < doorGenome.dimensionsM.y / 4
+	local leafHasPositiveClearance = false
+	if frameIsHollow then
+		local leafLeft = leaf.localPositionM.x - leaf.dimensionsM.x / 2
+		local leafRight = leaf.localPositionM.x + leaf.dimensionsM.x / 2
+		local leafBottom = leaf.localPositionM.y - leaf.dimensionsM.y / 2
+		local leafTop = leaf.localPositionM.y + leaf.dimensionsM.y / 2
+		local hingeInner = hingeJamb.localPositionM.x + hingeJamb.dimensionsM.x / 2
+		local latchInner = latchJamb.localPositionM.x - latchJamb.dimensionsM.x / 2
+		local headerBottom = header.localPositionM.y - header.dimensionsM.y / 2
+		local frameBottom = -doorGenome.dimensionsM.y / 2
+		local hingeClearance = leafLeft - hingeInner
+		local latchClearance = latchInner - leafRight
+		local floorClearance = leafBottom - frameBottom
+		local headerClearance = headerBottom - leafTop
+		local maximumProxyGap = 0.01
+		leafHasPositiveClearance = hingeClearance > 0
+			and hingeClearance <= maximumProxyGap
+			and latchClearance > 0
+			and latchClearance <= maximumProxyGap
+			and floorClearance > 0
+			and floorClearance <= maximumProxyGap
+			and headerClearance > 0
+			and headerClearance <= maximumProxyGap
+	end
+	local hingeUsesJamb = false
+	for _, mechanism in ipairs(doorGenome.mechanisms) do
+		if mechanism.key == "leaf-hinge" then
+			hingeUsesJamb = mechanism.kind == "hinge" and mechanism.frameComponentKey == "hinge-jamb"
 		end
 	end
+	expect("lab commercial door frame revision is explicit", doorGenome.familyVersion == 2)
+	expect("lab commercial door F2 frame leaves a real aperture", frameIsHollow)
+	expect("lab commercial door F2 leaf has positive proxy clearance", leafHasPositiveClearance)
+	expect("lab commercial door hinge references the structural jamb", hingeUsesJamb)
 
-	expect("lab includes a drawer mechanism representation contract", cabinet ~= nil)
-	expect("cabinet proxy binds the production top-drawer mechanism", cabinet ~= nil and cabinet.mechanismKey == "slide-top")
-	if cabinet ~= nil then
-		local mechanism = PhysicsLabRecipe.mechanismFor(cabinet)
-		expect("cabinet mechanism resolves through ObjectGenome", mechanism ~= nil and mechanism.kind == "slide")
-		if mechanism ~= nil and mechanism.kind == "slide" then
-			expect(
-				"cabinet proxy keeps authored slide axis and travel",
-				mechanism.axis.x == 0
-					and mechanism.axis.y == 0
-					and mechanism.axis.z == -1
-					and mechanism.minTravelM == 0
-					and mechanism.maxTravelM == 0.44
-			)
-		end
-	end
-
-	expect("lab includes a four-caster rolling-cart representation contract", cart ~= nil)
-	if cart ~= nil then
-		local genome = PhysicsLabRecipe.objectGenomeFor(cart)
-		local casterCount = 0
-		if genome ~= nil then
-			for _, mechanism in ipairs(genome.mechanisms) do
-				if mechanism.kind == "caster" then
-					casterCount += 1
-					expect(
-						`cart caster {mechanism.key} uses authored axes`,
-						mechanism.swivelAxis.x == 0
-							and mechanism.swivelAxis.y == 1
-							and mechanism.swivelAxis.z == 0
-							and mechanism.rollAxis.x == 1
-							and mechanism.rollAxis.y == 0
-							and mechanism.rollAxis.z == 0
-					)
-				end
-			end
-		end
-		expect("cart proxy consumes four ObjectGenome caster mechanisms", casterCount == 4)
-	end
-
-	expect("lab stairs are actual stepped geometry", stairCount >= 4)
-
-	local mutationAccepted = pcall(function()
-		first.elements[1].positionStuds.x = 999
-	end)
-	expect("resolved lab recipe rejects nested mutation", not mutationAccepted)
+	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
+	expect("lab duplicate identity is detectable", duplicateAccepted == false)
 
 	return failures
 end

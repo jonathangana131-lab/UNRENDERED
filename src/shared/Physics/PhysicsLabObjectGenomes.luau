@@ -10,52 +10,55 @@ type AffordanceSpec = ObjectGenome.AffordanceSpec
 type Genome = ObjectGenome.ObjectGenome
 
 local zero: Vec3 = table.freeze({ x = 0, y = 0, z = 0 })
-local paintedMetal = "material.v1.office-metal.warm-gray-enamel"
 
+-- Keep the F2 door frame physically hollow. A single full-width/full-height
+-- collidable frame component would seal the wall opening before the door can
+-- ever promote to an articulated representation. The proxy also keeps a small
+-- positive clearance around the leaf so anchored F2 parts do not interpenetrate.
 local doorComponents: { ComponentSpec } = {
 	{
 		key = "hinge-jamb",
-		role = "ground-supported hinge-side commercial door jamb",
-		materialKey = paintedMetal,
+		role = "ground-supported commercial door hinge jamb",
+		materialKey = "material.v1.office-metal.warm-gray-enamel",
 		materialRecipeVersion = 1,
-		massKg = 6.5,
-		localPositionM = { x = -0.54, y = 0, z = 0 },
+		massKg = 7,
+		localPositionM = { x = -0.525, y = 0, z = 0 },
 		localRotationDeg = zero,
-		dimensionsM = { x = 0.10, y = 2.16, z = 0.12 },
+		dimensionsM = { x = 0.12, y = 2.16, z = 0.12 },
 		supportKeys = {},
 		externalSupport = "ground",
 	},
 	{
-		key = "strike-jamb",
-		role = "ground-supported strike-side commercial door jamb",
-		materialKey = paintedMetal,
+		key = "latch-jamb",
+		role = "ground-supported commercial door latch jamb",
+		materialKey = "material.v1.office-metal.warm-gray-enamel",
 		materialRecipeVersion = 1,
-		massKg = 6.5,
-		localPositionM = { x = 0.54, y = 0, z = 0 },
+		massKg = 7,
+		localPositionM = { x = 0.525, y = 0, z = 0 },
 		localRotationDeg = zero,
-		dimensionsM = { x = 0.10, y = 2.16, z = 0.12 },
+		dimensionsM = { x = 0.12, y = 2.16, z = 0.12 },
 		supportKeys = {},
 		externalSupport = "ground",
 	},
 	{
 		key = "header",
-		role = "commercial door frame header spanning the jambs",
-		materialKey = paintedMetal,
+		role = "commercial door frame head",
+		materialKey = "material.v1.office-metal.warm-gray-enamel",
 		materialRecipeVersion = 1,
-		massKg = 5,
-		localPositionM = { x = 0, y = 1.03, z = 0 },
+		massKg = 4,
+		localPositionM = { x = 0, y = 1.015, z = 0 },
 		localRotationDeg = zero,
-		dimensionsM = { x = 1.18, y = 0.10, z = 0.12 },
-		supportKeys = { "hinge-jamb", "strike-jamb" },
+		dimensionsM = { x = 1.18, y = 0.13, z = 0.12 },
+		supportKeys = { "hinge-jamb", "latch-jamb" },
 		externalSupport = "none",
 	},
 	{
 		key = "leaf",
-		role = "solid-core hinged lab door leaf",
-		materialKey = paintedMetal,
+		role = "solid-core hinged door leaf",
+		materialKey = "material.v1.office-metal.gray-painted-steel",
 		materialRecipeVersion = 1,
 		massKg = 26,
-		localPositionM = { x = 0, y = -0.06, z = -0.025 },
+		localPositionM = { x = 0, y = -0.065, z = -0.025 },
 		localRotationDeg = zero,
 		dimensionsM = { x = 0.92, y = 2.02, z = 0.045 },
 		supportKeys = { "hinge-jamb" },
@@ -88,7 +91,7 @@ local doorAffordances: { AffordanceSpec } = {
 local commercialDoor: Genome = {
 	schemaVersion = ObjectGenome.SCHEMA_VERSION,
 	familyId = "lab-door.commercial",
-	familyVersion = 1,
+	familyVersion = 2,
 	variantKey = "single-leaf",
 	provenance = {
 		manufacturerFamily = "Northfield Architectural Hardware",
@@ -122,12 +125,12 @@ for _, caster in ipairs(casterPositions) do
 	table.insert(cartComponents, {
 		key = key,
 		role = "floor-contact swivel caster",
-		materialKey = paintedMetal,
+		materialKey = "material.v1.chair-caster.polymer-rubber",
 		materialRecipeVersion = 1,
 		massKg = 0.4,
-		localPositionM = { x = caster.x, y = -0.44, z = caster.z },
+		localPositionM = { x = caster.x, y = -0.42, z = caster.z },
 		localRotationDeg = zero,
-		dimensionsM = { x = 0.04, y = 0.07, z = 0.07 },
+		dimensionsM = { x = 0.10, y = 0.10, z = 0.05 },
 		supportKeys = {},
 		externalSupport = "ground",
 	})
@@ -152,7 +155,7 @@ local casterKeys = {
 table.insert(cartComponents, {
 	key = "chassis",
 	role = "load-bearing welded cart chassis",
-	materialKey = paintedMetal,
+	materialKey = "material.v1.office-metal.warm-gray-enamel",
 	materialRecipeVersion = 1,
 	massKg = 8,
 	localPositionM = { x = 0, y = -0.33, z = 0 },
@@ -165,7 +168,7 @@ table.insert(cartComponents, {
 table.insert(cartComponents, {
 	key = "lower-shelf",
 	role = "lower utility shelf",
-	materialKey = paintedMetal,
+	materialKey = "material.v1.office-metal.warm-gray-enamel",
 	materialRecipeVersion = 1,
 	massKg = 3,
 	localPositionM = { x = 0, y = -0.08, z = 0 },
@@ -178,7 +181,7 @@ table.insert(cartComponents, {
 table.insert(cartComponents, {
 	key = "upper-shelf",
 	role = "upper utility shelf and push surface",
-	materialKey = paintedMetal,
+	materialKey = "material.v1.office-metal.warm-gray-enamel",
 	materialRecipeVersion = 1,
 	massKg = 3,
 	localPositionM = { x = 0, y = 0.28, z = 0 },
