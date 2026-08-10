@@ -140,6 +140,16 @@ local function isLevel(value: unknown): boolean
 	return value == "F0" or value == "F1" or value == "F2" or value == "F3" or value == "F4"
 end
 
+local function assertEntityId(value: unknown): string
+	assert(type(value) == "string", "entityId must satisfy the WorldEntityId string contract")
+	local entityId = value :: string
+	assert(
+		entityId ~= "" and #entityId <= 256 and string.find(entityId, "%c") == nil,
+		"entityId must satisfy the WorldEntityId value contract"
+	)
+	return entityId
+end
+
 local function levelIndex(level: FidelityLevel): number
 	return LEVEL_INDEX[level]
 end
@@ -433,7 +443,7 @@ function FidelityManager.new(config: PolicyConfig?): Manager
 end
 
 function FidelityManager.register(self: Manager, entityId: string, currentLevel: FidelityLevel?): ()
-	assert(entityId ~= "", "entityId required")
+	entityId = assertEntityId(entityId)
 	assert(self._states[entityId] == nil, `entity already registered: {entityId}`)
 	if self._metrics.registered >= self.config.maxRegisteredEntities then
 		self._metrics.registrationCapacityRejections += 1
@@ -460,6 +470,7 @@ function FidelityManager.register(self: Manager, entityId: string, currentLevel:
 end
 
 function FidelityManager.unregister(self: Manager, entityId: string): ()
+	entityId = assertEntityId(entityId)
 	local state = self._states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
 	self._metrics.registered -= 1
@@ -468,6 +479,7 @@ function FidelityManager.unregister(self: Manager, entityId: string): ()
 end
 
 function FidelityManager.getObservedLevel(self: Manager, entityId: string): FidelityLevel
+	entityId = assertEntityId(entityId)
 	local state = self._states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
 	return state.observedLevel
@@ -500,6 +512,7 @@ function FidelityManager.step(
 	nowSeconds: number,
 	applyTransition: TransitionHook?
 ): StepResult
+	entityId = assertEntityId(entityId)
 	local state = self._states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
 	assert(isLevel(currentLevel), "currentLevel must be F0-F4")
