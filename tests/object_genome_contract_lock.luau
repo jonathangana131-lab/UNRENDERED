@@ -213,8 +213,8 @@ local function run(): number
 		stateMutationOk and mutableState.componentWear[componentKey] == 0.5
 	)
 	expect(
-		"default state records exact genome identity",
-		mutableState.genomeId == ObjectGenome.identityKey(ownedGenome)
+		"default state records exact recipe identity",
+		mutableState.genomeId == ObjectGenome.recipeIdentityKey(ownedGenome)
 	)
 	expect(
 		"mutated state still validates against its genome",
