@@ -114,13 +114,13 @@ Pass conditions:
 - promotion does not register duplicate WorldEntityIds,
 - repeated cycles return to a stable full-lab physical envelope instead of monotonically leaking descendants/constraints/registrations.
 
-**Current Studio-access limitation:** the production bootstrap intentionally keeps the `RealizedLab` handle private. Do not bypass that protection by requiring the raw `PhysicsLabRuntime`, mutating Instance attributes, or manually deleting representations. Until a source-owned Studio/test harness can drive the public representation-aware `lab.step` boundary, lifecycle cycling from the Command Bar remains **UNVERIFIED** and should be reported as a #10/#151 blocker. The collector can still capture initial/bootstrap evidence safely.
+**Studio lifecycle driver:** the server bootstrap now retains the representation-safe `RealizedLab` handle through `PhysicsLabStudioHarness`. Use the server Command Bar procedures in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md` to drive `lab.step`, teardown/rebuild, and 20-cycle snapshots through the existing production Realizer/runtime boundary. Do not require the raw `PhysicsLabRuntime`, mutate Instance attributes, or manually delete representations as lifecycle evidence. Lifecycle rows remain **UNVERIFIED** until those Studio procedures are actually run and recorded.
 
 ## Fidelity ownership
 
 For each lab entity, prove the displayed/diagnosed fidelity is the authoritative WorldEntity fidelity coordinated through the production Fidelity Manager, not a local Physics Lab enum or Instance attribute that becomes a second truth source.
 
-Exercise at least one promotion and one demotion where a source-owned Studio/test path can invoke the representation-aware lifecycle without bypassing the realizer. Capture:
+Exercise at least one promotion and one demotion through `PhysicsLabStudioHarness`, which exposes the representation-aware `RealizedLab` without exposing the raw runtime. Capture:
 
 - WorldEntityId,
 - authoritative fidelity before/after,
@@ -128,7 +128,7 @@ Exercise at least one promotion and one demotion where a source-owned Studio/tes
 - whether state capture was required,
 - representation before/after.
 
-A local lab-only fidelity state machine is an architecture failure even if the visual transition looks correct. If no safe Studio driver exists yet, leave this row UNVERIFIED rather than using the raw runtime as a shortcut.
+A local lab-only fidelity state machine is an architecture failure even if the visual transition looks correct. The harness existing does not prove fidelity behavior; leave this row UNVERIFIED until the runbook procedure is actually executed and its observations are recorded.
 
 ## MaterialDNA / ObjectGenome boundary
 
@@ -193,7 +193,7 @@ Store the emitted JSON verbatim with the evidence bundle. It includes:
 - total scoped resource counts,
 - full-lab world-space BasePart envelope.
 
-When a safe production lifecycle driver exists, capture snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20. A partially demoted lab is intentionally a different physical representation, so record its count delta but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt.
+Using `PhysicsLabStudioHarness`, capture snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20 as specified in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`. A partially demoted lab is intentionally a different physical representation, so record its count delta but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt.
 
 To compare two stored snapshots in a server-context Command Bar, paste their JSON strings into this source-owned comparison path:
 
