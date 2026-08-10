@@ -1,6 +1,7 @@
 --!strict
 
 local StableId = require(script.Parent.Parent.Core.StableId)
+local MaterialDNA = require(script.Parent.Parent.Materials.MaterialDNA)
 
 export type Vec3 = {
 	x: number,
@@ -679,12 +680,26 @@ local function formatIssues(issues: { ValidationIssue }): string
 end
 
 function ObjectGenome.identityParts(value: ObjectGenome): { string }
-	return {
+	local parts = {
 		tostring(value.schemaVersion),
 		value.familyId,
 		tostring(value.familyVersion),
 		value.variantKey,
 	}
+
+	local materialBindings: { string } = {}
+	for _, component in ipairs(value.components) do
+		table.insert(
+			materialBindings,
+			`{component.key}={component.materialKey}@{component.materialRecipeVersion}`
+		)
+	end
+	table.sort(materialBindings)
+	for _, binding in ipairs(materialBindings) do
+		table.insert(parts, binding)
+	end
+
+	return parts
 end
 
 function ObjectGenome.identityKey(value: ObjectGenome): string
@@ -853,20 +868,16 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		if not isNonEmptyString(component.role) then
 			addIssue(issues, "component.role", path .. ".role", "component role required")
 		end
-		if not isSemanticKey(component.materialKey) then
+		local materialReferenceResult = MaterialDNA.validateReference({
+			id = component.materialKey,
+			recipeVersion = component.materialRecipeVersion,
+		})
+		if not materialReferenceResult.ok then
 			addIssue(
 				issues,
-				"component.material_key",
+				"component.material_reference",
 				path .. ".materialKey",
-				"materialKey must be the stable lowercase MaterialDNA recipe id"
-			)
-		end
-		if not isPositiveInteger(component.materialRecipeVersion) then
-			addIssue(
-				issues,
-				"component.material_recipe_version",
-				path .. ".materialRecipeVersion",
-				"materialRecipeVersion must be a positive integer"
+				`component material reference must satisfy MaterialDNA v2: {table.concat(materialReferenceResult.errors, "; ")}`
 			)
 		end
 		if not isPositiveFinite(component.massKg) then
