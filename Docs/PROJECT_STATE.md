@@ -97,8 +97,9 @@ The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational; 
 - Mac self-hosted runner: `UNRENDERED-STUDIO-MAC`.
 - The bridge uses fixed repository-owned drivers, a managed Studio RunMode executor plugin, exact source-SHA validation, request-bound log provenance, bounded CreatorOutput evidence transport, and job-specific fail-closed evaluation.
 - Historical request `20260810-005-reality-hero-gate` produced a lifecycle-style simulation signal but was incorrectly promoted to a composite Hero Gate `PASS`; that durable bridge result has been corrected to `FAIL`. It does not prove contact/traversability, diagnostics behavior, two-client authority, or device/performance rows.
-- A later managed-plugin server-smoke request (`20260810-015-server-smoke-managed-plugin-n7`) never reached Studio because its requested source SHA was stale after public `main` advanced. It provides no engine evidence and must not be counted.
-- Future engine evidence requests must target the exact current canonical `main` SHA and satisfy the job-specific evaluator. No single lifecycle result may unlock the Hero Gate.
+- Request `20260810-015-server-smoke-managed-plugin-n7` never reached Studio because the older validator invalidated its queued SHA after public `main` advanced. It provides no engine evidence and must not be counted. The bridge now accepts an exact pinned SHA only when it is a real ancestor of the named canonical ref, so queued immutable evidence requests survive later canonical commits without accepting unrelated history.
+- Request `20260810-018-server-smoke-managed-only-sol56j8` on exact UNRENDERED SHA `d225b3fe9f6da0a389bd8e14ddbe0f4cead26efe` is durable `PASS` / `evidence accepted` after removal of the proven legacy RunMode executor collision. It records `isRunning=true`, `isServer=true`, `labModelValid=true`, `baselineOk=true`, and `playerCount=0`. This proves only the single-server smoke/bootstrap/baseline slice; it does **not** prove two-client authority, contact/traversability, diagnostics behavior, device/performance, or the composite Hero Gate.
+- Future engine evidence requests must pin an exact canonical SHA that is reachable from the named canonical ref and satisfy the job-specific evaluator. No lifecycle or single-server result may unlock the Hero Gate by itself.
 
 ## Current unlock status
 
@@ -115,7 +116,7 @@ Do not start a Reality-Grade door, chair, physical-player controller, world gene
 
 ## Hero Gate exit direction
 
-The source-contract portion of the Physics Lab gate is established. The remaining gate is actual Roblox Studio/engine evidence where pure CI cannot prove behavior: contact/traversability, constraints/mechanisms as they become applicable, diagnostics behavior, server/two-client authority behavior, and device/performance observations.
+The source-contract portion of the Physics Lab gate is established. The remaining gate is actual Roblox Studio/engine evidence where pure CI cannot prove behavior: contact/traversability, constraints/mechanisms as they become applicable, diagnostics behavior, two-client authority behavior, and device/performance observations.
 
 After that evidence is gathered and reviewed, update this file to explicitly unlock the next narrow Hero Feature. The intended order remains **door, chair, then physical player movement**, not a giant procedural map.
 
@@ -128,7 +129,7 @@ Workers may inspect/review/decompose them, but should not build those major syst
 ## Known external setup gaps
 
 - No published Roblox universe/place is connected to automated publishing yet.
-- Studio engine tests, graphics validation, server-authority tests, and device profiling require a Roblox Studio/test-place workflow; current GitHub CI covers source/pure deterministic logic/Rojo builds.
+- The bridge now has accepted lifecycle-style and single-server execution evidence, but #151 still lacks accepted contact/traversability, diagnostics, true two-client authority, and device/performance observations.
 - Approved production PBR, audio and model libraries do not exist yet. Use project-owned fallbacks and do not add unlicensed content.
 
 ## Architecture migrations
