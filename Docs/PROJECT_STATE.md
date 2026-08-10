@@ -55,12 +55,27 @@ Exit evidence:
 - support-cycle rejection and external-support reachability are independent deterministic graph facts,
 - validators reject the locked invalid examples.
 
+## Hero Gate foundations
+
+### #9 — First-observation lock / resolved-region recipe: complete via #163
+The plain/versioned `ResolvedRegionRecipe` boundary is landed and post-merge `main` CI is green.
+
+Landed direction:
+- deterministic potential -> canonical observed truth stays independent of Workspace serialization,
+- first meaningful observation locks recipe/version truth,
+- reconstruction equality/repro and v1 identity/fingerprint goldens are testable,
+- later generator output cannot silently rewrite established observed truth,
+- generator-version migration is explicit rather than automatic,
+- mutable deltas/runtime representation remain outside the immutable generated base.
+
+Do not open competing #9 implementations. Any future contract change must be a narrowly justified repair/migration with compatibility evidence.
+
 ## Unlocked Hero Gate
 
-Finish these foundations before broadening into planned P1 systems.
+Finish this foundation before broadening into planned P1 systems.
 
 ### #10 — Production-contract Physics Lab
-Build the permanent test/lab shell using the landed WorldEntity, Fidelity, MaterialDNA and ObjectGenome contracts. This is not permission for ad-hoc gameplay scripts or a competing framework.
+Build the permanent test/lab shell using the landed WorldEntity, Fidelity, MaterialDNA, ObjectGenome, and resolved-region contracts. This is not permission for ad-hoc gameplay scripts or a competing framework.
 
 Required direction:
 - deterministic lab recipe and stable IDs,
@@ -68,21 +83,12 @@ Required direction:
 - floor/walls/ceiling plus door/chair/table/cart/cabinet/stairs/ramp/ledge test geometry,
 - development diagnostics for IDs/fidelity state,
 - clear Studio validation/repro instructions,
-- keep Roblox Instances as physical representation, never canonical world state.
-
-### #9 — First-observation lock / resolved-region recipe
-Implement deterministic potential -> canonical observed truth as plain/versioned data, with immutable generated base recipe + mutable delta boundary and explicit generator-version handling.
-
-Required direction:
-- `ResolvedRegionRecipe` remains independent of Workspace serialization,
-- first meaningful observation locks canonical recipe/version truth,
-- reconstruction equality/repro is testable,
-- generator upgrades cannot silently rewrite already-observed regions,
-- keep this narrow; do not turn #9 into the full world generator.
+- keep Roblox Instances as physical representation, never canonical world state,
+- consume the landed #9 resolved-region identity boundary rather than minting a competing permanent region identity formula.
 
 ## Hero Gate exit direction
 
-Before opening broader content, prove that #10 and #9 use the Wave-1 contracts without replacing them. Strike-team work should deepen these two lanes through tests, Studio/physics evidence, diagnostics, performance, integration and Reality-Grade review.
+Before opening broader content, prove that #10 uses the Wave-1 and landed #9 contracts without replacing them. Strike-team work should deepen #10 through tests, Studio/physics evidence, diagnostics, performance, integration and Reality-Grade review.
 
 After the lab foundation is stable, the first Reality-Grade Hero Features should be **door, chair, and physical player movement**, not a giant procedural map.
 
@@ -114,7 +120,7 @@ None active.
 ## Next critical outcomes
 
 1. #10 becomes a permanent production-contract Physics Lab rather than a disposable demo,
-2. #9 locks first-observation/resolved-region truth without Workspace serialization,
+2. the lab consumes the landed resolved-region boundary instead of inventing a second region identity contract,
 3. the lab proves Wave-1 identity/material/object/fidelity contracts survive real Roblox realization and interaction,
 4. door/chair/physical-player work begins only on those stable foundations,
 5. the first five-minute experience can be improved deeply without replacing its foundations.
