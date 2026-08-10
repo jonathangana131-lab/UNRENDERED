@@ -133,6 +133,7 @@ export type ValidationResult = {
 
 local ObjectGenome = {}
 
+ObjectGenome.SCHEMA_VERSION = 1
 ObjectGenome.STATE_SCHEMA_VERSION = 1
 
 local MASS_TOLERANCE_FRACTION = 0.05
@@ -296,8 +297,13 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		return reportResult(issues)
 	end
 
-	if not isPositiveInteger(value.schemaVersion) then
-		addIssue(issues, "genome.schema_version", "schemaVersion", "schemaVersion must be a positive integer")
+	if value.schemaVersion ~= ObjectGenome.SCHEMA_VERSION then
+		addIssue(
+			issues,
+			"genome.schema_version",
+			"schemaVersion",
+			`unsupported ObjectGenome schema version; expected {ObjectGenome.SCHEMA_VERSION}`
+		)
 	end
 	if not isSemanticKey(value.familyId) then
 		addIssue(issues, "genome.family_id", "familyId", "familyId must be a stable lowercase semantic key")
@@ -510,7 +516,7 @@ function ObjectGenome.inspect(value: any): ValidationResult
 				continue
 			end
 			if not isSemanticKey(mechanism.key) then
-				addIssue(issues, "mechanism.key", path .. ".key", "mechanism key must be a stable semantic key")
+				addIssue(issues, "mechanism.key", path .. ".key", "mechanism key must be a stable lowercase semantic key")
 			elseif mechanismsByKey[mechanism.key] then
 				addIssue(issues, "mechanism.duplicate_key", path .. ".key", "duplicate mechanism key")
 			else
@@ -668,6 +674,11 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 			addIssue(issues, "state.collection", fieldName, `{fieldName} must be a table`)
 			return
 		end
+		for key in pairs(knownKeys) do
+			if mapValue[key] == nil then
+				addIssue(issues, "state.missing_key", `{fieldName}.{key}`, "state is missing a required genome key")
+			end
+		end
 		for key, amount in pairs(mapValue) do
 			if type(key) ~= "string" or not knownKeys[key] then
 				addIssue(issues, "state.unknown_key", `{fieldName}.{tostring(key)}`, "state references an unknown genome key")
@@ -684,6 +695,11 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 	if type(state.detachedComponents) ~= "table" then
 		addIssue(issues, "state.collection", "detachedComponents", "detachedComponents must be a table")
 	else
+		for key in pairs(componentKeys) do
+			if state.detachedComponents[key] == nil then
+				addIssue(issues, "state.missing_key", `detachedComponents.{key}`, "state is missing a required component key")
+			end
+		end
 		for key, detached in pairs(state.detachedComponents) do
 			if type(key) ~= "string" or not componentKeys[key] then
 				addIssue(issues, "state.unknown_key", `detachedComponents.{tostring(key)}`, "state references an unknown component")
