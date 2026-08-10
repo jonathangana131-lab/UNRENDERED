@@ -62,14 +62,14 @@ A successful run is strong lifecycle/resource evidence for the exact Studio sess
 
 ## Production F2 -> F0 -> F2 lifecycle
 
-The landed lab adapter intentionally realizes only F0/F2. The following inputs exercise the production FidelityManager policy without introducing lab-only transition rules. Use this focused block when inspecting one structural entity such as `floor` and one ObjectGenome-backed entity such as `door-main`, or when diagnosing a failure from the source-owned 20-cycle sweep.
+The landed lab adapter intentionally realizes only F0/F2. The following inputs exercise the production FidelityManager policy without introducing lab-only transition rules. Use this focused block when inspecting one structural entity such as `floor` and one ObjectGenome-backed entity such as `door-main`, or when diagnosing a failure from the source-owned 20-cycle sweep. The block intentionally restarts the harness first so its fixed synthetic timestamps own a fresh monotonic FidelityManager clock.
 
 ```luau
 local ServerScriptService = game:GetService("ServerScriptService")
 local PhysicsLab = ServerScriptService.UNRENDERED_Server.PhysicsLab
 local Harness = require(PhysicsLab.PhysicsLabStudioHarness)
 
-local lab = assert(Harness.get(), "Physics Lab bootstrap handle is missing")
+local lab = Harness.restart(workspace)
 local target = assert(lab.model:FindFirstChild("door-main"), "target representation missing")
 local entityId = assert(target:GetAttribute("UNRENDERED_WorldEntityId"), "target has no WorldEntityId") :: string
 
