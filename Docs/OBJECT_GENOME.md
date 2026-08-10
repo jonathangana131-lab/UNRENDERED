@@ -8,7 +8,7 @@
 - `schemaVersion` is an explicit compatibility lock. A reader rejects unknown versions instead of interpreting future schemas as v1.
 - `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityParts()` supplies those semantic parts to the locked project `StableId` contract; ObjectGenome does not duplicate hashing/canonical encoding.
 - `components`, per-component `supportKeys`, `mechanisms`, and `affordances` are canonical dense 1-based arrays. Sparse arrays and map-like extra keys are rejected so accepted plain data has one unambiguous shape.
-- `materialKey` is an opaque stable reference. Objects do not import MaterialDNA implementation details or Roblox asset IDs.
+- `materialKey` is a lowercase project-owned semantic reference. ObjectGenome validates the stable-key shape but does not import MaterialDNA implementation details or Roblox asset IDs; production fixtures use the current `material.v1.*` project-key form.
 - Roblox `Instance`, `Vector3`, `CFrame`, meshes, constraints, and rendering APIs are deliberately absent from the schema.
 - Mutable wear, damage, mechanism position, and detach state live in `ObjectState`, never in the immutable genome.
 - Mutable state is a complete snapshot for the referenced genome: every component/mechanism key must be present and unknown keys are rejected.
@@ -44,7 +44,7 @@ Schema v1 uses one explicit plain-data local basis and rotation convention so in
 - every stored Euler component must be canonical in `[-180, 180]` degrees. Equivalent turns outside that range are rejected rather than silently normalized;
 - component-envelope validation evaluates the rotated component AABB using `abs(R) * halfDimensions`, then applies the component's local translation. Rotation is therefore part of the v1 bounds invariant rather than an adapter-specific afterthought.
 
-This convention is intentionally project-owned domain math. A Roblox realization adapter may convert it to `CFrame`, but the canonical recipe never stores `CFrame` or delegates rotation order to an engine default.
+This convention is intentionally project-owned domain math. A Roblox realization adapter may convert it to `CFrame`, but the canonical recipe never stores `CFrame` or delegates rotation order to an engine default. Tests include a mixed-axis case that distinguishes the declared matrix order from a silently reversed order.
 
 ## Mechanisms
 
