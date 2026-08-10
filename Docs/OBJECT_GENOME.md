@@ -62,6 +62,8 @@ Stable issue codes are suitable for test diagnostics and future procedural rejec
 2. a rectangular utility office table with four ground-supported legs and anti-racking structure;
 3. a three-drawer vertical filing cabinet with slide/latch mechanisms.
 
+The fixture collections are explicitly typed against the exported ObjectGenome domain contract so strict analysis catches heterogeneous mechanism/vector shape drift instead of relying on incidental table inference.
+
 These are contract fixtures, not final art or Hero Feature implementations. Their purpose is to prove the schema can describe believable manufactured construction without depending on a MeshPart/prefab.
 
 ## Evolution
