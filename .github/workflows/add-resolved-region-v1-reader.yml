@@ -22,22 +22,20 @@ jobs:
         run: |
           set -euo pipefail
           cp src/shared/Reality/ResolvedRegionRecipe.luau src/shared/Reality/ResolvedRegionRecipeV1.luau
-
           python3 - <<'PY'
           from pathlib import Path
 
-          legacy = Path('src/shared/Reality/ResolvedRegionRecipeV1.luau')
+          legacy = Path("src/shared/Reality/ResolvedRegionRecipeV1.luau")
           text = legacy.read_text()
-          if not text.startswith('--!strict\n'):
-              raise SystemExit('legacy source did not preserve strict header')
+          if not text.startswith("--!strict\n"):
+              raise SystemExit("legacy source did not preserve strict header")
           text = text.replace(
-              '--!strict\n',
-              '--!strict\n\n-- Historical schema-v1 read/reconstruction compatibility only.\n'
-              '-- New canonical observations must use ResolvedRegionRecipe v2+.\n',
+              "--!strict\n",
+              "--!strict\n\n-- Historical schema-v1 read/reconstruction compatibility only.\n-- New canonical observations must use ResolvedRegionRecipe v2+.\n",
               1,
           )
-          old_return = 'return table.freeze(ResolvedRegionRecipe)\n'
-          new_return = '''local LegacyResolvedRegionRecipe = {
+          old_return = "return table.freeze(ResolvedRegionRecipe)\n"
+          new_return = """local LegacyResolvedRegionRecipe = {
           \tSCHEMA_VERSION = ResolvedRegionRecipe.SCHEMA_VERSION,
           \tFINGERPRINT_VERSION = ResolvedRegionRecipe.FINGERPRINT_VERSION,
           \tdeserialize = ResolvedRegionRecipe.deserialize,
@@ -48,91 +46,91 @@ jobs:
           }
 
           return table.freeze(LegacyResolvedRegionRecipe)
-          '''
+          """
           if old_return not in text:
-              raise SystemExit('legacy module return marker not found')
+              raise SystemExit("legacy module return marker not found")
           legacy.write_text(text.replace(old_return, new_return, 1))
-
-          compat = Path('tests/resolved_region_recipe_v1_compat.luau')
-          compat.write_text('''local ProductionLoader = require("./support/ProductionLoader")
-
-local ResolvedRegionRecipeV1 = ProductionLoader.requireShared("Reality/ResolvedRegionRecipeV1")
-local RegionAddress = ProductionLoader.requireShared("Spatial/RegionAddress")
-
-local GOLDEN_REGION_ID = "region:v1:7cd90883b952e7534e6f3ffdd71d66a7"
-local GOLDEN_RECIPE_FINGERPRINT = "resolved-region:v1:6448a82dcdebe20b03d9a6a98847bdd7"
-
-local function historicalV1Record()
-\treturn {
-\t\tschemaVersion = 1,
-\t\tregionId = GOLDEN_REGION_ID,
-\t\tworldSeedRef = "world-seed:office-alpha",
-\t\tregionAddress = RegionAddress.new(12, -4, 1),
-\t\tgeneratorVersions = {
-\t\t\treality = 1,
-\t\t\ttopology = 1,
-\t\t\tmaterial = 1,
-\t\t\tobject = 1,
-\t\t\tentity = 1,
-\t\t},
-\t\tsemanticIntentKey = "intent:commercial-office.late-90s",
-\t\ttopologyAnchors = {
-\t\t\t"anchor:west-service-threshold",
-\t\t\t"anchor:east-primary-threshold",
-\t\t},
-\t\tcanonicalContentKeys = {
-\t\t\t"object:chair-a",
-\t\t\t"material:carpet-batch-a",
-\t\t\t"fixture:fluorescent-row-a",
-\t\t},
-\t\trecipeFingerprint = GOLDEN_RECIPE_FINGERPRINT,
-\t}
-end
-
-local function run(): number
-\tlocal failures = 0
-
-\tlocal function expect(name: string, condition: boolean): ()
-\t\tif condition then
-\t\t\tprint(`PASS {name}`)
-\t\telse
-\t\t\tfailures += 1
-\t\t\tprint(`FAIL {name}`)
-\t\tend
-\tend
-
-\t-- Already-observed schema-v1 truth is reconstructed from a literal record.
-\t-- The isolated compatibility module intentionally exposes no observation/lock
-\t-- API, so it cannot mint new canonical content under the deprecated identity law.
-\tlocal locked = ResolvedRegionRecipeV1.deserialize(historicalV1Record())
-\texpect("historical v1 decoder remains schema 1", ResolvedRegionRecipeV1.SCHEMA_VERSION == 1)
-\texpect("historical v1 region identity remains compatible", locked.regionId == GOLDEN_REGION_ID)
-\texpect(
-\t\t"historical v1 recipe fingerprint remains compatible",
-\t\tlocked.recipeFingerprint == GOLDEN_RECIPE_FINGERPRINT
-\t)
-\texpect(
-\t\t"historical v1 fingerprint API remains compatible",
-\t\tResolvedRegionRecipeV1.fingerprint(locked) == GOLDEN_RECIPE_FINGERPRINT
-\t)
-
-\tlocal reconstructed = ResolvedRegionRecipeV1.deserialize(ResolvedRegionRecipeV1.serialize(locked))
-\texpect(
-\t\t"historical v1 serialized truth remains reconstructable",
-\t\tResolvedRegionRecipeV1.equal(locked, reconstructed)
-\t)
-\texpect("legacy v1 compatibility module exposes no new-write lock API", ResolvedRegionRecipeV1.lock == nil)
-\texpect(
-\t\t"legacy v1 compatibility module exposes no observation transition API",
-\t\tResolvedRegionRecipeV1.resolveOnObservation == nil
-\t)
-
-\treturn failures
-end
-
-return run
-''')
           PY
+
+          cat > tests/resolved_region_recipe_v1_compat.luau <<'EOF'
+          local ProductionLoader = require("./support/ProductionLoader")
+
+          local ResolvedRegionRecipeV1 = ProductionLoader.requireShared("Reality/ResolvedRegionRecipeV1")
+          local RegionAddress = ProductionLoader.requireShared("Spatial/RegionAddress")
+
+          local GOLDEN_REGION_ID = "region:v1:7cd90883b952e7534e6f3ffdd71d66a7"
+          local GOLDEN_RECIPE_FINGERPRINT = "resolved-region:v1:6448a82dcdebe20b03d9a6a98847bdd7"
+
+          local function historicalV1Record()
+          	return {
+          		schemaVersion = 1,
+          		regionId = GOLDEN_REGION_ID,
+          		worldSeedRef = "world-seed:office-alpha",
+          		regionAddress = RegionAddress.new(12, -4, 1),
+          		generatorVersions = {
+          			reality = 1,
+          			topology = 1,
+          			material = 1,
+          			object = 1,
+          			entity = 1,
+          		},
+          		semanticIntentKey = "intent:commercial-office.late-90s",
+          		topologyAnchors = {
+          			"anchor:west-service-threshold",
+          			"anchor:east-primary-threshold",
+          		},
+          		canonicalContentKeys = {
+          			"object:chair-a",
+          			"material:carpet-batch-a",
+          			"fixture:fluorescent-row-a",
+          		},
+          		recipeFingerprint = GOLDEN_RECIPE_FINGERPRINT,
+          	}
+          end
+
+          local function run(): number
+          	local failures = 0
+
+          	local function expect(name: string, condition: boolean): ()
+          		if condition then
+          			print(`PASS {name}`)
+          		else
+          			failures += 1
+          			print(`FAIL {name}`)
+          		end
+          	end
+
+          	-- Already-observed schema-v1 truth is reconstructed from a literal record.
+          	-- The isolated compatibility module intentionally exposes no observation/lock
+          	-- API, so it cannot mint new canonical content under the deprecated identity law.
+          	local locked = ResolvedRegionRecipeV1.deserialize(historicalV1Record())
+          	expect("historical v1 decoder remains schema 1", ResolvedRegionRecipeV1.SCHEMA_VERSION == 1)
+          	expect("historical v1 region identity remains compatible", locked.regionId == GOLDEN_REGION_ID)
+          	expect(
+          		"historical v1 recipe fingerprint remains compatible",
+          		locked.recipeFingerprint == GOLDEN_RECIPE_FINGERPRINT
+          	)
+          	expect(
+          		"historical v1 fingerprint API remains compatible",
+          		ResolvedRegionRecipeV1.fingerprint(locked) == GOLDEN_RECIPE_FINGERPRINT
+          	)
+
+          	local reconstructed = ResolvedRegionRecipeV1.deserialize(ResolvedRegionRecipeV1.serialize(locked))
+          	expect(
+          		"historical v1 serialized truth remains reconstructable",
+          		ResolvedRegionRecipeV1.equal(locked, reconstructed)
+          	)
+          	expect("legacy v1 compatibility module exposes no new-write lock API", ResolvedRegionRecipeV1.lock == nil)
+          	expect(
+          		"legacy v1 compatibility module exposes no observation transition API",
+          		ResolvedRegionRecipeV1.resolveOnObservation == nil
+          	)
+
+          	return failures
+          end
+
+          return run
+          EOF
 
       - name: Install pinned Roblox toolchain
         shell: bash
