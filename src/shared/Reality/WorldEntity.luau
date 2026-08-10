@@ -94,7 +94,10 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 		elseif keyType == "number" then
 			local numericKey = key :: number
 			assertFiniteNumber(`${path} key`, numericKey)
-			assert(numericKey >= 1 and numericKey == math.floor(numericKey), `{path} numeric keys must be positive integers`)
+			assert(
+				numericKey >= 1 and numericKey == math.floor(numericKey),
+				`{path} numeric keys must be positive integers`
+			)
 		else
 			error(`{path} keys must be strings or positive integers, got {keyType}`)
 		end
@@ -108,7 +111,10 @@ end
 local function cloneState(state: PlainData?): PlainData
 	local source = state or {}
 	for key in pairs(source) do
-		assert(type(key) == "string" and key ~= "", "persistentState top-level keys must be non-empty strings")
+		assert(
+			type(key) == "string" and key ~= "",
+			"persistentState top-level keys must be non-empty strings"
+		)
 	end
 	return clonePlainValue(source, "persistentState", {}) :: PlainData
 end
@@ -119,7 +125,10 @@ local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
 		assertNonEmpty("origin.regionId", origin.regionId)
 	end
 	assertNonEmpty("origin.generator", origin.generator)
-	assert(origin.generatorVersion >= 1 and origin.generatorVersion == math.floor(origin.generatorVersion), "origin.generatorVersion must be a positive integer")
+	assert(
+		origin.generatorVersion >= 1 and origin.generatorVersion == math.floor(origin.generatorVersion),
+		"origin.generatorVersion must be a positive integer"
+	)
 	assertNonEmpty("origin.recipeKey", origin.recipeKey)
 
 	return table.freeze({
@@ -164,7 +173,10 @@ function WorldEntity.fidelityRank(fidelity: Fidelity): number
 end
 
 function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord
-	assert(WorldEntity.isId(spec.id), "WorldEntity.id must be a non-empty stable identifier without control characters")
+	assert(
+		WorldEntity.isId(spec.id),
+		"WorldEntity.id must be a non-empty stable identifier without control characters"
+	)
 	assertNonEmpty("WorldEntity.kind", spec.kind)
 	local fidelity = spec.fidelity or "F0"
 	assert(WorldEntity.isFidelity(fidelity), `invalid fidelity {tostring(fidelity)}`)
@@ -181,10 +193,20 @@ function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord
 end
 
 function WorldEntity.captureState(record: WorldEntityRecord, capturedState: PlainData): WorldEntityRecord
-	return cloneRecord(record, record.fidelity, cloneState(capturedState), record.stateRevision + 1, record.representationRevision)
+	return cloneRecord(
+		record,
+		record.fidelity,
+		cloneState(capturedState),
+		record.stateRevision + 1,
+		record.representationRevision
+	)
 end
 
-function WorldEntity.transition(record: WorldEntityRecord, target: Fidelity, capturedState: PlainData?): WorldEntityRecord
+function WorldEntity.transition(
+	record: WorldEntityRecord,
+	target: Fidelity,
+	capturedState: PlainData?
+): WorldEntityRecord
 	assert(WorldEntity.isFidelity(target), `invalid fidelity {tostring(target)}`)
 	if target == record.fidelity then
 		if capturedState == nil then
@@ -199,11 +221,17 @@ function WorldEntity.transition(record: WorldEntityRecord, target: Fidelity, cap
 	local nextStateRevision = record.stateRevision
 
 	if targetRank < currentRank then
-		assert(capturedState ~= nil, "demotion requires captured persistent state before representation teardown")
+		assert(
+			capturedState ~= nil,
+			"demotion requires captured persistent state before representation teardown"
+		)
 		nextState = cloneState(capturedState)
 		nextStateRevision += 1
 	else
-		assert(capturedState == nil, "promotion consumes the already-captured persistent state; do not pass capturedState")
+		assert(
+			capturedState == nil,
+			"promotion consumes the already-captured persistent state; do not pass capturedState"
+		)
 	end
 
 	return cloneRecord(record, target, nextState, nextStateRevision, record.representationRevision + 1)
@@ -216,7 +244,10 @@ function WorldEntity.createRegistry(): Registry
 	}) :: Registry
 end
 
-function WorldEntity.register(registry: Registry, record: WorldEntityRecord): (boolean, DuplicateIdentityDiagnostic?)
+function WorldEntity.register(
+	registry: Registry,
+	record: WorldEntityRecord
+): (boolean, DuplicateIdentityDiagnostic?)
 	local existing = registry._records[record.id]
 	if existing ~= nil then
 		local diagnostic = table.freeze({
