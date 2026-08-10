@@ -5,8 +5,8 @@ local MaterialFixtureCatalog = {}
 function MaterialFixtureCatalog.build(MaterialDNA: any): any
 	local commercialWallpaperDrywall = MaterialDNA.freezeRecipe({
 		id = "material.v1.office-wallpaper.yellow-vinyl",
-		schemaVersion = MaterialDNA.SchemaVersion,
 		recipeVersion = 1,
+		schemaVersion = MaterialDNA.SchemaVersion,
 		coherenceClass = "interior.wallpapered-drywall",
 		substrate = {
 			classKey = "substrate.gypsum-board",
@@ -89,8 +89,8 @@ function MaterialFixtureCatalog.build(MaterialDNA: any): any
 
 	local lowPileCarpet = MaterialDNA.freezeRecipe({
 		id = "material.v1.office-carpet.low-pile-beige",
-		schemaVersion = MaterialDNA.SchemaVersion,
 		recipeVersion = 1,
+		schemaVersion = MaterialDNA.SchemaVersion,
 		coherenceClass = "interior.low-pile-carpet",
 		substrate = {
 			classKey = "substrate.synthetic-carpet-backing",
@@ -173,8 +173,8 @@ function MaterialFixtureCatalog.build(MaterialDNA: any): any
 
 	local paintedMetal = MaterialDNA.freezeRecipe({
 		id = "material.v1.office-metal.warm-gray-enamel",
-		schemaVersion = MaterialDNA.SchemaVersion,
 		recipeVersion = 1,
+		schemaVersion = MaterialDNA.SchemaVersion,
 		coherenceClass = "interior.painted-sheet-metal",
 		substrate = {
 			classKey = "substrate.cold-rolled-steel",

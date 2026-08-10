@@ -1,12 +1,17 @@
 --!strict
 
-local SCHEMA_VERSION = 1
+local SCHEMA_VERSION = 2
 local MAX_RECIPE_VERSION = 2147483647
 local MAX_HISTORY_EVENTS = 32
 local MAX_ANOMALY_MODIFIERS = 8
 local MAX_KEY_LENGTH = 160
 
 export type MaterialId = string
+
+export type MaterialRef = {
+	id: MaterialId,
+	recipeVersion: number,
+}
 
 export type Color01 = {
 	r: number,
@@ -89,8 +94,8 @@ export type ResponseSpec = {
 
 export type MaterialRecipe = {
 	id: MaterialId,
-	schemaVersion: number,
 	recipeVersion: number,
+	schemaVersion: number,
 	coherenceClass: string,
 	substrate: SubstrateSpec,
 	finish: FinishSpec,
@@ -159,8 +164,8 @@ end
 
 local RECIPE_FIELDS = fieldSet({
 	"id",
-	"schemaVersion",
 	"recipeVersion",
+	"schemaVersion",
 	"coherenceClass",
 	"substrate",
 	"finish",
@@ -206,6 +211,7 @@ local RESPONSE_FIELDS = fieldSet({
 	"damageResistance01",
 	"stainAffinity01",
 })
+local MATERIAL_REF_FIELDS = fieldSet({ "id", "recipeVersion" })
 local STATE_FIELDS = fieldSet({
 	"recipeId",
 	"recipeVersion",
@@ -283,7 +289,7 @@ local function validatePositiveInteger(errors: { string }, path: string, value: 
 	if
 		type(value) ~= "number"
 		or not isFinite(value)
-		or value < 1
+		or value <= 0
 		or value > MAX_RECIPE_VERSION
 		or math.floor(value) ~= value
 	then
@@ -563,10 +569,10 @@ function MaterialDNA.validateRecipe(value: unknown): ValidationResult
 
 	validateKnownFields(errors, "MaterialRecipe", recipe, RECIPE_FIELDS)
 	validateProjectKey(errors, "id", recipe.id)
+	validatePositiveInteger(errors, "recipeVersion", recipe.recipeVersion)
 	if type(recipe.schemaVersion) ~= "number" or recipe.schemaVersion ~= SCHEMA_VERSION then
 		appendError(errors, `schemaVersion must be {SCHEMA_VERSION}`)
 	end
-	validatePositiveInteger(errors, "recipeVersion", recipe.recipeVersion)
 	local coherenceClass = validateProjectKey(errors, "coherenceClass", recipe.coherenceClass)
 	local substrateClass = validateSubstrate(errors, recipe.substrate)
 	local finishClass = validateFinish(errors, recipe.finish)
@@ -627,10 +633,58 @@ function MaterialDNA.assertValidState(value: unknown): MaterialState
 	return value :: MaterialState
 end
 
-function MaterialDNA.stateMatchesRecipe(recipe: MaterialRecipe, state: MaterialState): boolean
-	return state.recipeId == recipe.id
-		and state.recipeVersion == recipe.recipeVersion
-		and state.schemaVersion == recipe.schemaVersion
+function MaterialDNA.validateReference(value: unknown): ValidationResult
+	local errors: { string } = {}
+	local reference = asTable(errors, "MaterialRef", value)
+	if reference == nil then
+		return {
+			ok = false,
+			errors = errors,
+		}
+	end
+
+	validateKnownFields(errors, "MaterialRef", reference, MATERIAL_REF_FIELDS)
+	validateProjectKey(errors, "id", reference.id)
+	validatePositiveInteger(errors, "recipeVersion", reference.recipeVersion)
+
+	return {
+		ok = #errors == 0,
+		errors = errors,
+	}
+end
+
+function MaterialDNA.reference(value: unknown): MaterialRef
+	local recipe = MaterialDNA.assertValidRecipe(value)
+	return table.freeze({
+		id = recipe.id,
+		recipeVersion = recipe.recipeVersion,
+	})
+end
+
+function MaterialDNA.validateStateForRecipe(recipeValue: unknown, stateValue: unknown): ValidationResult
+	local recipeResult = MaterialDNA.validateRecipe(recipeValue)
+	local stateResult = MaterialDNA.validateState(stateValue)
+	local errors: { string } = {}
+
+	for _, message in recipeResult.errors do
+		table.insert(errors, `recipe: {message}`)
+	end
+	for _, message in stateResult.errors do
+		table.insert(errors, `state: {message}`)
+	end
+
+	if recipeResult.ok and stateResult.ok then
+		local recipe = recipeValue :: MaterialRecipe
+		local state = stateValue :: MaterialState
+		if state.recipeId ~= recipe.id or state.recipeVersion ~= recipe.recipeVersion then
+			appendError(errors, "MaterialState must reference the exact MaterialRecipe id + recipeVersion")
+		end
+	end
+
+	return {
+		ok = #errors == 0,
+		errors = errors,
+	}
 end
 
 local function freezeColor(value: Color01): Color01
@@ -663,8 +717,8 @@ function MaterialDNA.freezeRecipe(value: unknown): MaterialRecipe
 	local source = MaterialDNA.assertValidRecipe(value)
 	local recipe: MaterialRecipe = {
 		id = source.id,
-		schemaVersion = source.schemaVersion,
 		recipeVersion = source.recipeVersion,
+		schemaVersion = source.schemaVersion,
 		coherenceClass = source.coherenceClass,
 		substrate = table.freeze({
 			classKey = source.substrate.classKey,
@@ -730,18 +784,19 @@ function MaterialDNA.freezeRecipe(value: unknown): MaterialRecipe
 	return table.freeze(recipe)
 end
 
-function MaterialDNA.defaultState(recipe: MaterialRecipe): MaterialState
-	local source = MaterialDNA.assertValidRecipe(recipe)
+function MaterialDNA.defaultState(recipeValue: unknown): MaterialState
+	local recipe = MaterialDNA.assertValidRecipe(recipeValue)
 	local state: MaterialState = {
-		recipeId = source.id,
-		recipeVersion = source.recipeVersion,
-		schemaVersion = source.schemaVersion,
+		recipeId = recipe.id,
+		recipeVersion = recipe.recipeVersion,
+		schemaVersion = SCHEMA_VERSION,
 		wear01 = 0,
 		damage01 = 0,
 		wetness01 = 0,
 		soil01 = 0,
 	}
-	MaterialDNA.assertValidState(state)
+	local result = MaterialDNA.validateStateForRecipe(recipe, state)
+	assert(result.ok, table.concat(result.errors, "; "))
 	return state
 end
 
