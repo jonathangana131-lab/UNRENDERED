@@ -186,10 +186,34 @@ local function run(): number
 			hingeUsesJamb = mechanism.kind == "hinge" and mechanism.frameComponentKey == "hinge-jamb"
 		end
 	end
-	expect("lab commercial door frame revision is explicit", doorGenome.familyVersion == 2)
+
+	local authoredDoorMass = 0
+	local weightedDoorX = 0
+	local weightedDoorY = 0
+	local weightedDoorZ = 0
+	for _, component in ipairs(doorGenome.components) do
+		authoredDoorMass += component.massKg
+		weightedDoorX += component.massKg * component.localPositionM.x
+		weightedDoorY += component.massKg * component.localPositionM.y
+		weightedDoorZ += component.massKg * component.localPositionM.z
+	end
+	local doorMassMatchesComponents = math.abs(authoredDoorMass - doorGenome.massKg) < 1e-9
+	local doorCenterOfMassMatchesComponents = false
+	if authoredDoorMass > 0 then
+		doorCenterOfMassMatchesComponents = math.abs(doorGenome.centerOfMassM.x - weightedDoorX / authoredDoorMass) < 1e-9
+			and math.abs(doorGenome.centerOfMassM.y - weightedDoorY / authoredDoorMass) < 1e-9
+			and math.abs(doorGenome.centerOfMassM.z - weightedDoorZ / authoredDoorMass) < 1e-9
+	end
+
+	expect("lab commercial door frame revision is explicit", doorGenome.familyVersion == 3)
 	expect("lab commercial door F2 frame leaves a real aperture", frameIsHollow)
 	expect("lab commercial door F2 leaf has positive proxy clearance", leafHasPositiveClearance)
 	expect("lab commercial door hinge references the structural jamb", hingeUsesJamb)
+	expect("lab commercial door component masses match authored total", doorMassMatchesComponents)
+	expect(
+		"lab commercial door center of mass matches component mass distribution",
+		doorCenterOfMassMatchesComponents
+	)
 
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
 	expect("lab duplicate identity is detectable", duplicateAccepted == false)
