@@ -68,6 +68,16 @@ local function run(): number
 		"recipe fingerprint is separately versioned StableId",
 		string.match(locked.fingerprint, "^resolved%-region%-recipe:v1:") ~= nil
 	)
+	expectEqual(
+		"resolved region v1 identity golden",
+		locked.regionId,
+		"region:v1:34dd810646b84277716e07e7d16b9570"
+	)
+	expectEqual(
+		"resolved recipe v1 fingerprint golden",
+		locked.fingerprint,
+		"resolved-region-recipe:v1:574d325a33ba8b95494a42364c6eb6be"
+	)
 	expectEqual("topology keys canonicalize lexically", locked.topologyAnchorKeys[1], "entry:west/reception")
 	expectEqual(
 		"content keys canonicalize lexically",
@@ -147,6 +157,24 @@ local function run(): number
 		futureResolved.generatorVersions.reality,
 		1
 	)
+
+	local malformedFutureInput = baseInput()
+	malformedFutureInput.generatorVersions = false
+	malformedFutureInput.topologyAnchorKeys = "broken-future-generator-output"
+	malformedFutureInput.canonicalContentKeys = { "duplicate", "duplicate" }
+	local malformedFutureResolved = ResolvedRegionRecipe.resolveFirstObservation(locked, malformedFutureInput)
+	expectEqual(
+		"established truth ignores malformed later unresolved content",
+		malformedFutureResolved.fingerprint,
+		locked.fingerprint
+	)
+
+	local wrongWorldInput = baseInput()
+	wrongWorldInput.worldId = StableId.fromParts("world", { "different-world" })
+	local wrongWorldAccepted = pcall(function()
+		ResolvedRegionRecipe.resolveFirstObservation(locked, wrongWorldInput)
+	end)
+	expectEqual("relock rejects a different canonical world", wrongWorldAccepted, false)
 
 	local wrongSeedInput = baseInput()
 	wrongSeedInput.worldSeedRef = "seed-ref:different:v1"

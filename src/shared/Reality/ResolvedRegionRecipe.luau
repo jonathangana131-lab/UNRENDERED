@@ -308,6 +308,17 @@ local function canonicalizeLockInput(value: unknown): LockInput
 	})
 end
 
+local function observationIdentity(value: unknown): (string, string, RegionAddress)
+	assert(type(value) == "table", "lockInput must be a table")
+	local source = value :: any
+	assert(getmetatable(source) == nil, "lockInput must not have a metatable")
+	local worldId = checkedString("lockInput.worldId", source.worldId, ResolvedRegionRecipe.MaxKeyBytes)
+	assert(StableId.is(worldId, "world"), "lockInput.worldId must be a canonical world StableId")
+	local worldSeedRef =
+		checkedString("lockInput.worldSeedRef", source.worldSeedRef, ResolvedRegionRecipe.MaxSeedRefBytes)
+	return worldId, worldSeedRef, cloneRegionAddress(source.regionAddress)
+end
+
 local function buildRecipe(input: LockInput): ResolvedRegionRecipe
 	local regionId = computeRegionId(input.worldId, input.regionAddress)
 	local fingerprint = computeFingerprint(
@@ -437,18 +448,21 @@ function ResolvedRegionRecipe.resolveFirstObservation(
 	existing: ResolvedRegionRecipe?,
 	value: LockInput
 ): ResolvedRegionRecipe
-	local candidate = buildRecipe(canonicalizeLockInput(value))
 	if existing == nil then
-		return candidate
+		return buildRecipe(canonicalizeLockInput(value))
 	end
 
 	local canonicalExisting = ResolvedRegionRecipe.deserialize(existing :: any)
-	assert(canonicalExisting.worldId == candidate.worldId, "existing truth belongs to a different world")
+	local incomingWorldId, incomingWorldSeedRef, incomingAddress = observationIdentity(value)
+	assert(canonicalExisting.worldId == incomingWorldId, "existing truth belongs to a different world")
 	assert(
-		canonicalExisting.worldSeedRef == candidate.worldSeedRef,
+		canonicalExisting.worldSeedRef == incomingWorldSeedRef,
 		"existing truth belongs to a different world seed"
 	)
-	assert(canonicalExisting.regionId == candidate.regionId, "existing truth belongs to a different region")
+	assert(
+		canonicalExisting.regionId == computeRegionId(incomingWorldId, incomingAddress),
+		"existing truth belongs to a different region"
+	)
 	return canonicalExisting
 end
 
