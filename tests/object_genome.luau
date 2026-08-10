@@ -1,3 +1,4 @@
+local StableId = require("../src/shared/Core/StableId")
 local ObjectGenome = require("../src/shared/Objects/ObjectGenome")
 local Fixtures = require("../src/shared/Objects/ObjectGenomeFixtures")
 
@@ -37,31 +38,31 @@ local function run(): number
 		{
 			name = "office chair",
 			genome = Fixtures.officeChair,
-			identity = "object-genome:1:office-chair.task:1:standard",
+			identity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",
 		},
 		{
 			name = "office table",
 			genome = Fixtures.officeTable,
-			identity = "object-genome:1:office-table.utility:1:rectangular",
+			identity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",
 		},
 		{
 			name = "filing cabinet",
 			genome = Fixtures.filingCabinet,
-			identity = "object-genome:1:filing-cabinet.vertical:1:three-drawer",
+			identity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",
 		},
 	}
 
 	for _, fixture in ipairs(fixtureCases) do
 		local report = ObjectGenome.inspect(fixture.genome)
 		expect(fixture.name .. " validates", report.ok)
+
+		local identity = ObjectGenome.identityKey(fixture.genome)
+		expect(fixture.name .. " locked stable identity", identity == fixture.identity)
 		expect(
-			fixture.name .. " stable identity",
-			ObjectGenome.identityKey(fixture.genome) == fixture.identity
+			fixture.name .. " uses project StableId",
+			StableId.is(identity, ObjectGenome.STABLE_ID_NAMESPACE)
 		)
-		expect(
-			fixture.name .. " repeat identity",
-			ObjectGenome.identityKey(fixture.genome) == ObjectGenome.identityKey(fixture.genome)
-		)
+		expect(fixture.name .. " repeat identity", identity == ObjectGenome.identityKey(fixture.genome))
 
 		local state = ObjectGenome.defaultState(fixture.genome)
 		expect(
