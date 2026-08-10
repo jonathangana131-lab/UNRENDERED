@@ -79,10 +79,12 @@ Promotion and demotion preserve domain identity and persistent state.
 - F0–F4 on a WorldEntity is lifecycle state only. The Fidelity Manager owns policy inputs, budgets, hysteresis, reasons, and timing for choosing a target fidelity.
 - Promotion reuses the latest captured persistent state. Demotion requires a fresh plain-data capture before representation teardown so physical state cannot disappear with Instances.
 - `stateRevision` tracks durable-state captures independently from `representationRevision`, which tracks fidelity representation changes.
-- Captured state is recursively checked for plain finite data and defensively copied/frozen. Instance/userdata/function/thread values, metatables, cycles, and non-finite numbers are rejected at the boundary.
-- The domain registry rejects duplicate live IDs, keeps the first registration authoritative, and emits a diagnostic describing both origins instead of silently replacing one entity with another.
+- Captured state is recursively checked for plain finite data and defensively copied/frozen. Nested tables must be either string-keyed maps or dense 1-based arrays; mixed or sparse shapes are rejected so persistence has one portable interpretation.
+- The domain registry rejects duplicate live IDs, retains only bounded recent diagnostics, and keeps one current immutable record for each registered identity.
+- Registered lifecycle changes use `captureRegistered` / `transitionRegistered` so the registry lookup advances atomically with the immutable record. Pure `captureState` / `transition` remain available for detached records and tests; callers must not use them as a second current-state owner for a registered entity.
+- Registry backing records and diagnostic history are closure-private. Callers can observe snapshots/current records but cannot mutate the registry behind duplicate detection or lifecycle revision boundaries.
 
-The registry is an identity diagnostic/index, not the universe database and not a persistence repository.
+The registry is an in-memory identity/lifecycle index and diagnostic guard, not the universe database and not a persistence repository. It owns no fidelity-selection policy: #7 chooses target fidelity and reasons, then applies that decision through the lifecycle boundary.
 
 ## Roblox-specific constraints
 
