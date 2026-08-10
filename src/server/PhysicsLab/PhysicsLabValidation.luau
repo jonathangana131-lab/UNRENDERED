@@ -140,10 +140,7 @@ local function assertCanonicalObjectComponents(model: Model, recipe: PhysicsLabR
 			end
 		end
 
-		assert(
-			matched,
-			`Physics Lab object {recipe.key} has unexpected component key {componentKey}`
-		)
+		assert(matched, `Physics Lab object {recipe.key} has unexpected component key {componentKey}`)
 	end
 
 	for _, expectedComponent in ipairs(genome.components) do
