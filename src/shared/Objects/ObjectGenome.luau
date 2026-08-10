@@ -1,6 +1,7 @@
 --!strict
 
 local StableId = require(script.Parent.Parent.Core.StableId)
+local ObjectGenomeRecipeIdentity = require(script.Parent.ObjectGenomeRecipeIdentity)
 
 export type Vec3 = {
 	x: number,
@@ -140,6 +141,8 @@ local ObjectGenome = {}
 ObjectGenome.SCHEMA_VERSION = 1
 ObjectGenome.STATE_SCHEMA_VERSION = 1
 ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
+ObjectGenome.RECIPE_ID_NAMESPACE = ObjectGenomeRecipeIdentity.Namespace
+ObjectGenome.RECIPE_ID_VERSION = ObjectGenomeRecipeIdentity.Version
 ObjectGenome.LOCAL_ROTATION_ORDER = "XYZ"
 ObjectGenome.LOCAL_ROTATION_HANDEDNESS = "right"
 
@@ -692,6 +695,11 @@ function ObjectGenome.identityKey(value: ObjectGenome): string
 	return StableId.fromParts(ObjectGenome.STABLE_ID_NAMESPACE, ObjectGenome.identityParts(value))
 end
 
+function ObjectGenome.recipeIdentityKey(value: ObjectGenome): string
+	ObjectGenome.validate(value)
+	return ObjectGenomeRecipeIdentity.key(value)
+end
+
 function ObjectGenome.inspect(value: any): ValidationResult
 	local issues: { ValidationIssue } = {}
 
@@ -710,7 +718,7 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		addIssue(
 			issues,
 			"genome.schema_version",
-			"schemaVersion",
+			`schemaVersion`,
 			`unsupported ObjectGenome schema version; expected {ObjectGenome.SCHEMA_VERSION}`
 		)
 	end
@@ -1230,7 +1238,7 @@ function ObjectGenome.defaultState(value: ObjectGenome): ObjectState
 
 	return {
 		stateSchemaVersion = ObjectGenome.STATE_SCHEMA_VERSION,
-		genomeId = ObjectGenome.identityKey(value),
+		genomeId = ObjectGenome.recipeIdentityKey(value),
 		componentWear = componentWear,
 		componentDamage = componentDamage,
 		mechanismPosition = mechanismPosition,
@@ -1277,7 +1285,7 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 		)
 	end
 
-	local expectedGenomeId = ObjectGenome.identityKey(genome)
+	local expectedGenomeId = ObjectGenome.recipeIdentityKey(genome)
 	if state.genomeId ~= expectedGenomeId then
 		addIssue(
 			issues,
