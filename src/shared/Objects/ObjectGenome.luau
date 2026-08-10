@@ -83,6 +83,13 @@ export type LatchMechanism = {
 
 export type MechanismSpec = HingeMechanism | SlideMechanism | CasterMechanism | TiltMechanism | LatchMechanism
 
+export type DecodedMechanismPosition =
+	{ kind: "hinge", degrees: number }
+	| { kind: "tilt", degrees: number }
+	| { kind: "slide", travelM: number }
+	| { kind: "caster", swivelTurns: number, swivelDegrees: number }
+	| { kind: "latch", engaged: boolean }
+
 export type AffordanceKind = "grip" | "push" | "pull" | "sit" | "open" | "close"
 
 export type AffordanceSpec = {
@@ -480,6 +487,26 @@ end
 
 local function isUnitInterval(value: any): boolean
 	return isFinite(value) and value >= 0 and value <= 1
+end
+
+local function mechanismPositionIsValid(mechanism: MechanismSpec, value: any): boolean
+	if mechanism.kind == "caster" then
+		return isFinite(value) and value >= 0 and value < 1
+	elseif mechanism.kind == "latch" then
+		return value == 0 or value == 1
+	elseif mechanism.kind == "hinge" or mechanism.kind == "tilt" or mechanism.kind == "slide" then
+		return isUnitInterval(value)
+	end
+	return false
+end
+
+local function defaultMechanismPosition(mechanism: MechanismSpec): number
+	if mechanism.kind == "hinge" or mechanism.kind == "tilt" then
+		return -mechanism.minDegrees / (mechanism.maxDegrees - mechanism.minDegrees)
+	elseif mechanism.kind == "slide" then
+		return -mechanism.minTravelM / (mechanism.maxTravelM - mechanism.minTravelM)
+	end
+	return 0
 end
 
 local function isPositiveInteger(value: any): boolean
@@ -1125,30 +1152,42 @@ function ObjectGenome.inspect(value: any): ValidationResult
 
 			if mechanism.kind == "hinge" or mechanism.kind == "tilt" then
 				validateAxis(issues, path .. ".axis", mechanism.axis)
-				if
-					not isFinite(mechanism.minDegrees)
-					or not isFinite(mechanism.maxDegrees)
-					or mechanism.minDegrees >= mechanism.maxDegrees
-				then
+				local angularLimitsValid = isFinite(mechanism.minDegrees)
+					and isFinite(mechanism.maxDegrees)
+					and mechanism.minDegrees < mechanism.maxDegrees
+				if not angularLimitsValid then
 					addIssue(
 						issues,
 						"mechanism.angular_limits",
 						path,
 						"angular limits require finite minDegrees < maxDegrees"
 					)
+				elseif mechanism.minDegrees > 0 or mechanism.maxDegrees < 0 then
+					addIssue(
+						issues,
+						"mechanism.reference_pose",
+						path,
+						"angular limits must include the authored zero/reference pose"
+					)
 				end
 			elseif mechanism.kind == "slide" then
 				validateAxis(issues, path .. ".axis", mechanism.axis)
-				if
-					not isFinite(mechanism.minTravelM)
-					or not isFinite(mechanism.maxTravelM)
-					or mechanism.minTravelM >= mechanism.maxTravelM
-				then
+				local linearLimitsValid = isFinite(mechanism.minTravelM)
+					and isFinite(mechanism.maxTravelM)
+					and mechanism.minTravelM < mechanism.maxTravelM
+				if not linearLimitsValid then
 					addIssue(
 						issues,
 						"mechanism.linear_limits",
 						path,
 						"slide limits require finite minTravelM < maxTravelM"
+					)
+				elseif mechanism.minTravelM > 0 or mechanism.maxTravelM < 0 then
+					addIssue(
+						issues,
+						"mechanism.reference_pose",
+						path,
+						"slide limits must include the authored zero/reference pose"
 					)
 				end
 			elseif mechanism.kind == "caster" then
@@ -1241,6 +1280,70 @@ function ObjectGenome.validate(value: ObjectGenome): ()
 	assert(result.ok, formatIssues(result.issues))
 end
 
+function ObjectGenome.decodeMechanismPosition(
+	mechanism: MechanismSpec,
+	position: number
+): DecodedMechanismPosition
+	assert(
+		mechanismPositionIsValid(mechanism, position),
+		"mechanism position must use canonical ObjectState v1 encoding"
+	)
+
+	if mechanism.kind == "hinge" then
+		assert(
+			isFinite(mechanism.minDegrees)
+				and isFinite(mechanism.maxDegrees)
+				and mechanism.minDegrees < mechanism.maxDegrees
+				and mechanism.minDegrees <= 0
+				and mechanism.maxDegrees >= 0,
+			"angular mechanism limits must include the authored zero/reference pose"
+		)
+		return {
+			kind = "hinge",
+			degrees = mechanism.minDegrees + position * (mechanism.maxDegrees - mechanism.minDegrees),
+		}
+	elseif mechanism.kind == "tilt" then
+		assert(
+			isFinite(mechanism.minDegrees)
+				and isFinite(mechanism.maxDegrees)
+				and mechanism.minDegrees < mechanism.maxDegrees
+				and mechanism.minDegrees <= 0
+				and mechanism.maxDegrees >= 0,
+			"angular mechanism limits must include the authored zero/reference pose"
+		)
+		return {
+			kind = "tilt",
+			degrees = mechanism.minDegrees + position * (mechanism.maxDegrees - mechanism.minDegrees),
+		}
+	elseif mechanism.kind == "slide" then
+		assert(
+			isFinite(mechanism.minTravelM)
+				and isFinite(mechanism.maxTravelM)
+				and mechanism.minTravelM < mechanism.maxTravelM
+				and mechanism.minTravelM <= 0
+				and mechanism.maxTravelM >= 0,
+			"slide mechanism limits must include the authored zero/reference pose"
+		)
+		return {
+			kind = "slide",
+			travelM = mechanism.minTravelM + position * (mechanism.maxTravelM - mechanism.minTravelM),
+		}
+	elseif mechanism.kind == "caster" then
+		return {
+			kind = "caster",
+			swivelTurns = position,
+			swivelDegrees = position * 360,
+		}
+	elseif mechanism.kind == "latch" then
+		return {
+			kind = "latch",
+			engaged = position == 1,
+		}
+	end
+
+	error("unsupported ObjectGenome mechanism kind", 2)
+end
+
 function ObjectGenome.defaultState(value: ObjectGenome): ObjectState
 	ObjectGenome.validate(value)
 	local componentWear: { [string]: number } = {}
@@ -1254,7 +1357,7 @@ function ObjectGenome.defaultState(value: ObjectGenome): ObjectState
 
 	local mechanismPosition: { [string]: number } = {}
 	for _, mechanism in ipairs(value.mechanisms) do
-		mechanismPosition[mechanism.key] = 0
+		mechanismPosition[mechanism.key] = defaultMechanismPosition(mechanism)
 	end
 
 	return {
@@ -1321,8 +1424,10 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 		componentKeys[component.key] = true
 	end
 	local mechanismKeys: { [string]: boolean } = {}
+	local mechanismsByKey: { [string]: MechanismSpec } = {}
 	for _, mechanism in ipairs(genome.mechanisms) do
 		mechanismKeys[mechanism.key] = true
+		mechanismsByKey[mechanism.key] = mechanism
 	end
 
 	local function validateUnitMap(fieldName: string, mapValue: any, knownKeys: { [string]: boolean }): ()
@@ -1358,9 +1463,49 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 		end
 	end
 
+	local function validateMechanismPositionMap(mapValue: any): ()
+		local fieldName = "mechanismPosition"
+		if type(mapValue) ~= "table" then
+			addIssue(issues, "state.collection", fieldName, "mechanismPosition must be a table")
+			return
+		end
+		if getmetatable(mapValue) ~= nil then
+			addIssue(issues, "state.metatable", fieldName, "mechanismPosition must not have a metatable")
+			return
+		end
+		for key in pairs(mechanismKeys) do
+			if mapValue[key] == nil then
+				addIssue(
+					issues,
+					"state.missing_key",
+					`mechanismPosition.{key}`,
+					"state is missing a required genome key"
+				)
+			end
+		end
+		for key, position in pairs(mapValue) do
+			local mechanism = if type(key) == "string" then mechanismsByKey[key] else nil
+			if mechanism == nil then
+				addIssue(
+					issues,
+					"state.unknown_key",
+					`mechanismPosition.{safeKeyLabel(key)}`,
+					"state references an unknown genome key"
+				)
+			elseif not mechanismPositionIsValid(mechanism, position) then
+				addIssue(
+					issues,
+					"state.mechanism_position",
+					`mechanismPosition.{key}`,
+					"mechanism position is not canonical for the referenced mechanism kind"
+				)
+			end
+		end
+	end
+
 	validateUnitMap("componentWear", state.componentWear, componentKeys)
 	validateUnitMap("componentDamage", state.componentDamage, componentKeys)
-	validateUnitMap("mechanismPosition", state.mechanismPosition, mechanismKeys)
+	validateMechanismPositionMap(state.mechanismPosition)
 
 	if type(state.detachedComponents) ~= "table" then
 		addIssue(issues, "state.collection", "detachedComponents", "detachedComponents must be a table")

@@ -33,6 +33,15 @@ local function findComponent(genome, key)
 	return nil
 end
 
+local function findMechanism(genome, key)
+	for _, mechanism in ipairs(genome.mechanisms) do
+		if mechanism.key == key then
+			return mechanism
+		end
+	end
+	return nil
+end
+
 local function run(): number
 	local failures = 0
 
@@ -191,6 +200,104 @@ local function run(): number
 	expect(
 		"rejects non-unit mechanism axis",
 		hasCode(ObjectGenome.inspect(nonUnitAxis), "mechanism.axis_unit")
+	)
+
+	local positiveOnlyTilt = deepCopy(Fixtures.officeChair)
+	local positiveTiltMechanism = findMechanism(positiveOnlyTilt, "seat-tilt")
+	if positiveTiltMechanism ~= nil then
+		positiveTiltMechanism.minDegrees = 2
+		positiveTiltMechanism.maxDegrees = 14
+	end
+	expect(
+		"rejects angular mechanism range that excludes authored zero pose",
+		positiveTiltMechanism ~= nil
+			and hasCode(ObjectGenome.inspect(positiveOnlyTilt), "mechanism.reference_pose")
+	)
+
+	local positiveOnlySlide = deepCopy(Fixtures.filingCabinet)
+	local positiveSlideMechanism = findMechanism(positiveOnlySlide, "slide-top")
+	if positiveSlideMechanism ~= nil then
+		positiveSlideMechanism.minTravelM = 0.05
+		positiveSlideMechanism.maxTravelM = 0.44
+	end
+	expect(
+		"rejects slide range that excludes authored zero pose",
+		positiveSlideMechanism ~= nil
+			and hasCode(ObjectGenome.inspect(positiveOnlySlide), "mechanism.reference_pose")
+	)
+
+	local chairMechanismState = ObjectGenome.defaultState(Fixtures.officeChair)
+	local seatTiltMechanism = findMechanism(Fixtures.officeChair, "seat-tilt")
+	local seatTiltPosition = chairMechanismState.mechanismPosition["seat-tilt"]
+	local decodedTilt = if seatTiltMechanism ~= nil
+		then ObjectGenome.decodeMechanismPosition(seatTiltMechanism, seatTiltPosition)
+		else nil
+	expect(
+		"chair tilt default scalar resolves to authored zero degrees",
+		seatTiltMechanism ~= nil
+			and math.abs(seatTiltPosition - (8 / 22)) < 1e-12
+			and decodedTilt ~= nil
+			and decodedTilt.kind == "tilt"
+			and math.abs(decodedTilt.degrees) < 1e-12
+	)
+
+	local casterMechanism = findMechanism(Fixtures.officeChair, "caster-front-left-swivel")
+	local casterState = ObjectGenome.defaultState(Fixtures.officeChair)
+	casterState.mechanismPosition["caster-front-left-swivel"] = 0.999
+	expect(
+		"caster accepts canonical half-open swivel scalar",
+		casterMechanism ~= nil and ObjectGenome.inspectState(Fixtures.officeChair, casterState).ok
+	)
+	local decodedCaster = if casterMechanism ~= nil
+		then ObjectGenome.decodeMechanismPosition(casterMechanism, 0.25)
+		else nil
+	expect(
+		"caster decoder maps persisted swivel turn fraction and leaves wheel roll transient",
+		decodedCaster ~= nil
+			and decodedCaster.kind == "caster"
+			and decodedCaster.swivelTurns == 0.25
+			and decodedCaster.swivelDegrees == 90
+	)
+	casterState.mechanismPosition["caster-front-left-swivel"] = 1
+	expect(
+		"caster rejects duplicate full-turn endpoint",
+		hasCode(ObjectGenome.inspectState(Fixtures.officeChair, casterState), "state.mechanism_position")
+	)
+
+	local slideMechanism = findMechanism(Fixtures.filingCabinet, "slide-top")
+	local decodedSlide = if slideMechanism ~= nil
+		then ObjectGenome.decodeMechanismPosition(slideMechanism, 0.5)
+		else nil
+	expect(
+		"slide decoder maps scalar to authored physical travel",
+		decodedSlide ~= nil and decodedSlide.kind == "slide" and math.abs(decodedSlide.travelM - 0.22) < 1e-12
+	)
+
+	local latchMechanism = findMechanism(Fixtures.filingCabinet, "latch-top")
+	local latchState = ObjectGenome.defaultState(Fixtures.filingCabinet)
+	local decodedLatchDefault = if latchMechanism ~= nil
+		then ObjectGenome.decodeMechanismPosition(latchMechanism, latchState.mechanismPosition["latch-top"])
+		else nil
+	expect(
+		"latch default is discrete disengaged authored reference pose",
+		decodedLatchDefault ~= nil and decodedLatchDefault.kind == "latch" and not decodedLatchDefault.engaged
+	)
+	latchState.mechanismPosition["latch-top"] = 1
+	expect(
+		"latch accepts engaged discrete state",
+		ObjectGenome.inspectState(Fixtures.filingCabinet, latchState).ok
+	)
+	local decodedLatchEngaged = if latchMechanism ~= nil
+		then ObjectGenome.decodeMechanismPosition(latchMechanism, 1)
+		else nil
+	expect(
+		"latch decoder maps one to engaged",
+		decodedLatchEngaged ~= nil and decodedLatchEngaged.kind == "latch" and decodedLatchEngaged.engaged
+	)
+	latchState.mechanismPosition["latch-top"] = 0.5
+	expect(
+		"latch rejects fractional persisted state",
+		hasCode(ObjectGenome.inspectState(Fixtures.filingCabinet, latchState), "state.mechanism_position")
 	)
 
 	local rotatedOutside = deepCopy(Fixtures.officeTable)

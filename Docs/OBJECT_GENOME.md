@@ -59,7 +59,16 @@ The first production mechanism vocabulary is intentionally small and semantic:
 
 Mechanism `axis`, caster `swivelAxis`, and caster `rollAxis` values are canonical unit direction vectors in the same object-local basis. Their magnitude must be within `0.0001` of `1.0`; scale-bearing alternatives such as `{ x = 0, y = 2, z = 0 }` are invalid recipes. This prevents equivalent directions from acquiring multiple persistent encodings or requiring adapter-specific normalization.
 
-Mechanisms reference component keys and plain axes/limits. A later Roblox realization adapter may choose constraints, servo settings, collision groups, fidelity simplifications, or authored meshes without changing the domain recipe.
+Mechanisms reference component keys and plain axes/limits. Their mutable `ObjectState.mechanismPosition` value is one canonical scalar whose meaning is kind-specific and project-owned rather than adapter-defined:
+
+- `hinge` / `tilt`: `p` is in `[0, 1]` and decodes as `degrees = minDegrees + p * (maxDegrees - minDegrees)`;
+- `slide`: `p` is in `[0, 1]` and decodes as `travelM = minTravelM + p * (maxTravelM - minTravelM)`;
+- `caster`: `p` is a persisted swivel turn fraction in `[0, 1)`, decoding to `p * 360` degrees. The full-turn endpoint is rejected because it duplicates zero. Wheel roll phase is transient Physical-World realization state in v1 and is not persisted by this scalar;
+- `latch`: only `0` and `1` are canonical. `0` is the authored/default disengaged reference pose and `1` is engaged.
+
+For hinge, tilt, and slide mechanisms, authored component transforms are the physical zero/reference pose. Recipe limits must include zero, and `ObjectGenome.defaultState()` derives the scalar that maps back to exactly zero physical offset (`-min / (max - min)`) instead of blindly storing `0`. `ObjectGenome.decodeMechanismPosition()` is the shared decoder boundary so Physics Lab/fidelity adapters do not invent competing formulas.
+
+A later Roblox realization adapter may choose constraints, servo settings, collision groups, fidelity simplifications, or authored meshes without changing the domain recipe or the persisted mechanism-state interpretation.
 
 ## Affordances
 
@@ -70,8 +79,9 @@ Affordances describe stable interaction/grip regions (`grip`, `push`, `pull`, `s
 - `ObjectGenome.inspect(genome)` returns a structured deterministic report with stable issue codes.
 - `ObjectGenome.validate(genome)` asserts when the report is invalid.
 - `ObjectGenomeOwnership.own(genome)` validates exact canonical shape, defensively copies, and recursively freezes a production-owned recipe.
-- `ObjectGenome.defaultState(genome)` creates separate zeroed mutable state bound to the exact canonical genome identity.
-- `ObjectGenome.inspectState(genome, state)` validates the state identity plus mutable keys/ranges against the immutable recipe.
+- `ObjectGenome.defaultState(genome)` creates separate mutable state bound to the exact canonical genome identity, with mechanism scalars at their authored zero/reference poses.
+- `ObjectGenome.decodeMechanismPosition(mechanism, position)` converts the canonical persisted scalar into one kind-specific physical semantic value.
+- `ObjectGenome.inspectState(genome, state)` validates the state identity plus mutable keys/ranges against the immutable recipe, including kind-specific mechanism encodings.
 - `ObjectGenome.validateState(genome, state)` is the asserting state validator.
 
 The semantic validators themselves are fail-closed plain-data boundaries, not only the ownership copier: undeclared v1 record fields are rejected before retention, metatable-backed canonical tables are rejected before metamethods can influence field reads, `ObjectState` has an exact top-level v1 shape, and its mutable maps may not carry metatables. This keeps validation/identity behavior dependent only on explicit versioned data.
