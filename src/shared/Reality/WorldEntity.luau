@@ -291,6 +291,33 @@ function WorldEntity.get(registry: Registry, entityId: WorldEntityId): WorldEnti
 	return registry._records[entityId]
 end
 
+local function getRegistered(registry: Registry, entityId: WorldEntityId): WorldEntityRecord
+	local record = registry._records[entityId]
+	assert(record ~= nil, `unknown WorldEntityId: {entityId}`)
+	return record
+end
+
+function WorldEntity.captureRegistered(
+	registry: Registry,
+	entityId: WorldEntityId,
+	capturedState: PlainData
+): WorldEntityRecord
+	local nextRecord = WorldEntity.captureState(getRegistered(registry, entityId), capturedState)
+	registry._records[entityId] = nextRecord
+	return nextRecord
+end
+
+function WorldEntity.transitionRegistered(
+	registry: Registry,
+	entityId: WorldEntityId,
+	target: Fidelity,
+	capturedState: PlainData?
+): WorldEntityRecord
+	local nextRecord = WorldEntity.transition(getRegistered(registry, entityId), target, capturedState)
+	registry._records[entityId] = nextRecord
+	return nextRecord
+end
+
 function WorldEntity.unregister(registry: Registry, entityId: WorldEntityId): WorldEntityRecord?
 	local existing = registry._records[entityId]
 	registry._records[entityId] = nil
