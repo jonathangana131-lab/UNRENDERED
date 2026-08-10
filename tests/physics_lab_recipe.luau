@@ -6,6 +6,31 @@ local PhysicsLabRecipe = ProductionLoader.requireShared("Physics/PhysicsLabRecip
 local StableId = ProductionLoader.requireShared("Core/StableId")
 local WorldEntity = ProductionLoader.requireShared("Reality/WorldEntity")
 
+local function axisAlignedComponentsOverlap(left, right)
+	local function overlapsAxis(leftCenter, leftSize, rightCenter, rightSize)
+		return math.abs(leftCenter - rightCenter) < (leftSize + rightSize) * 0.5
+	end
+
+	return overlapsAxis(
+		left.localPositionM.x,
+		left.dimensionsM.x,
+		right.localPositionM.x,
+		right.dimensionsM.x
+	)
+		and overlapsAxis(
+			left.localPositionM.y,
+			left.dimensionsM.y,
+			right.localPositionM.y,
+			right.dimensionsM.y
+		)
+		and overlapsAxis(
+			left.localPositionM.z,
+			left.dimensionsM.z,
+			right.localPositionM.z,
+			right.dimensionsM.z
+		)
+end
+
 local function run(): number
 	local failures = 0
 
@@ -141,29 +166,38 @@ local function run(): number
 
 	local doorGenome = PhysicsLabRecipe.objectGenome("commercialDoor")
 	local doorLeaf = nil
+	local hingeUsesStructuralJamb = false
 	for _, component in ipairs(doorGenome.components) do
 		if component.key == "leaf" then
 			doorLeaf = component
 			break
 		end
 	end
+
 	local doorFrameLeavesOpening = doorLeaf ~= nil
 	if doorLeaf ~= nil then
 		for _, component in ipairs(doorGenome.components) do
-			if
-				component.key ~= "leaf"
-				and component.dimensionsM.x >= doorLeaf.dimensionsM.x
-				and component.dimensionsM.y >= doorLeaf.dimensionsM.y
-			then
+			if component.key ~= "leaf" and axisAlignedComponentsOverlap(doorLeaf, component) then
 				doorFrameLeavesOpening = false
 				break
 			end
 		end
 	end
+	for _, mechanism in ipairs(doorGenome.mechanisms) do
+		if mechanism.key == "leaf-hinge" then
+			hingeUsesStructuralJamb = mechanism.kind == "hinge"
+				and mechanism.movingComponentKey == "leaf"
+				and mechanism.frameComponentKey == "hinge-jamb"
+			break
+		end
+	end
+
+	expect("commercial door repaired recipe has an explicit revision", doorGenome.familyVersion == 2)
 	expect(
-		"commercial door frame does not realize as a solid slab across the opening",
+		"commercial door leaf has collision clearance from every F2 frame component",
 		doorFrameLeavesOpening
 	)
+	expect("commercial door hinge is bound to the structural hinge jamb", hingeUsesStructuralJamb)
 
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
 	expect("lab duplicate identity is detectable", duplicateAccepted == false)
