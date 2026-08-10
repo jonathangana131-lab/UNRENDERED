@@ -133,6 +133,28 @@ local function run(): number
 		"default mutable state remains writable",
 		stateMutationOk and mutableState.componentWear[componentKey] == 0.5
 	)
+	expect("default state records exact genome identity", mutableState.genomeId == ObjectGenome.identityKey(ownedGenome))
+	expect("mutated state still validates against its genome", ObjectGenome.inspectState(ownedGenome, mutableState).ok)
+
+	local missingGenomeIdState = ObjectGenome.defaultState(Fixtures.officeChair)
+	missingGenomeIdState.genomeId = nil
+	expect(
+		"rejects state without exact genome identity",
+		hasCode(ObjectGenome.inspectState(Fixtures.officeChair, missingGenomeIdState), "state.genome_id")
+	)
+
+	local revisedGenome = deepCopy(Fixtures.officeChair)
+	revisedGenome.familyVersion += 1
+	expect("cross-revision fixture remains a valid genome", ObjectGenome.inspect(revisedGenome).ok)
+	expect(
+		"cross-revision genome changes canonical identity",
+		ObjectGenome.identityKey(revisedGenome) ~= ObjectGenome.identityKey(Fixtures.officeChair)
+	)
+	local priorRevisionState = ObjectGenome.defaultState(Fixtures.officeChair)
+	expect(
+		"rejects state replay against different genome revision with matching keys",
+		hasCode(ObjectGenome.inspectState(revisedGenome, priorRevisionState), "state.genome_id")
+	)
 
 	local missingComponentState = ObjectGenome.defaultState(Fixtures.officeChair)
 	missingComponentState.componentWear[componentKey] = nil
