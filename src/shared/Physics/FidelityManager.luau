@@ -130,16 +130,27 @@ end
 
 local function validateConfig(config: PolicyConfig): ()
 	assert(
-		config.maxRegisteredEntities >= 1 and config.maxRegisteredEntities == math.floor(config.maxRegisteredEntities),
-		"maxRegisteredEntities must be a positive integer"
+		config.maxRegisteredEntities >= 1
+			and config.maxRegisteredEntities < math.huge
+			and config.maxRegisteredEntities == math.floor(config.maxRegisteredEntities),
+		"maxRegisteredEntities must be a positive finite integer"
 	)
 	validateNonNegative("heroDistanceStuds", config.heroDistanceStuds)
 	validateNonNegative("interactiveDistanceStuds", config.interactiveDistanceStuds)
 	validateNonNegative("renderDistanceStuds", config.renderDistanceStuds)
 	validateNonNegative("structuralDistanceStuds", config.structuralDistanceStuds)
-	assert(config.heroDistanceStuds <= config.interactiveDistanceStuds, "hero distance must not exceed interactive")
-	assert(config.interactiveDistanceStuds <= config.renderDistanceStuds, "interactive distance must not exceed render")
-	assert(config.renderDistanceStuds <= config.structuralDistanceStuds, "render distance must not exceed structural")
+	assert(
+		config.heroDistanceStuds <= config.interactiveDistanceStuds,
+		"hero distance must not exceed interactive"
+	)
+	assert(
+		config.interactiveDistanceStuds <= config.renderDistanceStuds,
+		"interactive distance must not exceed render"
+	)
+	assert(
+		config.renderDistanceStuds <= config.structuralDistanceStuds,
+		"render distance must not exceed structural"
+	)
 	validateNonNegative("distanceHysteresisStuds", config.distanceHysteresisStuds)
 	validateNonNegative("interactionGraceSeconds", config.interactionGraceSeconds)
 	validateNonNegative("promotionHoldSeconds", config.promotionHoldSeconds)
@@ -148,7 +159,10 @@ local function validateConfig(config: PolicyConfig): ()
 	validateUnit("significanceKeepaliveThreshold", config.significanceKeepaliveThreshold)
 	validateUnit("activeRelevanceThreshold", config.activeRelevanceThreshold)
 	validateUnit("heroRelevanceThreshold", config.heroRelevanceThreshold)
-	assert(config.activeRelevanceThreshold <= config.heroRelevanceThreshold, "active relevance must not exceed hero relevance")
+	assert(
+		config.activeRelevanceThreshold <= config.heroRelevanceThreshold,
+		"active relevance must not exceed hero relevance"
+	)
 end
 
 local function validateInputs(inputs: PolicyInputs): ()
@@ -184,7 +198,12 @@ local function atLeast(current: FidelityLevel, minimum: FidelityLevel): Fidelity
 	return minimum
 end
 
-local function distanceLimit(base: number, currentIndex: number, retainedIndex: number, hysteresis: number): number
+local function distanceLimit(
+	base: number,
+	currentIndex: number,
+	retainedIndex: number,
+	hysteresis: number
+): number
 	if currentIndex >= retainedIndex then
 		return base + hysteresis
 	end
@@ -225,7 +244,8 @@ function FidelityManager.selectDesiredLevel(
 	local hysteresis = resolvedConfig.distanceHysteresisStuds
 	local structuralLimit = distanceLimit(resolvedConfig.structuralDistanceStuds, currentIndex, 1, hysteresis)
 	local renderLimit = distanceLimit(resolvedConfig.renderDistanceStuds, currentIndex, 2, hysteresis)
-	local interactiveLimit = distanceLimit(resolvedConfig.interactiveDistanceStuds, currentIndex, 3, hysteresis)
+	local interactiveLimit =
+		distanceLimit(resolvedConfig.interactiveDistanceStuds, currentIndex, 3, hysteresis)
 	local heroLimit = distanceLimit(resolvedConfig.heroDistanceStuds, currentIndex, 4, hysteresis)
 
 	local desired: FidelityLevel = "F0"
@@ -257,7 +277,8 @@ function FidelityManager.selectDesiredLevel(
 	end
 
 	local heroRelevance = math.max(inputs.significance, inputs.networkRelevance, inputs.entityRelevance)
-	local closeHeroDemand = inputs.distanceStuds <= heroLimit and (inputs.directlyObserved or recentlyInteracted)
+	local closeHeroDemand = inputs.distanceStuds <= heroLimit
+		and (inputs.directlyObserved or recentlyInteracted)
 	local visibleHeroDemand = inputs.visible and heroRelevance >= resolvedConfig.heroRelevanceThreshold
 	if closeHeroDemand or visibleHeroDemand then
 		desired = "F4"
@@ -267,7 +288,13 @@ function FidelityManager.selectDesiredLevel(
 end
 
 function FidelityManager.new(config: PolicyConfig?): Manager
-	local resolvedConfig = copyConfig(config or DEFAULT_CONFIG)
+	local sourceConfig: PolicyConfig
+	if config == nil then
+		sourceConfig = DEFAULT_CONFIG
+	else
+		sourceConfig = config
+	end
+	local resolvedConfig = copyConfig(sourceConfig)
 	validateConfig(resolvedConfig)
 
 	local self: ManagerImpl = {
@@ -361,7 +388,10 @@ function FidelityManager.step(
 	local state = self._states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
 	assert(isLevel(currentLevel), "currentLevel must be F0-F4")
-	assert(nowSeconds == nowSeconds and nowSeconds >= state.lastEvaluatedAt, "nowSeconds must be monotonic per entity")
+	assert(
+		nowSeconds == nowSeconds and nowSeconds >= state.lastEvaluatedAt,
+		"nowSeconds must be monotonic per entity"
+	)
 	state.lastEvaluatedAt = nowSeconds
 
 	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
@@ -385,7 +415,9 @@ function FidelityManager.step(
 
 	local pendingSince = state.pendingSince :: number
 	local isPromotion = levelIndex(desired) > levelIndex(currentLevel)
-	local holdSeconds = if isPromotion then self.config.promotionHoldSeconds else self.config.demotionHoldSeconds
+	local holdSeconds = if isPromotion
+		then self.config.promotionHoldSeconds
+		else self.config.demotionHoldSeconds
 	if nowSeconds - pendingSince < holdSeconds then
 		self._metrics.blockedByHold += 1
 		return {
