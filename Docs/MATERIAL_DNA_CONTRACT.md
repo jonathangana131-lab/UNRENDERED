@@ -6,7 +6,7 @@ MaterialDNA is the canonical plain-data material recipe shared by world generati
 
 A `MaterialRecipe` is canonical identity/history data. Call `MaterialDNA.freezeRecipe(input)` when a recipe becomes owned by the resolved world or a fixture/catalog. The function validates, deep-copies, and deep-freezes the complete recipe tree. Mutating the caller's input after that boundary cannot rewrite canonical material truth.
 
-`MaterialState` is intentionally separate and mutable. It carries runtime/durable deltas such as wear, damage, wetness, and soil. Representation demotion/persistence should capture state without modifying the immutable recipe.
+`MaterialState` is intentionally separate and mutable. It carries runtime/durable deltas such as wear, damage, wetness, and soil plus the exact `recipeId + recipeRevision` those deltas belong to. `validateStateForRecipe` rejects state from a different semantic material or content revision. Representation demotion/persistence should capture state without modifying the immutable recipe.
 
 ## Recipe layers
 
@@ -51,7 +51,7 @@ The literal fixture definitions live in `MaterialFixtureCatalog`, a pure builder
 
 ## Versioning
 
-`MaterialDNA.SchemaVersion` is currently `1`. Unknown schema versions are rejected. Changing the meaning/shape of established recipe data is a schema migration, not an unversioned refactor. Already-resolved world truth must never silently reinterpret an old recipe under a new schema.
+`MaterialDNA.SchemaVersion` is currently `1`. Unknown schema versions are rejected. `recipeRevision` is a separate positive integer for canonical content changes that keep the same schema and semantic material ID. Changing the meaning/shape of established recipe data is a schema migration; changing established recipe values requires a new recipe revision. Persisted mutable state records that exact revision so already-resolved world truth cannot silently reinterpret old deltas under newer material content.
 
 ## Performance boundary
 

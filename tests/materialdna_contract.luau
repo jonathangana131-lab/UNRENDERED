@@ -36,6 +36,7 @@ local function run(): number
 		return {
 			id = "material.v1.test.wallpaper",
 			schemaVersion = MaterialDNA.SchemaVersion,
+			recipeRevision = 1,
 			coherenceClass = "interior.wallpapered-drywall",
 			substrate = {
 				classKey = "substrate.gypsum-board",
@@ -238,6 +239,15 @@ local function run(): number
 		table.concat(schemaResult.errors, "; ")
 	)
 
+	local invalidRevision = makeRecipe()
+	invalidRevision.recipeRevision = 0
+	local revisionResult = MaterialDNA.validateRecipe(invalidRevision)
+	expect(
+		"non-positive recipe revision rejected",
+		not revisionResult.ok and containsError(revisionResult, "recipeRevision"),
+		table.concat(revisionResult.errors, "; ")
+	)
+
 	local metatableRecipe: any = makeRecipe()
 	setmetatable(metatableRecipe, {
 		__index = {
@@ -303,6 +313,11 @@ local function run(): number
 			fixtureResult.ok,
 			table.concat(fixtureResult.errors, "; ")
 		)
+		expect(
+			`production fixture {fixtureName} has locked content revision`,
+			fixture.recipeRevision == 1,
+			tostring(fixture.recipeRevision)
+		)
 		local mutateFixture = pcall(function()
 			fixture.apparentAgeYears = 0
 		end)
@@ -324,17 +339,42 @@ local function run(): number
 		"fixture coherence classes collapsed"
 	)
 
-	local state = MaterialDNA.defaultState("material.v1.test.wallpaper")
+	local revisionOne = makeRecipe()
+	local state = MaterialDNA.defaultState(revisionOne.id, revisionOne.recipeRevision)
 	local stateMutation = pcall(function()
 		state.wear01 = 0.5
 	end)
 	expect("material state remains mutable", stateMutation and state.wear01 == 0.5, "state mutation failed")
 	local stateResult = MaterialDNA.validateState(state)
 	expect("mutated state remains valid", stateResult.ok, table.concat(stateResult.errors, "; "))
+	local matchingStateResult = MaterialDNA.validateStateForRecipe(revisionOne, state)
+	expect(
+		"state matches its exact recipe revision",
+		matchingStateResult.ok,
+		table.concat(matchingStateResult.errors, "; ")
+	)
+
+	local revisionTwo = makeRecipe()
+	revisionTwo.recipeRevision = 2
+	revisionTwo.finish.roughness01 = 0.71
+	local revisionTwoResult = MaterialDNA.validateRecipe(revisionTwo)
+	expect(
+		"second content revision accepted",
+		revisionTwoResult.ok,
+		table.concat(revisionTwoResult.errors, "; ")
+	)
+	local mismatchedRevisionResult = MaterialDNA.validateStateForRecipe(revisionTwo, state)
+	expect(
+		"same material ID cannot confuse state across content revisions",
+		not mismatchedRevisionResult.ok
+			and containsError(mismatchedRevisionResult, "recipeRevision must match"),
+		table.concat(mismatchedRevisionResult.errors, "; ")
+	)
 
 	local invalidState: any = {
 		recipeId = "material.v1.test.wallpaper",
 		schemaVersion = MaterialDNA.SchemaVersion,
+		recipeRevision = 1,
 		wear01 = 0.2,
 		damage01 = -0.1,
 		wetness01 = 0,
