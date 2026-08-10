@@ -32,6 +32,8 @@ The realized lab root now exposes the resolved-region fingerprint and repro key,
 
 Before/after comparisons also reject snapshots with different schema/recipe/WorldId/RegionId/fingerprint/repro identity. Never compare measurements from different canonical lab truth as if they were one lifecycle run.
 
+For executable Studio procedures, use `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`. It retrieves the bootstrap-owned `RealizedLab` through the Studio/server-only `PhysicsLabStudioHarness`, so lifecycle evidence exercises the production `PhysicsLabRealizer`/FidelityManager boundary without exposing raw `PhysicsLabRuntime` authority.
+
 ## Source and CI preflight
 
 Before Studio evidence, validate the exact commit with the project toolchain:
@@ -114,13 +116,13 @@ Pass conditions:
 - promotion does not register duplicate WorldEntityIds,
 - repeated cycles return to a stable full-lab physical envelope instead of monotonically leaking descendants/constraints/registrations.
 
-**Current Studio-access limitation:** the production bootstrap intentionally keeps the `RealizedLab` handle private. Do not bypass that protection by requiring the raw `PhysicsLabRuntime`, mutating Instance attributes, or manually deleting representations. Until a source-owned Studio/test harness can drive the public representation-aware `lab.step` boundary, lifecycle cycling from the Command Bar remains **UNVERIFIED** and should be reported as a #10/#151 blocker. The collector can still capture initial/bootstrap evidence safely.
+The landed `PhysicsLabStudioHarness` now provides the source-owned Studio/server-only handle required to drive this procedure through the public representation-aware `lab.step` boundary. Follow `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`; do not bypass the harness by requiring raw `PhysicsLabRuntime`, mutating Instance attributes, or manually deleting representations. The existence of the harness makes the procedure executable, but every lifecycle row remains **UNVERIFIED** until the documented Studio observations are actually run and recorded.
 
 ## Fidelity ownership
 
 For each lab entity, prove the displayed/diagnosed fidelity is the authoritative WorldEntity fidelity coordinated through the production Fidelity Manager, not a local Physics Lab enum or Instance attribute that becomes a second truth source.
 
-Exercise at least one promotion and one demotion where a source-owned Studio/test path can invoke the representation-aware lifecycle without bypassing the realizer. Capture:
+Exercise at least one promotion and one demotion through the `PhysicsLabStudioHarness`/`RealizedLab.step` path documented in `Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md`. Capture:
 
 - WorldEntityId,
 - authoritative fidelity before/after,
@@ -128,7 +130,7 @@ Exercise at least one promotion and one demotion where a source-owned Studio/tes
 - whether state capture was required,
 - representation before/after.
 
-A local lab-only fidelity state machine is an architecture failure even if the visual transition looks correct. If no safe Studio driver exists yet, leave this row UNVERIFIED rather than using the raw runtime as a shortcut.
+A local lab-only fidelity state machine is an architecture failure even if the visual transition looks correct. The harness is only an owner/access boundary around the existing realizer; it is not permission to use the raw runtime as a shortcut. Leave this row UNVERIFIED until the harness-driven Studio procedure is actually observed.
 
 ## MaterialDNA / ObjectGenome boundary
 
@@ -172,16 +174,17 @@ Resource counts are evidence, not budgets. Do not invent a permanent “allowed 
 
 The canonical collector is `src/server/PhysicsLab/PhysicsLabValidation.luau`; do **not** maintain a second hand-written counting script in the Command Bar. It scopes traversal to one owned lab root, records exact canonical evidence identity, counts total Instances/Models/BaseParts/unique assemblies/Attachments/Constraints/JointInstances, and computes the world-space BasePart envelope using all eight transformed corners per part. Returned snapshots are plain/frozen data and retain no Instance references.
 
-In a **server-context** Studio Command Bar on the exact Rojo-synced build, capture an initial snapshot with:
+In a **server-context** Studio Command Bar on the exact Rojo-synced build, capture the bootstrap-owned lab through the harness rather than rediscovering authority from Workspace:
 
 ```luau
 local HttpService = game:GetService("HttpService")
 local ServerScriptService = game:GetService("ServerScriptService")
-local Validation = require(
-    ServerScriptService.UNRENDERED_Server.PhysicsLab.PhysicsLabValidation
-)
-local root = workspace:WaitForChild("UNRENDERED_PhysicsLab")
-local snapshot = Validation.capture(root)
+local PhysicsLab = ServerScriptService.UNRENDERED_Server.PhysicsLab
+local Harness = require(PhysicsLab.PhysicsLabStudioHarness)
+local Validation = require(PhysicsLab.PhysicsLabValidation)
+
+local lab = assert(Harness.get(), "Physics Lab bootstrap handle is missing")
+local snapshot = Validation.capture(lab.model)
 print(HttpService:JSONEncode(snapshot))
 ```
 
@@ -193,7 +196,7 @@ Store the emitted JSON verbatim with the evidence bundle. It includes:
 - total scoped resource counts,
 - full-lab world-space BasePart envelope.
 
-When a safe production lifecycle driver exists, capture snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20. A partially demoted lab is intentionally a different physical representation, so record its count delta but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt.
+Use the landed harness/runbook to capture snapshots after initial settle, after a complete rebuild, and after rebuild cycles 1, 5, 10, and 20. A partially demoted lab is intentionally a different physical representation, so record its count delta but do not apply the **full-lab envelope** assertion until the complete F2 lab has been rebuilt.
 
 To compare two stored snapshots in a server-context Command Bar, paste their JSON strings into this source-owned comparison path:
 
