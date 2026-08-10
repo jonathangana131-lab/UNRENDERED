@@ -1,6 +1,6 @@
 # Project State
 
-Current phase: **Hero Gate — Production Physics Lab / Resolved Reality Foundation**
+Current phase: **Hero Gate — Production Physics Lab**
 
 ## Main health
 
@@ -55,9 +55,23 @@ Exit evidence:
 - support-cycle rejection and external-support reachability are independent deterministic graph facts,
 - validators reject the locked invalid examples.
 
-## Unlocked Hero Gate
+## Resolved Reality Foundation — complete
 
-Finish these foundations before broadening into planned P1 systems.
+### #9 — First-observation lock / resolved-region recipe
+Complete via #163.
+
+Exit evidence:
+- `ResolvedRegionRecipe` is plain/versioned data independent of Workspace serialization,
+- stable region identity derives from the required world-seed reference + project-owned `RegionAddress`,
+- first meaningful observation locks an immutable generated-base recipe and later malformed/newer generator output cannot rewrite or invalidate established truth,
+- generator-version snapshots, canonical topology/content key sets, exact reconstruction equality, repro identity and literal v1 identity/fingerprint goldens are tested,
+- stored drift/tampering and representation-shaped fields fail closed,
+- migration is explicit and identity-preserving rather than an implicit reinterpretation of historical truth,
+- mutable delta storage remains outside the closed base contract so gated persistence work can own bounded retention/replay semantics later.
+
+## Remaining unlocked Hero Gate
+
+Finish this foundation before broadening into planned P1 systems.
 
 ### #10 — Production-contract Physics Lab
 Build the permanent test/lab shell using the landed WorldEntity, Fidelity, MaterialDNA and ObjectGenome contracts. This is not permission for ad-hoc gameplay scripts or a competing framework.
@@ -70,19 +84,9 @@ Required direction:
 - clear Studio validation/repro instructions,
 - keep Roblox Instances as physical representation, never canonical world state.
 
-### #9 — First-observation lock / resolved-region recipe
-Implement deterministic potential -> canonical observed truth as plain/versioned data, with immutable generated base recipe + mutable delta boundary and explicit generator-version handling.
-
-Required direction:
-- `ResolvedRegionRecipe` remains independent of Workspace serialization,
-- first meaningful observation locks canonical recipe/version truth,
-- reconstruction equality/repro is testable,
-- generator upgrades cannot silently rewrite already-observed regions,
-- keep this narrow; do not turn #9 into the full world generator.
-
 ## Hero Gate exit direction
 
-Before opening broader content, prove that #10 and #9 use the Wave-1 contracts without replacing them. Strike-team work should deepen these two lanes through tests, Studio/physics evidence, diagnostics, performance, integration and Reality-Grade review.
+Before opening broader content, prove that #10 uses the Wave-1 contracts without replacing them and composes cleanly with the landed #9 resolved-truth foundation. Strike-team work should deepen #10 through tests, Studio/physics evidence, diagnostics, performance, integration and Reality-Grade review.
 
 After the lab foundation is stable, the first Reality-Grade Hero Features should be **door, chair, and physical player movement**, not a giant procedural map.
 
@@ -114,8 +118,8 @@ None active.
 ## Next critical outcomes
 
 1. #10 becomes a permanent production-contract Physics Lab rather than a disposable demo,
-2. #9 locks first-observation/resolved-region truth without Workspace serialization,
-3. the lab proves Wave-1 identity/material/object/fidelity contracts survive real Roblox realization and interaction,
+2. the lab proves Wave-1 identity/material/object/fidelity contracts survive real Roblox realization and interaction,
+3. the lab consumes the landed #9 resolved-truth foundation without creating a parallel world-state model,
 4. door/chair/physical-player work begins only on those stable foundations,
 5. the first five-minute experience can be improved deeply without replacing its foundations.
 
