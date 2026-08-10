@@ -331,7 +331,8 @@ local function evaluatePolicy(
 			else
 				reason = "interaction"
 			end
-		elseif inputs.significance >= inputs.networkRelevance
+		elseif
+			inputs.significance >= inputs.networkRelevance
 			and inputs.significance >= inputs.entityRelevance
 		then
 			reason = "significance"
@@ -345,7 +346,8 @@ local function evaluatePolicy(
 			reason = "observation"
 		elseif recentlyInteracted then
 			reason = "interaction"
-		elseif inputs.networkRelevance >= resolvedConfig.activeRelevanceThreshold
+		elseif
+			inputs.networkRelevance >= resolvedConfig.activeRelevanceThreshold
 			and inputs.networkRelevance >= inputs.entityRelevance
 		then
 			reason = "network-relevance"

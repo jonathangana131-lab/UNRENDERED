@@ -47,18 +47,8 @@ local function run(): number
 		local results = {}
 		local transitionReason = nil
 
-		results[1] = manager:step(
-			entity.id,
-			entity.fidelity,
-			policyInputs({ networkRelevance = 0.9 }),
-			0
-		)
-		results[2] = manager:step(
-			entity.id,
-			entity.fidelity,
-			policyInputs({ directlyObserved = true }),
-			0.05
-		)
+		results[1] = manager:step(entity.id, entity.fidelity, policyInputs({ networkRelevance = 0.9 }), 0)
+		results[2] = manager:step(entity.id, entity.fidelity, policyInputs({ directlyObserved = true }), 0.05)
 		results[3] = manager:step(
 			entity.id,
 			entity.fidelity,
