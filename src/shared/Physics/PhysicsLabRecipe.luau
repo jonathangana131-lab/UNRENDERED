@@ -57,30 +57,63 @@ export type PhysicsLabRecipe = {
 	recipeKey: string,
 	worldId: string,
 	regionId: string,
-	resolvedRegion: ResolvedRegionRecipe.Recipe,
 	entities: { EntityRecipe },
 }
 
 local PhysicsLabRecipe = {}
 
 PhysicsLabRecipe.SCHEMA_VERSION = 1
-PhysicsLabRecipe.GENERATOR_VERSION = 1
-PhysicsLabRecipe.RECIPE_KEY = "physics-lab.hero-gate.v1"
+PhysicsLabRecipe.GENERATOR_VERSION = 2
+PhysicsLabRecipe.RECIPE_KEY = "physics-lab.hero-gate.v2"
+PhysicsLabRecipe.WORLD_SEED_REF = "physics-lab.world-seed.v1"
 
 local WORLD_ID = StableId.fromParts("world", { "physics-lab", "hero-gate", "v1" })
+
+-- This is the source-controlled first-observation snapshot for the permanent lab.
+-- It is intentionally pinned to the Wave-1 versions that established this truth;
+-- future generator bumps must not silently rewrite the v2 resolved base.
 local RESOLVED_REGION = ResolvedRegionRecipe.resolveOnObservation(nil, {
-	-- #9 owns canonical region identity. The lab world StableId is an opaque,
-	-- deterministic reference to the seed/identity source for this permanent harness.
-	worldSeedRef = WORLD_ID,
+	worldSeedRef = PhysicsLabRecipe.WORLD_SEED_REF,
 	regionAddress = {
 		x = 0,
 		z = 0,
 		layer = 0,
 	},
-	generatorVersions = ResolvedRegionRecipe.currentGeneratorVersions(),
-	semanticIntentKey = PhysicsLabRecipe.RECIPE_KEY,
-	topologyAnchors = { "physics-lab.hero-gate.bay-a" },
-	canonicalContentKeys = { PhysicsLabRecipe.RECIPE_KEY },
+	generatorVersions = {
+		reality = 1,
+		topology = 1,
+		material = 1,
+		object = 1,
+		entity = 1,
+	},
+	semanticIntentKey = "physics-lab.hero-gate",
+	topologyAnchors = {
+		"physics-lab/bay-a",
+		"physics-lab/front-door-opening",
+	},
+	canonicalContentKeys = {
+		"physics-lab/generator-version/2",
+		"entity/floor",
+		"entity/ceiling",
+		"entity/wall-left",
+		"entity/wall-right",
+		"entity/wall-back",
+		"entity/wall-front-left",
+		"entity/wall-front-right",
+		"entity/wall-front-header",
+		"entity/ramp",
+		"entity/ledge",
+		"entity/stair-1",
+		"entity/stair-2",
+		"entity/stair-3",
+		"entity/stair-4",
+		"entity/character-spawn-anchor",
+		"entity/door-main",
+		"entity/chair-a",
+		"entity/table-a",
+		"entity/cabinet-a",
+		"entity/cart-a",
+	},
 })
 local REGION_ID = RESOLVED_REGION.regionId
 
@@ -112,6 +145,9 @@ end
 local ZERO = vec3(0, 0, 0)
 
 local function entityId(key: string): string
+	-- WorldEntity identity is conceptual and survives generator upgrades. Keep
+	-- the established v1 identity namespace while origin.generatorVersion tracks
+	-- the authored recipe that produced the current representation recipe.
 	return StableId.fromParts("entity", { "physics-lab", "v1", key })
 end
 
@@ -197,6 +233,10 @@ function PhysicsLabRecipe.objectGenome(key: ObjectGenomeKey): ObjectGenome.Objec
 	local genome = OBJECT_GENOMES[key]
 	assert(genome ~= nil, `unknown Physics Lab ObjectGenome key {key}`)
 	return genome
+end
+
+function PhysicsLabRecipe.resolvedRegion(): ResolvedRegionRecipe.Recipe
+	return RESOLVED_REGION
 end
 
 function PhysicsLabRecipe.build(): PhysicsLabRecipe
@@ -349,7 +389,6 @@ function PhysicsLabRecipe.build(): PhysicsLabRecipe
 		recipeKey = PhysicsLabRecipe.RECIPE_KEY,
 		worldId = WORLD_ID,
 		regionId = REGION_ID,
-		resolvedRegion = RESOLVED_REGION,
 		entities = table.freeze(entities),
 	})
 end
