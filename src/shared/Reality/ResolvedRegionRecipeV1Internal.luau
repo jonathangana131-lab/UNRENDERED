@@ -5,9 +5,8 @@ local RegionAddress = require(script.Parent.Parent.Spatial.RegionAddress)
 local RealityVersions = require(script.Parent.RealityVersions)
 
 local ResolvedRegionRecipe = {
-	SCHEMA_VERSION = 2,
-	FINGERPRINT_VERSION = 2,
-	LEGACY_SCHEMA_VERSION = 1,
+	SCHEMA_VERSION = 1,
+	FINGERPRINT_VERSION = 1,
 	MAX_REFERENCE_COUNT = 4096,
 	MAX_KEY_BYTES = 256,
 	MAX_WORLD_SEED_REF_BYTES = 512,
@@ -28,7 +27,6 @@ export type RegionAddressData = {
 }
 
 export type Candidate = {
-	worldId: string,
 	worldSeedRef: string,
 	regionAddress: RegionAddressData,
 	generatorVersions: GeneratorVersions,
@@ -40,7 +38,6 @@ export type Candidate = {
 export type Recipe = {
 	schemaVersion: number,
 	regionId: string,
-	worldId: string,
 	worldSeedRef: string,
 	regionAddress: RegionAddressData,
 	generatorVersions: GeneratorVersions,
@@ -52,7 +49,6 @@ export type Recipe = {
 
 export type MigrationReceipt = {
 	migrationKey: string,
-	worldId: string,
 	regionId: string,
 	sourceFingerprint: string,
 	targetFingerprint: string,
@@ -72,7 +68,6 @@ local FINGERPRINT_SEEDS = table.freeze({
 })
 
 local CANDIDATE_KEYS: { [string]: boolean } = table.freeze({
-	worldId = true,
 	worldSeedRef = true,
 	regionAddress = true,
 	generatorVersions = true,
@@ -84,7 +79,6 @@ local CANDIDATE_KEYS: { [string]: boolean } = table.freeze({
 local RECIPE_KEYS: { [string]: boolean } = table.freeze({
 	schemaVersion = true,
 	regionId = true,
-	worldId = true,
 	worldSeedRef = true,
 	regionAddress = true,
 	generatorVersions = true,
@@ -133,12 +127,6 @@ local function checkedOpaqueKey(path: string, value: unknown, maximumBytes: numb
 	assert(#text <= maximumBytes, `{path} must be <= {maximumBytes} bytes`)
 	assert(string.find(text, "%c") == nil, `{path} must not contain control characters`)
 	return text
-end
-
-local function checkedWorldId(value: unknown): string
-	local worldId = checkedOpaqueKey("worldId", value, ResolvedRegionRecipe.MAX_KEY_BYTES)
-	assert(DeterminismContract.isStableId(worldId, "world"), "worldId must be a world StableId")
-	return worldId
 end
 
 local function checkedSafeInteger(path: string, value: unknown): number
@@ -210,7 +198,6 @@ end
 local function ownCandidate(value: Candidate): Candidate
 	local source = assertExactRecordShape(value, CANDIDATE_KEYS, "ResolvedRegionCandidate")
 	return table.freeze({
-		worldId = checkedWorldId(source.worldId),
 		worldSeedRef = checkedOpaqueKey(
 			"worldSeedRef",
 			source.worldSeedRef,
@@ -228,12 +215,11 @@ local function ownCandidate(value: Candidate): Candidate
 	})
 end
 
-local function ownObservationIdentity(value: unknown): (string, string, RegionAddressData)
+local function ownObservationIdentity(value: unknown): (string, RegionAddressData)
 	local source = assertPlainRecord(value, "ResolvedRegionCandidate")
-	local worldId = checkedWorldId(source.worldId)
 	local worldSeedRef =
 		checkedOpaqueKey("worldSeedRef", source.worldSeedRef, ResolvedRegionRecipe.MAX_WORLD_SEED_REF_BYTES)
-	return worldId, worldSeedRef, cloneAddress(source.regionAddress)
+	return worldSeedRef, cloneAddress(source.regionAddress)
 end
 
 local function addressKey(address: RegionAddressData): string
@@ -244,7 +230,6 @@ local function canonicalPayload(candidate: Candidate): string
 	return DeterminismContract.encodeParts({
 		"resolved-region-recipe",
 		tostring(ResolvedRegionRecipe.SCHEMA_VERSION),
-		candidate.worldId,
 		candidate.worldSeedRef,
 		addressKey(candidate.regionAddress),
 		tostring(candidate.generatorVersions.reality),
@@ -273,7 +258,7 @@ end
 
 local function regionIdFor(candidate: Candidate): string
 	return DeterminismContract.stableId("region", {
-		candidate.worldId,
+		candidate.worldSeedRef,
 		addressKey(candidate.regionAddress),
 	})
 end
@@ -282,7 +267,6 @@ local function lockOwned(candidate: Candidate): Recipe
 	return table.freeze({
 		schemaVersion = ResolvedRegionRecipe.SCHEMA_VERSION,
 		regionId = regionIdFor(candidate),
-		worldId = candidate.worldId,
 		worldSeedRef = candidate.worldSeedRef,
 		regionAddress = candidate.regionAddress,
 		generatorVersions = candidate.generatorVersions,
@@ -295,7 +279,6 @@ end
 
 local function recipeAsCandidate(source: any): Candidate
 	return ownCandidate({
-		worldId = source.worldId,
 		worldSeedRef = source.worldSeedRef,
 		regionAddress = source.regionAddress,
 		generatorVersions = source.generatorVersions,
@@ -320,7 +303,7 @@ local function ownRecipe(value: Recipe): Recipe
 	local candidate = recipeAsCandidate(source)
 	local expectedRegionId = regionIdFor(candidate)
 	local expectedFingerprint = fingerprintFor(candidate)
-	assert(regionId == expectedRegionId, "regionId does not match worldId + regionAddress identity")
+	assert(regionId == expectedRegionId, "regionId does not match worldSeedRef + regionAddress identity")
 	assert(
 		storedFingerprint == expectedFingerprint,
 		"recipeFingerprint does not match canonical resolved recipe content"
@@ -364,8 +347,7 @@ function ResolvedRegionRecipe.resolveOnObservation(existing: Recipe?, candidate:
 	end
 
 	local locked = ownRecipe(existing)
-	local incomingWorldId, incomingWorldSeedRef, incomingAddress = ownObservationIdentity(candidate)
-	assert(locked.worldId == incomingWorldId, "observation candidate worldId does not match locked region")
+	local incomingWorldSeedRef, incomingAddress = ownObservationIdentity(candidate)
 	assert(
 		locked.worldSeedRef == incomingWorldSeedRef,
 		"observation candidate worldSeedRef does not match locked region"
@@ -382,7 +364,6 @@ function ResolvedRegionRecipe.serialize(recipe: Recipe): { [string]: any }
 	return {
 		schemaVersion = owned.schemaVersion,
 		regionId = owned.regionId,
-		worldId = owned.worldId,
 		worldSeedRef = owned.worldSeedRef,
 		regionAddress = {
 			x = owned.regionAddress.x,
@@ -424,10 +405,8 @@ end
 function ResolvedRegionRecipe.reproKey(recipe: Recipe): string
 	local owned = ownRecipe(recipe)
 	return string.format(
-		"%s|%s|seed=%s|%s|reality=%d|%s",
-		owned.worldId,
+		"%s|%s|reality=%d|%s",
 		owned.regionId,
-		owned.worldSeedRef,
 		addressKey(owned.regionAddress),
 		owned.generatorVersions.reality,
 		owned.recipeFingerprint
@@ -459,7 +438,6 @@ function ResolvedRegionRecipe.migrate(
 	assert(type(builder) == "function", "migration builder must be a function")
 
 	local migratedCandidate = ownCandidate(builder(source, target))
-	assert(migratedCandidate.worldId == source.worldId, "migration must preserve worldId")
 	assert(migratedCandidate.worldSeedRef == source.worldSeedRef, "migration must preserve worldSeedRef")
 	assert(
 		sameAddress(migratedCandidate.regionAddress, source.regionAddress),
@@ -479,7 +457,6 @@ function ResolvedRegionRecipe.migrate(
 
 	local receipt: MigrationReceipt = table.freeze({
 		migrationKey = ownedMigrationKey,
-		worldId = source.worldId,
 		regionId = source.regionId,
 		sourceFingerprint = source.recipeFingerprint,
 		targetFingerprint = migrated.recipeFingerprint,
@@ -489,4 +466,14 @@ function ResolvedRegionRecipe.migrate(
 	return migrated, receipt
 end
 
-return table.freeze(ResolvedRegionRecipe)
+local LegacyReplayCore = {
+	SCHEMA_VERSION = ResolvedRegionRecipe.SCHEMA_VERSION,
+	FINGERPRINT_VERSION = ResolvedRegionRecipe.FINGERPRINT_VERSION,
+	deserialize = ResolvedRegionRecipe.deserialize,
+	serialize = ResolvedRegionRecipe.serialize,
+	equal = ResolvedRegionRecipe.equal,
+	fingerprint = ResolvedRegionRecipe.fingerprint,
+	reproKey = ResolvedRegionRecipe.reproKey,
+}
+
+return table.freeze(LegacyReplayCore)
