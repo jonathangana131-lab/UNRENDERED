@@ -193,11 +193,7 @@ local function validateNonNegativeInteger(errors: { string }, path: string, valu
 end
 
 local function looksLikeExternalAssetReference(value: string): boolean
-	local lowered = string.lower(value)
-	return string.find(lowered, "rbxassetid://", 1, true) ~= nil
-		or string.find(lowered, "http://", 1, true) ~= nil
-		or string.find(lowered, "https://", 1, true) ~= nil
-		or string.match(value, "^%d+$") ~= nil
+	return string.find(value, "://", 1, true) ~= nil or string.match(value, "^%d+$") ~= nil
 end
 
 local function validateProjectKey(errors: { string }, path: string, value: unknown): string?
