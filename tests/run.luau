@@ -1,4 +1,5 @@
 local process = require("@lune/process")
+local runWorldEntity = require("./world_entity")
 
 local failures = 0
 
@@ -35,6 +36,8 @@ if hash32("UNRENDERED", 1234) == hash32("UNRENDERED!", 1234) then
 else
 	print("PASS hash distinguishes nearby input")
 end
+
+failures += runWorldEntity()
 
 if failures > 0 then
 	process.exit(1)
