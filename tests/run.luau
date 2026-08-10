@@ -7,6 +7,7 @@ local runDeterministicRng = require("./deterministic_rng")
 local runFidelityManager = require("./fidelity_manager")
 local runFidelityManagerDeterminism = require("./fidelity_manager_determinism")
 local runMaterialDNA = require("./materialdna_contract")
+local runMaterialDNAFixtures = require("./materialdna_fixtures")
 local runWorldEntity = require("./world_entity")
 
 local runner = TestHarness.new()
@@ -18,6 +19,7 @@ local legacyFailures = runDeterministicRng()
 	+ runFidelityManager()
 	+ runFidelityManagerDeterminism()
 	+ runMaterialDNA()
+	+ runMaterialDNAFixtures()
 local deterministicPassed = runner:run()
 
 if legacyFailures > 0 or not deterministicPassed then
