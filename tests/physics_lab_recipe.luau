@@ -21,8 +21,14 @@ local function run(): number
 
 	expect("lab schema is explicit", first.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION)
 	expect("lab recipe key is explicit", first.recipeKey == PhysicsLabRecipe.RECIPE_KEY)
-	expect("lab world id is deterministic", first.worldId == second.worldId and StableId.is(first.worldId, "world"))
-	expect("lab region id is deterministic", first.regionId == second.regionId and StableId.is(first.regionId, "region"))
+	expect(
+		"lab world id is deterministic",
+		first.worldId == second.worldId and StableId.is(first.worldId, "world")
+	)
+	expect(
+		"lab region id is deterministic",
+		first.regionId == second.regionId and StableId.is(first.regionId, "region")
+	)
 	expect("lab entity count is deterministic", #first.entities == #second.entities and #first.entities == 20)
 
 	local requiredKeys = {
@@ -59,7 +65,8 @@ local function run(): number
 
 	for index, entityRecipe in ipairs(first.entities) do
 		local comparison = second.entities[index]
-		if comparison == nil
+		if
+			comparison == nil
 			or comparison.kind ~= entityRecipe.kind
 			or comparison.key ~= entityRecipe.key
 			or comparison.entity.id ~= entityRecipe.entity.id
@@ -78,7 +85,8 @@ local function run(): number
 		if entityRecipe.entity.fidelity ~= "F2" then
 			allInitialFidelityF2 = false
 		end
-		if entityRecipe.entity.origin.worldId ~= first.worldId
+		if
+			entityRecipe.entity.origin.worldId ~= first.worldId
 			or entityRecipe.entity.origin.regionId ~= first.regionId
 			or entityRecipe.entity.origin.generator ~= "physics-lab.recipe"
 			or entityRecipe.entity.origin.generatorVersion ~= PhysicsLabRecipe.GENERATOR_VERSION
@@ -102,7 +110,8 @@ local function run(): number
 			local genome = PhysicsLabRecipe.objectGenome(entityRecipe.genomeKey)
 			local genomeReport = ObjectGenome.inspect(genome)
 			local stateReport = ObjectGenome.inspectState(genome, entityRecipe.entity.persistentState)
-			if not genomeReport.ok
+			if
+				not genomeReport.ok
 				or not stateReport.ok
 				or entityRecipe.genomeId ~= ObjectGenome.identityKey(genome)
 				or entityRecipe.genomeRecipeFingerprint ~= ObjectGenome.recipeFingerprint(genome)
@@ -122,7 +131,10 @@ local function run(): number
 	expect("lab entity sequence is deterministic", deterministicEntries)
 	expect("lab includes every required shell/object key", allRequiredKeysPresent)
 	expect("lab WorldEntity ids are unique StableIds", allEntityIdsValid)
-	expect("lab WorldEntity registry accepts every entity once", allRegistrationsValid and WorldEntity.count(registry) == 20)
+	expect(
+		"lab WorldEntity registry accepts every entity once",
+		allRegistrationsValid and WorldEntity.count(registry) == 20
+	)
 	expect("lab primitive material references satisfy MaterialDNA", allMaterialRefsValid)
 	expect("lab object placements bind valid ObjectGenome recipes and default state", allObjectContractsValid)
 	expect("lab shell starts as explicit F2 proxy fidelity", allInitialFidelityF2)
