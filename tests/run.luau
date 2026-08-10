@@ -48,17 +48,23 @@ local function expectError(name, callback)
 end
 
 -- Canonical byte encoding. Lengths are byte counts, not character counts.
+local delimiterByte = string.char(30)
+local delimiterPayload = "a" .. delimiterByte .. "b"
 expectEqual("encode empty list", Contract.encodeParts({}), "u1;0;")
 expectEqual("encode empty string", Contract.encodeParts({ "" }), "u1;1;0:")
 expectEqual("encode boundaries", Contract.encodeParts({ "a", "bc" }), "u1;2;1:a2:bc")
-expectEqual("encode delimiter bytes", Contract.encodeParts({ "a\30b", "" }), "u1;2;3:a\30b0:")
+expectEqual(
+	"encode delimiter bytes",
+	Contract.encodeParts({ delimiterPayload, "" }),
+	"u1;2;3:a" .. delimiterByte .. "b0:"
+)
 expectFalse(
 	"encoding distinguishes part boundaries",
 	Contract.encodeParts({ "ab", "c" }) == Contract.encodeParts({ "a", "bc" })
 )
 expectFalse(
 	"encoding prevents delimiter alias",
-	Contract.encodeParts({ "a\30b" }) == Contract.encodeParts({ "a", "b" })
+	Contract.encodeParts({ delimiterPayload }) == Contract.encodeParts({ "a", "b" })
 )
 expectError("encoding rejects sparse arrays", function()
 	Contract.encodeParts({ [1] = "a", [3] = "c" })
