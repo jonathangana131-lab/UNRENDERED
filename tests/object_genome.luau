@@ -1,6 +1,7 @@
 local ProductionLoader = require("./support/ProductionLoader")
 
 local StableId = ProductionLoader.requireShared("Core/StableId")
+local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
 local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
 local Fixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
 
@@ -49,17 +50,17 @@ local function run(): number
 		{
 			name = "office chair",
 			genome = Fixtures.officeChair,
-			identity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",
+			identity = "object-genome:v1:d8e1be05ad547583b237bac40243b22b",
 		},
 		{
 			name = "office table",
 			genome = Fixtures.officeTable,
-			identity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",
+			identity = "object-genome:v1:faf31e65ed10a78582134f9c9af4fb59",
 		},
 		{
 			name = "filing cabinet",
 			genome = Fixtures.filingCabinet,
-			identity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",
+			identity = "object-genome:v1:7b67b63e2e0871ec69e91d2bae95b397",
 		},
 	}
 
@@ -76,13 +77,13 @@ local function run(): number
 		expect(fixture.name .. " repeat identity", identity == ObjectGenome.identityKey(fixture.genome))
 
 		for _, component in ipairs(fixture.genome.components) do
+			local materialReference = {
+				id = component.materialKey,
+				recipeVersion = component.materialRecipeVersion,
+			}
 			expect(
-				fixture.name .. " component uses MaterialDNA-style project key",
-				string.match(component.materialKey, "^material%.v1%.") ~= nil
-			)
-			expect(
-				fixture.name .. " component pins a material recipe revision",
-				component.materialRecipeVersion == 1
+				fixture.name .. " component satisfies MaterialDNA exact reference contract",
+				MaterialDNA.validateReference(materialReference).ok
 			)
 		end
 
@@ -110,22 +111,58 @@ local function run(): number
 	local badMaterial = deepCopy(Fixtures.officeChair)
 	badMaterial.components[1].materialKey = ""
 	expect(
-		"rejects missing material assignment",
-		hasCode(ObjectGenome.inspect(badMaterial), "component.material_key")
+		"rejects missing material assignment through MaterialDNA contract",
+		hasCode(ObjectGenome.inspect(badMaterial), "component.material_reference")
 	)
 
 	local badMaterialRevision = deepCopy(Fixtures.officeChair)
 	badMaterialRevision.components[1].materialRecipeVersion = 0
 	expect(
-		"rejects missing material recipe revision",
-		hasCode(ObjectGenome.inspect(badMaterialRevision), "component.material_recipe_version")
+		"rejects missing material recipe revision through MaterialDNA contract",
+		hasCode(ObjectGenome.inspect(badMaterialRevision), "component.material_reference")
 	)
 
 	local legacyMaterial = deepCopy(Fixtures.officeChair)
 	legacyMaterial.components[1].materialKey = "material:polymer-rubber.caster.v1"
 	expect(
 		"rejects legacy material reference syntax",
-		hasCode(ObjectGenome.inspect(legacyMaterial), "component.material_key")
+		hasCode(ObjectGenome.inspect(legacyMaterial), "component.material_reference")
+	)
+
+	local slashMaterial = deepCopy(Fixtures.officeChair)
+	slashMaterial.components[1].materialKey = "material.v1/chair-caster.polymer-rubber"
+	local slashReference = {
+		id = slashMaterial.components[1].materialKey,
+		recipeVersion = slashMaterial.components[1].materialRecipeVersion,
+	}
+	expect("MaterialDNA accepts slash-bearing project material id", MaterialDNA.validateReference(slashReference).ok)
+	expect("ObjectGenome accepts every MaterialDNA-valid material id", ObjectGenome.inspect(slashMaterial).ok)
+
+	local numericMaterial = deepCopy(Fixtures.officeChair)
+	numericMaterial.components[1].materialKey = "123"
+	expect(
+		"ObjectGenome rejects numeric-only material id exactly like MaterialDNA",
+		not MaterialDNA.validateReference({ id = "123", recipeVersion = 1 }).ok
+			and hasCode(ObjectGenome.inspect(numericMaterial), "component.material_reference")
+	)
+
+	local overlongMaterial = deepCopy(Fixtures.officeChair)
+	overlongMaterial.components[1].materialKey = "material." .. string.rep("x", 160)
+	expect(
+		"ObjectGenome rejects overlong material id exactly like MaterialDNA",
+		not MaterialDNA.validateReference({ id = overlongMaterial.components[1].materialKey, recipeVersion = 1 }).ok
+			and hasCode(ObjectGenome.inspect(overlongMaterial), "component.material_reference")
+	)
+
+	local overflowMaterialRevision = deepCopy(Fixtures.officeChair)
+	overflowMaterialRevision.components[1].materialRecipeVersion = 2147483648
+	expect(
+		"ObjectGenome rejects material revision above MaterialDNA maximum",
+		not MaterialDNA.validateReference({
+			id = overflowMaterialRevision.components[1].materialKey,
+			recipeVersion = overflowMaterialRevision.components[1].materialRecipeVersion,
+		}).ok
+			and hasCode(ObjectGenome.inspect(overflowMaterialRevision), "component.material_reference")
 	)
 
 	local revisedMaterial = deepCopy(Fixtures.filingCabinet)
@@ -135,12 +172,18 @@ local function run(): number
 		revisedShell.materialRecipeVersion += 1
 	end
 	expect(
-		"material recipe revision is retained as canonical object recipe input",
+		"material recipe revision remains a valid exact MaterialDNA reference",
 		revisedShell ~= nil
 			and canonicalShell ~= nil
 			and revisedShell.materialKey == canonicalShell.materialKey
 			and revisedShell.materialRecipeVersion ~= canonicalShell.materialRecipeVersion
 			and ObjectGenome.inspect(revisedMaterial).ok
+	)
+	expect(
+		"material recipe revision changes canonical ObjectGenome identity without familyVersion bump",
+		revisedShell ~= nil
+			and revisedMaterial.familyVersion == Fixtures.filingCabinet.familyVersion
+			and ObjectGenome.identityKey(revisedMaterial) ~= ObjectGenome.identityKey(Fixtures.filingCabinet)
 	)
 
 	local danglingSupport = deepCopy(Fixtures.filingCabinet)
