@@ -489,6 +489,17 @@ local function isUnitInterval(value: any): boolean
 	return isFinite(value) and value >= 0 and value <= 1
 end
 
+local function finiteInterpolationSpan(minimum: number, maximum: number): number?
+	if not isFinite(minimum) or not isFinite(maximum) or minimum >= maximum then
+		return nil
+	end
+	local span = maximum - minimum
+	if not isPositiveFinite(span) then
+		return nil
+	end
+	return span
+end
+
 local function mechanismPositionIsValid(mechanism: MechanismSpec, value: any): boolean
 	if mechanism.kind == "caster" then
 		return isFinite(value) and value >= 0 and value < 1
@@ -500,11 +511,30 @@ local function mechanismPositionIsValid(mechanism: MechanismSpec, value: any): b
 	return false
 end
 
+local function canonicalReferencePosition(minimum: number, maximum: number): number
+	local span = finiteInterpolationSpan(minimum, maximum)
+	assert(span ~= nil, "mechanism interpolation span must be positive and finite")
+	local position = -minimum / span
+	assert(
+		isUnitInterval(position),
+		"mechanism authored zero/reference pose must map to a finite canonical scalar"
+	)
+	return position
+end
+
+local function decodeLinearPosition(minimum: number, maximum: number, position: number): number
+	local span = finiteInterpolationSpan(minimum, maximum)
+	assert(span ~= nil, "mechanism interpolation span must be positive and finite")
+	local physicalPosition = minimum + position * span
+	assert(isFinite(physicalPosition), "decoded mechanism physical position must be finite")
+	return physicalPosition
+end
+
 local function defaultMechanismPosition(mechanism: MechanismSpec): number
 	if mechanism.kind == "hinge" or mechanism.kind == "tilt" then
-		return -mechanism.minDegrees / (mechanism.maxDegrees - mechanism.minDegrees)
+		return canonicalReferencePosition(mechanism.minDegrees, mechanism.maxDegrees)
 	elseif mechanism.kind == "slide" then
-		return -mechanism.minTravelM / (mechanism.maxTravelM - mechanism.minTravelM)
+		return canonicalReferencePosition(mechanism.minTravelM, mechanism.maxTravelM)
 	end
 	return 0
 end
@@ -1152,15 +1182,13 @@ function ObjectGenome.inspect(value: any): ValidationResult
 
 			if mechanism.kind == "hinge" or mechanism.kind == "tilt" then
 				validateAxis(issues, path .. ".axis", mechanism.axis)
-				local angularLimitsValid = isFinite(mechanism.minDegrees)
-					and isFinite(mechanism.maxDegrees)
-					and mechanism.minDegrees < mechanism.maxDegrees
-				if not angularLimitsValid then
+				local angularSpan = finiteInterpolationSpan(mechanism.minDegrees, mechanism.maxDegrees)
+				if angularSpan == nil then
 					addIssue(
 						issues,
 						"mechanism.angular_limits",
 						path,
-						"angular limits require finite minDegrees < maxDegrees"
+						"angular limits require finite minDegrees < maxDegrees with a finite interpolation span"
 					)
 				elseif mechanism.minDegrees > 0 or mechanism.maxDegrees < 0 then
 					addIssue(
@@ -1172,15 +1200,13 @@ function ObjectGenome.inspect(value: any): ValidationResult
 				end
 			elseif mechanism.kind == "slide" then
 				validateAxis(issues, path .. ".axis", mechanism.axis)
-				local linearLimitsValid = isFinite(mechanism.minTravelM)
-					and isFinite(mechanism.maxTravelM)
-					and mechanism.minTravelM < mechanism.maxTravelM
-				if not linearLimitsValid then
+				local linearSpan = finiteInterpolationSpan(mechanism.minTravelM, mechanism.maxTravelM)
+				if linearSpan == nil then
 					addIssue(
 						issues,
 						"mechanism.linear_limits",
 						path,
-						"slide limits require finite minTravelM < maxTravelM"
+						"slide limits require finite minTravelM < maxTravelM with a finite interpolation span"
 					)
 				elseif mechanism.minTravelM > 0 or mechanism.maxTravelM < 0 then
 					addIssue(
@@ -1291,42 +1317,30 @@ function ObjectGenome.decodeMechanismPosition(
 
 	if mechanism.kind == "hinge" then
 		assert(
-			isFinite(mechanism.minDegrees)
-				and isFinite(mechanism.maxDegrees)
-				and mechanism.minDegrees < mechanism.maxDegrees
-				and mechanism.minDegrees <= 0
-				and mechanism.maxDegrees >= 0,
+			mechanism.minDegrees <= 0 and mechanism.maxDegrees >= 0,
 			"angular mechanism limits must include the authored zero/reference pose"
 		)
 		return {
 			kind = "hinge",
-			degrees = mechanism.minDegrees + position * (mechanism.maxDegrees - mechanism.minDegrees),
+			degrees = decodeLinearPosition(mechanism.minDegrees, mechanism.maxDegrees, position),
 		}
 	elseif mechanism.kind == "tilt" then
 		assert(
-			isFinite(mechanism.minDegrees)
-				and isFinite(mechanism.maxDegrees)
-				and mechanism.minDegrees < mechanism.maxDegrees
-				and mechanism.minDegrees <= 0
-				and mechanism.maxDegrees >= 0,
+			mechanism.minDegrees <= 0 and mechanism.maxDegrees >= 0,
 			"angular mechanism limits must include the authored zero/reference pose"
 		)
 		return {
 			kind = "tilt",
-			degrees = mechanism.minDegrees + position * (mechanism.maxDegrees - mechanism.minDegrees),
+			degrees = decodeLinearPosition(mechanism.minDegrees, mechanism.maxDegrees, position),
 		}
 	elseif mechanism.kind == "slide" then
 		assert(
-			isFinite(mechanism.minTravelM)
-				and isFinite(mechanism.maxTravelM)
-				and mechanism.minTravelM < mechanism.maxTravelM
-				and mechanism.minTravelM <= 0
-				and mechanism.maxTravelM >= 0,
+			mechanism.minTravelM <= 0 and mechanism.maxTravelM >= 0,
 			"slide mechanism limits must include the authored zero/reference pose"
 		)
 		return {
 			kind = "slide",
-			travelM = mechanism.minTravelM + position * (mechanism.maxTravelM - mechanism.minTravelM),
+			travelM = decodeLinearPosition(mechanism.minTravelM, mechanism.maxTravelM, position),
 		}
 	elseif mechanism.kind == "caster" then
 		return {
