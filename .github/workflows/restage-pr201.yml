@@ -1,0 +1,44 @@
+name: Restage PR201 authority-first lifecycle repair
+
+on:
+  push:
+    branches:
+      - agent/physicslab/191-authority-first-recover-sol56g7
+
+permissions:
+  contents: write
+
+jobs:
+  restage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/physicslab/191-authority-first-recover-sol56g7
+          fetch-depth: 0
+      - name: Cherry-pick reviewed lifecycle repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git cherry-pick ca0d4d1de6187f8bf022ea78c0d24291c66d1053
+      - name: Install pinned toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+      - name: Format source and tests
+        run: stylua src tests
+      - name: Commit clean restage
+        shell: bash
+        run: |
+          git rm .github/workflows/restage-pr201.yml
+          git add src tests Docs
+          git commit --amend --no-edit
+          git push --force-with-lease origin HEAD:agent/physicslab/191-authority-first-recover-sol56g7
