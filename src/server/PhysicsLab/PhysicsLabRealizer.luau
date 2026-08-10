@@ -3,20 +3,19 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("UNRENDERED")
-local FidelityManager = require(Shared.Physics.FidelityManager)
 local PhysicsLabRecipe = require(Shared.Physics.PhysicsLabRecipe)
 local WorldEntity = require(Shared.Reality.WorldEntity)
 
 local PhysicsLabRealizer = {}
 
-local ROOT_NAME = "UNRENDERED_PhysicsLab"
+PhysicsLabRealizer.ModelName = "UNRENDERED_PhysicsLab"
+PhysicsLabRealizer.OwnershipAttribute = "UNRENDERED_PhysicsLabOwned"
 -- Roblox standard physics units: 1 stud = 0.28 meters.
 local STUDS_PER_METER = 1 / 0.28
 
 export type RealizedLab = {
 	model: Model,
-	registry: WorldEntity.Registry,
-	fidelityManager: FidelityManager.Manager,
+	representations: { [string]: Instance },
 	destroy: () -> (),
 }
 
@@ -109,7 +108,9 @@ local function setEntityAttributes(instance: Instance, record: WorldEntity.World
 	instance:SetAttribute("UNRENDERED_WorldEntityId", record.id)
 	instance:SetAttribute("UNRENDERED_Fidelity", record.fidelity)
 	instance:SetAttribute("UNRENDERED_RecipeKey", record.origin.recipeKey)
+	instance:SetAttribute("UNRENDERED_StateRevision", record.stateRevision)
 	instance:SetAttribute("UNRENDERED_RepresentationRevision", record.representationRevision)
+	instance:SetAttribute("UNRENDERED_FidelityAuthority", "PhysicsLabRuntime")
 end
 
 local function realizePrimitive(parent: Instance, recipe: PhysicsLabRecipe.PrimitiveEntityRecipe): BasePart
@@ -156,6 +157,7 @@ local function realizeObject(parent: Instance, recipe: PhysicsLabRecipe.ObjectEn
 		part.TopSurface = Enum.SurfaceType.Smooth
 		part.BottomSurface = Enum.SurfaceType.Smooth
 		applyAppearance(part, component.materialKey, component.materialRecipeVersion)
+		setEntityAttributes(part, recipe.entity)
 		part:SetAttribute("UNRENDERED_ComponentKey", component.key)
 		part:SetAttribute("UNRENDERED_ComponentRole", component.role)
 		part:SetAttribute("UNRENDERED_ComponentMassKg", component.massKg)
@@ -166,48 +168,57 @@ local function realizeObject(parent: Instance, recipe: PhysicsLabRecipe.ObjectEn
 	return model
 end
 
-function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
-	local recipe = PhysicsLabRecipe.build()
-	local existing = parent:FindFirstChild(ROOT_NAME)
-	if existing ~= nil then
-		assert(
-			existing:GetAttribute("UNRENDERED_PhysicsLabOwned") == true,
-			`refusing to replace unrelated Instance named {ROOT_NAME}`
-		)
-		existing:Destroy()
+local function destroyOwnedExisting(parent: Instance): ()
+	local existing = parent:FindFirstChild(PhysicsLabRealizer.ModelName)
+	if existing == nil then
+		return
 	end
+	assert(
+		existing:GetAttribute(PhysicsLabRealizer.OwnershipAttribute) == true,
+		`refusing to replace unrelated Instance named {PhysicsLabRealizer.ModelName}`
+	)
+	existing:Destroy()
+end
+
+function PhysicsLabRealizer.realize(
+	parent: Instance,
+	recipe: PhysicsLabRecipe.PhysicsLabRecipe?
+): RealizedLab
+	local ownedRecipe = recipe or PhysicsLabRecipe.build()
+	destroyOwnedExisting(parent)
 
 	local model = Instance.new("Model")
-	model.Name = ROOT_NAME
-	model:SetAttribute("UNRENDERED_PhysicsLabOwned", true)
-	model:SetAttribute("UNRENDERED_LabSchemaVersion", recipe.schemaVersion)
-	model:SetAttribute("UNRENDERED_LabRecipeKey", recipe.recipeKey)
-	model:SetAttribute("UNRENDERED_WorldId", recipe.worldId)
-	model:SetAttribute("UNRENDERED_RegionId", recipe.regionId)
+	model.Name = PhysicsLabRealizer.ModelName
+	model:SetAttribute(PhysicsLabRealizer.OwnershipAttribute, true)
+	model:SetAttribute("UNRENDERED_LabSchemaVersion", ownedRecipe.schemaVersion)
+	model:SetAttribute("UNRENDERED_LabRecipeKey", ownedRecipe.recipeKey)
+	model:SetAttribute("UNRENDERED_WorldId", ownedRecipe.worldId)
+	model:SetAttribute("UNRENDERED_RegionId", ownedRecipe.regionId)
+	model:SetAttribute("UNRENDERED_ResolvedRegionFingerprint", ownedRecipe.resolvedRegion.recipeFingerprint)
+	model:SetAttribute("UNRENDERED_RepresentationClass", "F2-anchored-proxy")
 
-	local registry = WorldEntity.createRegistry()
-	local fidelityManager = FidelityManager.new()
-
-	for _, entityRecipe in ipairs(recipe.entities) do
-		local registered, duplicate = WorldEntity.register(registry, entityRecipe.entity)
-		assert(registered, `duplicate Physics Lab WorldEntityId: {entityRecipe.entity.id}`)
-		assert(duplicate == nil, "successful Physics Lab registration must not emit a duplicate diagnostic")
-		fidelityManager:register(entityRecipe.entity.id, entityRecipe.entity.fidelity)
-
-		if entityRecipe.kind == "primitive" then
-			realizePrimitive(model, entityRecipe)
-		else
-			realizeObject(model, entityRecipe)
+	local representations: { [string]: Instance } = {}
+	local ok, realizeError = pcall(function()
+		for _, entityRecipe in ipairs(ownedRecipe.entities) do
+			local representation: Instance
+			if entityRecipe.kind == "primitive" then
+				representation = realizePrimitive(model, entityRecipe)
+			else
+				representation = realizeObject(model, entityRecipe)
+			end
+			assert(
+				representations[entityRecipe.entity.id] == nil,
+				`duplicate realized Physics Lab WorldEntityId: {entityRecipe.entity.id}`
+			)
+			representations[entityRecipe.entity.id] = representation
 		end
+	end)
+	if not ok then
+		model:Destroy()
+		error(realizeError)
 	end
 
-	local metrics = fidelityManager:getMetrics()
-	model:SetAttribute("UNRENDERED_EntityCount", WorldEntity.count(registry))
-	model:SetAttribute("UNRENDERED_FidelityF0", metrics.counts.F0)
-	model:SetAttribute("UNRENDERED_FidelityF1", metrics.counts.F1)
-	model:SetAttribute("UNRENDERED_FidelityF2", metrics.counts.F2)
-	model:SetAttribute("UNRENDERED_FidelityF3", metrics.counts.F3)
-	model:SetAttribute("UNRENDERED_FidelityF4", metrics.counts.F4)
+	model:SetAttribute("UNRENDERED_EntityCount", #ownedRecipe.entities)
 	model.Parent = parent
 
 	local destroyed = false
@@ -216,13 +227,18 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 			return
 		end
 		destroyed = true
-		model:Destroy()
+		if model.Parent ~= nil then
+			assert(
+				model:GetAttribute(PhysicsLabRealizer.OwnershipAttribute) == true,
+				"refusing to destroy a Physics Lab model whose ownership marker drifted"
+			)
+			model:Destroy()
+		end
 	end
 
 	return table.freeze({
 		model = model,
-		registry = registry,
-		fidelityManager = fidelityManager,
+		representations = table.freeze(representations),
 		destroy = destroy,
 	})
 end
