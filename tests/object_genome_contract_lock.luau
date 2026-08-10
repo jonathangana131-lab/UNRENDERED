@@ -61,6 +61,24 @@ local function run(): number
 	keyedAffordances.affordances.debug = keyedAffordances.affordances[1]
 	expect("rejects keyed affordance entries", hasCode(ObjectGenome.inspect(keyedAffordances), "array.shape"))
 
+	local fixtureCases = {
+		{ name = "office chair", genome = Fixtures.officeChair },
+		{ name = "office table", genome = Fixtures.officeTable },
+		{ name = "filing cabinet", genome = Fixtures.filingCabinet },
+	}
+	for _, fixture in ipairs(fixtureCases) do
+		expect(fixture.name .. " fixture root is frozen", table.isfrozen(fixture.genome))
+		expect(fixture.name .. " fixture components are frozen", table.isfrozen(fixture.genome.components))
+		expect(
+			fixture.name .. " fixture nested component is frozen",
+			table.isfrozen(fixture.genome.components[1])
+		)
+		expect(
+			fixture.name .. " fixture nested transform is frozen",
+			table.isfrozen(fixture.genome.components[1].dimensionsM)
+		)
+	end
+
 	local callerGenome = deepCopy(Fixtures.officeChair)
 	local ownedGenome = ObjectGenomeOwnership.own(callerGenome)
 	local originalOwnedMass = ownedGenome.components[1].massKg
