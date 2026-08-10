@@ -74,6 +74,8 @@ Affordances describe stable interaction/grip regions (`grip`, `push`, `pull`, `s
 - `ObjectGenome.inspectState(genome, state)` validates the state identity plus mutable keys/ranges against the immutable recipe.
 - `ObjectGenome.validateState(genome, state)` is the asserting state validator.
 
+The semantic validators themselves are fail-closed plain-data boundaries, not only the ownership copier: undeclared v1 record fields are rejected before retention, metatable-backed canonical tables are rejected before metamethods can influence field reads, `ObjectState` has an exact top-level v1 shape, and its mutable maps may not carry metatables. This keeps validation/identity behavior dependent only on explicit versioned data.
+
 Stable issue codes are suitable for test diagnostics and future procedural rejection/repro tooling.
 
 ## Fixtures
