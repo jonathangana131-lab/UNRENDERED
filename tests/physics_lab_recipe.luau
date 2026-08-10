@@ -54,6 +54,7 @@ local function run(): number
 				and element.sizeStuds.y == repeated.sizeStuds.y
 				and element.sizeStuds.z == repeated.sizeStuds.z
 				and element.yawDegrees == repeated.yawDegrees
+				and element.mechanismKey == repeated.mechanismKey
 		)
 		expect(`element {index} WorldEntityId valid`, WorldEntity.isId(element.entity.id))
 		expect(`element {index} WorldEntityId unique`, ids[element.entity.id] == nil)
@@ -66,9 +67,15 @@ local function run(): number
 		expect(`element {index} region origin bound`, element.entity.origin.regionId == first.regionId)
 		expect(`element {index} recipe key bound`, element.entity.origin.recipeKey == element.key)
 		if element.objectGenomeId ~= nil then
+			local genome = PhysicsLabRecipe.objectGenomeFor(element)
+			expect(`element {index} fixture ObjectGenome resolves`, genome ~= nil)
 			expect(
 				`element {index} fixture ObjectState binds genome identity`,
 				element.entity.persistentState.genomeId == element.objectGenomeId
+			)
+			expect(
+				`element {index} fixture ObjectState validates`,
+				genome ~= nil and ObjectGenome.inspectState(genome, element.entity.persistentState).ok
 			)
 		else
 			expect(`element {index} proxy state begins empty`, next(element.entity.persistentState) == nil)
@@ -118,23 +125,43 @@ local function run(): number
 		)
 	end
 
-	local hasHingedDoor = false
-	local hasDrawerProxy = false
+	local door = nil
+	local cabinet = nil
 	local hasRollingCart = false
 	local stairCount = 0
 	for _, element in first.elements do
 		if element.role == "door" and element.representationKind == "hinged-panel" then
-			hasHingedDoor = true
+			door = element
 		elseif element.role == "cabinet" and element.representationKind == "sliding-drawer-proxy" then
-			hasDrawerProxy = true
+			cabinet = element
 		elseif element.role == "cart" and element.representationKind == "rolling-cart-proxy" then
 			hasRollingCart = true
 		elseif element.role == "stairs" then
 			stairCount += 1
 		end
 	end
-	expect("lab includes a hinged door representation contract", hasHingedDoor)
-	expect("lab includes a drawer mechanism representation contract", hasDrawerProxy)
+
+	expect("lab includes a hinged door representation contract", door ~= nil)
+	expect(
+		"door proxy has positive clearance inside authored 4x8 opening",
+		door ~= nil and door.sizeStuds.x < 4 and door.sizeStuds.y < 8
+	)
+	expect("lab includes a drawer mechanism representation contract", cabinet ~= nil)
+	expect("cabinet proxy binds the production top-drawer mechanism", cabinet ~= nil and cabinet.mechanismKey == "slide-top")
+	if cabinet ~= nil then
+		local mechanism = PhysicsLabRecipe.mechanismFor(cabinet)
+		expect("cabinet mechanism resolves through ObjectGenome", mechanism ~= nil and mechanism.kind == "slide")
+		if mechanism ~= nil and mechanism.kind == "slide" then
+			expect(
+				"cabinet proxy keeps authored slide axis and travel",
+				mechanism.axis.x == 0
+					and mechanism.axis.y == 0
+					and mechanism.axis.z == -1
+					and mechanism.minTravelM == 0
+					and mechanism.maxTravelM == 0.44
+			)
+		end
+	end
 	expect("lab includes a four-wheel rolling-cart representation contract", hasRollingCart)
 	expect("lab stairs are actual stepped geometry", stairCount >= 4)
 
