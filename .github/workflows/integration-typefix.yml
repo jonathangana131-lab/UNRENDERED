@@ -1,0 +1,50 @@
+name: Integration Type Fix
+
+on:
+  push:
+    branches: [agent/integration/7-fidelity-review-8c1e]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Patch strict union annotations
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("src/shared/Physics/FidelityManager.luau")
+          text = path.read_text()
+          replacements = {
+              "\tlocal desired = evaluatePolicy(inputs, config, currentLevel)":
+                  "\tlocal desired: FidelityLevel = evaluatePolicy(inputs, config, currentLevel)",
+              "\tlocal desired, reason = evaluatePolicy(inputs, self.config, currentLevel)":
+                  "\tlocal desired: FidelityLevel, reason: PolicyReason = evaluatePolicy(inputs, self.config, currentLevel)",
+          }
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"expected exactly one occurrence of {old!r}, found {count}")
+              text = text.replace(old, new)
+          path.write_text(text)
+          PY
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          git add src/shared/Physics/FidelityManager.luau
+          if git diff --cached --quiet; then
+            echo "Type annotations already applied"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fix: preserve fidelity literal union types"
+          git push
