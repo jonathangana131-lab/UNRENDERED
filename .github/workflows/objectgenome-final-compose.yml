@@ -1,0 +1,51 @@
+name: ObjectGenome Final Compose
+
+on:
+  push:
+    branches: [agent/integration/6-objectgenome-final-2f9c]
+
+permissions:
+  contents: write
+
+jobs:
+  compose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Compose ownership, StableId, and transform semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          BASE=agent/integration/6-objectgenome-final-sol56q4
+          TRANSFORM_BASE=f29848d29ccc732543d37d93d1e8b8812db9c6f4
+          TRANSFORM_HEAD=4dde895bf4abeb9e370190804ecd20f20007d692
+          git fetch origin "$BASE" "$TRANSFORM_HEAD"
+
+          git restore --source="origin/$BASE" -- \
+            Docs/OBJECT_GENOME.md \
+            src/shared/Objects/ObjectGenome.luau \
+            src/shared/Objects/ObjectGenomeFixtures.luau \
+            src/shared/Objects/ObjectGenomeOwnership.luau \
+            tests/object_genome.luau \
+            tests/object_genome_contract_lock.luau \
+            tests/run.luau
+          git add Docs/OBJECT_GENOME.md src/shared/Objects tests/object_genome.luau tests/object_genome_contract_lock.luau tests/run.luau
+          git commit -m "stage: import ownership and StableId ObjectGenome integration"
+
+          git diff --binary "$TRANSFORM_BASE".."$TRANSFORM_HEAD" -- \
+            Docs/OBJECT_GENOME.md \
+            src/shared/Objects/ObjectGenome.luau \
+            tests/object_genome.luau > /tmp/transform.patch
+          git apply --3way --index /tmp/transform.patch
+          git commit -m "stage: lock ObjectGenome transform and axis semantics"
+
+          git rm .github/workflows/objectgenome-final-compose.yml
+          git commit -m "chore: remove temporary ObjectGenome composer"
+          git push origin HEAD:agent/integration/6-objectgenome-final-2f9c
