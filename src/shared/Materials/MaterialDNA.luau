@@ -537,10 +537,7 @@ local function freezeHistoryEvents(value: { HistoryEvent }): { HistoryEvent }
 end
 
 local function freezeKeys(value: { string }): { string }
-	local keys: { string } = {}
-	for index, key in value do
-		keys[index] = key
-	end
+	local keys: { string } = table.clone(value)
 	return table.freeze(keys)
 end
 
