@@ -1,0 +1,47 @@
+name: Apply mechanism finite-span repair
+
+on:
+  push:
+    branches:
+      - agent/objects/101-finite-span-sol56j9
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/objects/101-finite-span-sol56j9
+          fetch-depth: 0
+
+      - name: Apply finite-span repair
+        run: python3 .github/scripts/apply_mechanism_finite_span_fix.py
+
+      - name: Install pinned formatter
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+
+      - name: Format changed Luau
+        run: stylua src/shared/Objects/ObjectGenome.luau tests/object_genome.luau
+
+      - name: Remove one-shot repair machinery
+        run: rm .github/scripts/apply_mechanism_finite_span_fix.py .github/workflows/apply-mechanism-finite-span-fix.yml
+
+      - name: Commit finite-span repair
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Reject non-finite ObjectGenome mechanism spans"
+          git push origin HEAD:agent/objects/101-finite-span-sol56j9
