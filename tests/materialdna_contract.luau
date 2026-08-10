@@ -35,6 +35,7 @@ local function run(): number
 		return {
 			id = "material.v1.test.wallpaper",
 			schemaVersion = MaterialDNA.SchemaVersion,
+			recipeVersion = 1,
 			coherenceClass = "interior.wallpapered-drywall",
 			substrate = {
 				classKey = "substrate.gypsum-board",
@@ -237,7 +238,39 @@ local function run(): number
 		table.concat(schemaResult.errors, "; ")
 	)
 
-	local state = MaterialDNA.defaultState("material.v1.test.wallpaper")
+	local invalidRecipeVersion = makeRecipe()
+	invalidRecipeVersion.recipeVersion = 0
+	local recipeVersionResult = MaterialDNA.validateRecipe(invalidRecipeVersion)
+	expect(
+		"non-positive recipe version rejected",
+		not recipeVersionResult.ok and containsError(recipeVersionResult, "recipeVersion"),
+		table.concat(recipeVersionResult.errors, "; ")
+	)
+
+	local revisionOne = makeRecipe()
+	local revisionTwo = makeRecipe()
+	revisionTwo.recipeVersion = 2
+	revisionTwo.physical.staticFriction = 0.61
+	local frozenRevisionOne = MaterialDNA.freezeRecipe(revisionOne)
+	local frozenRevisionTwo = MaterialDNA.freezeRecipe(revisionTwo)
+	local revisionOneState = MaterialDNA.defaultState(frozenRevisionOne)
+	local revisionTwoState = MaterialDNA.defaultState(frozenRevisionTwo)
+	expect(
+		"state captures exact recipe revision",
+		revisionOneState.recipeId == frozenRevisionOne.id and revisionOneState.recipeVersion == 1,
+		`{revisionOneState.recipeId}@{revisionOneState.recipeVersion}`
+	)
+	expect(
+		"same material id revisions stay distinct",
+		frozenRevisionOne.id == frozenRevisionTwo.id
+			and frozenRevisionOne.recipeVersion ~= frozenRevisionTwo.recipeVersion
+			and MaterialDNA.stateMatchesRecipe(frozenRevisionOne, revisionOneState)
+			and not MaterialDNA.stateMatchesRecipe(frozenRevisionTwo, revisionOneState)
+			and MaterialDNA.stateMatchesRecipe(frozenRevisionTwo, revisionTwoState),
+		"state did not preserve exact recipe revision identity"
+	)
+
+	local state = MaterialDNA.defaultState(makeRecipe())
 	local stateMutation = pcall(function()
 		state.wear01 = 0.5
 	end)
@@ -247,6 +280,7 @@ local function run(): number
 
 	local invalidState: any = {
 		recipeId = "material.v1.test.wallpaper",
+		recipeVersion = 1,
 		schemaVersion = MaterialDNA.SchemaVersion,
 		wear01 = 0.2,
 		damage01 = -0.1,
