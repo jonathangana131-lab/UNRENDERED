@@ -29,16 +29,20 @@ Pinned through Rokit:
 - Lune 0.10.5
 - Wally 0.3.2
 
-## Build
+## Build / validate locally
 
 ```bash
 rokit install
 rojo sourcemap default.project.json --output sourcemap.json
-rojo build default.project.json --output build/UNRENDERED.rbxlx
+curl --proto '=https' --tlsv1.2 -sSf \
+  https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/1.69.0/scripts/globalTypes.d.luau \
+  -o globalTypes.d.luau
 stylua --check src tests
 selene src tests
-luau-lsp analyze --platform=roblox --sourcemap=sourcemap.json src tests
+luau-lsp analyze --platform=roblox --definitions:@roblox=globalTypes.d.luau --sourcemap=sourcemap.json src
 lune run tests/run
+mkdir -p build
+rojo build default.project.json --output build/UNRENDERED.rbxlx
 ```
 
-The generated place is a source-controlled bootstrap shell, not the final world. Roblox Studio is still required for real engine playtests, graphics validation, server-authority validation, and device profiling.
+CI uses the same pinned Roblox definitions and source checks. The generated place is a source-controlled bootstrap shell, not the final world. Roblox Studio is still required for real engine playtests, graphics validation, server-authority validation, and device profiling.
