@@ -37,7 +37,8 @@ local function scanDirectory(path, parent)
 			parent._children[entryName] = child
 			scanDirectory(childPath, child)
 		elseif fs.isFile(childPath) then
-			local moduleName = string.match(entryName, "^(.*)%.luau$") or string.match(entryName, "^(.*)%.lua$")
+			local moduleName = string.match(entryName, "^(.*)%.luau$")
+				or string.match(entryName, "^(.*)%.lua$")
 			if moduleName ~= nil then
 				parent._children[moduleName] = newNode(moduleName, parent, childPath, true)
 			end
