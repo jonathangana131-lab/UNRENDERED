@@ -15,9 +15,13 @@ from pathlib import Path
 
 from check_domain_boundaries import DOMAIN_ROOTS, REPO_ROOT, _line_for_offset, _mask_luau
 
+# Keep this list to Roblox-global names that are sufficiently distinctive for a lexical
+# guard. Generic names such as NumberRange/NumberSequence/ColorSequence/Axes/Faces can be
+# legitimate project-defined plain record types, so treating the bare symbol as proof of a
+# Roblox dependency would create false positives. Enum.* remains separately unambiguous.
 ROBLOX_VALUE_TYPE = re.compile(
-    r"\b(?:Axes|BrickColor|CFrame|Color3|ColorSequence|Faces|NumberRange|NumberSequence|"
-    r"PhysicalProperties|Ray|Rect|Region3|Region3int16|UDim|UDim2|Vector2|Vector3)\b"
+    r"\b(?:BrickColor|CFrame|Color3|PhysicalProperties|Ray|Rect|Region3|Region3int16|"
+    r"UDim|UDim2|Vector2|Vector3)\b"
 )
 ROBLOX_ENUM = re.compile(r"\bEnum\s*\.")
 
@@ -59,6 +63,10 @@ local nested = `value = {Color3.new(1, 1, 1)}`
 -- Vector3.new(1, 2, 3) Enum.Material.Concrete
 local quoted = "CFrame Color3 Enum.Material"
 local longQuoted = [[UDim2.new(1, 0, 1, 0)]]
+type NumberRange = { min: number, max: number }
+type NumberSequence = { NumberRange }
+type ColorSequence = { keypoints: { number } }
+local massLimitsKg: NumberRange = { min = 1, max = 2 }
 local position = { x = 1, y = 2, z = 3 }
 local transform = { position = position, yawRadians = 0 }
 '''.lstrip()
