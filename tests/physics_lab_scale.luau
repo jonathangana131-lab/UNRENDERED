@@ -18,7 +18,10 @@ local function run(): number
 		end
 	end
 
-	expect("Physics Lab scale owns Roblox 0.28 meters-per-stud boundary", PhysicsLabScale.METERS_PER_STUD == 0.28)
+	expect(
+		"Physics Lab scale owns Roblox 0.28 meters-per-stud boundary",
+		PhysicsLabScale.METERS_PER_STUD == 0.28
+	)
 	expect(
 		"Physics Lab scale reciprocal is internally consistent",
 		PhysicsLabScale.STUDS_PER_METER == 1 / PhysicsLabScale.METERS_PER_STUD
@@ -44,10 +47,7 @@ local function run(): number
 	local authoredMeters = { 0.045, 0.92, 2.02, 9.6, -4.35 }
 	for index, meters in ipairs(authoredMeters) do
 		local reconstructed = PhysicsLabScale.studsToMeters(PhysicsLabScale.metersToStuds(meters))
-		expect(
-			`Physics Lab SI realization round trip {index}`,
-			nearlyEqual(reconstructed, meters, 1e-12)
-		)
+		expect(`Physics Lab SI realization round trip {index}`, nearlyEqual(reconstructed, meters, 1e-12))
 	end
 
 	local nanAccepted = pcall(function()
