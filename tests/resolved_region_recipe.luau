@@ -66,7 +66,11 @@ local function run(): number
 		string.match(locked.fingerprint, "^resolved%-region%-recipe:v1:") ~= nil
 	)
 	expectEqual("topology keys canonicalize lexically", locked.topologyAnchorKeys[1], "entry:west/reception")
-	expectEqual("content keys canonicalize lexically", locked.canonicalContentKeys[1], "fixture:ceiling-grid/a")
+	expectEqual(
+		"content keys canonicalize lexically",
+		locked.canonicalContentKeys[1],
+		"fixture:ceiling-grid/a"
+	)
 
 	source.worldId = "world:mutated"
 	source.regionAddress.x = 999
@@ -99,7 +103,11 @@ local function run(): number
 	}
 	local reordered = ResolvedRegionRecipe.lockFirstObservation(reorderedInput)
 	expectEqual("set traversal order cannot change region identity", reordered.regionId, locked.regionId)
-	expectEqual("set traversal order cannot change recipe fingerprint", reordered.fingerprint, locked.fingerprint)
+	expectEqual(
+		"set traversal order cannot change recipe fingerprint",
+		reordered.fingerprint,
+		locked.fingerprint
+	)
 	expect("canonical equality ignores input set order", ResolvedRegionRecipe.equals(locked, reordered))
 
 	local changedContentInput = baseInput()
@@ -110,11 +118,18 @@ local function run(): number
 
 	local serialized = ResolvedRegionRecipe.serialize(locked)
 	local reconstructed = ResolvedRegionRecipe.deserialize(serialized)
-	expect("plain-data round trip preserves canonical equality", ResolvedRegionRecipe.equals(locked, reconstructed))
+	expect(
+		"plain-data round trip preserves canonical equality",
+		ResolvedRegionRecipe.equals(locked, reconstructed)
+	)
 	expectEqual("round trip preserves exact fingerprint", reconstructed.fingerprint, locked.fingerprint)
 
 	local relocked = ResolvedRegionRecipe.lockFirstObservation(ResolvedRegionRecipe.lockInput(locked))
-	expectEqual("stored lock input deterministically reconstructs recipe", relocked.fingerprint, locked.fingerprint)
+	expectEqual(
+		"stored lock input deterministically reconstructs recipe",
+		relocked.fingerprint,
+		locked.fingerprint
+	)
 
 	local tampered = deepCopy(serialized)
 	tampered.generatorVersions.reality = 2
@@ -130,12 +145,32 @@ local function run(): number
 	expect("generator upgrade produces explicit migration plan", migrationPlan ~= nil)
 	if migrationPlan ~= nil then
 		expectEqual("migration plan is anchored to locked region", migrationPlan.regionId, locked.regionId)
-		expectEqual("migration plan preserves source fingerprint", migrationPlan.fromFingerprint, locked.fingerprint)
-		expectEqual("migration plan reports reality change first", migrationPlan.changedGenerators[1], "reality")
-		expectEqual("migration plan reports topology change second", migrationPlan.changedGenerators[2], "topology")
+		expectEqual(
+			"migration plan preserves source fingerprint",
+			migrationPlan.fromFingerprint,
+			locked.fingerprint
+		)
+		expectEqual(
+			"migration plan reports reality change first",
+			migrationPlan.changedGenerators[1],
+			"reality"
+		)
+		expectEqual(
+			"migration plan reports topology change second",
+			migrationPlan.changedGenerators[2],
+			"topology"
+		)
 	end
-	expectEqual("migration planning does not mutate locked reality version", locked.generatorVersions.reality, 1)
-	expectEqual("migration planning does not mutate locked topology version", locked.generatorVersions.topology, 1)
+	expectEqual(
+		"migration planning does not mutate locked reality version",
+		locked.generatorVersions.reality,
+		1
+	)
+	expectEqual(
+		"migration planning does not mutate locked topology version",
+		locked.generatorVersions.topology,
+		1
+	)
 	expectEqual(
 		"matching generator versions require no migration",
 		ResolvedRegionRecipe.migrationPlan(locked, locked.generatorVersions),
@@ -182,11 +217,20 @@ local function run(): number
 	deltaPayload.tags[1] = "mutated"
 	expectEqual("delta payload is defensively copied", delta.payload.door.open, true)
 	expectEqual("delta nested arrays are defensively copied", delta.payload.tags[1], "player-moved")
-	expectEqual("delta creation cannot change base fingerprint", locked.fingerprint, reconstructed.fingerprint)
+	expectEqual(
+		"delta creation cannot change base fingerprint",
+		locked.fingerprint,
+		reconstructed.fingerprint
+	)
 	local deltaMutationAccepted = pcall(function()
 		delta.payload.door.angle = 90
 	end)
 	expectEqual("delta payload snapshot rejects mutation", deltaMutationAccepted, false)
+
+	local falsePayloadAccepted = pcall(function()
+		ResolvedRegionRecipe.newDelta(2, "invalid-payload-type", nil, false)
+	end)
+	expectEqual("delta payload rejects false instead of treating it as missing", falsePayloadAccepted, false)
 
 	local cyclicPayload = {}
 	cyclicPayload.self = cyclicPayload

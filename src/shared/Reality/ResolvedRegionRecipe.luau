@@ -169,8 +169,16 @@ local function cloneGeneratorVersions(value: unknown): GeneratorVersions
 	local source = assertExactShape(value, GENERATOR_VERSION_KEYS, "generatorVersions")
 	return table.freeze({
 		reality = checkedPositiveInteger("generatorVersions.reality", source.reality, MAX_GENERATOR_VERSION),
-		topology = checkedPositiveInteger("generatorVersions.topology", source.topology, MAX_GENERATOR_VERSION),
-		material = checkedPositiveInteger("generatorVersions.material", source.material, MAX_GENERATOR_VERSION),
+		topology = checkedPositiveInteger(
+			"generatorVersions.topology",
+			source.topology,
+			MAX_GENERATOR_VERSION
+		),
+		material = checkedPositiveInteger(
+			"generatorVersions.material",
+			source.material,
+			MAX_GENERATOR_VERSION
+		),
 		object = checkedPositiveInteger("generatorVersions.object", source.object, MAX_GENERATOR_VERSION),
 		entity = checkedPositiveInteger("generatorVersions.entity", source.entity, MAX_GENERATOR_VERSION),
 	})
@@ -185,10 +193,7 @@ local function cloneCanonicalKeyArray(path: string, value: unknown, maximumCount
 
 	for key in pairs(source) do
 		assert(
-			type(key) == "number"
-				and key == math.floor(key)
-				and key >= 1
-				and key <= length,
+			type(key) == "number" and key == math.floor(key) and key >= 1 and key <= length,
 			`{path} must be a dense 1-based array`
 		)
 	end
@@ -257,18 +262,12 @@ end
 local function canonicalizeLockInput(value: unknown): LockInput
 	local source = assertExactShape(value, LOCK_INPUT_KEYS, "lockInput")
 	local worldId = checkedString("lockInput.worldId", source.worldId, ResolvedRegionRecipe.MaxKeyBytes)
-	local worldSeedRef = checkedString(
-		"lockInput.worldSeedRef",
-		source.worldSeedRef,
-		ResolvedRegionRecipe.MaxSeedRefBytes
-	)
+	local worldSeedRef =
+		checkedString("lockInput.worldSeedRef", source.worldSeedRef, ResolvedRegionRecipe.MaxSeedRefBytes)
 	local address = cloneRegionAddress(source.regionAddress)
 	local versions = cloneGeneratorVersions(source.generatorVersions)
-	local semanticIntent = checkedString(
-		"lockInput.semanticIntent",
-		source.semanticIntent,
-		ResolvedRegionRecipe.MaxKeyBytes
-	)
+	local semanticIntent =
+		checkedString("lockInput.semanticIntent", source.semanticIntent, ResolvedRegionRecipe.MaxKeyBytes)
 	local topologyAnchorKeys = cloneCanonicalKeyArray(
 		"lockInput.topologyAnchorKeys",
 		source.topologyAnchorKeys,
@@ -337,7 +336,10 @@ local function clonePlainValue(
 ): unknown
 	assert(depth <= ResolvedRegionRecipe.MaxDeltaPayloadDepth, `{path} exceeds maximum nesting depth`)
 	nodeBudget.count += 1
-	assert(nodeBudget.count <= ResolvedRegionRecipe.MaxDeltaPayloadNodes, `{path} exceeds payload node budget`)
+	assert(
+		nodeBudget.count <= ResolvedRegionRecipe.MaxDeltaPayloadNodes,
+		`{path} exceeds payload node budget`
+	)
 
 	local valueType = type(value)
 	if valueType == "nil" or valueType == "boolean" or valueType == "string" then
@@ -425,21 +427,24 @@ end
 function ResolvedRegionRecipe.deserialize(value: unknown): ResolvedRegionRecipe
 	local source = assertExactShape(value, RECIPE_KEYS, "resolvedRegionRecipe")
 	assert(
-		checkedPositiveInteger("resolvedRegionRecipe.schemaVersion", source.schemaVersion, MAX_GENERATOR_VERSION)
-			== ResolvedRegionRecipe.SchemaVersion,
+		checkedPositiveInteger(
+			"resolvedRegionRecipe.schemaVersion",
+			source.schemaVersion,
+			MAX_GENERATOR_VERSION
+		) == ResolvedRegionRecipe.SchemaVersion,
 		`resolvedRegionRecipe.schemaVersion must equal {ResolvedRegionRecipe.SchemaVersion}`
 	)
-	local expectedRegionId = checkedString(
-		"resolvedRegionRecipe.regionId",
-		source.regionId,
-		ResolvedRegionRecipe.MaxKeyBytes
-	)
+	local expectedRegionId =
+		checkedString("resolvedRegionRecipe.regionId", source.regionId, ResolvedRegionRecipe.MaxKeyBytes)
 	local expectedFingerprint = checkedString(
 		"resolvedRegionRecipe.fingerprint",
 		source.fingerprint,
 		ResolvedRegionRecipe.MaxKeyBytes
 	)
-	assert(StableId.is(expectedRegionId, "region"), "resolvedRegionRecipe.regionId must be a canonical region StableId")
+	assert(
+		StableId.is(expectedRegionId, "region"),
+		"resolvedRegionRecipe.regionId must be a canonical region StableId"
+	)
 	assert(
 		StableId.is(expectedFingerprint, "resolved-region-recipe"),
 		"resolvedRegionRecipe.fingerprint must be a canonical resolved-region-recipe StableId"
@@ -455,7 +460,10 @@ function ResolvedRegionRecipe.deserialize(value: unknown): ResolvedRegionRecipe
 		canonicalContentKeys = source.canonicalContentKeys,
 	})
 	local canonical = buildRecipe(canonicalInput)
-	assert(canonical.regionId == expectedRegionId, "resolvedRegionRecipe.regionId does not match canonical identity")
+	assert(
+		canonical.regionId == expectedRegionId,
+		"resolvedRegionRecipe.regionId does not match canonical identity"
+	)
 	assert(
 		canonical.fingerprint == expectedFingerprint,
 		"resolvedRegionRecipe.fingerprint does not match canonical recipe content"
@@ -466,7 +474,8 @@ end
 function ResolvedRegionRecipe.equals(left: ResolvedRegionRecipe, right: ResolvedRegionRecipe): boolean
 	local canonicalLeft = ResolvedRegionRecipe.deserialize(left :: any)
 	local canonicalRight = ResolvedRegionRecipe.deserialize(right :: any)
-	return canonicalLeft.regionId == canonicalRight.regionId and canonicalLeft.fingerprint == canonicalRight.fingerprint
+	return canonicalLeft.regionId == canonicalRight.regionId
+		and canonicalLeft.fingerprint == canonicalRight.fingerprint
 end
 
 function ResolvedRegionRecipe.migrationPlan(
@@ -505,7 +514,11 @@ function ResolvedRegionRecipe.newDelta(
 	if targetKey ~= nil then
 		canonicalTarget = checkedString("delta.targetKey", targetKey, ResolvedRegionRecipe.MaxKeyBytes)
 	end
-	local canonicalPayload = clonePlainMap(payload or {}, "delta.payload")
+	local payloadValue: unknown = payload
+	if payloadValue == nil then
+		payloadValue = {}
+	end
+	local canonicalPayload = clonePlainMap(payloadValue, "delta.payload")
 	return table.freeze({
 		sequence = canonicalSequence,
 		kind = canonicalKind,
