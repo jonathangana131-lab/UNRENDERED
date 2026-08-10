@@ -248,7 +248,8 @@ local function run(): number
 		expectEqual("migration result preserves canonical region identity", migration.target.id, locked.id)
 		expectEqual("migration does not mutate stored source truth", locked.generatorVersions.reality, 1)
 
-		local _, postMigrationDisposition = ResolvedRegionRecipe.lock(locked, potentialFromResolved(migration.target))
+		local _, postMigrationDisposition =
+			ResolvedRegionRecipe.lock(locked, potentialFromResolved(migration.target))
 		expectEqual(
 			"ordinary observation still preserves source until caller explicitly persists migration",
 			postMigrationDisposition,
