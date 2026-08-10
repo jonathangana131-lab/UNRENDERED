@@ -20,7 +20,7 @@ type DrawerPosition = {
 	y: number,
 }
 
--- Production-contract examples use project-owned semantic material keys only.
+-- Production-contract examples pin an exact project material recipe id + revision.
 -- ObjectGenome does not own MaterialDNA's schema implementation or Roblox asset bindings.
 local zero: Vec3 = { x = 0, y = 0, z = 0 }
 
@@ -39,6 +39,7 @@ for _, caster in ipairs(casterPositions) do
 		key = key,
 		role = "floor-contact caster",
 		materialKey = "material.v1.chair-caster.polymer-rubber",
+		materialRecipeVersion = 1,
 		massKg = 0.35,
 		localPositionM = { x = caster.x, y = -0.49, z = caster.z },
 		localRotationDeg = zero,
@@ -61,6 +62,7 @@ table.insert(chairComponents, {
 	key = "base",
 	role = "five-star load-bearing base",
 	materialKey = "material.v1.office-metal.black-painted-steel",
+	materialRecipeVersion = 1,
 	massKg = 1.8,
 	localPositionM = { x = 0, y = -0.42, z = 0 },
 	localRotationDeg = zero,
@@ -78,6 +80,7 @@ table.insert(chairComponents, {
 	key = "lift-column",
 	role = "height and tilt support column",
 	materialKey = "material.v1.mechanism-steel.dark",
+	materialRecipeVersion = 1,
 	massKg = 1.4,
 	localPositionM = { x = 0, y = -0.23, z = 0 },
 	localRotationDeg = zero,
@@ -89,6 +92,7 @@ table.insert(chairComponents, {
 	key = "seat",
 	role = "upholstered seat pan",
 	materialKey = "material.v1.upholstery.charcoal-fabric-foam",
+	materialRecipeVersion = 1,
 	massKg = 3.4,
 	localPositionM = { x = 0, y = 0, z = -0.01 },
 	localRotationDeg = zero,
@@ -100,6 +104,7 @@ table.insert(chairComponents, {
 	key = "back",
 	role = "upholstered back rest",
 	materialKey = "material.v1.upholstery.charcoal-fabric-foam",
+	materialRecipeVersion = 1,
 	massKg = 2.0,
 	localPositionM = { x = 0, y = 0.28, z = 0.20 },
 	localRotationDeg = zero,
@@ -112,6 +117,7 @@ for _, side in ipairs({ -1, 1 }) do
 		key = if side < 0 then "arm-left" else "arm-right",
 		role = "arm support",
 		materialKey = "material.v1.polypropylene.black",
+		materialRecipeVersion = 1,
 		massKg = 0.75,
 		localPositionM = { x = side * 0.27, y = 0.12, z = 0.02 },
 		localRotationDeg = zero,
@@ -181,6 +187,7 @@ for _, leg in ipairs(tableLegPositions) do
 		key = `leg-{leg.name}`,
 		role = "load-bearing leg",
 		materialKey = "material.v1.office-metal.gray-painted-steel",
+		materialRecipeVersion = 1,
 		massKg = 2.4,
 		localPositionM = { x = leg.x, y = -0.03, z = leg.z },
 		localRotationDeg = zero,
@@ -194,6 +201,7 @@ table.insert(tableComponents, {
 	key = "crossbar",
 	role = "anti-racking brace",
 	materialKey = "material.v1.office-metal.gray-painted-steel",
+	materialRecipeVersion = 1,
 	massKg = 2.0,
 	localPositionM = { x = 0, y = 0.15, z = 0 },
 	localRotationDeg = zero,
@@ -205,6 +213,7 @@ table.insert(tableComponents, {
 	key = "top",
 	role = "laminated work surface",
 	materialKey = "material.v1.laminate-particleboard.beige",
+	materialRecipeVersion = 1,
 	massKg = 15.4,
 	localPositionM = { x = 0, y = 0.33, z = 0 },
 	localRotationDeg = zero,
@@ -248,6 +257,7 @@ local cabinetComponents: { ComponentSpec } = {
 		key = "shell",
 		role = "load-bearing folded steel carcass",
 		materialKey = "material.v1.office-metal.warm-gray-enamel",
+		materialRecipeVersion = 1,
 		massKg = 24.0,
 		localPositionM = zero,
 		localRotationDeg = zero,
@@ -269,6 +279,7 @@ for _, drawer in ipairs(drawerPositions) do
 		key = key,
 		role = "document drawer",
 		materialKey = "material.v1.office-metal.warm-gray-enamel",
+		materialRecipeVersion = 1,
 		massKg = 4.2,
 		localPositionM = { x = 0, y = drawer.y, z = -0.01 },
 		localRotationDeg = zero,

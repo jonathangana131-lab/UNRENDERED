@@ -78,6 +78,10 @@ local function run(): number
 				fixture.name .. " component uses MaterialDNA-style project key",
 				string.match(component.materialKey, "^material%.v1%.") ~= nil
 			)
+			expect(
+				fixture.name .. " component pins a material recipe revision",
+				component.materialRecipeVersion == 1
+			)
 		end
 
 		local state = ObjectGenome.defaultState(fixture.genome)
@@ -108,11 +112,33 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(badMaterial), "component.material_key")
 	)
 
+	local badMaterialRevision = deepCopy(Fixtures.officeChair)
+	badMaterialRevision.components[1].materialRecipeVersion = 0
+	expect(
+		"rejects missing material recipe revision",
+		hasCode(ObjectGenome.inspect(badMaterialRevision), "component.material_recipe_version")
+	)
+
 	local legacyMaterial = deepCopy(Fixtures.officeChair)
 	legacyMaterial.components[1].materialKey = "material:polymer-rubber.caster.v1"
 	expect(
 		"rejects legacy material reference syntax",
 		hasCode(ObjectGenome.inspect(legacyMaterial), "component.material_key")
+	)
+
+	local revisedMaterial = deepCopy(Fixtures.filingCabinet)
+	local revisedShell = findComponent(revisedMaterial, "shell")
+	local canonicalShell = findComponent(Fixtures.filingCabinet, "shell")
+	if revisedShell ~= nil then
+		revisedShell.materialRecipeVersion += 1
+	end
+	expect(
+		"material recipe revision is retained as canonical object recipe input",
+		revisedShell ~= nil
+			and canonicalShell ~= nil
+			and revisedShell.materialKey == canonicalShell.materialKey
+			and revisedShell.materialRecipeVersion ~= canonicalShell.materialRecipeVersion
+			and ObjectGenome.inspect(revisedMaterial).ok
 	)
 
 	local danglingSupport = deepCopy(Fixtures.filingCabinet)
@@ -174,14 +200,14 @@ local function run(): number
 		mixedCrossbar ~= nil and not hasCode(ObjectGenome.inspect(mixedAxisOrder), "component.outside_bounds")
 	)
 
-	local nonCanonicalRotation = deepCopy(Fixtures.officeTable)
-	local rotatedTop = findComponent(nonCanonicalRotation, "top")
+	local outOfBoundsRotation = deepCopy(Fixtures.officeTable)
+	local rotatedTop = findComponent(outOfBoundsRotation, "top")
 	if rotatedTop ~= nil then
 		rotatedTop.localRotationDeg = { x = 0, y = 270, z = 0 }
 	end
 	expect(
-		"rejects non-canonical rotation range",
-		rotatedTop ~= nil and hasCode(ObjectGenome.inspect(nonCanonicalRotation), "component.rotation_range")
+		"rejects rotation outside the v1 bounded representation",
+		rotatedTop ~= nil and hasCode(ObjectGenome.inspect(outOfBoundsRotation), "component.rotation_range")
 	)
 
 	local badAffordance = deepCopy(Fixtures.officeChair)

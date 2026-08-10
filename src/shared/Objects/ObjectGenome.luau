@@ -24,6 +24,7 @@ export type ComponentSpec = {
 	key: string,
 	role: string,
 	materialKey: string,
+	materialRecipeVersion: number,
 	massKg: number,
 	localPositionM: Vec3,
 	localRotationDeg: Vec3,
@@ -312,7 +313,7 @@ local function validateLocalRotation(issues: { ValidationIssue }, path: string, 
 			issues,
 			"component.rotation_range",
 			path,
-			`v1 local rotation components must be canonical degrees in [-{ROTATION_LIMIT_DEG}, {ROTATION_LIMIT_DEG}]`
+			`v1 local rotation components must be bounded degrees in [-{ROTATION_LIMIT_DEG}, {ROTATION_LIMIT_DEG}]`
 		)
 		return false
 	end
@@ -561,7 +562,15 @@ function ObjectGenome.inspect(value: any): ValidationResult
 				issues,
 				"component.material_key",
 				path .. ".materialKey",
-				"materialKey must be a stable lowercase project semantic key"
+				"materialKey must be the stable lowercase MaterialDNA recipe id"
+			)
+		end
+		if not isPositiveInteger(component.materialRecipeVersion) then
+			addIssue(
+				issues,
+				"component.material_recipe_version",
+				path .. ".materialRecipeVersion",
+				"materialRecipeVersion must be a positive integer"
 			)
 		end
 		if not isPositiveFinite(component.massKg) then

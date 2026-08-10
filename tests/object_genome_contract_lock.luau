@@ -82,11 +82,17 @@ local function run(): number
 	local callerGenome = deepCopy(Fixtures.officeChair)
 	local ownedGenome = ObjectGenomeOwnership.own(callerGenome)
 	local originalOwnedMass = ownedGenome.components[1].massKg
+	local originalOwnedMaterialRevision = ownedGenome.components[1].materialRecipeVersion
 	callerGenome.components[1].massKg = originalOwnedMass + 1
+	callerGenome.components[1].materialRecipeVersion = originalOwnedMaterialRevision + 1
 	expect("ownership leaves caller input mutable", not table.isfrozen(callerGenome.components[1]))
 	expect(
 		"owned genome is detached from caller input",
 		ownedGenome.components[1].massKg == originalOwnedMass
+	)
+	expect(
+		"owned genome preserves exact material recipe revision",
+		ownedGenome.components[1].materialRecipeVersion == originalOwnedMaterialRevision
 	)
 	expect("owned genome root is frozen", table.isfrozen(ownedGenome))
 	expect("owned genome component array is frozen", table.isfrozen(ownedGenome.components))
