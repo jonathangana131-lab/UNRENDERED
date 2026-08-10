@@ -1,0 +1,39 @@
+name: Production task
+description: A scoped, independently mergeable UNRENDERED task
+title: "[AREA] "
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: What production capability should exist when this is done?
+    validations:
+      required: true
+  - type: textarea
+    id: contracts
+    attributes:
+      label: Contracts / boundaries
+      description: Which stable interfaces, IDs, schemas, or ADRs are involved?
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: "- [ ] deterministic repro\n- [ ] tests\n- [ ] metrics"
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Required evidence
+      description: Build, tests, seed repro, screenshots, physics trace, or multiplayer simulation.
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk
+      options:
+        - low
+        - shared-contract
+        - architecture
+        - persistence/network
+    validations:
+      required: true

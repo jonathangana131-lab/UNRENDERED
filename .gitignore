@@ -1,0 +1,23 @@
+# Rojo / Roblox
+sourcemap.json
+*.rbxl
+*.rbxlx
+*.rbxm
+*.rbxmx
+/build/
+
+# Wally
+Packages/
+DevPackages/
+
+# Rokit
+.rokit/
+
+# OS / editors
+.DS_Store
+.vscode/settings.local.json
+.idea/
+
+# Test artifacts
+artifacts/
+coverage/
