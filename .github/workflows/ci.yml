@@ -37,6 +37,18 @@ jobs:
             https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/1.69.0/scripts/globalTypes.d.luau \
             -o globalTypes.d.luau
 
+      - name: Format workspace for repair artifact
+        run: stylua src tests
+
+      - name: Upload formatted repair artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: formatted-source-repair
+          path: |
+            src
+            tests
+          retention-days: 1
+
       - name: Format check
         run: stylua --check src tests
 
