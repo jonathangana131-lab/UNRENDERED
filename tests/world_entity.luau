@@ -207,7 +207,11 @@ local function run(): number
 
 	local diagnosticSnapshot = WorldEntity.duplicateDiagnostics(registry)
 	table.clear(diagnosticSnapshot)
-	expectEqual("diagnostic snapshot cannot mutate registry history", #WorldEntity.duplicateDiagnostics(registry), 1)
+	expectEqual(
+		"diagnostic snapshot cannot mutate registry history",
+		#WorldEntity.duplicateDiagnostics(registry),
+		1
+	)
 
 	local boundedRegistry = WorldEntity.createRegistry(2)
 	WorldEntity.register(boundedRegistry, entity)
@@ -228,7 +232,11 @@ local function run(): number
 	end
 	local boundedDiagnostics = WorldEntity.duplicateDiagnostics(boundedRegistry)
 	expectEqual("duplicate diagnostics stay bounded", #boundedDiagnostics, 2)
-	expectEqual("duplicate diagnostics discard oldest", boundedDiagnostics[1].incomingRecipeKey, "duplicate/2")
+	expectEqual(
+		"duplicate diagnostics discard oldest",
+		boundedDiagnostics[1].incomingRecipeKey,
+		"duplicate/2"
+	)
 	expectEqual("duplicate diagnostics retain newest", boundedDiagnostics[2].incomingRecipeKey, "duplicate/3")
 
 	local disabledDiagnosticsRegistry = WorldEntity.createRegistry(0)
