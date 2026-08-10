@@ -144,12 +144,20 @@ local function levelIndex(level: FidelityLevel): number
 	return LEVEL_INDEX[level]
 end
 
+local function isFinite(value: number): boolean
+	return value == value and value > -math.huge and value < math.huge
+end
+
 local function validateUnit(name: string, value: number): ()
 	assert(value == value and value >= 0 and value <= 1, `{name} must be in [0, 1]`)
 end
 
 local function validateNonNegative(name: string, value: number): ()
 	assert(value == value and value >= 0, `{name} must be non-negative`)
+end
+
+local function validateFiniteNonNegative(name: string, value: number): ()
+	assert(isFinite(value) and value >= 0, `{name} must be finite and non-negative`)
 end
 
 local function validateConfig(config: PolicyConfig): ()
@@ -159,10 +167,10 @@ local function validateConfig(config: PolicyConfig): ()
 			and config.maxRegisteredEntities == math.floor(config.maxRegisteredEntities),
 		"maxRegisteredEntities must be a positive finite integer"
 	)
-	validateNonNegative("heroDistanceStuds", config.heroDistanceStuds)
-	validateNonNegative("interactiveDistanceStuds", config.interactiveDistanceStuds)
-	validateNonNegative("renderDistanceStuds", config.renderDistanceStuds)
-	validateNonNegative("structuralDistanceStuds", config.structuralDistanceStuds)
+	validateFiniteNonNegative("heroDistanceStuds", config.heroDistanceStuds)
+	validateFiniteNonNegative("interactiveDistanceStuds", config.interactiveDistanceStuds)
+	validateFiniteNonNegative("renderDistanceStuds", config.renderDistanceStuds)
+	validateFiniteNonNegative("structuralDistanceStuds", config.structuralDistanceStuds)
 	assert(
 		config.heroDistanceStuds <= config.interactiveDistanceStuds,
 		"hero distance must not exceed interactive"
@@ -175,11 +183,15 @@ local function validateConfig(config: PolicyConfig): ()
 		config.renderDistanceStuds <= config.structuralDistanceStuds,
 		"render distance must not exceed structural"
 	)
-	validateNonNegative("distanceHysteresisStuds", config.distanceHysteresisStuds)
-	validateNonNegative("interactionGraceSeconds", config.interactionGraceSeconds)
-	validateNonNegative("promotionHoldSeconds", config.promotionHoldSeconds)
-	validateNonNegative("demotionHoldSeconds", config.demotionHoldSeconds)
-	validateNonNegative("transitionCooldownSeconds", config.transitionCooldownSeconds)
+	validateFiniteNonNegative("distanceHysteresisStuds", config.distanceHysteresisStuds)
+	validateFiniteNonNegative("interactionGraceSeconds", config.interactionGraceSeconds)
+	validateFiniteNonNegative("promotionHoldSeconds", config.promotionHoldSeconds)
+	validateFiniteNonNegative("demotionHoldSeconds", config.demotionHoldSeconds)
+	validateFiniteNonNegative("transitionCooldownSeconds", config.transitionCooldownSeconds)
+	assert(
+		config.structuralDistanceStuds + config.distanceHysteresisStuds < math.huge,
+		"structural distance plus hysteresis must remain finite"
+	)
 	validateUnit("significanceKeepaliveThreshold", config.significanceKeepaliveThreshold)
 	validateUnit("activeRelevanceThreshold", config.activeRelevanceThreshold)
 	validateUnit("heroRelevanceThreshold", config.heroRelevanceThreshold)
@@ -190,7 +202,8 @@ local function validateConfig(config: PolicyConfig): ()
 end
 
 local function validateInputs(inputs: PolicyInputs): ()
-	validateNonNegative("distanceStuds", inputs.distanceStuds)
+	validateFiniteNonNegative("distanceStuds", inputs.distanceStuds)
+	-- `math.huge` intentionally means the entity has never been interacted with.
 	validateNonNegative("secondsSinceInteraction", inputs.secondsSinceInteraction)
 	validateUnit("significance", inputs.significance)
 	validateUnit("networkRelevance", inputs.networkRelevance)
@@ -491,8 +504,8 @@ function FidelityManager.step(
 	assert(state ~= nil, `entity not registered: {entityId}`)
 	assert(isLevel(currentLevel), "currentLevel must be F0-F4")
 	assert(
-		nowSeconds == nowSeconds and nowSeconds >= state.lastEvaluatedAt,
-		"nowSeconds must be monotonic per entity"
+		isFinite(nowSeconds) and nowSeconds >= state.lastEvaluatedAt,
+		"nowSeconds must be finite and monotonic per entity"
 	)
 	state.lastEvaluatedAt = nowSeconds
 
