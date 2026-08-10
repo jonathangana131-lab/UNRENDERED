@@ -52,6 +52,19 @@ Generated base + persistent deltas. Never serialize the live Workspace as the wo
 
 When a region becomes canonical, store enough recipe/version information that future generator upgrades do not silently rewrite established space. New unobserved regions can use newer generation versions; old regions migrate only explicitly.
 
+`src/shared/Reality/ResolvedRegionRecipe.luau` owns the narrow plain-data contract for that transition:
+
+- a candidate contains the world seed, semantic region address, exact generator-version vector, semantic intent, topology anchor keys, and canonical content keys;
+- locking replaces the raw world seed with a project StableId reference and derives a stable `regionId` from that reference plus the region address;
+- the immutable base recipe carries a separate deterministic `recipeFingerprint` over every canonical recipe field, so content drift is detectable without changing regional identity;
+- topology-anchor/content-key sets are sorted canonically before sealing so producer traversal order cannot perturb truth;
+- `resolveFirstObservation` creates truth only when no recipe exists. Once a matching region is locked, later candidate content or generator-version changes return the established recipe rather than silently re-resolving it;
+- `toPlainData` / `fromPlainData` are the serialization boundary. Reconstruction revalidates the exact plain shape, region identity, canonical ordering, and content fingerprint; Roblox Instances and arbitrary representation fields are not part of the schema;
+- generator-version migration is an explicit pure hook that produces a new immutable recipe with the same `regionId` and a new fingerprint. There is no automatic “use current generator” rewrite path;
+- mutable durable state is intentionally outside the base recipe. The initial delta-stream contract binds ordered delta payload references to both `regionId` and the exact base fingerprint, preventing deltas from silently attaching to a migrated or different base recipe. Persistence transport/storage remains a later adapter concern.
+
+This contract is the resolved-world layer, not a world generator, Workspace serializer, DataStore repository, streaming system, or Roblox realization service.
+
 ## Determinism
 
 Never use uncontrolled randomness inside canonical generation. Random streams are derived from explicit seed + scope salts, for example:
