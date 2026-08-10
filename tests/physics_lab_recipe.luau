@@ -3,6 +3,7 @@ local ProductionLoader = require("./support/ProductionLoader")
 local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
 local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
 local PhysicsLabRecipe = ProductionLoader.requireShared("Physics/PhysicsLabRecipe")
+local ResolvedRegionRecipe = ProductionLoader.requireShared("Reality/ResolvedRegionRecipe")
 local StableId = ProductionLoader.requireShared("Core/StableId")
 local WorldEntity = ProductionLoader.requireShared("Reality/WorldEntity")
 
@@ -20,18 +21,55 @@ local function run(): number
 
 	local first = PhysicsLabRecipe.build()
 	local second = PhysicsLabRecipe.build()
+	local resolvedRegion = PhysicsLabRecipe.resolvedRegion()
+	local reconstructedRegion = ResolvedRegionRecipe.deserialize(ResolvedRegionRecipe.serialize(resolvedRegion))
 
 	expect("lab schema is explicit", first.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION)
+	expect("lab generator version advances resolved-region integration", PhysicsLabRecipe.GENERATOR_VERSION == 2)
 	expect("lab recipe key is explicit", first.recipeKey == PhysicsLabRecipe.RECIPE_KEY)
 	expect(
 		"lab world id is deterministic",
 		first.worldId == second.worldId and StableId.is(first.worldId, "world")
 	)
 	expect(
-		"lab region id is deterministic",
-		first.regionId == second.regionId and StableId.is(first.regionId, "region")
+		"lab region id comes from landed resolved-region contract",
+		first.regionId == resolvedRegion.regionId
+			and second.regionId == resolvedRegion.regionId
+			and StableId.is(first.regionId, "region")
+	)
+	expect(
+		"lab resolved-region recipe reconstructs exactly",
+		ResolvedRegionRecipe.equal(resolvedRegion, reconstructedRegion)
+			and ResolvedRegionRecipe.fingerprint(resolvedRegion)
+				== ResolvedRegionRecipe.fingerprint(reconstructedRegion)
+	)
+	expect(
+		"lab resolved-region identity pins world seed reference and address",
+		resolvedRegion.worldSeedRef == PhysicsLabRecipe.WORLD_SEED_REF
+			and resolvedRegion.regionAddress.x == 0
+			and resolvedRegion.regionAddress.z == 0
+			and resolvedRegion.regionAddress.layer == 0
+	)
+	expect(
+		"lab resolved-region truth pins Wave-1 generator versions",
+		resolvedRegion.generatorVersions.reality == 1
+			and resolvedRegion.generatorVersions.topology == 1
+			and resolvedRegion.generatorVersions.material == 1
+			and resolvedRegion.generatorVersions.object == 1
+			and resolvedRegion.generatorVersions.entity == 1
 	)
 	expect("lab entity count is deterministic", #first.entities == #second.entities and #first.entities == 20)
+
+	local expectedFloorId = StableId.fromParts("entity", {
+		resolvedRegion.regionId,
+		"physics-lab.recipe",
+		tostring(PhysicsLabRecipe.GENERATOR_VERSION),
+		"floor",
+	})
+	expect(
+		"lab entity identity is scoped by canonical resolved region",
+		first.entities[1].key == "floor" and first.entities[1].entity.id == expectedFloorId
+	)
 
 	local requiredKeys = {
 		floor = true,
@@ -89,7 +127,7 @@ local function run(): number
 		end
 		if
 			entityRecipe.entity.origin.worldId ~= first.worldId
-			or entityRecipe.entity.origin.regionId ~= first.regionId
+			or entityRecipe.entity.origin.regionId ~= resolvedRegion.regionId
 			or entityRecipe.entity.origin.generator ~= "physics-lab.recipe"
 			or entityRecipe.entity.origin.generatorVersion ~= PhysicsLabRecipe.GENERATOR_VERSION
 		then
