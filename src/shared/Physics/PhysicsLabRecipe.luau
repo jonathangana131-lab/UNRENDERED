@@ -63,8 +63,8 @@ export type PhysicsLabRecipe = {
 local PhysicsLabRecipe = {}
 
 PhysicsLabRecipe.SCHEMA_VERSION = 1
-PhysicsLabRecipe.GENERATOR_VERSION = 1
-PhysicsLabRecipe.RECIPE_KEY = "physics-lab.hero-gate.v1"
+PhysicsLabRecipe.GENERATOR_VERSION = 2
+PhysicsLabRecipe.RECIPE_KEY = "physics-lab.hero-gate.v2"
 PhysicsLabRecipe.WORLD_SEED_REF = "physics-lab.hero-gate.seed.v1"
 
 local WORLD_ID = StableId.fromParts("world", { "physics-lab", "hero-gate", "v1" })
@@ -73,11 +73,18 @@ local REGION_ADDRESS: ResolvedRegionRecipe.RegionAddressData = table.freeze({
 	z = 0,
 	layer = 0,
 })
+local LOCKED_GENERATOR_VERSIONS: ResolvedRegionRecipe.GeneratorVersions = table.freeze({
+	reality = 1,
+	topology = 1,
+	material = 1,
+	object = 1,
+	entity = 1,
+})
 local RESOLVED_REGION = ResolvedRegionRecipe.lock({
 	worldId = WORLD_ID,
 	worldSeedRef = PhysicsLabRecipe.WORLD_SEED_REF,
 	regionAddress = REGION_ADDRESS,
-	generatorVersions = ResolvedRegionRecipe.currentGeneratorVersions(),
+	generatorVersions = LOCKED_GENERATOR_VERSIONS,
 	semanticIntentKey = "physics-lab.hero-gate",
 	topologyAnchors = {
 		"character-spawn-anchor",
@@ -109,6 +116,7 @@ local RESOLVED_REGION = ResolvedRegionRecipe.lock({
 local REGION_ID = RESOLVED_REGION.regionId
 
 PhysicsLabRecipe.WORLD_ID = WORLD_ID
+PhysicsLabRecipe.RESOLVED_GENERATOR_VERSIONS = LOCKED_GENERATOR_VERSIONS
 PhysicsLabRecipe.RESOLVED_REGION = RESOLVED_REGION
 
 local WALL_MATERIAL: MaterialReference = table.freeze({
@@ -139,7 +147,7 @@ end
 local ZERO = vec3(0, 0, 0)
 
 local function entityId(key: string): string
-	return StableId.fromParts("entity", { "physics-lab", "v1", key })
+	return StableId.fromParts("entity", { "physics-lab", "v2", key })
 end
 
 local function originFor(key: string): WorldEntity.GenerationOrigin
