@@ -1,0 +1,130 @@
+name: Repair PR191 lifecycle seam
+
+on:
+  push:
+    branches:
+      - agent/physicslab/10-f2-f0-lifecycle-sol56a4
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/physicslab/10-f2-f0-lifecycle-sol56a4
+          fetch-depth: 0
+      - name: Merge current main and repair construction order
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge --no-edit origin/main
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("src/server/PhysicsLab/PhysicsLabRealizer.luau")
+          text = path.read_text()
+          old = '''\tlocal model = Instance.new("Model")
+          \tmodel.Name = ROOT_NAME
+          \tmodel:SetAttribute("UNRENDERED_PhysicsLabOwned", true)
+          \tmodel:SetAttribute("UNRENDERED_LabSchemaVersion", recipe.schemaVersion)
+          \tmodel:SetAttribute("UNRENDERED_LabRecipeKey", recipe.recipeKey)
+          \tmodel:SetAttribute("UNRENDERED_WorldId", recipe.worldId)
+          \tmodel:SetAttribute("UNRENDERED_RegionId", recipe.regionId)
+
+          \tlocal representations: RepresentationMap = {}
+          \tfor _, entityRecipe in ipairs(recipe.entities) do
+          \t\tlocal entityId = entityRecipe.entity.id
+          \t\tassert(representations[entityId] == nil, `duplicate Physics Lab representation id: {entityId}`)
+          \t\trepresentations[entityId] = realizeEntity(model, entityRecipe, entityRecipe.entity)
+          \tend
+
+          \tlocal runtime = PhysicsLabRuntime.new(recipe)
+          \tsyncMetrics(model, runtime, representations)
+          \tmodel.Parent = parent
+          '''
+          new = '''\t-- Establish and validate bounded domain authority before allocating any
+          \t-- Roblox representation. Workspace remains a disposable projection of this runtime.
+          \tlocal runtime = PhysicsLabRuntime.new(recipe)
+          \tlocal model = Instance.new("Model")
+          \tmodel.Name = ROOT_NAME
+          \tlocal representations: RepresentationMap = {}
+
+          \tlocal realized, realizationError = pcall(function()
+          \t\tmodel:SetAttribute("UNRENDERED_PhysicsLabOwned", true)
+          \t\tmodel:SetAttribute("UNRENDERED_LabSchemaVersion", recipe.schemaVersion)
+          \t\tmodel:SetAttribute("UNRENDERED_LabRecipeKey", recipe.recipeKey)
+          \t\tmodel:SetAttribute("UNRENDERED_WorldId", recipe.worldId)
+          \t\tmodel:SetAttribute("UNRENDERED_RegionId", recipe.regionId)
+
+          \t\tfor _, entityRecipe in ipairs(recipe.entities) do
+          \t\t\tlocal entityId = entityRecipe.entity.id
+          \t\t\tassert(representations[entityId] == nil, `duplicate Physics Lab representation id: {entityId}`)
+          \t\t\tlocal record = runtime:getRecord(entityId)
+          \t\t\trepresentations[entityId] = realizeEntity(model, entityRecipe, record)
+          \t\tend
+
+          \t\tsyncMetrics(model, runtime, representations)
+          \tend)
+          \tif not realized then
+          \t\tmodel:Destroy()
+          \t\ttable.clear(representations)
+          \t\truntime:dispose()
+          \t\terror(realizationError, 0)
+          \tend
+
+          \t-- Swap only after the replacement is complete. A failed realization leaves the
+          \t-- previously owned lab intact rather than turning a rebuild into destructive state.
+          \tif existing ~= nil then
+          \t\texisting:Destroy()
+          \tend
+          \tmodel.Parent = parent
+          '''
+          if old not in text:
+              raise SystemExit("PR191 construction-order marker not found")
+          text = text.replace(old, new, 1)
+
+          old_existing = '''\tif existing ~= nil then
+          \t\tassert(
+          \t\t\texisting:GetAttribute("UNRENDERED_PhysicsLabOwned") == true,
+          \t\t\t`refusing to replace unrelated Instance named {ROOT_NAME}`
+          \t\t)
+          \t\texisting:Destroy()
+          \tend
+          '''
+          new_existing = '''\tif existing ~= nil then
+          \t\tassert(
+          \t\t\texisting:GetAttribute("UNRENDERED_PhysicsLabOwned") == true,
+          \t\t\t`refusing to replace unrelated Instance named {ROOT_NAME}`
+          \t\t)
+          \tend
+          '''
+          if old_existing not in text:
+              raise SystemExit("PR191 existing-root marker not found")
+          text = text.replace(old_existing, new_existing, 1)
+          path.write_text(text)
+          PY
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+      - name: Format source and tests
+        run: stylua src tests
+      - name: Commit repair and remove helper
+        shell: bash
+        run: |
+          git rm .github/workflows/repair-pr191.yml
+          git add src tests Docs
+          git commit -m "fix(physicslab): establish runtime before representation"
+          git push origin HEAD:agent/physicslab/10-f2-f0-lifecycle-sol56a4
