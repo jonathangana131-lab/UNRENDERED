@@ -40,9 +40,29 @@ print("PHYSICS_LAB_BASELINE=" .. HttpService:JSONEncode(snapshot))
 
 Record the tested Git commit SHA, Studio version/channel, OS, server/client topology and flags next to that JSON output.
 
+## Source-owned 20-cycle lifecycle sweep
+
+`PhysicsLabStudioEvidence` drives every canonical lab WorldEntity through the existing representation-safe `RealizedLab.step` boundary. It performs 20 complete F2 -> F0 -> F2 cycles, checks that all representations disappear and return, verifies identity/revision progression, and captures the source-owned resource/envelope evidence at cycles 1, 5, 10 and 20.
+
+Run it from the **server** Command Bar:
+
+```luau
+local ServerScriptService = game:GetService("ServerScriptService")
+local HttpService = game:GetService("HttpService")
+local PhysicsLab = ServerScriptService.UNRENDERED_Server.PhysicsLab
+local Evidence = require(PhysicsLab.PhysicsLabStudioEvidence)
+
+local evidence = Evidence.runLifecycle20()
+print("PHYSICS_LAB_LIFECYCLE_20=" .. HttpService:JSONEncode(evidence))
+```
+
+The runner fails immediately if a production hold/transition behaves differently than expected, an F0 representation survives, an F2 representation fails to rebuild, the canonical identity changes, resource counts drift at a checkpoint, or the complete F2 envelope moves beyond the recorded `0.001` stud tolerance. The returned value is frozen plain evidence and does not retain Instances or the runtime.
+
+A successful run is strong lifecycle/resource evidence for the exact Studio session, but it is not a substitute for visible physical inspection. Record the emitted JSON with commit/Studio/OS/topology identity and still inspect at least one structural entity and one ObjectGenome-backed entity before marking the lifecycle row PASS.
+
 ## Production F2 -> F0 -> F2 lifecycle
 
-The landed lab adapter intentionally realizes only F0/F2. The following inputs exercise the production FidelityManager policy without introducing lab-only transition rules. Run the block separately for one structural entity such as `floor` and one ObjectGenome-backed entity such as `door-main`.
+The landed lab adapter intentionally realizes only F0/F2. The following inputs exercise the production FidelityManager policy without introducing lab-only transition rules. Use this focused block when inspecting one structural entity such as `floor` and one ObjectGenome-backed entity such as `door-main`, or when diagnosing a failure from the source-owned 20-cycle sweep.
 
 ```luau
 local ServerScriptService = game:GetService("ServerScriptService")
