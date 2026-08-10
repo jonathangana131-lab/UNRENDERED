@@ -28,7 +28,10 @@ local function run(): number
 	local runtime = PhysicsLabRuntime.new(recipe)
 	local initial = runtime:snapshot()
 	expect("runtime owns every lab WorldEntity", initial.registered == #recipe.entities)
-	expect("runtime FidelityManager owns every lab WorldEntity", initial.fidelity.registered == #recipe.entities)
+	expect(
+		"runtime FidelityManager owns every lab WorldEntity",
+		initial.fidelity.registered == #recipe.entities
+	)
 	expect("runtime starts without duplicate identities", initial.duplicateIdentities == 0)
 	expect("runtime is scoped to the exact lab recipe", initial.recipeKey == recipe.recipeKey)
 
@@ -41,7 +44,10 @@ local function run(): number
 
 	local entityId = floor.entity.id
 	local initialRecord = runtime:getRecord(entityId)
-	expect("runtime record begins at authored fidelity", runtime:getFidelity(entityId) == initialRecord.fidelity)
+	expect(
+		"runtime record begins at authored fidelity",
+		runtime:getFidelity(entityId) == initialRecord.fidelity
+	)
 
 	local noDemand = {
 		distanceStuds = 10000,
@@ -82,14 +88,23 @@ local function run(): number
 			after.persistentState.lifecycleProbe.marker == "captured-before-demotion"
 		)
 	end)
-	expect("runtime demotes through production FidelityManager", demotion.transitioned and demoted.fidelity == "F0")
+	expect(
+		"runtime demotes through production FidelityManager",
+		demotion.transitioned and demoted.fidelity == "F0"
+	)
 	expect("runtime demotion captures state exactly once", captureCalls == 1)
-	expect("runtime demotion increments state revision", demoted.stateRevision == initialRecord.stateRevision + 1)
+	expect(
+		"runtime demotion increments state revision",
+		demoted.stateRevision == initialRecord.stateRevision + 1
+	)
 	expect(
 		"runtime demotion increments representation revision",
 		demoted.representationRevision == initialRecord.representationRevision + 1
 	)
-	expect("runtime keeps fidelity authorities synchronized after demotion", runtime:getFidelity(entityId) == "F0")
+	expect(
+		"runtime keeps fidelity authorities synchronized after demotion",
+		runtime:getFidelity(entityId) == "F0"
+	)
 
 	local observed = {
 		distanceStuds = 8,
@@ -103,7 +118,10 @@ local function run(): number
 
 	local firstPromotion = runtime:step(entityId, observed, 3, nil, function(before, after)
 		observerCalls += 1
-		expect("promotion observer preserves captured state revision", before.stateRevision == after.stateRevision)
+		expect(
+			"promotion observer preserves captured state revision",
+			before.stateRevision == after.stateRevision
+		)
 	end)
 	expect("default promotion hold blocks first observed sample", not firstPromotion.transitioned)
 
@@ -115,13 +133,19 @@ local function run(): number
 			after.persistentState.lifecycleProbe.marker == "captured-before-demotion"
 		)
 	end)
-	expect("runtime promotes through production FidelityManager", promotion.transitioned and promoted.fidelity == "F4")
+	expect(
+		"runtime promotes through production FidelityManager",
+		promotion.transitioned and promoted.fidelity == "F4"
+	)
 	expect("promotion does not recapture persistent state", promoted.stateRevision == demoted.stateRevision)
 	expect(
 		"promotion preserves captured state",
 		promoted.persistentState.lifecycleProbe.marker == "captured-before-demotion"
 	)
-	expect("runtime keeps fidelity authorities synchronized after promotion", runtime:getFidelity(entityId) == "F4")
+	expect(
+		"runtime keeps fidelity authorities synchronized after promotion",
+		runtime:getFidelity(entityId) == "F4"
+	)
 	expect("transition observer only runs for committed transitions", observerCalls == 2)
 
 	local snapshot = runtime:snapshot()
@@ -165,7 +189,10 @@ local function run(): number
 			"rejected transition preserves representation revision",
 			after.representationRevision == before.representationRevision
 		)
-		expect("rejected transition preserves FidelityManager observed level", rejectionRuntime:getFidelity(rejectedId) == "F2")
+		expect(
+			"rejected transition preserves FidelityManager observed level",
+			rejectionRuntime:getFidelity(rejectedId) == "F2"
+		)
 	end
 	rejectionRuntime:dispose()
 
