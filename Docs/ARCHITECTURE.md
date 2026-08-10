@@ -70,6 +70,20 @@ Topology, materials, props, anomalies, and traces use separate streams so changi
 
 Promotion and demotion preserve domain identity and persistent state.
 
+## WorldEntity lifecycle contract
+
+`src/shared/Reality/WorldEntity.luau` is the plain-data domain boundary for identity that survives representation changes.
+
+- `WorldEntityId` is supplied by the project StableId contract; this module does not own hashing or seed derivation.
+- Generation origin records the WorldId, optional RegionId, generator name/version, and stable recipe key without referencing a Roblox Instance.
+- F0–F4 on a WorldEntity is lifecycle state only. The Fidelity Manager owns policy inputs, budgets, hysteresis, reasons, and timing for choosing a target fidelity.
+- Promotion reuses the latest captured persistent state. Demotion requires a fresh plain-data capture before representation teardown so physical state cannot disappear with Instances.
+- `stateRevision` tracks durable-state captures independently from `representationRevision`, which tracks fidelity representation changes.
+- Captured state is recursively checked for plain finite data and defensively copied/frozen. Instance/userdata/function/thread values, metatables, cycles, and non-finite numbers are rejected at the boundary.
+- The domain registry rejects duplicate live IDs, keeps the first registration authoritative, and emits a diagnostic describing both origins instead of silently replacing one entity with another.
+
+The registry is an identity diagnostic/index, not the universe database and not a persistence repository.
+
 ## Roblox-specific constraints
 
 - `Workspace.StreamingEnabled` is the engine streaming layer; our region/fidelity system sits above it.
