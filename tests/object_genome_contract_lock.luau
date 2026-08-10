@@ -1,6 +1,8 @@
-local ObjectGenome = require("../src/shared/Objects/ObjectGenome")
-local Fixtures = require("../src/shared/Objects/ObjectGenomeFixtures")
-local ObjectGenomeOwnership = require("../src/shared/Objects/ObjectGenomeOwnership")
+local ProductionLoader = require("./support/ProductionLoader")
+
+local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
+local Fixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
+local ObjectGenomeOwnership = ProductionLoader.requireShared("Objects/ObjectGenomeOwnership")
 
 local function deepCopy(value)
 	if type(value) ~= "table" then
