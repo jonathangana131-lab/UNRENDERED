@@ -91,7 +91,7 @@ local doorAffordances: { AffordanceSpec } = {
 local commercialDoor: Genome = {
 	schemaVersion = ObjectGenome.SCHEMA_VERSION,
 	familyId = "lab-door.commercial",
-	familyVersion = 2,
+	familyVersion = 3,
 	variantKey = "single-leaf",
 	provenance = {
 		manufacturerFamily = "Northfield Architectural Hardware",
@@ -105,7 +105,10 @@ local commercialDoor: Genome = {
 	},
 	massKg = 44,
 	massLimitsKg = { min = 35, max = 60 },
-	centerOfMassM = { x = 0, y = 0, z = -0.01 },
+	-- Component masses sum to the authored total mass, so keep the declared COM
+	-- consistent with their mass-weighted local centroids. This matters once the
+	-- F2 proxy promotes to an articulated physical representation.
+	centerOfMassM = { x = 0, y = 0.05386363636363636, z = -0.014772727272727272 },
 	components = doorComponents,
 	mechanisms = doorMechanisms,
 	affordances = doorAffordances,
