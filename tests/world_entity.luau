@@ -36,6 +36,21 @@ local function run(): number
 	expectEqual("origin is copied", entity.origin.recipeKey, "chair/front-desk/01")
 	expectEqual("persistent state is copied", entity.persistentState.open, false)
 
+	local infiniteVersionAccepted = pcall(function()
+		WorldEntity.new({
+			id = "entity:invalid-version",
+			kind = "office-chair",
+			origin = {
+				worldId = "world:0000000000000001",
+				regionId = "region:office-a",
+				generator = "objects.office",
+				generatorVersion = math.huge,
+				recipeKey = "chair/invalid-version",
+			},
+		})
+	end)
+	expectEqual("generator version rejects infinity", infiniteVersionAccepted, false)
+
 	local interactive = WorldEntity.transition(entity, "F3")
 	expectEqual("promotion preserves identity", interactive.id, entity.id)
 	expectEqual("promotion changes fidelity", interactive.fidelity, "F3")
