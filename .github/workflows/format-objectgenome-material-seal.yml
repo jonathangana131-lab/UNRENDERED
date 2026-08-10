@@ -1,0 +1,35 @@
+name: Format ObjectGenome material identity seal
+
+on:
+  push:
+    branches:
+      - agent/integration/6-objectgenome-material-identity-seal-sol56r8
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/integration/6-objectgenome-material-identity-seal-sol56r8
+      - name: Install pinned StyLua
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+      - name: Format reviewed files
+        run: stylua src/shared/Objects/ObjectGenome.luau tests/object_genome.luau
+      - name: Commit formatting
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/shared/Objects/ObjectGenome.luau tests/object_genome.luau
+          git diff --cached --check
+          git commit -m "style(objects): format material identity seal"
+          git push origin HEAD:agent/integration/6-objectgenome-material-identity-seal-sol56r8
