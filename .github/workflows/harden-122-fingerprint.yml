@@ -1,0 +1,272 @@
+name: Harden ObjectGenome fingerprint boundaries
+
+on:
+  push:
+    branches:
+      - agent/objects/100-materialref-lock-sol56s8
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/objects/100-materialref-lock-sol56s8
+          fetch-depth: 0
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Make fingerprint total and runtime-independent
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("src/shared/Objects/ObjectGenome.luau")
+          source = path.read_text()
+
+          old = '''local function canonicalFingerprintNumber(value: number): string
+          \tif value == 0 then
+          \t\treturn "0"
+          \tend
+          \treturn string.format("%.17g", value)
+          end
+
+          local function appendVec3FingerprintParts(parts: { string }, value: Vec3): ()
+          '''
+          new = '''local FINGERPRINT_STRING_CHUNK_BYTES = 384
+          local FINGERPRINT_SIGNIFICAND_SCALE = 9007199254740992 -- 2^53
+
+          local function fingerprintUnsignedIntegerText(value: number): string
+          \tassert(value >= 0 and value % 1 == 0 and value <= FINGERPRINT_SIGNIFICAND_SCALE, "fingerprint integer out of range")
+          \tif value == 0 then
+          \t\treturn "0"
+          \tend
+
+          \tlocal reversedDigits = {}
+          \twhile value > 0 do
+          \t\tlocal digit = value % 10
+          \t\ttable.insert(reversedDigits, string.char(48 + digit))
+          \t\tvalue = (value - digit) / 10
+          \tend
+
+          \tlocal digits = table.create(#reversedDigits)
+          \tfor index = #reversedDigits, 1, -1 do
+          \t\ttable.insert(digits, reversedDigits[index])
+          \tend
+          \treturn table.concat(digits)
+          end
+
+          local function fingerprintSignedIntegerText(value: number): string
+          \tif value < 0 then
+          \t\treturn "-" .. fingerprintUnsignedIntegerText(-value)
+          \tend
+          \treturn fingerprintUnsignedIntegerText(value)
+          end
+
+          local function canonicalFingerprintNumber(value: number): string
+          \tassert(value == value and value ~= math.huge and value ~= -math.huge, "fingerprint number must be finite")
+          \tif value == 0 then
+          \t\treturn "zero"
+          \tend
+
+          \tlocal sign = if value < 0 then "negative" else "positive"
+          \tlocal fraction, exponent = math.frexp(math.abs(value))
+          \tlocal significand = fraction * FINGERPRINT_SIGNIFICAND_SCALE
+          \tassert(significand % 1 == 0, "fingerprint significand must be exact")
+          \treturn sign
+          \t\t.. ":m"
+          \t\t.. fingerprintUnsignedIntegerText(significand)
+          \t\t.. ":e"
+          \t\t.. fingerprintSignedIntegerText(exponent - 53)
+          end
+
+          local function fingerprintString(label: string, value: string): string
+          \tlocal version = fingerprintUnsignedIntegerText(ObjectGenome.CONTENT_FINGERPRINT_VERSION)
+          \tlocal digest = StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, {
+          \t\t"string",
+          \t\tversion,
+          \t\tlabel,
+          \t\tfingerprintUnsignedIntegerText(#value),
+          \t})
+          \tlocal chunkIndex = 0
+          \tfor offset = 1, #value, FINGERPRINT_STRING_CHUNK_BYTES do
+          \t\tchunkIndex += 1
+          \t\tlocal chunk = string.sub(value, offset, offset + FINGERPRINT_STRING_CHUNK_BYTES - 1)
+          \t\tdigest = StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, {
+          \t\t\t"string-chunk",
+          \t\t\tversion,
+          \t\t\tlabel,
+          \t\t\tdigest,
+          \t\t\tfingerprintUnsignedIntegerText(chunkIndex),
+          \t\t\tchunk,
+          \t\t})
+          \tend
+          \treturn digest
+          end
+
+          local function appendVec3FingerprintParts(parts: { string }, value: Vec3): ()
+          '''
+          if source.count(old) != 1:
+              raise SystemExit("numeric helper marker not found exactly once")
+          source = source.replace(old, new, 1)
+
+          old = '''local function foldFingerprintList(label: string, values: { string }): string
+          \tlocal fingerprint = StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, {
+          \t\t"list",
+          \t\ttostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+          \t\tlabel,
+          \t\t"empty",
+          \t})
+          \tfor index, value in ipairs(values) do
+          \t\tfingerprint = StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, {
+          \t\t\t"list-item",
+          \t\t\ttostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),
+          \t\t\tlabel,
+          \t\t\tfingerprint,
+          \t\t\ttostring(index),
+          \t\t\tvalue,
+          \t\t})
+          \tend
+          \treturn fingerprint
+          end
+          '''
+          new = '''local function foldFingerprintList(label: string, values: { string }): string
+          \tlocal version = fingerprintUnsignedIntegerText(ObjectGenome.CONTENT_FINGERPRINT_VERSION)
+          \tlocal fingerprint = StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, {
+          \t\t"list",
+          \t\tversion,
+          \t\tlabel,
+          \t\t"empty",
+          \t})
+          \tfor index, value in ipairs(values) do
+          \t\tfingerprint = StableId.fromParts(ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE, {
+          \t\t\t"list-item",
+          \t\t\tversion,
+          \t\t\tlabel,
+          \t\t\tfingerprint,
+          \t\t\tfingerprintUnsignedIntegerText(index),
+          \t\t\tfingerprintString(label .. ".item", value),
+          \t\t})
+          \tend
+          \treturn fingerprint
+          end
+          '''
+          if source.count(old) != 1:
+              raise SystemExit("list helper marker not found exactly once")
+          source = source.replace(old, new, 1)
+
+          direct_replacements = {
+              '\t\ttostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),\n\t\tcomponent.key,\n\t\tcomponent.role,\n\t\tcomponent.materialKey,\n\t\ttostring(component.materialRecipeVersion),\n': '\t\tfingerprintUnsignedIntegerText(ObjectGenome.CONTENT_FINGERPRINT_VERSION),\n\t\tfingerprintString("component.key", component.key),\n\t\tfingerprintString("component.role", component.role),\n\t\tfingerprintString("component.materialKey", component.materialKey),\n\t\tcanonicalFingerprintNumber(component.materialRecipeVersion),\n',
+              '\ttable.insert(parts, component.externalSupport)\n': '\ttable.insert(parts, fingerprintString("component.externalSupport", component.externalSupport))\n',
+              '\t\ttostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),\n\t\tvalue.key,\n\t\tvalue.kind,\n\t\tvalue.movingComponentKey,\n': '\t\tfingerprintUnsignedIntegerText(ObjectGenome.CONTENT_FINGERPRINT_VERSION),\n\t\tfingerprintString("mechanism.key", value.key),\n\t\tfingerprintString("mechanism.kind", value.kind),\n\t\tfingerprintString("mechanism.movingComponentKey", value.movingComponentKey),\n',
+              '\t\ttable.insert(parts, value.frameComponentKey)\n': '\t\ttable.insert(parts, fingerprintString("mechanism.frameComponentKey", value.frameComponentKey))\n',
+              '\t\ttable.insert(parts, value.catchComponentKey)\n': '\t\ttable.insert(parts, fingerprintString("mechanism.catchComponentKey", value.catchComponentKey))\n',
+              '\t\ttostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),\n\t\taffordance.key,\n\t\taffordance.kind,\n\t\taffordance.componentKey,\n': '\t\tfingerprintUnsignedIntegerText(ObjectGenome.CONTENT_FINGERPRINT_VERSION),\n\t\tfingerprintString("affordance.key", affordance.key),\n\t\tfingerprintString("affordance.kind", affordance.kind),\n\t\tfingerprintString("affordance.componentKey", affordance.componentKey),\n',
+              '\t\ttostring(ObjectGenome.CONTENT_FINGERPRINT_VERSION),\n\t\ttostring(value.schemaVersion),\n\t\tvalue.familyId,\n\t\ttostring(value.familyVersion),\n\t\tvalue.variantKey,\n\t\tvalue.provenance.manufacturerFamily,\n\t\tvalue.provenance.productLine,\n\t\tvalue.provenance.apparentEra,\n': '\t\tfingerprintUnsignedIntegerText(ObjectGenome.CONTENT_FINGERPRINT_VERSION),\n\t\tcanonicalFingerprintNumber(value.schemaVersion),\n\t\tfingerprintString("genome.familyId", value.familyId),\n\t\tcanonicalFingerprintNumber(value.familyVersion),\n\t\tfingerprintString("genome.variantKey", value.variantKey),\n\t\tfingerprintString("provenance.manufacturerFamily", value.provenance.manufacturerFamily),\n\t\tfingerprintString("provenance.productLine", value.provenance.productLine),\n\t\tfingerprintString("provenance.apparentEra", value.provenance.apparentEra),\n',
+          }
+          for old_text, new_text in direct_replacements.items():
+              count = source.count(old_text)
+              if count != 1:
+                  raise SystemExit(f"replacement marker expected once, got {count}: {old_text[:80]!r}")
+              source = source.replace(old_text, new_text, 1)
+
+          path.write_text(source)
+
+          test_path = Path("tests/object_genome.luau")
+          tests = test_path.read_text()
+          marker = '''\tlocal revisedMaterial = deepCopy(Fixtures.filingCabinet)
+          '''
+          addition = '''\tlocal longStringGenome = deepCopy(Fixtures.officeChair)
+          \tlongStringGenome.provenance.productLine = string.rep("x", 1025)
+          \tlongStringGenome.components[1].role = string.rep("r", 769)
+          \texpect("long free-form ObjectGenome strings remain valid v1 data", ObjectGenome.inspect(longStringGenome).ok)
+          \tlocal longStringFingerprint = ObjectGenome.contentFingerprint(longStringGenome)
+          \texpect(
+          \t\t"long free-form ObjectGenome strings fingerprint deterministically",
+          \t\tStableId.is(longStringFingerprint, ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE)
+          \t\t\tand longStringFingerprint == ObjectGenome.contentFingerprint(longStringGenome)
+          \t)
+
+          '''
+          if tests.count(marker) != 1:
+              raise SystemExit("long-string test marker not found exactly once")
+          tests = tests.replace(marker, addition + marker, 1)
+          test_path.write_text(tests)
+
+          docs_path = Path("Docs/OBJECT_GENOME.md")
+          docs = docs_path.read_text()
+          old = '- `ObjectGenome.contentFingerprint()` is a separate versioned deterministic digest over the complete immutable recipe. It is a drift/review lock, not a replacement for the published v1 StableId inputs; changing fingerprint inputs does not silently rewrite `genomeId`.\n'
+          new = old + '- The fingerprint encoder is total over accepted v1 data: arbitrary accepted strings are byte-length/chunk folded into bounded StableId inputs, and finite numbers use a project-owned exact binary sign/significand/exponent encoding rather than host `%g` formatting.\n'
+          if docs.count(old) != 1:
+              raise SystemExit("docs fingerprint marker not found exactly once")
+          docs_path.write_text(docs.replace(old, new, 1))
+          PY
+
+          stylua src/shared/Objects/ObjectGenome.luau tests/object_genome.luau
+
+      - name: Regenerate pre-merge fixture fingerprint goldens
+        shell: bash
+        run: |
+          cat > tests/print_object_genome_fingerprint.luau <<'LUA'
+          local ProductionLoader = require("./support/ProductionLoader")
+          local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
+          local Fixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
+
+          print("FP_CHAIR=" .. ObjectGenome.contentFingerprint(Fixtures.officeChair))
+          print("FP_TABLE=" .. ObjectGenome.contentFingerprint(Fixtures.officeTable))
+          print("FP_CABINET=" .. ObjectGenome.contentFingerprint(Fixtures.filingCabinet))
+          LUA
+          OUTPUT="$(lune run tests/print_object_genome_fingerprint)"
+          printf '%s\n' "$OUTPUT"
+          CHAIR="$(printf '%s\n' "$OUTPUT" | sed -n 's/^FP_CHAIR=//p')"
+          TABLE="$(printf '%s\n' "$OUTPUT" | sed -n 's/^FP_TABLE=//p')"
+          CABINET="$(printf '%s\n' "$OUTPUT" | sed -n 's/^FP_CABINET=//p')"
+          test -n "$CHAIR" && test -n "$TABLE" && test -n "$CABINET"
+          CHAIR="$CHAIR" TABLE="$TABLE" CABINET="$CABINET" python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          path = Path("tests/object_genome.luau")
+          source = path.read_text()
+          identities = [
+              ("object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af", os.environ["CHAIR"]),
+              ("object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4", os.environ["TABLE"]),
+              ("object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969", os.environ["CABINET"]),
+          ]
+          for identity, fingerprint in identities:
+              pattern = re.compile(r'(identity = "' + re.escape(identity) + r'",\n\s*fingerprint = ")[^"]+("[,])')
+              source, count = pattern.subn(r'\g<1>' + fingerprint + r'\g<2>', source, count=1)
+              if count != 1:
+                  raise SystemExit(f"fixture fingerprint marker not found for {identity}")
+          path.write_text(source)
+          PY
+          rm tests/print_object_genome_fingerprint.luau
+          stylua tests/object_genome.luau
+
+      - name: Run full pure Luau suite
+        run: lune run tests/run
+
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/harden-122-fingerprint.yml
+
+      - name: Commit blocker repairs
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Make ObjectGenome fingerprint total and canonical"
+          git push origin HEAD:agent/objects/100-materialref-lock-sol56s8
