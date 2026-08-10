@@ -17,10 +17,10 @@ local Harness = require(PhysicsLab.PhysicsLabStudioHarness)
 local Validation = require(PhysicsLab.PhysicsLabValidation)
 
 local lab = assert(Harness.get(), "Physics Lab bootstrap handle is missing")
-print(HttpService:JSONEncode(Validation.capture(lab.model)))
+print(HttpService:JSONEncode(Validation.captureFull(lab.model)))
 ```
 
-The snapshot is source-owned evidence. It includes lab/world/region identity, the exact resolved-region fingerprint and repro key, scoped Instance/resource counts, and the full physical envelope. `Validation.compare()` rejects snapshots from different canonical resolved truth before producing a delta.
+The snapshot is source-owned evidence. It includes lab/world/region identity, the exact resolved-region fingerprint and repro key, scoped Instance/resource counts, and the full physical envelope. Before emitting evidence, the collector also rejects noncanonical direct representations: unknown or duplicate representation keys, wrong/duplicate WorldEntityIds, wrong entity recipe identity, incorrect primitive MaterialDNA references, and incorrect ObjectGenome identity/fingerprint/class metadata. `Validation.captureFull()` additionally requires every canonical F2 representation to be present; `Validation.capture()` allows the expected canonical subset during an intentional F0/F2 lifecycle transition. `Validation.compare()` rejects snapshots from different canonical resolved truth before producing a delta.
 
 ## Exact evidence identity
 
@@ -34,7 +34,7 @@ local Harness = require(PhysicsLab.PhysicsLabStudioHarness)
 local Validation = require(PhysicsLab.PhysicsLabValidation)
 
 local lab = assert(Harness.get(), "Physics Lab bootstrap handle is missing")
-local snapshot = Validation.capture(lab.model)
+local snapshot = Validation.captureFull(lab.model)
 print("PHYSICS_LAB_BASELINE=" .. HttpService:JSONEncode(snapshot))
 ```
 
@@ -83,6 +83,10 @@ local demotionResult, demoted = lab.step(entityId, noDemand, 102)
 assert(demotionResult.transitioned and demoted.fidelity == "F0", "F2->F0 did not commit")
 assert(not lab.isRepresented(entityId), "F0 entity still has a representation")
 
+-- Partial lifecycle evidence may use Validation.capture(lab.model) here. It
+-- still rejects any present noncanonical representation but intentionally
+-- permits the demoted F0 entity to be absent from the Instance tree.
+
 -- Respect transition cooldown, establish the pending promotion, then exceed the
 -- production promotion hold.
 lab.step(entityId, f2Demand, 102.3)
@@ -98,7 +102,7 @@ The printed line is only a candidate observation. Record the before/after author
 
 ## Whole-lab teardown/rebuild envelope
 
-This procedure uses the harness rather than deleting Workspace Instances. It proves deterministic rebuild identity/count/envelope behavior at checkpoints 1, 5, 10 and 20.
+This procedure uses the harness rather than deleting Workspace Instances. It proves deterministic rebuild identity/count/envelope behavior at checkpoints 1, 5, 10 and 20. Full checkpoints use `captureFull()` so a stable-but-wrong shell cannot pass merely by reproducing the same counts and outer bounds.
 
 ```luau
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -108,12 +112,12 @@ local Harness = require(PhysicsLab.PhysicsLabStudioHarness)
 local Validation = require(PhysicsLab.PhysicsLabValidation)
 
 local lab = assert(Harness.get(), "Physics Lab bootstrap handle is missing")
-local baseline = Validation.capture(lab.model)
+local baseline = Validation.captureFull(lab.model)
 local checkpoints = { [1] = true, [5] = true, [10] = true, [20] = true }
 
 for cycle = 1, 20 do
     lab = Harness.restart(workspace)
-    local snapshot = Validation.capture(lab.model)
+    local snapshot = Validation.captureFull(lab.model)
     local comparison = Validation.compare(baseline, snapshot)
 
     assert(comparison.delta.instances == 0, "Instance count drifted")
