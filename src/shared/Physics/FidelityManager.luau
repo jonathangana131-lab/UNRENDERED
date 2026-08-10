@@ -36,9 +36,8 @@ export type Config = {
 export type PersistentState = { [string]: unknown }
 
 export type Adapter = {
-	getFidelity: (entityId: string) -> string,
 	captureState: (entityId: string, from: Fidelity, to: Fidelity, reason: string) -> PersistentState,
-	transition: (entityId: string, target: Fidelity, capturedState: PersistentState?, reason: string) -> (),
+	transition: (entityId: string, from: Fidelity, target: Fidelity, capturedState: PersistentState?, reason: string) -> (),
 }
 
 export type FidelityCounts = {
@@ -153,24 +152,6 @@ local DEFAULT_CONFIG: Config = table.freeze({
 
 local function isFiniteNumber(value: number): boolean
 	return value == value and value > -math.huge and value < math.huge
-end
-
-local function normalizeFidelity(value: string): Fidelity
-	local fidelity: Fidelity
-	if value == "F0" then
-		fidelity = "F0"
-	elseif value == "F1" then
-		fidelity = "F1"
-	elseif value == "F2" then
-		fidelity = "F2"
-	elseif value == "F3" then
-		fidelity = "F3"
-	elseif value == "F4" then
-		fidelity = "F4"
-	else
-		error(`invalid fidelity {value}`)
-	end
-	return fidelity
 end
 
 local function rank(fidelity: Fidelity): number
@@ -337,42 +318,10 @@ local function isCooldownActive(lastTransitionAt: number?, nowSeconds: number, d
 	return lastTransitionAt ~= nil and nowSeconds - lastTransitionAt < duration
 end
 
-local function syncEntry(manager: Manager, entityId: string, entry: Entry): Fidelity
-	local authoritative = normalizeFidelity(manager.adapter.getFidelity(entityId))
-	if authoritative ~= entry.currentFidelity then
-		adjustFidelityCount(manager.metrics.fidelityCounts, entry.currentFidelity, -1)
-		adjustFidelityCount(manager.metrics.fidelityCounts, authoritative, 1)
-		entry.currentFidelity = authoritative
-		clearPendingDemotion(entry)
-		manager.metrics.externalResyncs += 1
-	end
-	return authoritative
-end
-
-local function trackEntry(manager: Manager, entityId: string)
-	assert(entityId ~= "", "entityId required")
-	assert(manager.entries[entityId] == nil, `entity already tracked: {entityId}`)
-	local current = normalizeFidelity(manager.adapter.getFidelity(entityId))
-	manager.entries[entityId] = {
-		currentFidelity = current,
-		lastTransitionAt = nil,
-		lastEvaluationAt = nil,
-		pendingDemotionTarget = nil,
-		pendingDemotionSince = nil,
-	}
-	manager.metrics.trackedEntities += 1
-	adjustFidelityCount(manager.metrics.fidelityCounts, current, 1)
-end
-
-local function getOrTrack(manager: Manager, entityId: string): Entry
+local function getTrackedEntry(manager: Manager, entityId: string): Entry
 	local entry = manager.entries[entityId]
-	if entry ~= nil then
-		return entry
-	end
-	trackEntry(manager, entityId)
-	local tracked = manager.entries[entityId]
-	assert(tracked ~= nil, `failed to track {entityId}`)
-	return tracked
+	assert(entry ~= nil, `entity is not tracked: {entityId}`)
+	return entry
 end
 
 local function performTransition(
@@ -385,16 +334,11 @@ local function performTransition(
 	nowSeconds: number,
 	capturedState: PersistentState?
 ): TransitionResult
-	manager.adapter.transition(entityId, target, capturedState, reason)
-	local authoritative = normalizeFidelity(manager.adapter.getFidelity(entityId))
-	assert(
-		authoritative == target,
-		`adapter transition for {entityId} ended at {authoritative}, expected {target}`
-	)
+	manager.adapter.transition(entityId, from, target, capturedState, reason)
 
-	adjustFidelityCount(manager.metrics.fidelityCounts, entry.currentFidelity, -1)
-	adjustFidelityCount(manager.metrics.fidelityCounts, authoritative, 1)
-	entry.currentFidelity = authoritative
+	adjustFidelityCount(manager.metrics.fidelityCounts, from, -1)
+	adjustFidelityCount(manager.metrics.fidelityCounts, target, 1)
+	entry.currentFidelity = target
 	entry.lastTransitionAt = nowSeconds
 	clearPendingDemotion(entry)
 
@@ -480,7 +424,6 @@ function FidelityManager.evaluatePolicy(inputs: PolicyInputs, configOverride: Co
 end
 
 function FidelityManager.new(adapter: Adapter, configOverride: Config?): Manager
-	assert(type(adapter.getFidelity) == "function", "adapter.getFidelity required")
 	assert(type(adapter.captureState) == "function", "adapter.captureState required")
 	assert(type(adapter.transition) == "function", "adapter.transition required")
 
@@ -505,8 +448,45 @@ function FidelityManager.new(adapter: Adapter, configOverride: Config?): Manager
 	}
 end
 
-function FidelityManager.track(manager: Manager, entityId: string)
-	trackEntry(manager, entityId)
+function FidelityManager.track(manager: Manager, entityId: string, initialFidelity: Fidelity)
+	assert(entityId ~= "", "entityId required")
+	assert(manager.entries[entityId] == nil, `entity already tracked: {entityId}`)
+	rank(initialFidelity)
+	manager.entries[entityId] = {
+		currentFidelity = initialFidelity,
+		lastTransitionAt = nil,
+		lastEvaluationAt = nil,
+		pendingDemotionTarget = nil,
+		pendingDemotionSince = nil,
+	}
+	manager.metrics.trackedEntities += 1
+	adjustFidelityCount(manager.metrics.fidelityCounts, initialFidelity, 1)
+end
+
+function FidelityManager.resync(
+	manager: Manager,
+	entityId: string,
+	authoritativeFidelity: Fidelity,
+	nowSeconds: number
+): boolean
+	rank(authoritativeFidelity)
+	assert(isFiniteNumber(nowSeconds) and nowSeconds >= 0, "nowSeconds must be a finite non-negative number")
+	local entry = getTrackedEntry(manager, entityId)
+	if entry.lastEvaluationAt ~= nil then
+		assert(nowSeconds >= entry.lastEvaluationAt, `time moved backwards for {entityId}`)
+	end
+	entry.lastEvaluationAt = nowSeconds
+	if authoritativeFidelity == entry.currentFidelity then
+		return false
+	end
+
+	adjustFidelityCount(manager.metrics.fidelityCounts, entry.currentFidelity, -1)
+	adjustFidelityCount(manager.metrics.fidelityCounts, authoritativeFidelity, 1)
+	entry.currentFidelity = authoritativeFidelity
+	entry.lastTransitionAt = nowSeconds
+	clearPendingDemotion(entry)
+	manager.metrics.externalResyncs += 1
+	return true
 end
 
 function FidelityManager.untrack(manager: Manager, entityId: string): boolean
@@ -527,13 +507,12 @@ function FidelityManager.request(
 	reason: string,
 	nowSeconds: number
 ): TransitionResult
-	assert(entityId ~= "", "entityId required")
-	normalizeFidelity(target)
+	rank(target)
 	assert(reason ~= "", "transition reason required")
 	assert(isFiniteNumber(nowSeconds) and nowSeconds >= 0, "nowSeconds must be a finite non-negative number")
 
-	local entry = getOrTrack(manager, entityId)
-	local current = syncEntry(manager, entityId, entry)
+	local entry = getTrackedEntry(manager, entityId)
+	local current = entry.currentFidelity
 	if entry.lastEvaluationAt ~= nil then
 		assert(nowSeconds >= entry.lastEvaluationAt, `time moved backwards for {entityId}`)
 	end
@@ -583,12 +562,6 @@ function FidelityManager.update(
 ): TransitionResult
 	local target, reason = FidelityManager.evaluatePolicy(inputs, manager.config)
 	return FidelityManager.request(manager, entityId, target, reason, nowSeconds)
-end
-
-function FidelityManager.refresh(manager: Manager)
-	for entityId, entry in pairs(manager.entries) do
-		syncEntry(manager, entityId, entry)
-	end
 end
 
 function FidelityManager.getMetrics(manager: Manager): Metrics
