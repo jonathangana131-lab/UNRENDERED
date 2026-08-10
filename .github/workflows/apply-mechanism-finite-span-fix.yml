@@ -18,6 +18,20 @@ jobs:
           ref: agent/objects/101-finite-span-sol56j9
           fetch-depth: 0
 
+      - name: Repair StyLua-wrapped test marker
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('.github/scripts/apply_mechanism_finite_span_fix.py')
+          text = path.read_text()
+          old = '\\t\\tpositiveSlideMechanism ~= nil and hasCode(ObjectGenome.inspect(positiveOnlySlide), "mechanism.reference_pose")'
+          new = '\\t\\tpositiveSlideMechanism ~= nil\\n\\t\\t\\tand hasCode(ObjectGenome.inspect(positiveOnlySlide), "mechanism.reference_pose")'
+          if text.count(old) != 1:
+              raise SystemExit(f'marker patch count was {text.count(old)}')
+          path.write_text(text.replace(old, new, 1))
+          PY
+
       - name: Apply finite-span repair
         run: python3 .github/scripts/apply_mechanism_finite_span_fix.py
 
