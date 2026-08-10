@@ -64,3 +64,5 @@ These are contract fixtures, not final art or Hero Feature implementations. Thei
 ## Evolution
 
 Changing field meaning or deterministic identity inputs requires an object schema/version decision. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.
+
+<!-- TEMP: trigger pinned formatter repair run; remove before review. -->
