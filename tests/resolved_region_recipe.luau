@@ -12,13 +12,14 @@ local LEGACY_V1_REGION_ID = "region:v1:7cd90883b952e7534e6f3ffdd71d66a7"
 local LEGACY_V1_FINGERPRINT = "resolved-region:v1:6448a82dcdebe20b03d9a6a98847bdd7"
 
 local function makeVersions()
-	local current = RealityVersions.current()
+	-- Historical schema-v2 compatibility vector. Keep literal generator
+	-- versions here so a future project-version bump cannot move the goldens.
 	return {
-		reality = current.reality,
-		topology = current.topology,
-		material = current.material,
-		object = current.object,
-		entity = current.entity,
+		reality = 1,
+		topology = 1,
+		material = 1,
+		object = 1,
+		entity = 1,
 	}
 end
 
@@ -59,7 +60,17 @@ local function run(): number
 
 	local candidate = makeCandidate()
 	local locked = ResolvedRegionRecipe.resolveOnObservation(nil, candidate)
+	local currentVersions = ResolvedRegionRecipe.currentGeneratorVersions()
+	local projectVersions = RealityVersions.current()
 
+	expect(
+		"current generator-version API tracks RealityVersions independently of v2 goldens",
+		currentVersions.reality == projectVersions.reality
+			and currentVersions.topology == projectVersions.topology
+			and currentVersions.material == projectVersions.material
+			and currentVersions.object == projectVersions.object
+			and currentVersions.entity == projectVersions.entity
+	)
 	expect("first observation creates schema-v2 locked recipe", locked.schemaVersion == 2)
 	expect("world identity stays independently locked", locked.worldId == GOLDEN_WORLD_ID)
 	expect("v2 region identity stays golden-locked", locked.regionId == GOLDEN_REGION_ID)
