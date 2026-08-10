@@ -68,6 +68,24 @@ local FIDELITY_RANK: { [string]: number } = table.freeze({
 	F4 = 4,
 })
 
+local RECORD_FIELDS: { [string]: boolean } = table.freeze({
+	id = true,
+	kind = true,
+	origin = true,
+	fidelity = true,
+	persistentState = true,
+	stateRevision = true,
+	representationRevision = true,
+})
+
+local ORIGIN_FIELDS: { [string]: boolean } = table.freeze({
+	worldId = true,
+	regionId = true,
+	generator = true,
+	generatorVersion = true,
+	recipeKey = true,
+})
+
 local function assertNonEmpty(name: string, value: string): ()
 	assert(value ~= "", `{name} must not be empty`)
 	assert(string.find(value, "%c") == nil, `{name} must not contain control characters`)
@@ -86,6 +104,19 @@ local function assertNonNegativeInteger(path: string, value: unknown): number
 		`{path} must be a non-negative integer`
 	)
 	return numericValue
+end
+
+local function assertExactFields(path: string, value: unknown, allowed: { [string]: boolean }): any
+	assert(type(value) == "table", `{path} must be a table`)
+	local source = value :: any
+	assert(getmetatable(source) == nil, `{path} must not contain a metatable`)
+	for key in pairs(source) do
+		assert(
+			type(key) == "string" and allowed[key] == true,
+			`{path} contains unknown field {tostring(key)}`
+		)
+	end
+	return source
 end
 
 local function clonePlainValue(value: unknown, path: string, seen: { [any]: boolean }): unknown
@@ -206,15 +237,14 @@ function WorldEntity.fidelityRank(fidelity: Fidelity): number
 end
 
 local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
-	local source = record :: any
-	assert(type(source) == "table", "WorldEntityRecord must be a table")
+	local source = assertExactFields("WorldEntityRecord", record, RECORD_FIELDS)
 	assert(
 		WorldEntity.isId(source.id),
 		"WorldEntityRecord.id must be a non-empty stable identifier without control characters"
 	)
 	assert(type(source.kind) == "string", "WorldEntityRecord.kind must be a string")
 	assertNonEmpty("WorldEntityRecord.kind", source.kind)
-	assert(type(source.origin) == "table", "WorldEntityRecord.origin must be a table")
+	local origin = assertExactFields("WorldEntityRecord.origin", source.origin, ORIGIN_FIELDS)
 	assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {tostring(source.fidelity)}`)
 	assert(type(source.persistentState) == "table", "WorldEntityRecord.persistentState must be a table")
 
@@ -225,7 +255,7 @@ local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
 	return table.freeze({
 		id = source.id,
 		kind = source.kind,
-		origin = cloneOrigin(source.origin :: GenerationOrigin),
+		origin = cloneOrigin(origin :: GenerationOrigin),
 		fidelity = source.fidelity :: Fidelity,
 		persistentState = cloneState(source.persistentState :: PlainData),
 		stateRevision = stateRevision,
