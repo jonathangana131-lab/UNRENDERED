@@ -138,9 +138,13 @@ local ObjectGenome = {}
 ObjectGenome.SCHEMA_VERSION = 1
 ObjectGenome.STATE_SCHEMA_VERSION = 1
 ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
+ObjectGenome.LOCAL_ROTATION_CONVENTION = "v1-right-handed-fixed-xyz-degrees"
+ObjectGenome.MECHANISM_AXIS_CONVENTION = "v1-object-local-unit-vector"
 
 local MASS_TOLERANCE_FRACTION = 0.05
 local BOUNDS_TOLERANCE_M = 0.005
+local AXIS_UNIT_TOLERANCE = 0.0001
+local DEGREES_TO_RADIANS = math.pi / 180
 
 local AFFORDANCE_KINDS = {
 	grip = true,
@@ -245,8 +249,9 @@ local function validateAxis(issues: { ValidationIssue }, path: string, value: an
 		addIssue(issues, "mechanism.axis", path, "axis must be a finite plain-data Vec3")
 		return
 	end
-	if vectorMagnitude(value) <= 0.000001 then
-		addIssue(issues, "mechanism.axis", path, "axis must be non-zero")
+	local magnitude = vectorMagnitude(value)
+	if math.abs(magnitude - 1) > AXIS_UNIT_TOLERANCE then
+		addIssue(issues, "mechanism.axis", path, "axis must be a unit object-local direction vector")
 	end
 end
 
@@ -283,9 +288,40 @@ local function validateDimensionLimits(issues: { ValidationIssue }, value: any):
 	end
 end
 
+-- ObjectGenome v1 uses a right-handed object-local frame with +X right, +Y up,
+-- and -Z forward. localRotationDeg applies positive right-hand rotations about
+-- fixed parent-frame +X, then +Y, then +Z axes; for column vectors R = Rz * Ry * Rx.
+local function rotatedHalfExtents(dimensions: any, rotationDeg: any): (number, number, number)
+	local rx = rotationDeg.x * DEGREES_TO_RADIANS
+	local ry = rotationDeg.y * DEGREES_TO_RADIANS
+	local rz = rotationDeg.z * DEGREES_TO_RADIANS
+	local cx, sx = math.cos(rx), math.sin(rx)
+	local cy, sy = math.cos(ry), math.sin(ry)
+	local cz, sz = math.cos(rz), math.sin(rz)
+
+	local r00 = cz * cy
+	local r01 = cz * sy * sx - sz * cx
+	local r02 = cz * sy * cx + sz * sx
+	local r10 = sz * cy
+	local r11 = sz * sy * sx + cz * cx
+	local r12 = sz * sy * cx - cz * sx
+	local r20 = -sy
+	local r21 = cy * sx
+	local r22 = cy * cx
+
+	local halfX = dimensions.x * 0.5
+	local halfY = dimensions.y * 0.5
+	local halfZ = dimensions.z * 0.5
+
+	return math.abs(r00) * halfX + math.abs(r01) * halfY + math.abs(r02) * halfZ,
+		math.abs(r10) * halfX + math.abs(r11) * halfY + math.abs(r12) * halfZ,
+		math.abs(r20) * halfX + math.abs(r21) * halfY + math.abs(r22) * halfZ
+end
+
 local function componentFitsEnvelope(component: any, envelope: any): boolean
 	if
 		not isVec3(component.localPositionM)
+		or not isVec3(component.localRotationDeg)
 		or not isPositiveVec3(component.dimensionsM)
 		or not isPositiveVec3(envelope)
 	then
@@ -295,10 +331,14 @@ local function componentFitsEnvelope(component: any, envelope: any): boolean
 	local halfEnvelopeX = envelope.x * 0.5 + BOUNDS_TOLERANCE_M
 	local halfEnvelopeY = envelope.y * 0.5 + BOUNDS_TOLERANCE_M
 	local halfEnvelopeZ = envelope.z * 0.5 + BOUNDS_TOLERANCE_M
+	local rotatedHalfX, rotatedHalfY, rotatedHalfZ = rotatedHalfExtents(
+		component.dimensionsM,
+		component.localRotationDeg
+	)
 
-	return math.abs(component.localPositionM.x) + component.dimensionsM.x * 0.5 <= halfEnvelopeX
-		and math.abs(component.localPositionM.y) + component.dimensionsM.y * 0.5 <= halfEnvelopeY
-		and math.abs(component.localPositionM.z) + component.dimensionsM.z * 0.5 <= halfEnvelopeZ
+	return math.abs(component.localPositionM.x) + rotatedHalfX <= halfEnvelopeX
+		and math.abs(component.localPositionM.y) + rotatedHalfY <= halfEnvelopeY
+		and math.abs(component.localPositionM.z) + rotatedHalfZ <= halfEnvelopeZ
 end
 
 local function reportResult(issues: { ValidationIssue }): ValidationResult
@@ -527,7 +567,7 @@ function ObjectGenome.inspect(value: any): ValidationResult
 				"component dimensions must be positive meters"
 			)
 		elseif not componentFitsEnvelope(component, value.dimensionsM) then
-			addIssue(issues, "component.outside_bounds", path, "component bounds exceed the object envelope")
+			addIssue(issues, "component.outside_bounds", path, "rotated component bounds exceed the object envelope")
 		end
 
 		local supportKeysDense = validateDenseArray(issues, path .. ".supportKeys", component.supportKeys)
