@@ -25,7 +25,8 @@ PhysicsLabRecipe.RecipeId = StableId.fromParts("physics-lab", {
 
 type WorldEntityRecord = WorldEntity.WorldEntityRecord
 type FidelityLevel = FidelityManager.FidelityLevel
-type Genome = ObjectGenome.ObjectGenome
+export type Genome = ObjectGenome.ObjectGenome
+export type MechanismSpec = ObjectGenome.MechanismSpec
 
 export type Vec3 = {
 	x: number,
@@ -57,6 +58,7 @@ export type LabElement = {
 	material: MaterialReference,
 	representationKind: RepresentationKind,
 	objectGenomeId: string?,
+	mechanismKey: string?,
 }
 
 export type Recipe = {
@@ -102,6 +104,12 @@ local WALL_MATERIAL = materialReference(MaterialFixtures.CommercialWallpaperDryw
 local FLOOR_MATERIAL = materialReference(MaterialFixtures.LowPileCarpet)
 local METAL_MATERIAL = materialReference(MaterialFixtures.PaintedMetal)
 
+local GENOMES_BY_ID: { [string]: Genome } = table.freeze({
+	[ObjectGenome.identityKey(ObjectGenomeFixtures.officeChair)] = ObjectGenomeFixtures.officeChair,
+	[ObjectGenome.identityKey(ObjectGenomeFixtures.officeTable)] = ObjectGenomeFixtures.officeTable,
+	[ObjectGenome.identityKey(ObjectGenomeFixtures.filingCabinet)] = ObjectGenomeFixtures.filingCabinet,
+})
+
 local function worldEntityId(key: string): string
 	return StableId.fromParts("world-entity", {
 		PhysicsLabRecipe.WorldId,
@@ -144,6 +152,7 @@ local function frozenElement(spec: LabElement): LabElement
 		material = spec.material,
 		representationKind = spec.representationKind,
 		objectGenomeId = spec.objectGenomeId,
+		mechanismKey = spec.mechanismKey,
 	})
 end
 
@@ -157,7 +166,8 @@ local function objectElement(
 	role: string,
 	position: Vec3,
 	genome: Genome,
-	representationKind: RepresentationKind
+	representationKind: RepresentationKind,
+	mechanismKey: string?
 ): LabElement
 	local size = genomeSizeStuds(genome)
 	return frozenElement({
@@ -170,6 +180,7 @@ local function objectElement(
 		material = METAL_MATERIAL,
 		representationKind = representationKind,
 		objectGenomeId = ObjectGenome.identityKey(genome),
+		mechanismKey = mechanismKey,
 	})
 end
 
@@ -197,12 +208,34 @@ local function add(
 			material = material,
 			representationKind = representationKind,
 			objectGenomeId = nil,
+			mechanismKey = nil,
 		})
 	)
 end
 
 local function assertFinite(path: string, value: number): ()
 	assert(value == value and value > -math.huge and value < math.huge, `{path} must be finite`)
+end
+
+function PhysicsLabRecipe.objectGenomeFor(element: LabElement): Genome?
+	if element.objectGenomeId == nil then
+		return nil
+	end
+	return GENOMES_BY_ID[element.objectGenomeId]
+end
+
+function PhysicsLabRecipe.mechanismFor(element: LabElement): MechanismSpec?
+	if element.mechanismKey == nil then
+		return nil
+	end
+	local genome = PhysicsLabRecipe.objectGenomeFor(element)
+	assert(genome ~= nil, `{element.key} mechanism binding requires a known ObjectGenome`)
+	for _, mechanism in ipairs(genome.mechanisms) do
+		if mechanism.key == element.mechanismKey then
+			return mechanism
+		end
+	end
+	error(`{element.key} references unknown ObjectGenome mechanism {element.mechanismKey}`)
 end
 
 function PhysicsLabRecipe.validate(recipe: Recipe): ()
@@ -268,11 +301,29 @@ function PhysicsLabRecipe.validate(recipe: Recipe): ()
 				StableId.is(element.objectGenomeId, ObjectGenome.STABLE_ID_NAMESPACE),
 				`{element.key} objectGenomeId must satisfy ObjectGenome identity contract`
 			)
+			local genome = PhysicsLabRecipe.objectGenomeFor(element)
+			assert(genome ~= nil, `{element.key} objectGenomeId must resolve through the production lab catalog`)
 			assert(element.entity.kind == "object", `{element.key} fixture-backed entity kind must be object`)
 			local objectState = element.entity.persistentState :: any
 			assert(
 				objectState.genomeId == element.objectGenomeId,
 				`{element.key} persistent ObjectState must match objectGenomeId`
+			)
+			assert(
+				ObjectGenome.inspectState(genome, element.entity.persistentState).ok,
+				`{element.key} persistent ObjectState must validate against ObjectGenome`
+			)
+		elseif element.mechanismKey ~= nil then
+			error(`{element.key} cannot bind a mechanism without an ObjectGenome`)
+		end
+
+		if element.mechanismKey ~= nil then
+			local mechanism = PhysicsLabRecipe.mechanismFor(element)
+			assert(mechanism ~= nil, `{element.key} mechanism binding failed`)
+			local objectState = element.entity.persistentState :: any
+			assert(
+				objectState.mechanismPosition[element.mechanismKey] ~= nil,
+				`{element.key} ObjectState must contain bound mechanism state`
 			)
 		end
 	end
@@ -286,198 +337,32 @@ end
 function PhysicsLabRecipe.build(): Recipe
 	local elements: { LabElement } = {}
 
-	-- Structural shell: the south wall is split around a physical door opening.
-	add(
-		elements,
-		"floor",
-		"floor",
-		"physics-lab.structure",
-		vec3(0, -0.5, 0),
-		vec3(48, 1, 36),
-		0,
-		FLOOR_MATERIAL,
-		"static-box",
-		"F2"
-	)
-	add(
-		elements,
-		"ceiling",
-		"ceiling",
-		"physics-lab.structure",
-		vec3(0, 12.5, 0),
-		vec3(48, 1, 36),
-		0,
-		WALL_MATERIAL,
-		"static-box",
-		"F2"
-	)
-	add(
-		elements,
-		"wall-north",
-		"wall",
-		"physics-lab.structure",
-		vec3(0, 6, 18.5),
-		vec3(48, 13, 1),
-		0,
-		WALL_MATERIAL,
-		"static-box",
-		"F2"
-	)
-	add(
-		elements,
-		"wall-west",
-		"wall",
-		"physics-lab.structure",
-		vec3(-24.5, 6, 0),
-		vec3(1, 13, 36),
-		0,
-		WALL_MATERIAL,
-		"static-box",
-		"F2"
-	)
-	add(
-		elements,
-		"wall-east",
-		"wall",
-		"physics-lab.structure",
-		vec3(24.5, 6, 0),
-		vec3(1, 13, 36),
-		0,
-		WALL_MATERIAL,
-		"static-box",
-		"F2"
-	)
-	add(
-		elements,
-		"wall-south-left",
-		"wall",
-		"physics-lab.structure",
-		vec3(-17, 6, -18.5),
-		vec3(14, 13, 1),
-		0,
-		WALL_MATERIAL,
-		"static-box",
-		"F2"
-	)
-	add(
-		elements,
-		"wall-south-right",
-		"wall",
-		"physics-lab.structure",
-		vec3(9, 6, -18.5),
-		vec3(30, 13, 1),
-		0,
-		WALL_MATERIAL,
-		"static-box",
-		"F2"
-	)
-	add(
-		elements,
-		"wall-south-lintel",
-		"wall",
-		"physics-lab.structure",
-		vec3(-8, 10.5, -18.5),
-		vec3(4, 4, 1),
-		0,
-		WALL_MATERIAL,
-		"static-box",
-		"F2"
-	)
+	add(elements, "floor", "floor", "physics-lab.structure", vec3(0, -0.5, 0), vec3(48, 1, 36), 0, FLOOR_MATERIAL, "static-box", "F2")
+	add(elements, "ceiling", "ceiling", "physics-lab.structure", vec3(0, 12.5, 0), vec3(48, 1, 36), 0, WALL_MATERIAL, "static-box", "F2")
+	add(elements, "wall-north", "wall", "physics-lab.structure", vec3(0, 6, 18.5), vec3(48, 13, 1), 0, WALL_MATERIAL, "static-box", "F2")
+	add(elements, "wall-west", "wall", "physics-lab.structure", vec3(-24.5, 6, 0), vec3(1, 13, 36), 0, WALL_MATERIAL, "static-box", "F2")
+	add(elements, "wall-east", "wall", "physics-lab.structure", vec3(24.5, 6, 0), vec3(1, 13, 36), 0, WALL_MATERIAL, "static-box", "F2")
+	add(elements, "wall-south-left", "wall", "physics-lab.structure", vec3(-17, 6, -18.5), vec3(14, 13, 1), 0, WALL_MATERIAL, "static-box", "F2")
+	add(elements, "wall-south-right", "wall", "physics-lab.structure", vec3(9, 6, -18.5), vec3(30, 13, 1), 0, WALL_MATERIAL, "static-box", "F2")
+	add(elements, "wall-south-lintel", "wall", "physics-lab.structure", vec3(-8, 10.5, -18.5), vec3(4, 4, 1), 0, WALL_MATERIAL, "static-box", "F2")
 
-	add(
-		elements,
-		"door",
-		"door",
-		"physics-lab.door-proxy",
-		vec3(-8, 4, -18),
-		vec3(4, 8, 0.45),
-		0,
-		METAL_MATERIAL,
-		"hinged-panel",
-		"F3"
-	)
-	table.insert(
-		elements,
-		objectElement("chair", "chair", vec3(-5, 0, -2), ObjectGenomeFixtures.officeChair, "dynamic-box")
-	)
-	table.insert(
-		elements,
-		objectElement("table", "table", vec3(2, 0, -3), ObjectGenomeFixtures.officeTable, "dynamic-box")
-	)
-	table.insert(
-		elements,
-		objectElement(
-			"cabinet",
-			"cabinet",
-			vec3(19, 0, -12),
-			ObjectGenomeFixtures.filingCabinet,
-			"sliding-drawer-proxy"
-		)
-	)
-	add(
-		elements,
-		"cart",
-		"cart",
-		"physics-lab.cart-proxy",
-		vec3(11, 1.6, -6),
-		vec3(3.5, 3.2, 2.5),
-		0,
-		METAL_MATERIAL,
-		"rolling-cart-proxy",
-		"F3"
-	)
+	-- The 4-stud structural opening retains explicit jamb/floor clearance so the
+	-- hinged proxy begins without penetrating the wall or scraping the floor.
+	add(elements, "door", "door", "physics-lab.door-proxy", vec3(-8, 4, -18), vec3(3.8, 7.8, 0.35), 0, METAL_MATERIAL, "hinged-panel", "F3")
+
+	table.insert(elements, objectElement("chair", "chair", vec3(-5, 0, -2), ObjectGenomeFixtures.officeChair, "dynamic-box", nil))
+	table.insert(elements, objectElement("table", "table", vec3(2, 0, -3), ObjectGenomeFixtures.officeTable, "dynamic-box", nil))
+	table.insert(elements, objectElement("cabinet", "cabinet", vec3(19, 0, -12), ObjectGenomeFixtures.filingCabinet, "sliding-drawer-proxy", "slide-top"))
+
+	add(elements, "cart", "cart", "physics-lab.cart-proxy", vec3(11, 1.6, -6), vec3(3.5, 3.2, 2.5), 0, METAL_MATERIAL, "rolling-cart-proxy", "F3")
 
 	for stepIndex = 1, 4 do
 		local height = stepIndex * 0.75
-		add(
-			elements,
-			`stair-{stepIndex}`,
-			"stairs",
-			"physics-lab.structure",
-			vec3(-16 + (stepIndex - 1) * 2, height / 2, 9),
-			vec3(2, height, 6),
-			0,
-			METAL_MATERIAL,
-			"static-box",
-			"F2"
-		)
+		add(elements, `stair-{stepIndex}`, "stairs", "physics-lab.structure", vec3(-16 + (stepIndex - 1) * 2, height / 2, 9), vec3(2, height, 6), 0, METAL_MATERIAL, "static-box", "F2")
 	end
-	add(
-		elements,
-		"ramp",
-		"ramp",
-		"physics-lab.structure",
-		vec3(10, 1.5, 9),
-		vec3(8, 3, 6),
-		0,
-		METAL_MATERIAL,
-		"static-wedge",
-		"F2"
-	)
-	add(
-		elements,
-		"ledge",
-		"ledge",
-		"physics-lab.structure",
-		vec3(19, 3.25, 8),
-		vec3(4, 0.5, 8),
-		0,
-		METAL_MATERIAL,
-		"static-box",
-		"F2"
-	)
-	add(
-		elements,
-		"character-spawn",
-		"spawn-anchor",
-		"physics-lab.spawn-anchor",
-		vec3(0, 0.05, 12),
-		vec3(2, 0.1, 2),
-		0,
-		FLOOR_MATERIAL,
-		"spawn-anchor",
-		"F1"
-	)
+	add(elements, "ramp", "ramp", "physics-lab.structure", vec3(10, 1.5, 9), vec3(8, 3, 6), 0, METAL_MATERIAL, "static-wedge", "F2")
+	add(elements, "ledge", "ledge", "physics-lab.structure", vec3(19, 3.25, 8), vec3(4, 0.5, 8), 0, METAL_MATERIAL, "static-box", "F2")
+	add(elements, "character-spawn", "spawn-anchor", "physics-lab.spawn-anchor", vec3(0, 0.05, 12), vec3(2, 0.1, 2), 0, FLOOR_MATERIAL, "spawn-anchor", "F1")
 
 	local recipe: Recipe = table.freeze({
 		schemaVersion = PhysicsLabRecipe.SchemaVersion,
