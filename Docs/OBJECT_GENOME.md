@@ -13,6 +13,12 @@
 - Mutable wear, damage, mechanism position, and detach state live in `ObjectState`, never in the immutable genome.
 - Mutable state is a complete snapshot for the referenced genome: every component/mechanism key must be present and unknown keys are rejected.
 
+## Immutable ownership
+
+Validation alone does not mutate or freeze caller-owned input. Production code that retains a genome uses `ObjectGenomeOwnership.own(genome)`. The ownership boundary accepts only the explicit v1 schema: records may not have metatables or unknown fields, canonical arrays must stay dense, non-plain/runtime values cannot enter declared scalar fields, and finite-number checks are enforced before retention.
+
+Ownership then constructs a defensive schema-exact copy, validates that owned copy with `ObjectGenome.validate`, and recursively freezes the complete recipe tree. Later mutation of caller input therefore cannot rewrite resolved truth, and unversioned extra data cannot hide outside deterministic identity/schema rules. `ObjectGenomeFixtures` exports all three examples through this boundary. `ObjectGenome.defaultState()` intentionally returns a separate mutable `ObjectState`.
+
 ## Construction graph
 
 Each component records:
@@ -48,6 +54,7 @@ Affordances describe stable interaction/grip regions (`grip`, `push`, `pull`, `s
 
 - `ObjectGenome.inspect(genome)` returns a structured deterministic report with stable issue codes.
 - `ObjectGenome.validate(genome)` asserts when the report is invalid.
+- `ObjectGenomeOwnership.own(genome)` creates the schema-exact immutable production-owned recipe.
 - `ObjectGenome.defaultState(genome)` creates separate zeroed mutable state.
 - `ObjectGenome.inspectState(genome, state)` validates mutable state keys/ranges against the immutable recipe.
 - `ObjectGenome.validateState(genome, state)` is the asserting state validator.
@@ -56,7 +63,7 @@ Stable issue codes are suitable for test diagnostics and future procedural rejec
 
 ## Fixtures
 
-`ObjectGenomeFixtures.luau` contains three production-contract examples:
+`ObjectGenomeFixtures.luau` contains three immutable production-contract examples:
 
 1. a task office chair with a load path, five casters, seat tilt, provenance, material assignments and interaction regions;
 2. a rectangular utility office table with four ground-supported legs and anti-racking structure;
