@@ -36,7 +36,7 @@ export type Config = {
 export type PersistentState = { [string]: unknown }
 
 export type Adapter = {
-	getFidelity: (entityId: string) -> Fidelity,
+	getFidelity: (entityId: string) -> string,
 	captureState: (entityId: string, from: Fidelity, to: Fidelity, reason: string) -> PersistentState,
 	transition: (entityId: string, target: Fidelity, capturedState: PersistentState?, reason: string) -> (),
 }
@@ -155,14 +155,25 @@ local function isFiniteNumber(value: number): boolean
 	return value == value and value > -math.huge and value < math.huge
 end
 
+local function normalizeFidelity(value: string): Fidelity
+	if value == "F0" then
+		return "F0"
+	elseif value == "F1" then
+		return "F1"
+	elseif value == "F2" then
+		return "F2"
+	elseif value == "F3" then
+		return "F3"
+	elseif value == "F4" then
+		return "F4"
+	end
+	error(`invalid fidelity {value}`)
+end
+
 local function rank(fidelity: Fidelity): number
 	local value = FIDELITY_RANK[fidelity]
 	assert(value ~= nil, `invalid fidelity {fidelity}`)
 	return value
-end
-
-local function assertFidelity(value: Fidelity)
-	assert(FIDELITY_RANK[value] ~= nil, `invalid fidelity {value}`)
 end
 
 local function assertUnitInterval(name: string, value: number)
@@ -324,8 +335,7 @@ local function isCooldownActive(lastTransitionAt: number?, nowSeconds: number, d
 end
 
 local function syncEntry(manager: Manager, entityId: string, entry: Entry): Fidelity
-	local authoritative = manager.adapter.getFidelity(entityId) :: Fidelity
-	assertFidelity(authoritative)
+	local authoritative = normalizeFidelity(manager.adapter.getFidelity(entityId))
 	if authoritative ~= entry.currentFidelity then
 		adjustFidelityCount(manager.metrics.fidelityCounts, entry.currentFidelity, -1)
 		adjustFidelityCount(manager.metrics.fidelityCounts, authoritative, 1)
@@ -339,8 +349,7 @@ end
 local function trackEntry(manager: Manager, entityId: string)
 	assert(entityId ~= "", "entityId required")
 	assert(manager.entries[entityId] == nil, `entity already tracked: {entityId}`)
-	local current = manager.adapter.getFidelity(entityId) :: Fidelity
-	assertFidelity(current)
+	local current = normalizeFidelity(manager.adapter.getFidelity(entityId))
 	manager.entries[entityId] = {
 		currentFidelity = current,
 		lastTransitionAt = nil,
@@ -374,8 +383,7 @@ local function performTransition(
 	capturedState: PersistentState?
 ): TransitionResult
 	manager.adapter.transition(entityId, target, capturedState, reason)
-	local authoritative = manager.adapter.getFidelity(entityId) :: Fidelity
-	assertFidelity(authoritative)
+	local authoritative = normalizeFidelity(manager.adapter.getFidelity(entityId))
 	assert(
 		authoritative == target,
 		`adapter transition for {entityId} ended at {authoritative}, expected {target}`
@@ -517,7 +525,7 @@ function FidelityManager.request(
 	nowSeconds: number
 ): TransitionResult
 	assert(entityId ~= "", "entityId required")
-	assertFidelity(target)
+	normalizeFidelity(target)
 	assert(reason ~= "", "transition reason required")
 	assert(isFiniteNumber(nowSeconds) and nowSeconds >= 0, "nowSeconds must be a finite non-negative number")
 
