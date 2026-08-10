@@ -15,6 +15,8 @@ local SCHEMA_ATTRIBUTE = "UNRENDERED_LabSchemaVersion"
 local RECIPE_ATTRIBUTE = "UNRENDERED_LabRecipeKey"
 local WORLD_ATTRIBUTE = "UNRENDERED_WorldId"
 local REGION_ATTRIBUTE = "UNRENDERED_RegionId"
+local RESOLVED_SCHEMA_ATTRIBUTE = "UNRENDERED_ResolvedRegionSchemaVersion"
+local WORLD_SEED_REF_ATTRIBUTE = "UNRENDERED_WorldSeedRef"
 local FINGERPRINT_ATTRIBUTE = "UNRENDERED_ResolvedRegionFingerprint"
 local REPRO_KEY_ATTRIBUTE = "UNRENDERED_ResolvedRegionReproKey"
 
@@ -24,11 +26,11 @@ local function requiredStringAttribute(root: Instance, name: string): string
 	return value
 end
 
-local function requiredSchemaVersion(root: Instance): number
-	local value = root:GetAttribute(SCHEMA_ATTRIBUTE)
+local function requiredPositiveIntegerAttribute(root: Instance, name: string): number
+	local value = root:GetAttribute(name)
 	assert(
 		type(value) == "number" and value == value and value >= 1 and value % 1 == 0,
-		`Physics Lab validation requires positive integer attribute {SCHEMA_ATTRIBUTE}`
+		`Physics Lab validation requires positive integer attribute {name}`
 	)
 	return value
 end
@@ -110,10 +112,12 @@ function PhysicsLabValidation.capture(root: Instance): Snapshot
 
 	local snapshot: Snapshot = table.freeze({
 		rootName = root.Name,
-		labSchemaVersion = requiredSchemaVersion(root),
+		labSchemaVersion = requiredPositiveIntegerAttribute(root, SCHEMA_ATTRIBUTE),
 		labRecipeKey = requiredStringAttribute(root, RECIPE_ATTRIBUTE),
 		worldId = requiredStringAttribute(root, WORLD_ATTRIBUTE),
 		regionId = requiredStringAttribute(root, REGION_ATTRIBUTE),
+		resolvedRegionSchemaVersion = requiredPositiveIntegerAttribute(root, RESOLVED_SCHEMA_ATTRIBUTE),
+		worldSeedRef = requiredStringAttribute(root, WORLD_SEED_REF_ATTRIBUTE),
 		resolvedRegionFingerprint = requiredStringAttribute(root, FINGERPRINT_ATTRIBUTE),
 		resolvedRegionReproKey = requiredStringAttribute(root, REPRO_KEY_ATTRIBUTE),
 		counts = table.freeze(counts),
