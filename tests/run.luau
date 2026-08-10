@@ -14,6 +14,7 @@ local runMaterialDNAMetatableBoundary = require("./materialdna_metatable_boundar
 local runObjectGenome = require("./object_genome")
 local runObjectGenomeContractLock = require("./object_genome_contract_lock")
 local runRealityVersions = require("./reality_versions")
+local runResolvedRegionDeltaBoundary = require("./resolved_region_delta_boundary")
 local runResolvedRegionRecipe = require("./resolved_region_recipe")
 local runStableIdHeadless = require("./stable_id_headless")
 local runWorldEntity = require("./world_entity")
@@ -38,6 +39,7 @@ local legacyFailures = runDeterministicRng()
 	+ runObjectGenomeContractLock()
 	+ runRealityVersions()
 	+ runResolvedRegionRecipe()
+	+ runResolvedRegionDeltaBoundary()
 local deterministicPassed = runner:run()
 
 if legacyFailures > 0 or not deterministicPassed then
