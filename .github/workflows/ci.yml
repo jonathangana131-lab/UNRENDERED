@@ -31,6 +31,12 @@ jobs:
       - name: Generate Rojo sourcemap
         run: rojo sourcemap default.project.json --output sourcemap.json
 
+      - name: Download pinned Roblox type definitions
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/1.69.0/scripts/globalTypes.d.luau \
+            -o globalTypes.d.luau
+
       - name: Format check
         run: stylua --check src tests
 
@@ -38,7 +44,7 @@ jobs:
         run: selene src tests
 
       - name: Luau analysis
-        run: luau-lsp analyze --platform=roblox --sourcemap=sourcemap.json src tests
+        run: luau-lsp analyze --platform=roblox --definitions:@roblox=globalTypes.d.luau --sourcemap=sourcemap.json src
 
       - name: Pure Luau tests
         run: lune run tests/run

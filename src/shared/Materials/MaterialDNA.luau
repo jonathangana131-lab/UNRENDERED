@@ -18,21 +18,19 @@ export type MaterialDNA = {
 
 local MaterialDNA = {}
 
+local function assertUnitInterval(name: string, value: number): ()
+	assert(value >= 0 and value <= 1, `{name} must be in [0, 1]`)
+end
+
 function MaterialDNA.validate(value: MaterialDNA): ()
 	assert(value.id ~= "", "MaterialDNA.id required")
 	assert(value.substrate ~= "", "substrate required")
 	assert(value.finishFamily ~= "", "finishFamily required")
-	for name, numberValue in
-		{
-			age = value.age,
-			maintenance = value.maintenance,
-			humidityExposure = value.humidityExposure,
-			wear = value.wear,
-			damage = value.damage,
-		}
-	do
-		assert(numberValue >= 0 and numberValue <= 1, `{name} must be in [0, 1]`)
-	end
+	assertUnitInterval("age", value.age)
+	assertUnitInterval("maintenance", value.maintenance)
+	assertUnitInterval("humidityExposure", value.humidityExposure)
+	assertUnitInterval("wear", value.wear)
+	assertUnitInterval("damage", value.damage)
 end
 
 return table.freeze(MaterialDNA)
