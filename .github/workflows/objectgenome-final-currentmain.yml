@@ -1,0 +1,557 @@
+name: ObjectGenome Final Current Main
+
+on:
+  push:
+    branches: [agent/integration/6-objectgenome-final-currentmain-b7e1]
+
+permissions:
+  contents: write
+
+jobs:
+  compose-and-validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          lfs: false
+
+      - name: Import reviewed ObjectGenome foundation
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE=agent/integration/6-objectgenome-transform-rebase-sol56c8
+          git fetch origin "$SOURCE"
+          git restore --source="origin/$SOURCE" -- \
+            Docs/OBJECT_GENOME.md \
+            src/shared/Objects/ObjectGenome.luau \
+            src/shared/Objects/ObjectGenomeFixtures.luau \
+            src/shared/Objects/ObjectGenomeOwnership.luau \
+            tests/object_genome.luau \
+            tests/object_genome_contract_lock.luau
+
+      - name: Close final ObjectGenome contract gaps
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          genome_path = Path('src/shared/Objects/ObjectGenome.luau')
+          s = genome_path.read_text()
+
+          s = s.replace('''export type DimensionLimits = {
+          \tminM: Vec3,
+          \tmaxM: Vec3,
+          }
+
+          export type ExternalSupport''', '''export type DimensionLimits = {
+          \tminM: Vec3,
+          \tmaxM: Vec3,
+          }
+
+          export type MaterialRef = {
+          \tid: string,
+          \trecipeVersion: number,
+          }
+
+          export type ExternalSupport''')
+          s = s.replace('\tmaterialKey: string,', '\tmaterialRef: MaterialRef,')
+          s = s.replace('''export type ObjectState = {
+          \tstateSchemaVersion: number,''', '''export type ObjectState = {
+          \tstateSchemaVersion: number,
+          \tgenomeId: string,''')
+          s = s.replace('''ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
+          ObjectGenome.LOCAL_ROTATION_CONVENTION''', '''ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
+          ObjectGenome.MATERIAL_BINDING_NAMESPACE = "object-material-binding"
+          ObjectGenome.MATERIAL_REF_ID_PREFIX = "material.v1."
+          ObjectGenome.LOCAL_ROTATION_CONVENTION''')
+          s = s.replace('local DEGREES_TO_RADIANS = math.pi / 180\n', 'local DEGREES_TO_RADIANS = math.pi / 180\nlocal MATERIAL_BINDING_CHUNK_BYTES = 512\nlocal MATERIAL_BINDING_MAX_CHUNKS = 32\n')
+
+          semantic_anchor = '''local function isSemanticKey(value: any): boolean
+          \treturn type(value) == "string" and string.match(value, "^[a-z0-9][a-z0-9._-]*$") ~= nil
+          end
+          '''
+          semantic_add = semantic_anchor + '''
+          local MATERIAL_REF_KEYS = {
+          \tid = true,
+          \trecipeVersion = true,
+          }
+
+          local function isMaterialRefId(value: any): boolean
+          \treturn isSemanticKey(value)
+          \t\tand string.sub(value, 1, #ObjectGenome.MATERIAL_REF_ID_PREFIX) == ObjectGenome.MATERIAL_REF_ID_PREFIX
+          \t\tand #value > #ObjectGenome.MATERIAL_REF_ID_PREFIX
+          end
+
+          local function validateMaterialRef(issues: { ValidationIssue }, path: string, value: any): ()
+          \tif type(value) ~= "table" or getmetatable(value) ~= nil then
+          \t\taddIssue(issues, "component.material_ref", path, "materialRef must be a plain-data table")
+          \t\treturn
+          \tend
+
+          \tfor key in pairs(value) do
+          \t\tif type(key) ~= "string" or not MATERIAL_REF_KEYS[key] then
+          \t\t\taddIssue(
+          \t\t\t\tissues,
+          \t\t\t\t"component.material_ref_shape",
+          \t\t\t\tpath,
+          \t\t\t\t`materialRef contains unknown schema key {tostring(key)}`
+          \t\t\t)
+          \t\tend
+          \tend
+
+          \tif not isMaterialRefId(value.id) then
+          \t\taddIssue(
+          \t\t\tissues,
+          \t\t\t"component.material_ref_id",
+          \t\t\tpath .. ".id",
+          \t\t\t"materialRef.id must be a stable MaterialDNA project key"
+          \t\t)
+          \tend
+          \tif not isPositiveInteger(value.recipeVersion) then
+          \t\taddIssue(
+          \t\t\tissues,
+          \t\t\t"component.material_ref_version",
+          \t\t\tpath .. ".recipeVersion",
+          \t\t\t"materialRef.recipeVersion must be a positive integer"
+          \t\t)
+          \tend
+          end
+          '''
+          if s.count(semantic_anchor) != 1:
+              raise SystemExit('semantic-key anchor mismatch')
+          s = s.replace(semantic_anchor, semantic_add)
+
+          old_identity = '''function ObjectGenome.identityParts(value: ObjectGenome): { string }
+          \treturn {
+          \t\ttostring(value.schemaVersion),
+          \t\tvalue.familyId,
+          \t\ttostring(value.familyVersion),
+          \t\tvalue.variantKey,
+          \t}
+          end
+
+          function ObjectGenome.identityKey(value: ObjectGenome): string
+          \tObjectGenome.validate(value)
+          \treturn StableId.fromParts(ObjectGenome.STABLE_ID_NAMESPACE, ObjectGenome.identityParts(value))
+          end
+          '''
+          new_identity = '''local function materialBindingKeyUnchecked(value: ObjectGenome): string
+          \tlocal manifestEntries: { string } = table.create(#value.components)
+          \tfor index, component in ipairs(value.components) do
+          \t\tmanifestEntries[index] = `{component.key}|{component.materialRef.id}|{component.materialRef.recipeVersion};`
+          \tend
+          \tlocal manifest = table.concat(manifestEntries)
+          \tlocal chunks: { string } = {}
+          \tlocal cursor = 1
+          \twhile cursor <= #manifest do
+          \t\ttable.insert(chunks, string.sub(manifest, cursor, cursor + MATERIAL_BINDING_CHUNK_BYTES - 1))
+          \t\tcursor += MATERIAL_BINDING_CHUNK_BYTES
+          \tend
+          \tassert(#chunks > 0, "ObjectGenome requires at least one material binding")
+          \tassert(
+          \t\t#chunks <= MATERIAL_BINDING_MAX_CHUNKS,
+          \t\t`ObjectGenome material binding manifest exceeds {MATERIAL_BINDING_MAX_CHUNKS * MATERIAL_BINDING_CHUNK_BYTES} bytes`
+          \t)
+          \treturn StableId.fromParts(ObjectGenome.MATERIAL_BINDING_NAMESPACE, chunks)
+          end
+
+          function ObjectGenome.materialBindingKey(value: ObjectGenome): string
+          \tObjectGenome.validate(value)
+          \treturn materialBindingKeyUnchecked(value)
+          end
+
+          function ObjectGenome.identityParts(value: ObjectGenome): { string }
+          \treturn {
+          \t\ttostring(value.schemaVersion),
+          \t\tvalue.familyId,
+          \t\ttostring(value.familyVersion),
+          \t\tvalue.variantKey,
+          \t\tmaterialBindingKeyUnchecked(value),
+          \t}
+          end
+
+          function ObjectGenome.identityKey(value: ObjectGenome): string
+          \tObjectGenome.validate(value)
+          \treturn StableId.fromParts(ObjectGenome.STABLE_ID_NAMESPACE, ObjectGenome.identityParts(value))
+          end
+          '''
+          if s.count(old_identity) != 1:
+              raise SystemExit('identity block mismatch')
+          s = s.replace(old_identity, new_identity)
+
+          old_material_validation = '''\t\tif not isNonEmptyString(component.materialKey) then
+          \t\t\taddIssue(
+          \t\t\t\tissues,
+          \t\t\t\t"component.material_key",
+          \t\t\t\tpath .. ".materialKey",
+          \t\t\t\t"opaque stable materialKey required"
+          \t\t\t)
+          \t\tend
+          '''
+          if s.count(old_material_validation) != 1:
+              raise SystemExit('material validation block mismatch')
+          s = s.replace(old_material_validation, '\t\tvalidateMaterialRef(issues, path .. ".materialRef", component.materialRef)\n')
+
+          old_rotation = '''\t\tif not isVec3(component.localRotationDeg) then
+          \t\t\taddIssue(
+          \t\t\t\tissues,
+          \t\t\t\t"component.rotation",
+          \t\t\t\tpath .. ".localRotationDeg",
+          \t\t\t\t"localRotationDeg must be a finite Vec3"
+          \t\t\t)
+          \t\tend
+          '''
+          new_rotation = '''\t\tif not isVec3(component.localRotationDeg) then
+          \t\t\taddIssue(
+          \t\t\t\tissues,
+          \t\t\t\t"component.rotation",
+          \t\t\t\tpath .. ".localRotationDeg",
+          \t\t\t\t"localRotationDeg must be a finite Vec3"
+          \t\t\t)
+          \t\telseif
+          \t\t\tcomponent.localRotationDeg.x < -180
+          \t\t\tor component.localRotationDeg.x >= 180
+          \t\t\tor component.localRotationDeg.y < -180
+          \t\t\tor component.localRotationDeg.y >= 180
+          \t\t\tor component.localRotationDeg.z < -180
+          \t\t\tor component.localRotationDeg.z >= 180
+          \t\tthen
+          \t\t\taddIssue(
+          \t\t\t\tissues,
+          \t\t\t\t"component.rotation_range",
+          \t\t\t\tpath .. ".localRotationDeg",
+          \t\t\t\t"localRotationDeg components must use the canonical half-open range [-180, 180)"
+          \t\t\t)
+          \t\tend
+          '''
+          if s.count(old_rotation) != 1:
+              raise SystemExit('rotation block mismatch')
+          s = s.replace(old_rotation, new_rotation)
+
+          s = s.replace('''function ObjectGenome.defaultState(value: ObjectGenome): ObjectState
+          \tObjectGenome.validate(value)''', '''function ObjectGenome.defaultState(value: ObjectGenome): ObjectState
+          \tlocal genomeId = ObjectGenome.identityKey(value)''')
+          s = s.replace('''\treturn {
+          \t\tstateSchemaVersion = ObjectGenome.STATE_SCHEMA_VERSION,
+          \t\tcomponentWear = componentWear,''', '''\treturn {
+          \t\tstateSchemaVersion = ObjectGenome.STATE_SCHEMA_VERSION,
+          \t\tgenomeId = genomeId,
+          \t\tcomponentWear = componentWear,''')
+          state_anchor = '''\tif state.stateSchemaVersion ~= ObjectGenome.STATE_SCHEMA_VERSION then
+          \t\taddIssue(
+          \t\t\tissues,
+          \t\t\t"state.schema_version",
+          \t\t\t"stateSchemaVersion",
+          \t\t\t"unsupported ObjectState schema version"
+          \t\t)
+          \tend
+          '''
+          state_add = state_anchor + '''\tlocal expectedGenomeId = ObjectGenome.identityKey(genome)
+          \tif state.genomeId ~= expectedGenomeId then
+          \t\taddIssue(
+          \t\t\tissues,
+          \t\t\t"state.genome_id",
+          \t\t\t"genomeId",
+          \t\t\t"ObjectState genomeId must match the exact immutable ObjectGenome identity"
+          \t\t)
+          \tend
+          '''
+          if s.count(state_anchor) != 1:
+              raise SystemExit('state schema anchor mismatch')
+          s = s.replace(state_anchor, state_add)
+          genome_path.write_text(s)
+
+          ownership_path = Path('src/shared/Objects/ObjectGenomeOwnership.luau')
+          s = ownership_path.read_text()
+          s = s.replace('type ComponentSpec = ObjectGenome.ComponentSpec\n', 'type MaterialRef = ObjectGenome.MaterialRef\ntype ComponentSpec = ObjectGenome.ComponentSpec\n')
+          s = s.replace('\tmaterialKey = true,', '\tmaterialRef = true,')
+          component_keys = '''local COMPONENT_KEYS = {
+          \tkey = true,
+          \trole = true,
+          \tmaterialRef = true,
+          \tmassKg = true,
+          \tlocalPositionM = true,
+          \tlocalRotationDeg = true,
+          \tdimensionsM = true,
+          \tsupportKeys = true,
+          \texternalSupport = true,
+          }
+          '''
+          if s.count(component_keys) != 1:
+              raise SystemExit('ownership component key anchor mismatch')
+          s = s.replace(component_keys, component_keys + '''
+          local MATERIAL_REF_KEYS = {
+          \tid = true,
+          \trecipeVersion = true,
+          }
+          ''')
+          shape_anchor = '''\t\tassertRecordShape(component, COMPONENT_KEYS, path)
+          \t\tassertVec3Shape(component.localPositionM, path .. ".localPositionM")'''
+          if s.count(shape_anchor) != 1:
+              raise SystemExit('ownership shape anchor mismatch')
+          s = s.replace(shape_anchor, '''\t\tassertRecordShape(component, COMPONENT_KEYS, path)
+          \t\tassertRecordShape(component.materialRef, MATERIAL_REF_KEYS, path .. ".materialRef")
+          \t\tassertVec3Shape(component.localPositionM, path .. ".localPositionM")''')
+          clone_anchor = 'local function cloneComponent(value: ComponentSpec): ComponentSpec\n'
+          if s.count(clone_anchor) != 1:
+              raise SystemExit('clone component anchor mismatch')
+          s = s.replace(clone_anchor, '''local function cloneMaterialRef(value: MaterialRef): MaterialRef
+          \treturn {
+          \t\tid = value.id,
+          \t\trecipeVersion = value.recipeVersion,
+          \t}
+          end
+
+          ''' + clone_anchor)
+          s = s.replace('\t\tmaterialKey = value.materialKey,', '\t\tmaterialRef = cloneMaterialRef(value.materialRef),')
+          ownership_path.write_text(s)
+
+          fixtures_path = Path('src/shared/Objects/ObjectGenomeFixtures.luau')
+          s = fixtures_path.read_text()
+          s = s.replace('type Vec3 = ObjectGenome.Vec3\n', 'type Vec3 = ObjectGenome.Vec3\ntype MaterialRef = ObjectGenome.MaterialRef\n')
+          s = s.replace('''-- Production-contract examples. Material keys are opaque references on purpose:
+          -- ObjectGenome must not own MaterialDNA's schema or Roblox asset bindings.
+          local zero: Vec3''', '''-- Production-contract examples pin exact MaterialDNA identity+recipeVersion pairs.
+          -- ObjectGenome owns only this plain-data reference shape, never MaterialDNA internals or Roblox asset bindings.
+          local function material(id: string, recipeVersion: number?): MaterialRef
+          \treturn {
+          \t\tid = id,
+          \t\trecipeVersion = recipeVersion or 1,
+          \t}
+          end
+
+          local zero: Vec3''')
+          material_map = {
+              'material:polymer-rubber.caster.v1': 'material.v1.furniture.caster-polymer-rubber',
+              'material:painted-steel.black.v1': 'material.v1.office-metal.warm-gray-enamel',
+              'material:steel-mechanism.dark.v1': 'material.v1.office-metal.warm-gray-enamel',
+              'material:fabric-foam.charcoal.v1': 'material.v1.furniture.fabric-foam-charcoal',
+              'material:polypropylene.black.v1': 'material.v1.furniture.polypropylene-black',
+              'material:painted-steel.gray.v1': 'material.v1.office-metal.warm-gray-enamel',
+              'material:laminate-particleboard.beige.v1': 'material.v1.furniture.laminate-particleboard-beige',
+              'material:painted-steel.warm-gray.v1': 'material.v1.office-metal.warm-gray-enamel',
+          }
+          for old, new in material_map.items():
+              s = s.replace(f'materialKey = "{old}"', f'materialRef = material("{new}")')
+          if 'materialKey' in s:
+              raise SystemExit('fixture materialKey remained after migration')
+          fixtures_path.write_text(s)
+
+          test_path = Path('tests/object_genome.luau')
+          s = test_path.read_text()
+          golden_map = {
+              'object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af': 'object-genome:v1:613b5df1d6d948938d348c131eb4ca25',
+              'object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4': 'object-genome:v1:cb084064e4d21150604f0cff9c22ca55',
+              'object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969': 'object-genome:v1:f2d5a8760c2c3e572ab67e7907aeabd7',
+          }
+          for old, new in golden_map.items():
+              s = s.replace(old, new)
+          s = s.replace('''\t\tlocal state = ObjectGenome.defaultState(fixture.genome)
+          \t\texpect(
+          \t\t\tfixture.name .. " default mutable state validates",''', '''\t\tlocal state = ObjectGenome.defaultState(fixture.genome)
+          \t\texpect(
+          \t\t\tfixture.name .. " default state is bound to exact genome identity",
+          \t\t\tstate.genomeId == identity
+          \t\t)
+          \t\texpect(
+          \t\t\tfixture.name .. " default mutable state validates",''')
+          old_bad_material = '''\tlocal badMaterial = deepCopy(Fixtures.officeChair)
+          \tbadMaterial.components[1].materialKey = ""
+          \texpect(
+          \t\t"rejects missing material assignment",
+          \t\thasCode(ObjectGenome.inspect(badMaterial), "component.material_key")
+          \t)
+          '''
+          new_bad_material = '''\tlocal badMaterial = deepCopy(Fixtures.officeChair)
+          \tbadMaterial.components[1].materialRef.id = ""
+          \texpect(
+          \t\t"rejects missing material assignment",
+          \t\thasCode(ObjectGenome.inspect(badMaterial), "component.material_ref_id")
+          \t)
+
+          \tlocal badMaterialVersion = deepCopy(Fixtures.officeChair)
+          \tbadMaterialVersion.components[1].materialRef.recipeVersion = 0
+          \texpect(
+          \t\t"rejects non-positive material recipe version",
+          \t\thasCode(ObjectGenome.inspect(badMaterialVersion), "component.material_ref_version")
+          \t)
+
+          \tlocal changedMaterialVersion = deepCopy(Fixtures.officeChair)
+          \tchangedMaterialVersion.components[1].materialRef.recipeVersion += 1
+          \texpect(
+          \t\t"material recipe version participates in canonical object identity",
+          \t\tObjectGenome.identityKey(changedMaterialVersion) ~= ObjectGenome.identityKey(Fixtures.officeChair)
+          \t)
+
+          \texpect(
+          \t\t"filing cabinet pins landed MaterialDNA painted-metal revision",
+          \t\tFixtures.filingCabinet.components[1].materialRef.id == "material.v1.office-metal.warm-gray-enamel"
+          \t\t\tand Fixtures.filingCabinet.components[1].materialRef.recipeVersion == 1
+          \t)
+          '''
+          if s.count(old_bad_material) != 1:
+              raise SystemExit('bad material test anchor mismatch')
+          s = s.replace(old_bad_material, new_bad_material)
+          state_insert_anchor = '\tlocal invalidForAssert = deepCopy(Fixtures.officeTable)\n'
+          state_tests = '''\tlocal missingGenomeId = ObjectGenome.defaultState(Fixtures.officeChair)
+          \tmissingGenomeId.genomeId = nil
+          \texpect(
+          \t\t"rejects mutable state without genome identity",
+          \t\thasCode(ObjectGenome.inspectState(Fixtures.officeChair, missingGenomeId), "state.genome_id")
+          \t)
+
+          \tlocal chairState = ObjectGenome.defaultState(Fixtures.officeChair)
+          \tlocal compatibleDifferentRevision = deepCopy(Fixtures.officeChair)
+          \tcompatibleDifferentRevision.familyVersion += 1
+          \texpect(
+          \t\t"rejects state from structurally compatible different genome revision",
+          \t\thasCode(ObjectGenome.inspectState(compatibleDifferentRevision, chairState), "state.genome_id")
+          \t)
+
+          '''
+          if s.count(state_insert_anchor) != 1:
+              raise SystemExit('state tests anchor mismatch')
+          s = s.replace(state_insert_anchor, state_tests + state_insert_anchor)
+          test_path.write_text(s)
+
+          lock_path = Path('tests/object_genome_contract_lock.luau')
+          s = lock_path.read_text()
+          rotation_insert = '''\texpect(
+          \t\t"rotation-aware bounds reject back extending outside envelope",
+          \t\thasCode(ObjectGenome.inspect(rotatedBack), "component.outside_bounds")
+          \t)
+          '''
+          rotation_more = rotation_insert + '''
+          \tlocal nonCanonicalRotation = deepCopy(Fixtures.officeChair)
+          \tnonCanonicalRotation.components[1].localRotationDeg = { x = 180, y = 0, z = 0 }
+          \texpect(
+          \t\t"rejects duplicate +180 degree Euler endpoint",
+          \t\thasCode(ObjectGenome.inspect(nonCanonicalRotation), "component.rotation_range")
+          \t)
+
+          \tlocal negativeEndpointRotation = deepCopy(Fixtures.officeChair)
+          \tnegativeEndpointRotation.components[1].localRotationDeg = { x = -180, y = 0, z = 0 }
+          \texpect(
+          \t\t"accepts canonical -180 degree Euler endpoint",
+          \t\tnot hasCode(ObjectGenome.inspect(negativeEndpointRotation), "component.rotation_range")
+          \t)
+
+          \tlocal mixedAxisRotation = deepCopy(Fixtures.officeChair)
+          \tfor _, component in ipairs(mixedAxisRotation.components) do
+          \t\tif component.key == "back" then
+          \t\t\tcomponent.localPositionM = { x = 0, y = 0.27, z = 0.05 }
+          \t\t\tcomponent.localRotationDeg = { x = 30, y = 45, z = 60 }
+          \t\t\tbreak
+          \t\tend
+          \tend
+          \texpect(
+          \t\t"mixed-axis golden locks fixed-parent XYZ order",
+          \t\thasCode(ObjectGenome.inspect(mixedAxisRotation), "component.outside_bounds")
+          \t)
+          '''
+          if s.count(rotation_insert) != 1:
+              raise SystemExit('rotation test anchor mismatch')
+          s = s.replace(rotation_insert, rotation_more)
+          freeze_anchor = '''\t\texpect(
+          \t\t\tfixture.name .. " fixture nested transform is frozen",
+          \t\t\ttable.isfrozen(fixture.genome.components[1].dimensionsM)
+          \t\t)
+          '''
+          if s.count(freeze_anchor) != 1:
+              raise SystemExit('freeze test anchor mismatch')
+          s = s.replace(freeze_anchor, freeze_anchor + '''\t\texpect(
+          \t\t\tfixture.name .. " fixture material ref is frozen",
+          \t\t\ttable.isfrozen(fixture.genome.components[1].materialRef)
+          \t\t)
+          ''')
+          lock_path.write_text(s)
+
+          docs_path = Path('Docs/OBJECT_GENOME.md')
+          s = docs_path.read_text()
+          s = s.replace('''- `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityParts()` is intended to feed the project StableId contract; ObjectGenome does not duplicate hashing/canonical encoding.''', '''- `familyId + familyVersion + variantKey + schemaVersion` form the stable family/version identity core. Ordered component MaterialDNA bindings are summarized through a project `StableId` material-binding key and included in `ObjectGenome.identityParts()`, so changing a pinned material recipe version cannot preserve the same genome identity.''')
+          s = s.replace('''- `materialKey` is an opaque stable reference. Objects do not import MaterialDNA implementation details or Roblox asset IDs.''', '''- each component carries `materialRef = { id, recipeVersion }`, matching MaterialDNA's frozen plain-data reference shape while keeping ObjectGenome independent from MaterialDNA implementation details and Roblox asset IDs.''')
+          s = s.replace('''- Mutable state is a complete snapshot for the referenced genome: every component/mechanism key must be present and unknown keys are rejected.''', '''- Mutable state is a complete snapshot for the referenced genome: `ObjectState.genomeId` must equal the exact canonical `ObjectGenome.identityKey(genome)`, every component/mechanism key must be present, and unknown keys are rejected.''')
+          s = s.replace('''- for column-vector math, the equivalent rotation matrix is `R = Rz * Ry * Rx`;''', '''- each Euler component uses the canonical half-open range `[-180, 180)`, avoiding duplicate `-180/+180` single-axis encodings;
+          - for column-vector math, the equivalent rotation matrix is `R = Rz * Ry * Rx`;''')
+          s = s.replace('''- `ObjectGenome.defaultState(genome)` creates separate zeroed mutable state.''', '''- `ObjectGenome.materialBindingKey(genome)` deterministically summarizes ordered component `{id, recipeVersion}` bindings through the project StableId contract.
+          - `ObjectGenome.defaultState(genome)` creates separate zeroed mutable state bound to the exact `genomeId`.''')
+          s = s.replace('''These are contract fixtures, not final art or Hero Feature implementations. Their purpose is to prove the schema can describe believable manufactured construction without depending on a MeshPart/prefab. Tests also pass these recipes through the immutable ownership boundary before treating them as retained canonical data.''', '''These are contract fixtures, not final art or Hero Feature implementations. Their purpose is to prove the schema can describe believable manufactured construction without depending on a MeshPart/prefab. Material references use MaterialDNA's `{id, recipeVersion}` semantics; the filing cabinet explicitly pins the currently catalogued painted-metal recipe while other furniture material identities remain content-owned project references rather than render assets. Tests also pass these recipes through the immutable ownership boundary before treating them as retained canonical data.''')
+          docs_path.write_text(s)
+
+          runner_path = Path('tests/run.luau')
+          s = runner_path.read_text()
+          require_anchor = 'local runMaterialDNA = require("./materialdna_contract")\n'
+          if 'local runObjectGenome = require("./object_genome")' not in s:
+              if s.count(require_anchor) != 1:
+                  raise SystemExit('runner MaterialDNA require anchor mismatch')
+              s = s.replace(require_anchor, require_anchor + 'local runObjectGenome = require("./object_genome")\nlocal runObjectGenomeContractLock = require("./object_genome_contract_lock")\n')
+          call_anchor = '\t+ runMaterialDNA()\n'
+          if '\t+ runObjectGenome()' not in s:
+              if s.count(call_anchor) != 1:
+                  raise SystemExit('runner MaterialDNA call anchor mismatch')
+              s = s.replace(call_anchor, call_anchor + '\t+ runObjectGenome()\n\t+ runObjectGenomeContractLock()\n')
+          runner_path.write_text(s)
+          PY
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+          rokit list
+
+      - name: Generate Rojo sourcemap
+        run: rojo sourcemap default.project.json --output sourcemap.json
+
+      - name: Download pinned Roblox type definitions
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/1.69.0/scripts/globalTypes.d.luau \
+            -o globalTypes.d.luau
+
+      - name: Apply pinned StyLua
+        run: stylua src tests
+
+      - name: Format check
+        run: stylua --check src tests
+
+      - name: Lint
+        run: selene src tests
+
+      - name: Luau analysis
+        run: luau-lsp analyze --platform=roblox --definitions:@roblox=globalTypes.d.luau --sourcemap=sourcemap.json src
+
+      - name: Canonical randomness audit
+        run: |
+          python3 scripts/check_canonical_randomness.py --self-test
+          python3 scripts/check_canonical_randomness.py
+
+      - name: Shared-domain boundary audit
+        run: |
+          python3 scripts/check_domain_boundaries.py --self-test
+          python3 scripts/check_domain_boundaries.py
+
+      - name: Pure Luau tests
+        run: lune run tests/run
+
+      - name: Build place file
+        run: |
+          mkdir -p build
+          rojo build default.project.json --output build/UNRENDERED.rbxlx
+
+      - name: Publish clean final head
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/objectgenome-final-currentmain.yml
+          git add Docs/OBJECT_GENOME.md src/shared/Objects tests/object_genome.luau tests/object_genome_contract_lock.luau tests/run.luau
+          git commit -m "feat: lock Reality-Grade ObjectGenome foundation contract"
+          git push origin HEAD:agent/integration/6-objectgenome-final-currentmain-b7e1
