@@ -1,5 +1,7 @@
-local Versions = require("../src/shared/Core/Versions")
-local RealityVersions = require("../src/shared/Reality/RealityVersions")
+local ProductionLoader = require("./support/ProductionLoader")
+
+local Versions = ProductionLoader.requireShared("Core/Versions")
+local RealityVersions = ProductionLoader.requireShared("Reality/RealityVersions")
 
 local function run(): number
 	local failures = 0
