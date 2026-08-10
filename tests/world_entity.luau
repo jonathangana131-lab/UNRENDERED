@@ -151,6 +151,15 @@ local function run(): number
 	end)
 	expectEqual("persistent state rejects sparse arrays", sparseArrayAccepted, false)
 
+	local contiguousArrayState = WorldEntity.captureState(entity, {
+		contacts = { "front-left", "front-right", "rear-left" },
+	})
+	expectEqual(
+		"persistent state preserves contiguous arrays",
+		(contiguousArrayState.persistentState.contacts :: any)[2],
+		"front-right"
+	)
+
 	local interactive = WorldEntity.transition(entity, "F3")
 	expectEqual("promotion preserves identity", interactive.id, entity.id)
 	expectEqual("promotion changes fidelity", interactive.fidelity, "F3")
@@ -228,6 +237,7 @@ local function run(): number
 	local removed = WorldEntity.unregister(registry, entity.id)
 	expectEqual("unregister returns record", removed, entity)
 	expectEqual("registry empty after unregister", WorldEntity.count(registry), 0)
+	assert(removed ~= nil)
 	local reRegistered = WorldEntity.register(registry, removed)
 	expectEqual("identity can re-register after representation recreation", reRegistered, true)
 	expectEqual("re-register preserves same identity record", WorldEntity.get(registry, entity.id), entity)
