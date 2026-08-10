@@ -32,7 +32,10 @@ local function run(): number
 			break
 		end
 	end
-	expect("ObjectGenome component references satisfy exact MaterialDNA reference contract", allMaterialRefsValid)
+	expect(
+		"ObjectGenome component references satisfy exact MaterialDNA reference contract",
+		allMaterialRefsValid
+	)
 
 	local objectState = ObjectGenome.defaultState(genome)
 	expect("default ObjectState is valid for fixture", ObjectGenome.inspectState(genome, objectState).ok)
@@ -86,9 +89,22 @@ local function run(): number
 		end
 	)
 	local promotedRecord = WorldEntity.get(registry, entityId)
-	expect("FidelityManager promotes observed lab object through transition boundary", promotion.transitioned and promotion.currentLevel == "F3")
-	expect("promotion keeps FidelityManager and WorldEntity in sync", manager:getObservedLevel(entityId) == "F3" and promotedRecord ~= nil and promotedRecord.fidelity == "F3")
-	expect("promotion preserves canonical object state", promotedRecord ~= nil and promotedRecord.stateRevision == 0 and ObjectGenome.inspectState(genome, promotedRecord.persistentState).ok)
+	expect(
+		"FidelityManager promotes observed lab object through transition boundary",
+		promotion.transitioned and promotion.currentLevel == "F3"
+	)
+	expect(
+		"promotion keeps FidelityManager and WorldEntity in sync",
+		manager:getObservedLevel(entityId) == "F3"
+			and promotedRecord ~= nil
+			and promotedRecord.fidelity == "F3"
+	)
+	expect(
+		"promotion preserves canonical object state",
+		promotedRecord ~= nil
+			and promotedRecord.stateRevision == 0
+			and ObjectGenome.inspectState(genome, promotedRecord.persistentState).ok
+	)
 
 	local demotion = manager:step(
 		entityId,
@@ -110,17 +126,39 @@ local function run(): number
 		end
 	)
 	local demotedRecord = WorldEntity.get(registry, entityId)
-	expect("FidelityManager demotes inactive lab object through state-capture boundary", demotion.transitioned and demotion.currentLevel == "F0")
-	expect("demotion keeps FidelityManager and WorldEntity in sync", manager:getObservedLevel(entityId) == "F0" and demotedRecord ~= nil and demotedRecord.fidelity == "F0")
-	expect("demotion captures state before representation teardown", demotedRecord ~= nil and demotedRecord.stateRevision == 1 and demotedRecord.representationRevision == 2)
-	expect("captured ObjectState survives F0-F3-F0 lifecycle", demotedRecord ~= nil and ObjectGenome.inspectState(genome, demotedRecord.persistentState).ok and demotedRecord.persistentState.genomeId == objectState.genomeId)
+	expect(
+		"FidelityManager demotes inactive lab object through state-capture boundary",
+		demotion.transitioned and demotion.currentLevel == "F0"
+	)
+	expect(
+		"demotion keeps FidelityManager and WorldEntity in sync",
+		manager:getObservedLevel(entityId) == "F0" and demotedRecord ~= nil and demotedRecord.fidelity == "F0"
+	)
+	expect(
+		"demotion captures state before representation teardown",
+		demotedRecord ~= nil
+			and demotedRecord.stateRevision == 1
+			and demotedRecord.representationRevision == 2
+	)
+	expect(
+		"captured ObjectState survives F0-F3-F0 lifecycle",
+		demotedRecord ~= nil
+			and ObjectGenome.inspectState(genome, demotedRecord.persistentState).ok
+			and demotedRecord.persistentState.genomeId == objectState.genomeId
+	)
 
 	local metrics = manager:getMetrics()
-	expect("integration path records one promotion and one demotion", metrics.transitions == 2 and metrics.promotions == 1 and metrics.demotions == 1)
+	expect(
+		"integration path records one promotion and one demotion",
+		metrics.transitions == 2 and metrics.promotions == 1 and metrics.demotions == 1
+	)
 
 	manager:unregister(entityId)
 	WorldEntity.unregister(registry, entityId)
-	expect("integration cleanup releases both registries", manager:getMetrics().registered == 0 and WorldEntity.count(registry) == 0)
+	expect(
+		"integration cleanup releases both registries",
+		manager:getMetrics().registered == 0 and WorldEntity.count(registry) == 0
+	)
 
 	return failures
 end
