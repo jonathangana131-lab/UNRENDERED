@@ -1,6 +1,7 @@
 --!strict
 
 local StableId = require(script.Parent.Parent.Core.StableId)
+local MaterialDNA = require(script.Parent.Parent.Materials.MaterialDNA)
 
 export type Vec3 = {
 	x: number,
@@ -147,6 +148,8 @@ local ObjectGenome = {}
 ObjectGenome.SCHEMA_VERSION = 1
 ObjectGenome.STATE_SCHEMA_VERSION = 1
 ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
+ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE = "object-genome-recipe"
+ObjectGenome.RECIPE_FINGERPRINT_VERSION = 1
 ObjectGenome.LOCAL_ROTATION_ORDER = "XYZ"
 ObjectGenome.LOCAL_ROTATION_HANDEDNESS = "right"
 
@@ -705,6 +708,83 @@ local function formatIssues(issues: { ValidationIssue }): string
 	return table.concat(messages, "; ")
 end
 
+local RECIPE_FINGERPRINT_CHUNK_BYTES = 384
+
+local function canonicalFingerprintNumber(value: number): string
+	if value == 0 then
+		return "0"
+	end
+	return string.format("%.17g", value)
+end
+
+local function foldFingerprintToken(signature: string, kind: string, payload: string): string
+	local nextSignature = StableId.fromParts(ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE, {
+		signature,
+		kind,
+		tostring(#payload),
+	})
+	local offset = 1
+	while offset <= #payload do
+		local chunk = string.sub(payload, offset, offset + RECIPE_FINGERPRINT_CHUNK_BYTES - 1)
+		nextSignature = StableId.fromParts(ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE, {
+			nextSignature,
+			"chunk",
+			chunk,
+		})
+		offset += RECIPE_FINGERPRINT_CHUNK_BYTES
+	end
+	return nextSignature
+end
+
+local function sortedFingerprintKeys(value: { [any]: any }): { any }
+	local keys: { any } = {}
+	for key in pairs(value) do
+		table.insert(keys, key)
+	end
+	table.sort(keys, function(left: any, right: any): boolean
+		local leftType = type(left)
+		local rightType = type(right)
+		if leftType ~= rightType then
+			return leftType < rightType
+		end
+		if leftType == "number" then
+			return (left :: number) < (right :: number)
+		end
+		assert(leftType == "string", "validated ObjectGenome keys must be strings or array indices")
+		return (left :: string) < (right :: string)
+	end)
+	return keys
+end
+
+local function fingerprintValue(signature: string, value: any): string
+	local valueType = type(value)
+	if valueType == "string" then
+		return foldFingerprintToken(signature, "string", value)
+	elseif valueType == "number" then
+		return foldFingerprintToken(signature, "number", canonicalFingerprintNumber(value))
+	elseif valueType == "boolean" then
+		return foldFingerprintToken(signature, "boolean", if value then "true" else "false")
+	elseif valueType == "table" then
+		local keys = sortedFingerprintKeys(value)
+		local nextSignature = foldFingerprintToken(signature, "table", tostring(#keys))
+		for _, key in ipairs(keys) do
+			nextSignature = fingerprintValue(nextSignature, key)
+			nextSignature = fingerprintValue(nextSignature, value[key])
+		end
+		return foldFingerprintToken(nextSignature, "end-table", tostring(#keys))
+	end
+	error(`unsupported validated ObjectGenome fingerprint value type: {valueType}`)
+end
+
+function ObjectGenome.recipeFingerprint(value: ObjectGenome): string
+	ObjectGenome.validate(value)
+	local signature = StableId.fromParts(ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE, {
+		tostring(ObjectGenome.RECIPE_FINGERPRINT_VERSION),
+		"root",
+	})
+	return fingerprintValue(signature, value)
+end
+
 function ObjectGenome.identityParts(value: ObjectGenome): { string }
 	return {
 		tostring(value.schemaVersion),
@@ -880,20 +960,28 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		if not isNonEmptyString(component.role) then
 			addIssue(issues, "component.role", path .. ".role", "component role required")
 		end
-		if not isSemanticKey(component.materialKey) then
+		local materialKeyValidation = MaterialDNA.validateReference({
+			id = component.materialKey,
+			recipeVersion = 1,
+		})
+		if not materialKeyValidation.ok then
 			addIssue(
 				issues,
 				"component.material_key",
 				path .. ".materialKey",
-				"materialKey must be the stable lowercase MaterialDNA recipe id"
+				"materialKey must satisfy MaterialDNA v2 project id rules"
 			)
 		end
-		if not isPositiveInteger(component.materialRecipeVersion) then
+		local materialRecipeVersionValidation = MaterialDNA.validateReference({
+			id = "material.v1.object-genome-validation-probe",
+			recipeVersion = component.materialRecipeVersion,
+		})
+		if not materialRecipeVersionValidation.ok then
 			addIssue(
 				issues,
 				"component.material_recipe_version",
 				path .. ".materialRecipeVersion",
-				"materialRecipeVersion must be a positive integer"
+				"materialRecipeVersion must satisfy MaterialDNA v2 recipe revision rules"
 			)
 		end
 		if not isPositiveFinite(component.massKg) then
