@@ -60,21 +60,26 @@ local function run(): number
 			name = "office chair",
 			genome = Fixtures.officeChair,
 			identity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",
-			fingerprint = "object-genome-recipe:v1:ffa0af4f10aec2dbbd9ad86e81afaf9d",
+			fingerprint = "object-genome-recipe:v1:a5612083f6e2c89bd042f0825d507f87",
 		},
 		{
 			name = "office table",
 			genome = Fixtures.officeTable,
 			identity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",
-			fingerprint = "object-genome-recipe:v1:dd51fe1c7c46d148e2ae5b01f2e08c69",
+			fingerprint = "object-genome-recipe:v1:869dd383324b32d2bdd705df792560bc",
 		},
 		{
 			name = "filing cabinet",
 			genome = Fixtures.filingCabinet,
 			identity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",
-			fingerprint = "object-genome-recipe:v1:de0c52ff58128135017337220a339f3c",
+			fingerprint = "object-genome-recipe:v1:eaeab1cf27fe6e1866a395736bca4e71",
 		},
 	}
+
+	expect(
+		"locks corrected recipe fingerprint encoding revision",
+		ObjectGenome.RECIPE_FINGERPRINT_VERSION == 2
+	)
 
 	for _, fixture in ipairs(fixtureCases) do
 		local report = ObjectGenome.inspect(fixture.genome)

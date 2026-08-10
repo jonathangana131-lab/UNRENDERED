@@ -149,7 +149,7 @@ ObjectGenome.SCHEMA_VERSION = 1
 ObjectGenome.STATE_SCHEMA_VERSION = 1
 ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
 ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE = "object-genome-recipe"
-ObjectGenome.RECIPE_FINGERPRINT_VERSION = 1
+ObjectGenome.RECIPE_FINGERPRINT_VERSION = 2
 ObjectGenome.LOCAL_ROTATION_ORDER = "XYZ"
 ObjectGenome.LOCAL_ROTATION_HANDEDNESS = "right"
 
