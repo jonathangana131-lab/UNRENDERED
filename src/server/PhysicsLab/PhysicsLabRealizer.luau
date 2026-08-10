@@ -217,7 +217,11 @@ local function representedCount(representations: RepresentationMap): number
 	return count
 end
 
-local function syncMetrics(model: Model, runtime: PhysicsLabRuntime.Runtime, representations: RepresentationMap): ()
+local function syncMetrics(
+	model: Model,
+	runtime: PhysicsLabRuntime.Runtime,
+	representations: RepresentationMap
+): ()
 	local snapshot = runtime:snapshot()
 	model:SetAttribute("UNRENDERED_EntityCount", snapshot.registered)
 	model:SetAttribute("UNRENDERED_RepresentedCount", representedCount(representations))
