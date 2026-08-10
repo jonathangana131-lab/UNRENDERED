@@ -91,12 +91,14 @@ Landed source evidence:
 
 This source-contract closure does **not** claim Roblox Studio physics/contact/constraint/server-authority PASS. Those observations remain external engine evidence and must stay explicitly UNVERIFIED until actually run.
 
-### Mac ↔ GitHub Roblox Studio Execution Bridge: complete (reality-grade engine validated)
-The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational ([Docs/STUDIO_EXECUTOR.md](file:///Users/joey/.gemini/antigravity/scratch/UNRENDERED/Docs/STUDIO_EXECUTOR.md)).
-- Private bridge repo: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`
-- Mac self-hosted runner: `UNRENDERED-STUDIO-MAC` (running as active LaunchAgent service)
-- Real Roblox Studio execution loop: GitHub request -> Mac self-hosted runner -> Roblox Studio (`PlayServer` simulation mode: `IsRunning=true`, `IsServer=true`) -> 20-cycle lifecycle sweep -> typed fail-closed status derivation (`PASS`) -> result.json + summary.md + viewport screenshot.
-- Proven Evidence: `requests/20260810-005-reality-hero-gate.json` on canonical main SHA `f348acb8dae2f98f7a75c8085539eab49b435b56` produced `status: PASS`, `isRunning: true`, `isServer: true`, `checkpointCount: 4`, `cycleCount: 20`, `envelopeToleranceStuds: 0.001`.
+### Mac ↔ GitHub Roblox Studio Execution Bridge: operational; composite Hero Gate still unverified
+The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational. Its production contract is documented in `Docs/STUDIO_EXECUTOR.md`.
+- Private bridge repo: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`.
+- Mac self-hosted runner: `UNRENDERED-STUDIO-MAC`.
+- Requests are data-only fixed presets; arbitrary remote Luau/shell execution is rejected.
+- The bridge has a managed Studio RunMode executor, request-bound log identity, bounded CreatorOutput chunk reassembly, typed screenshot provenance, and a single job-specific fail-closed evidence evaluator.
+- Historical request `20260810-005-reality-hero-gate` on canonical SHA `f348acb8dae2f98f7a75c8085539eab49b435b56` did record a useful Run-mode lifecycle signal (`isRunning=true`, `isServer=true`, 20 cycles / 4 checkpoints). Its original top-level composite `PASS` was later invalidated: the durable bridge result is `FAIL` because lifecycle-only evidence cannot prove the full #151 Hero Gate and that result did not contain the evaluator-owned canonical lifecycle proof.
+- A row-specific result may be consumed only when its exact `result.json` passes the current job-specific evaluator. Lifecycle/server evidence must never be promoted into contact/traversability, diagnostics, two-client, or device/performance PASS by inference.
 
 ## Current unlock status
 
