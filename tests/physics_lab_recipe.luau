@@ -139,6 +139,59 @@ local function run(): number
 	expect("lab object placements bind valid ObjectGenome recipes and default state", allObjectContractsValid)
 	expect("lab shell starts as explicit F2 proxy fidelity", allInitialFidelityF2)
 
+	local doorGenome = PhysicsLabRecipe.objectGenome("commercialDoor")
+	local doorComponents = {}
+	for _, component in ipairs(doorGenome.components) do
+		doorComponents[component.key] = component
+	end
+	local hingeJamb = doorComponents["jamb-hinge"]
+	local strikeJamb = doorComponents["jamb-strike"]
+	local header = doorComponents.header
+	local leaf = doorComponents.leaf
+	expect(
+		"commercial door frame uses opening-preserving jamb/header construction",
+		doorComponents.frame == nil and hingeJamb ~= nil and strikeJamb ~= nil and header ~= nil and leaf ~= nil
+	)
+
+	if hingeJamb ~= nil and strikeJamb ~= nil and header ~= nil and leaf ~= nil then
+		local openingLeft = hingeJamb.localPositionM.x + hingeJamb.dimensionsM.x * 0.5
+		local openingRight = strikeJamb.localPositionM.x - strikeJamb.dimensionsM.x * 0.5
+		local openingBottom = math.max(
+			hingeJamb.localPositionM.y - hingeJamb.dimensionsM.y * 0.5,
+			strikeJamb.localPositionM.y - strikeJamb.dimensionsM.y * 0.5
+		)
+		local openingTop = header.localPositionM.y - header.dimensionsM.y * 0.5
+		local leafLeft = leaf.localPositionM.x - leaf.dimensionsM.x * 0.5
+		local leafRight = leaf.localPositionM.x + leaf.dimensionsM.x * 0.5
+		local leafBottom = leaf.localPositionM.y - leaf.dimensionsM.y * 0.5
+		local leafTop = leaf.localPositionM.y + leaf.dimensionsM.y * 0.5
+
+		expect(
+			"commercial door leaf fits inside clear frame opening without overlap",
+			leafLeft > openingLeft
+				and leafRight < openingRight
+				and leafBottom > openingBottom
+				and leafTop < openingTop
+		)
+		expect(
+			"commercial door header lands on both jamb tops",
+			math.abs((hingeJamb.localPositionM.y + hingeJamb.dimensionsM.y * 0.5) - openingTop) < 1e-9
+				and math.abs((strikeJamb.localPositionM.y + strikeJamb.dimensionsM.y * 0.5) - openingTop) < 1e-9
+		)
+	end
+
+	local leafHinge = nil
+	for _, mechanism in ipairs(doorGenome.mechanisms) do
+		if mechanism.key == "leaf-hinge" then
+			leafHinge = mechanism
+			break
+		end
+	end
+	expect(
+		"commercial door hinge references the structural hinge jamb",
+		leafHinge ~= nil and leafHinge.movingComponentKey == "leaf" and leafHinge.frameComponentKey == "jamb-hinge"
+	)
+
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
 	expect("lab duplicate identity is detectable", duplicateAccepted == false)
 
