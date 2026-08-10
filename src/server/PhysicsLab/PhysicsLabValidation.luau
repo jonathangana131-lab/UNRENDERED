@@ -71,7 +71,8 @@ local function assertCanonicalRootIdentity(root: Model, recipe: PhysicsLabRecipe
 		"Physics Lab root RegionId does not match the canonical resolved region"
 	)
 	assert(
-		requiredPositiveIntegerAttribute(root, RESOLVED_SCHEMA_ATTRIBUTE) == PhysicsLabRecipe.RESOLVED_REGION.schemaVersion,
+		requiredPositiveIntegerAttribute(root, RESOLVED_SCHEMA_ATTRIBUTE)
+			== PhysicsLabRecipe.RESOLVED_REGION.schemaVersion,
 		"Physics Lab root resolved-region schema version does not match canonical truth"
 	)
 	assert(
