@@ -248,10 +248,138 @@ local function run(): number
 	end)
 	expectEqual("registered transition rejects unknown identity", unknownTransitionAccepted, false)
 
+	local mutableRecord = {
+		id = "entity:mutable-registration",
+		kind = "office-chair",
+		origin = {
+			worldId = "world:0000000000000001",
+			regionId = "region:office-a",
+			generator = "objects.office",
+			generatorVersion = 1,
+			recipeKey = "chair/mutable-registration",
+		},
+		fidelity = "F2",
+		persistentState = {
+			mechanism = { angle = 12 },
+		},
+		stateRevision = 3,
+		representationRevision = 4,
+	}
+	local ownershipRegistry = WorldEntity.createRegistry()
+	local mutableRegistrationAccepted = WorldEntity.register(ownershipRegistry, mutableRecord :: any)
+	expectEqual("registry accepts structurally valid mutable record", mutableRegistrationAccepted, true)
+	local ownedRecord = WorldEntity.get(ownershipRegistry, mutableRecord.id) :: any
+	expectEqual("registry stores an owned record snapshot", ownedRecord == mutableRecord, false)
+
+	mutableRecord.id = "entity:mutated-after-registration"
+	mutableRecord.kind = "mutated-kind"
+	mutableRecord.origin.recipeKey = "mutated/recipe"
+	mutableRecord.persistentState.mechanism.angle = 99
+	mutableRecord.stateRevision = 99
+	mutableRecord.representationRevision = 100
+
+	expectEqual(
+		"caller id mutation cannot move registry identity",
+		ownedRecord.id,
+		"entity:mutable-registration"
+	)
+	expectEqual("caller kind mutation cannot rewrite registry truth", ownedRecord.kind, "office-chair")
+	expectEqual(
+		"caller origin mutation cannot rewrite registry truth",
+		ownedRecord.origin.recipeKey,
+		"chair/mutable-registration"
+	)
+	expectEqual(
+		"caller nested state mutation cannot rewrite registry truth",
+		ownedRecord.persistentState.mechanism.angle,
+		12
+	)
+	expectEqual("caller state revision mutation cannot rewrite registry truth", ownedRecord.stateRevision, 3)
+	expectEqual(
+		"caller representation revision mutation cannot rewrite registry truth",
+		ownedRecord.representationRevision,
+		4
+	)
+	expectEqual(
+		"old registry key remains authoritative after caller id mutation",
+		WorldEntity.get(ownershipRegistry, "entity:mutable-registration"),
+		ownedRecord
+	)
+	expectEqual(
+		"mutated caller id is absent from registry",
+		WorldEntity.get(ownershipRegistry, "entity:mutated-after-registration"),
+		nil
+	)
+	local ownedRecordMutationAccepted = pcall(function()
+		ownedRecord.kind = "registry-bypass"
+	end)
+	expectEqual("owned registered record rejects mutation", ownedRecordMutationAccepted, false)
+
+	local function mutableRegistrationFixture()
+		return {
+			id = "entity:registration-validation",
+			kind = "office-chair",
+			origin = {
+				worldId = "world:0000000000000001",
+				generator = "objects.office",
+				generatorVersion = 1,
+				recipeKey = "chair/registration-validation",
+			},
+			fidelity = "F1",
+			persistentState = { open = false },
+			stateRevision = 0,
+			representationRevision = 0,
+		}
+	end
+
+	local malformedFidelity = mutableRegistrationFixture()
+	malformedFidelity.fidelity = "F9"
+	local malformedFidelityAccepted = pcall(function()
+		WorldEntity.register(WorldEntity.createRegistry(), malformedFidelity :: any)
+	end)
+	expectEqual("registry rejects malformed record fidelity", malformedFidelityAccepted, false)
+
+	local negativeStateRevision = mutableRegistrationFixture()
+	negativeStateRevision.stateRevision = -1
+	local negativeStateRevisionAccepted = pcall(function()
+		WorldEntity.register(WorldEntity.createRegistry(), negativeStateRevision :: any)
+	end)
+	expectEqual("registry rejects negative state revision", negativeStateRevisionAccepted, false)
+
+	local fractionalRepresentationRevision = mutableRegistrationFixture()
+	fractionalRepresentationRevision.representationRevision = 1.5
+	local fractionalRepresentationRevisionAccepted = pcall(function()
+		WorldEntity.register(WorldEntity.createRegistry(), fractionalRepresentationRevision :: any)
+	end)
+	expectEqual(
+		"registry rejects fractional representation revision",
+		fractionalRepresentationRevisionAccepted,
+		false
+	)
+
+	local malformedOrigin = mutableRegistrationFixture()
+	malformedOrigin.origin.generatorVersion = 0
+	local malformedOriginAccepted = pcall(function()
+		WorldEntity.register(WorldEntity.createRegistry(), malformedOrigin :: any)
+	end)
+	expectEqual("registry rejects malformed record origin", malformedOriginAccepted, false)
+
+	local malformedState = mutableRegistrationFixture()
+	malformedState.persistentState = {
+		callback = function() end,
+	}
+	local malformedStateAccepted = pcall(function()
+		WorldEntity.register(WorldEntity.createRegistry(), malformedState :: any)
+	end)
+	expectEqual("registry rejects malformed record persistent state", malformedStateAccepted, false)
+
 	local registry = WorldEntity.createRegistry()
 	local registered = WorldEntity.register(registry, entity)
 	expectEqual("first registration succeeds", registered, true)
 	expectEqual("registry count", WorldEntity.count(registry), 1)
+	local authoritativeRecord = WorldEntity.get(registry, entity.id) :: any
+	expectEqual("registry owns registered record", authoritativeRecord == entity, false)
+	expectEqual("registry preserves registered identity", authoritativeRecord.id, entity.id)
 
 	local duplicate = WorldEntity.new({
 		id = entity.id,
@@ -267,7 +395,11 @@ local function run(): number
 	local duplicateRegistered, diagnostic = WorldEntity.register(registry, duplicate)
 	expectEqual("duplicate registration is rejected", duplicateRegistered, false)
 	expectEqual("duplicate diagnostic exists", diagnostic ~= nil, true)
-	expectEqual("duplicate does not replace original", WorldEntity.get(registry, entity.id), entity)
+	expectEqual(
+		"duplicate does not replace authoritative identity",
+		WorldEntity.get(registry, entity.id),
+		authoritativeRecord
+	)
 	expectEqual("duplicate diagnostic retained", #WorldEntity.duplicateDiagnostics(registry), 1)
 
 	local diagnosticSnapshot = WorldEntity.duplicateDiagnostics(registry)
@@ -319,12 +451,15 @@ local function run(): number
 	end)
 	expectEqual("duplicate diagnostic capacity rejects infinity", invalidCapacityAccepted, false)
 
-	local removed = WorldEntity.unregister(registry, entity.id)
-	expectEqual("unregister returns record", removed, entity)
+	local removed = WorldEntity.unregister(registry, entity.id) :: any
+	expectEqual("unregister returns canonical record identity", removed.id, entity.id)
+	expectEqual("unregister returns registry-owned record", removed, authoritativeRecord)
 	expectEqual("registry empty after unregister", WorldEntity.count(registry), 0)
-	local reRegistered = WorldEntity.register(registry, removed :: any)
+	local reRegistered = WorldEntity.register(registry, removed)
 	expectEqual("identity can be re-registered after teardown", reRegistered, true)
-	expectEqual("re-register restores same current identity", WorldEntity.get(registry, entity.id), removed)
+	local reRegisteredRecord = WorldEntity.get(registry, entity.id) :: any
+	expectEqual("re-register restores same current identity", reRegisteredRecord.id, removed.id)
+	expectEqual("re-register takes a fresh owned snapshot", reRegisteredRecord == removed, false)
 	WorldEntity.unregister(registry, entity.id)
 	expectEqual("registry empty after second unregister", WorldEntity.count(registry), 0)
 
