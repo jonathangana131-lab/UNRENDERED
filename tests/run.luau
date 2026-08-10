@@ -38,6 +38,7 @@ else
 end
 
 failures += runWorldEntity()
+require("./material_dna")
 
 if failures > 0 then
 	process.exit(1)
