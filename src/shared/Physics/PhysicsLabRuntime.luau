@@ -108,45 +108,50 @@ function PhysicsLabRuntime.step(
 		`Physics Lab fidelity authority diverged before step for {entityId}`
 	)
 
-	local function applyTransition(
-		transitionEntityId: string,
-		fromLevel: FidelityLevel,
-		toLevel: FidelityLevel,
-		reason: PolicyReason
-	): ()
-		assert(transitionEntityId == entityId, "FidelityManager transitioned the wrong Physics Lab entity")
-		assert(fromLevel == current.fidelity, "Physics Lab transition source fidelity drifted")
-		-- A canonical fidelity change must never advance without an explicit
-		-- representation-boundary acknowledgement. Callers with intentionally no
-		-- physical representation may pass a deliberate no-op observer; omission
-		-- is not silently treated as success.
-		assert(observeTransition ~= nil, "Physics Lab fidelity transition requires a representation observer")
+	local transitionHook: FidelityManager.TransitionHook? = nil
+	local observer = observeTransition
+	if observer ~= nil then
+		transitionHook = function(
+			transitionEntityId: string,
+			fromLevel: FidelityLevel,
+			toLevel: FidelityLevel,
+			reason: PolicyReason
+		): ()
+			assert(transitionEntityId == entityId, "FidelityManager transitioned the wrong Physics Lab entity")
+			assert(fromLevel == current.fidelity, "Physics Lab transition source fidelity drifted")
 
-		local capturedState: PlainData? = nil
-		if WorldEntity.fidelityRank(toLevel) < WorldEntity.fidelityRank(fromLevel) then
-			assert(captureState ~= nil, "Physics Lab demotion requires a state-capture adapter")
-			capturedState = captureState(current)
+			local capturedState: PlainData? = nil
+			if WorldEntity.fidelityRank(toLevel) < WorldEntity.fidelityRank(fromLevel) then
+				assert(captureState ~= nil, "Physics Lab demotion requires a state-capture adapter")
+				capturedState = captureState(current)
+			end
+
+			-- Preview first so representation adapters can reject a transition before
+			-- either authoritative store commits it. Demotion state has already been
+			-- captured at this point; promotion receives the incumbent stored state.
+			local preview = WorldEntity.transition(current, toLevel, capturedState)
+			observer(current, preview, reason)
+
+			local committed = self._registry.transitionRegistered(entityId, toLevel, capturedState)
+			assert(committed.fidelity == preview.fidelity, "Physics Lab transition commit fidelity mismatch")
+			assert(
+				committed.stateRevision == preview.stateRevision,
+				"Physics Lab transition commit state mismatch"
+			)
+			assert(
+				committed.representationRevision == preview.representationRevision,
+				"Physics Lab transition commit representation mismatch"
+			)
 		end
-
-		-- Preview first so representation adapters can reject a transition before
-		-- either authoritative store commits it. Demotion state has already been
-		-- captured at this point; promotion receives the incumbent stored state.
-		local preview = WorldEntity.transition(current, toLevel, capturedState)
-		observeTransition(current, preview, reason)
-
-		local committed = self._registry.transitionRegistered(entityId, toLevel, capturedState)
-		assert(committed.fidelity == preview.fidelity, "Physics Lab transition commit fidelity mismatch")
-		assert(
-			committed.stateRevision == preview.stateRevision,
-			"Physics Lab transition commit state mismatch"
-		)
-		assert(
-			committed.representationRevision == preview.representationRevision,
-			"Physics Lab transition commit representation mismatch"
-		)
 	end
 
-	local result = self._fidelity:step(entityId, current.fidelity, inputs, nowSeconds, applyTransition)
+	-- Preserve FidelityManager's production fail-closed contract: when no
+	-- representation observer is supplied, pass no transition hook. Once hold
+	-- and cooldown permit a transition, the manager returns
+	-- blockedReason="transition-required" without committing either fidelity
+	-- authority. Callers with intentionally no physical representation may pass
+	-- an explicit no-op observer instead of silently advancing truth.
+	local result = self._fidelity:step(entityId, current.fidelity, inputs, nowSeconds, transitionHook)
 	local nextRecord = PhysicsLabRuntime.getRecord(self, entityId)
 	assert(
 		self._fidelity:getObservedLevel(entityId) == nextRecord.fidelity,
