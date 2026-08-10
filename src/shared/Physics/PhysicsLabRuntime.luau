@@ -7,15 +7,16 @@ local WorldEntity = require(script.Parent.Parent.Reality.WorldEntity)
 local PhysicsLabRuntime = {}
 PhysicsLabRuntime.__index = PhysicsLabRuntime
 
-type FidelityLevel = FidelityManager.FidelityLevel
+export type FidelityLevel = FidelityManager.FidelityLevel
+export type PolicyInputs = FidelityManager.PolicyInputs
+export type PolicyReason = FidelityManager.PolicyReason
+export type StepResult = FidelityManager.StepResult
+export type PlainData = WorldEntity.PlainData
+export type WorldEntityRecord = WorldEntity.WorldEntityRecord
+
 type Manager = FidelityManager.Manager
 type Metrics = FidelityManager.Metrics
-type PolicyInputs = FidelityManager.PolicyInputs
-type PolicyReason = FidelityManager.PolicyReason
-type StepResult = FidelityManager.StepResult
-type PlainData = WorldEntity.PlainData
 type Registry = WorldEntity.Registry
-type WorldEntityRecord = WorldEntity.WorldEntityRecord
 type Recipe = PhysicsLabRecipe.Recipe
 
 export type CaptureState = (WorldEntityRecord) -> PlainData
@@ -116,8 +117,6 @@ function PhysicsLabRuntime.step(
 			capturedState = captureState(current)
 		end
 
-		-- Preview the exact production transition before mutating either authority.
-		-- If representation work rejects the transition, both registries remain unchanged.
 		local preview = WorldEntity.transition(current, toLevel, capturedState)
 		if observeTransition ~= nil then
 			observeTransition(current, preview, reason)
