@@ -1,0 +1,96 @@
+name: Apply issue 71 falsy-state leaf
+
+on:
+  push:
+    branches:
+      - agent/reality/71-falsy-state-sol56s3
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/reality/71-falsy-state-sol56s3
+          fetch-depth: 0
+
+      - name: Patch fail-closed persistent state boundary
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          source_path = Path("src/shared/Reality/WorldEntity.luau")
+          source = source_path.read_text()
+          old = '''local function cloneState(state: PlainData?): PlainData
+          \tlocal source: any = state or {}
+          \tassert(getmetatable(source) == nil, "persistentState must not contain metatables")
+          \tfor key in pairs(source) do
+          \t\tassert(
+          \t\t\ttype(key) == "string" and key ~= "",
+          \t\t\t"persistentState top-level keys must be non-empty strings"
+          \t\t)
+          \tend
+          \treturn clonePlainValue(source, "persistentState", {}) :: PlainData
+          end
+          '''
+          new = '''local function cloneState(state: PlainData?): PlainData
+          \tlocal source: any = state
+          \tif source == nil then
+          \t\tsource = {}
+          \tend
+          \tassert(type(source) == "table", "persistentState must be a table")
+          \tassert(getmetatable(source) == nil, "persistentState must not contain metatables")
+          \tfor key in pairs(source) do
+          \t\tassert(
+          \t\t\ttype(key) == "string" and key ~= "",
+          \t\t\t"persistentState top-level keys must be non-empty strings"
+          \t\t)
+          \tend
+          \treturn clonePlainValue(source, "persistentState", {}) :: PlainData
+          end
+          '''
+          if source.count(old) != 1:
+              raise SystemExit("cloneState marker not found exactly once")
+          source_path.write_text(source.replace(old, new, 1))
+
+          test_path = Path("tests/world_entity_registry_shape.luau")
+          tests = test_path.read_text()
+          marker = '''\tlocal wrongKind = makeSpec()
+          '''
+          addition = '''\tlocal omittedStateSpec = makeSpec()
+          \tomittedStateSpec.persistentState = nil
+          \tlocal omittedStateAccepted, omittedStateEntity = newResult(omittedStateSpec)
+          \texpect("new accepts omitted persistent state", omittedStateAccepted)
+          \tif omittedStateAccepted then
+          \t\texpect("new defaults omitted persistent state to empty data", next(omittedStateEntity.persistentState) == nil)
+          \tend
+
+          \tlocal captureTarget = WorldEntity.new(makeSpec())
+          \tlocal falseCaptureAccepted = pcall(function()
+          \t\tWorldEntity.captureState(captureTarget, false :: any)
+          \tend)
+          \texpect("captureState rejects false persistent state", not falseCaptureAccepted)
+
+          '''
+          if tests.count(marker) != 1:
+              raise SystemExit("test insertion marker not found exactly once")
+          test_path.write_text(tests.replace(marker, addition + marker, 1))
+          PY
+
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/apply-71-falsy-state.yml
+
+      - name: Commit repair leaf
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/shared/Reality/WorldEntity.luau tests/world_entity_registry_shape.luau .github/workflows/apply-71-falsy-state.yml
+          git commit -m "Reject falsy WorldEntity persistent state"
+          git push origin HEAD:agent/reality/71-falsy-state-sol56s3
