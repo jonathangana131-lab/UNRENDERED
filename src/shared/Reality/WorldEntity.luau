@@ -68,6 +68,14 @@ local FIDELITY_RANK: { [string]: number } = table.freeze({
 	F4 = 4,
 })
 
+local NEW_ENTITY_KEYS: { [string]: boolean } = table.freeze({
+	id = true,
+	kind = true,
+	origin = true,
+	fidelity = true,
+	persistentState = true,
+})
+
 local RECORD_KEYS: { [string]: boolean } = table.freeze({
 	id = true,
 	kind = true,
@@ -86,19 +94,26 @@ local ORIGIN_KEYS: { [string]: boolean } = table.freeze({
 	recipeKey = true,
 })
 
-local function assertNonEmpty(name: string, value: string): ()
-	assert(value ~= "", `{name} must not be empty`)
-	assert(string.find(value, "%c") == nil, `{name} must not contain control characters`)
+local function assertNonEmpty(name: string, value: unknown): string
+	assert(type(value) == "string", `{name} must be a string`)
+	local stringValue = value :: string
+	assert(stringValue ~= "", `{name} must not be empty`)
+	assert(string.find(stringValue, "%c") == nil, `{name} must not contain control characters`)
+	return stringValue
 end
 
-local function assertFiniteNumber(path: string, value: number): ()
-	assert(value == value and value > -math.huge and value < math.huge, `{path} must be finite`)
+local function assertFiniteNumber(path: string, value: unknown): number
+	assert(type(value) == "number", `{path} must be a number`)
+	local numericValue = value :: number
+	assert(
+		numericValue == numericValue and numericValue > -math.huge and numericValue < math.huge,
+		`{path} must be finite`
+	)
+	return numericValue
 end
 
 local function assertNonNegativeInteger(path: string, value: unknown): number
-	assert(type(value) == "number", `{path} must be a number`)
-	local numericValue = value :: number
-	assertFiniteNumber(path, numericValue)
+	local numericValue = assertFiniteNumber(path, value)
 	assert(
 		numericValue >= 0 and numericValue == math.floor(numericValue),
 		`{path} must be a non-negative integer`
@@ -124,7 +139,7 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 	if valueType == "nil" or valueType == "boolean" or valueType == "string" then
 		return value
 	elseif valueType == "number" then
-		assertFiniteNumber(path, value :: number)
+		assertFiniteNumber(path, value)
 		return value
 	elseif valueType ~= "table" then
 		error(`{path} must contain plain data, got {valueType}`)
@@ -173,6 +188,8 @@ end
 
 local function cloneState(state: PlainData?): PlainData
 	local source = state or {}
+	assert(type(source) == "table", "persistentState must be a table")
+	assert(getmetatable(source) == nil, "persistentState must not contain metatables")
 	for key in pairs(source) do
 		assert(
 			type(key) == "string" and key ~= "",
@@ -184,24 +201,25 @@ end
 
 local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
 	local source = assertExactRecordShape(origin, ORIGIN_KEYS, "origin")
-	assertNonEmpty("origin.worldId", source.worldId)
+	local worldId = assertNonEmpty("origin.worldId", source.worldId)
+	local regionId: string? = nil
 	if source.regionId ~= nil then
-		assertNonEmpty("origin.regionId", source.regionId)
+		regionId = assertNonEmpty("origin.regionId", source.regionId)
 	end
-	assertNonEmpty("origin.generator", source.generator)
-	assertFiniteNumber("origin.generatorVersion", source.generatorVersion)
+	local generator = assertNonEmpty("origin.generator", source.generator)
+	local generatorVersion = assertFiniteNumber("origin.generatorVersion", source.generatorVersion)
 	assert(
-		source.generatorVersion >= 1 and source.generatorVersion == math.floor(source.generatorVersion),
+		generatorVersion >= 1 and generatorVersion == math.floor(generatorVersion),
 		"origin.generatorVersion must be a positive integer"
 	)
-	assertNonEmpty("origin.recipeKey", source.recipeKey)
+	local recipeKey = assertNonEmpty("origin.recipeKey", source.recipeKey)
 
 	return table.freeze({
-		worldId = source.worldId,
-		regionId = source.regionId,
-		generator = source.generator,
-		generatorVersion = source.generatorVersion,
-		recipeKey = source.recipeKey,
+		worldId = worldId,
+		regionId = regionId,
+		generator = generator,
+		generatorVersion = generatorVersion,
+		recipeKey = recipeKey,
 	})
 end
 
@@ -243,8 +261,7 @@ local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
 		WorldEntity.isId(source.id),
 		"WorldEntityRecord.id must be a non-empty stable identifier without control characters"
 	)
-	assert(type(source.kind) == "string", "WorldEntityRecord.kind must be a string")
-	assertNonEmpty("WorldEntityRecord.kind", source.kind)
+	local kind = assertNonEmpty("WorldEntityRecord.kind", source.kind)
 	assert(type(source.origin) == "table", "WorldEntityRecord.origin must be a table")
 	assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {tostring(source.fidelity)}`)
 	assert(type(source.persistentState) == "table", "WorldEntityRecord.persistentState must be a table")
@@ -255,7 +272,7 @@ local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
 
 	return table.freeze({
 		id = source.id,
-		kind = source.kind,
+		kind = kind,
 		origin = cloneOrigin(source.origin :: GenerationOrigin),
 		fidelity = source.fidelity :: Fidelity,
 		persistentState = cloneState(source.persistentState :: PlainData),
@@ -265,25 +282,26 @@ local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
 end
 
 function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord
+	local source = assertExactRecordShape(spec, NEW_ENTITY_KEYS, "NewWorldEntity")
 	assert(
-		WorldEntity.isId(spec.id),
+		WorldEntity.isId(source.id),
 		"WorldEntity.id must be a non-empty stable identifier without control characters"
 	)
-	assertNonEmpty("WorldEntity.kind", spec.kind)
+	local kind = assertNonEmpty("WorldEntity.kind", source.kind)
 	local fidelity: Fidelity
-	if spec.fidelity == nil then
+	if source.fidelity == nil then
 		fidelity = "F0"
 	else
-		fidelity = spec.fidelity
+		assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {tostring(source.fidelity)}`)
+		fidelity = source.fidelity :: Fidelity
 	end
-	assert(WorldEntity.isFidelity(fidelity), `invalid fidelity {tostring(fidelity)}`)
 
 	return table.freeze({
-		id = spec.id,
-		kind = spec.kind,
-		origin = cloneOrigin(spec.origin),
+		id = source.id,
+		kind = kind,
+		origin = cloneOrigin(source.origin :: GenerationOrigin),
 		fidelity = fidelity,
-		persistentState = cloneState(spec.persistentState),
+		persistentState = cloneState(source.persistentState :: PlainData?),
 		stateRevision = 0,
 		representationRevision = 0,
 	})
