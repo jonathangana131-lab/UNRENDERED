@@ -56,18 +56,38 @@ function Loader:_makeNode(relativePath, kind)
 				directory = dirname(relativePath)
 			end
 
-			local candidateBase = `{directory}/{key}`
-			local candidateModule = `{candidateBase}.luau`
-			if fs.isFile(join(loader.root, candidateModule)) then
-				return loader:_makeNode(candidateModule, "module")
-			end
-			if fs.isDir(join(loader.root, candidateBase)) then
-				return loader:_makeNode(candidateBase, "directory")
-			end
-
-			error(`unable to resolve production module child {candidateBase}`, 2)
+			-- Lune filesystem calls can yield. Roblox-style property lookup is a
+			-- metamethod here, so probing the filesystem inside __index can cross
+			-- a non-yieldable metamethod/C-call boundary. Keep navigation pure and
+			-- defer existence checks until the explicit require call below.
+			return loader:_makeNode(`{directory}/{key}`, "unresolved")
 		end,
 	})
+end
+
+function Loader:_resolveRequireTarget(target)
+	if type(target) ~= "table" then
+		return nil
+	end
+
+	local targetPath = rawget(target, "_path")
+	local targetKind = rawget(target, "_kind")
+	if type(targetPath) ~= "string" then
+		return nil
+	end
+
+	if targetKind == "module" then
+		return targetPath
+	end
+	if targetKind == "unresolved" then
+		local candidateModule = `{targetPath}.luau`
+		if fs.isFile(join(self.root, candidateModule)) then
+			return candidateModule
+		end
+		error(`unable to resolve production module {targetPath}`, 3)
+	end
+
+	return nil
 end
 
 function Loader:_requirePath(relativePath)
@@ -86,12 +106,9 @@ function Loader:_requirePath(relativePath)
 		script = self:_makeNode(relativePath, "module"),
 	}
 	environment.require = function(target)
-		if type(target) == "table" then
-			local targetPath = rawget(target, "_path")
-			local targetKind = rawget(target, "_kind")
-			if type(targetPath) == "string" and targetKind == "module" then
-				return self:_requirePath(targetPath)
-			end
+		local targetPath = self:_resolveRequireTarget(target)
+		if targetPath ~= nil then
+			return self:_requirePath(targetPath)
 		end
 		return hostRequire(target)
 	end
