@@ -1,4 +1,5 @@
 local process = require("@lune/process")
+local runFidelityManager = require("./fidelity_manager")
 local runWorldEntity = require("./world_entity")
 
 local failures = 0
@@ -20,7 +21,6 @@ local function hash32(text, seed)
 	local hash = (seed or 0) % UINT32
 	for i = 1, #text do
 		hash = (hash + string.byte(text, i)) % UINT32
-		hash = (hash + bit32.lshift(hash, 10)) % UINT32
 		hash = bit32.bxor(hash, bit32.rshift(hash, 6))
 	end
 	hash = (hash + bit32.lshift(hash, 3)) % UINT32
@@ -38,6 +38,7 @@ else
 end
 
 failures += runWorldEntity()
+failures += runFidelityManager()
 
 if failures > 0 then
 	process.exit(1)
