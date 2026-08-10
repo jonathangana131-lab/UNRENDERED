@@ -1,8 +1,10 @@
-local MaterialDNA = require("../src/shared/Materials/MaterialDNA")
-local ObjectGenome = require("../src/shared/Objects/ObjectGenome")
-local PhysicsLabRecipe = require("../src/shared/Physics/PhysicsLabRecipe")
-local StableId = require("../src/shared/Core/StableId")
-local WorldEntity = require("../src/shared/Reality/WorldEntity")
+local ProductionLoader = require("./support/ProductionLoader")
+
+local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
+local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
+local PhysicsLabRecipe = ProductionLoader.requireShared("Physics/PhysicsLabRecipe")
+local StableId = ProductionLoader.requireShared("Core/StableId")
+local WorldEntity = ProductionLoader.requireShared("Reality/WorldEntity")
 
 local function run(): number
 	local failures = 0
