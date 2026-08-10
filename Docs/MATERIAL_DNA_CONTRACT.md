@@ -31,13 +31,17 @@ Visual, physical, and acoustic profiles share a `coherenceClass`. They are diffe
 
 `validateRecipe` accepts `unknown` plain data and returns a `ValidationResult`; structurally malformed persisted/generated input must report errors instead of crashing through missing nested fields. Canonical history/anomaly lists must be dense 1-based arrays with no keyed entries. Numeric plausibility ranges are finite and bounded.
 
+V1 record shapes are closed: the recipe, every nested record, history-event record, color record, and `MaterialState` reject undeclared fields. `freezeRecipe` therefore cannot validate a value and silently discard unknown accepted data. Extending canonical shape requires an explicit schema migration or a deliberately versioned extension field.
+
 The validator also rejects direct URLs/Roblox asset IDs in project-owned semantic keys and checks known semantic compatibility families. V1 examples include vinyl wallcovering on wall-compatible substrates with pasted-wallpaper installation, low-pile carpet on carpet backing with a supported carpet install method, and baked enamel on sheet metal with factory-coated-panel installation.
 
 Compatibility checks are intentionally conservative. Adding a new material family should add an explicit production rule or remain unconstrained until its construction semantics are defined; do not infer arbitrary compatibility from string similarity.
 
 ## Fixtures
 
-`MaterialFixtures` provides three deliberately ordinary commercial materials:
+`MaterialFixtureData` is the pure, Roblox-independent source of truth for the production fixture recipes. `MaterialFixtures` consumes that data and freezes it through the production `MaterialDNA` validator for Roblox runtime use. Pure Lune tests consume the same data, so the catalog cannot drift invalid while a duplicated test fixture remains green.
+
+The initial catalog contains three deliberately ordinary commercial materials:
 
 - yellow vinyl wallcovering over gypsum board,
 - beige low-pile commercial carpet,
