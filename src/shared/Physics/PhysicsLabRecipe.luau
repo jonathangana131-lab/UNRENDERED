@@ -4,6 +4,7 @@ local StableId = require(script.Parent.Parent.Core.StableId)
 local MaterialDNA = require(script.Parent.Parent.Materials.MaterialDNA)
 local ObjectGenome = require(script.Parent.Parent.Objects.ObjectGenome)
 local ObjectGenomeFixtures = require(script.Parent.Parent.Objects.ObjectGenomeFixtures)
+local ResolvedRegionRecipe = require(script.Parent.Parent.Reality.ResolvedRegionRecipe)
 local WorldEntity = require(script.Parent.Parent.Reality.WorldEntity)
 local PhysicsLabObjectGenomes = require(script.Parent.PhysicsLabObjectGenomes)
 
@@ -64,9 +65,51 @@ local PhysicsLabRecipe = {}
 PhysicsLabRecipe.SCHEMA_VERSION = 1
 PhysicsLabRecipe.GENERATOR_VERSION = 1
 PhysicsLabRecipe.RECIPE_KEY = "physics-lab.hero-gate.v1"
+PhysicsLabRecipe.WORLD_SEED_REF = "physics-lab.hero-gate.seed.v1"
 
 local WORLD_ID = StableId.fromParts("world", { "physics-lab", "hero-gate", "v1" })
-local REGION_ID = StableId.fromParts("region", { "physics-lab", "bay-a", "v1" })
+local REGION_ADDRESS: ResolvedRegionRecipe.RegionAddressData = table.freeze({
+	x = 0,
+	z = 0,
+	layer = 0,
+})
+local RESOLVED_REGION = ResolvedRegionRecipe.lock({
+	worldId = WORLD_ID,
+	worldSeedRef = PhysicsLabRecipe.WORLD_SEED_REF,
+	regionAddress = REGION_ADDRESS,
+	generatorVersions = ResolvedRegionRecipe.currentGeneratorVersions(),
+	semanticIntentKey = "physics-lab.hero-gate",
+	topologyAnchors = {
+		"character-spawn-anchor",
+		"door-main",
+	},
+	canonicalContentKeys = {
+		"floor",
+		"ceiling",
+		"wall-left",
+		"wall-right",
+		"wall-back",
+		"wall-front-left",
+		"wall-front-right",
+		"wall-front-header",
+		"ramp",
+		"ledge",
+		"stair-1",
+		"stair-2",
+		"stair-3",
+		"stair-4",
+		"character-spawn-anchor",
+		"door-main",
+		"chair-a",
+		"table-a",
+		"cabinet-a",
+		"cart-a",
+	},
+})
+local REGION_ID = RESOLVED_REGION.regionId
+
+PhysicsLabRecipe.WORLD_ID = WORLD_ID
+PhysicsLabRecipe.RESOLVED_REGION = RESOLVED_REGION
 
 local WALL_MATERIAL: MaterialReference = table.freeze({
 	id = "material.v1.office-wallpaper.yellow-vinyl",
