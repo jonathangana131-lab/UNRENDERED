@@ -1,5 +1,6 @@
 local process = require("@lune/process")
 local Contract = require("../src/shared/Core/DeterminismContract")
+local runWorldEntity = require("./world_entity")
 
 local failures = 0
 
@@ -166,8 +167,10 @@ expectError("seed stream rejects empty scope", function()
 	Contract.seedFor("world-alpha", 1, "worldgen.topology", { "" })
 end)
 
+failures += runWorldEntity()
+
 if failures > 0 then
 	process.exit(1)
 end
 
-print("UNRENDERED deterministic contract golden suite passed")
+print("UNRENDERED pure test suite passed")

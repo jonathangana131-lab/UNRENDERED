@@ -46,6 +46,11 @@ jobs:
       - name: Luau analysis
         run: luau-lsp analyze --platform=roblox --definitions:@roblox=globalTypes.d.luau --sourcemap=sourcemap.json src
 
+      - name: Canonical randomness audit
+        run: |
+          python3 scripts/check_canonical_randomness.py --self-test
+          python3 scripts/check_canonical_randomness.py
+
       - name: Pure Luau tests
         run: lune run tests/run
 
