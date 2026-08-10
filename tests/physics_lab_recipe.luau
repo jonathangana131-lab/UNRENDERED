@@ -139,6 +139,29 @@ local function run(): number
 	expect("lab object placements bind valid ObjectGenome recipes and default state", allObjectContractsValid)
 	expect("lab shell starts as explicit F2 proxy fidelity", allInitialFidelityF2)
 
+	local doorGenome = PhysicsLabRecipe.objectGenome("commercialDoor")
+	local doorLeaf = nil
+	for _, component in ipairs(doorGenome.components) do
+		if component.key == "leaf" then
+			doorLeaf = component
+			break
+		end
+	end
+	local doorFrameLeavesOpening = doorLeaf ~= nil
+	if doorLeaf ~= nil then
+		for _, component in ipairs(doorGenome.components) do
+			if
+				component.key ~= "leaf"
+				and component.dimensionsM.x >= doorLeaf.dimensionsM.x
+				and component.dimensionsM.y >= doorLeaf.dimensionsM.y
+			then
+				doorFrameLeavesOpening = false
+				break
+			end
+		end
+	end
+	expect("commercial door frame does not realize as a solid slab across the opening", doorFrameLeavesOpening)
+
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
 	expect("lab duplicate identity is detectable", duplicateAccepted == false)
 
