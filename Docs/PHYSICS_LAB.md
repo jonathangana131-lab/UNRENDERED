@@ -18,7 +18,7 @@ The deterministic shell contains:
 
 - carpeted floor, ceiling, and split walls with a real door opening;
 - a physical hinged-panel door proxy;
-- chair and table proxies bound to the landed production ObjectGenome fixture identities;
+- chair and table proxies bound to the landed production ObjectGenome fixture identities and their default ObjectState snapshots;
 - a filing-cabinet proxy bound to the landed ObjectGenome fixture identity plus a prismatic drawer mechanism placeholder;
 - a dynamic rolling-cart mass proxy;
 - four actual stair steps;

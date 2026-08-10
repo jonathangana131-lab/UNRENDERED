@@ -40,7 +40,10 @@ local function run(): number
 	for index, element in first.elements do
 		local repeated = second.elements[index]
 		expect(`element {index} key deterministic`, repeated ~= nil and element.key == repeated.key)
-		expect(`element {index} id deterministic`, repeated ~= nil and element.entity.id == repeated.entity.id)
+		expect(
+			`element {index} id deterministic`,
+			repeated ~= nil and element.entity.id == repeated.entity.id
+		)
 		expect(
 			`element {index} transform deterministic`,
 			repeated ~= nil
@@ -55,13 +58,26 @@ local function run(): number
 		expect(`element {index} WorldEntityId valid`, WorldEntity.isId(element.entity.id))
 		expect(`element {index} WorldEntityId unique`, ids[element.entity.id] == nil)
 		ids[element.entity.id] = true
-		expect(`element {index} exact MaterialDNA ref valid`, MaterialDNA.validateReference(element.material).ok)
+		expect(
+			`element {index} exact MaterialDNA ref valid`,
+			MaterialDNA.validateReference(element.material).ok
+		)
 		expect(`element {index} world origin bound`, element.entity.origin.worldId == first.worldId)
 		expect(`element {index} region origin bound`, element.entity.origin.regionId == first.regionId)
 		expect(`element {index} recipe key bound`, element.entity.origin.recipeKey == element.key)
-		expect(`element {index} state begins empty`, next(element.entity.persistentState) == nil)
+		if element.objectGenomeId ~= nil then
+			expect(
+				`element {index} fixture ObjectState binds genome identity`,
+				element.entity.persistentState.genomeId == element.objectGenomeId
+			)
+		else
+			expect(`element {index} proxy state begins empty`, next(element.entity.persistentState) == nil)
+		end
 		expect(`element {index} state revision begins zero`, element.entity.stateRevision == 0)
-		expect(`element {index} representation revision begins zero`, element.entity.representationRevision == 0)
+		expect(
+			`element {index} representation revision begins zero`,
+			element.entity.representationRevision == 0
+		)
 
 		manager:register(element.entity.id, element.entity.fidelity)
 		expect(
@@ -93,10 +109,12 @@ local function run(): number
 		end
 		expect(`${role} lab proxy exists`, matched ~= nil)
 		expect(
-			`${role} uses landed ObjectGenome identity`,
+			`${role} uses landed ObjectGenome identity and state`,
 			matched ~= nil
 				and matched.objectGenomeId == expectedGenomeId
 				and StableId.is(matched.objectGenomeId, ObjectGenome.STABLE_ID_NAMESPACE)
+				and matched.entity.kind == "object"
+				and matched.entity.persistentState.genomeId == expectedGenomeId
 		)
 	end
 

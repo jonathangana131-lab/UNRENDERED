@@ -15,7 +15,8 @@ PhysicsLabRecipe.RecipeVersion = 1
 PhysicsLabRecipe.StudsPerMeter = 25 / 7
 PhysicsLabRecipe.GeneratorKey = "physics-lab.shell"
 PhysicsLabRecipe.WorldId = StableId.fromParts("world", { "physics-lab", "hero-gate", "v1" })
-PhysicsLabRecipe.RegionId = StableId.fromParts("region", { PhysicsLabRecipe.WorldId, "physics-lab-shell", "v1" })
+PhysicsLabRecipe.RegionId =
+	StableId.fromParts("region", { PhysicsLabRecipe.WorldId, "physics-lab-shell", "v1" })
 PhysicsLabRecipe.RecipeId = StableId.fromParts("physics-lab", {
 	PhysicsLabRecipe.WorldId,
 	PhysicsLabRecipe.RegionId,
@@ -110,7 +111,12 @@ local function worldEntityId(key: string): string
 	})
 end
 
-local function worldEntity(key: string, kind: string, fidelity: FidelityLevel): WorldEntityRecord
+local function worldEntity(
+	key: string,
+	kind: string,
+	fidelity: FidelityLevel,
+	persistentState: any?
+): WorldEntityRecord
 	return WorldEntity.new({
 		id = worldEntityId(key),
 		kind = kind,
@@ -122,7 +128,7 @@ local function worldEntity(key: string, kind: string, fidelity: FidelityLevel): 
 			recipeKey = key,
 		},
 		fidelity = fidelity,
-		persistentState = {},
+		persistentState = persistentState or {},
 	})
 end
 
@@ -142,11 +148,7 @@ end
 
 local function genomeSizeStuds(genome: Genome): Vec3
 	local scale = PhysicsLabRecipe.StudsPerMeter
-	return vec3(
-		genome.dimensionsM.x * scale,
-		genome.dimensionsM.y * scale,
-		genome.dimensionsM.z * scale
-	)
+	return vec3(genome.dimensionsM.x * scale, genome.dimensionsM.y * scale, genome.dimensionsM.z * scale)
 end
 
 local function objectElement(
@@ -160,7 +162,7 @@ local function objectElement(
 	return frozenElement({
 		key = key,
 		role = role,
-		entity = worldEntity(key, `physics-lab.{role}`, "F3"),
+		entity = worldEntity(key, "object", "F3", ObjectGenome.defaultState(genome)),
 		positionStuds = vec3(position.x, size.y / 2, position.z),
 		sizeStuds = size,
 		yawDegrees = 0,
@@ -182,17 +184,20 @@ local function add(
 	representationKind: RepresentationKind,
 	fidelity: FidelityLevel
 ): ()
-	table.insert(elements, frozenElement({
-		key = key,
-		role = role,
-		entity = worldEntity(key, kind, fidelity),
-		positionStuds = position,
-		sizeStuds = size,
-		yawDegrees = yawDegrees,
-		material = material,
-		representationKind = representationKind,
-		objectGenomeId = nil,
-	}))
+	table.insert(
+		elements,
+		frozenElement({
+			key = key,
+			role = role,
+			entity = worldEntity(key, kind, fidelity),
+			positionStuds = position,
+			sizeStuds = size,
+			yawDegrees = yawDegrees,
+			material = material,
+			representationKind = representationKind,
+			objectGenomeId = nil,
+		})
+	)
 end
 
 local function assertFinite(path: string, value: number): ()
@@ -223,16 +228,28 @@ function PhysicsLabRecipe.validate(recipe: Recipe): ()
 		seenIds[element.entity.id] = true
 		assert(element.entity.origin.worldId == recipe.worldId, `{element.key} worldId mismatch`)
 		assert(element.entity.origin.regionId == recipe.regionId, `{element.key} regionId mismatch`)
-		assert(element.entity.origin.generator == PhysicsLabRecipe.GeneratorKey, `{element.key} generator mismatch`)
-		assert(element.entity.origin.generatorVersion == recipe.recipeVersion, `{element.key} generatorVersion mismatch`)
+		assert(
+			element.entity.origin.generator == PhysicsLabRecipe.GeneratorKey,
+			`{element.key} generator mismatch`
+		)
+		assert(
+			element.entity.origin.generatorVersion == recipe.recipeVersion,
+			`{element.key} generatorVersion mismatch`
+		)
 		assert(element.entity.origin.recipeKey == element.key, `{element.key} recipeKey mismatch`)
 
 		local registered = registry.register(element.entity)
 		assert(registered, `WorldEntity registry rejected {element.key}`)
 		fidelity:register(element.entity.id, element.entity.fidelity)
-		assert(fidelity:getObservedLevel(element.entity.id) == element.entity.fidelity, `{element.key} fidelity mismatch`)
+		assert(
+			fidelity:getObservedLevel(element.entity.id) == element.entity.fidelity,
+			`{element.key} fidelity mismatch`
+		)
 
-		assert(MaterialDNA.validateReference(element.material).ok, `{element.key} material reference is invalid`)
+		assert(
+			MaterialDNA.validateReference(element.material).ok,
+			`{element.key} material reference is invalid`
+		)
 		for axis, value in pairs(element.positionStuds) do
 			assertFinite(`{element.key}.positionStuds.{axis}`, value)
 		end
@@ -245,6 +262,12 @@ function PhysicsLabRecipe.validate(recipe: Recipe): ()
 			assert(
 				StableId.is(element.objectGenomeId, ObjectGenome.STABLE_ID_NAMESPACE),
 				`{element.key} objectGenomeId must satisfy ObjectGenome identity contract`
+			)
+			assert(element.entity.kind == "object", `{element.key} fixture-backed entity kind must be object`)
+			local objectState = element.entity.persistentState :: any
+			assert(
+				objectState.genomeId == element.objectGenomeId,
+				`{element.key} persistent ObjectState must match objectGenomeId`
 			)
 		end
 	end
@@ -259,20 +282,145 @@ function PhysicsLabRecipe.build(): Recipe
 	local elements: { LabElement } = {}
 
 	-- Structural shell: the south wall is split around a physical door opening.
-	add(elements, "floor", "floor", "physics-lab.structure", vec3(0, -0.5, 0), vec3(48, 1, 36), 0, FLOOR_MATERIAL, "static-box", "F2")
-	add(elements, "ceiling", "ceiling", "physics-lab.structure", vec3(0, 12.5, 0), vec3(48, 1, 36), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-north", "wall", "physics-lab.structure", vec3(0, 6, 18.5), vec3(48, 13, 1), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-west", "wall", "physics-lab.structure", vec3(-24.5, 6, 0), vec3(1, 13, 36), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-east", "wall", "physics-lab.structure", vec3(24.5, 6, 0), vec3(1, 13, 36), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-south-left", "wall", "physics-lab.structure", vec3(-17, 6, -18.5), vec3(14, 13, 1), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-south-right", "wall", "physics-lab.structure", vec3(9, 6, -18.5), vec3(30, 13, 1), 0, WALL_MATERIAL, "static-box", "F2")
-	add(elements, "wall-south-lintel", "wall", "physics-lab.structure", vec3(-8, 10.5, -18.5), vec3(4, 4, 1), 0, WALL_MATERIAL, "static-box", "F2")
+	add(
+		elements,
+		"floor",
+		"floor",
+		"physics-lab.structure",
+		vec3(0, -0.5, 0),
+		vec3(48, 1, 36),
+		0,
+		FLOOR_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"ceiling",
+		"ceiling",
+		"physics-lab.structure",
+		vec3(0, 12.5, 0),
+		vec3(48, 1, 36),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"wall-north",
+		"wall",
+		"physics-lab.structure",
+		vec3(0, 6, 18.5),
+		vec3(48, 13, 1),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"wall-west",
+		"wall",
+		"physics-lab.structure",
+		vec3(-24.5, 6, 0),
+		vec3(1, 13, 36),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"wall-east",
+		"wall",
+		"physics-lab.structure",
+		vec3(24.5, 6, 0),
+		vec3(1, 13, 36),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"wall-south-left",
+		"wall",
+		"physics-lab.structure",
+		vec3(-17, 6, -18.5),
+		vec3(14, 13, 1),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"wall-south-right",
+		"wall",
+		"physics-lab.structure",
+		vec3(9, 6, -18.5),
+		vec3(30, 13, 1),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"wall-south-lintel",
+		"wall",
+		"physics-lab.structure",
+		vec3(-8, 10.5, -18.5),
+		vec3(4, 4, 1),
+		0,
+		WALL_MATERIAL,
+		"static-box",
+		"F2"
+	)
 
-	add(elements, "door", "door", "physics-lab.door-proxy", vec3(-8, 4, -18), vec3(4, 8, 0.45), 0, METAL_MATERIAL, "hinged-panel", "F3")
-	table.insert(elements, objectElement("chair", "chair", vec3(-5, 0, -2), ObjectGenomeFixtures.officeChair, "dynamic-box"))
-	table.insert(elements, objectElement("table", "table", vec3(2, 0, -3), ObjectGenomeFixtures.officeTable, "dynamic-box"))
-	table.insert(elements, objectElement("cabinet", "cabinet", vec3(19, 0, -12), ObjectGenomeFixtures.filingCabinet, "sliding-drawer-proxy"))
-	add(elements, "cart", "cart", "physics-lab.cart-proxy", vec3(11, 1.6, -6), vec3(3.5, 3.2, 2.5), 0, METAL_MATERIAL, "dynamic-box", "F3")
+	add(
+		elements,
+		"door",
+		"door",
+		"physics-lab.door-proxy",
+		vec3(-8, 4, -18),
+		vec3(4, 8, 0.45),
+		0,
+		METAL_MATERIAL,
+		"hinged-panel",
+		"F3"
+	)
+	table.insert(
+		elements,
+		objectElement("chair", "chair", vec3(-5, 0, -2), ObjectGenomeFixtures.officeChair, "dynamic-box")
+	)
+	table.insert(
+		elements,
+		objectElement("table", "table", vec3(2, 0, -3), ObjectGenomeFixtures.officeTable, "dynamic-box")
+	)
+	table.insert(
+		elements,
+		objectElement(
+			"cabinet",
+			"cabinet",
+			vec3(19, 0, -12),
+			ObjectGenomeFixtures.filingCabinet,
+			"sliding-drawer-proxy"
+		)
+	)
+	add(
+		elements,
+		"cart",
+		"cart",
+		"physics-lab.cart-proxy",
+		vec3(11, 1.6, -6),
+		vec3(3.5, 3.2, 2.5),
+		0,
+		METAL_MATERIAL,
+		"dynamic-box",
+		"F3"
+	)
 
 	for stepIndex = 1, 4 do
 		local height = stepIndex * 0.75
@@ -289,9 +437,42 @@ function PhysicsLabRecipe.build(): Recipe
 			"F2"
 		)
 	end
-	add(elements, "ramp", "ramp", "physics-lab.structure", vec3(10, 1.5, 9), vec3(8, 3, 6), 0, METAL_MATERIAL, "static-wedge", "F2")
-	add(elements, "ledge", "ledge", "physics-lab.structure", vec3(19, 3.25, 8), vec3(4, 0.5, 8), 0, METAL_MATERIAL, "static-box", "F2")
-	add(elements, "character-spawn", "spawn-anchor", "physics-lab.spawn-anchor", vec3(0, 0.05, 12), vec3(2, 0.1, 2), 0, FLOOR_MATERIAL, "spawn-anchor", "F1")
+	add(
+		elements,
+		"ramp",
+		"ramp",
+		"physics-lab.structure",
+		vec3(10, 1.5, 9),
+		vec3(8, 3, 6),
+		0,
+		METAL_MATERIAL,
+		"static-wedge",
+		"F2"
+	)
+	add(
+		elements,
+		"ledge",
+		"ledge",
+		"physics-lab.structure",
+		vec3(19, 3.25, 8),
+		vec3(4, 0.5, 8),
+		0,
+		METAL_MATERIAL,
+		"static-box",
+		"F2"
+	)
+	add(
+		elements,
+		"character-spawn",
+		"spawn-anchor",
+		"physics-lab.spawn-anchor",
+		vec3(0, 0.05, 12),
+		vec3(2, 0.1, 2),
+		0,
+		FLOOR_MATERIAL,
+		"spawn-anchor",
+		"F1"
+	)
 
 	local recipe: Recipe = table.freeze({
 		schemaVersion = PhysicsLabRecipe.SchemaVersion,
