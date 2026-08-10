@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, agent/validation/7-fidelity-ci-sol7d9c]
   pull_request:
 
 permissions:
