@@ -130,9 +130,15 @@ local function run(): number
 			local record = records[entityId]
 			assert(record ~= nil, `missing test WorldEntity {entityId}`)
 			if capturedState == nil then
-				table.insert(transitionEvents, `transition:{entityId}:{targetFidelity}:{transitionReason}:no-capture`)
+				table.insert(
+					transitionEvents,
+					`transition:{entityId}:{targetFidelity}:{transitionReason}:no-capture`
+				)
 			else
-				table.insert(transitionEvents, `transition:{entityId}:{targetFidelity}:{transitionReason}:captured`)
+				table.insert(
+					transitionEvents,
+					`transition:{entityId}:{targetFidelity}:{transitionReason}:captured`
+				)
 			end
 			records[entityId] = WorldEntity.transition(record, targetFidelity, capturedState)
 		end,
@@ -150,7 +156,11 @@ local function run(): number
 	local promoted = FidelityManager.request(manager, "entity:a", "F3", "interaction", 0)
 	expectEqual("promotion happens immediately", promoted.status, "transitioned")
 	expectEqual("promotion reaches WorldEntity target", records["entity:a"].fidelity, "F3")
-	expectEqual("promotion increments WorldEntity representation revision", records["entity:a"].representationRevision, 1)
+	expectEqual(
+		"promotion increments WorldEntity representation revision",
+		records["entity:a"].representationRevision,
+		1
+	)
 	expectEqual("promotion does not capture state", captureCount, 0)
 
 	local promotionBlocked = FidelityManager.request(manager, "entity:a", "F4", "interaction", 0.1)
@@ -234,11 +244,56 @@ local function run(): number
 		}
 		local localManager = FidelityManager.new(localAdapter)
 		local sequence = {
-			{ 0, { distanceStuds = 20, observation = 0, interaction = 0, significance = 0, networkRelevance = 0 } },
-			{ 1, { distanceStuds = 1000, observation = 0, interaction = 0, significance = 0, networkRelevance = 0 } },
-			{ 2, { distanceStuds = 1000, observation = 0, interaction = 0, significance = 0, networkRelevance = 0 } },
-			{ 3, { distanceStuds = 1000, observation = 0, interaction = 0, significance = 0, networkRelevance = 0 } },
-			{ 4, { distanceStuds = 1000, observation = 0, interaction = 0.9, significance = 0, networkRelevance = 0 } },
+			{
+				0,
+				{
+					distanceStuds = 20,
+					observation = 0,
+					interaction = 0,
+					significance = 0,
+					networkRelevance = 0,
+				},
+			},
+			{
+				1,
+				{
+					distanceStuds = 1000,
+					observation = 0,
+					interaction = 0,
+					significance = 0,
+					networkRelevance = 0,
+				},
+			},
+			{
+				2,
+				{
+					distanceStuds = 1000,
+					observation = 0,
+					interaction = 0,
+					significance = 0,
+					networkRelevance = 0,
+				},
+			},
+			{
+				3,
+				{
+					distanceStuds = 1000,
+					observation = 0,
+					interaction = 0,
+					significance = 0,
+					networkRelevance = 0,
+				},
+			},
+			{
+				4,
+				{
+					distanceStuds = 1000,
+					observation = 0,
+					interaction = 0.9,
+					significance = 0,
+					networkRelevance = 0,
+				},
+			},
 		}
 		local output = {}
 		for _, item in ipairs(sequence) do
@@ -246,7 +301,10 @@ local function run(): number
 			table.insert(output, `{item[1]}:{result.status}:{result.from}:{result.target}:{result.reason}`)
 		end
 		local localMetrics = FidelityManager.getMetrics(localManager)
-		table.insert(output, `metrics:{localMetrics.transitions}:{localMetrics.promotions}:{localMetrics.demotions}`)
+		table.insert(
+			output,
+			`metrics:{localMetrics.transitions}:{localMetrics.promotions}:{localMetrics.demotions}`
+		)
 		return table.concat(output, "|")
 	end
 
