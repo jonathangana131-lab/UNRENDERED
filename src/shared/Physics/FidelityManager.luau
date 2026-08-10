@@ -33,7 +33,7 @@ export type Config = {
 	networkF1: number,
 }
 
-export type PersistentState = { [string]: any }
+export type PersistentState = { [string]: unknown }
 
 export type Adapter = {
 	getFidelity: (entityId: string) -> Fidelity,
@@ -49,6 +49,16 @@ export type FidelityCounts = {
 	F4: number,
 }
 
+export type ReasonCounts = {
+	distance: number,
+	observation: number,
+	interaction: number,
+	significance: number,
+	network: number,
+	idle: number,
+	other: number,
+}
+
 export type Metrics = {
 	trackedEntities: number,
 	fidelityCounts: FidelityCounts,
@@ -59,7 +69,7 @@ export type Metrics = {
 	cooldownBlocks: number,
 	hysteresisBlocks: number,
 	externalResyncs: number,
-	reasonCounts: { [string]: number },
+	reasonCounts: ReasonCounts,
 }
 
 export type TransitionStatus = "unchanged" | "transitioned" | "blocked_hysteresis" | "blocked_cooldown"
@@ -90,7 +100,7 @@ type InternalMetrics = {
 	cooldownBlocks: number,
 	hysteresisBlocks: number,
 	externalResyncs: number,
-	reasonCounts: { [string]: number },
+	reasonCounts: ReasonCounts,
 }
 
 export type Manager = {
@@ -134,7 +144,7 @@ local DEFAULT_CONFIG: Config = table.freeze({
 })
 
 local function isFiniteNumber(value: number): boolean
-	return value == value and value ~= math.huge and value ~= -math.huge
+	return value == value and value > -math.huge and value < math.huge
 end
 
 local function rank(fidelity: Fidelity): number
@@ -143,9 +153,17 @@ local function rank(fidelity: Fidelity): number
 	return value
 end
 
+local function assertFidelity(value: Fidelity)
+	assert(FIDELITY_RANK[value] ~= nil, `invalid fidelity {value}`)
+end
+
 local function assertUnitInterval(name: string, value: number)
 	assert(isFiniteNumber(value), `{name} must be finite`)
 	assert(value >= 0 and value <= 1, `{name} must be in [0, 1]`)
+end
+
+local function assertDescending(name: string, highest: number, middle: number, lowest: number)
+	assert(highest >= middle and middle >= lowest, `{name} thresholds must descend by fidelity`)
 end
 
 local function validateInputs(inputs: PolicyInputs)
@@ -158,41 +176,45 @@ local function validateInputs(inputs: PolicyInputs)
 end
 
 local function validateConfig(config: Config)
-	assert(isFiniteNumber(config.promotionCooldownSeconds) and config.promotionCooldownSeconds >= 0, "invalid promotion cooldown")
-	assert(isFiniteNumber(config.demotionCooldownSeconds) and config.demotionCooldownSeconds >= 0, "invalid demotion cooldown")
-	assert(isFiniteNumber(config.demotionGraceSeconds) and config.demotionGraceSeconds >= 0, "invalid demotion grace")
-
-	assert(config.distanceF3 >= 0, "distanceF3 must be non-negative")
-	assert(config.distanceF3 <= config.distanceF2, "distance thresholds must widen from F3 to F2")
-	assert(config.distanceF2 <= config.distanceF1, "distance thresholds must widen from F2 to F1")
+	assert(
+		isFiniteNumber(config.promotionCooldownSeconds) and config.promotionCooldownSeconds >= 0,
+		"invalid promotion cooldown"
+	)
+	assert(
+		isFiniteNumber(config.demotionCooldownSeconds) and config.demotionCooldownSeconds >= 0,
+		"invalid demotion cooldown"
+	)
+	assert(
+		isFiniteNumber(config.demotionGraceSeconds) and config.demotionGraceSeconds >= 0,
+		"invalid demotion grace"
+	)
+	assert(isFiniteNumber(config.distanceF3) and config.distanceF3 >= 0, "invalid distanceF3")
+	assert(isFiniteNumber(config.distanceF2) and config.distanceF2 >= config.distanceF3, "invalid distanceF2")
+	assert(isFiniteNumber(config.distanceF1) and config.distanceF1 >= config.distanceF2, "invalid distanceF1")
 
 	assertUnitInterval("observationF3", config.observationF3)
 	assertUnitInterval("observationF2", config.observationF2)
 	assertUnitInterval("observationF1", config.observationF1)
-	assert(config.observationF3 >= config.observationF2, "observation thresholds must descend by fidelity")
-	assert(config.observationF2 >= config.observationF1, "observation thresholds must descend by fidelity")
+	assertDescending("observation", config.observationF3, config.observationF2, config.observationF1)
 
 	assertUnitInterval("interactionF4", config.interactionF4)
 	assertUnitInterval("interactionF3", config.interactionF3)
 	assertUnitInterval("interactionF2", config.interactionF2)
 	assertUnitInterval("interactionF1", config.interactionF1)
-	assert(config.interactionF4 >= config.interactionF3, "interaction thresholds must descend by fidelity")
-	assert(config.interactionF3 >= config.interactionF2, "interaction thresholds must descend by fidelity")
-	assert(config.interactionF2 >= config.interactionF1, "interaction thresholds must descend by fidelity")
+	assert(config.interactionF4 >= config.interactionF3, "interaction F4 threshold must be highest")
+	assertDescending("interaction", config.interactionF3, config.interactionF2, config.interactionF1)
 
 	assertUnitInterval("significanceF4", config.significanceF4)
 	assertUnitInterval("significanceF3", config.significanceF3)
 	assertUnitInterval("significanceF2", config.significanceF2)
 	assertUnitInterval("significanceF1", config.significanceF1)
-	assert(config.significanceF4 >= config.significanceF3, "significance thresholds must descend by fidelity")
-	assert(config.significanceF3 >= config.significanceF2, "significance thresholds must descend by fidelity")
-	assert(config.significanceF2 >= config.significanceF1, "significance thresholds must descend by fidelity")
+	assert(config.significanceF4 >= config.significanceF3, "significance F4 threshold must be highest")
+	assertDescending("significance", config.significanceF3, config.significanceF2, config.significanceF1)
 
 	assertUnitInterval("networkF3", config.networkF3)
 	assertUnitInterval("networkF2", config.networkF2)
 	assertUnitInterval("networkF1", config.networkF1)
-	assert(config.networkF3 >= config.networkF2, "network thresholds must descend by fidelity")
-	assert(config.networkF2 >= config.networkF1, "network thresholds must descend by fidelity")
+	assertDescending("network", config.networkF3, config.networkF2, config.networkF1)
 end
 
 local function cloneConfig(config: Config): Config
@@ -220,17 +242,23 @@ local function cloneConfig(config: Config): Config
 	}
 end
 
-local function newCounts(): FidelityCounts
+local function newFidelityCounts(): FidelityCounts
+	return { F0 = 0, F1 = 0, F2 = 0, F3 = 0, F4 = 0 }
+end
+
+local function newReasonCounts(): ReasonCounts
 	return {
-		F0 = 0,
-		F1 = 0,
-		F2 = 0,
-		F3 = 0,
-		F4 = 0,
+		distance = 0,
+		observation = 0,
+		interaction = 0,
+		significance = 0,
+		network = 0,
+		idle = 0,
+		other = 0,
 	}
 end
 
-local function adjustCount(counts: FidelityCounts, fidelity: Fidelity, delta: number)
+local function adjustFidelityCount(counts: FidelityCounts, fidelity: Fidelity, delta: number)
 	if fidelity == "F0" then
 		counts.F0 += delta
 	elseif fidelity == "F1" then
@@ -244,17 +272,27 @@ local function adjustCount(counts: FidelityCounts, fidelity: Fidelity, delta: nu
 	end
 end
 
-local function assertFidelity(value: Fidelity)
-	assert(FIDELITY_RANK[value] ~= nil, `invalid fidelity {value}`)
+local function countReason(counts: ReasonCounts, reason: string)
+	if reason == "distance" then
+		counts.distance += 1
+	elseif reason == "observation" then
+		counts.observation += 1
+	elseif reason == "interaction" then
+		counts.interaction += 1
+	elseif reason == "significance" then
+		counts.significance += 1
+	elseif reason == "network" then
+		counts.network += 1
+	elseif reason == "idle" then
+		counts.idle += 1
+	else
+		counts.other += 1
+	end
 end
 
 local function clearPendingDemotion(entry: Entry)
 	entry.pendingDemotionTarget = nil
 	entry.pendingDemotionSince = nil
-end
-
-local function isCooldownActive(lastTransitionAt: number?, nowSeconds: number, duration: number): boolean
-	return lastTransitionAt ~= nil and nowSeconds - lastTransitionAt < duration
 end
 
 local function makeResult(
@@ -273,25 +311,45 @@ local function makeResult(
 	})
 end
 
+local function isCooldownActive(lastTransitionAt: number?, nowSeconds: number, duration: number): boolean
+	return lastTransitionAt ~= nil and nowSeconds - lastTransitionAt < duration
+end
+
 local function syncEntry(manager: Manager, entityId: string, entry: Entry): Fidelity
-	local actual = manager.adapter.getFidelity(entityId)
-	assertFidelity(actual)
-	if actual ~= entry.currentFidelity then
-		adjustCount(manager.metrics.fidelityCounts, entry.currentFidelity, -1)
-		adjustCount(manager.metrics.fidelityCounts, actual, 1)
-		entry.currentFidelity = actual
+	local authoritative = manager.adapter.getFidelity(entityId)
+	assertFidelity(authoritative)
+	if authoritative ~= entry.currentFidelity then
+		adjustFidelityCount(manager.metrics.fidelityCounts, entry.currentFidelity, -1)
+		adjustFidelityCount(manager.metrics.fidelityCounts, authoritative, 1)
+		entry.currentFidelity = authoritative
 		clearPendingDemotion(entry)
 		manager.metrics.externalResyncs += 1
 	end
-	return actual
+	return authoritative
+end
+
+local function trackEntry(manager: Manager, entityId: string)
+	assert(entityId ~= "", "entityId required")
+	assert(manager.entries[entityId] == nil, `entity already tracked: {entityId}`)
+	local current = manager.adapter.getFidelity(entityId)
+	assertFidelity(current)
+	manager.entries[entityId] = {
+		currentFidelity = current,
+		lastTransitionAt = nil,
+		lastEvaluationAt = nil,
+		pendingDemotionTarget = nil,
+		pendingDemotionSince = nil,
+	}
+	manager.metrics.trackedEntities += 1
+	adjustFidelityCount(manager.metrics.fidelityCounts, current, 1)
 end
 
 local function getOrTrack(manager: Manager, entityId: string): Entry
-	local existing = manager.entries[entityId]
-	if existing ~= nil then
-		return existing
+	local entry = manager.entries[entityId]
+	if entry ~= nil then
+		return entry
 	end
-	FidelityManager.track(manager, entityId)
+	trackEntry(manager, entityId)
 	local tracked = manager.entries[entityId]
 	assert(tracked ~= nil, `failed to track {entityId}`)
 	return tracked
@@ -308,13 +366,16 @@ local function performTransition(
 	capturedState: PersistentState?
 ): TransitionResult
 	manager.adapter.transition(entityId, target, capturedState, reason)
-	local actual = manager.adapter.getFidelity(entityId)
-	assertFidelity(actual)
-	assert(actual == target, `adapter transition for {entityId} ended at {actual}, expected {target}`)
+	local authoritative = manager.adapter.getFidelity(entityId)
+	assertFidelity(authoritative)
+	assert(
+		authoritative == target,
+		`adapter transition for {entityId} ended at {authoritative}, expected {target}`
+	)
 
-	adjustCount(manager.metrics.fidelityCounts, entry.currentFidelity, -1)
-	adjustCount(manager.metrics.fidelityCounts, actual, 1)
-	entry.currentFidelity = actual
+	adjustFidelityCount(manager.metrics.fidelityCounts, entry.currentFidelity, -1)
+	adjustFidelityCount(manager.metrics.fidelityCounts, authoritative, 1)
+	entry.currentFidelity = authoritative
 	entry.lastTransitionAt = nowSeconds
 	clearPendingDemotion(entry)
 
@@ -324,8 +385,7 @@ local function performTransition(
 	else
 		manager.metrics.demotions += 1
 	end
-	manager.metrics.reasonCounts[reason] = (manager.metrics.reasonCounts[reason] or 0) + 1
-
+	countReason(manager.metrics.reasonCounts, reason)
 	return makeResult("transitioned", entityId, from, target, reason)
 end
 
@@ -407,14 +467,13 @@ function FidelityManager.new(adapter: Adapter, configOverride: Config?): Manager
 
 	local config = cloneConfig(configOverride or DEFAULT_CONFIG)
 	validateConfig(config)
-
 	return {
 		adapter = adapter,
 		config = table.freeze(config),
 		entries = {},
 		metrics = {
 			trackedEntities = 0,
-			fidelityCounts = newCounts(),
+			fidelityCounts = newFidelityCounts(),
 			transitions = 0,
 			promotions = 0,
 			demotions = 0,
@@ -422,33 +481,21 @@ function FidelityManager.new(adapter: Adapter, configOverride: Config?): Manager
 			cooldownBlocks = 0,
 			hysteresisBlocks = 0,
 			externalResyncs = 0,
-			reasonCounts = {},
+			reasonCounts = newReasonCounts(),
 		},
 	}
 end
 
 function FidelityManager.track(manager: Manager, entityId: string)
-	assert(entityId ~= "", "entityId required")
-	assert(manager.entries[entityId] == nil, `entity already tracked: {entityId}`)
-	local current = manager.adapter.getFidelity(entityId)
-	assertFidelity(current)
-	manager.entries[entityId] = {
-		currentFidelity = current,
-		lastTransitionAt = nil,
-		lastEvaluationAt = nil,
-		pendingDemotionTarget = nil,
-		pendingDemotionSince = nil,
-	}
-	manager.metrics.trackedEntities += 1
-	adjustCount(manager.metrics.fidelityCounts, current, 1)
+	trackEntry(manager, entityId)
 end
 
 function FidelityManager.untrack(manager: Manager, entityId: string): boolean
-	local existing = manager.entries[entityId]
-	if existing == nil then
+	local entry = manager.entries[entityId]
+	if entry == nil then
 		return false
 	end
-	adjustCount(manager.metrics.fidelityCounts, existing.currentFidelity, -1)
+	adjustFidelityCount(manager.metrics.fidelityCounts, entry.currentFidelity, -1)
 	manager.entries[entityId] = nil
 	manager.metrics.trackedEntities -= 1
 	return true
@@ -464,7 +511,10 @@ function FidelityManager.request(
 	assert(entityId ~= "", "entityId required")
 	assertFidelity(target)
 	assert(reason ~= "", "transition reason required")
-	assert(isFiniteNumber(nowSeconds) and nowSeconds >= 0, "nowSeconds must be a finite non-negative number")
+	assert(
+		isFiniteNumber(nowSeconds) and nowSeconds >= 0,
+		"nowSeconds must be a finite non-negative number"
+	)
 
 	local entry = getOrTrack(manager, entityId)
 	local current = syncEntry(manager, entityId, entry)
@@ -491,14 +541,13 @@ function FidelityManager.request(
 		entry.pendingDemotionTarget = target
 		entry.pendingDemotionSince = nowSeconds
 	end
-
 	local pendingSince = entry.pendingDemotionSince
 	assert(pendingSince ~= nil, "pending demotion timestamp missing")
+
 	if nowSeconds - pendingSince < manager.config.demotionGraceSeconds then
 		manager.metrics.hysteresisBlocks += 1
 		return makeResult("blocked_hysteresis", entityId, current, target, reason)
 	end
-
 	if isCooldownActive(entry.lastTransitionAt, nowSeconds, manager.config.demotionCooldownSeconds) then
 		manager.metrics.cooldownBlocks += 1
 		return makeResult("blocked_cooldown", entityId, current, target, reason)
@@ -527,10 +576,6 @@ function FidelityManager.refresh(manager: Manager)
 end
 
 function FidelityManager.getMetrics(manager: Manager): Metrics
-	local reasonCounts = {}
-	for reason, count in pairs(manager.metrics.reasonCounts) do
-		reasonCounts[reason] = count
-	end
 	return table.freeze({
 		trackedEntities = manager.metrics.trackedEntities,
 		fidelityCounts = table.freeze({
@@ -547,7 +592,15 @@ function FidelityManager.getMetrics(manager: Manager): Metrics
 		cooldownBlocks = manager.metrics.cooldownBlocks,
 		hysteresisBlocks = manager.metrics.hysteresisBlocks,
 		externalResyncs = manager.metrics.externalResyncs,
-		reasonCounts = table.freeze(reasonCounts),
+		reasonCounts = table.freeze({
+			distance = manager.metrics.reasonCounts.distance,
+			observation = manager.metrics.reasonCounts.observation,
+			interaction = manager.metrics.reasonCounts.interaction,
+			significance = manager.metrics.reasonCounts.significance,
+			network = manager.metrics.reasonCounts.network,
+			idle = manager.metrics.reasonCounts.idle,
+			other = manager.metrics.reasonCounts.other,
+		}),
 	})
 end
 
