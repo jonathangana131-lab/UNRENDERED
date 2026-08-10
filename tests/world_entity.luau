@@ -147,6 +147,38 @@ local function run(): number
 	expectEqual("duplicate does not replace original", WorldEntity.get(registry, entity.id), entity)
 	expectEqual("duplicate diagnostic retained", #WorldEntity.duplicateDiagnostics(registry), 1)
 
+	local boundedRegistry = WorldEntity.createRegistry(2)
+	WorldEntity.register(boundedRegistry, entity)
+	for index = 1, 3 do
+		WorldEntity.register(
+			boundedRegistry,
+			WorldEntity.new({
+				id = entity.id,
+				kind = `duplicate-{index}`,
+				origin = {
+					worldId = "world:0000000000000001",
+					regionId = "region:office-a",
+					generator = "objects.office",
+					generatorVersion = 1,
+					recipeKey = `duplicate/{index}`,
+				},
+			})
+		)
+	end
+	local boundedDiagnostics = WorldEntity.duplicateDiagnostics(boundedRegistry)
+	expectEqual("duplicate diagnostic retention stays capped", #boundedDiagnostics, 2)
+	expectEqual("duplicate diagnostic cap evicts oldest entry", boundedDiagnostics[1].incomingRecipeKey, "duplicate/2")
+	expectEqual("duplicate diagnostic cap retains newest entry", boundedDiagnostics[2].incomingRecipeKey, "duplicate/3")
+
+	local disabledDiagnosticsRegistry = WorldEntity.createRegistry(0)
+	WorldEntity.register(disabledDiagnosticsRegistry, entity)
+	WorldEntity.register(disabledDiagnosticsRegistry, duplicate)
+	expectEqual(
+		"zero duplicate diagnostic capacity retains no history",
+		#WorldEntity.duplicateDiagnostics(disabledDiagnosticsRegistry),
+		0
+	)
+
 	local removed = WorldEntity.unregister(registry, entity.id)
 	expectEqual("unregister returns record", removed, entity)
 	expectEqual("registry empty after unregister", WorldEntity.count(registry), 0)
