@@ -1,41 +1,53 @@
 --!strict
 
+local DeterminismContract = require(script.Parent.DeterminismContract)
+
+local UINT32 = 4294967296
+local MAX_SAFE_INTEGER = 9007199254740991
+
 local Generator = {}
 Generator.__index = Generator
 
 export type Generator = typeof(setmetatable({} :: { state: number }, Generator))
 
-local DeterministicRng = {}
+local DeterministicRng = {
+	ContractVersion = DeterminismContract.RngVersion,
+}
+
+local function isSafeInteger(value: number): boolean
+	if value ~= value or value == math.huge or value == -math.huge then
+		return false
+	end
+	return value % 1 == 0 and math.abs(value) <= MAX_SAFE_INTEGER
+end
 
 function DeterministicRng.new(seed: number): Generator
-	local normalized = bit32.band(seed, 0xffffffff)
-	if normalized == 0 then
-		normalized = 0x6d2b79f5
-	end
-	return setmetatable({ state = normalized }, Generator)
+	return setmetatable({ state = DeterminismContract.normalizeRngSeed(seed) }, Generator)
 end
 
 function Generator.nextU32(self: Generator): number
-	local x = self.state
-	x = bit32.bxor(x, bit32.lshift(x, 13))
-	x = bit32.bxor(x, bit32.rshift(x, 17))
-	x = bit32.bxor(x, bit32.lshift(x, 5))
-	x = bit32.band(x, 0xffffffff)
-	if x == 0 then
-		x = 0x6d2b79f5
-	end
-	self.state = x
-	return x
+	local nextState = DeterminismContract.nextRngState(self.state)
+	self.state = nextState
+	return nextState
 end
 
 function Generator.nextNumber(self: Generator): number
-	return Generator.nextU32(self) / 4294967296
+	return Generator.nextU32(self) / UINT32
 end
 
 function Generator.nextInteger(self: Generator, minimum: number, maximum: number): number
+	assert(isSafeInteger(minimum) and isSafeInteger(maximum), "minimum and maximum must be safe integers")
 	assert(minimum <= maximum, "minimum must be <= maximum")
 	local width = maximum - minimum + 1
-	return minimum + math.floor(Generator.nextNumber(self) * width)
+	assert(width <= UINT32, "integer range width must be <= 2^32")
+
+	local acceptanceLimit = UINT32 - (UINT32 % width)
+	local sample = Generator.nextU32(self)
+	while sample >= acceptanceLimit do
+		sample = Generator.nextU32(self)
+	end
+
+	return minimum + (sample % width)
 end
 
 function Generator.chance(self: Generator, probability: number): boolean
