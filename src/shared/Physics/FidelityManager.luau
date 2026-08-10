@@ -49,9 +49,17 @@ export type StepResult = {
 	blockedReason: BlockedReason?,
 }
 
+export type LevelCounts = {
+	F0: number,
+	F1: number,
+	F2: number,
+	F3: number,
+	F4: number,
+}
+
 export type Metrics = {
 	registered: number,
-	counts: { [FidelityLevel]: number },
+	counts: LevelCounts,
 	transitions: number,
 	promotions: number,
 	demotions: number,
@@ -85,7 +93,7 @@ type EntityState = {
 
 type MutableMetrics = {
 	registered: number,
-	counts: { [FidelityLevel]: number },
+	counts: LevelCounts,
 	transitions: number,
 	promotions: number,
 	demotions: number,
@@ -433,7 +441,7 @@ function FidelityManager.step(
 	state.lastEvaluatedAt = nowSeconds
 
 	local decision = FidelityManager.evaluate(inputs, self.config, state.level, request)
-	local desired = decision.level
+	local desired: FidelityLevel = decision.level :: FidelityLevel
 	if desired == state.level then
 		state.pendingLevel = nil
 		state.pendingReason = nil
@@ -480,7 +488,7 @@ function FidelityManager.step(
 		}
 	end
 
-	local previousLevel = state.level
+	local previousLevel: FidelityLevel = state.level
 	if not isPromotion then
 		if self.adapter == nil or self.adapter.captureBeforeDemotion == nil then
 			self._metrics.blockedByCapture += 1
@@ -524,15 +532,16 @@ function FidelityManager.step(
 end
 
 function FidelityManager.getMetrics(self: Manager): Metrics
+	local counts: LevelCounts = {
+		F0 = self._metrics.counts.F0,
+		F1 = self._metrics.counts.F1,
+		F2 = self._metrics.counts.F2,
+		F3 = self._metrics.counts.F3,
+		F4 = self._metrics.counts.F4,
+	}
 	return table.freeze({
 		registered = self._metrics.registered,
-		counts = table.freeze({
-			F0 = self._metrics.counts.F0,
-			F1 = self._metrics.counts.F1,
-			F2 = self._metrics.counts.F2,
-			F3 = self._metrics.counts.F3,
-			F4 = self._metrics.counts.F4,
-		}),
+		counts = table.freeze(counts),
 		transitions = self._metrics.transitions,
 		promotions = self._metrics.promotions,
 		demotions = self._metrics.demotions,
