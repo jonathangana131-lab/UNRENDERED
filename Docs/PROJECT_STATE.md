@@ -1,28 +1,80 @@
 # Project State
 
-Current phase: **Phase 0 foundation, entering Phase 1**
+Current phase: **Foundation Lock — Reality-Grade Wave 1**
 
-Bootstrap status:
-- PR #1 is merged to `main`.
-- Its final PR validation passed tool installation, Rojo sourcemap, StyLua, Selene, Roblox Luau analysis, pure deterministic tests, Rojo build, and artifact upload.
-- Every worker must inspect the latest `main` Actions status before feature work. If main is failing, restoring it is the first priority.
+## Main health
 
-Current P0:
-1. Keep `main` reproducibly green.
-2. Lock deterministic IDs, scoped RNG, and generation-version contracts with golden tests.
-3. Define WorldEntity identity and the F0-F4 representation lifecycle.
-4. Expand MaterialDNA and ObjectGenome into production contracts.
-5. Establish the production Physics Lab shell without throwaway frameworks.
-6. Establish deterministic regression and seed-repro tooling.
+- Roblox/Rojo production bootstrap is merged.
+- The proven CI path covers pinned tool installation, Rojo sourcemap, StyLua, Selene, Roblox Luau analysis, pure deterministic tests, Rojo build, and artifact upload.
+- Every worker must inspect the latest `main` Actions status. Red main overrides feature work.
 
-Known external setup gaps:
+## Quality policy
+
+`Docs/QUALITY_STANDARD.md` is mandatory.
+
+Open issue != unlocked work. This file is the authoritative unlock board.
+
+Project-wide WIP target: **3–5 major Feature Epics maximum**. With many workers, deepen active epics through tests, fuzzing, performance, polish, integration and independent review rather than opening unrelated systems.
+
+## Unlocked Wave 1
+
+### Epic A — Deterministic Reality Foundation
+- #3 — lock StableId / scoped RNG contracts.
+- #8 — deterministic regression/repro harness.
+
+Exit gate:
+- golden vectors are stable,
+- subsystem streams cannot perturb unrelated streams,
+- repro keys are clear enough that later generators can attach failures directly.
+
+### Epic B — WorldEntity / Fidelity Foundation
+- #4 — WorldEntity identity and representation lifecycle.
+- #7 — F0–F4 promotion/demotion manager.
+
+Exit gate:
+- identity survives Roblox Instance destruction/recreation,
+- duplicate IDs are detectable,
+- state capture/promotion/demotion is tested,
+- fidelity policy has metrics and anti-thrashing behavior.
+
+### Epic C — Physical Content Domain Foundation
+- #5 — MaterialDNA production contract.
+- #6 — ObjectGenome construction-grammar contract.
+
+Exit gate:
+- coherent immutable recipe vs mutable state separation,
+- MaterialDNA links visual/physical/acoustic identity without asset-ID coupling,
+- ObjectGenome supports components, mechanisms, realistic dimensions/materials/mass/affordances,
+- validators reject bad examples.
+
+## Next unlock
+
+### Hero Gate — Production Physics Lab / Perfect 5 Minutes foundation
+- #10 — production-contract Physics Lab.
+- #9 — first-observation/resolved-region recipe joins once deterministic contracts are ready.
+
+Do not treat #10 as permission for ad-hoc scripts. Its objects must instantiate through the production contracts from Wave 1 as they land.
+
+After the lab foundation is stable, the first Reality-Grade Hero Features should be **door, chair, and physical player movement**, not a giant procedural map.
+
+## Currently gated planned work
+
+Issues #11–#25 are planned future work. They are **not automatically implementation-ready** until this file unlocks them or they become an explicit prerequisite for an unlocked Epic.
+
+Workers may inspect/review/decompose them, but should not build those major systems yet merely because worker capacity exists.
+
+## Known external setup gaps
+
 - No published Roblox universe/place is connected to automated publishing yet.
-- Studio engine tests, graphics validation, server-authority tests, and device profiling still require a Roblox Studio/test-place workflow. Current GitHub CI validates source, pure Luau logic, deterministic contracts, and Rojo builds.
-- Approved production PBR, audio, and model libraries do not exist yet; use project-owned fallback references and do not add unlicensed content.
+- Studio engine tests, graphics validation, server-authority tests, and device profiling require a Roblox Studio/test-place workflow; current GitHub CI covers source/pure deterministic logic/Rojo builds.
+- Approved production PBR, audio and model libraries do not exist yet. Use project-owned fallbacks and do not add unlicensed content.
 
-Architecture migrations: none.
+## Architecture migrations
 
-Generation versions:
+None active.
+
+## Generation/schema versions
+
 - reality: 1
 - topology: 1
 - material: 1
@@ -30,12 +82,12 @@ Generation versions:
 - entity: 1
 - persistence: 1
 
-Next critical outcomes:
-- deterministic core golden contract is locked.
-- WorldEntity can promote and demote representations without losing identity/state.
-- Physics Lab uses production IDs/contracts.
-- a resolved region recipe can unload and recreate identically.
-- first believable MaterialDNA surface families exist.
-- first construction-grammar furniture family exists.
+## Next critical outcomes
 
-Keep this file concise. Git history is the changelog.
+1. deterministic core is a golden locked contract,
+2. WorldEntity/F0–F4 lifecycle is production-safe,
+3. MaterialDNA/ObjectGenome foundations pass validators/tests,
+4. Physics Lab begins using those exact contracts,
+5. the first five-minute experience can be improved deeply without replacing its foundations.
+
+Keep this file concise and operational. Git history is the changelog; Project Source is the long-term vision.
