@@ -1,0 +1,87 @@
+name: Temporary #190 legacy read-only hardening
+
+on:
+  push:
+    branches:
+      - agent/reality/183-worldid-v2-compat-sol56j9
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/reality/183-worldid-v2-compat-sol56j9
+      - name: Make legacy core structurally replay-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          core = Path('src/shared/Reality/ResolvedRegionRecipeV1Internal.luau')
+          text = core.read_text()
+          old = 'return table.freeze(ResolvedRegionRecipe)\n'
+          new = '''local LegacyReplayCore = {
+          \tSCHEMA_VERSION = ResolvedRegionRecipe.SCHEMA_VERSION,
+          \tFINGERPRINT_VERSION = ResolvedRegionRecipe.FINGERPRINT_VERSION,
+          \tdeserialize = ResolvedRegionRecipe.deserialize,
+          \tserialize = ResolvedRegionRecipe.serialize,
+          \tequal = ResolvedRegionRecipe.equal,
+          \tfingerprint = ResolvedRegionRecipe.fingerprint,
+          \treproKey = ResolvedRegionRecipe.reproKey,
+          }
+
+          return table.freeze(LegacyReplayCore)
+          '''
+          if old not in text:
+              raise SystemExit('legacy core return marker not found')
+          core.write_text(text.replace(old, new, 1))
+
+          test = Path('tests/resolved_region_recipe_v1_compat.luau')
+          text = test.read_text()
+          old_require = '''local ResolvedRegionRecipeV1 = ProductionLoader.requireShared("Reality/ResolvedRegionRecipeV1")
+          '''
+          new_require = '''local ResolvedRegionRecipeV1 = ProductionLoader.requireShared("Reality/ResolvedRegionRecipeV1")
+          local ResolvedRegionRecipeV1Internal = ProductionLoader.requireShared("Reality/ResolvedRegionRecipeV1Internal")
+          '''
+          if old_require not in text:
+              raise SystemExit('legacy test require marker not found')
+          text = text.replace(old_require, new_require, 1)
+
+          marker = '''\texpect("legacy v1 public boundary exposes no lock constructor", ResolvedRegionRecipeV1.lock == nil)
+          '''
+          insertion = '''\texpect("legacy v1 public boundary exposes no lock constructor", ResolvedRegionRecipeV1.lock == nil)
+          \texpect("legacy v1 internal core exposes no lock constructor", ResolvedRegionRecipeV1Internal.lock == nil)
+          \texpect(
+          \t\t"legacy v1 internal core exposes no observation or migration write path",
+          \t\tResolvedRegionRecipeV1Internal.resolveOnObservation == nil and ResolvedRegionRecipeV1Internal.migrate == nil
+          \t)
+          '''
+          if marker not in text:
+              raise SystemExit('legacy test expectation marker not found')
+          test.write_text(text.replace(marker, insertion, 1))
+          PY
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+      - name: Format and publish
+        shell: bash
+        run: |
+          stylua src tests
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/zz-temp-v1-readonly-190.yml
+          git add src tests
+          git commit -m "fix(reality): make v1 replay boundary read-only"
+          git push origin HEAD:agent/reality/183-worldid-v2-compat-sol56j9
