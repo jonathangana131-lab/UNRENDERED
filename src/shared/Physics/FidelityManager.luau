@@ -37,9 +37,17 @@ export type StepResult = {
 	blockedReason: BlockedReason?,
 }
 
+export type FidelityCounts = {
+	F0: number,
+	F1: number,
+	F2: number,
+	F3: number,
+	F4: number,
+}
+
 export type Metrics = {
 	registered: number,
-	counts: { [FidelityLevel]: number },
+	counts: FidelityCounts,
 	transitions: number,
 	promotions: number,
 	demotions: number,
@@ -63,7 +71,7 @@ type EntityState = {
 
 type MutableMetrics = {
 	registered: number,
-	counts: { [FidelityLevel]: number },
+	counts: FidelityCounts,
 	transitions: number,
 	promotions: number,
 	demotions: number,
@@ -210,7 +218,21 @@ local function distanceLimit(
 	return base
 end
 
-local function frozenCounts(metrics: MutableMetrics): { [FidelityLevel]: number }
+local function adjustCount(counts: FidelityCounts, level: FidelityLevel, delta: number): ()
+	if level == "F0" then
+		counts.F0 += delta
+	elseif level == "F1" then
+		counts.F1 += delta
+	elseif level == "F2" then
+		counts.F2 += delta
+	elseif level == "F3" then
+		counts.F3 += delta
+	else
+		counts.F4 += delta
+	end
+end
+
+local function frozenCounts(metrics: MutableMetrics): FidelityCounts
 	return table.freeze({
 		F0 = metrics.counts.F0,
 		F1 = metrics.counts.F1,
@@ -225,7 +247,7 @@ function FidelityManager.defaultConfig(): PolicyConfig
 	return table.freeze(config)
 end
 
-function FidelityManager.selectDesiredLevel(
+local function selectDesiredLevel(
 	inputs: PolicyInputs,
 	config: PolicyConfig?,
 	currentLevel: FidelityLevel?
@@ -287,6 +309,8 @@ function FidelityManager.selectDesiredLevel(
 	return desired
 end
 
+FidelityManager.selectDesiredLevel = selectDesiredLevel
+
 function FidelityManager.new(config: PolicyConfig?): Manager
 	local sourceConfig: PolicyConfig
 	if config == nil then
@@ -341,14 +365,14 @@ function FidelityManager.register(self: Manager, entityId: string, currentLevel:
 		lastEvaluatedAt = -math.huge,
 	}
 	self._metrics.registered += 1
-	self._metrics.counts[level] += 1
+	adjustCount(self._metrics.counts, level, 1)
 end
 
 function FidelityManager.unregister(self: Manager, entityId: string): ()
 	local state = self._states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
 	self._metrics.registered -= 1
-	self._metrics.counts[state.observedLevel] -= 1
+	adjustCount(self._metrics.counts, state.observedLevel, -1)
 	self._states[entityId] = nil
 end
 
@@ -368,8 +392,8 @@ local function synchronizeObservedLevel(
 		return
 	end
 
-	self._metrics.counts[state.observedLevel] -= 1
-	self._metrics.counts[currentLevel] += 1
+	adjustCount(self._metrics.counts, state.observedLevel, -1)
+	adjustCount(self._metrics.counts, currentLevel, 1)
 	self._metrics.externalSynchronizations += 1
 	state.observedLevel = currentLevel
 	state.pendingLevel = nil
@@ -396,7 +420,7 @@ function FidelityManager.step(
 
 	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
 
-	local desired = FidelityManager.selectDesiredLevel(inputs, self.config, currentLevel)
+	local desired: FidelityLevel = selectDesiredLevel(inputs, self.config, currentLevel)
 	if desired == currentLevel then
 		state.pendingLevel = nil
 		state.pendingSince = nil
@@ -450,8 +474,8 @@ function FidelityManager.step(
 
 	applyTransition(entityId, currentLevel, desired)
 	self._metrics.transitionHookCalls += 1
-	self._metrics.counts[currentLevel] -= 1
-	self._metrics.counts[desired] += 1
+	adjustCount(self._metrics.counts, currentLevel, -1)
+	adjustCount(self._metrics.counts, desired, 1)
 	state.observedLevel = desired
 	state.pendingLevel = nil
 	state.pendingSince = nil
