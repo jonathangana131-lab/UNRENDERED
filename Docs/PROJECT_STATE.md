@@ -41,7 +41,7 @@ Exit gate:
 - #5 — MaterialDNA production contract.
 - #6 — ObjectGenome construction-grammar contract.
 - #100 — post-merge ObjectGenome↔MaterialDNA exact-reference/content-revision repair; **blocking Epic C exit**.
-- #101 — post-merge ObjectGenome mechanism-state/persistence semantics repair; **blocking Epic C exit**.
+- #101 — ObjectGenome mechanism-state/persistence semantics repair; **merged green via #117 and complete**.
 
 Exit gate:
 - coherent immutable recipe vs mutable state separation,
@@ -57,7 +57,7 @@ Exit gate:
 - #10 — production-contract Physics Lab.
 - #9 — first-observation/resolved-region recipe joins once deterministic contracts are ready.
 
-This remains a **next unlock, not current implementation permission**. Do not begin #10/#9 until the Wave 1 exit gates are green, including #100 and #101, and this file is updated to unlock the Hero Gate.
+This remains a **next unlock, not current implementation permission**. Do not begin #10/#9 until the Wave 1 exit gates are green, including the remaining #100 blocker, and this file is updated to unlock the Hero Gate.
 
 Do not treat #10 as permission for ad-hoc scripts. Its objects must instantiate through the production contracts from Wave 1 as they land.
 
@@ -92,7 +92,7 @@ None active.
 
 1. deterministic core is a golden locked contract,
 2. WorldEntity/F0–F4 lifecycle is production-safe,
-3. MaterialDNA/ObjectGenome foundations pass validators/tests, including #100 exact-reference/content-revision and #101 mechanism-state/persistence repairs,
+3. MaterialDNA/ObjectGenome foundations pass validators/tests, with #101 mechanism-state semantics landed and the remaining #100 exact-reference/content-revision repair completed,
 4. Physics Lab begins using those exact contracts only after the Hero Gate is explicitly unlocked,
 5. the first five-minute experience can be improved deeply without replacing its foundations.
 
