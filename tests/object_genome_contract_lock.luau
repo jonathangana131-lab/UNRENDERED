@@ -1,5 +1,6 @@
 local ObjectGenome = require("../src/shared/Objects/ObjectGenome")
 local Fixtures = require("../src/shared/Objects/ObjectGenomeFixtures")
+local ObjectGenomeOwnership = require("../src/shared/Objects/ObjectGenomeOwnership")
 
 local function deepCopy(value)
 	if type(value) ~= "table" then
@@ -60,7 +61,62 @@ local function run(): number
 	keyedAffordances.affordances.debug = keyedAffordances.affordances[1]
 	expect("rejects keyed affordance entries", hasCode(ObjectGenome.inspect(keyedAffordances), "array.shape"))
 
+	local fixtureMutationOk = pcall(function()
+		Fixtures.officeChair.components[1].massKg = 999
+	end)
+	expect("canonical fixtures reject nested mutation", not fixtureMutationOk)
+	expect("canonical fixture roots are frozen", table.isfrozen(Fixtures.officeChair))
+	expect("canonical fixture component arrays are frozen", table.isfrozen(Fixtures.officeChair.components))
+	expect("canonical fixture components are frozen", table.isfrozen(Fixtures.officeChair.components[1]))
+
+	local callerGenome = deepCopy(Fixtures.officeChair)
+	local ownedGenome = ObjectGenomeOwnership.own(callerGenome)
+	local originalOwnedMass = ownedGenome.components[1].massKg
+	callerGenome.components[1].massKg = originalOwnedMass + 1
+	expect("ownership does not freeze caller input", not table.isfrozen(callerGenome.components[1]))
+	expect(
+		"owned genome is detached from caller input",
+		ownedGenome.components[1].massKg == originalOwnedMass
+	)
+
+	local unknownTopLevel = deepCopy(Fixtures.officeChair)
+	unknownTopLevel.debugHook = function() end
+	local unknownTopLevelOk = pcall(function()
+		ObjectGenomeOwnership.own(unknownTopLevel)
+	end)
+	expect("ownership rejects unknown runtime-valued fields", not unknownTopLevelOk)
+
+	local unknownNested = deepCopy(Fixtures.officeChair)
+	unknownNested.components[1].debugTag = "unversioned"
+	local unknownNestedOk = pcall(function()
+		ObjectGenomeOwnership.own(unknownNested)
+	end)
+	expect("ownership rejects unknown nested schema fields", not unknownNestedOk)
+
+	local metatableGenome = deepCopy(Fixtures.officeChair)
+	setmetatable(metatableGenome.provenance, {})
+	local metatableOk = pcall(function()
+		ObjectGenomeOwnership.own(metatableGenome)
+	end)
+	expect("ownership rejects metatable-backed records", not metatableOk)
+
+	local cyclicGenome = deepCopy(Fixtures.officeChair)
+	cyclicGenome.debugCycle = cyclicGenome
+	local cyclicOwnershipOk = pcall(function()
+		ObjectGenomeOwnership.own(cyclicGenome)
+	end)
+	expect("ownership rejects cyclic extra schema data", not cyclicOwnershipOk)
+
 	local componentKey = Fixtures.officeChair.components[1].key
+	local mutableState = ObjectGenome.defaultState(Fixtures.officeChair)
+	local stateMutationOk = pcall(function()
+		mutableState.componentWear[componentKey] = 0.5
+	end)
+	expect(
+		"default mutable state remains writable",
+		stateMutationOk and mutableState.componentWear[componentKey] == 0.5
+	)
+
 	local missingComponentState = ObjectGenome.defaultState(Fixtures.officeChair)
 	missingComponentState.componentWear[componentKey] = nil
 	expect(
