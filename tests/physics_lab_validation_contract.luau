@@ -86,7 +86,10 @@ local function run(): number
 	local swappedIdentity = snapshot(counts(46, 0), -10, 10)
 	swappedIdentity.entities[2] = { id = "entity:v1:c", fidelity = "F2", recipeKey = "lab.c" }
 	local swappedComparison = ValidationContract.compare(baseline, swappedIdentity, 0.001)
-	expect("same resource totals and envelope do not hide a swapped WorldEntity id", not swappedComparison.entities.ok)
+	expect(
+		"same resource totals and envelope do not hide a swapped WorldEntity id",
+		not swappedComparison.entities.ok
+	)
 	expect(
 		"entity inventory reports missing and unexpected ids deterministically",
 		#swappedComparison.entities.missingIds == 1
