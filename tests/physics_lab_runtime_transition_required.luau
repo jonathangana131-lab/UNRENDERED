@@ -42,7 +42,10 @@ local function run(): number
 	end)
 
 	expect("missing observer blocks committed fidelity transition", not blocked.transitioned)
-	expect("missing observer uses FidelityManager transition-required contract", blocked.blockedReason == "transition-required")
+	expect(
+		"missing observer uses FidelityManager transition-required contract",
+		blocked.blockedReason == "transition-required"
+	)
 	expect("missing observer is rejected before demotion capture side effects", captureCalls == 0)
 	expect("missing observer preserves WorldEntity fidelity", after.fidelity == before.fidelity)
 	expect(
@@ -63,18 +66,12 @@ local function run(): number
 	)
 
 	local observerCalls = 0
-	local retried, demoted = runtime:step(
-		entityId,
-		noDemand,
-		2,
-		function(record)
-			captureCalls += 1
-			return record.persistentState
-		end,
-		function(_current, _preview, _reason)
-			observerCalls += 1
-		end
-	)
+	local retried, demoted = runtime:step(entityId, noDemand, 2, function(record)
+		captureCalls += 1
+		return record.persistentState
+	end, function(_current, _preview, _reason)
+		observerCalls += 1
+	end)
 	expect("supplying observer can retry the blocked transition", retried.transitioned)
 	expect("retry captures demotion state exactly once", captureCalls == 1)
 	expect("retry observes representation transition exactly once", observerCalls == 1)
