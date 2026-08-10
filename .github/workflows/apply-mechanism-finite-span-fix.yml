@@ -27,9 +27,9 @@ jobs:
           text = path.read_text()
           old = '\\t\\tpositiveSlideMechanism ~= nil and hasCode(ObjectGenome.inspect(positiveOnlySlide), "mechanism.reference_pose")'
           new = '\\t\\tpositiveSlideMechanism ~= nil\\n\\t\\t\\tand hasCode(ObjectGenome.inspect(positiveOnlySlide), "mechanism.reference_pose")'
-          if text.count(old) != 1:
+          if text.count(old) != 2:
               raise SystemExit(f'marker patch count was {text.count(old)}')
-          path.write_text(text.replace(old, new, 1))
+          path.write_text(text.replace(old, new))
           PY
 
       - name: Apply finite-span repair
