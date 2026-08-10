@@ -2,6 +2,8 @@
 
 -- Production-contract examples. Material keys are opaque references on purpose:
 -- ObjectGenome must not own MaterialDNA's schema or Roblox asset bindings.
+local ObjectGenomeOwnership = require("./ObjectGenomeOwnership")
+
 local Fixtures = {}
 
 local zero = { x = 0, y = 0, z = 0 }
@@ -303,5 +305,9 @@ Fixtures.filingCabinet = {
 	mechanisms = cabinetMechanisms,
 	affordances = cabinetAffordances,
 }
+
+for key, fixture in pairs(Fixtures) do
+	Fixtures[key] = ObjectGenomeOwnership.seal(fixture)
+end
 
 return table.freeze(Fixtures)
