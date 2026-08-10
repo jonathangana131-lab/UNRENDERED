@@ -6,7 +6,7 @@ local RunService = game:GetService("RunService")
 local Shared = ReplicatedStorage:WaitForChild("UNRENDERED")
 local Versions = require(Shared.Core.Versions)
 local SeedStream = require(Shared.WorldGen.SeedStream)
-local PhysicsLabRealizer = require(script.Parent.PhysicsLab.PhysicsLabRealizer)
+local PhysicsLabStudioHarness = require(script.Parent.PhysicsLab.PhysicsLabStudioHarness)
 
 assert(RunService:IsServer(), "server bootstrap must run on server")
 
@@ -24,7 +24,7 @@ print(
 )
 
 if RunService:IsStudio() then
-	local lab = PhysicsLabRealizer.realize(workspace)
+	local lab = PhysicsLabStudioHarness.start(workspace)
 	print(
 		string.format(
 			"[UNRENDERED] Physics Lab realized | entities=%d recipe=%s",
