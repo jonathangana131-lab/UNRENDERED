@@ -1,13 +1,4 @@
-warning[unused_variable]: deltaStream is assigned a value, but never used
-    ┌─ tests/resolved_region_recipe.luau:169:8
-    │
-169 │     local deltaStream = {}
-    │           ^^^^^^^^^^^
-170 │     local fingerprintBeforeDelta = ResolvedRegionRecipe.fingerprint(locked)
-171 │     table.insert(deltaStream, { kind = "object.moved", entityKey = "object/chair-a" })
-    │                  ----------- `table.insert` only writes to `deltaStream`
-
 Results:
 0 errors
-1 warnings
+0 warnings
 0 parse errors
