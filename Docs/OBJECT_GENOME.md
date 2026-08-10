@@ -6,7 +6,7 @@
 
 - All measurements are plain-data SI units: meters, kilograms, degrees.
 - `schemaVersion` is an explicit compatibility lock. A reader rejects unknown versions instead of interpreting future schemas as v1.
-- `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityParts()` is intended to feed the project StableId contract; ObjectGenome does not duplicate hashing/canonical encoding.
+- `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityKey()` delegates those semantic parts to the locked project `StableId` v1 contract under the `object-genome` namespace; ObjectGenome does not duplicate hashing or canonical encoding.
 - `components`, per-component `supportKeys`, `mechanisms`, and `affordances` are canonical dense 1-based arrays. Sparse arrays and map-like extra keys are rejected so accepted plain data has one unambiguous shape.
 - `materialKey` is an opaque stable reference. Objects do not import MaterialDNA implementation details or Roblox asset IDs.
 - Roblox `Instance`, `Vector3`, `CFrame`, meshes, constraints, and rendering APIs are deliberately absent from the schema.
@@ -66,4 +66,4 @@ These are contract fixtures, not final art or Hero Feature implementations. Thei
 
 ## Evolution
 
-Changing field meaning or deterministic identity inputs requires an object schema/version decision. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.
+Changing field meaning or deterministic identity inputs requires an object schema/version decision. Changing stable-ID encoding is a project `StableId` contract decision, not an ObjectGenome-local change. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.
