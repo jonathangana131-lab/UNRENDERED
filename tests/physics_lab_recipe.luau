@@ -21,8 +21,10 @@ local function run(): number
 
 	local first = PhysicsLabRecipe.build()
 	local second = PhysicsLabRecipe.build()
+	local resolvedRegion = PhysicsLabRecipe.resolvedRegion()
 
 	expect("lab schema is explicit", first.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION)
+	expect("lab generator version advances resolved-region integration", PhysicsLabRecipe.GENERATOR_VERSION == 2)
 	expect("lab recipe key is explicit", first.recipeKey == PhysicsLabRecipe.RECIPE_KEY)
 	expect(
 		"lab world id is deterministic",
@@ -34,26 +36,34 @@ local function run(): number
 	)
 	expect(
 		"lab region identity is owned by ResolvedRegionRecipe",
-		first.regionId == first.resolvedRegion.regionId
-			and first.resolvedRegion.worldSeedRef == first.worldId
-			and first.resolvedRegion.regionAddress.x == 0
-			and first.resolvedRegion.regionAddress.z == 0
-			and first.resolvedRegion.regionAddress.layer == 0
+		first.regionId == resolvedRegion.regionId
+			and resolvedRegion.worldSeedRef == PhysicsLabRecipe.WORLD_SEED_REF
+			and resolvedRegion.regionAddress.x == 0
+			and resolvedRegion.regionAddress.z == 0
+			and resolvedRegion.regionAddress.layer == 0
 	)
 	expect(
-		"lab resolved-region truth is deterministic",
-		ResolvedRegionRecipe.equal(first.resolvedRegion, second.resolvedRegion)
-			and first.resolvedRegion.recipeFingerprint == second.resolvedRegion.recipeFingerprint
+		"lab resolved-region truth pins first-observation generator versions",
+		resolvedRegion.generatorVersions.reality == 1
+			and resolvedRegion.generatorVersions.topology == 1
+			and resolvedRegion.generatorVersions.material == 1
+			and resolvedRegion.generatorVersions.object == 1
+			and resolvedRegion.generatorVersions.entity == 1
 	)
 	local reconstructedRegion =
-		ResolvedRegionRecipe.deserialize(ResolvedRegionRecipe.serialize(first.resolvedRegion))
+		ResolvedRegionRecipe.deserialize(ResolvedRegionRecipe.serialize(resolvedRegion))
 	expect(
 		"lab resolved-region truth reconstructs through production contract",
-		ResolvedRegionRecipe.equal(first.resolvedRegion, reconstructedRegion)
-			and ResolvedRegionRecipe.reproKey(first.resolvedRegion)
-				== ResolvedRegionRecipe.reproKey(reconstructedRegion)
+		ResolvedRegionRecipe.equal(resolvedRegion, reconstructedRegion)
+			and ResolvedRegionRecipe.reproKey(resolvedRegion) == ResolvedRegionRecipe.reproKey(reconstructedRegion)
 	)
 	expect("lab entity count is deterministic", #first.entities == #second.entities and #first.entities == 20)
+
+	local expectedFloorId = StableId.fromParts("entity", { "physics-lab", "v1", "floor" })
+	expect(
+		"lab generator upgrade preserves established WorldEntity identity",
+		first.entities[1].key == "floor" and first.entities[1].entity.id == expectedFloorId
+	)
 
 	local requiredKeys = {
 		floor = true,
@@ -111,7 +121,7 @@ local function run(): number
 		end
 		if
 			entityRecipe.entity.origin.worldId ~= first.worldId
-			or entityRecipe.entity.origin.regionId ~= first.regionId
+			or entityRecipe.entity.origin.regionId ~= resolvedRegion.regionId
 			or entityRecipe.entity.origin.generator ~= "physics-lab.recipe"
 			or entityRecipe.entity.origin.generatorVersion ~= PhysicsLabRecipe.GENERATOR_VERSION
 		then
