@@ -20,7 +20,7 @@ The deterministic shell contains:
 - a physical hinged-panel door proxy;
 - chair and table proxies bound to the landed production ObjectGenome fixture identities and their default ObjectState snapshots;
 - a filing-cabinet proxy bound to the landed ObjectGenome fixture identity plus a prismatic drawer mechanism placeholder;
-- a dynamic rolling-cart mass proxy;
+- a four-wheel rolling-cart proxy whose chassis and wheels are server-owned rigidbodies connected by hinge constraints;
 - four actual stair steps;
 - a wedge ramp and raised ledge;
 - a physical-character spawn anchor for later body work.
@@ -39,7 +39,7 @@ Primitive geometry is intentional at this gate. The door/cart mechanism proxies 
 
 Useful interaction checks in Studio:
 
-- push the unanchored chair/table/cart proxies and confirm they are actual physics bodies;
+- push the unanchored chair/table proxies and roll the cart to confirm the cart wheels remain axle-constrained to the server-owned chassis;
 - push the door panel and confirm the hinge constrains it to the frame anchor and limits travel;
 - pull/push the filing-cabinet drawer proxy and confirm the prismatic constraint retains it on its slide axis;
 - walk the four steps, wedge ramp, and ledge to expose contact/controller problems once the physical-character work is unlocked.

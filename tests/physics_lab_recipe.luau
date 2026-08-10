@@ -120,18 +120,22 @@ local function run(): number
 
 	local hasHingedDoor = false
 	local hasDrawerProxy = false
+	local hasRollingCart = false
 	local stairCount = 0
 	for _, element in first.elements do
 		if element.role == "door" and element.representationKind == "hinged-panel" then
 			hasHingedDoor = true
 		elseif element.role == "cabinet" and element.representationKind == "sliding-drawer-proxy" then
 			hasDrawerProxy = true
+		elseif element.role == "cart" and element.representationKind == "rolling-cart-proxy" then
+			hasRollingCart = true
 		elseif element.role == "stairs" then
 			stairCount += 1
 		end
 	end
 	expect("lab includes a hinged door representation contract", hasHingedDoor)
 	expect("lab includes a drawer mechanism representation contract", hasDrawerProxy)
+	expect("lab includes a four-wheel rolling-cart representation contract", hasRollingCart)
 	expect("lab stairs are actual stepped geometry", stairCount >= 4)
 
 	local mutationAccepted = pcall(function()

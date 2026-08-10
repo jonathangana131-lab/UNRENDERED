@@ -41,6 +41,7 @@ export type MaterialReference = {
 export type RepresentationKind =
 	"static-box"
 	| "dynamic-box"
+	| "rolling-cart-proxy"
 	| "static-wedge"
 	| "hinged-panel"
 	| "sliding-drawer-proxy"
@@ -224,6 +225,10 @@ function PhysicsLabRecipe.validate(recipe: Recipe): ()
 		seenRoles[element.role] = true
 
 		assert(WorldEntity.isId(element.entity.id), `invalid WorldEntityId for {element.key}`)
+		assert(
+			element.entity.id == worldEntityId(element.key),
+			`{element.key} WorldEntityId derivation mismatch`
+		)
 		assert(not seenIds[element.entity.id], `duplicate Physics Lab WorldEntityId: {element.entity.id}`)
 		seenIds[element.entity.id] = true
 		assert(element.entity.origin.worldId == recipe.worldId, `{element.key} worldId mismatch`)
@@ -418,7 +423,7 @@ function PhysicsLabRecipe.build(): Recipe
 		vec3(3.5, 3.2, 2.5),
 		0,
 		METAL_MATERIAL,
-		"dynamic-box",
+		"rolling-cart-proxy",
 		"F3"
 	)
 

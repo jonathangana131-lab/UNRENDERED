@@ -32,7 +32,10 @@ end
 local function materialFor(reference: MaterialReference): any
 	local material = MATERIALS_BY_ID[reference.id]
 	assert(material ~= nil, `Physics Lab realization missing material recipe: {reference.id}`)
-	assert(material.recipeVersion == reference.recipeVersion, `Physics Lab material revision mismatch: {reference.id}`)
+	assert(
+		material.recipeVersion == reference.recipeVersion,
+		`Physics Lab material revision mismatch: {reference.id}`
+	)
 	return material
 end
 
@@ -139,10 +142,67 @@ end
 
 local function realizeBox(element: LabElement, parent: Instance, anchored: boolean): ()
 	local model = newEntityModel(element, parent)
-	local part = newPart("Body", vector3(element.sizeStuds), cframeFor(element), anchored, element.material, model)
+	local part =
+		newPart("Body", vector3(element.sizeStuds), cframeFor(element), anchored, element.material, model)
 	applyEntityDiagnostics(part, element)
 	model.PrimaryPart = part
 	addStudioDiagnostic(part, element)
+end
+
+local function realizeRollingCart(element: LabElement, parent: Instance): ()
+	local model = newEntityModel(element, parent)
+	local size = vector3(element.sizeStuds)
+	local bodyCFrame = cframeFor(element)
+	local chassisSize = Vector3.new(size.X, math.max(0.45, size.Y * 0.42), size.Z)
+	local chassis = newPart("Chassis", chassisSize, bodyCFrame, false, element.material, model)
+	applyEntityDiagnostics(chassis, element)
+	chassis:SetNetworkOwner(nil)
+
+	local wheelDiameter = math.max(0.65, math.min(size.X, size.Z) * 0.28)
+	local wheelWidth = math.max(0.32, wheelDiameter * 0.42)
+	local halfX = math.max(0.1, size.X * 0.5 - wheelWidth * 0.55)
+	local halfZ = math.max(0.1, size.Z * 0.5 - wheelDiameter * 0.55)
+	local wheelY = -chassisSize.Y * 0.5 + wheelDiameter * 0.15
+
+	local wheelOffsets = {
+		Vector3.new(-halfX, wheelY, -halfZ),
+		Vector3.new(halfX, wheelY, -halfZ),
+		Vector3.new(-halfX, wheelY, halfZ),
+		Vector3.new(halfX, wheelY, halfZ),
+	}
+	for index, offset in ipairs(wheelOffsets) do
+		local wheelCFrame = bodyCFrame * CFrame.new(offset)
+		local wheel = newPart(
+			`Wheel{index}`,
+			Vector3.new(wheelWidth, wheelDiameter, wheelDiameter),
+			wheelCFrame,
+			false,
+			element.material,
+			model
+		)
+		wheel.Shape = Enum.PartType.Cylinder
+		wheel:SetNetworkOwner(nil)
+
+		local chassisAttachment = Instance.new("Attachment")
+		chassisAttachment.Name = `WheelMount{index}`
+		chassisAttachment.Position = offset
+		chassisAttachment.Axis = Vector3.new(1, 0, 0)
+		chassisAttachment.Parent = chassis
+
+		local wheelAttachment = Instance.new("Attachment")
+		wheelAttachment.Name = `WheelAxle{index}`
+		wheelAttachment.Axis = Vector3.new(1, 0, 0)
+		wheelAttachment.Parent = wheel
+
+		local hinge = Instance.new("HingeConstraint")
+		hinge.Name = `WheelHinge{index}`
+		hinge.Attachment0 = chassisAttachment
+		hinge.Attachment1 = wheelAttachment
+		hinge.Parent = model
+	end
+
+	model.PrimaryPart = chassis
+	addStudioDiagnostic(chassis, element)
 end
 
 local function realizeWedge(element: LabElement, parent: Instance): ()
@@ -242,7 +302,8 @@ end
 
 local function realizeSpawnAnchor(element: LabElement, parent: Instance): ()
 	local model = newEntityModel(element, parent)
-	local part = newPart("Anchor", vector3(element.sizeStuds), cframeFor(element), true, element.material, model)
+	local part =
+		newPart("Anchor", vector3(element.sizeStuds), cframeFor(element), true, element.material, model)
 	part.Transparency = 0.65
 	part.CanCollide = false
 	part.CanTouch = false
@@ -257,6 +318,8 @@ local function realizeElement(element: LabElement, parent: Instance): ()
 		realizeBox(element, parent, true)
 	elseif element.representationKind == "dynamic-box" then
 		realizeBox(element, parent, false)
+	elseif element.representationKind == "rolling-cart-proxy" then
+		realizeRollingCart(element, parent)
 	elseif element.representationKind == "static-wedge" then
 		realizeWedge(element, parent)
 	elseif element.representationKind == "hinged-panel" then
