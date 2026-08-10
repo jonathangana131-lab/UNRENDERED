@@ -98,7 +98,10 @@ The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational; 
 - The bridge uses fixed repository-owned drivers, a managed Studio RunMode executor plugin, exact source-SHA validation, request-bound log provenance, bounded CreatorOutput evidence transport, and job-specific fail-closed evaluation.
 - Historical request `20260810-005-reality-hero-gate` produced a lifecycle-style simulation signal but was incorrectly promoted to a composite Hero Gate `PASS`; that durable bridge result has been corrected to `FAIL`. It does not prove contact/traversability, diagnostics behavior, two-client authority, or device/performance rows.
 - A later managed-plugin server-smoke request (`20260810-015-server-smoke-managed-plugin-n7`) never reached Studio because its requested source SHA was stale after public `main` advanced. It provides no engine evidence and must not be counted.
-- Future engine evidence requests must target the exact current canonical `main` SHA and satisfy the job-specific evaluator. No single lifecycle result may unlock the Hero Gate.
+- Verified current-main lifecycle evidence now exists: request `20260810-025-lifecycle-current-d225-joeysol` is a durable `physics-lab-lifecycle` `PASS` on exact `main@d225b3fe9f6da0a389bd8e14ddbe0f4cead26efe`, with 20 F2 -> F0 -> F2 cycles, canonical checkpoints 1/5/10/20, zero resource-count deltas, zero envelope drift within 0.001 studs, stable resolved-region repro identity, and expected primitive/ObjectGenome revision deltas.
+- Verified current-main single-server evidence now exists: request `20260810-022-server-smoke-post-legacy-cleanup-sol56r4` is a durable `physics-lab-server-smoke` `PASS` on the same exact SHA with server RunMode active, valid lab model, and assertion-backed baseline capture. Its `playerCount=0`, so it is **not** two-client authority evidence.
+- The Hero Gate remains open. Contact/traversability, diagnostics behavior, two-client authority, and required device/performance observations still need independent engine evidence before any next-Epic unlock.
+- Future engine evidence requests must target the exact current canonical `main` SHA and satisfy the job-specific evaluator. No single lifecycle or server-smoke result may unlock the Hero Gate.
 
 ## Current unlock status
 
