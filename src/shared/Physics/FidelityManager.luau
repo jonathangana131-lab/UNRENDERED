@@ -2,6 +2,16 @@
 
 export type FidelityLevel = "F0" | "F1" | "F2" | "F3" | "F4"
 
+export type PolicyReason =
+	"distance"
+	| "visibility"
+	| "observation"
+	| "interaction"
+	| "significance"
+	| "network-relevance"
+	| "entity-relevance"
+	| "no-demand"
+
 export type PolicyInputs = {
 	distanceStuds: number,
 	visible: boolean,
@@ -34,6 +44,7 @@ export type StepResult = {
 	transitioned: boolean,
 	currentLevel: FidelityLevel,
 	desiredLevel: FidelityLevel,
+	reason: PolicyReason,
 	blockedReason: BlockedReason?,
 }
 
@@ -59,7 +70,12 @@ export type Metrics = {
 	registrationCapacityRejections: number,
 }
 
-export type TransitionHook = (entityId: string, fromLevel: FidelityLevel, toLevel: FidelityLevel) -> ()
+export type TransitionHook = (
+	entityId: string,
+	fromLevel: FidelityLevel,
+	toLevel: FidelityLevel,
+	reason: PolicyReason
+) -> ()
 
 type EntityState = {
 	observedLevel: FidelityLevel,
@@ -247,11 +263,11 @@ function FidelityManager.defaultConfig(): PolicyConfig
 	return table.freeze(config)
 end
 
-local function selectDesiredLevel(
+local function evaluatePolicy(
 	inputs: PolicyInputs,
 	config: PolicyConfig?,
 	currentLevel: FidelityLevel?
-): FidelityLevel
+): (FidelityLevel, PolicyReason)
 	local resolvedConfig = config or DEFAULT_CONFIG
 	local resolvedCurrent: FidelityLevel
 	if currentLevel == nil then
@@ -259,6 +275,7 @@ local function selectDesiredLevel(
 	else
 		resolvedCurrent = currentLevel
 	end
+	assert(isLevel(resolvedCurrent), "currentLevel must be F0-F4")
 	validateConfig(resolvedConfig)
 	validateInputs(inputs)
 
@@ -306,6 +323,64 @@ local function selectDesiredLevel(
 		desired = "F4"
 	end
 
+	local reason: PolicyReason
+	if desired == "F4" then
+		if closeHeroDemand then
+			if inputs.directlyObserved then
+				reason = "observation"
+			else
+				reason = "interaction"
+			end
+		elseif inputs.significance >= inputs.networkRelevance
+			and inputs.significance >= inputs.entityRelevance
+		then
+			reason = "significance"
+		elseif inputs.networkRelevance >= inputs.entityRelevance then
+			reason = "network-relevance"
+		else
+			reason = "entity-relevance"
+		end
+	elseif desired == "F3" then
+		if inputs.directlyObserved then
+			reason = "observation"
+		elseif recentlyInteracted then
+			reason = "interaction"
+		elseif inputs.networkRelevance >= resolvedConfig.activeRelevanceThreshold
+			and inputs.networkRelevance >= inputs.entityRelevance
+		then
+			reason = "network-relevance"
+		elseif inputs.entityRelevance >= resolvedConfig.activeRelevanceThreshold then
+			reason = "entity-relevance"
+		else
+			reason = "distance"
+		end
+	elseif desired == "F2" then
+		if inputs.visible then
+			reason = "visibility"
+		else
+			reason = "distance"
+		end
+	elseif desired == "F1" then
+		if inputs.significance >= resolvedConfig.significanceKeepaliveThreshold then
+			reason = "significance"
+		else
+			reason = "distance"
+		end
+	else
+		reason = "no-demand"
+	end
+
+	return desired, reason
+end
+
+FidelityManager.evaluatePolicy = evaluatePolicy
+
+local function selectDesiredLevel(
+	inputs: PolicyInputs,
+	config: PolicyConfig?,
+	currentLevel: FidelityLevel?
+): FidelityLevel
+	local desired = evaluatePolicy(inputs, config, currentLevel)
 	return desired
 end
 
@@ -356,6 +431,7 @@ function FidelityManager.register(self: Manager, entityId: string, currentLevel:
 	else
 		level = currentLevel
 	end
+	assert(isLevel(level), "currentLevel must be F0-F4")
 
 	self._states[entityId] = {
 		observedLevel = level,
@@ -420,7 +496,7 @@ function FidelityManager.step(
 
 	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
 
-	local desired: FidelityLevel = selectDesiredLevel(inputs, self.config, currentLevel)
+	local desired, reason = evaluatePolicy(inputs, self.config, currentLevel)
 	if desired == currentLevel then
 		state.pendingLevel = nil
 		state.pendingSince = nil
@@ -428,6 +504,7 @@ function FidelityManager.step(
 			transitioned = false,
 			currentLevel = currentLevel,
 			desiredLevel = desired,
+			reason = reason,
 			blockedReason = nil,
 		}
 	end
@@ -448,6 +525,7 @@ function FidelityManager.step(
 			transitioned = false,
 			currentLevel = currentLevel,
 			desiredLevel = desired,
+			reason = reason,
 			blockedReason = "hold",
 		}
 	end
@@ -458,6 +536,7 @@ function FidelityManager.step(
 			transitioned = false,
 			currentLevel = currentLevel,
 			desiredLevel = desired,
+			reason = reason,
 			blockedReason = "cooldown",
 		}
 	end
@@ -468,11 +547,12 @@ function FidelityManager.step(
 			transitioned = false,
 			currentLevel = currentLevel,
 			desiredLevel = desired,
+			reason = reason,
 			blockedReason = "transition-required",
 		}
 	end
 
-	applyTransition(entityId, currentLevel, desired)
+	applyTransition(entityId, currentLevel, desired, reason)
 	self._metrics.transitionHookCalls += 1
 	adjustCount(self._metrics.counts, currentLevel, -1)
 	adjustCount(self._metrics.counts, desired, 1)
@@ -491,6 +571,7 @@ function FidelityManager.step(
 		transitioned = true,
 		currentLevel = desired,
 		desiredLevel = desired,
+		reason = reason,
 		blockedReason = nil,
 	}
 end
