@@ -22,6 +22,8 @@ export type Snapshot = {
 	labRecipeKey: string,
 	worldId: string,
 	regionId: string,
+	resolvedRegionSchemaVersion: number,
+	worldSeedRef: string,
 	resolvedRegionFingerprint: string,
 	resolvedRegionReproKey: string,
 	counts: ResourceCounts,
@@ -52,6 +54,7 @@ local IDENTITY_KEYS = table.freeze({
 	"labRecipeKey",
 	"worldId",
 	"regionId",
+	"worldSeedRef",
 	"resolvedRegionFingerprint",
 	"resolvedRegionReproKey",
 })
@@ -62,6 +65,10 @@ end
 
 local function isNonNegativeInteger(value: any): boolean
 	return isFinite(value) and value >= 0 and value % 1 == 0
+end
+
+local function isPositiveInteger(value: any): boolean
+	return isNonNegativeInteger(value) and value >= 1
 end
 
 local function inspectVec3(value: any, label: string): (boolean, string?)
@@ -103,8 +110,11 @@ function PhysicsLabValidationContract.inspectSnapshot(snapshot: any): (boolean, 
 	if type(snapshot.rootName) ~= "string" or snapshot.rootName == "" then
 		return false, "snapshot.rootName must be a non-empty string"
 	end
-	if not isNonNegativeInteger(snapshot.labSchemaVersion) or snapshot.labSchemaVersion < 1 then
+	if not isPositiveInteger(snapshot.labSchemaVersion) then
 		return false, "snapshot.labSchemaVersion must be a positive integer"
+	end
+	if not isPositiveInteger(snapshot.resolvedRegionSchemaVersion) then
+		return false, "snapshot.resolvedRegionSchemaVersion must be a positive integer"
 	end
 	for _, field in ipairs(IDENTITY_KEYS) do
 		if type(snapshot[field]) ~= "string" or snapshot[field] == "" then
@@ -140,6 +150,10 @@ local function assertSameIdentity(baseline: Snapshot, checkpoint: Snapshot): ()
 	assert(
 		baseline.labSchemaVersion == checkpoint.labSchemaVersion,
 		"Physics Lab validation snapshots use different lab schema versions"
+	)
+	assert(
+		baseline.resolvedRegionSchemaVersion == checkpoint.resolvedRegionSchemaVersion,
+		"Physics Lab validation snapshots use different resolved-region schema versions"
 	)
 	for _, key in ipairs(IDENTITY_KEYS) do
 		assert(
