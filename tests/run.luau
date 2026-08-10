@@ -1,5 +1,6 @@
 local process = require("@lune/process")
 local runWorldEntity = require("./world_entity")
+local materialDnaTests = require("./materialdna")
 
 local failures = 0
 
@@ -38,6 +39,7 @@ else
 end
 
 failures += runWorldEntity()
+materialDnaTests.run()
 
 if failures > 0 then
 	process.exit(1)
