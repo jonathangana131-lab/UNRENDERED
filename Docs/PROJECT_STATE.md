@@ -43,7 +43,7 @@ Exit evidence:
 - #100 — exact ObjectGenome↔MaterialDNA reference/content-revision lock: complete via #121 + fingerprint-v2 closure #129.
 - #101 — mechanism-state/persistence semantics: complete via #117 + finite-span closure #123.
 - #119 — mechanism-range numeric closure: complete via #123.
-- #125 — cycle-independent deterministic external-support reachability: complete via #137.
+- #125 — cycle-independent deterministic external-support reachability: complete via #136.
 
 Exit evidence:
 - immutable recipe vs mutable state separation is explicit,
