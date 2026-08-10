@@ -1,7 +1,5 @@
 --!strict
 
-local StableId = require(script.Parent.Parent.Core.StableId)
-
 export type Vec3 = {
 	x: number,
 	y: number,
@@ -323,11 +321,6 @@ function ObjectGenome.identityParts(value: ObjectGenome): { string }
 		tostring(value.familyVersion),
 		value.variantKey,
 	}
-end
-
-function ObjectGenome.identityKey(value: ObjectGenome): string
-	ObjectGenome.validate(value)
-	return StableId.fromParts(ObjectGenome.STABLE_ID_NAMESPACE, ObjectGenome.identityParts(value))
 end
 
 function ObjectGenome.inspect(value: any): ValidationResult
@@ -777,7 +770,7 @@ function ObjectGenome.inspect(value: any): ValidationResult
 					issues,
 					"affordance.key",
 					path .. ".key",
-					"affordance key must be a stable semantic key"
+					"affordance key must be a stable lowercase semantic key"
 				)
 			elseif affordancesByKey[affordance.key] then
 				addIssue(issues, "affordance.duplicate_key", path .. ".key", "duplicate affordance key")
