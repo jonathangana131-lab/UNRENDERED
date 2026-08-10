@@ -130,8 +130,16 @@ local function run(): number
 	frozenSource.physical.staticFriction = 3
 	frozenSource.finish.color.r = 0
 	frozenSource.historyEvents[1].severity01 = 1
-	expect("frozen recipe owns physical copy", frozen.physical.staticFriction == 0.6, tostring(frozen.physical.staticFriction))
-	expect("frozen recipe owns nested color copy", frozen.finish.color.r == 0.7, tostring(frozen.finish.color.r))
+	expect(
+		"frozen recipe owns physical copy",
+		frozen.physical.staticFriction == 0.6,
+		tostring(frozen.physical.staticFriction)
+	)
+	expect(
+		"frozen recipe owns nested color copy",
+		frozen.finish.color.r == 0.7,
+		tostring(frozen.finish.color.r)
+	)
 	expect(
 		"frozen recipe owns history event copy",
 		frozen.historyEvents[1].severity01 == 0.2,
