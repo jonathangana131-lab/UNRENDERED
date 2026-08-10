@@ -41,6 +41,16 @@ local function run(): number
 		"F1"
 	)
 	expectEqual(
+		"unseen significance inside render range does not force hero",
+		FidelityManager.selectDesiredLevel(inputs({ distanceStuds = 100, significance = 1 })),
+		"F2"
+	)
+	expectEqual(
+		"visible hero relevance can request hero fidelity",
+		FidelityManager.selectDesiredLevel(inputs({ distanceStuds = 100, visible = true, significance = 1 })),
+		"F4"
+	)
+	expectEqual(
 		"close observed entity requests hero fidelity",
 		FidelityManager.selectDesiredLevel(inputs({ distanceStuds = 10, directlyObserved = true })),
 		"F4"
@@ -143,6 +153,16 @@ local function run(): number
 	metrics = manager:getMetrics()
 	expectEqual("unregister removes record", metrics.registered, 0)
 	expectEqual("unregister updates fidelity counts", metrics.counts.F1, 0)
+
+	local capacityConfig = table.clone(FidelityManager.defaultConfig())
+	capacityConfig.maxRegisteredEntities = 1
+	local capacityManager = FidelityManager.new(capacityConfig)
+	capacityManager:register("entity:capacity-a", "F0")
+	local overCapacityAccepted = pcall(function()
+		capacityManager:register("entity:capacity-b", "F0")
+	end)
+	expectEqual("registered state is hard bounded", overCapacityAccepted, false)
+	expectEqual("capacity rejection is observable", capacityManager:getMetrics().registrationCapacityRejections, 1)
 
 	return failures
 end
