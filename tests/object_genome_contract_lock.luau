@@ -152,6 +152,59 @@ local function run(): number
 		)
 	end
 
+	local positiveZeroGenome = deepCopy(Fixtures.officeChair)
+	local negativeZeroGenome = deepCopy(Fixtures.officeChair)
+	positiveZeroGenome.centerOfMassM.x = 0.0
+	negativeZeroGenome.centerOfMassM.x = -0.0
+	expect(
+		"signed-zero fingerprint vectors remain valid recipes",
+		ObjectGenome.inspect(positiveZeroGenome).ok and ObjectGenome.inspect(negativeZeroGenome).ok
+	)
+	expect(
+		"recipe fingerprint normalizes signed zero",
+		ObjectGenome.recipeFingerprint(positiveZeroGenome)
+			== ObjectGenome.recipeFingerprint(negativeZeroGenome)
+	)
+
+	local baselineFingerprint = ObjectGenome.recipeFingerprint(Fixtures.officeChair)
+	local numericFingerprintCases = {
+		{
+			name = "fractional finite",
+			mutate = function(genome)
+				genome.centerOfMassM.x = 0.125
+			end,
+		},
+		{
+			name = "very small finite",
+			mutate = function(genome)
+				genome.dimensionLimits.minM.x = 1e-300
+			end,
+		},
+		{
+			name = "very large finite",
+			mutate = function(genome)
+				genome.dimensionLimits.maxM.x = 1e300
+			end,
+		},
+	}
+	for _, numericCase in ipairs(numericFingerprintCases) do
+		local genome = deepCopy(Fixtures.officeChair)
+		numericCase.mutate(genome)
+		local report = ObjectGenome.inspect(genome)
+		expect(numericCase.name .. " fingerprint vector remains a valid recipe", report.ok)
+		if report.ok then
+			local fingerprint = ObjectGenome.recipeFingerprint(genome)
+			expect(
+				numericCase.name .. " mutation is represented in recipe fingerprint",
+				fingerprint ~= baselineFingerprint
+			)
+			expect(
+				numericCase.name .. " recipe fingerprint repeats deterministically",
+				fingerprint == ObjectGenome.recipeFingerprint(genome)
+			)
+		end
+	end
+
 	local callerGenome = deepCopy(Fixtures.officeChair)
 	local ownedGenome = ObjectGenomeOwnership.own(callerGenome)
 	local originalOwnedMass = ownedGenome.components[1].massKg
