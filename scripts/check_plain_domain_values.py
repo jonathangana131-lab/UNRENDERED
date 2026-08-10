@@ -5,7 +5,7 @@ Conceptual/resolved data and authored production recipes stay plain/versioned so
 be reconstructed independently of Roblox representation. Shared physics computation is a
 different boundary: it may legitimately use Roblox math/value types while remaining free
 of Instances, Workspace, services, and persistence backends. This audit therefore protects
-canonical data roots plus explicitly data-shaped recipe/genome modules under shared Physics.
+canonical data roots plus explicitly plain policy/recipe/genome modules under shared Physics.
 """
 
 from __future__ import annotations
@@ -20,6 +20,11 @@ from check_domain_boundaries import DOMAIN_ROOTS, REPO_ROOT, _line_for_offset, _
 
 PHYSICS_ROOT = REPO_ROOT / "src/shared/Physics"
 PLAIN_DATA_ROOTS = tuple(root for root in DOMAIN_ROOTS if root != PHYSICS_ROOT)
+PHYSICS_PLAIN_DATA_FILES = frozenset(
+    {
+        "FidelityManager.luau",
+    }
+)
 PHYSICS_PLAIN_DATA_PATTERNS = (
     "*Recipe.luau",
     "*Genome*.luau",
@@ -48,7 +53,9 @@ def _is_protected_path(path: Path) -> bool:
     if any(_is_under(path, root) for root in PLAIN_DATA_ROOTS):
         return True
     if _is_under(path, PHYSICS_ROOT):
-        return any(fnmatch.fnmatch(path.name, pattern) for pattern in PHYSICS_PLAIN_DATA_PATTERNS)
+        return path.name in PHYSICS_PLAIN_DATA_FILES or any(
+            fnmatch.fnmatch(path.name, pattern) for pattern in PHYSICS_PLAIN_DATA_PATTERNS
+        )
     return False
 
 
@@ -101,12 +108,15 @@ local transform = { position = position, yawRadians = 0 }
         raise AssertionError(f"plain-domain value self-test produced false positives: {clean_violations!r}")
 
     reality_contract = REPO_ROOT / "src/shared/Reality/WorldEntity.luau"
+    fidelity_manager = PHYSICS_ROOT / "FidelityManager.luau"
     physics_recipe = PHYSICS_ROOT / "PhysicsLabRecipe.luau"
     physics_genome = PHYSICS_ROOT / "PhysicsLabObjectGenomes.luau"
     physics_solver = PHYSICS_ROOT / "ContactSolver.luau"
 
     if not _is_protected_path(reality_contract):
         raise AssertionError("canonical Reality data must remain protected")
+    if not _is_protected_path(fidelity_manager):
+        raise AssertionError("headless FidelityManager policy must remain protected")
     if not _is_protected_path(physics_recipe) or not _is_protected_path(physics_genome):
         raise AssertionError("shared Physics recipe/genome data must remain protected")
     if _is_protected_path(physics_solver):
