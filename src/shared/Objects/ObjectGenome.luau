@@ -114,6 +114,7 @@ export type ObjectGenome = {
 
 export type ObjectState = {
 	stateSchemaVersion: number,
+	genomeId: string,
 	componentWear: { [string]: number },
 	componentDamage: { [string]: number },
 	mechanismPosition: { [string]: number },
@@ -837,7 +838,7 @@ function ObjectGenome.validate(value: ObjectGenome): ()
 end
 
 function ObjectGenome.defaultState(value: ObjectGenome): ObjectState
-	ObjectGenome.validate(value)
+	local genomeId = ObjectGenome.identityKey(value)
 	local componentWear: { [string]: number } = {}
 	local componentDamage: { [string]: number } = {}
 	local detachedComponents: { [string]: boolean } = {}
@@ -854,6 +855,7 @@ function ObjectGenome.defaultState(value: ObjectGenome): ObjectState
 
 	return {
 		stateSchemaVersion = ObjectGenome.STATE_SCHEMA_VERSION,
+		genomeId = genomeId,
 		componentWear = componentWear,
 		componentDamage = componentDamage,
 		mechanismPosition = mechanismPosition,
@@ -883,6 +885,15 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 			"state.schema_version",
 			"stateSchemaVersion",
 			"unsupported ObjectState schema version"
+		)
+	end
+	local expectedGenomeId = ObjectGenome.identityKey(genome)
+	if state.genomeId ~= expectedGenomeId then
+		addIssue(
+			issues,
+			"state.genome_id",
+			"genomeId",
+			"ObjectState genomeId must match the exact immutable ObjectGenome identity"
 		)
 	end
 
