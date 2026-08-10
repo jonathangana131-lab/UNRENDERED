@@ -1,0 +1,57 @@
+name: Replay issue 100 contract lock
+
+on:
+  push:
+    branches:
+      - agent/objects/100-materialref-lock-sol56s8
+
+permissions:
+  contents: write
+
+jobs:
+  replay:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/objects/100-materialref-lock-sol56s8
+          fetch-depth: 0
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Replay tested three-file repair additively
+        shell: bash
+        run: |
+          git fetch origin agent/objects/100-materialref-lock-sol56s7
+          git diff 0afc7daf0194a8654135623f84282a86ecca0d58 a597caaa67c051d67b5b2d997dbbd694a61df099 -- \
+            Docs/OBJECT_GENOME.md \
+            src/shared/Objects/ObjectGenome.luau \
+            tests/object_genome.luau > /tmp/issue100.patch
+          git apply --3way --index /tmp/issue100.patch
+          stylua src/shared/Objects/ObjectGenome.luau tests/object_genome.luau
+          git add src/shared/Objects/ObjectGenome.luau tests/object_genome.luau Docs/OBJECT_GENOME.md
+
+      - name: Verify reconciled pure suite
+        run: lune run tests/run
+
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/replay-100-contract-lock.yml
+
+      - name: Commit reconciled repair
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Lock ObjectGenome material content on current main"
+          git push origin HEAD:agent/objects/100-materialref-lock-sol56s8
