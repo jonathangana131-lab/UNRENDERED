@@ -28,7 +28,10 @@ local function run(): number
 	local runtime = PhysicsLabRuntime.new(recipe)
 	local initial = runtime:snapshot()
 	expect("runtime owns every lab WorldEntity", initial.registered == #recipe.entities)
-	expect("runtime FidelityManager owns every lab WorldEntity", initial.fidelity.registered == #recipe.entities)
+	expect(
+		"runtime FidelityManager owns every lab WorldEntity",
+		initial.fidelity.registered == #recipe.entities
+	)
 	expect("runtime starts without duplicate identities", initial.duplicateIdentities == 0)
 
 	local interactive = findEntity(recipe, "cabinet-a")
@@ -63,14 +66,23 @@ local function run(): number
 		captureCalls += 1
 		return record.persistentState
 	end)
-	expect("runtime demotes through production FidelityManager", demotion.transitioned and demoted.fidelity == "F0")
+	expect(
+		"runtime demotes through production FidelityManager",
+		demotion.transitioned and demoted.fidelity == "F0"
+	)
 	expect("runtime demotion captures state exactly once", captureCalls == 1)
-	expect("runtime demotion increments state revision", demoted.stateRevision == initialRecord.stateRevision + 1)
+	expect(
+		"runtime demotion increments state revision",
+		demoted.stateRevision == initialRecord.stateRevision + 1
+	)
 	expect(
 		"runtime demotion increments representation revision",
 		demoted.representationRevision == initialRecord.representationRevision + 1
 	)
-	expect("runtime keeps fidelity authorities synchronized after demotion", runtime:getFidelity(entityId) == "F0")
+	expect(
+		"runtime keeps fidelity authorities synchronized after demotion",
+		runtime:getFidelity(entityId) == "F0"
+	)
 
 	local observed = {
 		distanceStuds = 8,
@@ -86,9 +98,15 @@ local function run(): number
 	expect("default promotion hold blocks first observed sample", not firstPromotion.transitioned)
 
 	local promotion, promoted = runtime:step(entityId, observed, 3.2)
-	expect("runtime promotes through production FidelityManager", promotion.transitioned and promoted.fidelity == "F4")
+	expect(
+		"runtime promotes through production FidelityManager",
+		promotion.transitioned and promoted.fidelity == "F4"
+	)
 	expect("promotion does not recapture persistent state", promoted.stateRevision == demoted.stateRevision)
-	expect("runtime keeps fidelity authorities synchronized after promotion", runtime:getFidelity(entityId) == "F4")
+	expect(
+		"runtime keeps fidelity authorities synchronized after promotion",
+		runtime:getFidelity(entityId) == "F4"
+	)
 
 	local snapshot = runtime:snapshot()
 	expect("runtime metrics record one promotion", snapshot.fidelity.promotions == 1)
@@ -119,7 +137,10 @@ local function run(): number
 			"rejected transition preserves representation revision",
 			after.representationRevision == before.representationRevision
 		)
-		expect("rejected transition preserves FidelityManager authority", atomicRuntime:getFidelity(atomicId) == "F2")
+		expect(
+			"rejected transition preserves FidelityManager authority",
+			atomicRuntime:getFidelity(atomicId) == "F2"
+		)
 	end
 	atomicRuntime:dispose()
 
