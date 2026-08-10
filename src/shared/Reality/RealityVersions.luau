@@ -1,6 +1,6 @@
 --!strict
 
-local Versions = require(script.Parent.Parent.Core.Versions)
+local Versions = require("../Core/Versions")
 
 export type RealityVersions = {
 	reality: number,
