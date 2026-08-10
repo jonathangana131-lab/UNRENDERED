@@ -89,14 +89,17 @@ Landed source evidence:
 - clear Studio validation/repro instructions,
 - green source/pure CI and Rojo build evidence.
 
-This source-contract closure does **not** claim Roblox Studio physics/contact/constraint/server-authority PASS. Those observations remain external engine evidence and must stay explicitly UNVERIFIED until actually run.
+This source-contract closure does **not** claim Roblox Studio physics/contact/constraint/server-authority PASS. Those observations remain external engine evidence and must stay explicitly UNVERIFIED until actually run and accepted for the applicable #151 row.
 
-### Mac ↔ GitHub Roblox Studio Execution Bridge: complete (reality-grade engine validated)
-The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational ([Docs/STUDIO_EXECUTOR.md](file:///Users/joey/.gemini/antigravity/scratch/UNRENDERED/Docs/STUDIO_EXECUTOR.md)).
-- Private bridge repo: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`
-- Mac self-hosted runner: `UNRENDERED-STUDIO-MAC` (running as active LaunchAgent service)
-- Real Roblox Studio execution loop: GitHub request -> Mac self-hosted runner -> Roblox Studio (`PlayServer` simulation mode: `IsRunning=true`, `IsServer=true`) -> 20-cycle lifecycle sweep -> typed fail-closed status derivation (`PASS`) -> result.json + summary.md + viewport screenshot.
-- Proven Evidence: `requests/20260810-005-reality-hero-gate.json` on canonical main SHA `f348acb8dae2f98f7a75c8085539eab49b435b56` produced `status: PASS`, `isRunning: true`, `isServer: true`, `checkpointCount: 4`, `cycleCount: 20`, `envelopeToleranceStuds: 0.001`.
+### Mac ↔ GitHub Roblox Studio Execution Bridge: operational; composite Hero Gate remains open
+The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational (`Docs/STUDIO_EXECUTOR.md`).
+- Private bridge repo: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`.
+- Mac self-hosted runner: `UNRENDERED-STUDIO-MAC`.
+- Requests are fixed-data presets: arbitrary remote Luau/shell execution is forbidden.
+- The bridge has demonstrated that Roblox Studio can reach managed simulation with `RunService:IsRunning() == true` and `RunService:IsServer() == true` on the canonical Physics Lab source.
+- CreatorOutput transport is request-bound and uses bounded chunk/reassembly for strong lifecycle evidence; semantic PASS is evaluator-owned and fail-closed.
+- Historical request `20260810-005-reality-hero-gate` on source SHA `f348acb8dae2f98f7a75c8085539eab49b435b56` produced useful coarse lifecycle signals (`cycleCount = 20`, `checkpointCount = 4`, `isRunning = true`, `isServer = true`), but its lifecycle-only top-level Hero Gate PASS was invalid and has been downgraded to `FAIL` in the bridge.
+- That historical result does **not** satisfy the strong reassembled lifecycle row and cannot substitute for contact/traversability, diagnostics, two-client authority, or device/performance evidence.
 
 ## Current unlock status
 
@@ -113,9 +116,9 @@ Do not start a Reality-Grade door, chair, physical-player controller, world gene
 
 ## Hero Gate exit direction
 
-The source-contract portion of the Physics Lab gate is established. The remaining gate is actual Roblox Studio/engine evidence where pure CI cannot prove behavior: contact/traversability, constraints/mechanisms as they become applicable, diagnostics behavior, server/two-client authority behavior, and device/performance observations.
+The source-contract portion of the Physics Lab gate is established. #151 remains a **composite** engine-evidence gate. Row-scoped evidence must stay distinct: lifecycle/rebuild/resource/envelope integrity, physical contact/traversability, diagnostics behavior, server/two-client authority behavior, and device/performance observations. A lifecycle-only run must never be promoted into a composite Hero Gate PASS.
 
-After that evidence is gathered and reviewed, update this file to explicitly unlock the next narrow Hero Feature. The intended order remains **door, chair, then physical player movement**, not a giant procedural map.
+After the applicable rows are gathered and independently reviewed, update this file to explicitly unlock the next narrow Hero Feature. The intended order remains **door, chair, then physical player movement**, not a giant procedural map.
 
 ## Currently gated planned work
 
@@ -126,7 +129,7 @@ Workers may inspect/review/decompose them, but should not build those major syst
 ## Known external setup gaps
 
 - No published Roblox universe/place is connected to automated publishing yet.
-- Studio engine tests, graphics validation, server-authority tests, and device profiling require a Roblox Studio/test-place workflow; current GitHub CI covers source/pure deterministic logic/Rojo builds.
+- The private Studio bridge can gather row-scoped engine evidence, but #151 still needs accepted contact/traversability, diagnostics, multiplayer/authority, and device/performance observations before Hero Gate closure.
 - Approved production PBR, audio and model libraries do not exist yet. Use project-owned fallbacks and do not add unlicensed content.
 
 ## Architecture migrations
@@ -146,7 +149,7 @@ Compatibility note: historical `ResolvedRegionRecipe` schema v1 remains replay-o
 
 ## Next critical outcomes
 
-1. gather real Studio physics/contact/constraint evidence for the permanent #10 lab without weakening source truth,
+1. gather and accept row-scoped real Studio evidence for #151 without weakening source truth or collapsing multiple rows into one coarse PASS,
 2. keep source-owned lifecycle/repro/ownership evidence green and fail closed on regressions,
 3. explicitly update this scheduler before opening the next major Hero Feature,
 4. when unlocked, deepen door/chair/physical-player work on these foundations rather than replacing them,
