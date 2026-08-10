@@ -217,11 +217,8 @@ end
 
 local function ownObservationIdentity(value: unknown): (string, RegionAddressData)
 	local source = assertPlainRecord(value, "ResolvedRegionCandidate")
-	local worldSeedRef = checkedOpaqueKey(
-		"worldSeedRef",
-		source.worldSeedRef,
-		ResolvedRegionRecipe.MAX_WORLD_SEED_REF_BYTES
-	)
+	local worldSeedRef =
+		checkedOpaqueKey("worldSeedRef", source.worldSeedRef, ResolvedRegionRecipe.MAX_WORLD_SEED_REF_BYTES)
 	return worldSeedRef, cloneAddress(source.regionAddress)
 end
 
