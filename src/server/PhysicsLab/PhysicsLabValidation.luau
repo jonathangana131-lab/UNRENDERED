@@ -78,7 +78,8 @@ function PhysicsLabValidation.capture(root: Instance): Snapshot
 					end
 				end
 			end
-			assemblyRoots[instance.AssemblyRootPart] = true
+			local assemblyRoot = instance.AssemblyRootPart
+			assemblyRoots[if assemblyRoot == nil then instance else assemblyRoot] = true
 		elseif instance:IsA("Attachment") then
 			counts.attachments += 1
 		elseif instance:IsA("Constraint") then
