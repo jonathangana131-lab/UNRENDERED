@@ -10,6 +10,21 @@
 - Roblox `Instance`, `Vector3`, `CFrame`, meshes, constraints, and rendering APIs are deliberately absent from the schema.
 - Mutable wear, damage, mechanism position, and detach state live in `ObjectState`, never in the immutable genome.
 
+## Canonical ownership
+
+Validation alone does not make a Lua table immutable. Any recipe that becomes canonical/shared domain state must cross `ObjectGenomeOwnership.seal(genome)` first.
+
+The ownership boundary:
+
+- validates the recipe through the production ObjectGenome validator,
+- defensively deep-copies the caller's data so later source-table mutation cannot rewrite canonical truth,
+- recursively freezes every nested recipe table,
+- rejects cyclic/metatable/non-plain data while copying.
+
+`ObjectState` is intentionally not sealed. It remains a separate mutable snapshot that can carry wear, damage, mechanism positions, and detach state across representation changes.
+
+The checked-in `ObjectGenomeFixtures` are sealed through the same production boundary; they are not special mutable test data.
+
 ## Construction graph
 
 Each component records:
@@ -48,6 +63,7 @@ Affordances describe stable interaction/grip regions (`grip`, `push`, `pull`, `s
 - `ObjectGenome.defaultState(genome)` creates separate zeroed mutable state.
 - `ObjectGenome.inspectState(genome, state)` validates mutable state keys/ranges against the immutable recipe.
 - `ObjectGenome.validateState(genome, state)` is the asserting state validator.
+- `ObjectGenomeOwnership.seal(genome)` validates, defensively copies, and deeply freezes a canonical recipe.
 
 Stable issue codes are suitable for test diagnostics and future procedural rejection/repro tooling.
 
