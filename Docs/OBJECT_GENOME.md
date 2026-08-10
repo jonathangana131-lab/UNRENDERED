@@ -34,6 +34,18 @@ A component is structurally valid only when its support chain reaches an externa
 
 The component mass sum must remain within 5% of the declared object mass. The genome also carries family plausibility envelopes for dimensions and mass plus local center-of-mass metadata.
 
+## Transform convention
+
+ObjectGenome v1 locks component transforms so independent realization adapters cannot interpret the same accepted recipe differently:
+
+- object-local coordinates are right-handed with `+X` right, `+Y` up, and `-Z` forward;
+- `localPositionM` is expressed in that object-local frame;
+- `localRotationDeg = { x, y, z }` uses positive right-hand rotations in degrees about fixed parent-frame `+X`, then `+Y`, then `+Z` axes;
+- for column-vector math, the equivalent rotation matrix is `R = Rz * Ry * Rx`;
+- component envelope validation treats each component as an oriented box under that rotation and checks its resulting object-local AABB against `dimensionsM`.
+
+`ObjectGenome.LOCAL_ROTATION_CONVENTION` exposes a compact compatibility tag for this v1 rule. Changing handedness, axis meaning, units, or rotation order requires a schema/version decision.
+
 ## Mechanisms
 
 The first production mechanism vocabulary is intentionally small and semantic:
@@ -43,6 +55,8 @@ The first production mechanism vocabulary is intentionally small and semantic:
 - `caster`
 - `tilt`
 - `latch`
+
+Mechanism axes use the same object-local frame and must be finite unit direction vectors. The v1 validator accepts only vectors whose magnitude is within `0.0001` of one, so realization adapters never infer meaning from arbitrary axis magnitudes or normalize them differently. `ObjectGenome.MECHANISM_AXIS_CONVENTION` exposes the corresponding compatibility tag.
 
 Mechanisms reference component keys and plain axes/limits. A later Roblox realization adapter may choose constraints, servo settings, collision groups, fidelity simplifications, or authored meshes without changing the domain recipe.
 
