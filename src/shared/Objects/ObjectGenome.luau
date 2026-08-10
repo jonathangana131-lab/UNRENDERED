@@ -741,10 +741,11 @@ end
 local RECIPE_FINGERPRINT_CHUNK_BYTES = 384
 
 local function canonicalFingerprintNumber(value: number): string
+	assert(isFinite(value), "validated ObjectGenome fingerprint numbers must be finite")
 	if value == 0 then
-		return "0"
+		value = 0
 	end
-	return string.format("%.17g", value)
+	return string.pack(">d", value)
 end
 
 local function foldFingerprintToken(signature: string, kind: string, payload: string): string
@@ -990,29 +991,48 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		if not isNonEmptyString(component.role) then
 			addIssue(issues, "component.role", path .. ".role", "component role required")
 		end
-		local materialKeyValidation = MaterialDNA.validateReference({
+		local materialReferenceValidation = MaterialDNA.validateReference({
 			id = component.materialKey,
-			recipeVersion = 1,
-		})
-		if not materialKeyValidation.ok then
-			addIssue(
-				issues,
-				"component.material_key",
-				path .. ".materialKey",
-				"materialKey must satisfy MaterialDNA v2 project id rules"
-			)
-		end
-		local materialRecipeVersionValidation = MaterialDNA.validateReference({
-			id = "material.v1.object-genome-validation-probe",
 			recipeVersion = component.materialRecipeVersion,
 		})
-		if not materialRecipeVersionValidation.ok then
-			addIssue(
-				issues,
-				"component.material_recipe_version",
-				path .. ".materialRecipeVersion",
-				"materialRecipeVersion must satisfy MaterialDNA v2 recipe revision rules"
-			)
+		if not materialReferenceValidation.ok then
+			local diagnosedField = false
+			local materialKeyValidation = MaterialDNA.validateReference({
+				id = component.materialKey,
+				recipeVersion = 1,
+			})
+			if not materialKeyValidation.ok then
+				diagnosedField = true
+				addIssue(
+					issues,
+					"component.material_key",
+					path .. ".materialKey",
+					"materialKey must satisfy MaterialDNA v2 project id rules"
+				)
+			end
+
+			local materialRecipeVersionValidation = MaterialDNA.validateReference({
+				id = "material.v1.object-genome-validation-probe",
+				recipeVersion = component.materialRecipeVersion,
+			})
+			if not materialRecipeVersionValidation.ok then
+				diagnosedField = true
+				addIssue(
+					issues,
+					"component.material_recipe_version",
+					path .. ".materialRecipeVersion",
+					"materialRecipeVersion must satisfy MaterialDNA v2 recipe revision rules"
+				)
+			end
+
+			if not diagnosedField then
+				addIssue(
+					issues,
+					"component.material_reference",
+					path,
+					"material reference must satisfy the complete MaterialDNA v2 reference contract"
+				)
+			end
 		end
 		if not isPositiveFinite(component.massKg) then
 			addIssue(

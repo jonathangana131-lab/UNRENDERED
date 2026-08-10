@@ -60,19 +60,19 @@ local function run(): number
 			name = "office chair",
 			genome = Fixtures.officeChair,
 			identity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",
-			fingerprint = "object-genome-recipe:v1:1d5bb9a8ca475743a26663e492e22d56",
+			fingerprint = "object-genome-recipe:v1:ffa0af4f10aec2dbbd9ad86e81afaf9d",
 		},
 		{
 			name = "office table",
 			genome = Fixtures.officeTable,
 			identity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",
-			fingerprint = "object-genome-recipe:v1:a7c8f49674cc01c57d91c0cb770c17fa",
+			fingerprint = "object-genome-recipe:v1:dd51fe1c7c46d148e2ae5b01f2e08c69",
 		},
 		{
 			name = "filing cabinet",
 			genome = Fixtures.filingCabinet,
 			identity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",
-			fingerprint = "object-genome-recipe:v1:e67dcf0b6b6563ef9bb5efa0f6086ddc",
+			fingerprint = "object-genome-recipe:v1:de0c52ff58128135017337220a339f3c",
 		},
 	}
 
@@ -218,6 +218,24 @@ local function run(): number
 			ObjectGenome.inspect(boundaryGenome).ok == expectedReferenceValidity
 		)
 	end
+
+	local longContentGenome = deepCopy(Fixtures.officeChair)
+	longContentGenome.provenance.productLine = string.rep("x", 513)
+	expect(
+		"accepts v1-valid free-form recipe strings above StableId part length",
+		ObjectGenome.inspect(longContentGenome).ok
+	)
+	local longFingerprintOk, longFingerprint = pcall(function()
+		return ObjectGenome.recipeFingerprint(longContentGenome)
+	end)
+	expect(
+		"fingerprint remains total for v1-valid long free-form strings",
+		longFingerprintOk and type(longFingerprint) == "string"
+	)
+	expect(
+		"long free-form recipe fingerprint repeats deterministically",
+		longFingerprintOk and longFingerprint == ObjectGenome.recipeFingerprint(longContentGenome)
+	)
 
 	local function expectSameVersionFingerprintDrift(name, mutate)
 		local genome = deepCopy(Fixtures.officeChair)
