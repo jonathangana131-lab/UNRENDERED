@@ -62,7 +62,7 @@ CODE_RULES = (
         re.compile(r"\bMessagingService\b"),
     ),
 )
-ASSET_LITERAL = re.compile(r"rbxassetid://", re.IGNORECASE)
+ASSET_LITERAL = re.compile(r"rbxassetid://\d+", re.IGNORECASE)
 
 
 def _long_bracket_level(source: str, start: int) -> tuple[int, int] | None:
@@ -386,6 +386,16 @@ local nestedBacktick = `outer = {`inner = {workspace.Model}`}`
         raise AssertionError(
             "domain-boundary self-test flagged interpolation-comment-only asset id: "
             f"{asset_interpolation_comment_violations!r}"
+        )
+
+    asset_scheme_validator = _find_violations(
+        root / "src/shared/Materials/Test.luau",
+        "local forbiddenScheme = 'rbxassetid://'",
+    )
+    if asset_scheme_validator:
+        raise AssertionError(
+            "domain-boundary self-test flagged protocol-only validation sentinel: "
+            f"{asset_scheme_validator!r}"
         )
 
     outside_asset_domain = _find_violations(
