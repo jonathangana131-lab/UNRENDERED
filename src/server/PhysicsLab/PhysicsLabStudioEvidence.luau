@@ -145,7 +145,7 @@ function PhysicsLabStudioEvidence.runLifecycle20(): LifecycleEvidence
 	-- prior manual harness steps and across repeat invocations in one Studio session.
 	local lab = PhysicsLabStudioHarness.restart()
 	local recipe = PhysicsLabRecipe.build()
-	local baseline = PhysicsLabValidation.capture(lab.model)
+	local baseline = PhysicsLabValidation.captureFull(lab.model)
 	local initialStateRevisionById: { [string]: number } = {}
 	local initialRepresentationRevisionById: { [string]: number } = {}
 
@@ -199,7 +199,7 @@ function PhysicsLabStudioEvidence.runLifecycle20(): LifecycleEvidence
 		)
 
 		if CHECKPOINT_CYCLES[cycle] then
-			local snapshot = PhysicsLabValidation.capture(lab.model)
+			local snapshot = PhysicsLabValidation.captureFull(lab.model)
 			local comparison = PhysicsLabValidation.compare(baseline, snapshot, ENVELOPE_TOLERANCE_STUDS)
 			assertZeroResourceDelta(comparison, cycle)
 			PhysicsLabValidation.assertFullLabEnvelope(baseline, snapshot, ENVELOPE_TOLERANCE_STUDS)
