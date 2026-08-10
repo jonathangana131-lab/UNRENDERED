@@ -153,7 +153,10 @@ local function run(): number
 	local omittedStateAccepted, omittedStateEntity = newResult(omittedStateSpec)
 	expect("new accepts omitted persistent state", omittedStateAccepted)
 	if omittedStateAccepted then
-		expect("new defaults omitted persistent state to empty data", next(omittedStateEntity.persistentState) == nil)
+		expect(
+			"new defaults omitted persistent state to empty data",
+			next(omittedStateEntity.persistentState) == nil
+		)
 	end
 
 	local captureTarget = WorldEntity.new(makeSpec())
