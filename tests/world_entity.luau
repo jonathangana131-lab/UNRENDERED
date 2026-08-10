@@ -51,10 +51,71 @@ local function run(): number
 	end)
 	expectEqual("generator version rejects infinity", infiniteVersionAccepted, false)
 
+	local functionStateAccepted = pcall(function()
+		WorldEntity.new({
+			id = "entity:function-state",
+			kind = "office-chair",
+			origin = {
+				worldId = "world:0000000000000001",
+				generator = "objects.office",
+				generatorVersion = 1,
+				recipeKey = "chair/function-state",
+			},
+			persistentState = {
+				callback = function() end,
+			},
+		})
+	end)
+	expectEqual("persistent state rejects functions", functionStateAccepted, false)
+
+	local cyclicState = {}
+	cyclicState.self = cyclicState
+	local cyclicStateAccepted = pcall(function()
+		WorldEntity.new({
+			id = "entity:cyclic-state",
+			kind = "office-chair",
+			origin = {
+				worldId = "world:0000000000000001",
+				generator = "objects.office",
+				generatorVersion = 1,
+				recipeKey = "chair/cyclic-state",
+			},
+			persistentState = cyclicState,
+		})
+	end)
+	expectEqual("persistent state rejects cycles", cyclicStateAccepted, false)
+
+	local nonFiniteStateAccepted = pcall(function()
+		WorldEntity.new({
+			id = "entity:nonfinite-state",
+			kind = "office-chair",
+			origin = {
+				worldId = "world:0000000000000001",
+				generator = "objects.office",
+				generatorVersion = 1,
+				recipeKey = "chair/nonfinite-state",
+			},
+			persistentState = {
+				energy = math.huge,
+			},
+		})
+	end)
+	expectEqual("persistent state rejects non-finite numbers", nonFiniteStateAccepted, false)
+
 	local interactive = WorldEntity.transition(entity, "F3")
 	expectEqual("promotion preserves identity", interactive.id, entity.id)
 	expectEqual("promotion changes fidelity", interactive.fidelity, "F3")
 	expectEqual("promotion increments representation revision", interactive.representationRevision, 1)
+
+	local promotionCaptureAccepted = pcall(function()
+		WorldEntity.transition(entity, "F3", { open = true })
+	end)
+	expectEqual("promotion rejects fresh captured state", promotionCaptureAccepted, false)
+
+	local missingDemotionCaptureAccepted = pcall(function()
+		WorldEntity.transition(interactive, "F1")
+	end)
+	expectEqual("demotion requires captured state", missingDemotionCaptureAccepted, false)
 
 	local captured = { open = true, hingeAngle = 37.5 }
 	local structural = WorldEntity.transition(interactive, "F1", captured)
