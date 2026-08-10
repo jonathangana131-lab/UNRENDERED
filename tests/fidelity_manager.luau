@@ -112,11 +112,6 @@ local function run(): number
 	local transitionEvents = {}
 
 	local adapter = {
-		getFidelity = function(entityId)
-			local record = records[entityId]
-			assert(record ~= nil, `missing test WorldEntity {entityId}`)
-			return record.fidelity
-		end,
 		captureState = function(entityId, from, to, transitionReason)
 			captureCount += 1
 			table.insert(transitionEvents, `capture:{entityId}:{from}:{to}:{transitionReason}`)
@@ -126,9 +121,10 @@ local function run(): number
 				reason = transitionReason,
 			}
 		end,
-		transition = function(entityId, targetFidelity, capturedState, transitionReason)
+		transition = function(entityId, from, targetFidelity, capturedState, transitionReason)
 			local record = records[entityId]
 			assert(record ~= nil, `missing test WorldEntity {entityId}`)
+			assert(record.fidelity == from, `manager mirror stale for {entityId}`)
 			if capturedState == nil then
 				table.insert(
 					transitionEvents,
@@ -145,8 +141,12 @@ local function run(): number
 	}
 
 	local manager = FidelityManager.new(adapter)
-	FidelityManager.track(manager, "entity:a")
-	FidelityManager.track(manager, "entity:b")
+	FidelityManager.track(manager, "entity:a", records["entity:a"].fidelity)
+	FidelityManager.track(manager, "entity:b", records["entity:b"].fidelity)
+
+	expectError("untracked requests are rejected", function()
+		FidelityManager.request(manager, "entity:missing", "F1", "distance", 0)
+	end)
 
 	local metrics = FidelityManager.getMetrics(manager)
 	expectEqual("tracking counts entities", metrics.trackedEntities, 2)
@@ -210,11 +210,18 @@ local function run(): number
 	expectEqual("metrics leave entity b in F3", metrics.fidelityCounts.F3, 1)
 
 	records["entity:b"] = WorldEntity.transition(records["entity:b"], "F1", { external = true })
-	FidelityManager.refresh(manager)
+	expectTrue(
+		"explicit resync accepts authoritative external change",
+		FidelityManager.resync(manager, "entity:b", records["entity:b"].fidelity, 5)
+	)
+	expectTrue(
+		"same-fidelity resync is a no-op",
+		not FidelityManager.resync(manager, "entity:b", records["entity:b"].fidelity, 5)
+	)
 	metrics = FidelityManager.getMetrics(manager)
-	expectEqual("refresh notices external fidelity changes", metrics.externalResyncs, 1)
-	expectEqual("refresh corrects F1 count", metrics.fidelityCounts.F1, 1)
-	expectEqual("refresh corrects F3 count", metrics.fidelityCounts.F3, 0)
+	expectEqual("resync notices external fidelity changes", metrics.externalResyncs, 1)
+	expectEqual("resync corrects F1 count", metrics.fidelityCounts.F1, 1)
+	expectEqual("resync corrects F3 count", metrics.fidelityCounts.F3, 0)
 
 	expectError("manager rejects time moving backwards", function()
 		FidelityManager.request(manager, "entity:a", "F3", "observation", 3)
@@ -232,17 +239,16 @@ local function run(): number
 			},
 		})
 		local localAdapter = {
-			getFidelity = function(_)
-				return record.fidelity
-			end,
 			captureState = function(_, from, to, transitionReason)
 				return { from = from, to = to, reason = transitionReason }
 			end,
-			transition = function(_, targetFidelity, capturedState)
+			transition = function(_, from, targetFidelity, capturedState)
+				assert(record.fidelity == from, "deterministic manager mirror stale")
 				record = WorldEntity.transition(record, targetFidelity, capturedState)
 			end,
 		}
 		local localManager = FidelityManager.new(localAdapter)
+		FidelityManager.track(localManager, "entity:deterministic", record.fidelity)
 		local sequence = {
 			{
 				0,
