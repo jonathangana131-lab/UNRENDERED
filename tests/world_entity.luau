@@ -147,6 +147,29 @@ local function run(): number
 	expectEqual("duplicate does not replace original", WorldEntity.get(registry, entity.id), entity)
 	expectEqual("duplicate diagnostic retained", #WorldEntity.duplicateDiagnostics(registry), 1)
 
+	local boundedRegistry = WorldEntity.createRegistry(2)
+	WorldEntity.register(boundedRegistry, entity)
+	for index = 1, 3 do
+		WorldEntity.register(
+			boundedRegistry,
+			WorldEntity.new({
+				id = entity.id,
+				kind = "duplicate-fixture",
+				origin = {
+					worldId = "world:0000000000000001",
+					regionId = "region:office-a",
+					generator = "objects.office",
+					generatorVersion = 1,
+					recipeKey = `duplicate/{index}`,
+				},
+			})
+		)
+	end
+	local boundedDiagnostics = WorldEntity.duplicateDiagnostics(boundedRegistry)
+	expectEqual("duplicate diagnostics stay bounded", #boundedDiagnostics, 2)
+	expectEqual("duplicate diagnostics discard oldest", boundedDiagnostics[1].incomingRecipeKey, "duplicate/2")
+	expectEqual("duplicate diagnostics retain newest", boundedDiagnostics[2].incomingRecipeKey, "duplicate/3")
+
 	local removed = WorldEntity.unregister(registry, entity.id)
 	expectEqual("unregister returns record", removed, entity)
 	expectEqual("registry empty after unregister", WorldEntity.count(registry), 0)
