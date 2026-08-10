@@ -324,12 +324,6 @@ local function isCooldownActive(lastTransitionAt: number?, nowSeconds: number, d
 	return lastTransitionAt ~= nil and nowSeconds - lastTransitionAt < duration
 end
 
-local function getTrackedEntry(manager: Manager, entityId: string): Entry
-	local entry = manager.entries[entityId]
-	assert(entry ~= nil, `entity is not tracked: {entityId}`)
-	return entry
-end
-
 local function performTransition(
 	manager: Manager,
 	entityId: string,
@@ -477,7 +471,8 @@ function FidelityManager.resync(
 ): boolean
 	rank(authoritativeFidelity)
 	assert(isFiniteNumber(nowSeconds) and nowSeconds >= 0, "nowSeconds must be a finite non-negative number")
-	local entry = getTrackedEntry(manager, entityId)
+	local entry = manager.entries[entityId]
+	assert(entry ~= nil, `entity is not tracked: {entityId}`)
 	if entry.lastEvaluationAt ~= nil then
 		assert(nowSeconds >= entry.lastEvaluationAt, `time moved backwards for {entityId}`)
 	end
@@ -517,8 +512,9 @@ function FidelityManager.request(
 	assert(reason ~= "", "transition reason required")
 	assert(isFiniteNumber(nowSeconds) and nowSeconds >= 0, "nowSeconds must be a finite non-negative number")
 
-	local entry = getTrackedEntry(manager, entityId)
-	local current = entry.currentFidelity
+	local entry = manager.entries[entityId]
+	assert(entry ~= nil, `entity is not tracked: {entityId}`)
+	local current: Fidelity = entry.currentFidelity
 	if entry.lastEvaluationAt ~= nil then
 		assert(nowSeconds >= entry.lastEvaluationAt, `time moved backwards for {entityId}`)
 	end
