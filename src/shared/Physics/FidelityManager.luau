@@ -156,18 +156,21 @@ local function isFiniteNumber(value: number): boolean
 end
 
 local function normalizeFidelity(value: string): Fidelity
+	local fidelity: Fidelity
 	if value == "F0" then
-		return "F0"
+		fidelity = "F0"
 	elseif value == "F1" then
-		return "F1"
+		fidelity = "F1"
 	elseif value == "F2" then
-		return "F2"
+		fidelity = "F2"
 	elseif value == "F3" then
-		return "F3"
+		fidelity = "F3"
 	elseif value == "F4" then
-		return "F4"
+		fidelity = "F4"
+	else
+		error(`invalid fidelity {value}`)
 	end
-	error(`invalid fidelity {value}`)
+	return fidelity
 end
 
 local function rank(fidelity: Fidelity): number
