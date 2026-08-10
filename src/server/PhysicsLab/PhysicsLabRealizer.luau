@@ -184,6 +184,17 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 	model:SetAttribute("UNRENDERED_LabRecipeKey", recipe.recipeKey)
 	model:SetAttribute("UNRENDERED_WorldId", recipe.worldId)
 	model:SetAttribute("UNRENDERED_RegionId", recipe.regionId)
+	model:SetAttribute("UNRENDERED_ResolvedRegionFingerprint", recipe.resolvedRegion.recipeFingerprint)
+	model:SetAttribute("UNRENDERED_ResolvedRegionWorldSeedRef", recipe.resolvedRegion.worldSeedRef)
+	model:SetAttribute(
+		"UNRENDERED_ResolvedRegionAddress",
+		string.format(
+			"%d,%d,%d",
+			recipe.resolvedRegion.regionAddress.x,
+			recipe.resolvedRegion.regionAddress.z,
+			recipe.resolvedRegion.regionAddress.layer
+		)
+	)
 
 	local registry = WorldEntity.createRegistry()
 	local fidelityManager = FidelityManager.new()
