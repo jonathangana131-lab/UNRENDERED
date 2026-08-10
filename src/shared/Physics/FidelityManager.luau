@@ -28,12 +28,30 @@ export type PolicyConfig = {
 	transitionCooldownSeconds: number,
 }
 
+export type FidelityReason =
+	"potential"
+	| "distance"
+	| "visibility"
+	| "observation"
+	| "interaction"
+	| "significance"
+	| "network-relevance"
+	| "entity-relevance"
+	| "hero-proximity"
+	| "hero-relevance"
+
+export type PolicyDecision = {
+	level: FidelityLevel,
+	reason: FidelityReason,
+}
+
 export type BlockedReason = "hold" | "cooldown" | "transition-required"
 
 export type StepResult = {
 	transitioned: boolean,
 	currentLevel: FidelityLevel,
 	desiredLevel: FidelityLevel,
+	reason: FidelityReason,
 	blockedReason: BlockedReason?,
 }
 
@@ -59,7 +77,12 @@ export type Metrics = {
 	registrationCapacityRejections: number,
 }
 
-export type TransitionHook = (entityId: string, fromLevel: FidelityLevel, toLevel: FidelityLevel) -> ()
+export type TransitionHook = (
+	entityId: string,
+	fromLevel: FidelityLevel,
+	toLevel: FidelityLevel,
+	reason: FidelityReason
+) -> ()
 
 type EntityState = {
 	observedLevel: FidelityLevel,
@@ -128,12 +151,22 @@ local function levelIndex(level: FidelityLevel): number
 	return LEVEL_INDEX[level]
 end
 
+local function validateFinite(name: string, value: number): ()
+	assert(value == value and value ~= math.huge and value ~= -math.huge, `{name} must be finite`)
+end
+
 local function validateUnit(name: string, value: number): ()
-	assert(value == value and value >= 0 and value <= 1, `{name} must be in [0, 1]`)
+	validateFinite(name, value)
+	assert(value >= 0 and value <= 1, `{name} must be in [0, 1]`)
 end
 
 local function validateNonNegative(name: string, value: number): ()
 	assert(value == value and value >= 0, `{name} must be non-negative`)
+end
+
+local function validateFiniteNonNegative(name: string, value: number): ()
+	validateFinite(name, value)
+	assert(value >= 0, `{name} must be non-negative`)
 end
 
 local function validateConfig(config: PolicyConfig): ()
@@ -143,10 +176,10 @@ local function validateConfig(config: PolicyConfig): ()
 			and config.maxRegisteredEntities == math.floor(config.maxRegisteredEntities),
 		"maxRegisteredEntities must be a positive finite integer"
 	)
-	validateNonNegative("heroDistanceStuds", config.heroDistanceStuds)
-	validateNonNegative("interactiveDistanceStuds", config.interactiveDistanceStuds)
-	validateNonNegative("renderDistanceStuds", config.renderDistanceStuds)
-	validateNonNegative("structuralDistanceStuds", config.structuralDistanceStuds)
+	validateFiniteNonNegative("heroDistanceStuds", config.heroDistanceStuds)
+	validateFiniteNonNegative("interactiveDistanceStuds", config.interactiveDistanceStuds)
+	validateFiniteNonNegative("renderDistanceStuds", config.renderDistanceStuds)
+	validateFiniteNonNegative("structuralDistanceStuds", config.structuralDistanceStuds)
 	assert(
 		config.heroDistanceStuds <= config.interactiveDistanceStuds,
 		"hero distance must not exceed interactive"
@@ -159,11 +192,11 @@ local function validateConfig(config: PolicyConfig): ()
 		config.renderDistanceStuds <= config.structuralDistanceStuds,
 		"render distance must not exceed structural"
 	)
-	validateNonNegative("distanceHysteresisStuds", config.distanceHysteresisStuds)
-	validateNonNegative("interactionGraceSeconds", config.interactionGraceSeconds)
-	validateNonNegative("promotionHoldSeconds", config.promotionHoldSeconds)
-	validateNonNegative("demotionHoldSeconds", config.demotionHoldSeconds)
-	validateNonNegative("transitionCooldownSeconds", config.transitionCooldownSeconds)
+	validateFiniteNonNegative("distanceHysteresisStuds", config.distanceHysteresisStuds)
+	validateFiniteNonNegative("interactionGraceSeconds", config.interactionGraceSeconds)
+	validateFiniteNonNegative("promotionHoldSeconds", config.promotionHoldSeconds)
+	validateFiniteNonNegative("demotionHoldSeconds", config.demotionHoldSeconds)
+	validateFiniteNonNegative("transitionCooldownSeconds", config.transitionCooldownSeconds)
 	validateUnit("significanceKeepaliveThreshold", config.significanceKeepaliveThreshold)
 	validateUnit("activeRelevanceThreshold", config.activeRelevanceThreshold)
 	validateUnit("heroRelevanceThreshold", config.heroRelevanceThreshold)
@@ -247,11 +280,11 @@ function FidelityManager.defaultConfig(): PolicyConfig
 	return table.freeze(config)
 end
 
-local function selectDesiredLevel(
+local function selectDecision(
 	inputs: PolicyInputs,
 	config: PolicyConfig?,
 	currentLevel: FidelityLevel?
-): FidelityLevel
+): PolicyDecision
 	local resolvedConfig = config or DEFAULT_CONFIG
 	local resolvedCurrent: FidelityLevel
 	if currentLevel == nil then
@@ -306,9 +339,52 @@ local function selectDesiredLevel(
 		desired = "F4"
 	end
 
-	return desired
+	local reason: FidelityReason
+	if desired == "F4" then
+		if closeHeroDemand then
+			reason = "hero-proximity"
+		else
+			reason = "hero-relevance"
+		end
+	elseif desired == "F3" then
+		if inputs.directlyObserved then
+			reason = "observation"
+		elseif recentlyInteracted then
+			reason = "interaction"
+		elseif inputs.entityRelevance >= resolvedConfig.activeRelevanceThreshold
+			and inputs.entityRelevance >= inputs.networkRelevance
+		then
+			reason = "entity-relevance"
+		elseif inputs.networkRelevance >= resolvedConfig.activeRelevanceThreshold then
+			reason = "network-relevance"
+		else
+			reason = "distance"
+		end
+	elseif desired == "F2" then
+		reason = if inputs.visible then "visibility" else "distance"
+	elseif desired == "F1" then
+		reason = if inputs.significance >= resolvedConfig.significanceKeepaliveThreshold
+			then "significance"
+			else "distance"
+	else
+		reason = "potential"
+	end
+
+	return table.freeze({
+		level = desired,
+		reason = reason,
+	})
 end
 
+local function selectDesiredLevel(
+	inputs: PolicyInputs,
+	config: PolicyConfig?,
+	currentLevel: FidelityLevel?
+): FidelityLevel
+	return selectDecision(inputs, config, currentLevel).level
+end
+
+FidelityManager.selectDecision = selectDecision
 FidelityManager.selectDesiredLevel = selectDesiredLevel
 
 function FidelityManager.new(config: PolicyConfig?): Manager
@@ -412,15 +488,14 @@ function FidelityManager.step(
 	local state = self._states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
 	assert(isLevel(currentLevel), "currentLevel must be F0-F4")
-	assert(
-		nowSeconds == nowSeconds and nowSeconds >= state.lastEvaluatedAt,
-		"nowSeconds must be monotonic per entity"
-	)
+	validateFinite("nowSeconds", nowSeconds)
+	assert(nowSeconds >= state.lastEvaluatedAt, "nowSeconds must be monotonic per entity")
 	state.lastEvaluatedAt = nowSeconds
 
 	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
 
-	local desired: FidelityLevel = selectDesiredLevel(inputs, self.config, currentLevel)
+	local decision = selectDecision(inputs, self.config, currentLevel)
+	local desired = decision.level
 	if desired == currentLevel then
 		state.pendingLevel = nil
 		state.pendingSince = nil
@@ -428,6 +503,7 @@ function FidelityManager.step(
 			transitioned = false,
 			currentLevel = currentLevel,
 			desiredLevel = desired,
+			reason = decision.reason,
 			blockedReason = nil,
 		}
 	end
@@ -448,6 +524,7 @@ function FidelityManager.step(
 			transitioned = false,
 			currentLevel = currentLevel,
 			desiredLevel = desired,
+			reason = decision.reason,
 			blockedReason = "hold",
 		}
 	end
@@ -458,6 +535,7 @@ function FidelityManager.step(
 			transitioned = false,
 			currentLevel = currentLevel,
 			desiredLevel = desired,
+			reason = decision.reason,
 			blockedReason = "cooldown",
 		}
 	end
@@ -468,11 +546,12 @@ function FidelityManager.step(
 			transitioned = false,
 			currentLevel = currentLevel,
 			desiredLevel = desired,
+			reason = decision.reason,
 			blockedReason = "transition-required",
 		}
 	end
 
-	applyTransition(entityId, currentLevel, desired)
+	applyTransition(entityId, currentLevel, desired, decision.reason)
 	self._metrics.transitionHookCalls += 1
 	adjustCount(self._metrics.counts, currentLevel, -1)
 	adjustCount(self._metrics.counts, desired, 1)
@@ -491,6 +570,7 @@ function FidelityManager.step(
 		transitioned = true,
 		currentLevel = desired,
 		desiredLevel = desired,
+		reason = decision.reason,
 		blockedReason = nil,
 	}
 end
