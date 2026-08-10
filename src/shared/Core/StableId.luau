@@ -1,6 +1,10 @@
 --!strict
 
-local DeterminismContract = require(script.Parent.DeterminismContract)
+local requireAny = require :: any
+local scriptValue = script :: any
+local DeterminismContract = if scriptValue ~= nil
+	then requireAny(scriptValue.Parent.DeterminismContract)
+	else requireAny("./DeterminismContract")
 
 local StableId = {
 	ContractVersion = DeterminismContract.StableIdVersion,
