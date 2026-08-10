@@ -57,36 +57,40 @@ Exit evidence:
 
 ## Hero Gate foundations
 
-### #9 — First-observation lock / resolved-region recipe: post-merge identity repair active
-#163 landed first-observation, exact-content fingerprint, explicit migration, and immutable generated-base semantics. #169 then permanently pinned historical schema-v1 compatibility. A post-merge audit found v1's canonical identity defect: it derives `regionId` from `worldSeedRef + RegionAddress`, conflating conceptual WorldId with generation-seed provenance.
-
-PR #183 is the narrow repair lane.
-
-Required repair direction:
-- all new resolved truth is schema v2 with stable regional identity from `WorldId + canonical RegionAddress`,
+### #9 — First-observation lock / resolved-region recipe: complete via #163 + WorldId correction #183
+The plain/versioned first-observation, exact-content fingerprint, explicit migration, and immutable generated-base boundary is landed. ADR 0003 corrects the post-#163 identity defect without erasing historical truth:
+- all new observations/writes use schema/fingerprint v2 and require an explicit project `WorldId`,
+- stable v2 regional identity is `WorldId + canonical RegionAddress`,
 - `worldSeedRef` remains separate generation provenance and exact recipe content,
-- historical v1 remains explicitly readable/reproducible under its original law but cannot be minted by normal first observation,
-- v1 -> v2 correction requires an explicit caller-supplied WorldId; never infer WorldId from seed,
-- first-observation/content-seal/migration/no-embedded-delta guarantees from #163 must remain intact,
-- no persistence/worldgen/#10 scope expansion.
+- historical v1 remains explicitly readable/reproducible under its original seed-derived identity law,
+- normal v2 deserialization does not silently reinterpret v1,
+- a loaded v1 incumbent remains established truth during first-observation reconciliation,
+- v1 -> v2 correction requires an explicit caller-supplied WorldId and returns source/target identity evidence; WorldId is never inferred from seed provenance,
+- generic generator-version migration is v2-only and preserves WorldId/address identity,
+- literal v1 and v2 compatibility vectors pin both historical laws.
 
-Until this repair lands, #10 may continue lab realization, physics, diagnostics, lifecycle evidence, and Studio validation, but must not bind a permanent region identity or repro contract to the seed-derived v1 RegionId.
+Do not reopen competing #9 identity implementations. Future incompatible changes require another explicit version path and compatibility evidence.
 
 ## Unlocked Hero Gate
 
-Finish these foundations before broadening into planned P1 systems.
+Finish this foundation before broadening into planned P1 systems.
 
 ### #10 — Production-contract Physics Lab
-Build the permanent test/lab shell using the landed WorldEntity, Fidelity, MaterialDNA, ObjectGenome, and resolved-region contracts. This is not permission for ad-hoc gameplay scripts or a competing framework.
+The permanent lab foundation is active and must be deepened in place through the landed production contracts. This is not permission for ad-hoc gameplay scripts or a competing framework.
 
-Required direction:
-- deterministic lab recipe and stable IDs,
-- production-contract realization boundaries,
-- floor/walls/ceiling plus door/chair/table/cart/cabinet/stairs/ramp/ledge test geometry,
-- development diagnostics for IDs/fidelity state,
-- clear Studio validation/repro instructions,
-- keep Roblox Instances as physical representation, never canonical world state,
-- after the #9 identity repair lands, consume corrected schema-v2 resolved-region identity rather than minting a competing permanent formula.
+Landed foundation includes:
+- #165 — deterministic 20-entity F2 anchored-proxy shell and Studio-only realization boundary,
+- #174 — manufacturable versioned commercial-door jamb/header aperture repair,
+- #185 — fail-closed MaterialDNA reference validation in the lab recipe,
+- #189 — bounded WorldEntity/Fidelity runtime authority and lifecycle regressions.
+
+Required next direction:
+- bind permanent lab region/repro identity through corrected #9 schema-v2 `WorldId + RegionAddress`, not a seed-derived or lab-private competing formula,
+- deepen F2 proxies into measured F3/F4 representations only where the production lifecycle owns promotion/demotion and state capture,
+- implement and validate door/chair/cart/cabinet mechanisms without normalizing unstable constraints,
+- add bounded runtime/rigidbody/constraint diagnostics and performance budgets,
+- run the documented Roblox Studio evidence protocol for engine-only physics/contact/resource gates,
+- keep Roblox Instances as physical representation, never canonical world state.
 
 ## Hero Gate exit direction
 
@@ -108,8 +112,9 @@ Workers may inspect/review/decompose them, but should not build those major syst
 
 ## Architecture migrations
 
-- ResolvedRegionRecipe v1 -> v2 identity correction is active under ADR 0003.
-- Historical v1 compatibility is preserved explicitly; WorldId must never be inferred from a seed reference.
+None active.
+
+Historical ResolvedRegionRecipe v1 remains an explicit compatibility/read path. Any deliberate v1 -> v2 conversion must receive WorldId from the caller/operator; there is no automatic seed-to-WorldId migration.
 
 ## Generation/schema versions
 
@@ -122,9 +127,9 @@ Workers may inspect/review/decompose them, but should not build those major syst
 
 ## Next critical outcomes
 
-1. land #183 without regressing historical-v1 or first-observation compatibility,
-2. #10 becomes a permanent production-contract Physics Lab rather than a disposable demo,
-3. the lab consumes corrected schema-v2 resolved-region identity instead of inventing a second region contract,
+1. #10 consumes corrected schema-v2 resolved-region identity without inventing a second region contract,
+2. the permanent Physics Lab deepens beyond the landed F2 proxy through measured lifecycle/mechanism/state-capture work,
+3. Studio evidence closes engine-only physics/contact/resource gates rather than substituting headless CI,
 4. the lab proves Wave-1 identity/material/object/fidelity contracts survive real Roblox realization and interaction,
 5. door/chair/physical-player work begins only on those stable foundations.
 
