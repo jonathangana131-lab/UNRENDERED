@@ -40,17 +40,19 @@ Exit gate:
 ### Epic C — Physical Content Domain Foundation
 - #5 — MaterialDNA production contract.
 - #6 — ObjectGenome construction-grammar contract.
-- #100 — post-merge ObjectGenome↔MaterialDNA exact-reference/content-revision repair; **blocking Epic C exit**.
+- #100 — post-merge ObjectGenome↔MaterialDNA exact-reference/content-revision repair; **reopened and blocking Epic C exit until the canonical fingerprint follow-up is green**.
 - #101 — ObjectGenome mechanism-state/persistence semantics repair; **merged green via #117, with finite-span closure #123, and complete**.
 - #119 — post-#117 ObjectGenome mechanism-range numeric-closure repair; **merged green via #123 and complete**.
+- #125 — support reachability must be cycle-independent and traversal-order deterministic; **blocking Epic C exit**.
 
 Exit gate:
 - coherent immutable recipe vs mutable state separation,
 - MaterialDNA links visual/physical/acoustic identity without asset-ID coupling,
 - ObjectGenome supports components, mechanisms, realistic dimensions/materials/mass/affordances,
-- ObjectGenome material references obey the exact landed MaterialDNA identity/revision contract and same-version canonical recipe drift is detectable,
+- ObjectGenome material references obey the exact landed MaterialDNA identity/revision contract and same-version canonical recipe drift is detectable through a project-owned deterministic seal,
 - ObjectGenome mechanism state has explicit kind-specific persistence semantics anchored to authored reference poses,
 - accepted hinge/tilt/slide range arithmetic stays finite through default-state derivation and canonical physical decode,
+- support-cycle rejection and external-support reachability are independent deterministic facts and do not depend on component traversal order,
 - validators reject bad examples.
 
 ## Next unlock
@@ -59,7 +61,7 @@ Exit gate:
 - #10 — production-contract Physics Lab.
 - #9 — first-observation/resolved-region recipe joins once deterministic contracts are ready.
 
-This remains a **next unlock, not current implementation permission**. Do not begin #10/#9 until the Wave 1 exit gates are green, including the remaining #100 blocker, and this file is updated to unlock the Hero Gate.
+This remains a **next unlock, not current implementation permission**. Do not begin #10/#9 until the Wave 1 exit gates are green, including both remaining #100 and #125 blockers, and this file is updated to unlock the Hero Gate.
 
 Do not treat #10 as permission for ad-hoc scripts. Its objects must instantiate through the production contracts from Wave 1 as they land.
 
@@ -94,7 +96,7 @@ None active.
 
 1. deterministic core is a golden locked contract,
 2. WorldEntity/F0–F4 lifecycle is production-safe,
-3. MaterialDNA/ObjectGenome foundations pass validators/tests, with #101/#119 mechanism-state numeric closure landed and the remaining #100 exact-reference/content-revision repair completed,
+3. MaterialDNA/ObjectGenome foundations pass validators/tests, with #101/#119 mechanism-state numeric closure landed and remaining #100 canonical-fingerprint plus #125 support-reachability repairs completed,
 4. Physics Lab begins using those exact contracts only after the Hero Gate is explicitly unlocked,
 5. the first five-minute experience can be improved deeply without replacing its foundations.
 
