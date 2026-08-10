@@ -41,9 +41,13 @@ export type DuplicateIdentityDiagnostic = {
 }
 
 export type Registry = {
-	_records: { [WorldEntityId]: WorldEntityRecord },
-	_duplicates: { DuplicateIdentityDiagnostic },
-	_duplicateCapacity: number,
+	register: (WorldEntityRecord) -> (boolean, DuplicateIdentityDiagnostic?),
+	get: (WorldEntityId) -> WorldEntityRecord?,
+	captureRegistered: (WorldEntityId, PlainData) -> WorldEntityRecord,
+	transitionRegistered: (WorldEntityId, Fidelity, PlainData?) -> WorldEntityRecord,
+	unregister: (WorldEntityId) -> WorldEntityRecord?,
+	count: () -> number,
+	duplicateDiagnostics: () -> { DuplicateIdentityDiagnostic },
 }
 
 WorldEntity.Fidelity = table.freeze({
@@ -254,47 +258,96 @@ function WorldEntity.createRegistry(duplicateDiagnosticCapacity: number?): Regis
 		"duplicateDiagnosticCapacity must be a non-negative integer"
 	)
 
+	local records: { [WorldEntityId]: WorldEntityRecord } = {}
+	local duplicates: { DuplicateIdentityDiagnostic } = {}
+
+	local function getRegistered(entityId: WorldEntityId): WorldEntityRecord
+		local record = records[entityId]
+		assert(record ~= nil, `unknown WorldEntityId: {entityId}`)
+		return record
+	end
+
+	local function register(record: WorldEntityRecord): (boolean, DuplicateIdentityDiagnostic?)
+		local existing = records[record.id]
+		if existing ~= nil then
+			local diagnostic = table.freeze({
+				entityId = record.id,
+				existingKind = existing.kind,
+				incomingKind = record.kind,
+				existingRecipeKey = existing.origin.recipeKey,
+				incomingRecipeKey = record.origin.recipeKey,
+			})
+			if capacity > 0 then
+				if #duplicates >= capacity then
+					table.remove(duplicates, 1)
+				end
+				table.insert(duplicates, diagnostic)
+			end
+			return false, diagnostic
+		end
+
+		records[record.id] = record
+		return true, nil
+	end
+
+	local function get(entityId: WorldEntityId): WorldEntityRecord?
+		return records[entityId]
+	end
+
+	local function captureRegistered(entityId: WorldEntityId, capturedState: PlainData): WorldEntityRecord
+		local nextRecord = WorldEntity.captureState(getRegistered(entityId), capturedState)
+		records[entityId] = nextRecord
+		return nextRecord
+	end
+
+	local function transitionRegistered(
+		entityId: WorldEntityId,
+		target: Fidelity,
+		capturedState: PlainData?
+	): WorldEntityRecord
+		local nextRecord = WorldEntity.transition(getRegistered(entityId), target, capturedState)
+		records[entityId] = nextRecord
+		return nextRecord
+	end
+
+	local function unregister(entityId: WorldEntityId): WorldEntityRecord?
+		local existing = records[entityId]
+		records[entityId] = nil
+		return existing
+	end
+
+	local function count(): number
+		local total = 0
+		for _ in pairs(records) do
+			total += 1
+		end
+		return total
+	end
+
+	local function duplicateDiagnostics(): { DuplicateIdentityDiagnostic }
+		return table.clone(duplicates)
+	end
+
 	return table.freeze({
-		_records = {},
-		_duplicates = {},
-		_duplicateCapacity = capacity,
-	}) :: Registry
+		register = register,
+		get = get,
+		captureRegistered = captureRegistered,
+		transitionRegistered = transitionRegistered,
+		unregister = unregister,
+		count = count,
+		duplicateDiagnostics = duplicateDiagnostics,
+	})
 end
 
 function WorldEntity.register(
 	registry: Registry,
 	record: WorldEntityRecord
 ): (boolean, DuplicateIdentityDiagnostic?)
-	local existing = registry._records[record.id]
-	if existing ~= nil then
-		local diagnostic = table.freeze({
-			entityId = record.id,
-			existingKind = existing.kind,
-			incomingKind = record.kind,
-			existingRecipeKey = existing.origin.recipeKey,
-			incomingRecipeKey = record.origin.recipeKey,
-		})
-		if registry._duplicateCapacity > 0 then
-			if #registry._duplicates >= registry._duplicateCapacity then
-				table.remove(registry._duplicates, 1)
-			end
-			table.insert(registry._duplicates, diagnostic)
-		end
-		return false, diagnostic
-	end
-
-	registry._records[record.id] = record
-	return true, nil
+	return registry.register(record)
 end
 
 function WorldEntity.get(registry: Registry, entityId: WorldEntityId): WorldEntityRecord?
-	return registry._records[entityId]
-end
-
-local function getRegistered(registry: Registry, entityId: WorldEntityId): WorldEntityRecord
-	local record = registry._records[entityId]
-	assert(record ~= nil, `unknown WorldEntityId: {entityId}`)
-	return record
+	return registry.get(entityId)
 end
 
 function WorldEntity.captureRegistered(
@@ -302,9 +355,7 @@ function WorldEntity.captureRegistered(
 	entityId: WorldEntityId,
 	capturedState: PlainData
 ): WorldEntityRecord
-	local nextRecord = WorldEntity.captureState(getRegistered(registry, entityId), capturedState)
-	registry._records[entityId] = nextRecord
-	return nextRecord
+	return registry.captureRegistered(entityId, capturedState)
 end
 
 function WorldEntity.transitionRegistered(
@@ -313,27 +364,19 @@ function WorldEntity.transitionRegistered(
 	target: Fidelity,
 	capturedState: PlainData?
 ): WorldEntityRecord
-	local nextRecord = WorldEntity.transition(getRegistered(registry, entityId), target, capturedState)
-	registry._records[entityId] = nextRecord
-	return nextRecord
+	return registry.transitionRegistered(entityId, target, capturedState)
 end
 
 function WorldEntity.unregister(registry: Registry, entityId: WorldEntityId): WorldEntityRecord?
-	local existing = registry._records[entityId]
-	registry._records[entityId] = nil
-	return existing
+	return registry.unregister(entityId)
 end
 
 function WorldEntity.count(registry: Registry): number
-	local count = 0
-	for _ in pairs(registry._records) do
-		count += 1
-	end
-	return count
+	return registry.count()
 end
 
 function WorldEntity.duplicateDiagnostics(registry: Registry): { DuplicateIdentityDiagnostic }
-	return table.clone(registry._duplicates)
+	return registry.duplicateDiagnostics()
 end
 
 return table.freeze(WorldEntity)
