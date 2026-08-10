@@ -1,6 +1,8 @@
-local StableId = require("../src/shared/Core/StableId")
-local ResolvedRegionRecipe = require("../src/shared/Reality/ResolvedRegionRecipe")
-local RegionAddress = require("../src/shared/Spatial/RegionAddress")
+local ProductionLoader = require("./support/ProductionLoader")
+
+local StableId = ProductionLoader.requireShared("Core/StableId")
+local ResolvedRegionRecipe = ProductionLoader.requireShared("Reality/ResolvedRegionRecipe")
+local RegionAddress = ProductionLoader.requireShared("Spatial/RegionAddress")
 
 local function run(): number
 	local failures = 0
