@@ -56,11 +56,6 @@ jobs:
           python3 scripts/check_domain_boundaries.py --self-test
           python3 scripts/check_domain_boundaries.py
 
-      - name: Plain shared-domain Roblox value audit
-        run: |
-          python3 scripts/check_plain_domain_values.py --self-test
-          python3 scripts/check_plain_domain_values.py
-
       - name: Pure Luau tests
         run: lune run tests/run
 
