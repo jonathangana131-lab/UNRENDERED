@@ -10,10 +10,13 @@ local PhysicsLabRecipe = require(Shared.Physics.PhysicsLabRecipe)
 local PhysicsLabRealizer = {}
 
 PhysicsLabRealizer.ModelName = "UNRENDERED_PhysicsLab"
+PhysicsLabRealizer.OwnershipAttribute = "UNRENDEREDPhysicsLabOwned"
 
 type Recipe = PhysicsLabRecipe.Recipe
 type LabElement = PhysicsLabRecipe.LabElement
 type MaterialReference = PhysicsLabRecipe.MaterialReference
+type Genome = PhysicsLabRecipe.Genome
+type MechanismSpec = PhysicsLabRecipe.MechanismSpec
 
 local MATERIALS_BY_ID: { [string]: any } = table.freeze({
 	[MaterialFixtures.CommercialWallpaperDrywall.id] = MaterialFixtures.CommercialWallpaperDrywall,
@@ -68,6 +71,9 @@ local function applyEntityDiagnostics(target: Instance, element: LabElement): ()
 	target:SetAttribute("RepresentationRevision", element.entity.representationRevision)
 	if element.objectGenomeId ~= nil then
 		target:SetAttribute("ObjectGenomeId", element.objectGenomeId)
+	end
+	if element.mechanismKey ~= nil then
+		target:SetAttribute("MechanismKey", element.mechanismKey)
 	end
 end
 
@@ -184,6 +190,7 @@ local function realizeRollingCart(element: LabElement, parent: Instance): ()
 		)
 		wheel.Shape = Enum.PartType.Cylinder
 		wheel:SetNetworkOwner(nil)
+		applyEntityDiagnostics(wheel, element)
 
 		local chassisAttachment = Instance.new("Attachment")
 		chassisAttachment.Name = `WheelMount{index}`
@@ -201,6 +208,12 @@ local function realizeRollingCart(element: LabElement, parent: Instance): ()
 		hinge.Attachment0 = chassisAttachment
 		hinge.Attachment1 = wheelAttachment
 		hinge.Parent = model
+
+		local noCollision = Instance.new("NoCollisionConstraint")
+		noCollision.Name = `WheelNoCollision{index}`
+		noCollision.Part0 = chassis
+		noCollision.Part1 = wheel
+		noCollision.Parent = model
 	end
 
 	model.PrimaryPart = chassis
@@ -235,6 +248,7 @@ local function realizeHingedPanel(element: LabElement, parent: Instance): ()
 	anchor.CanCollide = false
 	anchor.CanQuery = false
 	anchor.CanTouch = false
+	applyEntityDiagnostics(anchor, element)
 
 	local frameAttachment = Instance.new("Attachment")
 	frameAttachment.Name = "FrameAttachment"
@@ -260,46 +274,125 @@ local function realizeHingedPanel(element: LabElement, parent: Instance): ()
 	addStudioDiagnostic(panel, element)
 end
 
+local function findMovingComponent(genome: Genome, mechanism: MechanismSpec): any
+	local movingComponentKey = (mechanism :: any).movingComponentKey
+	assert(type(movingComponentKey) == "string", "Physics Lab mechanism must identify a moving component")
+	for _, component in ipairs(genome.components) do
+		if component.key == movingComponentKey then
+			return component
+		end
+	end
+	error(`Physics Lab mechanism references missing component {movingComponentKey}`)
+end
+
 local function realizeDrawerProxy(element: LabElement, parent: Instance): ()
+	local genome = PhysicsLabRecipe.objectGenomeFor(element)
+	assert(genome ~= nil, "Physics Lab drawer proxy requires a bound ObjectGenome")
+	local mechanism = PhysicsLabRecipe.mechanismFor(element)
+	assert(mechanism ~= nil and mechanism.kind == "slide", "Physics Lab drawer proxy requires a slide mechanism")
+	local movingComponent = findMovingComponent(genome, mechanism)
+	local scale = PhysicsLabRecipe.StudsPerMeter
+
 	local model = newEntityModel(element, parent)
 	local size = vector3(element.sizeStuds)
 	local shellCFrame = cframeFor(element)
-	local shell = newPart("Shell", size, shellCFrame, true, element.material, model)
-	applyEntityDiagnostics(shell, element)
-
-	local drawerSize = Vector3.new(size.X * 0.84, size.Y * 0.22, size.Z * 0.82)
-	local drawer = newPart(
-		"Drawer",
-		drawerSize,
-		shellCFrame * CFrame.new(0, size.Y * 0.22, -size.Z * 0.08),
-		false,
-		element.material,
-		model
+	local drawerSize = Vector3.new(
+		movingComponent.dimensionsM.x * scale,
+		movingComponent.dimensionsM.y * scale,
+		movingComponent.dimensionsM.z * scale
 	)
-	drawer:SetNetworkOwner(nil)
+	local drawerOffset = Vector3.new(
+		movingComponent.localPositionM.x * scale,
+		movingComponent.localPositionM.y * scale,
+		movingComponent.localPositionM.z * scale
+	)
+	local drawerCFrame = shellCFrame * CFrame.new(drawerOffset)
 
-	local shellAttachment = Instance.new("Attachment")
-	shellAttachment.Name = "ShellSlideAttachment"
-	shellAttachment.Position = Vector3.new(0, size.Y * 0.22, 0)
-	shellAttachment.Axis = Vector3.new(0, 0, 1)
-	shellAttachment.Parent = shell
+	-- The cabinet carcass is deliberately decomposed instead of represented by
+	-- one solid box. A full collidable shell would begin by interpenetrating the
+	-- dynamic drawer and normalize an unstable mechanism test.
+	local wallThickness = math.min(
+		0.08,
+		math.max(0.05, (size.X - drawerSize.X) * 0.4),
+		math.max(0.05, (size.Z - drawerSize.Z) * 0.4)
+	)
+	local halfX = size.X * 0.5
+	local halfY = size.Y * 0.5
+	local halfZ = size.Z * 0.5
+
+	local carcassSpecs = {
+		{
+			name = "SideLeft",
+			size = Vector3.new(wallThickness, size.Y, size.Z),
+			offset = Vector3.new(-halfX + wallThickness * 0.5, 0, 0),
+		},
+		{
+			name = "SideRight",
+			size = Vector3.new(wallThickness, size.Y, size.Z),
+			offset = Vector3.new(halfX - wallThickness * 0.5, 0, 0),
+		},
+		{
+			name = "Top",
+			size = Vector3.new(size.X - wallThickness * 2, wallThickness, size.Z),
+			offset = Vector3.new(0, halfY - wallThickness * 0.5, 0),
+		},
+		{
+			name = "Bottom",
+			size = Vector3.new(size.X - wallThickness * 2, wallThickness, size.Z),
+			offset = Vector3.new(0, -halfY + wallThickness * 0.5, 0),
+		},
+		{
+			name = "Back",
+			size = Vector3.new(size.X - wallThickness * 2, size.Y - wallThickness * 2, wallThickness),
+			offset = Vector3.new(0, 0, halfZ - wallThickness * 0.5),
+		},
+	}
+
+	local primaryPart: BasePart? = nil
+	for _, spec in ipairs(carcassSpecs) do
+		local part = newPart(spec.name, spec.size, shellCFrame * CFrame.new(spec.offset), true, element.material, model)
+		applyEntityDiagnostics(part, element)
+		if spec.name == "Back" then
+			primaryPart = part
+		end
+	end
+	assert(primaryPart ~= nil, "Physics Lab cabinet carcass is missing its back panel")
+
+	local drawer = newPart("Drawer", drawerSize, drawerCFrame, false, element.material, model)
+	drawer:SetNetworkOwner(nil)
+	applyEntityDiagnostics(drawer, element)
+
+	local guide = newPart("SlideGuide", Vector3.new(0.05, 0.05, 0.05), drawerCFrame, true, element.material, model)
+	guide.Transparency = 1
+	guide.CanCollide = false
+	guide.CanQuery = false
+	guide.CanTouch = false
+	applyEntityDiagnostics(guide, element)
+
+	local slideAxis = Vector3.new(mechanism.axis.x, mechanism.axis.y, mechanism.axis.z)
+	assert(slideAxis.Magnitude > 0, "Physics Lab slide axis must be non-zero")
+
+	local guideAttachment = Instance.new("Attachment")
+	guideAttachment.Name = "ShellSlideAttachment"
+	guideAttachment.Axis = slideAxis.Unit
+	guideAttachment.Parent = guide
 
 	local drawerAttachment = Instance.new("Attachment")
 	drawerAttachment.Name = "DrawerSlideAttachment"
-	drawerAttachment.Axis = Vector3.new(0, 0, 1)
+	drawerAttachment.Axis = slideAxis.Unit
 	drawerAttachment.Parent = drawer
 
 	local slide = Instance.new("PrismaticConstraint")
 	slide.Name = "DrawerSlide"
-	slide.Attachment0 = shellAttachment
+	slide.Attachment0 = guideAttachment
 	slide.Attachment1 = drawerAttachment
 	slide.LimitsEnabled = true
-	slide.LowerLimit = 0
-	slide.UpperLimit = math.min(1.5, size.Z * 0.55)
+	slide.LowerLimit = mechanism.minTravelM * scale
+	slide.UpperLimit = mechanism.maxTravelM * scale
 	slide.Parent = model
 
-	model.PrimaryPart = shell
-	addStudioDiagnostic(shell, element)
+	model.PrimaryPart = primaryPart
+	addStudioDiagnostic(primaryPart, element)
 end
 
 local function realizeSpawnAnchor(element: LabElement, parent: Instance): ()
@@ -337,9 +430,14 @@ end
 
 function PhysicsLabRealizer.destroy(parent: Instance): ()
 	local existing = parent:FindFirstChild(PhysicsLabRealizer.ModelName)
-	if existing ~= nil then
-		existing:Destroy()
+	if existing == nil then
+		return
 	end
+	assert(
+		existing:GetAttribute(PhysicsLabRealizer.OwnershipAttribute) == true,
+		`refusing to destroy unrelated content named {PhysicsLabRealizer.ModelName}`
+	)
+	existing:Destroy()
 end
 
 function PhysicsLabRealizer.realize(recipe: Recipe, parent: Instance): (Folder, { [string]: Instance })
@@ -348,6 +446,7 @@ function PhysicsLabRealizer.realize(recipe: Recipe, parent: Instance): (Folder, 
 
 	local root = Instance.new("Folder")
 	root.Name = PhysicsLabRealizer.ModelName
+	root:SetAttribute(PhysicsLabRealizer.OwnershipAttribute, true)
 	root:SetAttribute("RecipeId", recipe.recipeId)
 	root:SetAttribute("RecipeVersion", recipe.recipeVersion)
 	root:SetAttribute("WorldId", recipe.worldId)
@@ -356,12 +455,21 @@ function PhysicsLabRealizer.realize(recipe: Recipe, parent: Instance): (Folder, 
 	root.Parent = parent
 
 	local representations: { [string]: Instance } = {}
-	for _, element in recipe.elements do
-		realizeElement(element, root)
-		local representation = root:FindFirstChild(element.key)
-		assert(representation ~= nil, `Physics Lab realization missing model: {element.key}`)
-		assert(representations[element.entity.id] == nil, `duplicate realized WorldEntityId: {element.entity.id}`)
-		representations[element.entity.id] = representation
+	local ok, realizeError = pcall(function()
+		for _, element in ipairs(recipe.elements) do
+			realizeElement(element, root)
+			local representation = root:FindFirstChild(element.key)
+			assert(representation ~= nil, `Physics Lab realization missing model: {element.key}`)
+			assert(
+				representations[element.entity.id] == nil,
+				`duplicate realized WorldEntityId: {element.entity.id}`
+			)
+			representations[element.entity.id] = representation
+		end
+	end)
+	if not ok then
+		root:Destroy()
+		error(realizeError)
 	end
 
 	return root, representations
