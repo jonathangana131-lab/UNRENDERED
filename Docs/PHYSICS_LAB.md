@@ -6,6 +6,8 @@ The Physics Lab is a permanent development experience for exercising UNRENDERED 
 
 `src/shared/Physics/PhysicsLabRecipe.luau` is the deterministic, headless lab recipe. It owns stable lab/world/entity identity, semantic material references, ObjectGenome references, placement data and initial WorldEntity state. It contains no Roblox Instances.
 
+The lab does **not** invent a second permanent region-ID formula. Its canonical regional truth is produced through the landed `ResolvedRegionRecipe` first-observation boundary: the lab WorldId is used as the deterministic `worldSeedRef`, bay A is address `(0, 0, 0)`, current project generator versions are snapshotted by the #9 contract, and every WorldEntity origin uses the resulting resolved `regionId`.
+
 `src/server/PhysicsLab/PhysicsLabRealizer.luau` is a Roblox representation adapter. In Studio it realizes the recipe into `Workspace/UNRENDERED_PhysicsLab`, registers every entity with the landed WorldEntity registry and FidelityManager, and exposes development diagnostics as attributes.
 
 Workspace remains representation only. Destroying the realized model does not destroy or redefine the recipe/identity contract.
@@ -30,17 +32,22 @@ The first Roblox representation is deliberately `F2-anchored-proxy`. Object comp
 3. Confirm `Workspace/UNRENDERED_PhysicsLab` exists. The server bootstrap only realizes the lab when `RunService:IsStudio()` is true.
 4. Inspect the lab model attributes:
    - `UNRENDERED_LabRecipeKey` should be `physics-lab.hero-gate.v1`.
+   - `UNRENDERED_RegionId` is the #9 `ResolvedRegionRecipe.regionId`, not an adapter-authored Workspace identity.
+   - `UNRENDERED_ResolvedRegionFingerprint`, `UNRENDERED_ResolvedRegionWorldSeedRef`, and `UNRENDERED_ResolvedRegionAddress` expose exact resolved-base repro diagnostics; the address should be `0,0,0`.
    - `UNRENDERED_EntityCount` should be `20`.
    - all initial fidelity should be represented by `UNRENDERED_FidelityF2 = 20` with F0/F1/F3/F4 at zero.
 5. Inspect `door-main`, `chair-a`, `table-a`, `cabinet-a`, and `cart-a`. Each Model should expose `UNRENDERED_WorldEntityId`, `UNRENDERED_ObjectGenomeId`, `UNRENDERED_ObjectRecipeFingerprint`, and `UNRENDERED_RepresentationClass = F2-anchored-proxy`.
 6. Inspect component Parts. They should expose `UNRENDERED_ComponentKey`, `UNRENDERED_ComponentRole`, `UNRENDERED_ComponentMassKg`, `UNRENDERED_MaterialKey`, and `UNRENDERED_MaterialRecipeVersion`.
-7. Stop/start Studio again and confirm the same recipe/entity IDs recur. The realizer owns only a model marked `UNRENDERED_PhysicsLabOwned`; it refuses to delete an unrelated Instance that merely has the same name.
+7. Stop/start Studio again and confirm the same recipe/entity IDs and resolved-region diagnostics recur. The realizer owns only a model marked `UNRENDERED_PhysicsLabOwned`; it refuses to delete an unrelated Instance that merely has the same name.
 
 ## Automated evidence
 
 `tests/physics_lab_recipe.luau` stays headless and verifies:
 
 - stable world/region/entity IDs and deterministic entity order;
+- the lab region ID is exactly the landed `ResolvedRegionRecipe` identity for its world seed reference + RegionAddress;
+- resolved truth reconstructs through #9 serialization/equality/repro contracts;
+- every WorldEntity origin binds to that resolved region;
 - the complete required bay/object key set;
 - duplicate identity detection through WorldEntity;
 - exact MaterialDNA reference acceptance for structural primitives;
