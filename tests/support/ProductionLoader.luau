@@ -53,11 +53,34 @@ local loading = {}
 
 local loadNode
 
-local function productionRequire(target)
+local function requireModuleNode(target)
 	if type(target) ~= "table" or getmetatable(target) ~= NodeMetatable or not target._isModule then
-		error("ProductionLoader only supports Roblox-style ModuleScript references", 2)
+		error("ProductionLoader only supports ModuleScript references or relative module paths", 3)
 	end
 	return loadNode(target)
+end
+
+local function resolveRelativeModule(callerNode, target)
+	if string.sub(target, 1, 2) ~= "./" and string.sub(target, 1, 3) ~= "../" then
+		error(`ProductionLoader only supports relative string requires; got {target}`, 3)
+	end
+
+	local node = callerNode._parent
+	for segment in string.gmatch(target, "[^/]+") do
+		if segment == "." then
+			continue
+		elseif segment == ".." then
+			node = if node ~= nil then node._parent else nil
+		else
+			node = if node ~= nil then node._children[segment] else nil
+		end
+
+		if node == nil then
+			error(`ProductionLoader could not resolve {target} from {callerNode._path}`, 3)
+		end
+	end
+
+	return requireModuleNode(node)
 end
 
 loadNode = function(node)
@@ -71,9 +94,16 @@ loadNode = function(node)
 	end
 	loading[path] = true
 
+	local function scopedRequire(target)
+		if type(target) == "string" then
+			return resolveRelativeModule(node, target)
+		end
+		return requireModuleNode(target)
+	end
+
 	local environment = {
 		script = node,
-		require = productionRequire,
+		require = scopedRequire,
 	}
 	local chunk = luau.load(fs.readFile(path), {
 		debugName = path,
@@ -98,8 +128,7 @@ function ProductionLoader.requireShared(modulePath)
 		node = node._children[segment]
 		assert(node ~= nil, `ProductionLoader missing shared module path segment {segment} in {modulePath}`)
 	end
-	assert(node._isModule, `ProductionLoader target is not a ModuleScript: {modulePath}`)
-	return loadNode(node)
+	return requireModuleNode(node)
 end
 
 return table.freeze(ProductionLoader)
