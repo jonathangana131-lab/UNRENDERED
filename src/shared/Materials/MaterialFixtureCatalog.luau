@@ -15,7 +15,11 @@ function MaterialFixtureCatalog.build(MaterialDNA: any): any
 		},
 		finish = {
 			classKey = "finish.vinyl-wallpaper",
-			color = { r = 0.72, g = 0.68, b = 0.42 },
+			color = {
+				r = 0.72,
+				g = 0.68,
+				b = 0.42,
+			},
 			roughness01 = 0.68,
 			metallic01 = 0,
 		},
@@ -32,7 +36,12 @@ function MaterialFixtureCatalog.build(MaterialDNA: any): any
 			cleanliness01 = 0.63,
 			repairCount = 2,
 		},
-		environment = { humidity01 = 0.38, water01 = 0.08, uv01 = 0.02, grime01 = 0.24 },
+		environment = {
+			humidity01 = 0.38,
+			water01 = 0.08,
+			uv01 = 0.02,
+			grime01 = 0.24,
+		},
 		historyEvents = {
 			{
 				kindKey = "history.cabinet-shadow",
@@ -90,7 +99,11 @@ function MaterialFixtureCatalog.build(MaterialDNA: any): any
 		},
 		finish = {
 			classKey = "finish.olefin-low-pile",
-			color = { r = 0.46, g = 0.42, b = 0.31 },
+			color = {
+				r = 0.46,
+				g = 0.42,
+				b = 0.31,
+			},
 			roughness01 = 0.93,
 			metallic01 = 0,
 		},
@@ -107,7 +120,12 @@ function MaterialFixtureCatalog.build(MaterialDNA: any): any
 			cleanliness01 = 0.49,
 			repairCount = 1,
 		},
-		environment = { humidity01 = 0.44, water01 = 0.12, uv01 = 0.01, grime01 = 0.41 },
+		environment = {
+			humidity01 = 0.44,
+			water01 = 0.12,
+			uv01 = 0.01,
+			grime01 = 0.41,
+		},
 		historyEvents = {
 			{
 				kindKey = "history.traffic-wear",
@@ -165,7 +183,11 @@ function MaterialFixtureCatalog.build(MaterialDNA: any): any
 		},
 		finish = {
 			classKey = "finish.baked-enamel-paint",
-			color = { r = 0.47, g = 0.46, b = 0.43 },
+			color = {
+				r = 0.47,
+				g = 0.46,
+				b = 0.43,
+			},
 			roughness01 = 0.42,
 			metallic01 = 0.03,
 		},
@@ -182,7 +204,12 @@ function MaterialFixtureCatalog.build(MaterialDNA: any): any
 			cleanliness01 = 0.71,
 			repairCount = 0,
 		},
-		environment = { humidity01 = 0.31, water01 = 0.03, uv01 = 0.04, grime01 = 0.18 },
+		environment = {
+			humidity01 = 0.31,
+			water01 = 0.03,
+			uv01 = 0.04,
+			grime01 = 0.18,
+		},
 		historyEvents = {
 			{
 				kindKey = "history.handle-zone-polish",

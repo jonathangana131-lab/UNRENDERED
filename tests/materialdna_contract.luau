@@ -45,7 +45,11 @@ local function run(): number
 			},
 			finish = {
 				classKey = "finish.vinyl-wallpaper",
-				color = { r = 0.7, g = 0.65, b = 0.4 },
+				color = {
+					r = 0.7,
+					g = 0.65,
+					b = 0.4,
+				},
 				roughness01 = 0.7,
 				metallic01 = 0,
 			},
@@ -62,7 +66,12 @@ local function run(): number
 				cleanliness01 = 0.6,
 				repairCount = 1,
 			},
-			environment = { humidity01 = 0.3, water01 = 0.1, uv01 = 0.05, grime01 = 0.2 },
+			environment = {
+				humidity01 = 0.3,
+				water01 = 0.1,
+				uv01 = 0.05,
+				grime01 = 0.2,
+			},
 			historyEvents = {
 				{
 					kindKey = "history.cabinet-shadow",
@@ -123,9 +132,21 @@ local function run(): number
 	frozenSource.physical.staticFriction = 3
 	frozenSource.finish.color.r = 0
 	frozenSource.historyEvents[1].severity01 = 1
-	expect("frozen recipe owns physical copy", frozen.physical.staticFriction == 0.6, tostring(frozen.physical.staticFriction))
-	expect("frozen recipe owns nested color copy", frozen.finish.color.r == 0.7, tostring(frozen.finish.color.r))
-	expect("frozen recipe owns history event copy", frozen.historyEvents[1].severity01 == 0.2, tostring(frozen.historyEvents[1].severity01))
+	expect(
+		"frozen recipe owns physical copy",
+		frozen.physical.staticFriction == 0.6,
+		tostring(frozen.physical.staticFriction)
+	)
+	expect(
+		"frozen recipe owns nested color copy",
+		frozen.finish.color.r == 0.7,
+		tostring(frozen.finish.color.r)
+	)
+	expect(
+		"frozen recipe owns history event copy",
+		frozen.historyEvents[1].severity01 == 0.2,
+		tostring(frozen.historyEvents[1].severity01)
+	)
 
 	local mutatePhysical = pcall(function()
 		frozen.physical.staticFriction = 0.1
@@ -146,50 +167,86 @@ local function run(): number
 	sparseEvents[2] = historyEvent
 	sparseHistory.historyEvents = sparseEvents
 	local sparseHistoryResult = MaterialDNA.validateRecipe(sparseHistory)
-	expect("sparse history list rejected", not sparseHistoryResult.ok and containsError(sparseHistoryResult, "no sparse entries"), table.concat(sparseHistoryResult.errors, "; "))
+	expect(
+		"sparse history list rejected",
+		not sparseHistoryResult.ok and containsError(sparseHistoryResult, "no sparse entries"),
+		table.concat(sparseHistoryResult.errors, "; ")
+	)
 
 	local keyedModifiers = makeRecipe()
 	local modifierList: any = {}
 	modifierList.extra = "anomaly.example"
 	keyedModifiers.anomalyModifiers = modifierList
 	local keyedModifierResult = MaterialDNA.validateRecipe(keyedModifiers)
-	expect("keyed anomaly list rejected", not keyedModifierResult.ok and containsError(keyedModifierResult, "no keyed entries"), table.concat(keyedModifierResult.errors, "; "))
+	expect(
+		"keyed anomaly list rejected",
+		not keyedModifierResult.ok and containsError(keyedModifierResult, "no keyed entries"),
+		table.concat(keyedModifierResult.errors, "; ")
+	)
 
 	local coherenceMismatch = makeRecipe()
 	coherenceMismatch.acoustic.coherenceClass = "interior.low-pile-carpet"
 	local coherenceResult = MaterialDNA.validateRecipe(coherenceMismatch)
-	expect("cross-domain coherence mismatch rejected", not coherenceResult.ok and containsError(coherenceResult, "acoustic.coherenceClass must match"), table.concat(coherenceResult.errors, "; "))
+	expect(
+		"cross-domain coherence mismatch rejected",
+		not coherenceResult.ok and containsError(coherenceResult, "acoustic.coherenceClass must match"),
+		table.concat(coherenceResult.errors, "; ")
+	)
 
 	local rawAssetReference = makeRecipe()
 	rawAssetReference.visual.familyKey = "rbxassetid://123456"
 	local rawAssetResult = MaterialDNA.validateRecipe(rawAssetReference)
-	expect("raw asset reference rejected", not rawAssetResult.ok and containsError(rawAssetResult, "project-owned semantic key"), table.concat(rawAssetResult.errors, "; "))
+	expect(
+		"raw asset reference rejected",
+		not rawAssetResult.ok and containsError(rawAssetResult, "project-owned semantic key"),
+		table.concat(rawAssetResult.errors, "; ")
+	)
 
 	local compatibilityMismatch = makeRecipe()
 	compatibilityMismatch.substrate.classKey = "substrate.cold-rolled-steel"
 	local compatibilityResult = MaterialDNA.validateRecipe(compatibilityMismatch)
-	expect("finish substrate mismatch rejected", not compatibilityResult.ok and containsError(compatibilityResult, "wall-compatible substrate"), table.concat(compatibilityResult.errors, "; "))
+	expect(
+		"finish substrate mismatch rejected",
+		not compatibilityResult.ok and containsError(compatibilityResult, "wall-compatible substrate"),
+		table.concat(compatibilityResult.errors, "; ")
+	)
 
 	local installationMismatch = makeRecipe()
 	installationMismatch.installation.methodKey = "installation.factory-coated-panel"
 	local installationResult = MaterialDNA.validateRecipe(installationMismatch)
-	expect("finish installation mismatch rejected", not installationResult.ok and containsError(installationResult, "installation.pasted-wallpaper"), table.concat(installationResult.errors, "; "))
+	expect(
+		"finish installation mismatch rejected",
+		not installationResult.ok and containsError(installationResult, "installation.pasted-wallpaper"),
+		table.concat(installationResult.errors, "; ")
+	)
 
 	local frictionMismatch = makeRecipe()
 	frictionMismatch.physical.dynamicFriction = 0.8
 	frictionMismatch.physical.staticFriction = 0.4
 	local frictionResult = MaterialDNA.validateRecipe(frictionMismatch)
-	expect("dynamic friction above static rejected", not frictionResult.ok and containsError(frictionResult, "dynamicFriction cannot exceed"), table.concat(frictionResult.errors, "; "))
+	expect(
+		"dynamic friction above static rejected",
+		not frictionResult.ok and containsError(frictionResult, "dynamicFriction cannot exceed"),
+		table.concat(frictionResult.errors, "; ")
+	)
 
 	local invalidSchema = makeRecipe()
 	invalidSchema.schemaVersion = MaterialDNA.SchemaVersion + 1
 	local schemaResult = MaterialDNA.validateRecipe(invalidSchema)
-	expect("unknown schema rejected", not schemaResult.ok and containsError(schemaResult, "schemaVersion must be"), table.concat(schemaResult.errors, "; "))
+	expect(
+		"unknown schema rejected",
+		not schemaResult.ok and containsError(schemaResult, "schemaVersion must be"),
+		table.concat(schemaResult.errors, "; ")
+	)
 
 	local invalidRecipeVersion = makeRecipe()
 	invalidRecipeVersion.recipeVersion = 0
 	local recipeVersionResult = MaterialDNA.validateRecipe(invalidRecipeVersion)
-	expect("non-positive recipe version rejected", not recipeVersionResult.ok and containsError(recipeVersionResult, "recipeVersion"), table.concat(recipeVersionResult.errors, "; "))
+	expect(
+		"non-positive recipe version rejected",
+		not recipeVersionResult.ok and containsError(recipeVersionResult, "recipeVersion"),
+		table.concat(recipeVersionResult.errors, "; ")
+	)
 
 	local revisionOne = makeRecipe()
 	local revisionTwo = makeRecipe()
@@ -215,26 +272,50 @@ local function run(): number
 	)
 
 	local metatableRecipe: any = makeRecipe()
-	setmetatable(metatableRecipe, { __index = { futureMeaning = "synthesized" } })
+	setmetatable(metatableRecipe, {
+		__index = {
+			futureMeaning = "synthesized",
+		},
+	})
 	local metatableResult = MaterialDNA.validateRecipe(metatableRecipe)
-	expect("metatable-backed canonical recipe rejected", not metatableResult.ok and containsError(metatableResult, "without a metatable"), table.concat(metatableResult.errors, "; "))
+	expect(
+		"metatable-backed canonical recipe rejected",
+		not metatableResult.ok and containsError(metatableResult, "without a metatable"),
+		table.concat(metatableResult.errors, "; ")
+	)
 
 	local unknownTopLevel: any = makeRecipe()
 	unknownTopLevel.futureMeaning = "must-not-disappear"
 	local unknownTopLevelResult = MaterialDNA.validateRecipe(unknownTopLevel)
-	expect("unknown top-level v1 field rejected", not unknownTopLevelResult.ok and containsError(unknownTopLevelResult, "unknown field futureMeaning"), table.concat(unknownTopLevelResult.errors, "; "))
+	expect(
+		"unknown top-level v1 field rejected",
+		not unknownTopLevelResult.ok and containsError(unknownTopLevelResult, "unknown field futureMeaning"),
+		table.concat(unknownTopLevelResult.errors, "; ")
+	)
 
 	local unknownNested: any = makeRecipe()
 	unknownNested.finish.color.gamma = 2.2
 	local unknownNestedResult = MaterialDNA.validateRecipe(unknownNested)
-	expect("unknown nested v1 field rejected", not unknownNestedResult.ok and containsError(unknownNestedResult, "unknown field gamma"), table.concat(unknownNestedResult.errors, "; "))
+	expect(
+		"unknown nested v1 field rejected",
+		not unknownNestedResult.ok and containsError(unknownNestedResult, "unknown field gamma"),
+		table.concat(unknownNestedResult.errors, "; ")
+	)
 
 	local fixtures = MaterialFixtureCatalog.build(MaterialDNA)
 	local wallpaper = fixtures.CommercialWallpaperDrywall
 	local carpet = fixtures.LowPileCarpet
 	local metal = fixtures.PaintedMetal
-	local expectedFixtureIds = { [wallpaper.id] = true, [carpet.id] = true, [metal.id] = true }
-	expect("production fixture IDs remain distinct", wallpaper.id ~= carpet.id and wallpaper.id ~= metal.id and carpet.id ~= metal.id, "fixture IDs collided")
+	local expectedFixtureIds = {
+		[wallpaper.id] = true,
+		[carpet.id] = true,
+		[metal.id] = true,
+	}
+	expect(
+		"production fixture IDs remain distinct",
+		wallpaper.id ~= carpet.id and wallpaper.id ~= metal.id and carpet.id ~= metal.id,
+		"fixture IDs collided"
+	)
 	expect(
 		"production fixture IDs remain stable",
 		expectedFixtureIds["material.v1.office-wallpaper.yellow-vinyl"] == true
@@ -242,14 +323,24 @@ local function run(): number
 			and expectedFixtureIds["material.v1.office-metal.warm-gray-enamel"] == true,
 		"one or more expected fixture IDs changed"
 	)
-	for fixtureName, fixture in {
-		CommercialWallpaperDrywall = wallpaper,
-		LowPileCarpet = carpet,
-		PaintedMetal = metal,
-	} do
+	for fixtureName, fixture in
+		{
+			CommercialWallpaperDrywall = wallpaper,
+			LowPileCarpet = carpet,
+			PaintedMetal = metal,
+		}
+	do
 		local fixtureResult = MaterialDNA.validateRecipe(fixture)
-		expect(`production fixture {fixtureName} validates`, fixtureResult.ok, table.concat(fixtureResult.errors, "; "))
-		expect(`production fixture {fixtureName} is content revision 1`, fixture.recipeVersion == 1, tostring(fixture.recipeVersion))
+		expect(
+			`production fixture {fixtureName} validates`,
+			fixtureResult.ok,
+			table.concat(fixtureResult.errors, "; ")
+		)
+		expect(
+			`production fixture {fixtureName} is content revision 1`,
+			fixture.recipeVersion == 1,
+			tostring(fixture.recipeVersion)
+		)
 		local mutateFixture = pcall(function()
 			fixture.apparentAgeYears = 0
 		end)
@@ -257,7 +348,11 @@ local function run(): number
 			fixture.finish.color.r = 0
 		end)
 		expect(`production fixture {fixtureName} is frozen`, not mutateFixture, "fixture accepted mutation")
-		expect(`production fixture {fixtureName} is deeply frozen`, not mutateNestedFixture, "fixture nested color accepted mutation")
+		expect(
+			`production fixture {fixtureName} is deeply frozen`,
+			not mutateNestedFixture,
+			"fixture nested color accepted mutation"
+		)
 	end
 	expect(
 		"production fixtures preserve distinct coherence classes",
@@ -285,7 +380,11 @@ local function run(): number
 		soil01 = 0,
 	}
 	local invalidStateResult = MaterialDNA.validateState(invalidState)
-	expect("invalid mutable state rejected", not invalidStateResult.ok and containsError(invalidStateResult, "damage01"), table.concat(invalidStateResult.errors, "; "))
+	expect(
+		"invalid mutable state rejected",
+		not invalidStateResult.ok and containsError(invalidStateResult, "damage01"),
+		table.concat(invalidStateResult.errors, "; ")
+	)
 
 	return failures
 end
