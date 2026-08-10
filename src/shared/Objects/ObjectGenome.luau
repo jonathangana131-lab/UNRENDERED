@@ -138,9 +138,13 @@ local ObjectGenome = {}
 ObjectGenome.SCHEMA_VERSION = 1
 ObjectGenome.STATE_SCHEMA_VERSION = 1
 ObjectGenome.STABLE_ID_NAMESPACE = "object-genome"
+ObjectGenome.LOCAL_ROTATION_ORDER = "XYZ"
+ObjectGenome.LOCAL_ROTATION_HANDEDNESS = "right"
 
 local MASS_TOLERANCE_FRACTION = 0.05
 local BOUNDS_TOLERANCE_M = 0.005
+local AXIS_UNIT_TOLERANCE = 0.0001
+local ROTATION_LIMIT_DEG = 180
 
 local AFFORDANCE_KINDS = {
 	grip = true,
@@ -245,8 +249,17 @@ local function validateAxis(issues: { ValidationIssue }, path: string, value: an
 		addIssue(issues, "mechanism.axis", path, "axis must be a finite plain-data Vec3")
 		return
 	end
-	if vectorMagnitude(value) <= 0.000001 then
+
+	local magnitude = vectorMagnitude(value)
+	if magnitude <= 0.000001 then
 		addIssue(issues, "mechanism.axis", path, "axis must be non-zero")
+	elseif math.abs(magnitude - 1) > AXIS_UNIT_TOLERANCE then
+		addIssue(
+			issues,
+			"mechanism.axis_unit",
+			path,
+			`axis must be unit length within {AXIS_UNIT_TOLERANCE}; got magnitude {magnitude}`
+		)
 	end
 end
 
@@ -283,22 +296,79 @@ local function validateDimensionLimits(issues: { ValidationIssue }, value: any):
 	end
 end
 
+local function validateLocalRotation(issues: { ValidationIssue }, path: string, value: any): boolean
+	if not isVec3(value) then
+		addIssue(issues, "component.rotation", path, "localRotationDeg must be a finite Vec3")
+		return false
+	end
+
+	if
+		math.abs(value.x) > ROTATION_LIMIT_DEG
+		or math.abs(value.y) > ROTATION_LIMIT_DEG
+		or math.abs(value.z) > ROTATION_LIMIT_DEG
+	then
+		addIssue(
+			issues,
+			"component.rotation_range",
+			path,
+			`v1 local rotation components must be canonical degrees in [-{ROTATION_LIMIT_DEG}, {ROTATION_LIMIT_DEG}]`
+		)
+		return false
+	end
+
+	return true
+end
+
+local function rotatedHalfExtents(dimensions: Vec3, rotationDeg: Vec3): Vec3
+	-- V1 uses right-handed rotations around the object-local +X, then +Y, then +Z axes.
+	-- For column vectors this is Rz * Ry * Rx. Absolute matrix coefficients produce
+	-- the axis-aligned half extents required for envelope validation without Roblox CFrame.
+	local x = math.rad(rotationDeg.x)
+	local y = math.rad(rotationDeg.y)
+	local z = math.rad(rotationDeg.z)
+	local sx, cx = math.sin(x), math.cos(x)
+	local sy, cy = math.sin(y), math.cos(y)
+	local sz, cz = math.sin(z), math.cos(z)
+
+	local r11 = cz * cy
+	local r12 = cz * sy * sx - sz * cx
+	local r13 = cz * sy * cx + sz * sx
+	local r21 = sz * cy
+	local r22 = sz * sy * sx + cz * cx
+	local r23 = sz * sy * cx - cz * sx
+	local r31 = -sy
+	local r32 = cy * sx
+	local r33 = cy * cx
+
+	local hx = dimensions.x * 0.5
+	local hy = dimensions.y * 0.5
+	local hz = dimensions.z * 0.5
+
+	return {
+		x = math.abs(r11) * hx + math.abs(r12) * hy + math.abs(r13) * hz,
+		y = math.abs(r21) * hx + math.abs(r22) * hy + math.abs(r23) * hz,
+		z = math.abs(r31) * hx + math.abs(r32) * hy + math.abs(r33) * hz,
+	}
+end
+
 local function componentFitsEnvelope(component: any, envelope: any): boolean
 	if
 		not isVec3(component.localPositionM)
+		or not isVec3(component.localRotationDeg)
 		or not isPositiveVec3(component.dimensionsM)
 		or not isPositiveVec3(envelope)
 	then
 		return true
 	end
 
+	local rotatedHalf = rotatedHalfExtents(component.dimensionsM, component.localRotationDeg)
 	local halfEnvelopeX = envelope.x * 0.5 + BOUNDS_TOLERANCE_M
 	local halfEnvelopeY = envelope.y * 0.5 + BOUNDS_TOLERANCE_M
 	local halfEnvelopeZ = envelope.z * 0.5 + BOUNDS_TOLERANCE_M
 
-	return math.abs(component.localPositionM.x) + component.dimensionsM.x * 0.5 <= halfEnvelopeX
-		and math.abs(component.localPositionM.y) + component.dimensionsM.y * 0.5 <= halfEnvelopeY
-		and math.abs(component.localPositionM.z) + component.dimensionsM.z * 0.5 <= halfEnvelopeZ
+	return math.abs(component.localPositionM.x) + rotatedHalf.x <= halfEnvelopeX
+		and math.abs(component.localPositionM.y) + rotatedHalf.y <= halfEnvelopeY
+		and math.abs(component.localPositionM.z) + rotatedHalf.z <= halfEnvelopeZ
 end
 
 local function reportResult(issues: { ValidationIssue }): ValidationResult
@@ -511,14 +581,7 @@ function ObjectGenome.inspect(value: any): ValidationResult
 				"localPositionM must be a finite Vec3"
 			)
 		end
-		if not isVec3(component.localRotationDeg) then
-			addIssue(
-				issues,
-				"component.rotation",
-				path .. ".localRotationDeg",
-				"localRotationDeg must be a finite Vec3"
-			)
-		end
+		validateLocalRotation(issues, path .. ".localRotationDeg", component.localRotationDeg)
 		if not isPositiveVec3(component.dimensionsM) then
 			addIssue(
 				issues,
@@ -527,7 +590,12 @@ function ObjectGenome.inspect(value: any): ValidationResult
 				"component dimensions must be positive meters"
 			)
 		elseif not componentFitsEnvelope(component, value.dimensionsM) then
-			addIssue(issues, "component.outside_bounds", path, "component bounds exceed the object envelope")
+			addIssue(
+				issues,
+				"component.outside_bounds",
+				path,
+				"component rotated bounds exceed the object envelope"
+			)
 		end
 
 		local supportKeysDense = validateDenseArray(issues, path .. ".supportKeys", component.supportKeys)
@@ -777,7 +845,7 @@ function ObjectGenome.inspect(value: any): ValidationResult
 					issues,
 					"affordance.key",
 					path .. ".key",
-					"affordance key must be a stable semantic key"
+					"affordance key must be a stable lowercase semantic key"
 				)
 			elseif affordancesByKey[affordance.key] then
 				addIssue(issues, "affordance.duplicate_key", path .. ".key", "duplicate affordance key")

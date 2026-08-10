@@ -34,6 +34,18 @@ A component is structurally valid only when its support chain reaches an externa
 
 The component mass sum must remain within 5% of the declared object mass. The genome also carries family plausibility envelopes for dimensions and mass plus local center-of-mass metadata.
 
+## Transform convention
+
+Schema v1 uses one explicit plain-data local basis and rotation convention so independent realization adapters resolve identical geometry without relying on Roblox types:
+
+- object-local `+X` is right, `+Y` is up, and `+Z` is back; the basis is right-handed;
+- `localRotationDeg = { x, y, z }` stores intrinsic local-axis rotations in degrees, applied around local `+X`, then local `+Y`, then local `+Z`;
+- equivalently for column-vector math, the composed matrix is `Rz * Ry * Rx`;
+- every stored Euler component must be canonical in `[-180, 180]` degrees. Equivalent turns outside that range are rejected rather than silently normalized;
+- component-envelope validation evaluates the rotated component AABB using `abs(R) * halfDimensions`, then applies the component's local translation. Rotation is therefore part of the v1 bounds invariant rather than an adapter-specific afterthought.
+
+This convention is intentionally project-owned domain math. A Roblox realization adapter may convert it to `CFrame`, but the canonical recipe never stores `CFrame` or delegates rotation order to an engine default.
+
 ## Mechanisms
 
 The first production mechanism vocabulary is intentionally small and semantic:
@@ -43,6 +55,8 @@ The first production mechanism vocabulary is intentionally small and semantic:
 - `caster`
 - `tilt`
 - `latch`
+
+Mechanism `axis`, caster `swivelAxis`, and caster `rollAxis` values are canonical unit direction vectors in the same local basis. Their magnitude must be within `0.0001` of `1.0`; scale-bearing alternatives such as `{ x = 0, y = 2, z = 0 }` are invalid recipes. This prevents equivalent directions from acquiring multiple persistent encodings or requiring adapter-specific normalization.
 
 Mechanisms reference component keys and plain axes/limits. A later Roblox realization adapter may choose constraints, servo settings, collision groups, fidelity simplifications, or authored meshes without changing the domain recipe.
 

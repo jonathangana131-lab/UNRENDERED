@@ -22,6 +22,15 @@ local function hasCode(report, code)
 	return false
 end
 
+local function findComponent(genome, key)
+	for _, component in ipairs(genome.components) do
+		if component.key == key then
+			return component
+		end
+	end
+	return nil
+end
+
 local function run(): number
 	local failures = 0
 
@@ -109,6 +118,44 @@ local function run(): number
 	expect(
 		"rejects mechanism with missing frame",
 		hasCode(ObjectGenome.inspect(badMechanism), "mechanism.frame_component")
+	)
+
+	local nonUnitAxis = deepCopy(Fixtures.filingCabinet)
+	nonUnitAxis.mechanisms[1].axis = { x = 0, y = 0, z = -2 }
+	expect(
+		"rejects non-unit mechanism axis",
+		hasCode(ObjectGenome.inspect(nonUnitAxis), "mechanism.axis_unit")
+	)
+
+	local rotatedOutside = deepCopy(Fixtures.officeTable)
+	local top = findComponent(rotatedOutside, "top")
+	if top ~= nil then
+		top.localRotationDeg = { x = 0, y = 90, z = 0 }
+	end
+	expect(
+		"rotation-aware bounds reject a rotated non-cubic component that no longer fits",
+		top ~= nil and hasCode(ObjectGenome.inspect(rotatedOutside), "component.outside_bounds")
+	)
+
+	local rotatedFits = deepCopy(Fixtures.officeTable)
+	local crossbar = findComponent(rotatedFits, "crossbar")
+	if crossbar ~= nil then
+		crossbar.dimensionsM = { x = 0.70, y = 0.08, z = 1.30 }
+		crossbar.localRotationDeg = { x = 0, y = 90, z = 0 }
+	end
+	expect(
+		"rotation-aware bounds accept a rotated non-cubic component that fits after rotation",
+		crossbar ~= nil and not hasCode(ObjectGenome.inspect(rotatedFits), "component.outside_bounds")
+	)
+
+	local nonCanonicalRotation = deepCopy(Fixtures.officeTable)
+	local rotatedTop = findComponent(nonCanonicalRotation, "top")
+	if rotatedTop ~= nil then
+		rotatedTop.localRotationDeg = { x = 0, y = 270, z = 0 }
+	end
+	expect(
+		"rejects non-canonical rotation range",
+		rotatedTop ~= nil and hasCode(ObjectGenome.inspect(nonCanonicalRotation), "component.rotation_range")
 	)
 
 	local badAffordance = deepCopy(Fixtures.officeChair)
