@@ -7,8 +7,9 @@
 - All measurements are plain-data SI units: meters, kilograms, degrees.
 - `schemaVersion` is an explicit compatibility lock. A reader rejects unknown versions instead of interpreting future schemas as v1.
 - `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityParts()` supplies those semantic parts to the locked project `StableId` contract; ObjectGenome does not duplicate hashing/canonical encoding.
+- `ObjectGenome.contentFingerprint()` is a separate versioned deterministic digest over the complete immutable recipe. It is a drift/review lock, not a replacement for the published v1 StableId inputs; changing fingerprint inputs does not silently rewrite `genomeId`.
 - `components`, per-component `supportKeys`, `mechanisms`, and `affordances` are canonical dense 1-based arrays. Sparse arrays and map-like extra keys are rejected so accepted plain data has one unambiguous shape.
-- Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`: `materialKey` is the stable lowercase MaterialDNA recipe id and `materialRecipeVersion` is its positive content revision. ObjectGenome validates and owns those plain values but does not import MaterialDNA implementation details or Roblox asset IDs. A published component material-revision change is a canonical object recipe change and therefore requires the corresponding `familyVersion` to advance rather than silently retargeting an established genome identity.
+- Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`. ObjectGenome reconstructs that plain `{ id, recipeVersion }` pair and delegates validation to the production MaterialDNA v2 reference contract, while remaining asset-agnostic and free of Roblox representation data. A published component material-revision change is a canonical object recipe change and therefore requires the corresponding `familyVersion` to advance rather than silently retargeting an established genome identity.
 - Roblox `Instance`, `Vector3`, `CFrame`, meshes, constraints, and rendering APIs are deliberately absent from the schema.
 - Mutable wear, damage, mechanism position, and detach state live in `ObjectState`, never in the immutable genome.
 - Mutable state is a complete snapshot for the referenced genome: every component/mechanism key must be present and unknown keys are rejected.
@@ -78,6 +79,7 @@ Affordances describe stable interaction/grip regions (`grip`, `push`, `pull`, `s
 
 - `ObjectGenome.inspect(genome)` returns a structured deterministic report with stable issue codes.
 - `ObjectGenome.validate(genome)` asserts when the report is invalid.
+- `ObjectGenome.contentFingerprint(genome)` returns the versioned full immutable-recipe drift fingerprint without changing `identityParts()` / `genomeId` semantics.
 - `ObjectGenomeOwnership.own(genome)` validates exact canonical shape, defensively copies, and recursively freezes a production-owned recipe.
 - `ObjectGenome.defaultState(genome)` creates separate mutable state bound to the exact canonical genome identity, with mechanism scalars at their authored zero/reference poses.
 - `ObjectGenome.decodeMechanismPosition(mechanism, position)` converts the canonical persisted scalar into one kind-specific physical semantic value.
@@ -100,4 +102,4 @@ These are contract fixtures, not final art or Hero Feature implementations. Thei
 
 ## Evolution
 
-Changing field meaning or deterministic identity inputs requires an object schema/version decision. Changing published canonical recipe content such as a component's exact material revision requires advancing `familyVersion`. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.
+Changing field meaning or deterministic identity inputs requires an object schema/version decision. Changing published canonical recipe content such as a component's exact material revision requires advancing `familyVersion`; fixture content fingerprints must change only alongside that intentional revision. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.

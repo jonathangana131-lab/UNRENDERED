@@ -1,6 +1,7 @@
 local ProductionLoader = require("./support/ProductionLoader")
 
 local StableId = ProductionLoader.requireShared("Core/StableId")
+local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
 local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
 local Fixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
 
@@ -59,16 +60,19 @@ local function run(): number
 			name = "office chair",
 			genome = Fixtures.officeChair,
 			identity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",
+			fingerprint = "object-genome-content:v1:7f30bf93113519a67cab919c38162864",
 		},
 		{
 			name = "office table",
 			genome = Fixtures.officeTable,
 			identity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",
+			fingerprint = "object-genome-content:v1:f297477251b7883154035fa7cd19953a",
 		},
 		{
 			name = "filing cabinet",
 			genome = Fixtures.filingCabinet,
 			identity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",
+			fingerprint = "object-genome-content:v1:cbbc4d1ff31cd7cdd966ef71544e6cbf",
 		},
 	}
 
@@ -83,6 +87,17 @@ local function run(): number
 			StableId.is(identity, ObjectGenome.STABLE_ID_NAMESPACE)
 		)
 		expect(fixture.name .. " repeat identity", identity == ObjectGenome.identityKey(fixture.genome))
+
+		local fingerprint = ObjectGenome.contentFingerprint(fixture.genome)
+		expect(fixture.name .. " locked content fingerprint", fingerprint == fixture.fingerprint)
+		expect(
+			fixture.name .. " uses project content fingerprint namespace",
+			StableId.is(fingerprint, ObjectGenome.CONTENT_FINGERPRINT_NAMESPACE)
+		)
+		expect(
+			fixture.name .. " repeat content fingerprint",
+			fingerprint == ObjectGenome.contentFingerprint(fixture.genome)
+		)
 
 		for _, component in ipairs(fixture.genome.components) do
 			expect(
@@ -137,6 +152,47 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(legacyMaterial), "component.material_key")
 	)
 
+	local materialReferenceCases = {
+		{
+			name = "slash project id",
+			id = "material.v1/office.carpet",
+			recipeVersion = 1,
+		},
+		{
+			name = "numeric-only id",
+			id = "123456",
+			recipeVersion = 1,
+		},
+		{
+			name = "overlong id",
+			id = "m" .. string.rep("a", 160),
+			recipeVersion = 1,
+		},
+		{
+			name = "maximum recipe version",
+			id = "material.v1.office.carpet",
+			recipeVersion = 2147483647,
+		},
+		{
+			name = "recipe version above maximum",
+			id = "material.v1.office.carpet",
+			recipeVersion = 2147483648,
+		},
+	}
+	for _, case in ipairs(materialReferenceCases) do
+		local materialReferenceOk = MaterialDNA.validateReference({
+			id = case.id,
+			recipeVersion = case.recipeVersion,
+		}).ok
+		local candidate = deepCopy(Fixtures.officeChair)
+		candidate.components[1].materialKey = case.id
+		candidate.components[1].materialRecipeVersion = case.recipeVersion
+		expect(
+			case.name .. " ObjectGenome/MaterialDNA reference parity",
+			ObjectGenome.inspect(candidate).ok == materialReferenceOk
+		)
+	end
+
 	local revisedMaterial = deepCopy(Fixtures.filingCabinet)
 	local revisedShell = findComponent(revisedMaterial, "shell")
 	local canonicalShell = findComponent(Fixtures.filingCabinet, "shell")
@@ -150,6 +206,26 @@ local function run(): number
 			and revisedShell.materialKey == canonicalShell.materialKey
 			and revisedShell.materialRecipeVersion ~= canonicalShell.materialRecipeVersion
 			and ObjectGenome.inspect(revisedMaterial).ok
+	)
+
+	expect(
+		"same-version material drift preserves the published v1 StableId law",
+		ObjectGenome.identityKey(revisedMaterial) == ObjectGenome.identityKey(Fixtures.filingCabinet)
+	)
+	expect(
+		"content fingerprint detects same-version material drift",
+		ObjectGenome.contentFingerprint(revisedMaterial)
+			~= ObjectGenome.contentFingerprint(Fixtures.filingCabinet)
+	)
+	local versionedMaterial = deepCopy(revisedMaterial)
+	versionedMaterial.familyVersion += 1
+	expect(
+		"material revision plus required familyVersion advance validates",
+		ObjectGenome.inspect(versionedMaterial).ok
+	)
+	expect(
+		"material revision plus required familyVersion advance changes identity",
+		ObjectGenome.identityKey(versionedMaterial) ~= ObjectGenome.identityKey(Fixtures.filingCabinet)
 	)
 
 	local danglingSupport = deepCopy(Fixtures.filingCabinet)
