@@ -11,6 +11,8 @@ local PhysicsLabRealizer = {}
 
 PhysicsLabRealizer.ModelName = "UNRENDERED_PhysicsLab"
 
+local OWNERSHIP_ATTRIBUTE = "UNRENDEREDPhysicsLabOwned"
+
 type Recipe = PhysicsLabRecipe.Recipe
 type LabElement = PhysicsLabRecipe.LabElement
 type MaterialReference = PhysicsLabRecipe.MaterialReference
@@ -64,8 +66,6 @@ local function applyEntityDiagnostics(target: Instance, element: LabElement): ()
 	target:SetAttribute("RegionId", element.entity.origin.regionId)
 	target:SetAttribute("Fidelity", element.entity.fidelity)
 	target:SetAttribute("RecipeKey", element.entity.origin.recipeKey)
-	target:SetAttribute("StateRevision", element.entity.stateRevision)
-	target:SetAttribute("RepresentationRevision", element.entity.representationRevision)
 	if element.objectGenomeId ~= nil then
 		target:SetAttribute("ObjectGenomeId", element.objectGenomeId)
 	end
@@ -264,29 +264,93 @@ local function realizeDrawerProxy(element: LabElement, parent: Instance): ()
 	local model = newEntityModel(element, parent)
 	local size = vector3(element.sizeStuds)
 	local shellCFrame = cframeFor(element)
-	local shell = newPart("Shell", size, shellCFrame, true, element.material, model)
-	applyEntityDiagnostics(shell, element)
-
+	local frameThickness = math.max(0.08, math.min(size.X, size.Z) * 0.06)
 	local drawerSize = Vector3.new(size.X * 0.84, size.Y * 0.22, size.Z * 0.82)
-	local drawer = newPart(
-		"Drawer",
-		drawerSize,
-		shellCFrame * CFrame.new(0, size.Y * 0.22, -size.Z * 0.08),
-		false,
+	local cavityWidth = size.X - frameThickness * 2
+	local cavityHeight = size.Y - frameThickness * 2
+	local rearClearance = size.Z * 0.5 - frameThickness
+	local drawerRearExtent = -size.Z * 0.08 + drawerSize.Z * 0.5
+
+	assert(frameThickness * 2 < size.X, "Physics Lab cabinet frame is too thick for its width")
+	assert(frameThickness * 2 < size.Y, "Physics Lab cabinet frame is too thick for its height")
+	assert(drawerSize.X < cavityWidth, "Physics Lab drawer must clear cabinet side walls")
+	assert(drawerSize.Y < cavityHeight, "Physics Lab drawer must clear cabinet top and bottom")
+	assert(drawerRearExtent < rearClearance, "Physics Lab drawer must clear cabinet back wall")
+
+	local sideSize = Vector3.new(frameThickness, size.Y, size.Z)
+	local sideOffsetX = size.X * 0.5 - frameThickness * 0.5
+	newPart(
+		"LeftSide",
+		sideSize,
+		shellCFrame * CFrame.new(-sideOffsetX, 0, 0),
+		true,
 		element.material,
 		model
 	)
+	newPart(
+		"RightSide",
+		sideSize,
+		shellCFrame * CFrame.new(sideOffsetX, 0, 0),
+		true,
+		element.material,
+		model
+	)
+
+	local horizontalSize = Vector3.new(cavityWidth, frameThickness, size.Z)
+	local horizontalOffsetY = size.Y * 0.5 - frameThickness * 0.5
+	local top = newPart(
+		"Top",
+		horizontalSize,
+		shellCFrame * CFrame.new(0, horizontalOffsetY, 0),
+		true,
+		element.material,
+		model
+	)
+	newPart(
+		"Bottom",
+		horizontalSize,
+		shellCFrame * CFrame.new(0, -horizontalOffsetY, 0),
+		true,
+		element.material,
+		model
+	)
+
+	local back = newPart(
+		"Back",
+		Vector3.new(cavityWidth, cavityHeight, frameThickness),
+		shellCFrame * CFrame.new(0, 0, size.Z * 0.5 - frameThickness * 0.5),
+		true,
+		element.material,
+		model
+	)
+	applyEntityDiagnostics(back, element)
+
+	local drawerCFrame = shellCFrame * CFrame.new(0, size.Y * 0.22, -size.Z * 0.08)
+	local drawer = newPart("Drawer", drawerSize, drawerCFrame, false, element.material, model)
+	applyEntityDiagnostics(drawer, element)
 	drawer:SetNetworkOwner(nil)
+
+	local slideFrame = newPart(
+		"SlideFrame",
+		Vector3.new(0.1, 0.1, 0.1),
+		drawerCFrame,
+		true,
+		element.material,
+		model
+	)
+	slideFrame.Transparency = 1
+	slideFrame.CanCollide = false
+	slideFrame.CanQuery = false
+	slideFrame.CanTouch = false
 
 	local shellAttachment = Instance.new("Attachment")
 	shellAttachment.Name = "ShellSlideAttachment"
-	shellAttachment.Position = Vector3.new(0, size.Y * 0.22, 0)
-	shellAttachment.Axis = Vector3.new(0, 0, 1)
-	shellAttachment.Parent = shell
+	shellAttachment.Axis = Vector3.new(0, 0, -1)
+	shellAttachment.Parent = slideFrame
 
 	local drawerAttachment = Instance.new("Attachment")
 	drawerAttachment.Name = "DrawerSlideAttachment"
-	drawerAttachment.Axis = Vector3.new(0, 0, 1)
+	drawerAttachment.Axis = Vector3.new(0, 0, -1)
 	drawerAttachment.Parent = drawer
 
 	local slide = Instance.new("PrismaticConstraint")
@@ -298,8 +362,8 @@ local function realizeDrawerProxy(element: LabElement, parent: Instance): ()
 	slide.UpperLimit = math.min(1.5, size.Z * 0.55)
 	slide.Parent = model
 
-	model.PrimaryPart = shell
-	addStudioDiagnostic(shell, element)
+	model.PrimaryPart = back
+	addStudioDiagnostic(top, element)
 end
 
 local function realizeSpawnAnchor(element: LabElement, parent: Instance): ()
@@ -337,9 +401,17 @@ end
 
 function PhysicsLabRealizer.destroy(parent: Instance): ()
 	local existing = parent:FindFirstChild(PhysicsLabRealizer.ModelName)
-	if existing ~= nil then
-		existing:Destroy()
+	if existing == nil then
+		return
 	end
+
+	assert(existing:IsA("Folder"), "refusing to destroy same-named non-Physics-Lab Instance")
+	assert(
+		existing:GetAttribute(OWNERSHIP_ATTRIBUTE) == true
+			and existing:GetAttribute("PhysicalRepresentationOnly") == true,
+		"refusing to destroy same-named Instance without PhysicsLabRealizer ownership"
+	)
+	existing:Destroy()
 end
 
 function PhysicsLabRealizer.realize(recipe: Recipe, parent: Instance): (Folder, { [string]: Instance })
@@ -348,6 +420,7 @@ function PhysicsLabRealizer.realize(recipe: Recipe, parent: Instance): (Folder, 
 
 	local root = Instance.new("Folder")
 	root.Name = PhysicsLabRealizer.ModelName
+	root:SetAttribute(OWNERSHIP_ATTRIBUTE, true)
 	root:SetAttribute("RecipeId", recipe.recipeId)
 	root:SetAttribute("RecipeVersion", recipe.recipeVersion)
 	root:SetAttribute("WorldId", recipe.worldId)
