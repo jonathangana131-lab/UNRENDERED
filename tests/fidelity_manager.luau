@@ -101,11 +101,19 @@ local function run(): number
 		end)
 	end)
 	expectEqual("WorldEntity rejects demotion without captured state", unsafeDemotionAccepted, false)
-	expectEqual("failed authoritative transition leaves manager at F3", manager:getObservedLevel(entity.id), "F3")
+	expectEqual(
+		"failed authoritative transition leaves manager at F3",
+		manager:getObservedLevel(entity.id),
+		"F3"
+	)
 	expectEqual("failed authoritative transition leaves entity at F3", entity.fidelity, "F3")
 
 	result = manager:step(entity.id, entity.fidelity, demotionInputs, 1.5, function(_, fromLevel, toLevel)
-		expectEqual("transition runs before manager cache commit", manager:getObservedLevel(entity.id), fromLevel)
+		expectEqual(
+			"transition runs before manager cache commit",
+			manager:getObservedLevel(entity.id),
+			fromLevel
+		)
 		entity = WorldEntity.transition(entity, toLevel, { hingeAngle = 17.5 })
 	end)
 	expectEqual("captured demotion commits", result.transitioned, true)
@@ -162,7 +170,53 @@ local function run(): number
 		capacityManager:register("entity:capacity-b", "F0")
 	end)
 	expectEqual("registered state is hard bounded", overCapacityAccepted, false)
-	expectEqual("capacity rejection is observable", capacityManager:getMetrics().registrationCapacityRejections, 1)
+	expectEqual(
+		"capacity rejection is observable",
+		capacityManager:getMetrics().registrationCapacityRejections,
+		1
+	)
+
+	local stableTargetEntity = WorldEntity.new({
+		id = "entity:stable-target",
+		kind = "office-chair",
+		origin = {
+			worldId = "world:fidelity-test",
+			regionId = "region:fidelity-test",
+			generator = "tests.fidelity",
+			generatorVersion = 1,
+			recipeKey = "chair/stable-target",
+		},
+	})
+	local stableTargetManager = FidelityManager.new()
+	stableTargetManager:register(stableTargetEntity.id, stableTargetEntity.fidelity)
+
+	local stableResult = stableTargetManager:step(
+		stableTargetEntity.id,
+		stableTargetEntity.fidelity,
+		inputs({ networkRelevance = 0.9 }),
+		0
+	)
+	expectEqual("stable target starts promotion hold", stableResult.blockedReason, "hold")
+
+	stableResult = stableTargetManager:step(
+		stableTargetEntity.id,
+		stableTargetEntity.fidelity,
+		inputs({ directlyObserved = true }),
+		0.05
+	)
+	expectEqual("changed cause preserves same target hold", stableResult.blockedReason, "hold")
+
+	stableResult = stableTargetManager:step(
+		stableTargetEntity.id,
+		stableTargetEntity.fidelity,
+		inputs({ networkRelevance = 0.9 }),
+		0.11,
+		function(_, _, toLevel)
+			stableTargetEntity = WorldEntity.transition(stableTargetEntity, toLevel)
+		end
+	)
+	expectEqual("same target matures despite changed causes", stableResult.transitioned, true)
+	expectEqual("stable target reaches interactive", stableTargetEntity.fidelity, "F3")
 
 	return failures
 end
