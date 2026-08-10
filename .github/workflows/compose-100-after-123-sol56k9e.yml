@@ -29,6 +29,8 @@ jobs:
       - name: Compose reviewed #100 patch on corrected mechanism contract
         shell: bash
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin a10127c8c39204a94d91cb8f78c62ada16459410
           git cherry-pick a10127c8c39204a94d91cb8f78c62ada16459410
           stylua src tests
@@ -41,7 +43,5 @@ jobs:
         shell: bash
         run: |
           git rm .github/workflows/compose-100-after-123-sol56k9e.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "chore(objects): retire #100 composition helper"
           git push origin HEAD:agent/scratch/100-after-123-sol56k9e
