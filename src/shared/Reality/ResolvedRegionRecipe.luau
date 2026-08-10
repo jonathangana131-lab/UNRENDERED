@@ -341,6 +341,7 @@ function ResolvedRegionRecipe.lock(
 		RegionAddress.equal(locked.regionAddress, canonicalCandidate.regionAddress),
 		"existing lock and candidate regionAddress must match"
 	)
+	assert(locked.worldSeed == canonicalCandidate.worldSeed, "existing lock and candidate worldSeed must match")
 	if ResolvedRegionRecipe.equivalent(locked, canonicalCandidate) then
 		return locked, "existing-match"
 	end
@@ -400,6 +401,7 @@ function ResolvedRegionRecipe.runMigration(plan: MigrationPlan, migrator: Migrat
 		RegionAddress.equal(migrated.regionAddress, source.regionAddress),
 		"migration must preserve regionAddress"
 	)
+	assert(migrated.worldSeed == source.worldSeed, "migration must preserve worldSeed")
 	assert(
 		versionsEqual(migrated.generatorVersions, targetVersions),
 		"migration output must use target generator versions"
