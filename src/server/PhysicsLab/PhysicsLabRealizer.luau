@@ -240,27 +240,40 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 			existing:GetAttribute("UNRENDERED_PhysicsLabOwned") == true,
 			`refusing to replace unrelated Instance named {ROOT_NAME}`
 		)
-		existing:Destroy()
+		error("Physics Lab is already realized; destroy the existing RealizedLab before replacement")
 	end
 
-	local model = Instance.new("Model")
-	model.Name = ROOT_NAME
-	model:SetAttribute("UNRENDERED_PhysicsLabOwned", true)
-	model:SetAttribute("UNRENDERED_LabSchemaVersion", recipe.schemaVersion)
-	model:SetAttribute("UNRENDERED_LabRecipeKey", recipe.recipeKey)
-	model:SetAttribute("UNRENDERED_WorldId", recipe.worldId)
-	model:SetAttribute("UNRENDERED_RegionId", recipe.regionId)
-
-	local representations: RepresentationMap = {}
-	for _, entityRecipe in ipairs(recipe.entities) do
-		local entityId = entityRecipe.entity.id
-		assert(representations[entityId] == nil, `duplicate Physics Lab representation id: {entityId}`)
-		representations[entityId] = realizeEntity(model, entityRecipe, entityRecipe.entity)
-	end
-
+	-- Establish and validate canonical domain authority before allocating any
+	-- physical representation. From this point onward, Instances are disposable
+	-- views of the runtime-owned WorldEntity records.
 	local runtime = PhysicsLabRuntime.new(recipe)
-	syncMetrics(model, runtime, representations)
-	model.Parent = parent
+	local model = Instance.new("Model")
+	local representations: RepresentationMap = {}
+
+	local realized, realizationError = pcall(function()
+		model.Name = ROOT_NAME
+		model:SetAttribute("UNRENDERED_PhysicsLabOwned", true)
+		model:SetAttribute("UNRENDERED_LabSchemaVersion", recipe.schemaVersion)
+		model:SetAttribute("UNRENDERED_LabRecipeKey", recipe.recipeKey)
+		model:SetAttribute("UNRENDERED_WorldId", recipe.worldId)
+		model:SetAttribute("UNRENDERED_RegionId", recipe.regionId)
+
+		for _, entityRecipe in ipairs(recipe.entities) do
+			local entityId = entityRecipe.entity.id
+			assert(representations[entityId] == nil, `duplicate Physics Lab representation id: {entityId}`)
+			representations[entityId] = realizeEntity(model, entityRecipe, runtime:getRecord(entityId))
+		end
+
+		syncMetrics(model, runtime, representations)
+		model.Parent = parent
+	end)
+
+	if not realized then
+		model:Destroy()
+		table.clear(representations)
+		runtime:dispose()
+		error(`failed to realize Physics Lab representation: {tostring(realizationError)}`)
+	end
 
 	local destroyed = false
 
@@ -354,10 +367,10 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 		if destroyed then
 			return
 		end
+		destroyed = true
 		model:Destroy()
 		table.clear(representations)
 		runtime:dispose()
-		destroyed = true
 	end
 
 	return table.freeze({
