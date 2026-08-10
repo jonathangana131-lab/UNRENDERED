@@ -43,11 +43,11 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(futureSchema), "genome.schema_version")
 	)
 
-	local unknownTopLevel = deepCopy(Fixtures.officeChair)
-	unknownTopLevel.futureField = true
+	local unknownTopLevelShape = deepCopy(Fixtures.officeChair)
+	unknownTopLevelShape.futureField = true
 	expect(
 		"rejects undeclared top-level genome fields",
-		hasCode(ObjectGenome.inspect(unknownTopLevel), "schema.unknown_field")
+		hasCode(ObjectGenome.inspect(unknownTopLevelShape), "schema.unknown_field")
 	)
 
 	local unknownProvenance = deepCopy(Fixtures.officeChair)
@@ -85,15 +85,15 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(unknownAffordanceField), "schema.unknown_field")
 	)
 
-	local metatableGenome = deepCopy(Fixtures.officeChair)
-	setmetatable(metatableGenome.provenance, {
+	local metatableValidationGenome = deepCopy(Fixtures.officeChair)
+	setmetatable(metatableValidationGenome.provenance, {
 		__index = function()
 			return "spoofed"
 		end,
 	})
 	expect(
 		"semantic validator rejects metatable-backed canonical records",
-		hasCode(ObjectGenome.inspect(metatableGenome), "schema.metatable")
+		hasCode(ObjectGenome.inspect(metatableValidationGenome), "schema.metatable")
 	)
 
 	local unknownStateField = ObjectGenome.defaultState(Fixtures.officeChair)
