@@ -2,10 +2,12 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
 
 local Shared = ReplicatedStorage:WaitForChild("UNRENDERED")
 local Versions = require(Shared.Core.Versions)
 local SeedStream = require(Shared.WorldGen.SeedStream)
+local PhysicsLabRuntime = require(script.Parent.PhysicsLab.PhysicsLabRuntime)
 
 assert(RunService:IsServer(), "server bootstrap must run on server")
 
@@ -21,3 +23,8 @@ print(
 		deterministicProbe
 	)
 )
+
+local physicsLabEnabled = RunService:IsStudio() or Workspace:GetAttribute("UNRENDERED_EnablePhysicsLab") == true
+if physicsLabEnabled then
+	PhysicsLabRuntime.start()
+end
