@@ -32,6 +32,8 @@ type Appearance = {
 	color: Color3,
 }
 
+type RepresentationMap = { [string]: Instance? }
+
 local APPEARANCE_BY_MATERIAL: { [string]: Appearance } = {
 	["material.v1.office-wallpaper.yellow-vinyl"] = {
 		material = Enum.Material.SmoothPlastic,
@@ -205,19 +207,17 @@ local function realizeEntity(
 	return realizeObject(parent, entityRecipe, record)
 end
 
-local function representedCount(representations: { [string]: Instance }): number
+local function representedCount(representations: RepresentationMap): number
 	local count = 0
-	for _ in pairs(representations) do
-		count += 1
+	for _, representation in pairs(representations) do
+		if representation ~= nil then
+			count += 1
+		end
 	end
 	return count
 end
 
-local function syncMetrics(
-	model: Model,
-	runtime: PhysicsLabRuntime.Runtime,
-	representations: { [string]: Instance }
-): ()
+local function syncMetrics(model: Model, runtime: PhysicsLabRuntime.Runtime, representations: RepresentationMap): ()
 	local snapshot = runtime:snapshot()
 	model:SetAttribute("UNRENDERED_EntityCount", snapshot.registered)
 	model:SetAttribute("UNRENDERED_RepresentedCount", representedCount(representations))
@@ -247,7 +247,7 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 	model:SetAttribute("UNRENDERED_WorldId", recipe.worldId)
 	model:SetAttribute("UNRENDERED_RegionId", recipe.regionId)
 
-	local representations: { [string]: Instance } = {}
+	local representations: RepresentationMap = {}
 	for _, entityRecipe in ipairs(recipe.entities) do
 		local entityId = entityRecipe.entity.id
 		assert(representations[entityId] == nil, `duplicate Physics Lab representation id: {entityId}`)
