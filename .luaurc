@@ -1,0 +1,11 @@
+{
+  "languageMode": "strict",
+  "lint": {
+    "LocalUnused": true,
+    "FunctionUnused": true,
+    "ImportUnused": true,
+    "DuplicateLocal": true,
+    "DuplicateFunction": true,
+    "UnreachableCode": true
+  }
+}

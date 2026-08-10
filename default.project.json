@@ -1,0 +1,40 @@
+{
+  "name": "UNRENDERED",
+  "servePort": 34872,
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "UNRENDERED": {
+        "$path": "src/shared"
+      }
+    },
+    "ServerScriptService": {
+      "UNRENDERED_Server": {
+        "$path": "src/server"
+      }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "UNRENDERED_Client": {
+          "$path": "src/client"
+        }
+      }
+    },
+    "Workspace": {
+      "$properties": {
+        "StreamingEnabled": true,
+        "StreamingMinRadius": 64,
+        "StreamingTargetRadius": 256
+      }
+    },
+    "Lighting": {
+      "$properties": {
+        "Technology": "Future",
+        "GlobalShadows": true,
+        "Brightness": 2,
+        "EnvironmentDiffuseScale": 0.35,
+        "EnvironmentSpecularScale": 0.5
+      }
+    }
+  }
+}

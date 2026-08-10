@@ -1,0 +1,12 @@
+[package]
+name = "jonathangana131-lab/unrendered"
+description = "UNRENDERED shared Roblox experience dependencies"
+version = "0.0.1"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+
+[server-dependencies]
+
+[dev-dependencies]
