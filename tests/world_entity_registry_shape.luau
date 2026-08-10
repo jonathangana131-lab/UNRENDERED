@@ -148,6 +148,20 @@ local function run(): number
 	expect("new rejects top-level persistent state metatable", not metatableStateAccepted)
 	expect("new rejects persistent state before metatable callbacks", stateCallbacks == 0)
 
+	local omittedStateSpec = makeSpec()
+	omittedStateSpec.persistentState = nil
+	local omittedStateAccepted, omittedStateEntity = newResult(omittedStateSpec)
+	expect("new accepts omitted persistent state", omittedStateAccepted)
+	if omittedStateAccepted then
+		expect("new defaults omitted persistent state to empty data", next(omittedStateEntity.persistentState) == nil)
+	end
+
+	local captureTarget = WorldEntity.new(makeSpec())
+	local falseCaptureAccepted = pcall(function()
+		WorldEntity.captureState(captureTarget, false :: any)
+	end)
+	expect("captureState rejects false persistent state", not falseCaptureAccepted)
+
 	local wrongKind = makeSpec()
 	wrongKind.kind = 17
 	local wrongKindAccepted, wrongKindError = newResult(wrongKind)
