@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Reject Roblox value types from canonical shared-domain Luau.
+"""Reject Roblox value types from canonical plain-data Luau contracts.
 
-The shared Reality/Physics/etc. contracts must stay plain/versioned data so Roblox value
-objects remain a physical-representation concern. This complements check_domain_boundaries
-by catching value/type dependencies that do not require Instance or service access.
+Conceptual/resolved data and authored recipes stay plain/versioned. Shared runtime physics
+computation may legitimately use Roblox math/value types after that boundary, so this guard
+protects canonical data roots plus explicitly named plain-data contracts instead of every
+shared Physics module.
 """
 
 from __future__ import annotations
@@ -14,6 +15,12 @@ import sys
 from pathlib import Path
 
 from check_domain_boundaries import DOMAIN_ROOTS, REPO_ROOT, _line_for_offset, _mask_luau
+
+PHYSICS_ROOT = REPO_ROOT / "src/shared/Physics"
+PLAIN_DATA_ROOTS = tuple(root for root in DOMAIN_ROOTS if root != PHYSICS_ROOT)
+PLAIN_DATA_FILES = (
+    PHYSICS_ROOT / "PhysicsLabRecipe.luau",
+)
 
 # Keep this list to Roblox-global names that are sufficiently distinctive for a lexical
 # guard. Generic names such as NumberRange/NumberSequence/ColorSequence/Axes/Faces can be
@@ -32,13 +39,17 @@ def _find_violations(source: str) -> list[tuple[int, str, str]]:
 
     for match in ROBLOX_VALUE_TYPE.finditer(code_only):
         line_number, snippet = _line_for_offset(source, match.start())
-        violations.append((line_number, "Roblox value type in shared domain", snippet))
+        violations.append((line_number, "Roblox value type in canonical plain data", snippet))
 
     for match in ROBLOX_ENUM.finditer(code_only):
         line_number, snippet = _line_for_offset(source, match.start())
-        violations.append((line_number, "Roblox Enum in shared domain", snippet))
+        violations.append((line_number, "Roblox Enum in canonical plain data", snippet))
 
     return violations
+
+
+def _is_plain_data_path(path: Path) -> bool:
+    return any(path == root or root in path.parents for root in PLAIN_DATA_ROOTS) or path in PLAIN_DATA_FILES
 
 
 def _self_test() -> None:
@@ -50,11 +61,11 @@ local nested = `value = {Color3.new(1, 1, 1)}`
 '''.lstrip()
     actual = [(line, rule) for line, rule, _ in _find_violations(violating)]
     expected = [
-        (1, "Roblox value type in shared domain"),
-        (1, "Roblox value type in shared domain"),
-        (2, "Roblox value type in shared domain"),
-        (4, "Roblox value type in shared domain"),
-        (3, "Roblox Enum in shared domain"),
+        (1, "Roblox value type in canonical plain data"),
+        (1, "Roblox value type in canonical plain data"),
+        (2, "Roblox value type in canonical plain data"),
+        (4, "Roblox value type in canonical plain data"),
+        (3, "Roblox Enum in canonical plain data"),
     ]
     if actual != expected:
         raise AssertionError(f"plain-domain value self-test expected {expected!r}, got {actual!r}")
@@ -74,26 +85,38 @@ local transform = { position = position, yawRadians = 0 }
     if clean_violations:
         raise AssertionError(f"plain-domain value self-test produced false positives: {clean_violations!r}")
 
-    physics_path = REPO_ROOT / "src/shared/Physics/Test.luau"
-    if not any(physics_path == root / "Test.luau" for root in DOMAIN_ROOTS):
-        raise AssertionError("shared Physics root is not protected by the canonical domain audit roots")
+    lab_recipe_path = PHYSICS_ROOT / "PhysicsLabRecipe.luau"
+    if not _is_plain_data_path(lab_recipe_path):
+        raise AssertionError("PhysicsLabRecipe must remain protected as a canonical plain-data contract")
 
-    print("Plain shared-domain Roblox-value guard self-test passed")
+    runtime_physics_path = PHYSICS_ROOT / "PhysicalCharacterSolver.luau"
+    if _is_plain_data_path(runtime_physics_path):
+        raise AssertionError("general shared Physics computation must not inherit the plain-data value ban")
+
+    reality_path = REPO_ROOT / "src/shared/Reality/WorldEntity.luau"
+    if not _is_plain_data_path(reality_path):
+        raise AssertionError("canonical Reality contracts must remain protected")
+
+    print("Canonical plain-data Roblox-value guard self-test passed")
 
 
 def _iter_luau_files() -> list[Path]:
-    files: list[Path] = []
+    files: set[Path] = set()
     missing_roots: list[Path] = []
 
-    for root in DOMAIN_ROOTS:
+    for root in PLAIN_DATA_ROOTS:
         if not root.is_dir():
             missing_roots.append(root)
             continue
-        files.extend(path for path in root.rglob("*.luau") if path.is_file())
+        files.update(path for path in root.rglob("*.luau") if path.is_file())
 
     if missing_roots:
         missing = ", ".join(str(path.relative_to(REPO_ROOT)) for path in missing_roots)
-        raise RuntimeError(f"shared-domain audit roots are missing: {missing}")
+        raise RuntimeError(f"canonical plain-data audit roots are missing: {missing}")
+
+    for path in PLAIN_DATA_FILES:
+        if path.is_file():
+            files.add(path)
 
     return sorted(files)
 
@@ -108,17 +131,17 @@ def _audit_repository() -> int:
             violations.append((path, line_number, rule, snippet))
 
     if violations:
-        print("Plain shared-domain value boundary violations found:", file=sys.stderr)
+        print("Canonical plain-data Roblox value boundary violations found:", file=sys.stderr)
         for path, line_number, rule, snippet in violations:
             relative = path.relative_to(REPO_ROOT)
             print(f"  {relative}:{line_number}: {rule}: {snippet}", file=sys.stderr)
         print(
-            "Keep Roblox value objects/enums in realization adapters; canonical shared data uses plain records/scalars.",
+            "Keep Roblox value objects/enums outside canonical plain-data contracts; runtime physics/realization may use them behind that boundary.",
             file=sys.stderr,
         )
         return 1
 
-    print(f"Plain shared-domain value audit passed ({len(files)} Luau files checked)")
+    print(f"Canonical plain-data Roblox value audit passed ({len(files)} Luau files checked)")
     return 0
 
 
@@ -127,7 +150,7 @@ def main() -> int:
     parser.add_argument(
         "--self-test",
         action="store_true",
-        help="verify Roblox value/type detection before auditing the repository",
+        help="verify Roblox value/type detection and plain-data scope before auditing the repository",
     )
     args = parser.parse_args()
 
