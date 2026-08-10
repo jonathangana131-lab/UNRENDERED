@@ -1,6 +1,7 @@
 --!strict
 
 local MaterialDNA = require("../src/shared/Materials/MaterialDNA")
+local MaterialFixtureData = require("../src/shared/Materials/MaterialFixtureData")
 
 local function run(): number
 	local failures = 0
@@ -43,11 +44,7 @@ local function run(): number
 			},
 			finish = {
 				classKey = "finish.vinyl-wallpaper",
-				color = {
-					r = 0.7,
-					g = 0.65,
-					b = 0.4,
-				},
+				color = { r = 0.7, g = 0.65, b = 0.4 },
 				roughness01 = 0.7,
 				metallic01 = 0,
 			},
@@ -64,12 +61,7 @@ local function run(): number
 				cleanliness01 = 0.6,
 				repairCount = 1,
 			},
-			environment = {
-				humidity01 = 0.3,
-				water01 = 0.1,
-				uv01 = 0.05,
-				grime01 = 0.2,
-			},
+			environment = { humidity01 = 0.3, water01 = 0.1, uv01 = 0.05, grime01 = 0.2 },
 			historyEvents = {
 				{
 					kindKey = "history.cabinet-shadow",
@@ -125,21 +117,39 @@ local function run(): number
 		)
 	end
 
+	local extraTopLevel: any = makeRecipe()
+	extraTopLevel.legacySurfaceId = "legacy.example"
+	local extraTopLevelResult = MaterialDNA.validateRecipe(extraTopLevel)
+	expect(
+		"undeclared top-level v1 field rejected",
+		not extraTopLevelResult.ok and containsError(extraTopLevelResult, "legacySurfaceId"),
+		table.concat(extraTopLevelResult.errors, "; ")
+	)
+	local freezeExtraTopLevel = pcall(function()
+		MaterialDNA.freezeRecipe(extraTopLevel)
+	end)
+	expect(
+		"freeze cannot silently drop undeclared top-level field",
+		not freezeExtraTopLevel,
+		"freezeRecipe accepted undeclared top-level data"
+	)
+
+	local extraNested: any = makeRecipe()
+	extraNested.physical.legacySurfaceId = "legacy.example"
+	local extraNestedResult = MaterialDNA.validateRecipe(extraNested)
+	expect(
+		"undeclared nested v1 field rejected",
+		not extraNestedResult.ok and containsError(extraNestedResult, "physical contains unknown field legacySurfaceId"),
+		table.concat(extraNestedResult.errors, "; ")
+	)
+
 	local frozenSource = makeRecipe()
 	local frozen = MaterialDNA.freezeRecipe(frozenSource)
 	frozenSource.physical.staticFriction = 3
 	frozenSource.finish.color.r = 0
 	frozenSource.historyEvents[1].severity01 = 1
-	expect(
-		"frozen recipe owns physical copy",
-		frozen.physical.staticFriction == 0.6,
-		tostring(frozen.physical.staticFriction)
-	)
-	expect(
-		"frozen recipe owns nested color copy",
-		frozen.finish.color.r == 0.7,
-		tostring(frozen.finish.color.r)
-	)
+	expect("frozen recipe owns physical copy", frozen.physical.staticFriction == 0.6, tostring(frozen.physical.staticFriction))
+	expect("frozen recipe owns nested color copy", frozen.finish.color.r == 0.7, tostring(frozen.finish.color.r))
 	expect(
 		"frozen recipe owns history event copy",
 		frozen.historyEvents[1].severity01 == 0.2,
@@ -231,11 +241,36 @@ local function run(): number
 	local invalidSchema = makeRecipe()
 	invalidSchema.schemaVersion = MaterialDNA.SchemaVersion + 1
 	local schemaResult = MaterialDNA.validateRecipe(invalidSchema)
-	expect(
-		"unknown schema rejected",
-		not schemaResult.ok and containsError(schemaResult, "schemaVersion must be"),
-		table.concat(schemaResult.errors, "; ")
-	)
+	expect("unknown schema rejected", not schemaResult.ok and containsError(schemaResult, "schemaVersion must be"), table.concat(schemaResult.errors, "; "))
+
+	local fixtures: any = MaterialFixtureData.build()
+	local requiredFixtureNames = { "CommercialWallpaperDrywall", "LowPileCarpet", "PaintedMetal" }
+	local fixtureIds: { [string]: boolean } = {}
+	for _, fixtureName in requiredFixtureNames do
+		local rawFixture = fixtures[fixtureName]
+		expect(`fixture {fixtureName} exists`, rawFixture ~= nil, "fixture missing from production data catalog")
+		if rawFixture ~= nil then
+			local fixtureResult = MaterialDNA.validateRecipe(rawFixture)
+			expect(`fixture {fixtureName} validates`, fixtureResult.ok, table.concat(fixtureResult.errors, "; "))
+			if fixtureResult.ok then
+				local immutableFixture = MaterialDNA.freezeRecipe(rawFixture)
+				expect(
+					`fixture {fixtureName} id is distinct`,
+					not fixtureIds[immutableFixture.id],
+					`duplicate fixture id {immutableFixture.id}`
+				)
+				fixtureIds[immutableFixture.id] = true
+				local fixtureMutation = pcall(function()
+					immutableFixture.physical.staticFriction = 0
+				end)
+				expect(
+					`fixture {fixtureName} freezes deeply`,
+					not fixtureMutation,
+					"production fixture physical table accepted mutation"
+				)
+			end
+		end
+	end
 
 	local state = MaterialDNA.defaultState("material.v1.test.wallpaper")
 	local stateMutation = pcall(function()
@@ -244,6 +279,15 @@ local function run(): number
 	expect("material state remains mutable", stateMutation and state.wear01 == 0.5, "state mutation failed")
 	local stateResult = MaterialDNA.validateState(state)
 	expect("mutated state remains valid", stateResult.ok, table.concat(stateResult.errors, "; "))
+
+	local stateWithUnknown: any = MaterialDNA.defaultState("material.v1.test.wallpaper")
+	stateWithUnknown.legacyWetness = 0.1
+	local unknownStateResult = MaterialDNA.validateState(stateWithUnknown)
+	expect(
+		"undeclared material-state field rejected",
+		not unknownStateResult.ok and containsError(unknownStateResult, "legacyWetness"),
+		table.concat(unknownStateResult.errors, "; ")
+	)
 
 	local invalidState: any = {
 		recipeId = "material.v1.test.wallpaper",
