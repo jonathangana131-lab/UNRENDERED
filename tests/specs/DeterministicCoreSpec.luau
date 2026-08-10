@@ -36,40 +36,48 @@ return function(runner)
 		end, nil, "empty namespace")
 	end)
 
-	runner:test("DeterministicRng v1 production sequence", repro("core.rng", "xorshift32-seed-1"), function(expect)
-		local rng = DeterministicRng.new(1)
-		local expected = {
-			0x00042021,
-			0x04080601,
-			0x9dcca8c5,
-			0x1255994f,
-			0x8ef917d1,
-			0x2c6f5bd0,
-		}
-		for index, value in expected do
-			expect:equal(rng:nextU32(), value, `draw {index}`)
+	runner:test(
+		"DeterministicRng v1 production sequence",
+		repro("core.rng", "xorshift32-seed-1"),
+		function(expect)
+			local rng = DeterministicRng.new(1)
+			local expected = {
+				0x00042021,
+				0x04080601,
+				0x9dcca8c5,
+				0x1255994f,
+				0x8ef917d1,
+				0x2c6f5bd0,
+			}
+			for index, value in expected do
+				expect:equal(rng:nextU32(), value, `draw {index}`)
+			end
 		end
-	end)
+	)
 
-	runner:test("DeterministicRng zero-seed fallback", repro("core.rng", "xorshift32-seed-0"), function(expect)
-		local rng = DeterministicRng.new(0)
-		local expected = {
-			0x40aec71f,
-			0x91e00c19,
-			0x9c0fe128,
-			0x6570f69d,
-		}
-		for index, value in expected do
-			expect:equal(rng:nextU32(), value, `draw {index}`)
+	runner:test(
+		"DeterministicRng zero-seed fallback",
+		repro("core.rng", "xorshift32-seed-0"),
+		function(expect)
+			local rng = DeterministicRng.new(0)
+			local expected = {
+				0x40aec71f,
+				0x91e00c19,
+				0x9c0fe128,
+				0x6570f69d,
+			}
+			for index, value in expected do
+				expect:equal(rng:nextU32(), value, `draw {index}`)
+			end
+
+			expect:throws(function()
+				rng:nextInteger(4, 3)
+			end, "minimum must be <= maximum", "invalid integer range")
+			expect:throws(function()
+				rng:chance(1.1)
+			end, "probability must be in [0, 1]", "invalid probability")
 		end
-
-		expect:throws(function()
-			rng:nextInteger(4, 3)
-		end, "minimum must be <= maximum", "invalid integer range")
-		expect:throws(function()
-			rng:chance(1.1)
-		end, "probability must be in [0, 1]", "invalid probability")
-	end)
+	)
 
 	runner:test("SeedStream v1 production golden", repro("worldgen.topology", "layout"), function(expect)
 		local scopes = { "region:r:0:0:0", "layout" }
@@ -88,25 +96,29 @@ return function(runner)
 		end
 	end)
 
-	runner:test("SeedStream subsystem and version isolation", repro("worldgen.stream-isolation", "topology-vs-material"), function(expect)
-		local scopes = { "region:r:0:0:0", "layout" }
-		local topologySeed = SeedStream.seedFor("world-alpha", 1, "worldgen.topology", scopes)
-		local materialSeed = SeedStream.seedFor("world-alpha", 1, "worldgen.material", scopes)
-		expect:equal(topologySeed, 0xcaa062ba, "topology seed")
-		expect:equal(materialSeed, 0xa6141672, "material seed")
-		expect:notEqual(materialSeed, topologySeed, "subsystem salt")
-		expect:notEqual(
-			SeedStream.seedFor("world-alpha", 2, "worldgen.topology", scopes),
-			topologySeed,
-			"generation version"
-		)
+	runner:test(
+		"SeedStream subsystem and version isolation",
+		repro("worldgen.stream-isolation", "topology-vs-material"),
+		function(expect)
+			local scopes = { "region:r:0:0:0", "layout" }
+			local topologySeed = SeedStream.seedFor("world-alpha", 1, "worldgen.topology", scopes)
+			local materialSeed = SeedStream.seedFor("world-alpha", 1, "worldgen.material", scopes)
+			expect:equal(topologySeed, 0xcaa062ba, "topology seed")
+			expect:equal(materialSeed, 0xa6141672, "material seed")
+			expect:notEqual(materialSeed, topologySeed, "subsystem salt")
+			expect:notEqual(
+				SeedStream.seedFor("world-alpha", 2, "worldgen.topology", scopes),
+				topologySeed,
+				"generation version"
+			)
 
-		local material = SeedStream.derive("world-alpha", 1, "worldgen.material", scopes)
-		for _ = 1, 32 do
-			material:nextU32()
+			local material = SeedStream.derive("world-alpha", 1, "worldgen.material", scopes)
+			for _ = 1, 32 do
+				material:nextU32()
+			end
+
+			local topology = SeedStream.derive("world-alpha", 1, "worldgen.topology", scopes)
+			expect:equal(topology:nextU32(), 0x181f79e1, "unrelated stream consumption")
 		end
-
-		local topology = SeedStream.derive("world-alpha", 1, "worldgen.topology", scopes)
-		expect:equal(topology:nextU32(), 0x181f79e1, "unrelated stream consumption")
-	end)
+	)
 end
