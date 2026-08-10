@@ -231,11 +231,12 @@ local function asTable(errors: { string }, path: string, value: unknown): any?
 		appendError(errors, `{path} must be a table`)
 		return nil
 	end
-	if getmetatable(value) ~= nil then
+	local tableValue = value :: any
+	if getmetatable(tableValue) ~= nil then
 		appendError(errors, `{path} must be a plain table with no metatable`)
 		return nil
 	end
-	return value :: any
+	return tableValue
 end
 
 local function asRecord(
