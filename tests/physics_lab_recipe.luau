@@ -3,6 +3,7 @@ local ProductionLoader = require("./support/ProductionLoader")
 local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
 local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
 local PhysicsLabRecipe = ProductionLoader.requireShared("Physics/PhysicsLabRecipe")
+local ResolvedRegionRecipe = ProductionLoader.requireShared("Reality/ResolvedRegionRecipe")
 local StableId = ProductionLoader.requireShared("Core/StableId")
 local WorldEntity = ProductionLoader.requireShared("Reality/WorldEntity")
 
@@ -30,6 +31,26 @@ local function run(): number
 	expect(
 		"lab region id is deterministic",
 		first.regionId == second.regionId and StableId.is(first.regionId, "region")
+	)
+	expect(
+		"lab region identity is owned by ResolvedRegionRecipe",
+		first.regionId == first.resolvedRegion.regionId
+			and first.resolvedRegion.worldSeedRef == first.worldId
+			and first.resolvedRegion.regionAddress.x == 0
+			and first.resolvedRegion.regionAddress.z == 0
+			and first.resolvedRegion.regionAddress.layer == 0
+	)
+	expect(
+		"lab resolved-region truth is deterministic",
+		ResolvedRegionRecipe.equal(first.resolvedRegion, second.resolvedRegion)
+			and first.resolvedRegion.recipeFingerprint == second.resolvedRegion.recipeFingerprint
+	)
+	local reconstructedRegion = ResolvedRegionRecipe.deserialize(ResolvedRegionRecipe.serialize(first.resolvedRegion))
+	expect(
+		"lab resolved-region truth reconstructs through production contract",
+		ResolvedRegionRecipe.equal(first.resolvedRegion, reconstructedRegion)
+			and ResolvedRegionRecipe.reproKey(first.resolvedRegion)
+				== ResolvedRegionRecipe.reproKey(reconstructedRegion)
 	)
 	expect("lab entity count is deterministic", #first.entities == #second.entities and #first.entities == 20)
 
