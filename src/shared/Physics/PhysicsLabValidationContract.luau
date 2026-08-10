@@ -1,0 +1,245 @@
+--!strict
+
+local PhysicsLabValidationContract = {}
+
+export type Vec3 = { x: number, y: number, z: number }
+
+export type ResourceCounts = {
+	instances: number,
+	models: number,
+	parts: number,
+	assemblies: number,
+	attachments: number,
+	constraints: number,
+	joints: number,
+}
+
+export type Envelope = { min: Vec3, max: Vec3 }
+
+export type Snapshot = {
+	rootName: string,
+	labSchemaVersion: number,
+	labRecipeKey: string,
+	worldId: string,
+	regionId: string,
+	resolvedRegionFingerprint: string,
+	resolvedRegionReproKey: string,
+	counts: ResourceCounts,
+	envelopeStuds: Envelope?,
+}
+
+export type ResourceDelta = ResourceCounts
+export type EnvelopeDrift = { min: Vec3, max: Vec3, maxAbsStuds: number }
+export type EnvelopeReport = {
+	ok: boolean,
+	reason: string?,
+	toleranceStuds: number,
+	driftStuds: EnvelopeDrift?,
+}
+export type Comparison = { delta: ResourceDelta, envelope: EnvelopeReport }
+
+local COUNT_KEYS = table.freeze({
+	"instances",
+	"models",
+	"parts",
+	"assemblies",
+	"attachments",
+	"constraints",
+	"joints",
+})
+
+local function isFinite(value: any): boolean
+	return type(value) == "number" and value == value and value ~= math.huge and value ~= -math.huge
+end
+
+local function isNonNegativeInteger(value: any): boolean
+	return isFinite(value) and value >= 0 and value % 1 == 0
+end
+
+local function inspectVec3(value: any, label: string): (boolean, string?)
+	if type(value) ~= "table" then
+		return false, `{label} must be a table`
+	end
+	for _, axis in ipairs({ "x", "y", "z" }) do
+		if not isFinite(value[axis]) then
+			return false, `{label}.{axis} must be finite`
+		end
+	end
+	return true, nil
+end
+
+local function inspectEnvelope(envelope: any): (boolean, string?)
+	if type(envelope) ~= "table" then
+		return false, "envelopeStuds must be a table when present"
+	end
+	local minOk, minError = inspectVec3(envelope.min, "envelopeStuds.min")
+	if not minOk then
+		return false, minError
+	end
+	local maxOk, maxError = inspectVec3(envelope.max, "envelopeStuds.max")
+	if not maxOk then
+		return false, maxError
+	end
+	for _, axis in ipairs({ "x", "y", "z" }) do
+		if envelope.min[axis] > envelope.max[axis] then
+			return false, `envelopeStuds.min.{axis} exceeds max.{axis}`
+		end
+	end
+	return true, nil
+end
+
+function PhysicsLabValidationContract.inspectSnapshot(snapshot: any): (boolean, string?)
+	if type(snapshot) ~= "table" then
+		return false, "snapshot must be a table"
+	end
+	if type(snapshot.rootName) ~= "string" or snapshot.rootName == "" then
+		return false, "snapshot.rootName must be a non-empty string"
+	end
+	if not isNonNegativeInteger(snapshot.labSchemaVersion) or snapshot.labSchemaVersion < 1 then
+		return false, "snapshot.labSchemaVersion must be a positive integer"
+	end
+	for _, field in ipairs({
+		"labRecipeKey",
+		"worldId",
+		"regionId",
+		"resolvedRegionFingerprint",
+		"resolvedRegionReproKey",
+	}) do
+		if type(snapshot[field]) ~= "string" or snapshot[field] == "" then
+			return false, `snapshot.{field} must be a non-empty string`
+		end
+	end
+	if type(snapshot.counts) ~= "table" then
+		return false, "snapshot.counts must be a table"
+	end
+	for _, key in ipairs(COUNT_KEYS) do
+		if not isNonNegativeInteger(snapshot.counts[key]) then
+			return false, `snapshot.counts.{key} must be a non-negative integer`
+		end
+	end
+	if snapshot.counts.instances < 1 then
+		return false, "snapshot.counts.instances must include the selected lab root"
+	end
+	if snapshot.envelopeStuds ~= nil then
+		local envelopeOk, envelopeError = inspectEnvelope(snapshot.envelopeStuds)
+		if not envelopeOk then
+			return false, envelopeError
+		end
+	end
+	return true, nil
+end
+
+local function assertSnapshot(snapshot: Snapshot, label: string): ()
+	local ok, problem = PhysicsLabValidationContract.inspectSnapshot(snapshot)
+	assert(ok, `{label} validation snapshot is invalid: {problem or "unknown validation error"}`)
+end
+
+local function freezeVec3(value: Vec3): Vec3
+	return table.freeze({ x = value.x, y = value.y, z = value.z })
+end
+
+local function resourceDelta(before: ResourceCounts, after: ResourceCounts): ResourceDelta
+	return table.freeze({
+		instances = after.instances - before.instances,
+		models = after.models - before.models,
+		parts = after.parts - before.parts,
+		assemblies = after.assemblies - before.assemblies,
+		attachments = after.attachments - before.attachments,
+		constraints = after.constraints - before.constraints,
+		joints = after.joints - before.joints,
+	})
+end
+
+function PhysicsLabValidationContract.delta(before: Snapshot, after: Snapshot): ResourceDelta
+	assertSnapshot(before, "before")
+	assertSnapshot(after, "after")
+	return resourceDelta(before.counts, after.counts)
+end
+
+function PhysicsLabValidationContract.compareFullLabEnvelope(
+	baseline: Snapshot,
+	checkpoint: Snapshot,
+	toleranceStuds: number?
+): EnvelopeReport
+	assertSnapshot(baseline, "baseline")
+	assertSnapshot(checkpoint, "checkpoint")
+
+	local tolerance = toleranceStuds or 0.001
+	assert(
+		isFinite(tolerance) and tolerance >= 0,
+		"Physics Lab envelope tolerance must be finite and non-negative"
+	)
+
+	local expected = baseline.envelopeStuds
+	local actual = checkpoint.envelopeStuds
+	if expected == nil then
+		return table.freeze({
+			ok = false,
+			reason = "baseline has no BasePart envelope",
+			toleranceStuds = tolerance,
+			driftStuds = nil,
+		})
+	end
+	if actual == nil then
+		return table.freeze({
+			ok = false,
+			reason = "checkpoint has no BasePart envelope",
+			toleranceStuds = tolerance,
+			driftStuds = nil,
+		})
+	end
+
+	local minDrift = {
+		x = actual.min.x - expected.min.x,
+		y = actual.min.y - expected.min.y,
+		z = actual.min.z - expected.min.z,
+	}
+	local maxDrift = {
+		x = actual.max.x - expected.max.x,
+		y = actual.max.y - expected.max.y,
+		z = actual.max.z - expected.max.z,
+	}
+	local maxAbs = 0
+	for _, drift in ipairs({ minDrift, maxDrift }) do
+		maxAbs = math.max(maxAbs, math.abs(drift.x), math.abs(drift.y), math.abs(drift.z))
+	end
+	local ok = maxAbs <= tolerance
+	local drift: EnvelopeDrift = table.freeze({
+		min = freezeVec3(minDrift),
+		max = freezeVec3(maxDrift),
+		maxAbsStuds = maxAbs,
+	})
+
+	return table.freeze({
+		ok = ok,
+		reason = if ok then nil else "full-lab physical envelope drift exceeded tolerance",
+		toleranceStuds = tolerance,
+		driftStuds = drift,
+	})
+end
+
+function PhysicsLabValidationContract.compare(
+	baseline: Snapshot,
+	checkpoint: Snapshot,
+	toleranceStuds: number?
+): Comparison
+	return table.freeze({
+		delta = PhysicsLabValidationContract.delta(baseline, checkpoint),
+		envelope = PhysicsLabValidationContract.compareFullLabEnvelope(baseline, checkpoint, toleranceStuds),
+	})
+end
+
+function PhysicsLabValidationContract.assertFullLabEnvelope(
+	baseline: Snapshot,
+	checkpoint: Snapshot,
+	toleranceStuds: number?
+): EnvelopeReport
+	local report = PhysicsLabValidationContract.compareFullLabEnvelope(baseline, checkpoint, toleranceStuds)
+	assert(
+		report.ok,
+		`Physics Lab full-lab envelope validation failed: {report.reason or "unknown envelope violation"}`
+	)
+	return report
+end
+
+return table.freeze(PhysicsLabValidationContract)
