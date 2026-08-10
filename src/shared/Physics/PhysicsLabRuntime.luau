@@ -116,6 +116,11 @@ function PhysicsLabRuntime.step(
 	): ()
 		assert(transitionEntityId == entityId, "FidelityManager transitioned the wrong Physics Lab entity")
 		assert(fromLevel == current.fidelity, "Physics Lab transition source fidelity drifted")
+		-- A canonical fidelity change must never advance without an explicit
+		-- representation-boundary acknowledgement. Callers with intentionally no
+		-- physical representation may pass a deliberate no-op observer; omission
+		-- is not silently treated as success.
+		assert(observeTransition ~= nil, "Physics Lab fidelity transition requires a representation observer")
 
 		local capturedState: PlainData? = nil
 		if WorldEntity.fidelityRank(toLevel) < WorldEntity.fidelityRank(fromLevel) then
@@ -127,9 +132,7 @@ function PhysicsLabRuntime.step(
 		-- either authoritative store commits it. Demotion state has already been
 		-- captured at this point; promotion receives the incumbent stored state.
 		local preview = WorldEntity.transition(current, toLevel, capturedState)
-		if observeTransition ~= nil then
-			observeTransition(current, preview, reason)
-		end
+		observeTransition(current, preview, reason)
 
 		local committed = self._registry.transitionRegistered(entityId, toLevel, capturedState)
 		assert(committed.fidelity == preview.fidelity, "Physics Lab transition commit fidelity mismatch")
