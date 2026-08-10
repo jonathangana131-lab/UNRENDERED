@@ -69,7 +69,11 @@ local function run(): number
 		paintedMetal,
 	}
 
-	expect("production material fixture catalog is frozen", table.isfrozen(catalog), "catalog accepted mutation")
+	expect(
+		"production material fixture catalog is frozen",
+		table.isfrozen(catalog),
+		"catalog accepted mutation"
+	)
 	expect(
 		"wallpaper fixture keeps stable id",
 		wallpaper.id == "material.v1.office-wallpaper.yellow-vinyl",
@@ -93,11 +97,7 @@ local function run(): number
 
 	for index, recipe in fixtures do
 		local result = MaterialDNA.validateRecipe(recipe)
-		expect(
-			`production material fixture {index} validates`,
-			result.ok,
-			table.concat(result.errors, "; ")
-		)
+		expect(`production material fixture {index} validates`, result.ok, table.concat(result.errors, "; "))
 		expect(
 			`production material fixture {index} is recursively frozen`,
 			isRecursivelyFrozen(recipe, {}),
