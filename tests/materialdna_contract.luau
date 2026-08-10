@@ -35,6 +35,7 @@ local function run(): number
 	local function makeRecipe(): MaterialDNA.MaterialRecipe
 		return {
 			id = "material.v1.test.wallpaper",
+			recipeVersion = 1,
 			schemaVersion = MaterialDNA.SchemaVersion,
 			coherenceClass = "interior.wallpapered-drywall",
 			substrate = {
@@ -238,6 +239,33 @@ local function run(): number
 		table.concat(schemaResult.errors, "; ")
 	)
 
+	local legacyV1 = makeRecipe()
+	legacyV1.schemaVersion = 1
+	local legacyV1Result = MaterialDNA.validateRecipe(legacyV1)
+	expect(
+		"legacy v1 recipe rejected after content-revision schema migration",
+		not legacyV1Result.ok and containsError(legacyV1Result, "schemaVersion must be"),
+		table.concat(legacyV1Result.errors, "; ")
+	)
+
+	local zeroRevision = makeRecipe()
+	zeroRevision.recipeVersion = 0
+	local zeroRevisionResult = MaterialDNA.validateRecipe(zeroRevision)
+	expect(
+		"zero recipe revision rejected",
+		not zeroRevisionResult.ok and containsError(zeroRevisionResult, "recipeVersion"),
+		table.concat(zeroRevisionResult.errors, "; ")
+	)
+
+	local oversizedRevision = makeRecipe()
+	oversizedRevision.recipeVersion = 2147483648
+	local oversizedRevisionResult = MaterialDNA.validateRecipe(oversizedRevision)
+	expect(
+		"oversized recipe revision rejected",
+		not oversizedRevisionResult.ok and containsError(oversizedRevisionResult, "recipeVersion"),
+		table.concat(oversizedRevisionResult.errors, "; ")
+	)
+
 	local metatableRecipe: any = makeRecipe()
 	setmetatable(metatableRecipe, {
 		__index = {
@@ -255,7 +283,7 @@ local function run(): number
 	unknownTopLevel.futureMeaning = "must-not-disappear"
 	local unknownTopLevelResult = MaterialDNA.validateRecipe(unknownTopLevel)
 	expect(
-		"unknown top-level v1 field rejected",
+		"unknown top-level schema-v2 field rejected",
 		not unknownTopLevelResult.ok and containsError(unknownTopLevelResult, "unknown field futureMeaning"),
 		table.concat(unknownTopLevelResult.errors, "; ")
 	)
@@ -264,7 +292,7 @@ local function run(): number
 	unknownNested.finish.color.gamma = 2.2
 	local unknownNestedResult = MaterialDNA.validateRecipe(unknownNested)
 	expect(
-		"unknown nested v1 field rejected",
+		"unknown nested schema-v2 field rejected",
 		not unknownNestedResult.ok and containsError(unknownNestedResult, "unknown field gamma"),
 		table.concat(unknownNestedResult.errors, "; ")
 	)
@@ -282,6 +310,34 @@ local function run(): number
 		"production fixture IDs remain distinct",
 		wallpaper.id ~= carpet.id and wallpaper.id ~= metal.id and carpet.id ~= metal.id,
 		"fixture IDs collided"
+	)
+	expect(
+		"production fixtures expose exact content revisions",
+		wallpaper.recipeVersion == 1 and carpet.recipeVersion == 1 and metal.recipeVersion == 1,
+		"one or more fixture recipe revisions changed"
+	)
+	local wallpaperReference = MaterialDNA.reference(wallpaper)
+	local carpetReference = MaterialDNA.reference(carpet)
+	local metalReference = MaterialDNA.reference(metal)
+	expect(
+		"production fixture exact references validate",
+		MaterialDNA.validateReference(wallpaperReference).ok
+			and MaterialDNA.validateReference(carpetReference).ok
+			and MaterialDNA.validateReference(metalReference).ok,
+		"one or more production fixture references failed validation"
+	)
+	expect(
+		"production fixture exact references remain distinct",
+		not (
+				wallpaperReference.id == carpetReference.id
+				and wallpaperReference.recipeVersion == carpetReference.recipeVersion
+			)
+			and not (wallpaperReference.id == metalReference.id and wallpaperReference.recipeVersion == metalReference.recipeVersion)
+			and not (
+				carpetReference.id == metalReference.id
+				and carpetReference.recipeVersion == metalReference.recipeVersion
+			),
+		"two production fixture exact references collided"
 	)
 	expect(
 		"production fixture IDs remain stable",
@@ -324,7 +380,67 @@ local function run(): number
 		"fixture coherence classes collapsed"
 	)
 
-	local state = MaterialDNA.defaultState("material.v1.test.wallpaper")
+	local revisionOne = MaterialDNA.freezeRecipe(makeRecipe())
+	local revisionTwoSource = makeRecipe()
+	revisionTwoSource.recipeVersion = 2
+	revisionTwoSource.physical.staticFriction = 0.61
+	local revisionTwo = MaterialDNA.freezeRecipe(revisionTwoSource)
+	local referenceOne = MaterialDNA.reference(revisionOne)
+	local referenceTwo = MaterialDNA.reference(revisionTwo)
+	expect(
+		"same material ID can carry distinct immutable recipe revisions",
+		referenceOne.id == referenceTwo.id
+			and referenceOne.recipeVersion == 1
+			and referenceTwo.recipeVersion == 2,
+		"recipe revisions did not produce distinct exact references"
+	)
+	expect(
+		"material reference validates",
+		MaterialDNA.validateReference(referenceOne).ok and MaterialDNA.validateReference(referenceTwo).ok,
+		"one or more exact material references failed validation"
+	)
+	local unknownReferenceField: any = {
+		id = referenceOne.id,
+		recipeVersion = referenceOne.recipeVersion,
+		futureMeaning = "must-not-disappear",
+	}
+	local unknownReferenceResult = MaterialDNA.validateReference(unknownReferenceField)
+	expect(
+		"exact material reference rejects unknown fields",
+		not unknownReferenceResult.ok and containsError(unknownReferenceResult, "unknown field futureMeaning"),
+		table.concat(unknownReferenceResult.errors, "; ")
+	)
+	local zeroReferenceResult = MaterialDNA.validateReference({
+		id = referenceOne.id,
+		recipeVersion = 0,
+	})
+	expect(
+		"exact material reference rejects zero revision",
+		not zeroReferenceResult.ok and containsError(zeroReferenceResult, "recipeVersion"),
+		table.concat(zeroReferenceResult.errors, "; ")
+	)
+	local mutateReference = pcall(function()
+		referenceOne.recipeVersion = 99
+	end)
+	expect(
+		"exact material reference is immutable",
+		not mutateReference,
+		"material reference accepted mutation"
+	)
+
+	local state = MaterialDNA.defaultState(revisionOne)
+	local matchingStateResult = MaterialDNA.validateStateForRecipe(revisionOne, state)
+	expect(
+		"state binds to exact recipe revision",
+		matchingStateResult.ok,
+		table.concat(matchingStateResult.errors, "; ")
+	)
+	local mismatchedStateResult = MaterialDNA.validateStateForRecipe(revisionTwo, state)
+	expect(
+		"state from revision one is rejected against revision two",
+		not mismatchedStateResult.ok and containsError(mismatchedStateResult, "exact MaterialRecipe"),
+		table.concat(mismatchedStateResult.errors, "; ")
+	)
 	local stateMutation = pcall(function()
 		state.wear01 = 0.5
 	end)
@@ -334,6 +450,7 @@ local function run(): number
 
 	local invalidState: any = {
 		recipeId = "material.v1.test.wallpaper",
+		recipeVersion = 1,
 		schemaVersion = MaterialDNA.SchemaVersion,
 		wear01 = 0.2,
 		damage01 = -0.1,
