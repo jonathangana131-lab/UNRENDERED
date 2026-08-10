@@ -9,6 +9,8 @@ local function snapshot(counts, minX, maxX)
 		labRecipeKey = "physics-lab.production-shell",
 		worldId = "world:v1:physics-lab",
 		regionId = "region:v2:physics-lab",
+		resolvedRegionSchemaVersion = 2,
+		worldSeedRef = "world-seed-ref:physics-lab",
 		resolvedRegionFingerprint = "fingerprint:v2:physics-lab",
 		resolvedRegionReproKey = "world=v1|region=v2|recipe=physics-lab",
 		counts = counts,
@@ -50,7 +52,10 @@ local function run(): number
 	expect("baseline snapshot validates", valid and problem == nil)
 	expect(
 		"snapshot preserves deterministic replay identity",
-		baseline.resolvedRegionFingerprint ~= "" and baseline.resolvedRegionReproKey ~= ""
+		baseline.resolvedRegionSchemaVersion == 2
+			and baseline.worldSeedRef ~= ""
+			and baseline.resolvedRegionFingerprint ~= ""
+			and baseline.resolvedRegionReproKey ~= ""
 	)
 
 	local comparison = ValidationContract.compare(baseline, rebuilt, 0.001)
@@ -85,6 +90,16 @@ local function run(): number
 	local malformedOk = ValidationContract.inspectSnapshot(malformed)
 	expect("snapshot validation rejects a count that omits the root", malformedOk == false)
 
+	local missingResolvedSchema = snapshot(counts(46, 0), -10, 10)
+	missingResolvedSchema.resolvedRegionSchemaVersion = 0
+	local missingResolvedSchemaOk = ValidationContract.inspectSnapshot(missingResolvedSchema)
+	expect("snapshot validation rejects missing resolved schema identity", missingResolvedSchemaOk == false)
+
+	local missingWorldSeedRef = snapshot(counts(46, 0), -10, 10)
+	missingWorldSeedRef.worldSeedRef = ""
+	local missingWorldSeedRefOk = ValidationContract.inspectSnapshot(missingWorldSeedRef)
+	expect("snapshot validation rejects missing world-seed provenance", missingWorldSeedRefOk == false)
+
 	local missingRepro = snapshot(counts(46, 0), -10, 10)
 	missingRepro.resolvedRegionReproKey = ""
 	local missingReproOk = ValidationContract.inspectSnapshot(missingRepro)
@@ -96,6 +111,20 @@ local function run(): number
 		ValidationContract.compare(baseline, differentTruth, 0.001)
 	end)
 	expect("before/after comparison rejects a different resolved truth identity", not crossIdentityAccepted)
+
+	local differentResolvedSchema = snapshot(counts(46, 0), -10, 10)
+	differentResolvedSchema.resolvedRegionSchemaVersion = 3
+	local crossSchemaAccepted = pcall(function()
+		ValidationContract.compare(baseline, differentResolvedSchema, 0.001)
+	end)
+	expect("before/after comparison rejects a different resolved schema", not crossSchemaAccepted)
+
+	local differentWorldSeedRef = snapshot(counts(46, 0), -10, 10)
+	differentWorldSeedRef.worldSeedRef = "world-seed-ref:different"
+	local crossSeedAccepted = pcall(function()
+		ValidationContract.compare(baseline, differentWorldSeedRef, 0.001)
+	end)
+	expect("before/after comparison rejects different seed provenance", not crossSeedAccepted)
 
 	local badToleranceAccepted = pcall(function()
 		ValidationContract.compareFullLabEnvelope(baseline, rebuilt, -1)
