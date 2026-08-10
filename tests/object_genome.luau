@@ -62,10 +62,7 @@ local function run(): number
 			fixture.name .. " uses project StableId",
 			StableId.is(identity, ObjectGenome.STABLE_ID_NAMESPACE)
 		)
-		expect(
-			fixture.name .. " repeat identity",
-			identity == ObjectGenome.identityKey(fixture.genome)
-		)
+		expect(fixture.name .. " repeat identity", identity == ObjectGenome.identityKey(fixture.genome))
 
 		local state = ObjectGenome.defaultState(fixture.genome)
 		expect(
