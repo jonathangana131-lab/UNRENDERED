@@ -91,12 +91,14 @@ Landed source evidence:
 
 This source-contract closure does **not** claim Roblox Studio physics/contact/constraint/server-authority PASS. Those observations remain external engine evidence and must stay explicitly UNVERIFIED until actually run.
 
-### Mac ↔ GitHub Roblox Studio Execution Bridge: complete (reality-grade engine validated)
-The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational ([Docs/STUDIO_EXECUTOR.md](file:///Users/joey/.gemini/antigravity/scratch/UNRENDERED/Docs/STUDIO_EXECUTOR.md)).
-- Private bridge repo: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`
-- Mac self-hosted runner: `UNRENDERED-STUDIO-MAC` (running as active LaunchAgent service)
-- Real Roblox Studio execution loop: GitHub request -> Mac self-hosted runner -> Roblox Studio (`PlayServer` simulation mode: `IsRunning=true`, `IsServer=true`) -> 20-cycle lifecycle sweep -> typed fail-closed status derivation (`PASS`) -> result.json + summary.md + viewport screenshot.
-- Proven Evidence: `requests/20260810-005-reality-hero-gate.json` on canonical main SHA `f348acb8dae2f98f7a75c8085539eab49b435b56` produced `status: PASS`, `isRunning: true`, `isServer: true`, `checkpointCount: 4`, `cycleCount: 20`, `envelopeToleranceStuds: 0.001`.
+### Mac ↔ GitHub Roblox Studio Execution Bridge: operational, composite Hero Gate still open
+The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational enough to run fixed, request-bound drivers in real Studio simulation and return fail-closed typed evidence; it is **not** itself proof that every #151 engine row passed.
+- Private bridge repo: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`.
+- Mac self-hosted runner: `UNRENDERED-STUDIO-MAC`.
+- Real engine evidence exists for source-owned lifecycle execution in Studio with `IsRunning=true`, `IsServer=true`, 20 lifecycle cycles, four checkpoints and the documented `0.001` stud envelope tolerance.
+- Durable bridge result `20260810-005-reality-hero-gate` on canonical SHA `f348acb8dae2f98f7a75c8085539eab49b435b56` is currently `status: FAIL`, not PASS. Its fail-closed reason is that lifecycle evidence alone does not prove contact/traversability, diagnostics behavior, two-client authority, or device/performance rows.
+- A later request-bound server smoke reached real simulation and produced `isRunning=true`, `isServer=true`, `baselineCaptured=true` and `labModelValid=true`; bridge orchestration/evaluator cleanup remains active before that row can be treated as durable accepted evidence.
+- Never promote a lifecycle/server smoke sentinel, screenshot, or partially supported topology run into a composite Hero Gate PASS.
 
 ## Current unlock status
 
@@ -126,7 +128,7 @@ Workers may inspect/review/decompose them, but should not build those major syst
 ## Known external setup gaps
 
 - No published Roblox universe/place is connected to automated publishing yet.
-- Studio engine tests, graphics validation, server-authority tests, and device profiling require a Roblox Studio/test-place workflow; current GitHub CI covers source/pure deterministic logic/Rojo builds.
+- The private Studio bridge can run fixed single-server/lifecycle evidence, but the remaining #151 contact/diagnostics/two-client/device rows still require explicit engine-facing procedures/topologies and accepted durable results; do not infer them from source CI or a single-server simulation.
 - Approved production PBR, audio and model libraries do not exist yet. Use project-owned fallbacks and do not add unlicensed content.
 
 ## Architecture migrations
