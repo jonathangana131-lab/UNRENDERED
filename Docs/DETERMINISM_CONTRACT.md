@@ -51,9 +51,11 @@ StableId v1 is designed to make accidental collisions extremely unlikely, but it
 
 ## RNG v1
 
-`DeterministicRng` uses xorshift32. State and outputs are unsigned 32-bit values. Seed `0` deterministically normalizes to `0x6d2b79f5` because xorshift32's zero state is absorbing.
+`DeterministicRng` uses xorshift32. State and outputs are unsigned 32-bit values. Seed `0` deterministically normalizes to `0x6d2b79f5` because xorshift32's zero state is absorbing. Canonical generators therefore occupy the nonzero xorshift cycle: exactly `2^32 - 1` reachable states.
 
-`nextInteger` uses rejection sampling so bounded integer draws do not introduce modulo bias. Changing draw count or call order changes that stream by design; it must not affect another derived stream.
+`nextInteger` maps each reachable state `1..2^32-1` to a zero-based sample `0..2^32-2`, then uses rejection sampling against that `2^32 - 1`-value domain so bounded draws do not introduce modulo bias. An exactly uniform one-draw range may therefore contain at most `2^32 - 1` integer values. Changing draw count or call order changes that stream by design; it must not affect another derived stream.
+
+The bounded-draw mapping was corrected during Foundation Lock before first-observation recipe locking was unlocked. No observed-world compatibility promise exists for the briefly merged biased mapping; the corrected mapping is the normative RNG v1 contract and its golden vectors are checked in CI.
 
 ## SeedStream v1
 
