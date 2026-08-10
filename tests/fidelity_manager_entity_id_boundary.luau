@@ -50,7 +50,10 @@ local function run(): number
 		end)
 		local after = manager:getMetrics()
 		expect(`register rejects invalid id {index}`, not accepted)
-		expect(`register invalid id {index} leaves registered count atomic`, after.registered == before.registered)
+		expect(
+			`register invalid id {index} leaves registered count atomic`,
+			after.registered == before.registered
+		)
 		expect(`register invalid id {index} leaves F0 count atomic`, after.counts.F0 == before.counts.F0)
 		expect(
 			`register invalid id {index} does not consume capacity rejection metric`,
@@ -63,7 +66,10 @@ local function run(): number
 		manager:unregister(invalidLookupId)
 	end)
 	expect("unregister rejects invalid id before lookup", not unregisterAccepted)
-	expect("invalid unregister leaves valid registration present", manager:getObservedLevel(validMaxLengthId) == "F0")
+	expect(
+		"invalid unregister leaves valid registration present",
+		manager:getObservedLevel(validMaxLengthId) == "F0"
+	)
 
 	local getAccepted = pcall(function()
 		manager:getObservedLevel(invalidLookupId)
@@ -82,7 +88,10 @@ local function run(): number
 	expect("invalid step cannot invoke transition hook", transitionCalls == 0)
 	expect("invalid step leaves transitions atomic", afterStep.transitions == beforeStep.transitions)
 	expect("invalid step leaves hold metric atomic", afterStep.blockedByHold == beforeStep.blockedByHold)
-	expect("invalid step leaves cooldown metric atomic", afterStep.blockedByCooldown == beforeStep.blockedByCooldown)
+	expect(
+		"invalid step leaves cooldown metric atomic",
+		afterStep.blockedByCooldown == beforeStep.blockedByCooldown
+	)
 	expect(
 		"invalid step leaves missing-transition metric atomic",
 		afterStep.blockedByMissingTransition == beforeStep.blockedByMissingTransition
