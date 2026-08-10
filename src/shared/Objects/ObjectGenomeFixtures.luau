@@ -1,6 +1,7 @@
 --!strict
 
 local ObjectGenome = require("./ObjectGenome")
+local ObjectGenomeOwnership = require("./ObjectGenomeOwnership")
 
 type Vec3 = ObjectGenome.Vec3
 type ComponentSpec = ObjectGenome.ComponentSpec
@@ -324,7 +325,7 @@ local filingCabinet: Genome = {
 }
 
 return table.freeze({
-	officeChair = officeChair,
-	officeTable = officeTable,
-	filingCabinet = filingCabinet,
+	officeChair = ObjectGenomeOwnership.own(officeChair),
+	officeTable = ObjectGenomeOwnership.own(officeTable),
+	filingCabinet = ObjectGenomeOwnership.own(filingCabinet),
 })
