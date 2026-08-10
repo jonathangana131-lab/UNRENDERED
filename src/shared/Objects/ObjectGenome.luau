@@ -877,7 +877,10 @@ function ObjectGenome.inspect(value: any): ValidationResult
 				issues,
 				"component.material_reference",
 				path .. ".materialKey",
-				`component material reference must satisfy MaterialDNA v2: {table.concat(materialReferenceResult.errors, "; ")}`
+				`component material reference must satisfy MaterialDNA v2: {table.concat(
+					materialReferenceResult.errors,
+					"; "
+				)}`
 			)
 		end
 		if not isPositiveFinite(component.massKg) then

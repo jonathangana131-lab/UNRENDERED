@@ -135,7 +135,10 @@ local function run(): number
 		id = slashMaterial.components[1].materialKey,
 		recipeVersion = slashMaterial.components[1].materialRecipeVersion,
 	}
-	expect("MaterialDNA accepts slash-bearing project material id", MaterialDNA.validateReference(slashReference).ok)
+	expect(
+		"MaterialDNA accepts slash-bearing project material id",
+		MaterialDNA.validateReference(slashReference).ok
+	)
 	expect("ObjectGenome accepts every MaterialDNA-valid material id", ObjectGenome.inspect(slashMaterial).ok)
 
 	local numericMaterial = deepCopy(Fixtures.officeChair)
@@ -150,8 +153,10 @@ local function run(): number
 	overlongMaterial.components[1].materialKey = "material." .. string.rep("x", 160)
 	expect(
 		"ObjectGenome rejects overlong material id exactly like MaterialDNA",
-		not MaterialDNA.validateReference({ id = overlongMaterial.components[1].materialKey, recipeVersion = 1 }).ok
-			and hasCode(ObjectGenome.inspect(overlongMaterial), "component.material_reference")
+		not MaterialDNA.validateReference({
+				id = overlongMaterial.components[1].materialKey,
+				recipeVersion = 1,
+			}).ok and hasCode(ObjectGenome.inspect(overlongMaterial), "component.material_reference")
 	)
 
 	local overflowMaterialRevision = deepCopy(Fixtures.officeChair)
@@ -159,9 +164,9 @@ local function run(): number
 	expect(
 		"ObjectGenome rejects material revision above MaterialDNA maximum",
 		not MaterialDNA.validateReference({
-			id = overflowMaterialRevision.components[1].materialKey,
-			recipeVersion = overflowMaterialRevision.components[1].materialRecipeVersion,
-		}).ok
+				id = overflowMaterialRevision.components[1].materialKey,
+				recipeVersion = overflowMaterialRevision.components[1].materialRecipeVersion,
+			}).ok
 			and hasCode(ObjectGenome.inspect(overflowMaterialRevision), "component.material_reference")
 	)
 
@@ -183,7 +188,8 @@ local function run(): number
 		"material recipe revision changes canonical ObjectGenome identity without familyVersion bump",
 		revisedShell ~= nil
 			and revisedMaterial.familyVersion == Fixtures.filingCabinet.familyVersion
-			and ObjectGenome.identityKey(revisedMaterial) ~= ObjectGenome.identityKey(Fixtures.filingCabinet)
+			and ObjectGenome.identityKey(revisedMaterial)
+				~= ObjectGenome.identityKey(Fixtures.filingCabinet)
 	)
 
 	local danglingSupport = deepCopy(Fixtures.filingCabinet)
