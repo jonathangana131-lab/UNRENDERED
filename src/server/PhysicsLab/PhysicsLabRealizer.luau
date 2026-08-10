@@ -6,6 +6,7 @@ local Shared = ReplicatedStorage:WaitForChild("UNRENDERED")
 local FidelityManager = require(Shared.Physics.FidelityManager)
 local PhysicsLabRecipe = require(Shared.Physics.PhysicsLabRecipe)
 local PhysicsLabRuntime = require(Shared.Physics.PhysicsLabRuntime)
+local ResolvedRegionRecipe = require(Shared.Reality.ResolvedRegionRecipe)
 local WorldEntity = require(Shared.Reality.WorldEntity)
 
 local PhysicsLabRealizer = {}
@@ -234,6 +235,9 @@ end
 
 function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 	local recipe = PhysicsLabRecipe.build()
+	local resolvedRegion = PhysicsLabRecipe.RESOLVED_REGION
+	local regionFingerprint = ResolvedRegionRecipe.fingerprint(resolvedRegion)
+	local regionReproKey = ResolvedRegionRecipe.reproKey(resolvedRegion)
 	local existing = parent:FindFirstChild(ROOT_NAME)
 	if existing ~= nil then
 		assert(
@@ -257,6 +261,10 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 		model:SetAttribute("UNRENDERED_LabRecipeKey", recipe.recipeKey)
 		model:SetAttribute("UNRENDERED_WorldId", recipe.worldId)
 		model:SetAttribute("UNRENDERED_RegionId", recipe.regionId)
+		model:SetAttribute("UNRENDERED_ResolvedRegionSchemaVersion", resolvedRegion.schemaVersion)
+		model:SetAttribute("UNRENDERED_WorldSeedRef", resolvedRegion.worldSeedRef)
+		model:SetAttribute("UNRENDERED_ResolvedRegionFingerprint", regionFingerprint)
+		model:SetAttribute("UNRENDERED_ResolvedRegionReproKey", regionReproKey)
 
 		for _, entityRecipe in ipairs(recipe.entities) do
 			local entityId = entityRecipe.entity.id
