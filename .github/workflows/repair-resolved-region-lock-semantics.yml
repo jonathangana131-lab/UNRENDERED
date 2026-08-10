@@ -1,0 +1,189 @@
+name: Harden resolved-region lock semantics
+
+on:
+  push:
+    branches:
+      - agent/reality/9-resolved-region-lock-clean-sol56g7
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/reality/9-resolved-region-lock-clean-sol56g7
+
+      - name: Apply established-truth and golden-vector repairs
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          module = Path('src/shared/Reality/ResolvedRegionRecipe.luau')
+          text = module.read_text()
+
+          marker = '''\treturn table.freeze({
+          \t\tworldId = worldId,
+          \t\tworldSeedRef = worldSeedRef,
+          \t\tregionAddress = address,
+          \t\tgeneratorVersions = versions,
+          \t\tsemanticIntent = semanticIntent,
+          \t\ttopologyAnchorKeys = topologyAnchorKeys,
+          \t\tcanonicalContentKeys = canonicalContentKeys,
+          \t})
+          end
+
+          local function buildRecipe'''
+          replacement = '''\treturn table.freeze({
+          \t\tworldId = worldId,
+          \t\tworldSeedRef = worldSeedRef,
+          \t\tregionAddress = address,
+          \t\tgeneratorVersions = versions,
+          \t\tsemanticIntent = semanticIntent,
+          \t\ttopologyAnchorKeys = topologyAnchorKeys,
+          \t\tcanonicalContentKeys = canonicalContentKeys,
+          \t})
+          end
+
+          local function observationIdentity(value: unknown): (string, string, RegionAddress)
+          \tassert(type(value) == "table", "lockInput must be a table")
+          \tlocal source = value :: any
+          \tassert(getmetatable(source) == nil, "lockInput must not have a metatable")
+          \tlocal worldId = checkedString("lockInput.worldId", source.worldId, ResolvedRegionRecipe.MaxKeyBytes)
+          \tassert(StableId.is(worldId, "world"), "lockInput.worldId must be a canonical world StableId")
+          \tlocal worldSeedRef = checkedString(
+          \t\t"lockInput.worldSeedRef",
+          \t\tsource.worldSeedRef,
+          \t\tResolvedRegionRecipe.MaxSeedRefBytes
+          \t)
+          \treturn worldId, worldSeedRef, cloneRegionAddress(source.regionAddress)
+          end
+
+          local function buildRecipe'''
+          if marker not in text:
+              raise SystemExit('canonical input marker not found')
+          text = text.replace(marker, replacement, 1)
+
+          old = '''function ResolvedRegionRecipe.resolveFirstObservation(
+          \texisting: ResolvedRegionRecipe?,
+          \tvalue: LockInput
+          ): ResolvedRegionRecipe
+          \tlocal candidate = buildRecipe(canonicalizeLockInput(value))
+          \tif existing == nil then
+          \t\treturn candidate
+          \tend
+
+          \tlocal canonicalExisting = ResolvedRegionRecipe.deserialize(existing :: any)
+          \tassert(canonicalExisting.worldId == candidate.worldId, "existing truth belongs to a different world")
+          \tassert(
+          \t\tcanonicalExisting.worldSeedRef == candidate.worldSeedRef,
+          \t\t"existing truth belongs to a different world seed"
+          \t)
+          \tassert(canonicalExisting.regionId == candidate.regionId, "existing truth belongs to a different region")
+          \treturn canonicalExisting
+          end'''
+          new = '''function ResolvedRegionRecipe.resolveFirstObservation(
+          \texisting: ResolvedRegionRecipe?,
+          \tvalue: LockInput
+          ): ResolvedRegionRecipe
+          \tif existing == nil then
+          \t\treturn buildRecipe(canonicalizeLockInput(value))
+          \tend
+
+          \tlocal canonicalExisting = ResolvedRegionRecipe.deserialize(existing :: any)
+          \tlocal incomingWorldId, incomingWorldSeedRef, incomingAddress = observationIdentity(value)
+          \tassert(canonicalExisting.worldId == incomingWorldId, "existing truth belongs to a different world")
+          \tassert(
+          \t\tcanonicalExisting.worldSeedRef == incomingWorldSeedRef,
+          \t\t"existing truth belongs to a different world seed"
+          \t)
+          \tassert(
+          \t\tcanonicalExisting.regionId == computeRegionId(incomingWorldId, incomingAddress),
+          \t\t"existing truth belongs to a different region"
+          \t)
+          \treturn canonicalExisting
+          end'''
+          if old not in text:
+              raise SystemExit('resolveFirstObservation marker not found')
+          text = text.replace(old, new, 1)
+          module.write_text(text)
+
+          test = Path('tests/resolved_region_recipe.luau')
+          text = test.read_text()
+          golden_marker = '''\texpect(
+          \t\t"recipe fingerprint is separately versioned StableId",
+          \t\tstring.match(locked.fingerprint, "^resolved%-region%-recipe:v1:") ~= nil
+          \t)
+          '''
+          goldens = '''\texpectEqual(
+          \t\t"resolved region v1 identity golden",
+          \t\tlocked.regionId,
+          \t\t"region:v1:34dd810646b84277716e07e7d16b9570"
+          \t)
+          \texpectEqual(
+          \t\t"resolved recipe v1 fingerprint golden",
+          \t\tlocked.fingerprint,
+          \t\t"resolved-region-recipe:v1:574d325a33ba8b95494a42364c6eb6be"
+          \t)
+          '''
+          if golden_marker not in text:
+              raise SystemExit('golden marker not found')
+          text = text.replace(golden_marker, golden_marker + goldens, 1)
+
+          future_marker = '''\texpectEqual(
+          \t\t"later candidate cannot rewrite locked reality version",
+          \t\tfutureResolved.generatorVersions.reality,
+          \t\t1
+          \t)
+          '''
+          future_regression = '''
+
+          \tlocal malformedFutureInput = baseInput()
+          \tmalformedFutureInput.generatorVersions = false
+          \tmalformedFutureInput.topologyAnchorKeys = "broken-future-generator-output"
+          \tmalformedFutureInput.canonicalContentKeys = { "duplicate", "duplicate" }
+          \tlocal malformedFutureResolved = ResolvedRegionRecipe.resolveFirstObservation(locked, malformedFutureInput)
+          \texpectEqual(
+          \t\t"established truth ignores malformed later unresolved content",
+          \t\tmalformedFutureResolved.fingerprint,
+          \t\tlocked.fingerprint
+          \t)
+
+          \tlocal wrongWorldInput = baseInput()
+          \twrongWorldInput.worldId = StableId.fromParts("world", { "different-world" })
+          \tlocal wrongWorldAccepted = pcall(function()
+          \t\tResolvedRegionRecipe.resolveFirstObservation(locked, wrongWorldInput)
+          \tend)
+          \texpectEqual("relock rejects a different canonical world", wrongWorldAccepted, false)
+          '''
+          if future_marker not in text:
+              raise SystemExit('future regression marker not found')
+          text = text.replace(future_marker, future_marker + future_regression, 1)
+          test.write_text(text)
+          PY
+
+      - name: Install pinned Roblox toolchain
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf \
+            https://raw.githubusercontent.com/rojo-rbx/rokit/v1.2.0/scripts/install.sh \
+            | bash -s -- 1.2.0
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.rokit/bin:$PATH"
+          rokit install --no-trust-check
+
+      - name: Format source and tests
+        run: stylua src tests
+
+      - name: Commit semantic hardening
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/shared/Reality/ResolvedRegionRecipe.luau tests/resolved_region_recipe.luau
+          git commit -m "fix(reality): preserve established truth before future validation"
+          git push origin HEAD:agent/reality/9-resolved-region-lock-clean-sol56g7
