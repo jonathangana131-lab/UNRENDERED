@@ -140,6 +140,7 @@ local function run(): number
 	expect("lab shell starts as explicit F2 proxy fidelity", allInitialFidelityF2)
 
 	local doorGenome = PhysicsLabRecipe.objectGenome("commercialDoor")
+	expect("commercial door construction revision is explicit", doorGenome.familyVersion == 2)
 	local doorComponents = {}
 	for _, component in ipairs(doorGenome.components) do
 		doorComponents[component.key] = component
@@ -150,7 +151,11 @@ local function run(): number
 	local leaf = doorComponents.leaf
 	expect(
 		"commercial door frame uses opening-preserving jamb/header construction",
-		doorComponents.frame == nil and hingeJamb ~= nil and strikeJamb ~= nil and header ~= nil and leaf ~= nil
+		doorComponents.frame == nil
+			and hingeJamb ~= nil
+			and strikeJamb ~= nil
+			and header ~= nil
+			and leaf ~= nil
 	)
 
 	if hingeJamb ~= nil and strikeJamb ~= nil and header ~= nil and leaf ~= nil then
@@ -176,7 +181,8 @@ local function run(): number
 		expect(
 			"commercial door header lands on both jamb tops",
 			math.abs((hingeJamb.localPositionM.y + hingeJamb.dimensionsM.y * 0.5) - openingTop) < 1e-9
-				and math.abs((strikeJamb.localPositionM.y + strikeJamb.dimensionsM.y * 0.5) - openingTop) < 1e-9
+				and math.abs((strikeJamb.localPositionM.y + strikeJamb.dimensionsM.y * 0.5) - openingTop)
+					< 1e-9
 		)
 	end
 
@@ -189,7 +195,9 @@ local function run(): number
 	end
 	expect(
 		"commercial door hinge references the structural hinge jamb",
-		leafHinge ~= nil and leafHinge.movingComponentKey == "leaf" and leafHinge.frameComponentKey == "jamb-hinge"
+		leafHinge ~= nil
+			and leafHinge.movingComponentKey == "leaf"
+			and leafHinge.frameComponentKey == "jamb-hinge"
 	)
 
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
