@@ -1289,7 +1289,7 @@ function ObjectGenome.decodeMechanismPosition(
 		"mechanism position must use canonical ObjectState v1 encoding"
 	)
 
-	if mechanism.kind == "hinge" or mechanism.kind == "tilt" then
+	if mechanism.kind == "hinge" then
 		assert(
 			isFinite(mechanism.minDegrees)
 				and isFinite(mechanism.maxDegrees)
@@ -1299,7 +1299,20 @@ function ObjectGenome.decodeMechanismPosition(
 			"angular mechanism limits must include the authored zero/reference pose"
 		)
 		return {
-			kind = mechanism.kind,
+			kind = "hinge",
+			degrees = mechanism.minDegrees + position * (mechanism.maxDegrees - mechanism.minDegrees),
+		}
+	elseif mechanism.kind == "tilt" then
+		assert(
+			isFinite(mechanism.minDegrees)
+				and isFinite(mechanism.maxDegrees)
+				and mechanism.minDegrees < mechanism.maxDegrees
+				and mechanism.minDegrees <= 0
+				and mechanism.maxDegrees >= 0,
+			"angular mechanism limits must include the authored zero/reference pose"
+		)
+		return {
+			kind = "tilt",
 			degrees = mechanism.minDegrees + position * (mechanism.maxDegrees - mechanism.minDegrees),
 		}
 	elseif mechanism.kind == "slide" then
