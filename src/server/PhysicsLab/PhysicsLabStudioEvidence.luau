@@ -181,6 +181,10 @@ function PhysicsLabStudioEvidence.runLifecycle20(): LifecycleEvidence
 			lab.model:GetAttribute("UNRENDERED_RepresentedCount") == 0,
 			`Physics Lab lifecycle cycle {cycle} did not fully tear down F2 representations`
 		)
+		assert(
+			lab.model:GetAttribute("UNRENDERED_EntityCount") == #recipe.entities,
+			`Physics Lab lifecycle cycle {cycle} changed authoritative registration count after teardown`
+		)
 
 		for _, entityRecipe in ipairs(recipe.entities) do
 			promoteToF2(lab, entityRecipe.entity.id, baseTime)
@@ -188,6 +192,10 @@ function PhysicsLabStudioEvidence.runLifecycle20(): LifecycleEvidence
 		assert(
 			lab.model:GetAttribute("UNRENDERED_RepresentedCount") == #recipe.entities,
 			`Physics Lab lifecycle cycle {cycle} did not restore the complete F2 representation`
+		)
+		assert(
+			lab.model:GetAttribute("UNRENDERED_EntityCount") == #recipe.entities,
+			`Physics Lab lifecycle cycle {cycle} changed authoritative registration count after rebuild`
 		)
 
 		if CHECKPOINT_CYCLES[cycle] then
