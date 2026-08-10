@@ -235,7 +235,8 @@ function PhysicsLabValidationContract.inspectSnapshot(snapshot: any): (boolean, 
 	end
 	for _, fidelity in ipairs({ "F1", "F2", "F3", "F4" }) do
 		if representedByFidelity[fidelity] > snapshot.fidelityCounts[fidelity] then
-			return false, `snapshot.entities contains more {fidelity} representations than authoritative fidelity count`
+			return false,
+				`snapshot.entities contains more {fidelity} representations than authoritative fidelity count`
 		end
 	end
 
@@ -335,13 +336,16 @@ function PhysicsLabValidationContract.compareEntityInventory(
 		if after == nil then
 			table.insert(missingIds, entity.id)
 		elseif after.fidelity ~= entity.fidelity or after.recipeKey ~= entity.recipeKey then
-			table.insert(mismatches, table.freeze({
-				id = entity.id,
-				baselineFidelity = entity.fidelity,
-				checkpointFidelity = after.fidelity,
-				baselineRecipeKey = entity.recipeKey,
-				checkpointRecipeKey = after.recipeKey,
-			}))
+			table.insert(
+				mismatches,
+				table.freeze({
+					id = entity.id,
+					baselineFidelity = entity.fidelity,
+					checkpointFidelity = after.fidelity,
+					baselineRecipeKey = entity.recipeKey,
+					checkpointRecipeKey = after.recipeKey,
+				})
+			)
 		end
 	end
 	for _, entity in ipairs(checkpoint.entities) do
