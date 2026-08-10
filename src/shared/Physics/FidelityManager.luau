@@ -507,11 +507,15 @@ function FidelityManager.step(
 		isFinite(nowSeconds) and nowSeconds >= state.lastEvaluatedAt,
 		"nowSeconds must be finite and monotonic per entity"
 	)
-	state.lastEvaluatedAt = nowSeconds
 
+	-- Policy validation is part of the acceptance boundary. Compute it before
+	-- mutating manager time, fidelity mirrors, pending targets, or metrics so a
+	-- rejected step is observationally atomic.
+	local desired: FidelityLevel, reason: PolicyReason = evaluatePolicy(inputs, self.config, currentLevel)
+
+	state.lastEvaluatedAt = nowSeconds
 	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
 
-	local desired: FidelityLevel, reason: PolicyReason = evaluatePolicy(inputs, self.config, currentLevel)
 	if desired == currentLevel then
 		state.pendingLevel = nil
 		state.pendingSince = nil
