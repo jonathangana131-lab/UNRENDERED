@@ -331,14 +331,20 @@ function ResolvedRegionRecipe.serialize(recipeValue: ResolvedRegionRecipe): any
 	}
 end
 
-function ResolvedRegionRecipe.reconstruct(serializedValue: any, migrationHook: MigrationHook?): ResolvedRegionRecipe
+function ResolvedRegionRecipe.reconstruct(
+	serializedValue: any,
+	migrationHook: MigrationHook?
+): ResolvedRegionRecipe
 	assert(type(serializedValue) == "table", "serialized recipe must be a plain table")
 	assert(getmetatable(serializedValue) == nil, "serialized recipe must not have a metatable")
 	local sourceVersion = checkedSchemaVersion("schemaVersion", rawget(serializedValue, "schemaVersion"))
 	local candidate = serializedValue
 
 	if sourceVersion ~= ResolvedRegionRecipe.SCHEMA_VERSION then
-		assert(migrationHook ~= nil, `unsupported ResolvedRegionRecipe schema version {sourceVersion}; migration required`)
+		assert(
+			migrationHook ~= nil,
+			`unsupported ResolvedRegionRecipe schema version {sourceVersion}; migration required`
+		)
 		local plainSource = clonePlainData(serializedValue, "serializedRecipe", {})
 		candidate = (migrationHook :: MigrationHook)(
 			sourceVersion,
