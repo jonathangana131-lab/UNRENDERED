@@ -87,7 +87,8 @@ local function run(): number
 	local unknownTopLevelResult = MaterialDNA.validateRecipe(unknownTopLevel)
 	expect(
 		"rejects unknown top-level v1 field",
-		not unknownTopLevelResult.ok and containsError(unknownTopLevelResult, "unknown schema key futureCanonicalField")
+		not unknownTopLevelResult.ok
+			and containsError(unknownTopLevelResult, "unknown schema key futureCanonicalField")
 	)
 
 	local unknownNested: any = deepCopy(MaterialFixtures.LowPileCarpet)
@@ -95,7 +96,8 @@ local function run(): number
 	local unknownNestedResult = MaterialDNA.validateRecipe(unknownNested)
 	expect(
 		"rejects unknown nested v1 field",
-		not unknownNestedResult.ok and containsError(unknownNestedResult, "finish contains unknown schema key")
+		not unknownNestedResult.ok
+			and containsError(unknownNestedResult, "finish contains unknown schema key")
 	)
 
 	local unknownHistory: any = deepCopy(MaterialFixtures.PaintedMetal)
@@ -103,7 +105,8 @@ local function run(): number
 	local unknownHistoryResult = MaterialDNA.validateRecipe(unknownHistory)
 	expect(
 		"rejects unknown history-event v1 field",
-		not unknownHistoryResult.ok and containsError(unknownHistoryResult, "historyEvents[1] contains unknown schema key")
+		not unknownHistoryResult.ok
+			and containsError(unknownHistoryResult, "historyEvents[1] contains unknown schema key")
 	)
 
 	local metatableRecipe: any = deepCopy(MaterialFixtures.CommercialWallpaperDrywall)
@@ -127,7 +130,8 @@ local function run(): number
 	local metatableNestedResult = MaterialDNA.validateRecipe(metatableNested)
 	expect(
 		"rejects metatable-backed nested record",
-		not metatableNestedResult.ok and containsError(metatableNestedResult, "substrate must be a plain table")
+		not metatableNestedResult.ok
+			and containsError(metatableNestedResult, "substrate must be a plain table")
 	)
 
 	local freezeUnknown: any = deepCopy(MaterialFixtures.PaintedMetal)
@@ -141,7 +145,10 @@ local function run(): number
 	local mutableStateAccepted = pcall(function()
 		mutableState.wear01 = 0.25
 	end)
-	expect("MaterialState remains intentionally mutable", mutableStateAccepted and mutableState.wear01 == 0.25)
+	expect(
+		"MaterialState remains intentionally mutable",
+		mutableStateAccepted and mutableState.wear01 == 0.25
+	)
 
 	return failures
 end
