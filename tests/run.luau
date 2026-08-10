@@ -56,6 +56,13 @@ else
 	print("PASS hash distinguishes nearby input")
 end
 
+local initialState = {
+	wear = 0.15,
+	mechanism = {
+		latched = false,
+	},
+}
+
 local entity = WorldEntity.new({
 	id = "entity:0123456789abcdef",
 	kind = "object",
@@ -67,17 +74,23 @@ local entity = WorldEntity.new({
 		localKey = "chair-a",
 	},
 	fidelity = "F3",
-	persistentState = {
-		wear = 0.15,
-		mechanism = {
-			latched = false,
-		},
-	},
+	persistentState = initialState,
 })
 
 expectEqual("WorldEntity starts at requested fidelity", entity.fidelity, "F3")
 expectEqual("WorldEntity starts at revision zero", entity.lifecycleRevision, 0)
 expectEqual("WorldEntity keeps stable identity", entity.id, "entity:0123456789abcdef")
+
+initialState.wear = 0.9
+initialState.mechanism.latched = true
+expectEqual("WorldEntity clones input state", entity.persistentState.wear, 0.15)
+expectEqual("WorldEntity clones nested input state", entity.persistentState.mechanism.latched, false)
+expectError("WorldEntity state snapshot rejects top-level mutation", function()
+	entity.persistentState.wear = 0.9
+end)
+expectError("WorldEntity state snapshot rejects nested mutation", function()
+	entity.persistentState.mechanism.latched = true
+end)
 
 local registry = WorldEntity.newRegistry()
 WorldEntity.register(registry, entity)
@@ -90,18 +103,25 @@ expectError("demotion requires state capture", function()
 	WorldEntity.transitionRegistered(registry, entity.id, "F1")
 end)
 
-local demoted = WorldEntity.transitionRegistered(registry, entity.id, "F1", {
+local capturedState = {
 	mechanism = {
 		latched = true,
 	},
 	lastInteractionTick = 42,
-})
+}
+local demoted = WorldEntity.transitionRegistered(registry, entity.id, "F1", capturedState)
+capturedState.mechanism.latched = false
+capturedState.lastInteractionTick = 99
+
 expectEqual("demotion preserves identity", demoted.id, entity.id)
 expectEqual("demotion changes fidelity", demoted.fidelity, "F1")
 expectEqual("demotion increments lifecycle revision", demoted.lifecycleRevision, 1)
 expectEqual("captured state replaces changed field", demoted.persistentState.mechanism.latched, true)
 expectEqual("captured state records new field", demoted.persistentState.lastInteractionTick, 42)
 expectEqual("uncaptured durable state survives demotion", demoted.persistentState.wear, 0.15)
+expectError("demoted snapshot rejects nested mutation", function()
+	demoted.persistentState.mechanism.latched = false
+end)
 
 local promoted = WorldEntity.transitionRegistered(registry, entity.id, "F3")
 expectEqual("promotion preserves identity after representation recreation", promoted.id, entity.id)
