@@ -43,6 +43,7 @@ export type DuplicateIdentityDiagnostic = {
 export type Registry = {
 	_records: { [WorldEntityId]: WorldEntityRecord },
 	_duplicates: { DuplicateIdentityDiagnostic },
+	_duplicateCapacity: number,
 }
 
 WorldEntity.Fidelity = table.freeze({
@@ -52,6 +53,8 @@ WorldEntity.Fidelity = table.freeze({
 	F3 = "F3",
 	F4 = "F4",
 })
+
+WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY = 64
 
 local FIDELITY_RANK: { [string]: number } = table.freeze({
 	F0 = 0,
@@ -243,10 +246,18 @@ function WorldEntity.transition(
 	return cloneRecord(record, target, nextState, nextStateRevision, record.representationRevision + 1)
 end
 
-function WorldEntity.createRegistry(): Registry
+function WorldEntity.createRegistry(duplicateDiagnosticCapacity: number?): Registry
+	local capacity = duplicateDiagnosticCapacity or WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY
+	assertFiniteNumber("duplicateDiagnosticCapacity", capacity)
+	assert(
+		capacity >= 0 and capacity == math.floor(capacity),
+		"duplicateDiagnosticCapacity must be a non-negative integer"
+	)
+
 	return table.freeze({
 		_records = {},
 		_duplicates = {},
+		_duplicateCapacity = capacity,
 	}) :: Registry
 end
 
@@ -263,7 +274,12 @@ function WorldEntity.register(
 			existingRecipeKey = existing.origin.recipeKey,
 			incomingRecipeKey = record.origin.recipeKey,
 		})
-		table.insert(registry._duplicates, diagnostic)
+		if registry._duplicateCapacity > 0 then
+			if #registry._duplicates >= registry._duplicateCapacity then
+				table.remove(registry._duplicates, 1)
+			end
+			table.insert(registry._duplicates, diagnostic)
+		end
 		return false, diagnostic
 	end
 
