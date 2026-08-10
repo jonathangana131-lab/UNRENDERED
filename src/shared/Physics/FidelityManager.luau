@@ -19,6 +19,9 @@ export type Config = {
 	interactiveDistanceStuds: number,
 	heroDistanceStuds: number,
 	interactiveGraceSeconds: number,
+	renderSignificance: number,
+	renderNetworkRelevance: number,
+	interactiveNetworkRelevance: number,
 	heroSignificance: number,
 	heroNetworkRelevance: number,
 	distanceHysteresisStuds: number,
@@ -75,6 +78,9 @@ local DEFAULT_CONFIG: Config = table.freeze({
 	interactiveDistanceStuds = 80,
 	heroDistanceStuds = 24,
 	interactiveGraceSeconds = 8,
+	renderSignificance = 0.4,
+	renderNetworkRelevance = 0.35,
+	interactiveNetworkRelevance = 0.6,
 	heroSignificance = 0.8,
 	heroNetworkRelevance = 0.8,
 	distanceHysteresisStuds = 12,
@@ -110,6 +116,9 @@ function FidelityManager.validateConfig(config: Config): ()
 	assert(config.heroDistanceStuds <= config.interactiveDistanceStuds, "hero distance must be <= interactive distance")
 	assert(config.interactiveDistanceStuds <= config.renderDistanceStuds, "interactive distance must be <= render distance")
 	assertUnitInterval("structuralSignificance", config.structuralSignificance)
+	assertUnitInterval("renderSignificance", config.renderSignificance)
+	assertUnitInterval("renderNetworkRelevance", config.renderNetworkRelevance)
+	assertUnitInterval("interactiveNetworkRelevance", config.interactiveNetworkRelevance)
 	assertUnitInterval("heroSignificance", config.heroSignificance)
 	assertUnitInterval("heroNetworkRelevance", config.heroNetworkRelevance)
 	assertUnitInterval("significanceHysteresis", config.significanceHysteresis)
@@ -144,11 +153,16 @@ end
 
 function FidelityManager.evaluateTarget(current: FidelityLevel, input: PolicyInput, config: Config?): (FidelityLevel, string)
 	local policy = config or DEFAULT_CONFIG
+	if config ~= nil then
+		FidelityManager.validateConfig(policy)
+	end
 	FidelityManager.validateInput(input)
 
-	local recentInteraction = input.secondsSinceInteraction
-		<= policy.interactiveGraceSeconds
-			+ if retains(current, "F3") then policy.interactionHysteresisSeconds else 0
+	local interactionGrace = policy.interactiveGraceSeconds
+	if retains(current, "F3") then
+		interactionGrace += policy.interactionHysteresisSeconds
+	end
+	local recentInteraction = input.secondsSinceInteraction <= interactionGrace
 
 	local heroRelevant = aboveThreshold(current, "F4", input.significance, policy.heroSignificance, policy.significanceHysteresis)
 		or aboveThreshold(current, "F4", input.networkRelevance, policy.heroNetworkRelevance, policy.networkHysteresis)
@@ -160,14 +174,14 @@ function FidelityManager.evaluateTarget(current: FidelityLevel, input: PolicyInp
 
 	if withinDistance(current, "F3", input.distanceStuds, policy.interactiveDistanceStuds, policy.distanceHysteresisStuds)
 		or recentInteraction
-		or aboveThreshold(current, "F3", input.networkRelevance, 0.6, policy.networkHysteresis)
+		or aboveThreshold(current, "F3", input.networkRelevance, policy.interactiveNetworkRelevance, policy.networkHysteresis)
 	then
 		return "F3", "interactive-relevance"
 	end
 
 	if withinDistance(current, "F2", input.distanceStuds, policy.renderDistanceStuds, policy.distanceHysteresisStuds)
-		or aboveThreshold(current, "F2", input.significance, 0.4, policy.significanceHysteresis)
-		or aboveThreshold(current, "F2", input.networkRelevance, 0.35, policy.networkHysteresis)
+		or aboveThreshold(current, "F2", input.significance, policy.renderSignificance, policy.significanceHysteresis)
+		or aboveThreshold(current, "F2", input.networkRelevance, policy.renderNetworkRelevance, policy.networkHysteresis)
 		or (input.isMoving and input.distanceStuds <= policy.renderDistanceStuds * 1.25)
 	then
 		return "F2", "render-relevance"
@@ -206,13 +220,13 @@ function FidelityManager.newRegistry(): Registry
 	}
 end
 
-function FidelityManager.register(registry: Registry, entityId: string, initialLevel: FidelityLevel?, now: number?): EntityState
+function FidelityManager.register(registry: Registry, entityId: string, initialLevel: FidelityLevel?, _now: number?): EntityState
 	assert(entityId ~= "", "entityId required")
 	assert(registry.entities[entityId] == nil, `duplicate fidelity registration: {entityId}`)
 	local level = initialLevel or "F0"
 	local state: EntityState = {
 		level = level,
-		lastTransitionAt = now or 0,
+		lastTransitionAt = -math.huge,
 		snapshot = nil,
 	}
 	registry.entities[entityId] = state
@@ -245,6 +259,9 @@ function FidelityManager.request(
 ): TransitionResult
 	assert(reason ~= "", "transition reason required")
 	local policy = config or DEFAULT_CONFIG
+	if config ~= nil then
+		FidelityManager.validateConfig(policy)
+	end
 	local state = registry.entities[entityId]
 	assert(state ~= nil, `entity is not registered: {entityId}`)
 
