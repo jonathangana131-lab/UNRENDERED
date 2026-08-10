@@ -1,7 +1,27 @@
 --!strict
 
+local fs = require("@lune/fs")
+local luau = require("@lune/luau")
+
 local MaterialDNA = require("../src/shared/Materials/MaterialDNA")
-local MaterialFixtures = require("../src/shared/Materials/MaterialFixtures")
+
+local materialDNAToken = {}
+local loadFixtures = luau.load(fs.readFile("src/shared/Materials/MaterialFixtures.luau"), {
+	debugName = "MaterialFixtures",
+	environment = {
+		script = {
+			Parent = {
+				MaterialDNA = materialDNAToken,
+			},
+		},
+		require = function(moduleRef: any): any
+			assert(moduleRef == materialDNAToken, "MaterialFixtures required an unexpected dependency")
+			return MaterialDNA
+		end,
+	},
+	injectGlobals = true,
+})
+local MaterialFixtures = loadFixtures()
 
 local function deepCopy(value: any): any
 	if type(value) ~= "table" then
