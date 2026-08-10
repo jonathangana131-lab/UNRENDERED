@@ -8,7 +8,7 @@
 - `schemaVersion` is an explicit compatibility lock. A reader rejects unknown versions instead of interpreting future schemas as v1.
 - `familyId + familyVersion + variantKey + schemaVersion` form the stable genome identity input. `ObjectGenome.identityParts()` supplies those semantic parts to the locked project `StableId` contract; ObjectGenome does not duplicate hashing/canonical encoding.
 - `components`, per-component `supportKeys`, `mechanisms`, and `affordances` are canonical dense 1-based arrays. Sparse arrays and map-like extra keys are rejected so accepted plain data has one unambiguous shape.
-- `materialKey` is a lowercase project-owned semantic reference. ObjectGenome validates the stable-key shape but does not import MaterialDNA implementation details or Roblox asset IDs; production fixtures use the current `material.v1.*` project-key form.
+- Each component pins an exact MaterialDNA recipe revision as `(materialKey, materialRecipeVersion)`: `materialKey` is the stable lowercase MaterialDNA recipe id and `materialRecipeVersion` is its positive content revision. ObjectGenome validates and owns those plain values but does not import MaterialDNA implementation details or Roblox asset IDs. A published component material-revision change is a canonical object recipe change and therefore requires the corresponding `familyVersion` to advance rather than silently retargeting an established genome identity.
 - Roblox `Instance`, `Vector3`, `CFrame`, meshes, constraints, and rendering APIs are deliberately absent from the schema.
 - Mutable wear, damage, mechanism position, and detach state live in `ObjectState`, never in the immutable genome.
 - Mutable state is a complete snapshot for the referenced genome: every component/mechanism key must be present and unknown keys are rejected.
@@ -25,7 +25,7 @@ This prevents unversioned fields, runtime objects, representation state, caller 
 Each component records:
 
 - a stable semantic key and role,
-- material assignment,
+- exact material recipe id/revision,
 - mass,
 - local position/rotation and dimensions,
 - immediate `supportKeys`,
@@ -42,7 +42,7 @@ Schema v1 uses one explicit plain-data local basis and rotation convention so in
 - object-local `+X` is right, `+Y` is up, and `+Z` is back; the basis is right-handed;
 - `localRotationDeg = { x, y, z }` stores **fixed-axis (extrinsic) XYZ** rotations in degrees about that object-local basis: rotate about basis `+X`, then basis `+Y`, then basis `+Z`;
 - for column-vector math, the composed matrix is therefore `Rz * Ry * Rx`;
-- every stored Euler component must be canonical in `[-180, 180]` degrees. Equivalent turns outside that range are rejected rather than silently normalized;
+- every stored Euler component uses the bounded v1 representation `[-180, 180]` degrees. Equivalent turns outside that range are rejected rather than silently normalized; the inclusive endpoints are bounded representations, not a claim of globally unique Euler encoding;
 - component-envelope validation evaluates the rotated component AABB using `abs(R) * halfDimensions`, then applies the component's local translation. Rotation is therefore part of the v1 bounds invariant rather than an adapter-specific afterthought.
 
 This convention is intentionally project-owned domain math. A Roblox realization adapter may convert it to `CFrame`, but the canonical recipe never stores `CFrame` or delegates rotation order to an engine default. Tests include a mixed-axis case that distinguishes the declared matrix order from a silently reversed order.
@@ -80,7 +80,7 @@ Stable issue codes are suitable for test diagnostics and future procedural rejec
 
 `ObjectGenomeFixtures.luau` contains three production-contract examples:
 
-1. a task office chair with a load path, five casters, seat tilt, provenance, material assignments and interaction regions;
+1. a task office chair with a load path, five casters, seat tilt, provenance, exact material recipe revisions and interaction regions;
 2. a rectangular utility office table with four ground-supported legs and anti-racking structure;
 3. a three-drawer vertical filing cabinet with slide/latch mechanisms.
 
@@ -88,4 +88,4 @@ These are contract fixtures, not final art or Hero Feature implementations. Thei
 
 ## Evolution
 
-Changing field meaning or deterministic identity inputs requires an object schema/version decision. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.
+Changing field meaning or deterministic identity inputs requires an object schema/version decision. Changing published canonical recipe content such as a component's exact material revision requires advancing `familyVersion`. Extend mechanism/affordance vocabularies through this contract rather than embedding furniture-specific runtime state into unrelated systems.
