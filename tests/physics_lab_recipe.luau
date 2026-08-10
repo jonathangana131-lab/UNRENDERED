@@ -200,9 +200,11 @@ local function run(): number
 	local doorMassMatchesComponents = math.abs(authoredDoorMass - doorGenome.massKg) < 1e-9
 	local doorCenterOfMassMatchesComponents = false
 	if authoredDoorMass > 0 then
-		doorCenterOfMassMatchesComponents = math.abs(doorGenome.centerOfMassM.x - weightedDoorX / authoredDoorMass) < 1e-9
-			and math.abs(doorGenome.centerOfMassM.y - weightedDoorY / authoredDoorMass) < 1e-9
-			and math.abs(doorGenome.centerOfMassM.z - weightedDoorZ / authoredDoorMass) < 1e-9
+		doorCenterOfMassMatchesComponents = math.abs(
+			doorGenome.centerOfMassM.x - weightedDoorX / authoredDoorMass
+		) < 1e-9 and math.abs(doorGenome.centerOfMassM.y - weightedDoorY / authoredDoorMass) < 1e-9 and math.abs(
+			doorGenome.centerOfMassM.z - weightedDoorZ / authoredDoorMass
+		) < 1e-9
 	end
 
 	expect("lab commercial door frame revision is explicit", doorGenome.familyVersion == 3)
