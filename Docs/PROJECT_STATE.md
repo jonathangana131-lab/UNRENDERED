@@ -91,6 +91,12 @@ Landed source evidence:
 
 This source-contract closure does **not** claim Roblox Studio physics/contact/constraint/server-authority PASS. Those observations remain external engine evidence and must stay explicitly UNVERIFIED until actually run.
 
+### Mac ↔ GitHub Roblox Studio Execution Bridge: complete
+The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational ([Docs/STUDIO_EXECUTOR.md](file:///Users/joey/.gemini/antigravity/scratch/UNRENDERED/Docs/STUDIO_EXECUTOR.md)).
+- Private bridge repo: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`
+- Mac self-hosted runner: `UNRENDERED-STUDIO-MAC`
+- Real Roblox Studio execution loop: GitHub request -> Mac self-hosted runner -> Roblox Studio -> result.json + artifact.
+
 ## Current unlock status
 
 **No new major Feature Epic is unlocked yet.** Issues #11–#25 remain gated until this file explicitly unlocks one after the Hero Gate evidence is strong enough.
