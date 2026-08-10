@@ -1,0 +1,39 @@
+name: MaterialDNA Recipe Revision Compose
+
+on:
+  push:
+    branches: [agent/integration/5-recipeversion-currentmain-6a2f]
+
+permissions:
+  contents: write
+
+jobs:
+  compose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Rebase recipe revision leaf onto current main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          LEAF=agent/materials/5-recipe-version-sol56s8
+          BASE=8341bb20e0c3e00c7301a0a841f9c43f96b09a78
+          git fetch origin "$LEAF"
+          git diff --binary "$BASE".."origin/$LEAF" -- \
+            Docs/MATERIAL_DNA_CONTRACT.md \
+            src/shared/Materials/MaterialDNA.luau \
+            src/shared/Materials/MaterialFixtures.luau \
+            tests/materialdna_contract.luau > /tmp/recipeversion.patch
+          git apply --3way --index /tmp/recipeversion.patch
+          git commit -m "fix: version immutable MaterialDNA recipe content"
+
+          git rm .github/workflows/material-recipeversion-compose.yml
+          git commit -m "chore: remove temporary MaterialDNA composer"
+          git push origin HEAD:agent/integration/5-recipeversion-currentmain-6a2f
