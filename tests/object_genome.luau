@@ -1,6 +1,7 @@
 local ProductionLoader = require("./support/ProductionLoader")
 
 local StableId = ProductionLoader.requireShared("Core/StableId")
+local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
 local ObjectGenome = ProductionLoader.requireShared("Objects/ObjectGenome")
 local Fixtures = ProductionLoader.requireShared("Objects/ObjectGenomeFixtures")
 
@@ -59,16 +60,19 @@ local function run(): number
 			name = "office chair",
 			genome = Fixtures.officeChair,
 			identity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",
+			fingerprint = "object-genome-recipe:v1:1d5bb9a8ca475743a26663e492e22d56",
 		},
 		{
 			name = "office table",
 			genome = Fixtures.officeTable,
 			identity = "object-genome:v1:44d2ee4894de4c20184e7e2a91c876e4",
+			fingerprint = "object-genome-recipe:v1:a7c8f49674cc01c57d91c0cb770c17fa",
 		},
 		{
 			name = "filing cabinet",
 			genome = Fixtures.filingCabinet,
 			identity = "object-genome:v1:7bd8b9e0c82d36ae53374a390fe2f969",
+			fingerprint = "object-genome-recipe:v1:e67dcf0b6b6563ef9bb5efa0f6086ddc",
 		},
 	}
 
@@ -84,6 +88,17 @@ local function run(): number
 		)
 		expect(fixture.name .. " repeat identity", identity == ObjectGenome.identityKey(fixture.genome))
 
+		local fingerprint = ObjectGenome.recipeFingerprint(fixture.genome)
+		expect(fixture.name .. " locked full recipe fingerprint", fingerprint == fixture.fingerprint)
+		expect(
+			fixture.name .. " uses separate recipe fingerprint namespace",
+			StableId.is(fingerprint, ObjectGenome.RECIPE_FINGERPRINT_NAMESPACE)
+		)
+		expect(
+			fixture.name .. " repeat recipe fingerprint",
+			fingerprint == ObjectGenome.recipeFingerprint(fixture.genome)
+		)
+
 		for _, component in ipairs(fixture.genome.components) do
 			expect(
 				fixture.name .. " component uses MaterialDNA-style project key",
@@ -92,6 +107,13 @@ local function run(): number
 			expect(
 				fixture.name .. " component pins a material recipe revision",
 				component.materialRecipeVersion == 1
+			)
+			expect(
+				fixture.name .. " component reference satisfies production MaterialDNA",
+				MaterialDNA.validateReference({
+					id = component.materialKey,
+					recipeVersion = component.materialRecipeVersion,
+				}).ok
 			)
 		end
 
@@ -151,6 +173,90 @@ local function run(): number
 			and revisedShell.materialRecipeVersion ~= canonicalShell.materialRecipeVersion
 			and ObjectGenome.inspect(revisedMaterial).ok
 	)
+	expect(
+		"same-version material drift preserves established v1 identity",
+		ObjectGenome.identityKey(revisedMaterial) == ObjectGenome.identityKey(Fixtures.filingCabinet)
+	)
+	expect(
+		"same-version material drift changes full recipe fingerprint",
+		ObjectGenome.recipeFingerprint(revisedMaterial)
+			~= ObjectGenome.recipeFingerprint(Fixtures.filingCabinet)
+	)
+
+	local publishedMaterialRevision = deepCopy(Fixtures.filingCabinet)
+	local publishedShell = findComponent(publishedMaterialRevision, "shell")
+	publishedMaterialRevision.familyVersion += 1
+	if publishedShell ~= nil then
+		publishedShell.materialRecipeVersion += 1
+	end
+	expect(
+		"published material revision with familyVersion advance is valid and changes identity",
+		publishedShell ~= nil
+			and ObjectGenome.inspect(publishedMaterialRevision).ok
+			and ObjectGenome.identityKey(publishedMaterialRevision)
+				~= ObjectGenome.identityKey(Fixtures.filingCabinet)
+	)
+
+	local materialBoundaryCases = {
+		{ name = "slash id", id = "material.v1/reference-probe", recipeVersion = 1 },
+		{ name = "numeric-only id", id = "123", recipeVersion = 1 },
+		{ name = "overlong id", id = "material.v1." .. string.rep("a", 151), recipeVersion = 1 },
+		{ name = "max recipe version", id = "material.v1.reference-probe", recipeVersion = 2147483647 },
+		{ name = "above max recipe version", id = "material.v1.reference-probe", recipeVersion = 2147483648 },
+	}
+	for _, materialCase in ipairs(materialBoundaryCases) do
+		local reference = {
+			id = materialCase.id,
+			recipeVersion = materialCase.recipeVersion,
+		}
+		local expectedReferenceValidity = MaterialDNA.validateReference(reference).ok
+		local boundaryGenome = deepCopy(Fixtures.officeChair)
+		boundaryGenome.components[1].materialKey = reference.id
+		boundaryGenome.components[1].materialRecipeVersion = reference.recipeVersion
+		expect(
+			"ObjectGenome matches MaterialDNA reference boundary: " .. materialCase.name,
+			ObjectGenome.inspect(boundaryGenome).ok == expectedReferenceValidity
+		)
+	end
+
+	local function expectSameVersionFingerprintDrift(name, mutate)
+		local genome = deepCopy(Fixtures.officeChair)
+		mutate(genome)
+		expect(name .. " remains a valid v1 recipe", ObjectGenome.inspect(genome).ok)
+		expect(
+			name .. " does not rewrite established v1 identity inputs",
+			ObjectGenome.identityKey(genome) == ObjectGenome.identityKey(Fixtures.officeChair)
+		)
+		expect(
+			name .. " changes full immutable recipe fingerprint",
+			ObjectGenome.recipeFingerprint(genome) ~= ObjectGenome.recipeFingerprint(Fixtures.officeChair)
+		)
+	end
+
+	expectSameVersionFingerprintDrift("provenance drift", function(genome)
+		genome.provenance.productLine ..= " Revised"
+	end)
+	expectSameVersionFingerprintDrift("dimension drift", function(genome)
+		genome.dimensionsM.x += 0.01
+	end)
+	expectSameVersionFingerprintDrift("mass drift", function(genome)
+		genome.massKg += 0.01
+	end)
+	expectSameVersionFingerprintDrift("component drift", function(genome)
+		genome.components[1].role ..= " revised"
+	end)
+	expectSameVersionFingerprintDrift("support-order drift", function(genome)
+		local base = findComponent(genome, "base")
+		if base ~= nil then
+			base.supportKeys[1], base.supportKeys[2] = base.supportKeys[2], base.supportKeys[1]
+		end
+	end)
+	expectSameVersionFingerprintDrift("mechanism drift", function(genome)
+		genome.mechanisms[#genome.mechanisms].maxDegrees -= 1
+	end)
+	expectSameVersionFingerprintDrift("affordance drift", function(genome)
+		genome.affordances[1].radiusM -= 0.01
+	end)
 
 	local danglingSupport = deepCopy(Fixtures.filingCabinet)
 	danglingSupport.components[2].supportKeys = { "missing-shell" }
