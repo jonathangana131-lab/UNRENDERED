@@ -67,10 +67,7 @@ return function(runner)
 		expect:truthy(Contract.isStableId(worldId, "world"), "namespace")
 		expect:falsy(Contract.isStableId(worldId, "entity"), "wrong namespace")
 		expect:falsy(Contract.isStableId("world:9fa76d9d4d3f0040"), "old unversioned shape")
-		expect:falsy(
-			Contract.isStableId("World:v1:9fa76d9d4d3f004052fffe125f6bfb2a"),
-			"uppercase namespace"
-		)
+		expect:falsy(Contract.isStableId("World:v1:9fa76d9d4d3f004052fffe125f6bfb2a"), "uppercase namespace")
 	end)
 
 	runner:test("StableId v1 validation bounds", repro("core.stable-id", "validation"), function(expect)
@@ -122,9 +119,12 @@ return function(runner)
 	end)
 
 	runner:test("SeedStream v1 golden vectors", repro("worldgen.stream", "region-layout"), function(expect)
-		local topologySeed = Contract.seedFor("world-alpha", 1, "worldgen.topology", { "region:r:0:0:0", "layout" })
-		local materialSeed = Contract.seedFor("world-alpha", 1, "worldgen.material", { "region:r:0:0:0", "layout" })
-		local objectSeed = Contract.seedFor("world-alpha", 1, "worldgen.object", { "region:r:0:0:0", "layout" })
+		local topologySeed =
+			Contract.seedFor("world-alpha", 1, "worldgen.topology", { "region:r:0:0:0", "layout" })
+		local materialSeed =
+			Contract.seedFor("world-alpha", 1, "worldgen.material", { "region:r:0:0:0", "layout" })
+		local objectSeed =
+			Contract.seedFor("world-alpha", 1, "worldgen.object", { "region:r:0:0:0", "layout" })
 		expect:equal(topologySeed, 0xcaa062ba, "topology")
 		expect:equal(materialSeed, 0xa6141672, "material")
 		expect:equal(objectSeed, 0xc7e7a414, "object")
