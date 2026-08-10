@@ -146,6 +146,103 @@ local CARPET_INSTALLATIONS = table.freeze({
 	["installation.carpet-tile-adhesive"] = true,
 })
 
+local RECIPE_FIELDS = table.freeze({
+	id = true,
+	schemaVersion = true,
+	coherenceClass = true,
+	substrate = true,
+	finish = true,
+	installation = true,
+	apparentAgeYears = true,
+	maintenance = true,
+	environment = true,
+	historyEvents = true,
+	visual = true,
+	physical = true,
+	acoustic = true,
+	response = true,
+	anomalyModifiers = true,
+})
+
+local SUBSTRATE_FIELDS = table.freeze({
+	classKey = true,
+	thicknessMeters = true,
+	porosity01 = true,
+})
+
+local FINISH_FIELDS = table.freeze({
+	classKey = true,
+	color = true,
+	roughness01 = true,
+	metallic01 = true,
+})
+
+local COLOR_FIELDS = table.freeze({
+	r = true,
+	g = true,
+	b = true,
+})
+
+local INSTALLATION_FIELDS = table.freeze({
+	methodKey = true,
+	batchKey = true,
+	quality01 = true,
+	seamPeriodMeters = true,
+})
+
+local MAINTENANCE_FIELDS = table.freeze({
+	careClassKey = true,
+	frequency01 = true,
+	cleanliness01 = true,
+	repairCount = true,
+})
+
+local ENVIRONMENT_FIELDS = table.freeze({
+	humidity01 = true,
+	water01 = true,
+	uv01 = true,
+	grime01 = true,
+})
+
+local HISTORY_EVENT_FIELDS = table.freeze({
+	kindKey = true,
+	causeKey = true,
+	severity01 = true,
+	coverage01 = true,
+})
+
+local VISUAL_FIELDS = table.freeze({
+	familyKey = true,
+	coherenceClass = true,
+	metersPerRepeat = true,
+})
+
+local PHYSICAL_FIELDS = table.freeze({
+	classKey = true,
+	coherenceClass = true,
+	densityKgPerM3 = true,
+	staticFriction = true,
+	dynamicFriction = true,
+	restitution01 = true,
+})
+
+local ACOUSTIC_FIELDS = table.freeze({
+	classKey = true,
+	coherenceClass = true,
+	absorptionLow01 = true,
+	absorptionMid01 = true,
+	absorptionHigh01 = true,
+	impactFamilyKey = true,
+	scrapeFamilyKey = true,
+})
+
+local RESPONSE_FIELDS = table.freeze({
+	wetFrictionMultiplier = true,
+	wetDarkening01 = true,
+	damageResistance01 = true,
+	stainAffinity01 = true,
+})
+
 local function appendError(errors: { string }, message: string): ()
 	table.insert(errors, message)
 end
@@ -156,6 +253,19 @@ local function asTable(errors: { string }, path: string, value: unknown): any?
 		return nil
 	end
 	return value :: any
+end
+
+local function validateRecordFields(
+	errors: { string },
+	path: string,
+	value: any,
+	allowedFields: { [string]: boolean }
+): ()
+	for key in pairs(value) do
+		if type(key) ~= "string" or not allowedFields[key] then
+			appendError(errors, `{path} contains undeclared field {tostring(key)}`)
+		end
+	end
 end
 
 local function isFinite(value: number): boolean
@@ -221,6 +331,7 @@ local function validateColor(errors: { string }, path: string, value: unknown): 
 	if color == nil then
 		return
 	end
+	validateRecordFields(errors, path, color, COLOR_FIELDS)
 	validateFiniteRange(errors, `{path}.r`, color.r, 0, 1)
 	validateFiniteRange(errors, `{path}.g`, color.g, 0, 1)
 	validateFiniteRange(errors, `{path}.b`, color.b, 0, 1)
@@ -266,6 +377,7 @@ local function validateSubstrate(errors: { string }, value: unknown): string?
 	if substrate == nil then
 		return nil
 	end
+	validateRecordFields(errors, "substrate", substrate, SUBSTRATE_FIELDS)
 	local classKey = validateProjectKey(errors, "substrate.classKey", substrate.classKey)
 	validatePositive(errors, "substrate.thicknessMeters", substrate.thicknessMeters, 5)
 	validateFiniteRange(errors, "substrate.porosity01", substrate.porosity01, 0, 1)
@@ -277,6 +389,7 @@ local function validateFinish(errors: { string }, value: unknown): string?
 	if finish == nil then
 		return nil
 	end
+	validateRecordFields(errors, "finish", finish, FINISH_FIELDS)
 	local classKey = validateProjectKey(errors, "finish.classKey", finish.classKey)
 	validateColor(errors, "finish.color", finish.color)
 	validateFiniteRange(errors, "finish.roughness01", finish.roughness01, 0, 1)
@@ -289,6 +402,7 @@ local function validateInstallation(errors: { string }, value: unknown): string?
 	if installation == nil then
 		return nil
 	end
+	validateRecordFields(errors, "installation", installation, INSTALLATION_FIELDS)
 	local methodKey = validateProjectKey(errors, "installation.methodKey", installation.methodKey)
 	validateProjectKey(errors, "installation.batchKey", installation.batchKey)
 	validateFiniteRange(errors, "installation.quality01", installation.quality01, 0, 1)
@@ -303,6 +417,7 @@ local function validateMaintenance(errors: { string }, value: unknown): ()
 	if maintenance == nil then
 		return
 	end
+	validateRecordFields(errors, "maintenance", maintenance, MAINTENANCE_FIELDS)
 	validateProjectKey(errors, "maintenance.careClassKey", maintenance.careClassKey)
 	validateFiniteRange(errors, "maintenance.frequency01", maintenance.frequency01, 0, 1)
 	validateFiniteRange(errors, "maintenance.cleanliness01", maintenance.cleanliness01, 0, 1)
@@ -314,6 +429,7 @@ local function validateEnvironment(errors: { string }, value: unknown): ()
 	if environment == nil then
 		return
 	end
+	validateRecordFields(errors, "environment", environment, ENVIRONMENT_FIELDS)
 	validateFiniteRange(errors, "environment.humidity01", environment.humidity01, 0, 1)
 	validateFiniteRange(errors, "environment.water01", environment.water01, 0, 1)
 	validateFiniteRange(errors, "environment.uv01", environment.uv01, 0, 1)
@@ -329,6 +445,7 @@ local function validateHistoryEvents(errors: { string }, value: unknown): ()
 		local path = `historyEvents[{index}]`
 		local event = asTable(errors, path, events[index])
 		if event ~= nil then
+			validateRecordFields(errors, path, event, HISTORY_EVENT_FIELDS)
 			validateProjectKey(errors, `{path}.kindKey`, event.kindKey)
 			validateProjectKey(errors, `{path}.causeKey`, event.causeKey)
 			validateFiniteRange(errors, `{path}.severity01`, event.severity01, 0, 1)
@@ -342,6 +459,7 @@ local function validateVisual(errors: { string }, value: unknown, coherenceClass
 	if visual == nil then
 		return
 	end
+	validateRecordFields(errors, "visual", visual, VISUAL_FIELDS)
 	validateProjectKey(errors, "visual.familyKey", visual.familyKey)
 	local visualCoherence = validateProjectKey(errors, "visual.coherenceClass", visual.coherenceClass)
 	if coherenceClass ~= nil and visualCoherence ~= nil and visualCoherence ~= coherenceClass then
@@ -355,6 +473,7 @@ local function validatePhysical(errors: { string }, value: unknown, coherenceCla
 	if physical == nil then
 		return
 	end
+	validateRecordFields(errors, "physical", physical, PHYSICAL_FIELDS)
 	validateProjectKey(errors, "physical.classKey", physical.classKey)
 	local physicalCoherence = validateProjectKey(errors, "physical.coherenceClass", physical.coherenceClass)
 	if coherenceClass ~= nil and physicalCoherence ~= nil and physicalCoherence ~= coherenceClass then
@@ -376,6 +495,7 @@ local function validateAcoustic(errors: { string }, value: unknown, coherenceCla
 	if acoustic == nil then
 		return
 	end
+	validateRecordFields(errors, "acoustic", acoustic, ACOUSTIC_FIELDS)
 	validateProjectKey(errors, "acoustic.classKey", acoustic.classKey)
 	local acousticCoherence = validateProjectKey(errors, "acoustic.coherenceClass", acoustic.coherenceClass)
 	if coherenceClass ~= nil and acousticCoherence ~= nil and acousticCoherence ~= coherenceClass then
@@ -393,6 +513,7 @@ local function validateResponse(errors: { string }, value: unknown): ()
 	if response == nil then
 		return
 	end
+	validateRecordFields(errors, "response", response, RESPONSE_FIELDS)
 	validateFiniteRange(errors, "response.wetFrictionMultiplier", response.wetFrictionMultiplier, 0, 2)
 	validateFiniteRange(errors, "response.wetDarkening01", response.wetDarkening01, 0, 1)
 	validateFiniteRange(errors, "response.damageResistance01", response.damageResistance01, 0, 1)
@@ -449,6 +570,7 @@ function MaterialDNA.validateRecipe(value: unknown): ValidationResult
 		}
 	end
 
+	validateRecordFields(errors, "MaterialRecipe", recipe, RECIPE_FIELDS)
 	validateProjectKey(errors, "id", recipe.id)
 	if type(recipe.schemaVersion) ~= "number" or recipe.schemaVersion ~= SCHEMA_VERSION then
 		appendError(errors, `schemaVersion must be {SCHEMA_VERSION}`)
