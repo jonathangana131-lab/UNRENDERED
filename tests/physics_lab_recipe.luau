@@ -160,7 +160,10 @@ local function run(): number
 			end
 		end
 	end
-	expect("commercial door frame does not realize as a solid slab across the opening", doorFrameLeavesOpening)
+	expect(
+		"commercial door frame does not realize as a solid slab across the opening",
+		doorFrameLeavesOpening
+	)
 
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
 	expect("lab duplicate identity is detectable", duplicateAccepted == false)
