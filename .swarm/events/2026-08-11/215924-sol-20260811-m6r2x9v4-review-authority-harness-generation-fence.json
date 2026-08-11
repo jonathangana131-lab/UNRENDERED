@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-m6r2x9v4-authority-harness-generation-fence-215924",
+  "eventType": "REVIEW_RESULT",
+  "occurredAt": "2026-08-11T21:59:24+00:00",
+  "workerId": "sol-20260811-m6r2x9v4",
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "slotId": "audit",
+  "generation": 1,
+  "claimToken": "5f2c8a1d7e3b9046",
+  "target": {
+    "kind": "pull_request",
+    "value": "410@d217ac07496cfe9021cac4e69fad6768ab83ccfd"
+  },
+  "severity": "high",
+  "summary": "REQUEST_CHANGES: PR #410 closes the generation-2 pre-callback stale-current window, but deferred external-lifecycle cleanup still retires the global currentReconcile token without proving generation identity. A stale deferred callback can erase a newer invalidated lab's reconcile token and reopen reacquisition before the newer raw teardown completes.",
+  "evidence": [
+    "At exact head d217ac07496cfe9021cac4e69fad6768ab83ccfd, invalidateExternalLifecycle() defers cleanup and then executes `if cleanupComplete and current == nil then currentReconcile = nil end`; the condition does not check that currentReconcile still equals this owned lab's reconcileExternalLifecycle closure.",
+    "The harness intentionally allows current to become nil while an invalidated lab retains deferred cleanup/reconciliation work. After generation A has been synchronously reconciled and generation B acquired, B can itself invalidate and set current=nil/currentReconcile=B; A's stale deferred callback can then clear B's token solely because current is nil.",
+    "Once B's token is erased, a later public start() has no reconcile closure to run for B and can reacquire generation C while B's deferred raw teardown remains pending, violating the lane's destroy-before-reacquire/exactly-one-owned-lab acceptance invariant.",
+    "The existing controlled owned.destroy() path and global reconcileCurrent() already use closure identity checks before clearing currentReconcile, demonstrating the narrow generation-fencing pattern available for the deferred path.",
+    "Native GitHub review 4911102573 carries the same blocking disposition. GitHub rejected a formal REQUEST_CHANGES action because the connected shared repository identity is also the PR author, so the blocker was submitted as a COMMENT review with explicit REQUEST_CHANGES wording.",
+    "Source-only exact-head review. No Roblox Studio, two-client, viewport, physical-contact, or runtime scheduler reproduction was run or claimed."
+  ],
+  "recommendedAction": "Generation-fence deferred token retirement before returning this lane to REVIEW. Prefer either clearing only when currentReconcile == this owned lab's reconcileExternalLifecycle closure, or removing deferred mutation of currentReconcile and letting reconcileCurrent() retire the token through its existing identity check. Add a regression with stale deferred cleanup from generation A and invalidated generation B proving B must reconcile/teardown-complete before generation C can be acquired."
+}
