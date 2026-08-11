@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime transition mutation fence",
   "objective": "Close the source-only runtime lifecycle reentrancy defect found by capacity mining: transition adapters must not be able to partially dismantle or recursively mutate PhysicsLabRuntime authority while an F2/F0 fidelity transaction is in flight.",
   "priority": 4990,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -44,6 +44,7 @@
     "pure regressions prove no partial teardown or count drift; no Roblox Studio/engine evidence claim",
     "independent review required before integration"
   ],
-  "notes": "Created from capacity-mining finding evt-20260811-081645-r8v2k6-runtime-callback-dispose-reentrancy. Bounded Hero Gate source-contract repair; no new feature framework.",
+  "pr": 334,
+  "notes": "Primary implementation is on PR #334 exact head 3475ca65f86e1dbb63e0d4d985ca5e4b3fd7c625 with canonical CI run 31476221489 green. Awaiting independent source-only audit and a fresh live pr-ownership PASS after shared control validation recovery regenerates the validation marker. Created from capacity-mining finding evt-20260811-081645-r8v2k6-runtime-callback-dispose-reentrancy.",
   "tags": ["backfill", "hero-gate", "source-only", "physics-runtime", "lifecycle"]
 }
