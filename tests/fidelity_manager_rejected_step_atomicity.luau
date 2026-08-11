@@ -24,6 +24,34 @@ local function run(): number
 		}
 	end
 
+	local function hostileConfigProxy()
+		local source = table.clone(FidelityManager.defaultConfig())
+		local reads = 0
+		local proxy = setmetatable({}, {
+			__index = function(_, key)
+				reads += 1
+				return source[key]
+			end,
+		})
+		return proxy, function()
+			return reads
+		end
+	end
+
+	local hostileNewConfig, hostileNewConfigReads = hostileConfigProxy()
+	local hostileNewConfigAccepted = pcall(function()
+		FidelityManager.new(hostileNewConfig)
+	end)
+	expectEqual("constructor rejects metatable-backed config", hostileNewConfigAccepted, false)
+	expectEqual("constructor config rejection executes no metamethod", hostileNewConfigReads(), 0)
+
+	local hostilePureConfig, hostilePureConfigReads = hostileConfigProxy()
+	local hostilePureConfigAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(validInputs(), hostilePureConfig, "F0")
+	end)
+	expectEqual("pure policy rejects metatable-backed config", hostilePureConfigAccepted, false)
+	expectEqual("pure policy config rejection executes no metamethod", hostilePureConfigReads(), 0)
+
 	local clockManager = FidelityManager.new()
 	clockManager:register("entity:atomic-clock", "F0")
 	clockManager:step("entity:atomic-clock", "F0", validInputs(), 1)
