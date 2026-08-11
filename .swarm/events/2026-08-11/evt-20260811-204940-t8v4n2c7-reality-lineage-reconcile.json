@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-204940-t8v4n2c7-reality-lineage-reconcile",
+  "timestamp": "2026-08-11T20:49:40+00:00",
+  "fromWorker": "sol-20260811-t8v4n2c7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "HG-COMPLETION-REALITY reconciliation: retain production no-execute hardening PR #359 exact head df5e1b397c673a0cb7e2d62bdb3a11e51762013a before test-only historical replay PR #370 exact head 7a95eafb295eded0364ed64689a52ebfcc0cda37. #359 changes only src/shared/Reality/ResolvedRegionRecipe.luau, src/shared/Reality/ResolvedRegionRecipeV1Internal.luau, and tests/resolved_region_recipe_v2_compat.luau; #370 changes only tests/resolved_region_recipe_v1_compat.luau, so there is no file overlap. Both exact heads have independent SOURCE/TEST PASS and green canonical CI plus Swarm engine-tests. Safe completion order is: once trusted live pr-ownership is restored, require a fresh ownership PASS and integrate #359 first; then rebase/replay #370's one-file test blob onto the retained post-#359 main head and rerun canonical CI, trusted ownership, and exact-head review as needed before integrating #370. This ordering ensures historical v1 replay regressions execute against the retained hardened V1Internal implementation instead of merely against the pre-#359 main snapshot. Do not squash away accepted historical replay coverage or treat either PR's current global ownership failure as a merge waiver. No Studio/engine evidence is applicable or claimed.",
+  "affects": ["HG-BACKFILL-REALITY", "HG-COMPLETION-REALITY"]
+}
