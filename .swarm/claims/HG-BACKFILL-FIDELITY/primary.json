@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-v6r2k9",
   "claimToken": "c7dce48867449485",
   "claimedAt": "2026-08-11T07:58:00+00:00",
-  "heartbeatAt": "2026-08-11T07:58:00+00:00",
+  "heartbeatAt": "2026-08-11T08:02:30+00:00",
   "leaseSeconds": 1800,
   "generation": 2,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-FIDELITY-w3n8k2",
   "pr": 274,
   "takeoverOf": "sol-20260811-w3n8k2",
-  "notes": "Generation-2 stale takeover after inspecting open PR #274 and its independent REQUEST_CHANGES verdict. Preserve the existing branch/PR and close the hostile numeric scalar/nowSeconds no-execute gap with regression coverage."
+  "notes": "Generation-2 stale takeover. Requested-changes closure pushed at head 6bd6ef9c75f5415c34ea4d93500b86a0028a3f5d: primitive numeric guards now precede operator use and adversarial tests cover every runtime numeric policy field plus hostile nowSeconds with zero metamethod execution."
 }
