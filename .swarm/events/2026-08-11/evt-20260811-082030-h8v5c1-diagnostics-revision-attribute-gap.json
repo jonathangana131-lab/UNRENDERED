@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082030-h8v5c1-diagnostics-revision-attribute-gap",
+  "timestamp": "2026-08-11T08:20:30+00:00",
+  "fromWorker": "sol-20260811-h8v5c1",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Physics Lab diagnostics machine-readable snapshots can hide stale physical revision metadata. capture() copies representationRevision/stateRevision from the authoritative WorldEntity record but never compares them with the UNRENDERED_RepresentationRevision / UNRENDERED_StateRevision attributes written onto the realized Instance. PhysicsLabValidation likewise does not validate those revision attributes. A representation with stale/tampered revision metadata therefore still produces a clean diagnostics snapshot and can pass the current diagnostics-off full-lab no-drift sweep. Add a narrow source-only representation-metadata coherence invariant with regression coverage; do not convert this into a Studio PASS claim.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "main@aa7e04f PhysicsLabRealizer.setEntityAttributes writes UNRENDERED_RepresentationRevision and UNRENDERED_StateRevision from the WorldEntity record on realized representations.",
+    "PhysicsLabStudioDiagnostics.capture() validates representation WorldEntityId and fidelity against authority, but its EntityDiagnostic representationRevision/stateRevision fields are copied directly from record.representationRevision/stateRevision without reading or checking the representation attributes.",
+    "PhysicsLabValidation.assertCanonicalRepresentationSet() validates identity, fidelity, recipe/material/object metadata and geometry, but defines no revision-attribute constants and does not compare physical UNRENDERED_RepresentationRevision / UNRENDERED_StateRevision to canonical records/recipe state.",
+    "Deterministic Studio-source repro: realize the lab, change one representation's UNRENDERED_RepresentationRevision or UNRENDERED_StateRevision attribute to a different numeric value, then Diagnostics.capture(lab) still emits the authoritative record revisions; after diagnostics disable, Validation.captureFull() likewise has no revision-attribute rejection path.",
+    "Docs/PHYSICS_LAB_DIAGNOSTICS.md says readouts are derived from the RealizedLab record plus attributes written by the production realizer and requires machine-readable evidence to agree with production state. Repository PR search found no existing repair for the revision attributes; active diagnostics PRs #295/#301/#304 address workload bounds, lifecycle ordering, and failure-atomicity docs instead."
+  ]
+}
