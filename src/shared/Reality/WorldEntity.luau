@@ -64,6 +64,7 @@ WorldEntity.Fidelity = table.freeze({
 })
 
 WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY = 64
+WorldEntity.MAX_DUPLICATE_DIAGNOSTIC_CAPACITY = 1024
 WorldEntity.MAX_PERSISTENT_STATE_DEPTH = 64
 WorldEntity.MAX_PERSISTENT_STATE_NODES = 4096
 WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES = 65536
@@ -471,6 +472,10 @@ function WorldEntity.createRegistry(duplicateDiagnosticCapacity: number?): Regis
 	local capacity = if duplicateDiagnosticCapacity == nil
 		then WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY
 		else assertNonNegativeInteger("duplicateDiagnosticCapacity", duplicateDiagnosticCapacity)
+	assert(
+		capacity <= WorldEntity.MAX_DUPLICATE_DIAGNOSTIC_CAPACITY,
+		`duplicateDiagnosticCapacity must not exceed {WorldEntity.MAX_DUPLICATE_DIAGNOSTIC_CAPACITY}`
+	)
 
 	local records: { [WorldEntityId]: WorldEntityRecord } = {}
 	local duplicates: { DuplicateIdentityDiagnostic } = {}
