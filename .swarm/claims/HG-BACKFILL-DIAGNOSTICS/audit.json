@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-z5r8m2",
   "claimToken": "4f8c1a7d9e2b6053",
   "claimedAt": "2026-08-11T07:46:48+00:00",
-  "heartbeatAt": "2026-08-11T08:14:30+00:00",
+  "heartbeatAt": "2026-08-11T08:32:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-z5r8m2",
   "pr": 304,
-  "notes": "Independent audit of active diagnostics source/backfill PRs and exact evidence contract; no Studio rerun. PR #304 publishes current-head failure-atomicity docs reconciliation."
+  "notes": "Independent audit of active diagnostics source/backfill PRs and exact evidence contract; no Studio rerun. PR #304 current head 4e13aa10 addresses independent P2 and is canonical-CI green; live ownership remains fail-closed on shared control recovery."
 }
