@@ -2,13 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-AUTHORITY",
   "slotId": "test-adversary",
-  "workerId": "sol-20260811-b7n5q2x8",
-  "claimToken": "c4e7a19d5b2638f0",
-  "claimedAt": "2026-08-11T07:53:00+00:00",
-  "heartbeatAt": "2026-08-11T08:24:00+00:00",
+  "workerId": "sol-20260811-j4m8q2v7",
+  "claimToken": "d8a3f1c6b9e25074",
+  "claimedAt": "2026-08-11T12:43:10+00:00",
+  "heartbeatAt": "2026-08-11T12:43:10+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
-  "resources": [],
-  "branch": "agent/authority/HG-BACKFILL-AUTHORITY-tests-b7n5q2x8",
-  "pr": 307
+  "generation": 2,
+  "resources": ["SERVER-AUTHORITY"],
+  "branch": "agent/authority/HG-BACKFILL-AUTHORITY-tests-j4m8q2v7-g2",
+  "pr": null,
+  "notes": "Stale takeover after inspecting PR #307 and exact old head c9760f2ca1048cf5ea3049e1690642821f216214. Salvage the reviewed teardown fixture onto current main rather than rewriting; preserve source-only evidence boundary and avoid folding the newly mined destroy-capability follow-on into this stale recovery unless lane ownership is explicitly expanded."
 }
