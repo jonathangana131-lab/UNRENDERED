@@ -86,6 +86,42 @@ local function run(): number
 	end)
 	expectEqual("distance plus hysteresis overflow rejected", overflowConfigAccepted, false)
 
+	expectEqual("registration safety ceiling is explicit", FidelityManager.MAX_REGISTERED_ENTITIES, 65536)
+	expectEqual(
+		"default registration budget stays below safety ceiling",
+		FidelityManager.defaultConfig().maxRegisteredEntities < FidelityManager.MAX_REGISTERED_ENTITIES,
+		true
+	)
+	local ceilingConfig = table.clone(FidelityManager.defaultConfig())
+	ceilingConfig.maxRegisteredEntities = FidelityManager.MAX_REGISTERED_ENTITIES
+	local ceilingConstructorAccepted = pcall(function()
+		FidelityManager.new(ceilingConfig)
+	end)
+	expectEqual("exact registration safety ceiling accepted by constructor", ceilingConstructorAccepted, true)
+	local ceilingPolicyAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(inputs(), ceilingConfig, "F0")
+	end)
+	expectEqual("exact registration safety ceiling accepted by pure policy", ceilingPolicyAccepted, true)
+
+	local overCeilingConfig = table.clone(FidelityManager.defaultConfig())
+	overCeilingConfig.maxRegisteredEntities = FidelityManager.MAX_REGISTERED_ENTITIES + 1
+	local overCeilingConstructorAccepted = pcall(function()
+		FidelityManager.new(overCeilingConfig)
+	end)
+	expectEqual(
+		"registration safety ceiling plus one rejected by constructor",
+		overCeilingConstructorAccepted,
+		false
+	)
+	local overCeilingPolicyAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(inputs(), overCeilingConfig, "F0")
+	end)
+	expectEqual(
+		"registration safety ceiling plus one rejected by pure policy",
+		overCeilingPolicyAccepted,
+		false
+	)
+
 	local timestampManager = FidelityManager.new()
 	timestampManager:register("entity:finite-time", "F0")
 	timestampManager:step("entity:finite-time", "F0", inputs(), 1)
