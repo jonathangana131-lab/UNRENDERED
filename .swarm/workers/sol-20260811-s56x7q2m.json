@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-s56x7q2m",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T21:34:45+00:00",
-  "lastSeenAt": "2026-08-11T21:35:15+00:00",
-  "laneId": "HG-COMPLETION-PHYSICS",
-  "slotId": "review-1",
-  "branch": "agent/review/HG-COMPLETION-PHYSICS-review1-s56x7q2m",
-  "notes": "Independent Physics completion-train exact-head review and lineage reconciliation. No Studio/viewport/contact/two-client evidence claim."
+  "lastSeenAt": "2026-08-11T21:41:30+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed HG-COMPLETION-PHYSICS review-1. Exact-head source PASS for PR #402 closes the prior #388 hostile entityId HOLD; retained #310/#388/#402 for one semantic current-main synthesis. Durable handoff: evt-20260811T213950Z-sol-20260811-s56x7q2m-physics-runtime-synthesis. Global pr-ownership recovery remains separate; no Studio/viewport/contact/two-client evidence claimed."
 }
