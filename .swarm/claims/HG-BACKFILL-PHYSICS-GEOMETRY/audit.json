@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-eeu3obwl",
+  "claimToken": "c5a81f3e729d406b",
+  "claimedAt": "2026-08-11T09:26:30+00:00",
+  "heartbeatAt": "2026-08-11T09:26:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-eeu3obwl",
+  "notes": "Independent source-only Physics Lab recipe/geometry/validation audit on current main and active scoped PRs. Target measurable non-duplicate recipe scale/support/clearance/COM/validation defects; no Studio or Hero Door claims."
+}
