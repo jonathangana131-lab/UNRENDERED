@@ -5,9 +5,7 @@ on:
     types: [opened, synchronize, reopened, edited, ready_for_review]
   push:
     branches: [swarm-control]
-    paths:
-      - '.swarm/**'
-      - '.github/workflows/swarm-control.yml'
+    paths: ['.swarm/**', '.github/workflows/swarm-control.yml']
   workflow_run:
     workflows: [CI]
     types: [completed]
@@ -23,7 +21,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Deterministic control-plane tests
+      - name: Deterministic and adversarial control-plane tests
         run: |
           python3 tools/swarm/test_swarmctl.py
           python3 tools/swarm/test_swarmctl_hardening.py
@@ -38,38 +36,42 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
       - name: Fetch trusted base and live control branch
-        shell: bash
         run: |
           git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}"
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
-
       - name: Materialize authoritative control state
-        shell: bash
         run: |
           mkdir -p "$RUNNER_TEMP/swarm-state"
           git archive origin/swarm-control .swarm | tar -x -C "$RUNNER_TEMP/swarm-state"
-
       - name: Materialize trusted base validator
-        shell: bash
+        id: trusted-validator
         run: |
           mkdir -p "$RUNNER_TEMP/trusted-swarm"
           git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl.py"
-          git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py"
-          python3 -m py_compile "$RUNNER_TEMP/trusted-swarm/swarmctl.py" "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py"
-
+          if git cat-file -e "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening.py" 2>/dev/null; then
+            git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py"
+            python3 -m py_compile "$RUNNER_TEMP/trusted-swarm/swarmctl.py" "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py"
+            echo "engine=hardening" >> "$GITHUB_OUTPUT"
+          else
+            # This one upgrade generation remains policed by the already-trusted
+            # V2 validator. Once merged, all later PRs use hardened base code.
+            python3 -m py_compile "$RUNNER_TEMP/trusted-swarm/swarmctl.py"
+            echo "engine=bootstrap" >> "$GITHUB_OUTPUT"
+          fi
       - name: Collect changed files safely
-        shell: bash
+        run: git diff --name-only "origin/${GITHUB_BASE_REF}...HEAD" > "$RUNNER_TEMP/swarm-changed-files.txt"
+      - name: Enforce live ownership with trusted code
         run: |
-          git diff --name-only "origin/${GITHUB_BASE_REF}...HEAD" > "$RUNNER_TEMP/swarm-changed-files.txt"
-
-      - name: Enforce validated live claim, scope, branch, worker, and resources
-        run: |
-          python3 "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py" pr-check \
-            --root "$RUNNER_TEMP/swarm-state/.swarm" \
-            --event "$GITHUB_EVENT_PATH" \
-            --changed-files "$RUNNER_TEMP/swarm-changed-files.txt"
+          if [[ "${{ steps.trusted-validator.outputs.engine }}" == "hardening" ]]; then
+            python3 "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py" pr-check \
+              --root "$RUNNER_TEMP/swarm-state/.swarm" --event "$GITHUB_EVENT_PATH" \
+              --changed-files "$RUNNER_TEMP/swarm-changed-files.txt"
+          else
+            python3 "$RUNNER_TEMP/trusted-swarm/swarmctl.py" pr-check \
+              --root "$RUNNER_TEMP/swarm-state/.swarm" --event "$GITHUB_EVENT_PATH" \
+              --changed-files "$RUNNER_TEMP/swarm-changed-files.txt"
+          fi
 
   validate-control-branch:
     if: github.event_name == 'push' && github.ref == 'refs/heads/swarm-control' && !contains(github.event.head_commit.message, '[swarm-generated]')
@@ -78,72 +80,51 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout trusted main implementation
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 0
-
       - name: Materialize current and previous control snapshots
         env:
           BEFORE_SHA: ${{ github.event.before }}
-        shell: bash
         run: |
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
-          mkdir -p "$RUNNER_TEMP/control-after"
+          mkdir -p "$RUNNER_TEMP/control-after" "$RUNNER_TEMP/control-before"
           git archive origin/swarm-control .swarm | tar -x -C "$RUNNER_TEMP/control-after"
-
-          mkdir -p "$RUNNER_TEMP/control-before"
           if [[ -n "${BEFORE_SHA:-}" && "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ]] && git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
             if git ls-tree -d --name-only "$BEFORE_SHA" .swarm | grep -qx '.swarm'; then
               git archive "$BEFORE_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-before"
               echo "before_available=true" >> "$GITHUB_ENV"
             fi
           fi
-
-      - name: Validate state and adversarial ownership model
+      - name: Validate state and ownership model
         run: |
           python3 tools/swarm/test_swarmctl.py
           python3 tools/swarm/test_swarmctl_hardening.py
           python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/control-after/.swarm"
           python3 tools/swarm/swarmctl_hardening.py simulate --workers 30
-
-      - name: Validate lease/event transitions
+      - name: Validate lease and immutable-event transitions
         if: env.before_available == 'true'
         run: |
           python3 tools/swarm/swarmctl_hardening.py transition-check \
             --before-root "$RUNNER_TEMP/control-before/.swarm" \
             --after-root "$RUNNER_TEMP/control-after/.swarm"
-
-      - name: Rebuild disposable board, metrics, and validation fence
+      - name: Rebuild board, metrics, and validation fence
+        run: python3 tools/swarm/swarmctl_hardening.py render --root "$RUNNER_TEMP/control-after/.swarm"
+      - name: Publish generated projection without overwriting newer state
         run: |
-          python3 tools/swarm/swarmctl_hardening.py render --root "$RUNNER_TEMP/control-after/.swarm"
-
-      - name: Commit generated projection only if source state is still current
-        shell: bash
-        run: |
-          EXPECTED_CONTROL_SHA="$(git rev-parse origin/swarm-control)"
+          EXPECTED="$(git rev-parse origin/swarm-control)"
           git switch --detach origin/swarm-control
           mkdir -p .swarm/generated
           rm -rf .swarm/generated/*
           cp -R "$RUNNER_TEMP/control-after/.swarm/generated/." .swarm/generated/
-
-          if [[ -z "$(git status --porcelain -- .swarm/generated)" ]]; then
-            echo "Generated projection already current."
-            exit 0
-          fi
-
-          git config user.name "unrendered-swarm-control"
-          git config user.email "actions@users.noreply.github.com"
+          [[ -n "$(git status --porcelain -- .swarm/generated)" ]] || exit 0
+          git config user.name unrendered-swarm-control
+          git config user.email actions@users.noreply.github.com
           git add .swarm/generated
-          git commit -m "chore(swarm): publish validated control projection [swarm-generated]"
-
-          # Never force-push a projection over newer live state.
+          git commit -m 'chore(swarm): publish validated control projection [swarm-generated]'
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
-          if [[ "$(git rev-parse origin/swarm-control)" != "$EXPECTED_CONTROL_SHA" ]]; then
-            echo "Control state advanced while rendering; refusing stale projection push."
-            exit 1
-          fi
+          [[ "$(git rev-parse origin/swarm-control)" == "$EXPECTED" ]] || { echo 'Control advanced; refusing stale projection.'; exit 1; }
           git push origin HEAD:swarm-control
 
   sync-main-health:
@@ -153,19 +134,15 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout trusted main control implementation
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 0
-
       - name: Materialize live control state
-        shell: bash
         run: |
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
           mkdir -p "$RUNNER_TEMP/control-health"
           git archive origin/swarm-control .swarm | tar -x -C "$RUNNER_TEMP/control-health"
-
       - name: Apply canonical CI health as data
         env:
           MAIN_SHA: ${{ github.event.workflow_run.head_sha }}
@@ -174,35 +151,21 @@ jobs:
           MAIN_UPDATED_AT: ${{ github.event.workflow_run.updated_at }}
         run: |
           python3 tools/swarm/swarmctl_hardening.py sync-main-health \
-            --root "$RUNNER_TEMP/control-health/.swarm" \
-            --sha "$MAIN_SHA" \
-            --conclusion "$MAIN_CONCLUSION" \
-            --run-id "$MAIN_RUN_ID" \
-            --updated-at "$MAIN_UPDATED_AT"
+            --root "$RUNNER_TEMP/control-health/.swarm" --sha "$MAIN_SHA" \
+            --conclusion "$MAIN_CONCLUSION" --run-id "$MAIN_RUN_ID" --updated-at "$MAIN_UPDATED_AT"
           python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/control-health/.swarm"
-
-      - name: Commit health state without force
-        shell: bash
+      - name: Publish health without overwriting newer state
         run: |
-          EXPECTED_CONTROL_SHA="$(git rev-parse origin/swarm-control)"
+          EXPECTED="$(git rev-parse origin/swarm-control)"
           git switch --detach origin/swarm-control
           mkdir -p .swarm/health
           cp "$RUNNER_TEMP/control-health/.swarm/health/main.json" .swarm/health/main.json
           cp "$RUNNER_TEMP/control-health/.swarm/lanes/OPS-MAIN-HEALTH.json" .swarm/lanes/OPS-MAIN-HEALTH.json
-
-          if [[ -z "$(git status --porcelain -- .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json)" ]]; then
-            echo "Main health already current."
-            exit 0
-          fi
-
-          git config user.name "unrendered-swarm-health"
-          git config user.email "actions@users.noreply.github.com"
+          [[ -n "$(git status --porcelain -- .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json)" ]] || exit 0
+          git config user.name unrendered-swarm-health
+          git config user.email actions@users.noreply.github.com
           git add .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json
-          git commit -m "chore(swarm): sync canonical main CI health [swarm-health]"
-
+          git commit -m 'chore(swarm): sync canonical main CI health [swarm-health]'
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
-          if [[ "$(git rev-parse origin/swarm-control)" != "$EXPECTED_CONTROL_SHA" ]]; then
-            echo "Control state advanced while syncing health; refusing stale health push."
-            exit 1
-          fi
+          [[ "$(git rev-parse origin/swarm-control)" == "$EXPECTED" ]] || { echo 'Control advanced; refusing stale health push.'; exit 1; }
           git push origin HEAD:swarm-control
