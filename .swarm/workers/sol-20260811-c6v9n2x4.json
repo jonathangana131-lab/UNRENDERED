@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-c6v9n2x4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:40:00+00:00",
-  "lastSeenAt": "2026-08-11T10:02:30+00:00",
-  "laneId": "HG-COMPLETION-AUTHORITY",
-  "slotId": "reconcile",
-  "branch": "agent/reconcile/HG-COMPLETION-AUTHORITY-c6v9n2x4",
-  "notes": "Published Physics #310 and WorldEntity #293 SYNC_REQUIRED findings. Content review had no non-overlapping target and was released. Now reconciling clearly superseded authority PR lineages while #348 undergoes its separate exact-head audit."
+  "lastSeenAt": "2026-08-11T10:07:00+00:00",
+  "notes": "GO cycle complete. Published HG-COMPLETION-PHYSICS SYNC_REQUIRED for stale PR #310 (evt-20260811-094700-c6v9n2x4-runtime-recipe-sync), HG-COMPLETION-REALITY SYNC_REQUIRED for WorldEntity PR #293 (evt-20260811-095500-c6v9n2x4-worldentity-sync), and authority lineage handoff retaining #348 while preserving distinct stale test value in #300/#307 (evt-20260811-100500-c6v9n2x4-authority-lineage). All owned completion claims released. Critical SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY remains primary-owned; reviewer slot not yet unlocked. No Studio/two-client evidence claimed."
 }
