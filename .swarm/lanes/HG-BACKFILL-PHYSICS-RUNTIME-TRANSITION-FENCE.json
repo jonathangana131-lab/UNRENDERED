@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime transition mutation fence",
   "objective": "Close the source-only runtime lifecycle reentrancy defect found by capacity mining: transition adapters must not be able to partially dismantle or recursively mutate PhysicsLabRuntime authority while an F2/F0 fidelity transaction is in flight.",
   "priority": 4990,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -45,6 +45,5 @@
     "independent review required before integration"
   ],
   "pr": 334,
-  "notes": "Primary implementation is on PR #334 exact head 3475ca65f86e1dbb63e0d4d985ca5e4b3fd7c625 with canonical CI run 31476221489 green. Awaiting independent source-only audit and a fresh live pr-ownership PASS after shared control validation recovery regenerates the validation marker. Created from capacity-mining finding evt-20260811-081645-r8v2k6-runtime-callback-dispose-reentrancy.",
-  "tags": ["backfill", "hero-gate", "source-only", "physics-runtime", "lifecycle"]
+  "notes": "Independent audit on #334 head 1725658506c9b1d11bcd1254f801fc0f6887cb97 returned requested changes. Dependent audit PR #365 proves the prior missing-EOF-newline formatter defect is mechanically fixed: exact-head CI 31482051292 now passes format and lint, then fails Luau analysis at PhysicsLabRuntime.luau:46 on the private weak-key runtimeStates declaration. The expired primary must be taken over/recovered, repair that source typing issue inside lane scope, absorb #365's newline or equivalent, rerun full exact-head CI, then return to independent review. Runtime recipe-fence PR #310 still overlaps the same two files and must be synchronized before whichever repair integrates second."
 }
