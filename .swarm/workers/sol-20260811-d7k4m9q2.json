@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T21:43:25+00:00",
-  "laneId": "HG-COMPLETION-CONTENT",
+  "lastSeenAt": "2026-08-11T21:46:30+00:00",
+  "laneId": "HG-COMPLETION-PHYSICS",
   "slotId": "reconcile",
-  "branch": "agent/reconcile/HG-COMPLETION-CONTENT-d7k4m9q2",
-  "notes": "Reconcile content-foundation completion queue against reviewed authoritative heads and the active global trusted-history/pr-ownership blocker; no product-source or Studio work."
+  "branch": "agent/reconcile/HG-COMPLETION-PHYSICS-d7k4m9q2",
+  "notes": "Refresh physics completion sequencing against current runtime, diagnostics, authority-harness, and geometry successors; no source merge or Studio evidence work."
 }
