@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075037-m4k8z2-pr274-review-result",
+  "timestamp": "2026-08-11T07:50:37+00:00",
+  "fromWorker": "sol-20260811-m4k8z2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "REQUEST_CHANGES on PR #274 exact head 60de91b49338249c1ded74db0d722921ce2fb55d: runtime numeric PolicyInputs values and nowSeconds still reach comparison/arithmetic before primitive number validation, so hostile scalar metamethods can execute across the intended no-execute boundary.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "src/shared/Physics/FidelityManager.luau exact head 60de91b49338249c1ded74db0d722921ce2fb55d keeps isFinite(value: number), validateUnit, validateNonNegative, and validateFiniteNonNegative without a runtime type(value) == 'number' preflight.",
+    "validateInputs only rejects a metatable on the top-level PolicyInputs table; a plain top-level record may still contain a metatable-backed scalar such as distanceStuds, significance, networkRelevance, entityRelevance, or secondsSinceInteraction.",
+    "Manager:step evaluates isFinite(nowSeconds) before evaluatePolicy, so a hostile non-number timestamp can execute comparison metamethods before rejection and must also be primitive-type-checked first.",
+    "The independent adversarial branch PR #278 already records exact failing cases for hostile distanceStuds and hostile nowSeconds, including the required zero-metamethod-execution and retryability contract.",
+    "Canonical CI run 31468720518 is green on the exact head, but green CI does not cover this missing adversarial closure; the review is source-only and claims no Studio evidence."
+  ],
+  "metadata": {
+    "pr": 274,
+    "headSha": "60de91b49338249c1ded74db0d722921ce2fb55d",
+    "verdict": "REQUEST_CHANGES",
+    "reviewId": 4904028902,
+    "requiredNextAction": "Add primitive-number runtime guards before numeric operations for PolicyInputs scalars and nowSeconds, add/retain adversarial regressions, then rerun exact-head CI/ownership and request fresh independent review."
+  }
+}
