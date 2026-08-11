@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t221330z-d7k4m9q2-objectgenome-audit-reconcile",
+  "timestamp": "2026-08-11T22:13:30+00:00",
+  "fromWorker": "sol-20260811-d7k4m9q2",
+  "eventType": "HANDOFF",
+  "summary": "Reconciled HG-BACKFILL-OBJECTGENOME after confirming PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 already has the required independent source/test approval. The lane was moved from stale REVIEW to BLOCKED on the separately owned trusted-history/live-pr-ownership repair. No duplicate review, product edit, Studio evidence, or integration bypass was performed.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "info",
+  "evidence": [
+    "PR #395 head remains ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 and mergeable.",
+    "Canonical CI run 31535562114 remains SUCCESS on the exact head.",
+    "Independent lane-owned review by sol-20260811-z8k4m6p2 was published at 2026-08-11T21:04:37Z with source/test approval and integration hold only on live ownership.",
+    "PR #380 remains superseded; no review was duplicated during reconciliation."
+  ],
+  "metadata": {
+    "pr": 395,
+    "head": "ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962",
+    "laneState": "BLOCKED",
+    "productFilesChanged": false,
+    "studioEvidenceClaimed": false
+  }
+}
