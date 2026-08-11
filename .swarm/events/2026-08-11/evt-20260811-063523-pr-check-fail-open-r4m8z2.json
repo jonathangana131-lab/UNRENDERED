@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063523-pr-check-fail-open-r4m8z2",
+  "timestamp": "2026-08-11T06:35:23+00:00",
+  "fromWorker": "sol-20260811-r4m8z2",
+  "eventType": "FINDING",
+  "summary": "CRITICAL: PR #288 restores trusted hardening imports, but its supposedly successful pr-ownership run proves the V2.1 facade is fail-open. tools/swarm/swarmctl_hardening.py calls `_base.main()` without `raise SystemExit(...)`, so a base ControlError returns integer 2 that the facade discards and the Python process exits 0. Run 31465489200 / job 93697426938 printed `SWARM CONTROL ERROR: ... SWARM-RECOVERY-PR-OWNERSHIP-IMPORT.json: priority out of range` during Enforce live ownership, yet GitHub marked the step/job successful. The live duplicate recovery lane has priority 20000 while core validation permits at most 10000. Do not merge #288 as a complete ownership recovery until exit propagation is fixed and live control state validates cleanly; then rerun a real pr-check and require visible PASS output, not only a green job conclusion.",
+  "affects": ["SWARM-V21-PR-OWNERSHIP-RECOVERY", "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT", "HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "SWARM-V21-PR-OWNERSHIP-RECOVERY",
+  "severity": "CRITICAL",
+  "evidence": [
+    "tools/swarm/swarmctl_hardening.py __main__ block invokes `_base.main()` without `raise SystemExit`, unlike tools/swarm/swarmctl_hardening_base.py which uses `raise SystemExit(main())`.",
+    "Swarm Control Plane run 31465489200, pr-ownership job 93697426938: trusted materialization/import succeeds, then Enforce live ownership prints `SWARM CONTROL ERROR: ... SWARM-RECOVERY-PR-OWNERSHIP-IMPORT.json: priority out of range`; GitHub still records the step and job success.",
+    "tools/swarm/swarmctl.py validate_lane permits priority only in [0, 10000]; live .swarm/lanes/SWARM-RECOVERY-PR-OWNERSHIP-IMPORT.json declares priority 20000.",
+    "PR #288 acceptance requires ownership enforcement to pass on the repair PR; a swallowed ControlError is not PASS evidence."
+  ]
+}
