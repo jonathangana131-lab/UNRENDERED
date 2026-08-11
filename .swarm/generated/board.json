@@ -73,15 +73,6 @@
       "workerId": "sol-20260811-r4m8z2"
     },
     {
-      "branch": "agent/reality/HG-BACKFILL-REALITY-q9m4r2",
-      "expiresAt": "2026-08-11T07:45:06+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-REALITY",
-      "pr": 282,
-      "slotId": "primary",
-      "workerId": "sol-20260811-q9m4r2"
-    },
-    {
       "branch": "agent/reality/HG-BACKFILL-REALITY-tests-q8n4z7",
       "expiresAt": "2026-08-11T07:42:30+00:00",
       "generation": 2,
@@ -140,17 +131,17 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:21:48.310309+00:00",
+  "generatedAt": "2026-08-11T07:23:50.488381+00:00",
   "mainHealth": {
     "conclusion": "success",
-    "headSha": "81a13b1138e26e7852c89685de5dbf9bd57753d8",
+    "headSha": "064e28f2306095dadd6a514b96f397cd810ac556",
     "schemaVersion": 1,
     "status": "GREEN",
-    "updatedAt": "2026-08-11T07:14:27+00:00",
-    "workflowRunId": 31468113697
+    "updatedAt": "2026-08-11T07:22:53+00:00",
+    "workflowRunId": 31468678800
   },
   "metrics": {
-    "activeClaims": 14,
+    "activeClaims": 13,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -166,7 +157,7 @@
       "REVIEW_REQUEST": 29,
       "REVIEW_RESULT": 30
     },
-    "generatedAt": "2026-08-11T07:21:48.310309+00:00",
+    "generatedAt": "2026-08-11T07:23:50.488381+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -175,7 +166,7 @@
       "READY": 12
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 16,
+    "readySlots": 17,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 2
@@ -191,6 +182,22 @@
       "writeScopes": [
         "src/shared/Objects/ObjectGenome*.luau",
         "tests/object_genome*.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-REALITY",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [],
+      "role": "Reality/replay source hardening",
+      "score": 5300,
+      "slotId": "primary",
+      "writeScopes": [
+        "src/shared/Reality/*.luau",
+        "src/shared/Core/*.luau",
+        "tests/resolved_region_recipe*.luau",
+        "tests/reality_versions.luau",
+        "tests/deterministic_rng.luau",
+        "tests/stable_id_headless.luau"
       ]
     },
     {
@@ -864,13 +871,13 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "2fd138dced23d0991e50e3837f7b650bb20eb3a857ce28011c5985a99b26fb40",
+  "stateDigest": "c1a53e0a29e3642c2a23d55b1b8731b35438a878827d0eb44f431db047e80218",
   "summary": {
-    "activeClaims": 14,
+    "activeClaims": 13,
     "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 25,
-    "readySlots": 16,
+    "readySlots": 17,
     "staleClaims": 2,
     "workers": 46
   }

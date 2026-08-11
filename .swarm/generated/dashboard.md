@@ -1,21 +1,22 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:21:48.310309+00:00`
+Generated: `2026-08-11T07:23:50.488381+00:00`
 
-Canonical main: **GREEN** `81a13b1138e26e7852c89685de5dbf9bd57753d8`
+Canonical main: **GREEN** `064e28f2306095dadd6a514b96f397cd810ac556`
 
-State digest: `2fd138dced23d0991e50e3837f7b650bb20eb3a857ce28011c5985a99b26fb40`
+State digest: `c1a53e0a29e3642c2a23d55b1b8731b35438a878827d0eb44f431db047e80218`
 
 ## Summary
 
-- ready slots: **16**
-- active claims: **14**
+- ready slots: **17**
+- active claims: **13**
 - stale claims: **2**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
 - `HG-BACKFILL-OBJECTGENOME/test-adversary` — **ObjectGenome malformed-input and identity tests** — score 5370 — dependencies satisfied
+- `HG-BACKFILL-REALITY/primary` — **Reality/replay source hardening** — score 5300 — dependencies satisfied; resources available
 - `HG-BACKFILL-PHYSICS-GEOMETRY/primary` — **Physics recipe and geometry hardening** — score 5200 — dependencies satisfied; resources available
 - `HG-BACKFILL-PHYSICS-GEOMETRY/test-adversary` — **Geometry, clearance, and reachability property tests** — score 5120 — dependencies satisfied
 - `HG-BACKFILL-DIAGNOSTICS/test-adversary` — **Diagnostics lifecycle and no-drift test author** — score 5070 — dependencies satisfied
@@ -42,7 +43,6 @@ State digest: `2fd138dced23d0991e50e3837f7b650bb20eb3a857ce28011c5985a99b26fb40`
 - `HG-BACKFILL-OBJECTGENOME/audit` → `sol-20260811-went7k3`; lease to `2026-08-11T07:48:00+00:00`
 - `HG-BACKFILL-OBJECTGENOME/primary` → `sol-20260811-k2m9x7`; lease to `2026-08-11T07:48:00+00:00`
 - `HG-BACKFILL-REALITY/audit` → `sol-20260811-r4m8z2`; lease to `2026-08-11T07:48:20+00:00`
-- `HG-BACKFILL-REALITY/primary` → `sol-20260811-q9m4r2`; lease to `2026-08-11T07:45:06+00:00`
 - `HG-BACKFILL-REALITY/test-adversary` → `sol-20260811-q8n4z7`; lease to `2026-08-11T07:42:30+00:00`
 - `HG-BACKFILL-WORLDENTITY/audit` → `sol-20260811-z4q8n1`; lease to `2026-08-11T07:50:00+00:00`
 - `HG-BACKFILL-WORLDENTITY/primary` → `sol-20260811-ogx9k2`; lease to `2026-08-11T07:47:00+00:00`
