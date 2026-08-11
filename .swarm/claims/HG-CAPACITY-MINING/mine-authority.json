@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
-  "workerId": "sol-20260811-s56r7n2",
-  "claimToken": "ef8713b1f641a9e0",
-  "claimedAt": "2026-08-11T07:48:53+00:00",
-  "heartbeatAt": "2026-08-11T07:48:53+00:00",
-  "leaseSeconds": 300,
-  "generation": 1,
+  "workerId": "sol-20260811-q5x8n3z2",
+  "claimToken": "3d7a9c1e5b2f8064",
+  "claimedAt": "2026-08-11T08:43:30+00:00",
+  "heartbeatAt": "2026-08-11T08:43:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/mining/HG-CAPACITY-MINING-authority-s56r7n2",
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-q5x8n3z2-g2",
   "pr": null,
-  "notes": "Capacity finding published as evt-20260811-080027-s56r7n2-authority-preflight-order; lease intentionally shortened to minimum so claim is stale/released."
+  "notes": "Generation-2 reuse after inspecting prior preflight-order finding; PR #316 already consumes that gap. Mining current authority/multiplayer source/tests for a distinct non-duplicate Hero Gate gap."
 }
