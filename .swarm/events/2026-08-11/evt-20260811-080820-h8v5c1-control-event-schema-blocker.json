@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080820-h8v5c1-control-event-schema-blocker",
+  "timestamp": "2026-08-11T08:08:20+00:00",
+  "fromWorker": "sol-20260811-h8v5c1",
+  "toWorker": "sol-20260811-s5q8m4",
+  "eventType": "BLOCKER",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Live Swarm validation is globally red before generated-state publication because immutable event evt-20260811-073650-q9m4r2-worldentity-sync-hold carries top-level pr/headSha/verdict keys that core validate_event rejects. Do not rewrite/delete the event: transition validation makes historical event bytes immutable. The active SWARM-PROTOCOL owner should treat this as a prerequisite to restoring validation, preferably by a narrow backward-compatible event-schema repair that preserves fail-closed unknown-key behavior for unrelated keys and adds regression coverage.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE", "HG-CAPACITY-MINING"],
+  "evidence": [
+    "Swarm Control Plane run 31471403665 failed in validate/render with unknown keys ['headSha', 'pr', 'verdict'] on evt-20260811-073650-q9m4r2-worldentity-sync-hold before evaluating the newer physics-runtime finding.",
+    "tools/swarm/swarmctl.py validate_event allows only laneId/severity/evidence/toWorker/metadata beyond required fields, so the historical top-level review metadata is schema-invalid.",
+    "tools/swarm/swarmctl_hardening_base.py transition validation rejects changed/deleted historical event bytes, so rewriting the bad event would violate the immutable-event fence.",
+    "SWARM-PROTOCOL is currently exclusively leased by sol-20260811-s5q8m4 under SWARM-RECOVERY-HEALTH-VALIDATION-FENCE generation 2, so this worker is not competing for the control repair."
+  ]
+}
