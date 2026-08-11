@@ -342,6 +342,102 @@ local function run(): number
 	end
 	recursiveRuntime:dispose()
 
+	local facadeRuntime = PhysicsLabRuntime.new(recipe)
+	expect(
+		"runtime facade hides mutable authority capabilities",
+		(facadeRuntime :: any)._registry == nil
+			and (facadeRuntime :: any)._fidelity == nil
+			and (facadeRuntime :: any)._entityIds == nil
+			and (facadeRuntime :: any)._disposed == nil
+			and (facadeRuntime :: any)._transitionInFlight == nil
+	)
+	local facadeMutationOk = pcall(function()
+		(facadeRuntime :: any).recipeKey = "tampered-runtime"
+	end)
+	expect("runtime facade itself is immutable", not facadeMutationOk)
+	if chair ~= nil then
+		local facadeId = floor.entity.id
+		local facadeOtherId = chair.entity.id
+		facadeRuntime:step(facadeId, noDemand, 0)
+		local facadeTamperOk = pcall(function()
+			facadeRuntime:step(facadeId, noDemand, 2, function(record)
+				return record.persistentState
+			end, function()
+				local leakedRegistry = (facadeRuntime :: any)._registry
+				assert(leakedRegistry ~= nil, "runtime facade does not expose registry authority")
+				leakedRegistry.unregister(facadeOtherId)
+			end)
+		end)
+		local afterFacadeTamper = facadeRuntime:snapshot()
+		expect("callback cannot reach registry capability through runtime facade", not facadeTamperOk)
+		expect(
+			"facade capability rejection preserves both authority populations",
+			afterFacadeTamper.registered == #recipe.entities
+				and afterFacadeTamper.fidelity.registered == #recipe.entities
+		)
+		local otherRecordOk = pcall(function()
+			facadeRuntime:getRecord(facadeOtherId)
+		end)
+		expect("facade capability rejection preserves unrelated registry entity", otherRecordOk)
+		local facadeRetry, facadeRetryRecord = facadeRuntime:step(
+			facadeId,
+			noDemand,
+			2,
+			function(record)
+				return record.persistentState
+			end,
+			function() end
+		)
+		expect(
+			"facade capability rejection remains retryable",
+			facadeRetry.transitioned and facadeRetryRecord.fidelity == "F0"
+		)
+	end
+	facadeRuntime:dispose()
+
+	local guardTamperRuntime = PhysicsLabRuntime.new(recipe)
+	local guardTamperId = floor.entity.id
+	guardTamperRuntime:step(guardTamperId, noDemand, 0)
+	local guardTamperOk = pcall(function()
+		guardTamperRuntime:step(guardTamperId, noDemand, 2, function(record)
+			return record.persistentState
+		end, function()
+			(guardTamperRuntime :: any)._transitionInFlight = false
+			guardTamperRuntime:dispose()
+		end)
+	end)
+	expect("callback cannot reset hidden runtime transition guard", not guardTamperOk)
+	local guardSnapshotOk = pcall(function()
+		local afterGuardTamper = guardTamperRuntime:snapshot()
+		expect(
+			"guard reset rejection preserves both authority populations",
+			afterGuardTamper.registered == #recipe.entities
+				and afterGuardTamper.fidelity.registered == #recipe.entities
+		)
+		expect(
+			"guard reset rejection preserves fidelity authority",
+			guardTamperRuntime:getFidelity(guardTamperId) == "F2"
+		)
+	end)
+	expect("guard reset rejection leaves runtime active", guardSnapshotOk)
+	local guardRetryOk, guardRetryTransitioned = pcall(function()
+		local retry, retryRecord = guardTamperRuntime:step(
+			guardTamperId,
+			noDemand,
+			2,
+			function(record)
+				return record.persistentState
+			end,
+			function() end
+		)
+		return retry.transitioned and retryRecord.fidelity == "F0"
+	end)
+	expect(
+		"guard reset rejection clears private transition state for retry",
+		guardRetryOk and guardRetryTransitioned == true
+	)
+	guardTamperRuntime:dispose()
+
 	runtime:dispose()
 	runtime:dispose()
 	local disposedSnapshotOk = pcall(function()
