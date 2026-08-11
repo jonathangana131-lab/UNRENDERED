@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-q7m3v8c6",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T23:12:33+00:00",
+  "lastSeenAt": "2026-08-11T23:12:33+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-tests-q7m3v8c6-g2",
+  "notes": "Generation-2 stale-slot takeover candidate after inspecting retained generation-7 PR #409, expected-red PR #411, active generation-8 primary, and expired generation-1 test-adversary claim. Scope is only a separate non-duplicate diagnostics lifecycle/no-drift false-pass or invariant gap; no Studio/viewport evidence."
+}
