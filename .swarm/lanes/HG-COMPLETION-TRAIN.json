@@ -2,35 +2,18 @@
   "schemaVersion": 1,
   "laneId": "HG-COMPLETION-TRAIN",
   "epicId": "HERO-GATE",
-  "title": "Hero Gate completion train",
-  "objective": "Convert already-produced Hero Gate work into accepted main changes faster than new work is created. Review, reconcile, rebase, integrate, close superseded lineages, and keep exact-head evidence truthful. This lane must not invent speculative features or bypass required risk gates.",
+  "title": "Hero Gate completion train umbrella",
+  "objective": "Historical umbrella for the V2.2 completion-train rollout. Family-specific authority, physics, reality, and content completion queues now own review/integration/reconciliation work to avoid duplicate queue ownership.",
   "priority": 10000,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["Docs/**"],
   "resources": [],
   "slots": [
-    {"slotId":"review-authority","role":"Review authority and multiplayer PR queue","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY","NEEDS_CHANGES"],"priorityBoost":1000,"writeScopes":["Docs/**"]},
-    {"slotId":"review-physics","role":"Review Physics Lab PR queue","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY","NEEDS_CHANGES"],"priorityBoost":990,"writeScopes":["Docs/**"]},
-    {"slotId":"review-reality","role":"Review Reality and WorldEntity PR queue","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY","NEEDS_CHANGES"],"priorityBoost":980,"writeScopes":["Docs/**"]},
-    {"slotId":"review-content","role":"Review ObjectGenome MaterialDNA Fidelity PR queue","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY","NEEDS_CHANGES"],"priorityBoost":970,"writeScopes":["Docs/**"]},
-    {"slotId":"integrate-authority","role":"Integrate authority and multiplayer accepted work","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY"],"priorityBoost":960,"writeScopes":["Docs/**"]},
-    {"slotId":"integrate-physics","role":"Integrate Physics Lab accepted work","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY"],"priorityBoost":950,"writeScopes":["Docs/**"]},
-    {"slotId":"integrate-reality","role":"Integrate Reality and WorldEntity accepted work","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY"],"priorityBoost":940,"writeScopes":["Docs/**"]},
-    {"slotId":"integrate-content","role":"Integrate content-foundation accepted work","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY"],"priorityBoost":930,"writeScopes":["Docs/**"]},
-    {"slotId":"ci-sheriff-a","role":"Repair exact-head CI and ownership blockers","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY","NEEDS_CHANGES"],"priorityBoost":920,"writeScopes":["Docs/**"]},
-    {"slotId":"ci-sheriff-b","role":"Reconcile stale validation and PR gates","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY","NEEDS_CHANGES"],"priorityBoost":910,"writeScopes":["Docs/**"]},
-    {"slotId":"pr-reconcile-a","role":"Collapse superseded and duplicate PR lineages","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY","NEEDS_CHANGES"],"priorityBoost":900,"writeScopes":["Docs/**"]},
-    {"slotId":"pr-reconcile-b","role":"Refresh stale claims and salvage useful branches","exclusive":true,"availableWhen":["READY","REVIEW","INTEGRATION_READY","NEEDS_CHANGES"],"priorityBoost":890,"writeScopes":["Docs/**"]}
+    {"slotId":"review-authority","role":"Retired umbrella review slot","exclusive":true,"availableWhen":["READY"],"priorityBoost":0,"writeScopes":["Docs/**"]}
   ],
-  "acceptance": [
-    "prefer merging retained value over creating another implementation PR",
-    "never bypass exact-head CI or ownership fencing",
-    "apply V2.2 risk-based review depth: self-review always, independent challenge only when risk requires it",
-    "close or supersede duplicate lineages after useful work is salvaged",
-    "record integration/review results durably",
-    "do not claim blocked Roblox Studio evidence"
-  ],
-  "tags": ["completion", "review", "integration", "throughput", "hero-gate"]
+  "acceptance": ["family completion queues exist and own live completion work"],
+  "notes": "Superseded immediately by HG-COMPLETION-AUTHORITY, HG-COMPLETION-PHYSICS, HG-COMPLETION-REALITY, and HG-COMPLETION-CONTENT so the scheduler has four explicit review queues and no ambiguous umbrella ownership.",
+  "tags": ["completion", "throughput", "hero-gate"]
 }
