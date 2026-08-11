@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091940-q4n7w2c9-fidelity-audit",
+  "timestamp": "2026-08-11T09:19:40+00:00",
+  "fromWorker": "sol-20260811-q4n7w2c9",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "normal",
+  "summary": "Independent exact-head audit passes FidelityManager PR #335 source/test semantics; integration remains blocked only by the separately owned immutable-event history-continuity recovery and live pr-ownership gate.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #335 head 4a3c55d9d2046df1af6ee93710d395aedd4ea102 is synchronized to current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 with behind_by=0 and only FidelityManager source plus adversarial tests in the effective diff.",
+    "Rejected inputs/config/timestamps are validated before manager-visible clocks, mirrors, pending state, counts, or metrics commit; caller config is validated before copy and stored as a copied/frozen manager-owned table.",
+    "Transition-ready state is staged and commits only after a successful hook; same-entity recursive step/unregister is fenced during the hook and the guard is restored on callback failure while cross-entity mutation remains independent.",
+    "External synchronization followed by a transition conserves fidelity counts by reconciling observed/current accounting before current-to-desired accounting.",
+    "Canonical exact-head CI run 31476561095 is SUCCESS. No Studio or two-client evidence is applicable or claimed for this source-only lane.",
+    "Live Swarm ownership remains fail-closed under separately owned SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY; product CI alone is not sufficient to merge."
+  ],
+  "metadata": {
+    "verdict": "SOURCE_TEST_PASS_CONTROL_GATED",
+    "pr": 335,
+    "headSha": "4a3c55d9d2046df1af6ee93710d395aedd4ea102",
+    "mainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "ciRun": 31476561095,
+    "prCommentId": 5251286995,
+    "nextAction": "After history-continuity recovery restores live ownership validation, rerun exact-head pr-ownership and integrate only if main ancestry remains current and all gates pass."
+  }
+}
