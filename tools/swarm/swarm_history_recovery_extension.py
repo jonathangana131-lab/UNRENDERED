@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Exact generation-4 additions to the finite 2026-08-11 history reset.
+"""Exact generation-4/5 additions to the finite 2026-08-11 history reset.
 
-These rows were measured from live swarm-control by the generation-4 read-only
-bootstrap inventory. They are data only: no schema aliasing, inference, or payload
-rewrites are permitted. Immutable events remain quarantine-only authority.
+These rows were measured from live swarm-control by read-only bootstrap inventory
+or exact Git provenance inspection. They are data only: no schema aliasing,
+inference, or payload rewrites are permitted. Immutable events remain
+quarantine-only authority.
 """
 
 # One invalid worker record was first published with the unsupported REVIEWING
@@ -15,7 +16,9 @@ FINITE_WORKER_TRANSITIONS = (
 )
 
 # (eventId, exact filename, exact first-write commit, exact quarantine Git blob SHA-1)
-# Every row had revisionCount=1 and rewritten=false in bootstrap run 31538683679.
+# Every row has exactly one first-add commit and no later byte rewrite in the
+# audited control history. The workflow independently re-proves those facts from
+# Git before a bootstrap candidate can be trusted.
 MALFORMED_EVENT_QUARANTINE_ROWS = (
     (
         "evt-sol-20260811-6v4k9n2c-worldentity-metadata-string-budget-211117",
@@ -40,6 +43,12 @@ MALFORMED_EVENT_QUARANTINE_ROWS = (
         "213200-sol-20260811-k5m8v2c6-handoff-harness-lifecycle-g2.json",
         "d9e4ee7f7755d5b19498f3b37cc1df73bdb793de",
         "074eea30dfd8ebcbf86ffaa9e21cd3f2cb7d0df5",
+    ),
+    (
+        "evt-20260811T210500Z-sol-20260811-c7p4m8v2-handoff-content-reconciliation",
+        "210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json",
+        "be4caea3394068a2883045842bf1d132e37cd157",
+        "713d54c453faa65e89875e69499444d5a7644d3f",
     ),
     (
         "evt-20260811-210630-j9v4m2q7-authority-harness-capability-reconfirm",
