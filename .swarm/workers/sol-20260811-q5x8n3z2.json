@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q5x8n3z2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T08:41:00+00:00",
-  "lastSeenAt": "2026-08-11T09:22:45+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-q5x8n3z2-g2",
-  "notes": "Generation-2 stale takeover of diagnostics audit. Reviewing #327 + dependent #333 against prior coverage requests and the later instance-binding authority finding; source-only, no Studio evidence claim."
+  "lastSeenAt": "2026-08-11T09:28:00+00:00",
+  "notes": "Diagnostics #327 generation-2 audit completed with REQUEST_CHANGES; #333 closes prior test gaps, exact-instance ownership remains blocked outside diagnostics scope. Published and unlocked HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING prerequisite, then released audit lease. Authority #316 remains handed off pending global control recovery. No Studio/two-client/viewport evidence claim."
 }
