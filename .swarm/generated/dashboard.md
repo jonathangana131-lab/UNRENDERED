@@ -1,14 +1,14 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T05:53:39.643183+00:00`
+Generated: `2026-08-11T05:53:54.898624+00:00`
 
 Canonical main: **GREEN** `10d3f6992ff243a9268ed8629893faf4fc40791c`
 
-State digest: `32e2a163ef7ef0160b677a8e24b6e2dfb6ce3aca32cfb605f88e8f3d7fcf8a25`
+State digest: `88e703b0e3fa678e118bce407816c4fed3ce1a0ce0f3e866aa621d7c8acd825e`
 
 ## Summary
 
-- ready slots: **15**
+- ready slots: **18**
 - active claims: **0**
 - stale claims: **0**
 - blocked-external lanes: **1**
@@ -26,10 +26,13 @@ State digest: `32e2a163ef7ef0160b677a8e24b6e2dfb6ce3aca32cfb605f88e8f3d7fcf8a25`
 - `HG-BACKFILL-REALITY/primary` — **Reality/replay source hardening** — score 5300 — dependencies satisfied; resources available
 - `HG-BACKFILL-FIDELITY/test-adversary` — **Fidelity transition and atomicity tests** — score 5270 — dependencies satisfied
 - `HG-BACKFILL-OBJECTGENOME/audit` — **ObjectGenome contract and ownership auditor** — score 5270 — dependencies satisfied
+- `HG-BACKFILL-PHYSICS-RUNTIME/primary` — **Physics runtime lifecycle hardening** — score 5250 — dependencies satisfied; resources available
 - `HG-BACKFILL-MATERIALDNA/audit` — **MaterialDNA contract and fixture auditor** — score 5220 — dependencies satisfied
 - `HG-BACKFILL-REALITY/test-adversary` — **Reality version and deterministic replay tests** — score 5220 — dependencies satisfied
 - `HG-BACKFILL-FIDELITY/audit` — **Fidelity state-machine auditor** — score 5170 — dependencies satisfied
+- `HG-BACKFILL-PHYSICS-RUNTIME/test-adversary` — **Long-cycle lifecycle and teardown regression tests** — score 5170 — dependencies satisfied
 - `HG-BACKFILL-REALITY/audit` — **WorldId, seed, and replay invariant auditor** — score 5120 — dependencies satisfied
+- `HG-BACKFILL-PHYSICS-RUNTIME/audit` — **Runtime ownership and drift auditor** — score 5070 — dependencies satisfied
 
 ## Active claims
 
