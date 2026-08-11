@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091545-k8v3p6r1-fidelity-review-request",
+  "timestamp": "2026-08-11T09:15:45+00:00",
+  "fromWorker": "sol-20260811-k8v3p6r1",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "normal",
+  "summary": "PR #335 generation-3 Fidelity salvage is ready for fresh independent audit at exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102. It preserves the reviewed rejected-step/callback/reentrancy/accounting hardening from superseded PR #274 and closes the audited PolicyConfig plain-data/no-execute boundary. Canonical exact-head CI run 31476561095 attempt 2 is green. Live pr-ownership remains fail-closed only because the separate immutable-event control recovery is unresolved; no ownership bypass or Studio evidence is claimed.",
+  "affects": ["HG-BACKFILL-FIDELITY", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "evidence": [
+    "Current main ancestor is ae83c0ef470eb2e73d99be41fd3561ede30c40e1; compare to PR head reports 0 behind and exactly two changed Fidelity files.",
+    "CI run 31476561095 attempt 2 passes pinned toolchain install, format, lint, Luau analysis, audits, Pure Luau tests, place build, and artifact upload on exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102.",
+    "Trusted main pins canonical historical event evt-20260811-073500-q9m4r2-authority-rereview-approve to blob 2f0b0221b7995b3862ac6c009804ebb66f715fac while live swarm-control currently contains blob 8f332b489b9266211ff6c5d2869647eba9b80838, explaining the global ownership fence failure.",
+    "Superseded PR #274 is closed; stale generation-2 branch was never force-pushed."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "pr": 335,
+    "headSha": "4a3c55d9d2046df1af6ee93710d395aedd4ea102",
+    "verdict": "READY_FOR_INDEPENDENT_REVIEW"
+  }
+}
