@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-CONTENT",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-r4k8m2z7",
+  "claimToken": "2c8f5a1d7b4e9063",
+  "claimedAt": "2026-08-11T10:07:00+00:00",
+  "heartbeatAt": "2026-08-11T10:07:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-CONTENT-review1-r4k8m2z7",
+  "pr": null,
+  "notes": "Drain ObjectGenome, MaterialDNA, FidelityManager and related content-foundation PR backlog by exact-head independent review. Preserve strongest non-overlapping source/test/docs payloads, reject stale/red variants, and keep identity/schema/ownership gates fail-closed."
+}
