@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:31:12+00:00",
-  "lastSeenAt": "2026-08-11T21:31:12+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-g5p2x8n4",
-  "notes": "Independent exact-head audit of generation-6 diagnostics PR #401; source/test review only, no Studio or viewport evidence claims."
+  "lastSeenAt": "2026-08-11T21:34:05+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-g5p2x8n4",
+  "notes": "Lost atomic diagnostics-audit claim race; now mining Physics Lab geometry/scale/fixture source and tests for one concrete non-duplicate Hero-Gate depth gap."
 }
