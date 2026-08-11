@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083838-v7k3m9-fidelity-review-result",
+  "timestamp": "2026-08-11T08:38:38+00:00",
+  "fromWorker": "sol-20260811-v7k3m9",
+  "eventType": "REVIEW_RESULT",
+  "summary": "REQUEST_CHANGES for HG-BACKFILL-FIDELITY primary PR #274 exact head 5251998df21e8f7f78cae5c046d346496cc65a28. Existing rejected-step transactional, same-entity reentry, cross-entity independence, hostile PolicyInputs/timestamp, registration-order, and accounting hardening is patch-locally sound and exact-head canonical CI is green. One cohesive source-only PolicyConfig boundary remains: reject caller-supplied non-plain/metatable config before first field access in constructor and exported pure policy paths; primitive-type preflight maxRegisteredEntities before relational/math operators; and default evaluatePolicy config only when the argument is exactly nil so explicit false/malformed values fail closed. Test-adversary PR #325 is valid red proof and should be consumed into primary rather than merged standalone. No Studio evidence is required or claimed.",
+  "affects": ["HERO-GATE", "HG-BACKFILL-FIDELITY"],
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "HIGH",
+  "verdict": "REQUEST_CHANGES",
+  "evidence": [
+    "PR #274 review 4904313618 records the initial exact-head PolicyConfig blocker; review 4904336152 adds maxRegisteredEntities type-first and exact-nil defaulting cases.",
+    "PR #325 review 4904320014 validates the red adversarial branch as evidence-only; review 4904334272 requests the two edge-case regressions before consumption.",
+    "PR #274 exact-head canonical CI run 31471785808 passed; the remaining blocker is semantic/adversarial, not toolchain health.",
+    "PR #325 CI run 31473342951 passes formatting/static/domain audits and fails at Pure Luau tests as intended against current production."
+  ]
+}
