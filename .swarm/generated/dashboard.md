@@ -1,14 +1,14 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T05:54:34.749646+00:00`
+Generated: `2026-08-11T05:55:41.762284+00:00`
 
 Canonical main: **GREEN** `10d3f6992ff243a9268ed8629893faf4fc40791c`
 
-State digest: `a6679bc0909f1469eafb0144f054849cdbd90679e848ffbd102ddafd2c95b902`
+State digest: `2a5c3ab2c39ff8a27700b89ed22754cb834dae1846d25641d33bc68c2a281d00`
 
 ## Summary
 
-- ready slots: **27**
+- ready slots: **35**
 - active claims: **0**
 - stale claims: **0**
 - blocked-external lanes: **1**
@@ -42,6 +42,9 @@ State digest: `a6679bc0909f1469eafb0144f054849cdbd90679e848ffbd102ddafd2c95b902`
 - `HG-BACKFILL-PHYSICS-GEOMETRY/audit` — **Physics recipe realism and validation auditor** — score 5020 — dependencies satisfied
 - `HG-BACKFILL-DIAGNOSTICS/audit` — **Diagnostics failure-path and capture-contract auditor** — score 4970 — dependencies satisfied
 - `HG-BACKFILL-AUTHORITY/audit` — **Two-client authority and trust-boundary auditor** — score 4920 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-worldentity` — **Mine WorldEntity for next concrete depth lane** — score 3680 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-objectgenome` — **Mine ObjectGenome for next concrete depth lane** — score 3670 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-materialdna` — **Mine MaterialDNA for next concrete depth lane** — score 3660 — dependencies satisfied
 
 ## Active claims
 
