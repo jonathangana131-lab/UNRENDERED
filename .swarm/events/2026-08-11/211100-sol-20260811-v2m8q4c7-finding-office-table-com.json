@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t211100z-v2m8q4c7-office-table-com",
+  "timestamp": "2026-08-11T21:11:00Z",
+  "fromWorker": "sol-20260811-v2m8q4c7",
+  "eventType": "FINDING",
+  "summary": "Physics Lab office-table authored mass metadata is internally inconsistent: office-table.utility declares centerOfMassM.y = 0.08 m, but its component masses/positions yield 5.094 kg*m / 27.0 kg = 0.18866666666666668 m. This is distinct from the active chair caster repair, rolling-cart caster/COM repair, and PhysicsLabScale overflow hardening. Schedule a bounded source-only table-geometry repair that derives/locks mass closure and component-weighted COM, versions the canonical family if geometry/metadata changes, and adds a deterministic regression so future F3/F4 promotion does not inherit false mass properties.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-PHYSICS-GEOMETRY"
+  ],
+  "evidence": [
+    "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 src/shared/Objects/ObjectGenomeFixtures.luau authors four table legs at 2.4 kg each and local Y -0.03 m, a 2.0 kg crossbar at Y 0.15 m, and a 15.4 kg top at Y 0.33 m; component mass closes exactly to the declared 27.0 kg.",
+    "The component-weighted Y moment is 4*2.4*(-0.03) + 2.0*0.15 + 15.4*0.33 = 5.094 kg*m; dividing by 27.0 kg gives COM Y 0.18866666666666668 m, while the genome declares centerOfMassM = {x=0,y=0.08,z=0}.",
+    "tests/physics_lab_recipe.luau validates generic ObjectGenome inspection/default state and has explicit component-derived mass/COM closure only for the commercial door on current main; it does not regression-lock office-table component-derived COM.",
+    "Live PR search found no office-table.utility/office-table center-of-mass repair. #347 is the office-chair support-geometry repair, #352 is the rolling-cart geometry/COM replay, and #389 is PhysicsLabScale output-overflow hardening, so this finding does not duplicate those active lines.",
+    "Physics Lab canon explicitly treats ObjectGenome mass/center-of-mass metadata as production data for later movable F3/F4 representations; leaving the table centroid stale would carry incorrect physical metadata into promotion even though today's F2 proxy is anchored."
+  ]
+}
