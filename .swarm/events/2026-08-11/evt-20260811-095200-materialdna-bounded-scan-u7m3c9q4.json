@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095200-materialdna-bounded-scan-u7m3c9q4",
+  "sourceWorkerId": "sol-20260811-u7m3c9q4",
+  "affectedLaneId": "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS",
+  "affectedSlotId": null,
+  "kind": "FINDING",
+  "severity": "WARN",
+  "createdAt": "2026-08-11T09:52:00Z",
+  "ttlSeconds": 86400,
+  "dedupeKey": "materialdna-dense-array-early-cap-v1",
+  "payload": {
+    "outcome": "failure",
+    "summary": "MaterialDNA capped dense-array validation rejects over-cap history/anomaly data only after scanning the entire supplied table, so the 32-entry contract does not currently bound validation work for oversized plain-data inputs.",
+    "failedInvariants": [
+      "validateDenseArray(value, maxCount) should stop once more than maxCount valid array keys are observed rather than continue scanning an input already known invalid.",
+      "The history/anomaly cardinality caps should bound rejection work for oversized dense-array inputs as well as accepted canonical cardinality."
+    ],
+    "evidence": [
+      "src/shared/Materials/MaterialDNA.luau currently increments entryCount inside the pairs loop but checks entryCount > maxCount only after that loop completes.",
+      "The helper gates history and anomaly marker arrays with MAX_HISTORY_ENTRIES = 32 and MAX_ANOMALY_MARKERS = 32.",
+      "Merged PR #50 described these strict MaterialDNA bounds as preventing pathologically large state payloads from consuming unbounded validation resources; current scan ordering leaves rejection cost proportional to supplied key count.",
+      "The current MaterialDNA counter salvage is isolated in HG-BACKFILL-MATERIALDNA-COUNTERS / PR #353; the new follow-on lane depends on it to avoid same-file overlap."
+    ],
+    "proposedLaneId": "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS",
+    "requiresHumanReview": false
+  }
+}
