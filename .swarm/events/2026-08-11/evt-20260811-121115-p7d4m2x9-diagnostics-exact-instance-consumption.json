@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-121115-p7d4m2x9-diagnostics-exact-instance-consumption",
+  "timestamp": "2026-08-11T12:11:15+00:00",
+  "fromWorker": "sol-20260811-p7d4m2x9",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "summary": "Diagnostics exact-Instance consumption gap now has isolated executable RED evidence: direct representation enumeration must bind each enumerated Workspace child to project-owned exact Instance authority via ownsRepresentation(entityId, child), not boolean isRepresented membership.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING"],
+  "evidence": [
+    "Draft PR #377 exact head 8324a651faaef20d6af8d688d858d302f6b378b9 changes only tests/physics_lab_diagnostics_atomicity.luau (+17/-0).",
+    "Canonical CI run 31489895761 / job 93773638633 passes formatting, lint, Luau analysis, randomness/domain audits, and Swarm deterministic tests, then fails Pure Luau exactly at 'diagnostics-atomicity direct representation enumeration binds each child to the exact runtime-owned Instance'.",
+    "All neighboring diagnostics atomicity assertions pass after the new failure; the rest of the canonical pure suite continues green.",
+    "PR #349 provides the narrow project-owned ownsRepresentation(entityId, candidate) prerequisite without exposing the private representation map; current diagnostics recovery #327 uses only boolean isRepresented(entityId) membership and cannot distinguish a one-for-one substitute same-id child."
+  ]
+}
