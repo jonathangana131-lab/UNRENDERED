@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-072330-q7h4n2-pr282-exacthead-review",
+  "timestamp": "2026-08-11T07:23:30+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "medium",
+  "summary": "APPROVE PR #282 source/test patch on exact synchronized head a2785f04f0fff74c9e78bfe3d79702376dad271b; integration remains BLOCKED only until a fresh fail-closed PR-ownership PASS is obtained. The StableId validator now requires the parsed numeric version token to exactly equal the canonical decimal spelling emitted by stableId(), preserving existing v1 output while rejecting aliases such as v01. The v2 resolved-region regression proves the noncanonical world ID fails closed. Canonical CI 31466997896 is green. Latest Swarm Control Plane run 31467814969 reached hardened pr-check and failed with 'live control state changed after its validation marker' rather than any lane/scope/claim denial; engine-tests passed. Retrigger after a stable validated control snapshot and require explicit PASS before merge.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "GitHub COMMENT review 4903779675 records the independent exact-head Reality/replay review.",
+    "PR #282 exact head a2785f04f0fff74c9e78bfe3d79702376dad271b is based on main ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and changes only src/shared/Core/DeterminismContract.luau plus tests/resolved_region_recipe_v2_compat.luau.",
+    "Canonical CI run 31466997896 is green on the exact head.",
+    "Swarm Control Plane run 31467814969 pr-ownership job 93704311270 executed the trusted hardening validator and failed only because live control state changed after its validation marker; engine-tests job 93704311391 succeeded.",
+    "Live primary claim remains worker sol-20260811-q9m4r2 / token c6b9e17d4a28f350 / PR 282, matching PR metadata."
+  ],
+  "metadata": {
+    "pr": 282,
+    "headSha": "a2785f04f0fff74c9e78bfe3d79702376dad271b",
+    "mergeSha": "e8703426c3e846795e814740671317367c3f3c95",
+    "result": "APPROVE_INTEGRATION_BLOCKED_CONTROL_REFRESH",
+    "claimToken": "3e8a1c56d9f4207b"
+  }
+}
