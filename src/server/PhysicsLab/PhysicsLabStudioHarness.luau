@@ -56,7 +56,10 @@ local function bindOwnedHandle(realized: RealizedLab): (RealizedLab, () -> boole
 			return
 		end
 		tearingDown = true
-		local ok, failure = pcall(realized.destroy)
+		local ok, failure = pcall(function(): boolean
+			realized.destroy()
+			return true
+		end)
 		tearingDown = false
 		if not ok then
 			error(failure, 0)
