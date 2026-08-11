@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-060200-v21-capacity-collapse",
+  "timestamp": "2026-08-11T06:02:00+00:00",
+  "fromWorker": "sol-20260811-v21fix",
+  "eventType": "FINDING",
+  "laneId": "SWARM-V21-CAPACITY",
+  "severity": "blocking",
+  "summary": "The first live ~25-worker V2 stress burst exposed a throughput collapse: roughly two dozen workers registered, but the board had zero ready slots and zero active claims because the Studio critical path was externally blocked; workers then reported green main and stopped. V2.1 fixes this by making GREEN non-terminal and exposing active-Epic backfill, audit, test, recovery and capacity-mining fallbacks.",
+  "affects": ["SWARM-V21-CAPACITY", "OPS-STUDIO-DISPLAY", "HG151-DIAGNOSTICS", "HG151-TWOCLIENT"],
+  "evidence": [
+    "Pre-repair live board showed workers registered with activeClaims=0 and readySlots=0 while OPS-STUDIO-DISPLAY was BLOCKED_EXTERNAL.",
+    "After live backfill/capacity seeding, the validated board exposed more than 25 claimable roles without unlocking HERO-DOOR.",
+    "PR #269 passed hardened ownership/resource/digest enforcement and canonical CI, then merged as 5ee9091eb9d7af665a990381b0133d8ccedea503."
+  ]
+}
