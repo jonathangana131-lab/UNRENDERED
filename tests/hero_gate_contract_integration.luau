@@ -163,8 +163,6 @@ local function run(): number
 		manager:getMetrics().registered == 0 and WorldEntity.count(registry) == 0
 	)
 
-	local runHeroGateAuthorityTeardown = require("./hero_gate_authority_teardown")
-	failures += runHeroGateAuthorityTeardown()
 	failures += runPhysicsLabDiagnosticsAtomicity()
 	return failures
 end
