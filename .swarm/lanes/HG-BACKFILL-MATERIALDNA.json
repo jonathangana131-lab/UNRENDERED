@@ -5,7 +5,7 @@
   "title": "MaterialDNA adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete MaterialDNA schema, fixture, metatable/no-execute, canonicalization, revision, material-reference, or immutability defects without depending on Studio.",
   "priority": 5100,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Materials/*.luau", "tests/materialdna*.luau"],
@@ -16,5 +16,6 @@
     {"slotId":"audit","role":"MaterialDNA contract and fixture auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/materialdna*.luau","Docs/MATERIAL_DNA_CONTRACT.md"]}
   ],
   "acceptance": ["inspect current main and existing metatable boundary tests", "do not broaden material architecture without a demonstrated defect", "behavior changes get deterministic regressions", "preserve no-execute and canonical serialization boundaries", "publish reusable findings as structured events"],
+  "notes": "Completed source-only Reality-Grade MaterialDNA depth. PR #283 merged as ed37c5698c1aad7a355e514b35ea5c5bd50aa738 after independent approval. It closes hostile unknown-key metamethod execution, preserves throwing-key fail-closed regressions, and seals canonical fixture revision content without introducing a second production identity contract. Exact merge-head canonical CI run 31466530602 passed. No Roblox Studio/engine evidence was claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
