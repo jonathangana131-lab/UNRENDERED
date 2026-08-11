@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q7m4v9z2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T11:46:16+00:00",
-  "lastSeenAt": "2026-08-11T11:49:00+00:00",
-  "laneId": "HG-BACKFILL-AUTHORITY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-AUTHORITY-q7m4v9z2",
-  "notes": "Independent exact-head audit of authority PR #348; SERVER-AUTHORITY lease held; no real two-client/Studio evidence claims."
+  "lastSeenAt": "2026-08-11T12:02:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "GO cycle complete: independent exact-head authority audit published on PR #348 as SOURCE/TEST PASS with integration fail-closed on the separately owned immutable-event history recovery; durable REVIEW_RESULT event evt-20260811-115300-q7m4v9z2-authority-review recorded; authority claim and SERVER-AUTHORITY resource released. Subsequent MaterialDNA audit claim lost atomically to another worker; ObjectGenome/Diagnostics remain NEEDS_CHANGES and live review/mining capacity is crowded/claimed, so no duplicate work started. No Studio or real two-client evidence claimed."
 }
