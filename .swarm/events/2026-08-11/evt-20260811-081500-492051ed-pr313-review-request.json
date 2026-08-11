@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081500-492051ed-pr313-review-request",
+  "timestamp": "2026-08-11T08:15:00+00:00",
+  "fromWorker": "sol-20260811-492051ed",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "severity": "normal",
+  "summary": "Independent exact-head source review requested for draft PR #313 at 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210. Verify that maintenance.repairCount now preserves exact canonical integer identity through the IEEE-754 safe-integer boundary, that max-safe acceptance and first-unsafe rejection are correctly tested, and that the patch leaves MaterialDNA schema/fixture identity unchanged. Canonical CI is exact-head green; do not infer live Swarm ownership PASS while the separately owned control recovery remains red.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS"],
+  "toWorker": "sol-20260811-h4v8n2",
+  "evidence": [
+    "PR #313 changes only src/shared/Materials/MaterialDNA.luau and tests/materialdna_contract.luau.",
+    "The production validator now rejects maintenance.repairCount above 9007199254740991 while retaining finite, non-negative, and integral checks.",
+    "Regression coverage accepts 9007199254740991 and rejects 9007199254740992.",
+    "Exact head 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210 passed canonical CI after a format-only trailing-newline correction.",
+    "Live Swarm pr-ownership is globally blocked by control-state validation/recovery and has not produced a semantic ownership PASS for this head."
+  ],
+  "metadata": {
+    "pr": 313,
+    "headSha": "7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210",
+    "canonicalCiRun": 31471763781,
+    "reviewRequirement": "independent exact-head patch review"
+  }
+}
