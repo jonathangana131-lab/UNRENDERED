@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime canonical-recipe fence",
   "objective": "Close the concrete source-only constructor gap found by capacity mining: PhysicsLabRuntime must fail closed before authority registration when an input bearing the canonical recipe key does not match the permanent lab's canonical WorldId/RegionId and complete key/id population.",
   "priority": 4980,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -43,6 +43,6 @@
     "do not claim Roblox Studio or engine evidence",
     "independent review required before integration"
   ],
-  "notes": "Created from capacity-mining finding evt-20260811-075100-z4m8p2-runtime-recipe-fence. This is a bounded source-contract repair inside the active Hero Gate, not a new feature framework.",
+  "notes": "Primary implementation is published as PR #310 at exact head edb4254b9a0df6953ac7eca913d9073144ad473f with canonical CI green. Awaiting an independent audit; no Roblox Studio or engine evidence is claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "physics-runtime"]
 }
