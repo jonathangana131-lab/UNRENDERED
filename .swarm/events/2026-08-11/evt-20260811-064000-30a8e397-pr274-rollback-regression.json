@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064000-30a8e397-pr274-rollback-regression",
+  "timestamp": "2026-08-11T06:40:00+00:00",
+  "fromWorker": "sol-20260811-30a8e397",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "Primary Fidelity PR #274's callback-failure rollback can introduce a new cross-entity accounting regression unless callback manager mutation is guarded. The PR snapshots/restores the entire fidelity-count table and externalSynchronization metric, but does not snapshot/restore `_states` or `registered` and does not forbid register/unregister/step during applyTransition. A hook for entity A that registers B and then raises leaves B present and registered while the rollback restores counts to the pre-B snapshot. This exact contract-neutral invariant passes on current main, so it protects against a regression introduced by the proposed rollback rather than merely restating the pre-existing same-entity reentrancy defect.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #278 CI run 31465718761: failing hook that registers another entity then raises propagates rejection PASS and aggregate counts-vs-registered consistency PASS on current main.",
+    "PR #274 d4cc3f56be8f514534634c4f7e70d8b16078b43b snapshots counts before applyTransition and restores counts on callback failure without rolling back callback-created registrations.",
+    "PR #274 currently exposes register/unregister/step during the hook with no per-manager in-flight mutation guard.",
+    "A per-manager mutation guard that leaves getObservedLevel/getMetrics readable during the hook satisfies existing integration behavior and avoids global transactional snapshots."
+  ]
+}
