@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "workerId": "sol-20260811-fcea3ee6",
+  "claimToken": "369b51c31330ae9c",
+  "claimedAt": "2026-08-11T09:52:31+00:00",
+  "heartbeatAt": "2026-08-11T09:52:31+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/audit/HG-CAPACITY-MINING-diagnostics-fcea3ee6",
+  "pr": null,
+  "notes": "Mine diagnostics source/tests/active PRs for one concrete non-duplicate Hero-Gate depth gap while trusted-history recovery remains independently owned; no Studio evidence claim."
+}
