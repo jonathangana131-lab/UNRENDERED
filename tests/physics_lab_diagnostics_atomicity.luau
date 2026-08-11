@@ -19,8 +19,9 @@ local function run(): number
 		return string.find(source, needle, 1, true)
 	end
 
-	local directRepresentationsStart =
-		position("local function directRepresentations(model: Model): { Instance }")
+	local directRepresentationsStart = position(
+		"local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model: Model): { Instance }"
+	)
 	local directRepresentationsEnd =
 		position("\nlocal function adorneeFor(representation: Instance): BasePart")
 	local directRepresentationsSource = nil
@@ -30,24 +31,24 @@ local function run(): number
 	end
 	local representedCountMetric = directRepresentationsSource ~= nil
 		and string.find(directRepresentationsSource, '"UNRENDERED_RepresentedCount"', 1, true)
-	local observedRepresentationCount = directRepresentationsSource ~= nil
-		and string.find(directRepresentationsSource, "#representations", 1, true)
-	local completenessFailurePath = directRepresentationsSource ~= nil
-		and (
-			string.find(directRepresentationsSource, "assert(", 1, true)
-			or string.find(directRepresentationsSource, "error(", 1, true)
-		)
+	local representedCountEquality = directRepresentationsSource ~= nil
+		and string.find(directRepresentationsSource, "#representations == expectedRepresentedCount", 1, true)
+	local uniqueRepresentationIds = directRepresentationsSource ~= nil
+		and string.find(directRepresentationsSource, "not seenEntityIds[entityId]", 1, true)
+	local authoritativeRepresentationMembership = directRepresentationsSource ~= nil
+		and string.find(directRepresentationsSource, "lab.isRepresented(entityId)", 1, true)
 	local preflightDefinition =
 		position("local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model)")
 	local captureDefinition = position(
 		"function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab): Snapshot"
 	)
-	local preflightEnumeration = position("for _, representation in ipairs(directRepresentations(model)) do")
+	local preflightEnumeration =
+		position("for _, representation in ipairs(directRepresentations(lab, model)) do")
 	local captureEnumeration = nil
 	if captureDefinition ~= nil then
 		captureEnumeration = string.find(
 			source,
-			"for _, representation in ipairs(directRepresentations(model)) do",
+			"for _, representation in ipairs(directRepresentations(lab, model)) do",
 			captureDefinition,
 			true
 		)
@@ -80,14 +81,15 @@ local function run(): number
 	local evidenceFreeze = position("\ttable.freeze(evidence)")
 
 	expect(
-		"direct representation enumeration is fenced by authoritative represented-count completeness",
+		"direct representation enumeration proves authoritative count and set membership",
 		directRepresentationsSource ~= nil
 			and representedCountMetric ~= nil
-			and observedRepresentationCount ~= nil
-			and completenessFailurePath ~= nil
+			and representedCountEquality ~= nil
+			and uniqueRepresentationIds ~= nil
+			and authoritativeRepresentationMembership ~= nil
 	)
 	expect(
-		"standalone preflight and capture both consume the completeness-fenced enumeration",
+		"standalone preflight and capture both consume the authoritative-set enumeration",
 		preflightDefinition ~= nil
 			and captureDefinition ~= nil
 			and preflightEnumeration ~= nil
