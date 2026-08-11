@@ -125,13 +125,29 @@ local function run(): number
 	local hostileCapacityConstructorAccepted = pcall(function()
 		FidelityManager.new(hostileCapacityConfig)
 	end)
-	expectEqual("constructor rejects hostile maxRegisteredEntities scalar", hostileCapacityConstructorAccepted, false)
-	expectEqual("constructor maxRegisteredEntities rejection executes no metamethod", hostileCapacityCalls(), 0)
+	expectEqual(
+		"constructor rejects hostile maxRegisteredEntities scalar",
+		hostileCapacityConstructorAccepted,
+		false
+	)
+	expectEqual(
+		"constructor maxRegisteredEntities rejection executes no metamethod",
+		hostileCapacityCalls(),
+		0
+	)
 	local hostileCapacityPureAccepted = pcall(function()
 		FidelityManager.evaluatePolicy(validInputs(), hostileCapacityConfig, "F0")
 	end)
-	expectEqual("pure policy rejects hostile maxRegisteredEntities scalar", hostileCapacityPureAccepted, false)
-	expectEqual("pure policy maxRegisteredEntities rejection executes no metamethod", hostileCapacityCalls(), 0)
+	expectEqual(
+		"pure policy rejects hostile maxRegisteredEntities scalar",
+		hostileCapacityPureAccepted,
+		false
+	)
+	expectEqual(
+		"pure policy maxRegisteredEntities rejection executes no metamethod",
+		hostileCapacityCalls(),
+		0
+	)
 
 	local explicitFalseConfigAccepted = pcall(function()
 		FidelityManager.evaluatePolicy(validInputs(), false :: any, "F0")
