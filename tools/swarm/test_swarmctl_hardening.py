@@ -45,6 +45,84 @@ class CliExitPropagationRegressionTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, 2)
 
 
+class ImmutableLegacyEventCompatibilityTests(unittest.TestCase):
+    def setUp(self):
+        self.fx = Fx()
+        self.now = core.parse_time("2026-08-11T08:24:30+00:00")
+
+    def tearDown(self):
+        self.fx.close()
+
+    def event(self, **overrides):
+        value = {
+            "schemaVersion": 1,
+            "eventId": "evt-20260811-080520-legacy-review",
+            "timestamp": "2026-08-11T08:05:20+00:00",
+            "fromWorker": "sol-20260811-a81f",
+            "eventType": "REVIEW_RESULT",
+            "laneId": "LANE-A",
+            "slotId": "reviewer-1",
+            "severity": "normal",
+            "summary": "Independent exact-head review result.",
+            "affects": ["LANE-A"],
+            "evidence": ["Exact historical evidence remains immutable."],
+            "pr": 315,
+            "headSha": "a" * 40,
+            "verdict": "APPROVE",
+            "nextAction": "Preserve the event bytes and continue integration.",
+            "metadata": {
+                "pr": 315,
+                "headSha": "a" * 40,
+                "verdict": "APPROVE",
+            },
+        }
+        value.update(overrides)
+        return value
+
+    def write_event(self, value):
+        path = self.fx.root / "events" / "2026-08-11" / "legacy.json"
+        write(path, value)
+        return path
+
+    def test_known_historical_review_fields_validate_without_rewriting_bytes(self):
+        path = self.write_event(self.event())
+        before = path.read_bytes()
+
+        result = hard.validate_all(self.fx.root, self.now)
+
+        self.assertEqual(result["events"], 1)
+        self.assertEqual(path.read_bytes(), before)
+
+    def test_post_cutoff_top_level_review_field_fails_closed(self):
+        path = self.write_event(self.event(timestamp="2026-08-11T08:25:01+00:00"))
+        before = path.read_bytes()
+
+        with self.assertRaises(core.ControlError):
+            hard.validate_all(self.fx.root, self.now)
+
+        self.assertEqual(path.read_bytes(), before)
+
+    def test_legacy_fields_are_restricted_to_review_control_event_types(self):
+        self.write_event(self.event(eventType="FINDING"))
+        with self.assertRaises(core.ControlError):
+            hard.validate_all(self.fx.root, self.now)
+
+    def test_malformed_legacy_coordinate_fails_closed(self):
+        self.write_event(self.event(pr="315"))
+        with self.assertRaises(core.ControlError):
+            hard.validate_all(self.fx.root, self.now)
+
+    def test_conflicting_metadata_fails_closed(self):
+        self.write_event(self.event(metadata={"pr": 316, "headSha": "a" * 40, "verdict": "APPROVE"}))
+        with self.assertRaises(core.ControlError):
+            hard.validate_all(self.fx.root, self.now)
+
+    def test_unknown_key_stays_rejected_on_legacy_event(self):
+        self.write_event(self.event(unknownCompatibilityEscape=True))
+        with self.assertRaises(core.ControlError):
+            hard.validate_all(self.fx.root, self.now)
+
+
 class WorkflowSnapshotFenceRegressionTests(unittest.TestCase):
     def workflow_text(self):
         workflow_path = Path(__file__).resolve().parents[2] / ".github" / "workflows" / "swarm-control.yml"
