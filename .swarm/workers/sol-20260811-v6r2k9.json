@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-v6r2k9",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T07:53:35+00:00",
+  "lastSeenAt": "2026-08-11T07:53:35+00:00",
+  "laneId": "HG-BACKFILL-REALITY",
+  "slotId": "primary",
+  "branch": "agent/reality/HG-BACKFILL-REALITY-v6r2k9",
+  "notes": "Claiming Reality/replay source-hardening backfill after confirming main CI green and higher-scoring WorldEntity audit is resource-blocked by an active REALITY-CONTRACT lease."
+}
