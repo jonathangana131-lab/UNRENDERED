@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "audit",
-  "workerId": "sol-20260811-p6r2m8v5",
-  "claimToken": "6c8d1f3a9b2e7054",
-  "claimedAt": "2026-08-11T11:56:00+00:00",
-  "heartbeatAt": "2026-08-11T11:56:00+00:00",
+  "workerId": "sol-20260811-k3m9v2q7",
+  "claimToken": "5a8d2c7f1b6e9043",
+  "claimedAt": "2026-08-11T20:15:00+00:00",
+  "heartbeatAt": "2026-08-11T20:15:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-p6r2m8v5-g1",
-  "pr": 369,
-  "notes": "Fresh successor completion audit for generation-5 ObjectGenome PR #369. Verify exact-head lineage, canonical family/key bounds, mutable-state alias fencing, decoder no-execute boundary, deterministic issue ordering, regression absorption, scope, CI, and integration gates."
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-k3m9v2q7-g2",
+  "pr": 380,
+  "notes": "Generation-2 stale audit takeover. Previous audit claim targeted superseded PR #369 and expired; current task is fresh independent exact-head source/test audit of generation-6 successor PR #380, without bypassing live pr-ownership recovery."
 }
