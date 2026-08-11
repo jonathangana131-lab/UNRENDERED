@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-n8v3q5d7",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T12:00:10+00:00",
-  "lastSeenAt": "2026-08-11T12:00:10+00:00",
-  "notes": "GO continuation worker claiming the unlocked HG-BACKFILL-REALITY audit slot for independent exact-head review of PR #359."
+  "lastSeenAt": "2026-08-11T12:05:40+00:00",
+  "notes": "Completed independent exact-head HG-BACKFILL-REALITY audit of PR #359 head df5e1b397c673a0cb7e2d62bdb3a11e51762013a. Published review 4905980511: source/test PASS; integration held only on global trusted-history/live ownership recovery. Exact-head canonical CI 31480065133 PASS and Swarm engine-tests PASS; no local or Studio execution claimed."
 }
