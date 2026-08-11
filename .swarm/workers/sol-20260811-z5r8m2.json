@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:46:48+00:00",
-  "lastSeenAt": "2026-08-11T07:52:20+00:00",
+  "lastSeenAt": "2026-08-11T08:05:02+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-z5r8m2",
-  "notes": "Reviewing diagnostics primary #295; published current-head docs reconciliation as draft PR #304."
+  "notes": "Reviewing diagnostics primary #295 and test-adversary #301; draft PR #304 carries current-head docs reconciliation while fail-closed ownership validation is being restored."
 }
