@@ -733,7 +733,18 @@ local function componentFitsEnvelope(component: any, envelope: any): boolean
 		and math.abs(component.localPositionM.z) + rotatedHalf.z <= halfEnvelopeZ
 end
 
+local function issueLess(left: ValidationIssue, right: ValidationIssue): boolean
+	if left.path ~= right.path then
+		return left.path < right.path
+	end
+	if left.code ~= right.code then
+		return left.code < right.code
+	end
+	return left.message < right.message
+end
+
 local function reportResult(issues: { ValidationIssue }): ValidationResult
+	table.sort(issues, issueLess)
 	return {
 		ok = #issues == 0,
 		issues = issues,
@@ -1436,6 +1447,10 @@ function ObjectGenome.decodeMechanismPosition(
 	mechanism: MechanismSpec,
 	position: number
 ): DecodedMechanismPosition
+	assert(
+		type(mechanism) == "table" and getmetatable(mechanism) == nil,
+		"mechanism must be a plain ObjectGenome mechanism table"
+	)
 	assert(
 		mechanismPositionIsValid(mechanism, position),
 		"mechanism position must use canonical ObjectState v1 encoding"
