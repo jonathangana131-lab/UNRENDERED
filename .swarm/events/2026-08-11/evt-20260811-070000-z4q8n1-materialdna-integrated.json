@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070000-z4q8n1-materialdna-integrated",
+  "timestamp": "2026-08-11T07:00:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "info",
+  "summary": "MaterialDNA adversarial slot complete. Primary PR #283 passed independent exact-head audit and was squash-merged to main as ed37c5698c1aad7a355e514b35ea5c5bd50aa738. The merged change preserves all #272 hostile-key regressions, including recipe/state/reference callback-zero checks and the throwing-key fail-closed case, while fixing production validation and sealing fixture revisions. PR #272 is closed superseded and must not merge separately. The separate maintenance.repairCount upper-bound finding remains a non-blocking future slice.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "Independent audit approval: evt-20260811-065830-q7h4n2-pr283-rereview.json.",
+    "Independent adversarial approval: evt-20260811-064900-z4q8n1-materialdna-approved.json.",
+    "PR #283 merged with expected head 11334326196adba5ced6c50ffe32e856a047c2b9 to main commit ed37c5698c1aad7a355e514b35ea5c5bd50aa738.",
+    "PR #272 is closed as superseded; its test obligations are present in the merged #283 suite.",
+    "Post-merge main CI run 31466530602 started for ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and must be observed before claiming main healthy."
+  ],
+  "metadata": {
+    "mergedPr": 283,
+    "mergedSha": "ed37c5698c1aad7a355e514b35ea5c5bd50aa738",
+    "supersededPr": 272,
+    "claimToken": "5f1a8c3d97e2b640"
+  }
+}
