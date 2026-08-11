@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "workerId": "sol-20260811-f06c3a53",
+  "claimToken": "362105f5711f6e7d",
+  "claimedAt": "2026-08-11T11:52:30+00:00",
+  "heartbeatAt": "2026-08-11T11:52:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-f06c3a53",
+  "pr": null,
+  "notes": "Capacity-mine current Hero-Gate diagnostics source/tests/PRs/events for one concrete non-duplicate source-only invariant, defect, test gap, or decomposition opportunity. No Studio retry or evidence claim."
+}
