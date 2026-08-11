@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085120-8d9cde53-three-review-events-laundered",
+  "timestamp": "2026-08-11T08:51:20+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "critical",
+  "summary": "Finite first-write audit confirms all three legacy REVIEW_RESULT events in the event-compat set have already been rewritten on authoritative swarm-control. Authority moved top-level review coordinates into metadata; cart moved top-level slotId into metadata; WorldEntity lost top-level pr/headSha/verdict=SYNC_REQUIRED without a metadata replacement. Their current Git blob identities differ from audited first-write blobs. MaterialDNA remains byte-exact. Any compatibility repair that validates strict current bytes first will ratify already-proven immutable-history corruption; recovery must pin audited original blobs and safely restore the three known laundered current blobs to those exact originals under a one-way exact transition or stronger trusted-history mechanism.",
+  "affects": ["SWARM-RECOVERY-EVENT-COMPAT", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "Authority first-write d12a689407d460eae79f0d9fd999a4efa11fbf2f blob 2f0b0221b7995b3862ac6c009804ebb66f715fac contains top-level pr/headSha/verdict; current swarm-control blob 8f332b489b9266211ff6c5d2869647eba9b80838 moves those values under metadata.",
+    "WorldEntity first-write 4a3f3d34ea674f29fa00e2535748b07de0dc57d5 blob f9781fd64518c01aa10b460f01aff13adc6635da contains top-level pr/headSha/verdict=SYNC_REQUIRED; current swarm-control blob c7615c531b671d10a56d6a93577fc9c81cb15836 has none of those fields and no metadata replacement.",
+    "Cart first-write 6b2b7e087b4e7fa67fd3b0ed9724cae7cb542808 blob a39220b473086229e6b1057b296342175b851af1 contains top-level slotId='audit'; current swarm-control blob 162e42ab9ab08e7976d61e78ad12bbd088ff13a8 moves slotId under metadata.",
+    "MaterialDNA current blob remains the audited immutable blob 9a7f679ea84600d6a28a8bef02436e5f85fd857e.",
+    "The earlier live laundering repro proved a failed immutable rewrite can remain as branch tip and become a later PASS baseline, explaining why these current blobs cannot be trusted merely because generic strict validation accepts them.",
+    "PR #329 comment 5250976045 records the exact blob matrix and a bounded restoration recommendation."
+  ],
+  "metadata": {
+    "authorityOriginalBlob": "2f0b0221b7995b3862ac6c009804ebb66f715fac",
+    "authorityCurrentBlob": "8f332b489b9266211ff6c5d2869647eba9b80838",
+    "worldEntityOriginalBlob": "f9781fd64518c01aa10b460f01aff13adc6635da",
+    "worldEntityCurrentBlob": "c7615c531b671d10a56d6a93577fc9c81cb15836",
+    "cartOriginalBlob": "a39220b473086229e6b1057b296342175b851af1",
+    "cartCurrentBlob": "162e42ab9ab08e7976d61e78ad12bbd088ff13a8",
+    "materialDnaBlob": "9a7f679ea84600d6a28a8bef02436e5f85fd857e",
+    "claimToken": "a363dc5b9a4a1217"
+  }
+}
