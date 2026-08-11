@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091130-q8m4v2c7-authority-stale-handle",
+  "ts": "2026-08-11T09:11:30+00:00",
+  "type": "FINDING",
+  "workerId": "sol-20260811-q8m4v2c7",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "claimGeneration": 3,
+  "claimToken": "4c7e1a9d2b6f8053",
+  "reason": "capacity mining: PhysicsLab harness ownership can outlive an externally destroyed canonical realization",
+  "payload": {
+    "findingId": "authority-stale-handle-lifetime",
+    "recommendationId": "physicslab-harness-lifetime-coherence",
+    "severity": "P1",
+    "title": "PhysicsLabStudioHarness can retain stale ownership after callers destroy the returned realization",
+    "reproducibleInvariant": "On current main, active = PhysicsLabStudioHarness.start(workspace) returns the raw RealizedLab, including active.destroy. Calling active.destroy() destroys the realized model/runtime but does not clear the harness-local current reference. PhysicsLabStudioHarness.get() therefore still returns active, and a subsequent start(workspace) rejects with 'PhysicsLabStudioHarness already running' even though the physical authority root is gone. This stale-ownership wedge also survives the open PR #307 ownership test because that patch covers stop()-owned destruction, not destruction through the raw returned handle.",
+    "affectedSource": "src/server/PhysicsLab/PhysicsLabStudioHarness.luau; src/server/PhysicsLab/PhysicsLabRealizer.luau; open PR #307 tests/hero_gate_authority_teardown.luau",
+    "evidence": [
+      "PhysicsLabStudioHarness.start stores current = PhysicsLabRealizer.realize(targetParent) and returns that same raw object.",
+      "The RealizedLab contract exposes destroy(), and PhysicsLabRealizer.destroy tears down model/runtime without notifying PhysicsLabStudioHarness.",
+      "PhysicsLabStudioHarness.get returns current without validating physical/runtime liveness; start rejects any non-nil current before realization.",
+      "Open PR #307 explicitly tests duplicate start, stop-owned destroy, double-stop, and restart ordering; its published scope does not cover a caller invoking destroy() on the start() result.",
+      "Open-PR duplicate search for PhysicsLab/harness destroy/stale/ownership/lifecycle found no existing repair for this raw-handle lifetime split."
+    ],
+    "proposedLane": {
+      "kind": "bounded authority lifecycle follow-up",
+      "priority": "P1",
+      "scope": "Centralize canonical realization destruction under the harness or reconcile current against realization liveness before get/start, with a source-level regression for external-handle destruction. Preserve fail-closed server ownership and do not make Workspace canonical truth."
+    },
+    "guardrail": "Do not start a competing authority implementation while #316/#307/#300 and the current diagnostics/authority train are still active. Consume this only as a bounded follow-up once the active train has a clear integration point; require exact-head source tests and independent review. No Roblox Studio or two-client evidence is claimed by this source-level finding.",
+    "duplicateCheck": "Distinct from evt-20260811-084830-q5x8n3z2-authority-workspace-parent: that finding concerns where the canonical root may be realized; this finding concerns harness ownership remaining live after the returned realization is independently destroyed."
+  }
+}
