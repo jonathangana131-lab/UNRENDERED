@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064700-z4q8n1-materialdna-exact-review",
+  "timestamp": "2026-08-11T06:47:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "high",
+  "summary": "Exact-head review of primary PR #283 at 104261d6529cc1f5b8787639a2f9ce679521866a confirms the production hostile-key formatter repair is correct and both canonical CI and live ownership checks are green, but merge clearance is withheld pending two test-only closures: preserve #272's throwing-__tostring pcall regression before superseding that PR, and make fixture-golden coverage exhaustive over the entire MaterialFixtureCatalog rather than a handwritten subset.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "PR #283 CI run 31465808262 is success on exact head 104261d6529cc1f5b8787639a2f9ce679521866a.",
+    "PR #283 Swarm Control Plane run 31465808252 is success on the same exact head after #288 recovery.",
+    "The source patch no longer calls tostring on arbitrary unknown keys, so the demonstrated metamethod execution path is correctly removed.",
+    "PR #272 exact head 97577ea87d4c70b8b5a4c0ea0ed63c13b6de92bd contains a pcall regression proving a hostile key formatter previously could abort validateRecipe; PR #283 currently preserves only callback-count probes.",
+    "Existing Codex thread discussion_r3755715416 remains applicable: fixtureGoldens enumerates the three current fixtures but never asserts that every catalog fixture has a corresponding golden."
+  ]
+}
