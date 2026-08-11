@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081620-mat8c3r1-materialdna-key-grammar",
+  "timestamp": "2026-08-11T08:16:20+00:00",
+  "fromWorker": "sol-20260811-mat8c3r1",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Concrete MaterialDNA next-depth leaf: canonical project-key validation currently accepts '%' even though the validator's own declared stable-key alphabet is [a-z0-9._/-]. Tighten the regex by removing '%' and add a regression such as visual.familyKey='materials%2fcarpet' so URI-percent-style aliases cannot enter canonical MaterialDNA keys before persistence/Hero depth builds on them.",
+  "affects": ["HERO-GATE", "MaterialDNA"],
+  "evidence": [
+    "src/shared/Materials/MaterialDNA.luau validateProjectKey currently uses ^[a-z0-9][a-z0-9._/%-]*$, which explicitly admits percent signs.",
+    "The immediately following validation diagnostic says accepted lowercase stable-key characters are [a-z0-9._/-], with no percent sign.",
+    "Docs/MATERIAL_DNA_CONTRACT.md defines these values as project-owned semantic keys and rejects direct URL/Roblox asset references; percent-encoded URI-like spellings are therefore unnecessary canonical surface area.",
+    "tests/materialdna_contract.luau covers direct rbxassetid:// rejection but has no percent-encoding regression; repository PR/lane search found no existing MaterialDNA percent/project-key-grammar repair lane.",
+    "Suggested bounded leaf acceptance: preserve all shipped fixture identities/fingerprints; reject '%' in every validateProjectKey-backed field; add explicit percent regression(s); no schema/version bump or new key framework unless existing canonical '%' keys are discovered during implementation."
+  ],
+  "proposedLane": {
+    "laneId": "HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR",
+    "kind": "source-hardening",
+    "scope": [
+      "src/shared/Materials/MaterialDNA.luau",
+      "tests/materialdna_contract.luau"
+    ]
+  }
+}
