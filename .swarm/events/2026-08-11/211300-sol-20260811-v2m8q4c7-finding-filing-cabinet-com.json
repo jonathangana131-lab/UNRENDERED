@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t211300z-v2m8q4c7-filing-cabinet-com",
+  "timestamp": "2026-08-11T21:13:00Z",
+  "fromWorker": "sol-20260811-v2m8q4c7",
+  "eventType": "FINDING",
+  "summary": "Physics Lab filing-cabinet authored center-of-mass metadata does not match the component-weighted centroid. The genome declares Y=-0.06 and Z=0.01, while the authored components derive Y=0.01721311475409836 and Z=-0.003442622950819672. Recommend a bounded source-only fixture mass-property repair/regression, optionally batched with the separate office-table COM finding.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 ObjectGenomeFixtures authors total filing-cabinet component mass 36.6 kg but stale centerOfMassM metadata.",
+    "Component arithmetic: 24.0 kg body at origin plus three 4.2 kg drawers at Y 0.38, 0.05, -0.28 and Z -0.01 gives Y moment 0.63 and Z moment -0.126; divide by 36.6 for the derived centroid.",
+    "Current physics_lab_recipe coverage does not assert filing-cabinet component-derived COM.",
+    "Repository PR searches found no filing-cabinet center-of-mass repair matching this exact defect."
+  ]
+}
