@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-211504-r7m3v9c5-diagnostics-duplicate-root-review",
+  "timestamp": "2026-08-11T21:15:04+00:00",
+  "fromWorker": "sol-20260811-r7m3v9c5",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "info",
+  "summary": "PASS expected-red adversarial evidence on PR #396 exact head ecd54b574ff0c390434a6ea14e509fb0680b7775. The audit isolates a real duplicate diagnostics-root fail-open in #392 generation-4: direct same-named root cardinality must be enumerated and rejected above one before any candidate is selected or class/ownership validated. Absorb equivalent coverage into the production successor; do not merge #396 independently.",
+  "affects": ["HG-COMPLETION-PHYSICS", "HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "PR #396 changes only tests/physics_lab_diagnostics_atomicity.luau and is based on PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519",
+    "Exact #392 PhysicsLabStudioDiagnostics diagnosticsRoot uses model:FindFirstChild(DIAGNOSTICS_ROOT_NAME), while capture excludes all direct children with that name from authoritative representation enumeration but validates only the selected root",
+    "Canonical CI run 31536376917 passes format, lint, Luau analysis, canonical randomness, domain-boundary, plain-value, and swarm deterministic checks; Pure Luau fails exactly the new duplicate-root assertion while adjacent diagnostics atomicity/bounds/readout assertions pass",
+    "Swarm Control Plane run 31536376859 engine-tests PASS; pr-ownership remains separately fail-closed on the actively owned global trusted-history recovery",
+    "Production successor must enumerate all direct matching roots, return nil for zero, reject cardinality above one before selecting any candidate, and preserve existing single-root Folder/project-owned checks",
+    "GitHub review 4910819435 records the exact-head PASS-for-expected-red verdict; no Roblox Studio or viewport evidence is required or claimed"
+  ]
+}
