@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071620-diaga6r2k-diagnostics-blocked-handoff",
+  "timestamp": "2026-08-11T07:16:20+00:00",
+  "fromWorker": "sol-20260811-diaga6r2k",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "summary": "PR #289 exact head b80df3bedef88a948f0334c9a36050e1323b8b2f has green canonical CI but pr-ownership is globally blocked by the main-health validation-fence defect. Releasing the diagnostics audit claim to repair that red control prerequisite first. The PR is docs-only, keeps Studio evidence unclaimed, and should be re-claimed/revalidated after the control repair lands.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "CI 31468187998 succeeded on exact PR head b80df3bedef88a948f0334c9a36050e1323b8b2f.",
+    "Swarm Control Plane 31468188022 engine-tests passed but pr-ownership job 93705446378 failed with 'live control state changed after its validation marker'.",
+    "Main CI 31468113697 succeeded on main@81a13b1138e26e7852c89685de5dbf9bd57753d8."
+  ]
+}
