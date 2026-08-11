@@ -1467,6 +1467,9 @@ local function isCanonicalUnitAxis(value: any): boolean
 	local x = rawget(value, "x")
 	local y = rawget(value, "y")
 	local z = rawget(value, "z")
+	if type(x) ~= "number" or type(y) ~= "number" or type(z) ~= "number" then
+		return false
+	end
 	if not isFinite(x) or not isFinite(y) or not isFinite(z) then
 		return false
 	end
@@ -1505,6 +1508,9 @@ local function standaloneMechanismIsCanonical(mechanism: any): boolean
 	if kind == "hinge" or kind == "tilt" then
 		local minimum = rawget(mechanism, "minDegrees")
 		local maximum = rawget(mechanism, "maxDegrees")
+		if type(minimum) ~= "number" or type(maximum) ~= "number" then
+			return false
+		end
 		return isCanonicalUnitAxis(rawget(mechanism, "axis"))
 			and finiteInterpolationSpan(minimum, maximum) ~= nil
 			and minimum <= 0
@@ -1512,6 +1518,9 @@ local function standaloneMechanismIsCanonical(mechanism: any): boolean
 	elseif kind == "slide" then
 		local minimum = rawget(mechanism, "minTravelM")
 		local maximum = rawget(mechanism, "maxTravelM")
+		if type(minimum) ~= "number" or type(maximum) ~= "number" then
+			return false
+		end
 		return isCanonicalUnitAxis(rawget(mechanism, "axis"))
 			and finiteInterpolationSpan(minimum, maximum) ~= nil
 			and minimum <= 0
