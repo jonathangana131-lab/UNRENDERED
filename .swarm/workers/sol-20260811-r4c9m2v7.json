@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-r4c9m2v7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T22:24:00+00:00",
+  "lastSeenAt": "2026-08-11T22:24:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-r4c9m2v7",
+  "notes": "Duplicate-aware source-only Physics Lab runtime mining against synthesis PR #408 and predecessor lineages; no Studio evidence."
+}
