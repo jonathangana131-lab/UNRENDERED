@@ -46,7 +46,7 @@ class RecoveryExtensionTests(unittest.TestCase):
 
     def test_measured_quarantine_rows_are_exact_and_unique(self):
         rows = extension.MALFORMED_EVENT_QUARANTINE_ROWS
-        self.assertEqual(len(rows), 43)
+        self.assertEqual(len(rows), 47)
         self.assertEqual(len({row[0] for row in rows}), len(rows))
         self.assertEqual(len({row[1] for row in rows}), len(rows))
         self.assertIn(
@@ -109,6 +109,15 @@ class RecoveryExtensionTests(unittest.TestCase):
                 "231630-sol-20260811-j4r8p2m6-finding-worldentity-no-fresh-gap.json",
                 "b166d68aa235be91627a11b5e9b0c1e468f5797a",
                 "a013a74d2164d0ad23ec3bbb1640586afde19a28",
+            ),
+            rows,
+        )
+        self.assertIn(
+            (
+                "evt-20260811-232300-g4m8q2v7-geometry-test-lineage-union",
+                "evt-20260811-232300-g4m8q2v7-geometry-test-lineage-union.json",
+                "7c39519f61b6e82d94fc4f72a5e5443bafd086c5",
+                "0431f08b228bef79faa08a20b5e449ccf535eab5",
             ),
             rows,
         )
