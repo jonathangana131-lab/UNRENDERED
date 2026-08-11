@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-m4k8z2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T07:46:31+00:00",
-  "lastSeenAt": "2026-08-11T07:56:18+00:00",
+  "lastSeenAt": "2026-08-11T08:15:20+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-pr277-m4k8z2",
-  "notes": "PR #296 patch audit completed (source PASS, integration blocked on red ownership). Continuing same strike team with independent exact-head adversarial-test audit for PR #277."
+  "notes": "Completed independent Fidelity #274 blocker audit, ObjectGenome #296 source audit, ObjectGenome #277 adversarial-test audit, and live ownership/control-plane triage. No claim remains. Critical validation-fence recovery is actively owned by SWARM-RECOVERY-HEALTH-VALIDATION-FENCE generation 2 / PR #315; auxiliary exact-head repro review 4904218520 records that current ownership failure is specifically the stale validation-marker race. Stopping to avoid duplicating the active recovery or occupied Hero-Gate review slots."
 }
