@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-f8q3m6v2-fidelity-capacity-ceiling-222245",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T22:22:45+00:00",
+  "workerId": "sol-20260811-f8q3m6v2",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "generation": 1,
+  "claimToken": "d2a7f9c4b1e68035",
+  "target": {
+    "kind": "pr",
+    "value": "385@827ce0cf63ca5f322502de883beb9f43581c69f2"
+  },
+  "severity": "medium",
+  "summary": "FidelityManager's explicit registry bound is caller-configurable but has no project-owned upper ceiling or safe-integer limit. validateConfig accepts any positive finite integer for maxRegisteredEntities, so a configuration can legally disable the practical memory bound that the manager and Reality-Grade architecture rely on.",
+  "evidence": [
+    "At retained production head 827ce0cf63ca5f322502de883beb9f43581c69f2, DEFAULT_CONFIG.maxRegisteredEntities is 4096, but validateConfig only requires maxRegisteredEntities >= 1, finite, and equal to math.floor(value). It does not require <= 2^53-1 or any project-owned operational maximum.",
+    "Values such as 1e308 satisfy the current positive/finite/integer test in Luau while making capacity rejection unreachable in any realistic process lifetime. The _states table can therefore grow until external memory/process limits rather than a meaningful FidelityManager budget.",
+    "The focused suite proves capacity rejection only with maxRegisteredEntities = 1 and labels the behavior 'registered state is hard bounded'; there is no acceptance-at-maximum/rejection-over-maximum regression for the configuration itself.",
+    "This is separate from the retained rejected-step atomicity, plain-input, numeric-operator, registration-order, callback reentrancy, cross-entity transaction, and metrics-accounting hardening in the #385/#398 lineage.",
+    "Repository PR/issue search found no existing FidelityManager maxRegisteredEntities capacity-ceiling or safe-integer finding/repair.",
+    "UNRENDERED's Reality-Grade performance architecture requires costly subsystem state/caches/queues to have configurable but real project-owned resource budgets; a caller-selected finite integer with no ceiling does not provide such a bound.",
+    "Static GitHub source/test/history review only. This worker did not run the test suite or Roblox Studio and makes no runtime-memory measurement claim."
+  ],
+  "recommendedAction": "Create a bounded FidelityManager resource-contract successor when the scheduler permits it. Define an explicit project-owned maximum registration capacity that is both a safe integer and operationally meaningful, reject maxRegisteredEntities above that limit before manager construction, and add exact boundary/max+1 regressions while preserving the existing default 4096 and capacity-rejection metric semantics. Keep the threshold configurable below the project maximum rather than hard-coding all managers to one size."
+}
