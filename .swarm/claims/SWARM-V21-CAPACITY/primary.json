@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V21-CAPACITY",
+  "slotId": "primary",
+  "workerId": "sol-20260811-v21fix",
+  "claimToken": "a91c4d7e2f5b8031",
+  "claimedAt": "2026-08-11T05:56:30+00:00",
+  "heartbeatAt": "2026-08-11T05:56:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/swarm/v21-capacity-v21fix",
+  "pr": null,
+  "notes": "Atomic primary claim for the V2.1 repair discovered by the live 25-worker stress test."
+}
