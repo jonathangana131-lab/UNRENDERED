@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r4k9m2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T08:40:30+00:00",
-  "lastSeenAt": "2026-08-11T09:39:20+00:00",
-  "laneId": "HG-BACKFILL-FIDELITY",
-  "slotId": "test-adversary",
-  "branch": "agent/physics/HG-BACKFILL-FIDELITY-tests-r4k9m2",
-  "notes": "Adversarial test-only strike stacked on active FidelityManager primary head 4a3c55d9d2046df1af6ee93710d395aedd4ea102. Looking for one concrete non-duplicate finite-state/atomicity gap; no production source or Studio evidence claim."
+  "lastSeenAt": "2026-08-11T09:47:00+00:00",
+  "notes": "Completed live-claim adoption of Fidelity cross-entity adversarial coverage as ready-for-review PR #354; exact fresh canonical CI fully green. No active claim/resource; global pr-ownership remains fail-closed on unrelated concurrent control-state corruption/recovery."
 }
