@@ -1,0 +1,172 @@
+{
+  "activeClaims": [
+    {
+      "branch": "agent/swarm/v2-hardening-ctl2",
+      "expiresAt": "2026-08-11T06:00:00+00:00",
+      "generation": 1,
+      "laneId": "SWARM-V2-HARDEN",
+      "pr": 267,
+      "slotId": "primary",
+      "workerId": "sol-20260811-ctl2"
+    }
+  ],
+  "blockedLanes": [
+    {
+      "laneId": "HERO-DOOR",
+      "reason": "waiting for HG151-FINAL-AUDIT (READY)",
+      "state": "LOCKED"
+    },
+    {
+      "laneId": "OPS-STUDIO-DISPLAY",
+      "reason": "External Mac GUI/display recovery is required before fresh diagnostics or two-client evidence retries.",
+      "state": "BLOCKED_EXTERNAL"
+    }
+  ],
+  "controlBranch": "swarm-control",
+  "generatedAt": "2026-08-11T05:26:07.912702+00:00",
+  "mainHealth": {
+    "conclusion": null,
+    "headSha": null,
+    "schemaVersion": 1,
+    "status": "UNKNOWN",
+    "updatedAt": null,
+    "workflowRunId": null
+  },
+  "metrics": {
+    "activeClaims": 1,
+    "activeEpics": [
+      "HERO-GATE",
+      "SWARM-V2"
+    ],
+    "eventCounts": {
+      "EXTERNAL_BLOCKER": 1,
+      "INTEGRATION_RESULT": 1
+    },
+    "generatedAt": "2026-08-11T05:26:07.912702+00:00",
+    "integrationBacklog": 0,
+    "laneStates": {
+      "BLOCKED_EXTERNAL": 1,
+      "DONE": 2,
+      "LOCKED": 1,
+      "READY": 4
+    },
+    "note": "Gross lines written are diagnostic, not a success metric.",
+    "readySlots": 1,
+    "reviewBacklog": 0,
+    "schemaVersion": 1,
+    "staleClaims": 0
+  },
+  "readySlots": [
+    {
+      "laneId": "SWARM-V2-HARDEN",
+      "reason": "dependencies satisfied",
+      "resources": [
+        "SWARM-PROTOCOL"
+      ],
+      "role": "Adversarial distributed-systems tests",
+      "score": 10550,
+      "slotId": "tests-1",
+      "writeScopes": [
+        "tools/swarm/**",
+        ".github/workflows/swarm-control.yml",
+        ".github/workflows/ci.yml",
+        ".github/pull_request_template.md",
+        "Docs/SWARM_CONTROL_PLANE.md",
+        "Docs/SWARM_PROTOCOL.md",
+        "Docs/ADR/0004-swarm-control-plane.md",
+        "ProjectSource/UNRENDERED_PROJECT_INSTRUCTIONS.txt"
+      ]
+    }
+  ],
+  "recentEvents": [
+    {
+      "affects": [
+        "OPS-STUDIO-DISPLAY",
+        "HG151-DIAGNOSTICS",
+        "HG151-TWOCLIENT",
+        "HG151-FINAL-AUDIT",
+        "HERO-DOOR"
+      ],
+      "eventId": "evt-20260811-044900-bootstrap-display",
+      "eventType": "EXTERNAL_BLOCKER",
+      "evidence": [
+        "Docs/PROJECT_STATE.md records bridge display preflight red and forbids speculative retries.",
+        "The blocker is external infrastructure state, not accepted gameplay PASS/FAIL evidence."
+      ],
+      "fromWorker": "sol-20260811-bootstrap",
+      "laneId": "OPS-STUDIO-DISPLAY",
+      "schemaVersion": 1,
+      "severity": "blocking",
+      "summary": "The authenticated Studio runner currently lacks a proven usable macOS GUI/WindowServer display session. Do not queue speculative diagnostics or two-client Studio evidence retries until display recovery.",
+      "timestamp": "2026-08-11T04:49:00+00:00"
+    },
+    {
+      "affects": [
+        "SWARM-V2-ROLLOUT"
+      ],
+      "eventId": "evt-20260811-045500-ctl1-activation",
+      "eventType": "INTEGRATION_RESULT",
+      "evidence": [
+        "PR #266 Swarm Control Plane engine-tests: PASS",
+        "PR #266 pr-ownership live claim/scope/protected-resource check: PASS",
+        "PR #266 canonical CI: PASS",
+        "Duplicate create attempt on SWARM-V2-ROLLOUT/primary was rejected by GitHub because the authoritative path already existed."
+      ],
+      "fromWorker": "sol-20260811-ctl1",
+      "laneId": "SWARM-V2-ROLLOUT",
+      "schemaVersion": 1,
+      "severity": "info",
+      "summary": "First real Swarm V2 protected-scope activation PR passed live claim/branch/scope/resource enforcement plus canonical CI and merged as cb6bbc953e1687cb11a0e6afbb0d454ecd23c9b1.",
+      "timestamp": "2026-08-11T04:55:00+00:00"
+    }
+  ],
+  "resources": [
+    {
+      "activeOwners": 0,
+      "capacity": 1,
+      "mode": "exclusive",
+      "resourceId": "PROJECT-STATE",
+      "state": "AVAILABLE"
+    },
+    {
+      "activeOwners": 1,
+      "capacity": 1,
+      "mode": "exclusive",
+      "resourceId": "SWARM-PROTOCOL",
+      "state": "AVAILABLE"
+    },
+    {
+      "activeOwners": 0,
+      "capacity": 1,
+      "mode": "exclusive",
+      "resourceId": "REALITY-CONTRACT",
+      "state": "AVAILABLE"
+    },
+    {
+      "activeOwners": 0,
+      "capacity": 1,
+      "mode": "exclusive",
+      "resourceId": "SERVER-AUTHORITY",
+      "state": "AVAILABLE"
+    },
+    {
+      "activeOwners": 0,
+      "capacity": 1,
+      "mode": "exclusive",
+      "resourceId": "STUDIO-RUNNER",
+      "state": "BLOCKED_EXTERNAL"
+    }
+  ],
+  "schemaVersion": 1,
+  "staleClaims": [],
+  "stateDigest": "20413218426d624bd061e2b5afef4ae5e6fb8019045cf59aa46c795ccbd0c48a",
+  "summary": {
+    "activeClaims": 1,
+    "activeResourceClaims": 1,
+    "blockedExternalLanes": 1,
+    "lanes": 8,
+    "readySlots": 1,
+    "staleClaims": 0,
+    "workers": 3
+  }
+}
