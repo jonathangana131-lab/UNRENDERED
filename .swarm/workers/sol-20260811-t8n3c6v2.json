@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-t8n3c6v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T20:15:10+00:00",
-  "lastSeenAt": "2026-08-11T20:51:00+00:00",
-  "laneId": "HG-PHYSICS-CHAIR-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-PHYSICS-CHAIR-GEOMETRY-audit-t8n3c6v2-g2",
-  "notes": "Cross-lane completion audit of PR #393 exact replay of #332 lab-level chair geometry assertions against source-approved #347."
+  "lastSeenAt": "2026-08-11T20:53:30+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed chair cross-lane evidence audit: #393 exact #332 replay passes on source-approved #347, chair lane blocked only on ownership/integration, stale #332 closed, audit released."
 }
