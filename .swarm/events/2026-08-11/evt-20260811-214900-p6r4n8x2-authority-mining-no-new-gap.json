@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-214900-p6r4n8x2-authority-mining-no-new-gap",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "workerId": "sol-20260811-p6r4n8x2",
+  "claimToken": "7d3a9c1e5b2f8046",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T21:49:00Z",
+  "headSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-p6r4n8x2",
+  "payload": {
+    "severity": "info",
+    "summary": "No additional nonduplicate source-only authority gap was found after accounting for the retained bootstrap/teardown lineage and the live generation-2 harness lifecycle blockers.",
+    "inspected": [
+      "main server bootstrap and PhysicsLabStudioHarness authority ownership",
+      "HG-BACKFILL-AUTHORITY retained PR #348 plus stacked teardown tests PR #394",
+      "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY PR #403 generation-2 source and exact-head reviews",
+      "Hero Gate two-client source/evidence contract in Docs/MULTIPLAYER_PERSISTENCE.md and issue #151"
+    ],
+    "activeOwnedBlockers": [
+      "PR #403 external invalidation clears current before deferred underlying teardown, permitting a temporary dual-authority replacement window",
+      "PR #403 relies on lifecycle signal callback scheduling, so Deferred SignalBehavior can expose stale ownership before callbacks reconcile it"
+    ],
+    "nextAction": "Do not materialize another authority lane from this mining pass. Let the owned PR #403 successor close its independent review blockers; retain #348/#394 sequencing and keep true two-client engine evidence UNVERIFIED until the external display blocker clears.",
+    "studioEvidence": "none performed or claimed"
+  }
+}
