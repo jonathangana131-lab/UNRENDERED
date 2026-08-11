@@ -2,13 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "primary",
-  "workerId": "sol-20260811-w3n8k2",
-  "claimToken": "d7a19c4e5f2b8a01",
-  "claimedAt": "2026-08-11T06:16:36+00:00",
-  "heartbeatAt": "2026-08-11T07:24:00+00:00",
+  "workerId": "sol-20260811-v6r2k9",
+  "claimToken": "c7dce48867449485",
+  "claimedAt": "2026-08-11T07:58:00+00:00",
+  "heartbeatAt": "2026-08-11T07:58:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-FIDELITY-w3n8k2",
-  "pr": 274
+  "pr": 274,
+  "takeoverOf": "sol-20260811-w3n8k2",
+  "notes": "Generation-2 stale takeover after inspecting open PR #274 and its independent REQUEST_CHANGES verdict. Preserve the existing branch/PR and close the hostile numeric scalar/nowSeconds no-execute gap with regression coverage."
 }
