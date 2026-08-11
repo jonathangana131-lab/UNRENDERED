@@ -217,6 +217,78 @@ local function run(): number
 		doorCenterOfMassMatchesComponents
 	)
 
+	-- The F2 realizer instantiates every ObjectGenome component. Therefore an outer
+	-- envelope touching the floor is insufficient: components that declare ground
+	-- support must themselves reach the envelope's authored ground plane, while the
+	-- chair base must stay connected to those casters. Keep mass metadata coherent
+	-- with the same component graph so later fidelity promotion has a physical COM.
+	local chairGenome = PhysicsLabRecipe.objectGenome("officeChair")
+	local chairGroundY = -chairGenome.dimensionsM.y / 2
+	local chairComponentsByKey = {}
+	local chairGroundSupportCount = 0
+	local chairGroundSupportsTouch = true
+	local authoredChairMass = 0
+	local weightedChairX = 0
+	local weightedChairY = 0
+	local weightedChairZ = 0
+	for _, component in ipairs(chairGenome.components) do
+		chairComponentsByKey[component.key] = component
+		authoredChairMass += component.massKg
+		weightedChairX += component.massKg * component.localPositionM.x
+		weightedChairY += component.massKg * component.localPositionM.y
+		weightedChairZ += component.massKg * component.localPositionM.z
+		if component.externalSupport == "ground" then
+			chairGroundSupportCount += 1
+			local componentBottom = component.localPositionM.y - component.dimensionsM.y / 2
+			if math.abs(componentBottom - chairGroundY) >= 1e-9 then
+				chairGroundSupportsTouch = false
+			end
+		end
+	end
+
+	local chairBase = chairComponentsByKey.base
+	local chairCasterBaseSupportsTouch = chairBase ~= nil
+	local chairBaseSupportCount = 0
+	if chairBase ~= nil then
+		local baseBottom = chairBase.localPositionM.y - chairBase.dimensionsM.y / 2
+		for _, supportKey in ipairs(chairBase.supportKeys) do
+			chairBaseSupportCount += 1
+			local caster = chairComponentsByKey[supportKey]
+			if caster == nil or caster.externalSupport ~= "ground" then
+				chairCasterBaseSupportsTouch = false
+			else
+				local casterTop = caster.localPositionM.y + caster.dimensionsM.y / 2
+				if math.abs(casterTop - baseBottom) >= 1e-9 then
+					chairCasterBaseSupportsTouch = false
+				end
+			end
+		end
+	end
+
+	local chairMassMatchesComponents = math.abs(authoredChairMass - chairGenome.massKg) < 1e-9
+	local chairCenterOfMassMatchesComponents = false
+	if authoredChairMass > 0 then
+		chairCenterOfMassMatchesComponents = math.abs(
+			chairGenome.centerOfMassM.x - weightedChairX / authoredChairMass
+		) < 1e-9 and math.abs(chairGenome.centerOfMassM.y - weightedChairY / authoredChairMass) < 1e-9 and math.abs(
+			chairGenome.centerOfMassM.z - weightedChairZ / authoredChairMass
+		) < 1e-9
+	end
+
+	expect(
+		"lab office chair ground-supported casters contact the authored ground plane",
+		chairGroundSupportCount == 5 and chairGroundSupportsTouch
+	)
+	expect(
+		"lab office chair caster supports contact the authored base underside",
+		chairBaseSupportCount == 5 and chairCasterBaseSupportsTouch
+	)
+	expect("lab office chair component masses match authored total", chairMassMatchesComponents)
+	expect(
+		"lab office chair center of mass matches component mass distribution",
+		chairCenterOfMassMatchesComponents
+	)
+
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
 	expect("lab duplicate identity is detectable", duplicateAccepted == false)
 
