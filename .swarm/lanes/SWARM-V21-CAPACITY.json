@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V21-CAPACITY",
+  "epicId": "HERO-GATE",
+  "title": "Prevent green-and-stop swarm collapse",
+  "objective": "Harden the worker protocol after the real 25-worker stress test exposed that zero ready slots caused nearly every Sol to stop after reporting healthy main instead of finding useful support/backfill work.",
+  "priority": 9800,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md"],
+  "resources": ["SWARM-PROTOCOL"],
+  "slots": [
+    {"slotId":"primary","role":"V2.1 capacity protocol implementer","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":500,"writeScopes":["Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md"]},
+    {"slotId":"reviewer-1","role":"V2.1 adversarial capacity reviewer","exclusive":true,"availableWhen":["REVIEW"],"requiresIndependentFrom":"primary","priorityBoost":300,"writeScopes":["Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md"]}
+  ],
+  "acceptance": ["green main alone can never be treated as work completion", "workers must exhaust ready, review, stale-recovery, backfill, and capacity-mining roles before stopping", "blocked scarce resources redirect capacity to source-only depth rather than speculative retries", "no new major feature is unlocked", "another 25-worker burst has at least 25 meaningful claimable roles while Hero Gate is externally blocked"],
+  "tags": ["control-repair", "capacity", "hero-gate"]
+}
