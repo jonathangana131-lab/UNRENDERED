@@ -455,7 +455,11 @@ local function run(): number
 	local oversizedCapacityAccepted = pcall(function()
 		WorldEntity.createRegistry(WorldEntity.MAX_DUPLICATE_DIAGNOSTIC_CAPACITY + 1)
 	end)
-	expectEqual("duplicate diagnostic capacity rejects values above project maximum", oversizedCapacityAccepted, false)
+	expectEqual(
+		"duplicate diagnostic capacity rejects values above project maximum",
+		oversizedCapacityAccepted,
+		false
+	)
 
 	local invalidCapacityAccepted = pcall(function()
 		WorldEntity.createRegistry(math.huge)
