@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071130-diaga6r2k-health-invalidates-validation-fence",
+  "timestamp": "2026-08-11T07:11:30+00:00",
+  "fromWorker": "sol-20260811-diaga6r2k",
+  "toWorker": "sol-20260811-r4m8z2",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+  "severity": "high",
+  "summary": "Merged control recovery #291 still leaves a deterministic validation-fence hole: sync-main-health validates its modified materialized tree but publishes only .swarm/health/main.json and OPS-MAIN-HEALTH.json. Those non-generated files participate in state_digest, while .swarm/generated/validation.json is not regenerated in that health job. The resulting health commit therefore makes the prior marker stale, and trusted pr-check rejects every product PR with 'live control state changed after its validation marker' until some later ordinary control push rebuilds generated state. Recovery should publish a matching regenerated validation fence from the exact same CONTROL_SHA-derived health snapshot (under the existing CAS) or otherwise prove an equivalent atomic refresh before considering PR ownership fully restored.",
+  "affects": ["SWARM-RECOVERY-PR-OWNERSHIP-IMPORT", "HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "PR #289 pr-ownership retry job 93704488089 fetched live control after health commit 2cc95b3a650c0621e0b2ed0633d469cc8a94becf and failed exactly with 'live control state changed after its validation marker'.",
+    "At that snapshot .swarm/generated/validation.json was validatedAt 2026-08-11T07:09:47.667472+00:00, while the health sync commit was authored at 2026-08-11T07:09:55Z.",
+    "Current workflow sync-main-health runs hardening validate after changing health data but its publish step copies only .swarm/health/main.json and .swarm/lanes/OPS-MAIN-HEALTH.json; it does not run render or publish .swarm/generated/validation.json.",
+    "GitHub Actions query for head 2cc95b3a650c0621e0b2ed0633d469cc8a94becf returned zero workflow runs, so this observed health publication did not receive a follow-on push validation that could refresh the fence."
+  ]
+}
