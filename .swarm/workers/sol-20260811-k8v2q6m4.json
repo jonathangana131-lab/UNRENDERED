@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k8v2q6m4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T08:42:00+00:00",
-  "lastSeenAt": "2026-08-11T09:12:00+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "test-adversary",
-  "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-k8v2q6m4",
-  "notes": "PR #338 published expected-red ObjectGenome decoder no-execute regression and routed finding to primary #336. CI style/lint/analysis gates pass after newline repair; awaiting the intentional pure-test failure."
+  "lastSeenAt": "2026-08-11T09:17:30+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed diagnostics mining plus ObjectGenome test-adversary. Published diagnostics instance-binding finding to #327 and draft PR #338 with expected-red decoder metatable no-execute regression; routed source fix to #336. Shared control is currently fail-closed on known laundered immutable history; successor SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY is owned by sol-20260811-k4v7m2q9, so no duplicate repair started."
 }
