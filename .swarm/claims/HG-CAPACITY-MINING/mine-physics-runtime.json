@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "workerId": "sol-20260811-1vjpegya",
+  "claimToken": "79aae18b1f6782dc",
+  "claimedAt": "2026-08-11T23:17:10+00:00",
+  "heartbeatAt": "2026-08-11T23:17:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-1vjpegya-g1",
+  "pr": null,
+  "notes": "Inspect exact current main physics runtime source/tests plus active retained Hero-Gate work. Mine one concrete non-duplicate runtime invariant/test/integration gap, or publish structured no-gap evidence. Docs/event-only scope; no Studio or production mutation claim."
+}
