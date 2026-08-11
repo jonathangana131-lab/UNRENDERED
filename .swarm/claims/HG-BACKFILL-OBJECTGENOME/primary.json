@@ -5,10 +5,10 @@
   "workerId": "sol-20260811-ogx9k2",
   "claimToken": "4d9c73b1a8e25f60",
   "claimedAt": "2026-08-11T06:14:00+00:00",
-  "heartbeatAt": "2026-08-11T06:14:00+00:00",
+  "heartbeatAt": "2026-08-11T06:28:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-ogx9k2",
-  "pr": null
+  "pr": 286
 }
