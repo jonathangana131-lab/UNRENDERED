@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "epicId": "HERO-GATE",
+  "title": "Keep main-health publication inside the validation fence",
+  "objective": "Repair the live Swarm control regression where sync-main-health publishes state-digest-participating health files without publishing a matching validation marker, causing every subsequent product PR ownership check to fail closed until an unrelated control push regenerates the marker.",
+  "priority": 10000,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    ".github/workflows/swarm-control.yml",
+    "tools/swarm/test_swarmctl_hardening.py",
+    "tools/swarm/test_swarmctl_hardening_base.py"
+  ],
+  "resources": ["SWARM-PROTOCOL"],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Critical validation-fence repair",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 1000,
+      "writeScopes": [
+        ".github/workflows/swarm-control.yml",
+        "tools/swarm/test_swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening_base.py"
+      ]
+    },
+    {
+      "slotId": "reviewer-1",
+      "role": "Independent recovery verifier",
+      "exclusive": true,
+      "availableWhen": ["REVIEW", "INTEGRATION_READY"],
+      "priorityBoost": 900,
+      "requiresIndependentFrom": "primary",
+      "writeScopes": [
+        ".github/workflows/swarm-control.yml",
+        "tools/swarm/test_swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening_base.py"
+      ]
+    }
+  ],
+  "acceptance": [
+    "sync-main-health cannot publish health state that makes the live validation marker stale",
+    "health publication remains CAS-fenced to the exact materialized control snapshot",
+    "a valid product PR receives explicit PASS immediately after a main-health publication without requiring an unrelated control push",
+    "stale health/projection writers still fail closed under concurrent control activity",
+    "control deterministic/adversarial tests and canonical CI remain green"
+  ],
+  "notes": "Emergency red-control prerequisite created from observed PR #289 ownership failure after main-health publication. This is a narrow continuation of the completed #290/#291 recovery, not a new product feature.",
+  "tags": ["control-repair", "red-ci", "pr-ownership", "hero-gate"]
+}
