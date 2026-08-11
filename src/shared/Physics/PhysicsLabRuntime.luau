@@ -50,6 +50,38 @@ local function assertActive(self: Runtime): ()
 	assert(not self._disposed, "PhysicsLabRuntime is disposed")
 end
 
+local function plainValuesEqual(canonical: unknown, candidate: unknown, seen: { [any]: boolean }): boolean
+	if type(canonical) ~= type(candidate) then
+		return false
+	end
+	if type(canonical) ~= "table" then
+		return canonical == candidate
+	end
+
+	local canonicalTable = canonical :: any
+	local candidateTable = candidate :: any
+	if getmetatable(candidateTable) ~= nil or seen[candidateTable] then
+		return false
+	end
+	seen[candidateTable] = true
+
+	local canonicalCount = 0
+	for key, canonicalValue in pairs(canonicalTable) do
+		canonicalCount += 1
+		if not plainValuesEqual(canonicalValue, candidateTable[key], seen) then
+			seen[candidateTable] = nil
+			return false
+		end
+	end
+
+	local candidateCount = 0
+	for _ in pairs(candidateTable) do
+		candidateCount += 1
+	end
+	seen[candidateTable] = nil
+	return candidateCount == canonicalCount
+end
+
 local function assertCanonicalRecipe(recipe: Recipe): ()
 	assert(recipe.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION, "unsupported Physics Lab recipe schema")
 	assert(recipe.recipeKey == PhysicsLabRecipe.RECIPE_KEY, "unexpected Physics Lab recipe key")
@@ -79,6 +111,18 @@ local function assertCanonicalRecipe(recipe: Recipe): ()
 		assert(
 			record.fidelity == canonicalRecord.fidelity,
 			`Physics Lab recipe initial fidelity mismatch: {entityRecipe.key}`
+		)
+		assert(
+			record.stateRevision == canonicalRecord.stateRevision,
+			`Physics Lab recipe state revision mismatch: {entityRecipe.key}`
+		)
+		assert(
+			record.representationRevision == canonicalRecord.representationRevision,
+			`Physics Lab recipe representation revision mismatch: {entityRecipe.key}`
+		)
+		assert(
+			plainValuesEqual(canonicalRecord.persistentState, record.persistentState, {}),
+			`Physics Lab recipe initial persistent state mismatch: {entityRecipe.key}`
 		)
 		assert(
 			record.origin.worldId == recipe.worldId,
