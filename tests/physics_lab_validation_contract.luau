@@ -35,6 +35,7 @@ local function counts(instances, constraints)
 	}
 end
 
+-- captureInternal always counts the selected owned lab Model even when it has no BaseParts.
 local function rootOnlyCounts()
 	return {
 		instances = 1,
