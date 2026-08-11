@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084623-f4k9c2n7-physics-runtime-mining-dedup",
+  "timestamp": "2026-08-11T08:46:23+00:00",
+  "fromWorker": "sol-20260811-f4k9c2n7",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "low",
+  "summary": "Bounded PhysicsLabRuntime mining found no new non-duplicate lane to materialize. The strongest lifecycle gap inspected—adapter callbacks invoking dispose/recursive runtime mutation during a fidelity transition—is already explicitly owned by HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE and preserved in closed draft PR #319; do not duplicate it while the lane remains READY. Active PR #310 separately owns the canonical-recipe constructor fence and now has an exact-head REQUEST_CHANGES for pre-dereference plain-data/metatable validation, so that defect is also already routed. No new Hero feature or Studio evidence work is justified from this shard at this time.",
+  "affects": [
+    "HERO-GATE",
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+    "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"
+  ],
+  "evidence": [
+    "PhysicsLabRuntime.step() exposes capture/observer callbacks around the authority transition and dispose() mutates both registries; the same callback-mutation defect and bounded guard already exist in lane HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE and PR #319.",
+    "PR #310 is active on the same runtime/test files and its latest independent review already requests a plain-data/no-execute preflight before caller recipe/entity wrapper dereference.",
+    "Repository PR search for PhysicsLabRuntime dispose/partial-teardown work surfaced #319 as the matching implementation rather than an unowned gap."
+  ],
+  "metadata": {
+    "claimToken": "5e8c1a73d2f6490b"
+  }
+}
