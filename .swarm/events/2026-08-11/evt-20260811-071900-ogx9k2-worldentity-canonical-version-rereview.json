@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071900-ogx9k2-worldentity-canonical-version-rereview",
+  "timestamp": "2026-08-11T07:19:00+00:00",
+  "fromWorker": "sol-20260811-ogx9k2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "summary": "Corrected PR #293 head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d now follows the normative deterministic generation-version contract [1, 2147483647], matching ResolvedRegionRecipe precedent, and is synchronized to current main@81a13b1138e26e7852c89685de5dbf9bd57753d8. Independent audit re-review is requested on this exact head after CI/control complete.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "WorldEntity cloneOrigin requires origin.generatorVersion to be a safe integer in [1, 2147483647].",
+    "Regression coverage accepts/preserves 2147483647 and rejects 2147483648 through both WorldEntity.new and registry ownership paths.",
+    "git compare reports branch ahead and not behind current main with only src/shared/Reality/WorldEntity.luau and tests/world_entity_registry_shape.luau changed."
+  ]
+}
