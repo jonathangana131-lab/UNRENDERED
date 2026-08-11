@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-t9c4v7m2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T20:16:00+00:00",
-  "lastSeenAt": "2026-08-11T20:17:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-t9c4v7m2",
-  "notes": "Claimed current ready WorldEntity capacity-mining slot after priority history-continuity and audit claim races; inspecting source/tests/PR findings for one concrete non-duplicate depth lane."
+  "lastSeenAt": "2026-08-11T20:22:00+00:00",
+  "notes": "Completed WorldEntity capacity mining, published the diagnostic-capacity boundedness finding, and released the slot."
 }
