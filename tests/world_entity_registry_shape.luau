@@ -64,6 +64,40 @@ local function run(): number
 
 	expect("registry accepts exact mutable record shape", registerAccepts(makeRecord()))
 
+	local mutationIdentityRegistry = WorldEntity.createRegistry()
+	local mutationIdentityRecord = makeRecord()
+	expect(
+		"mutation identity fixture registers",
+		WorldEntity.register(mutationIdentityRegistry, mutationIdentityRecord)
+	)
+	local hostileIdentityCallbacks = 0
+	local hostileIdentity = setmetatable({}, {
+		__tostring = function()
+			hostileIdentityCallbacks += 1
+			error("hostile registry identity __tostring must not execute")
+		end,
+	})
+	local hostileCaptureAccepted = pcall(function()
+		WorldEntity.captureRegistered(mutationIdentityRegistry, hostileIdentity :: any, {})
+	end)
+	expect("captureRegistered rejects hostile non-string identity", not hostileCaptureAccepted)
+	expect("captureRegistered rejects before hostile __tostring", hostileIdentityCallbacks == 0)
+	expect(
+		"rejected hostile capture preserves registered entity",
+		WorldEntity.get(mutationIdentityRegistry, mutationIdentityRecord.id) ~= nil
+	)
+
+	hostileIdentityCallbacks = 0
+	local hostileTransitionAccepted = pcall(function()
+		WorldEntity.transitionRegistered(mutationIdentityRegistry, hostileIdentity :: any, "F2", nil)
+	end)
+	expect("transitionRegistered rejects hostile non-string identity", not hostileTransitionAccepted)
+	expect("transitionRegistered rejects before hostile __tostring", hostileIdentityCallbacks == 0)
+	expect(
+		"rejected hostile transition preserves registered entity",
+		WorldEntity.get(mutationIdentityRegistry, mutationIdentityRecord.id) ~= nil
+	)
+
 	local extraRecord = makeRecord()
 	extraRecord.authorityLease = "future-field"
 	expect("registry rejects unknown record field", not registerAccepts(extraRecord))
