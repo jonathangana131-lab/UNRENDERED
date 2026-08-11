@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-p8n4c7r2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:40:00+00:00",
-  "lastSeenAt": "2026-08-11T09:48:00+00:00",
-  "notes": "Reviewing HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING PR #349 exact head after completing chair-geometry audit #347."
+  "lastSeenAt": "2026-08-11T09:51:00+00:00",
+  "notes": "Completed two independent exact-head source audits: PR #347 chair geometry APPROVE and PR #349 diagnostics representation-instance binding APPROVE. Both remain integration-gated on live pr-ownership recovery; #347 also requires #332 regression synchronization."
 }
