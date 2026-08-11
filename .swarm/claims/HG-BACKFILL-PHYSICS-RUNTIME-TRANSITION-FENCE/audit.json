@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-k3q8v6z2",
   "claimToken": "4e9b2c7a1d6f8053",
   "claimedAt": "2026-08-11T10:23:00+00:00",
-  "heartbeatAt": "2026-08-11T10:23:00+00:00",
+  "heartbeatAt": "2026-08-11T10:25:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/review/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-audit-k3q8v6z2",
-  "pr": null,
-  "notes": "Independent audit-owned mechanical completion for PR #334 exact-head StyLua blocker; test-only EOF newline fix, no product semantic widening."
+  "pr": 365,
+  "notes": "Dependent audit PR #365 applies only the missing EOF newline to primary #334 head 1725658506c9b1d11bcd1254f801fc0f6887cb97; patch verified byte-for-byte otherwise. Awaiting exact-head CI; no Studio evidence claim."
 }
