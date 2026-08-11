@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092100-r4k8m2z7-objectgenome-g2-audit",
+  "timestamp": "2026-08-11T09:21:00+00:00",
+  "fromWorker": "sol-20260811-r4k8m2z7",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "summary": "Fresh generation-2 ObjectGenome audit on PR #336 exact head 8ed54d2d965334d5a74fc9cd9b454d358da6f01f: intended generation-3 familyVersion, nested semantic-key, and generic mutable ObjectState map-alias closures are product-CI PASS, but lane integration remains REQUEST_CHANGES. Two concrete ObjectGenome defects remain: exported decodeMechanismPosition executes hostile __index before rejecting a metatable-backed mechanism (clean expected-RED PR #338), and deterministic inspect/validate diagnostic publication remains unsatisfied because issue-producing hash traversals are unordered while published issue/assertion order is observable. Live pr-ownership is separately BLOCKED by the already-owned immutable-event history-continuity recovery; do not weaken or duplicate that control work here. After both ObjectGenome closures and the control prerequisite, rerun exact-head canonical CI + live ownership and obtain a fresh independent audit. No Studio evidence is claimed.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "verdict": "REQUEST_CHANGES",
+  "subject": "PR-336",
+  "subjectSha": "8ed54d2d965334d5a74fc9cd9b454d358da6f01f",
+  "evidence": [
+    "PR #336 canonical CI run 31476917089 is green on exact product head 8ed54d2d965334d5a74fc9cd9b454d358da6f01f.",
+    "GitHub review 4904687825 records exact-head product PASS for the intended generation-3 changes plus the two remaining ObjectGenome contract blockers.",
+    "PR #338 exact head 8feb49aff4936f5f6fe6823b78b0681a5b484ce7 is narrowly test-only; canonical CI run 31476554885 passes all pre-test gates and fails the intended decoder zero-__index pure-Luau assertion. GitHub review 4904689237 records expected-RED PASS.",
+    "evt-20260811-084400-r4k8m2z7-objectgenome-diagnostic-order records the deterministic diagnostic-publication gap; current ObjectGenome source still has unordered issue-producing hash traversal paths.",
+    "PR #336 Swarm run 31476917049 engine-tests pass, while pr-ownership fails globally on audited immutable event evt-20260811-073500-q9m4r2-authority-rereview-approve.json canonical-byte mismatch; dedicated history-continuity recovery is separately owned."
+  ]
+}
