@@ -91,7 +91,10 @@ local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model:
 		if child.Name ~= DIAGNOSTICS_ROOT_NAME and child:GetAttribute("UNRENDERED_WorldEntityId") ~= nil then
 			local entityId = requireStringAttribute(child, "UNRENDERED_WorldEntityId")
 			assert(not seenEntityIds[entityId], `duplicate diagnostics representation id: {entityId}`)
-			assert(lab.isRepresented(entityId), `diagnostics child is not an authoritative representation: {entityId}`)
+			assert(
+				lab.isRepresented(entityId),
+				`diagnostics child is not an authoritative representation: {entityId}`
+			)
 			seenEntityIds[entityId] = true
 			table.insert(representations, child)
 		end
