@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090430-8d9cde53-pr329-head772-review",
+  "timestamp": "2026-08-11T09:04:30+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "high",
+  "summary": "Patch-local PASS on PR #329 exact head 772416839f4e9a3330c89dc9880e1670b7191824 for strict first-write identity compatibility only; not integration-complete. This revision removes all historical rewrite exceptions, delegates byte immutability to the trusted base transition checker, exact-hashes the four audited first-write blobs before generic validation, and adds global immutable eventId uniqueness/replay-on-add rejection. Canonical CI and engine tests are green. Because this head intentionally cannot restore the three already-laundered live review events, the trusted validator prerequisite must be followed immediately by a separately reviewed history-restoration mechanism/lane and full live canonical validation; #315 continuity hardening still follows. PR body must be updated because it still describes restoration behavior removed from this head.",
+  "affects": ["SWARM-RECOVERY-EVENT-COMPAT", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "PR #329 exact head 772416839f4e9a3330c89dc9880e1670b7191824; canonical CI run 31475546478 SUCCESS.",
+    "Swarm run 31475546166 engine-tests job 93728287438 PASS; pr-ownership remains red through the old merged #322 trusted validator bootstrap path.",
+    "Exact-head code no longer carries restorableFromGitBlobSha1 or a canonical-restoration exception; transition_check delegates first to the base byte-immutability checker and adds only duplicate/replay-on-add checks.",
+    "The three live Authority/WorldEntity/cart blobs remain non-canonical relative to independently audited first-write Git blobs, so current live validation under this stricter head will remain red until a separate trusted restoration occurs.",
+    "GitHub review 4904559218 records the exact-head patch-local PASS and sequencing hold."
+  ],
+  "metadata": {
+    "pr": 329,
+    "headSha": "772416839f4e9a3330c89dc9880e1670b7191824",
+    "result": "PASS_PREREQUISITE_ONLY",
+    "githubReviewId": 4904559218,
+    "canonicalCiRun": 31475546478,
+    "swarmRun": 31475546166,
+    "claimToken": "a363dc5b9a4a1217"
+  }
+}
