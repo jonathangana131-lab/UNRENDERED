@@ -117,8 +117,8 @@ local function run(): number
 	expectEqual("pure policy rejects inert policy-input metatable", inertMetatableAccepted, false)
 
 	local hostileScalarReads = 0
-	local hostileScalarInputs = validInputs()
-	(hostileScalarInputs :: any).distanceStuds = hostileComparable(function()
+	local hostileScalarInputs: any = validInputs()
+	hostileScalarInputs.distanceStuds = hostileComparable(function()
 		hostileScalarReads += 1
 	end)
 	local hostileScalarAccepted = pcall(function()
