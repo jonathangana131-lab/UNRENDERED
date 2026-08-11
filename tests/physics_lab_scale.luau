@@ -104,11 +104,7 @@ local function run(): number
 	-- during studs->meters conversion, so amplify only a loaded test copy. This
 	-- behaviorally exercises the otherwise unreachable reverse derived-output fence.
 	local scaleSource = fs.readFile("src/shared/Physics/PhysicsLabScale.luau")
-	local amplifiedSource, replacements = string.gsub(
-		scaleSource,
-		"METERS_PER_STUD = 0.28",
-		"METERS_PER_STUD = 2"
-	)
+	local amplifiedSource, replacements = string.gsub(scaleSource, "METERS_PER_STUD = 0.28", "METERS_PER_STUD = 2")
 	expect("Physics Lab reverse-overflow adversary rewrites exactly one scale constant", replacements == 1)
 
 	local amplifiedChunk = luau.load(amplifiedSource, {
