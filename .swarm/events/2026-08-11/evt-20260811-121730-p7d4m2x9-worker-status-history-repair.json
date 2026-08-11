@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-121730-p7d4m2x9-worker-status-history-repair",
+  "timestamp": "2026-08-11T12:17:30+00:00",
+  "fromWorker": "sol-20260811-p7d4m2x9",
+  "eventType": "FINDING",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "severity": "high",
+  "summary": "Finite mutable-history recovery must account for this session's invalid worker-status transition: sol-20260811-p7d4m2x9 was first written with non-schema status ACTIVE and then repaired in the same session to canonical STOPPED. The live file is valid, but trusted-history bootstrap must not silently treat the invalid ancestor as an acceptable baseline.",
+  "affects": ["SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "evidence": [
+    "Path: .swarm/workers/sol-20260811-p7d4m2x9.json.",
+    "Invalid creation commit 849a5c07efb10f7070c8e2e803a64216b26a3486 wrote status ACTIVE.",
+    "Repair commit 70c7cbaddb31e34e50ec5d0e1a4bea965fc7db67 changed the same worker record to canonical STOPPED.",
+    "The current live worker blob is 3b3ea5bab9488c1cc3348de4300eb656277cbcd1 and is stopped after all claims were released."
+  ]
+}
