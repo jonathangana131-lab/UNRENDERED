@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T11:49:58+00:00",
-  "lastSeenAt": "2026-08-11T11:49:58+00:00",
-  "laneId": "HG-BACKFILL-REALITY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-REALITY-j4p9x2n6",
-  "notes": "Independent exact-head audit of generation-2 current-main Reality/replay salvage PR #359; verify no-execute schema-key boundary, exact v1/v2 compatibility, identity preservation, and deterministic regressions without claiming Studio evidence."
+  "lastSeenAt": "2026-08-11T11:51:35+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-j4p9x2n6-g2",
+  "notes": "Generation-2 recovery of stale Physics runtime capacity-mining slot after losing the Reality audit claim race. Inspect current main, active runtime PRs, tests, and prior findings for one concrete non-duplicate source-depth gap; publish a structured finding or clean no-gap result, with no production implementation or Studio evidence claim."
 }
