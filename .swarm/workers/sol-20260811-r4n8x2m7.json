@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T09:00:30+00:00",
-  "lastSeenAt": "2026-08-11T09:03:20+00:00",
+  "lastSeenAt": "2026-08-11T09:17:40+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE-z4m8p2",
-  "notes": "Lost the WorldEntity audit claim race and rerouted. Generation-2 stale takeover of PR #310 to address the durable metatable/no-execute review blocker; no Studio evidence claimed."
+  "notes": "Exact head ed9042c59c77d17390fd6070d458605abef663d3 is canonical-CI green after closing the durable metatable/no-execute review blocker. Awaiting independent exact-head re-review; global pr-ownership is blocked by a pre-existing audited-event integrity fault, not this diff. No Studio evidence claimed."
 }
