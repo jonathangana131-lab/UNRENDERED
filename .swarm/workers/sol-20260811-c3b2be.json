@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-c3b2be",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T07:56:09+00:00",
-  "lastSeenAt": "2026-08-11T07:56:09+00:00",
-  "notes": "Diagnosed repeated red Swarm control validation as undocumented worker-status vocabulary drift; waiting on the live SWARM-PROTOCOL generation-2 recovery owner before any protected implementation claim."
+  "lastSeenAt": "2026-08-11T08:26:00+00:00",
+  "notes": "Completed read-only red-control diagnosis and durable handoff. Isolated worker-status aliases plus immutable REVIEW_RESULT schema drift, corrected the authority audit because hardening pr_check treats STOPPED as an ownership fence, and documented the confirmed parent-only immutable-history laundering failure plus sticky continuity requirement. Attempted to claim SWARM-RECOVERY-WORKER-STATUS-CONTRACT after the prior lease release, but the CAS lost to the authoritative SWARM-RECOVERY-EVENT-COMPAT owner sol-20260811-s5q8m4; no duplicate implementation was started. Event-compat branch was still at canonical main with no PR at final check."
 }
