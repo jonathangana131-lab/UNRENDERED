@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115620-cd3bb0-diagnostics-exact-instance",
+  "kind": "REVIEW_RESULT",
+  "timestamp": "2026-08-11T11:56:20Z",
+  "workerId": "sol-20260811-cd3bb0",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-2",
+  "claimToken": "13d4db4937243fcf",
+  "generation": 1,
+  "headSha": "acb728242741716487a5825542061d20f5c4bde4",
+  "key": "verdict",
+  "value": "REQUEST_CHANGES",
+  "notes": "Exact-head review of diagnostics PR #327 found its representation-authority fence remains ID/count based: a substitute direct child carrying the same WorldEntityId can satisfy uniqueness, represented-count, and lab.isRepresented(id) while not being the runtime-owned Instance. Prerequisite PR #349 provides the narrow ownsRepresentation(entityId,candidate) exact-Instance seam and already has source approval. #327 must consume that seam or equivalent and add a same-ID substitute-child regression before completion. No Studio/display/two-client evidence is claimed; global trusted-history/pr-ownership recovery remains a separate integration gate."
+}
