@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "slotId": "primary",
+  "workerId": "sol-20260811-h4v8n2",
+  "claimToken": "b61e9c4a72d3058f",
+  "claimedAt": "2026-08-11T08:34:30+00:00",
+  "heartbeatAt": "2026-08-11T08:34:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 3,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/swarm/SWARM-RECOVERY-HEALTH-VALIDATION-FENCE-h4v8n2-g3",
+  "pr": null,
+  "notes": "Generation-3 salvage of released recovery PR #315 after inspecting its current head f9eb94d8, live recovery comments, immutable-event laundering finding, CAS race evidence, and primary-WIP saturation. Preserve fail-closed semantics; no force push or marker weakening."
+}
