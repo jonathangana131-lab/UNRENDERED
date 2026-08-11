@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-u8c4m1q7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:21:30+00:00",
-  "lastSeenAt": "2026-08-11T21:21:30+00:00",
+  "lastSeenAt": "2026-08-11T21:24:00+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-u8c4m1q7",
-  "notes": "Independent exact-head audit of generation-8 ObjectGenome PR #395 at ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962. Source/test review only; preserve live ownership gate."
+  "notes": "Stopped without publishing a duplicate review after discovering existing independent exact-head review PRR_kwDOTz3V8c8AAAABJLP6IQ on PR #395 head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962. Existing verdict already approves source/test closure and holds integration on trusted pr-ownership recovery. Claim released cleanly."
 }
