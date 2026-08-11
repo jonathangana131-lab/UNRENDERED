@@ -73,6 +73,38 @@ class RecoveryInventoryTests(unittest.TestCase):
         self.assertTrue(item["rewritten"])
         self.assertEqual(item["revisionCount"], 2)
 
+    def test_no_execute_error_uses_actual_path_when_filename_differs_from_event_id(self):
+        self.event = (
+            self.root
+            / "events"
+            / "2026-08-11"
+            / "210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json"
+        )
+        self.event.write_text(
+            json.dumps(
+                {
+                    "schemaVersion": 1,
+                    "eventId": "evt-20260811T210500Z-sol-20260811-c7p4m8v2-handoff-content-reconciliation",
+                    "validation": [{"command": "never execute this"}],
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        first = self.commit("path-divergent malformed handoff")
+
+        inventory = audit.build_inventory(self.root, self.repo, first)
+        self.assertEqual(inventory["invalidEventCount"], 1)
+        item = inventory["invalidEvents"][0]
+        self.assertEqual(
+            item["path"],
+            ".swarm/events/2026-08-11/210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json",
+        )
+        self.assertEqual(item["firstWriteCommit"], first)
+        self.assertIn("forbidden executable-looking control key validation.0.command", item["error"])
+        self.assertIn(str(self.event), item["error"])
+
 
 if __name__ == "__main__":
     unittest.main()
