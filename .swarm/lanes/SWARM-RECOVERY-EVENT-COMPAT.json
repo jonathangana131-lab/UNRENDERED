@@ -5,7 +5,7 @@
   "title": "Restore immutable event compatibility",
   "objective": "Unblock trusted control validation without rewriting immutable historical events by narrowly accepting only audited already-published malformed event identities/classes at the V2.1 compatibility facade, while keeping all newly emitted event writes strict and preserving immutable-byte transition fencing.",
   "priority": 10000,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -47,6 +47,6 @@
     "transition-check continues to reject any historical event rewrite or deletion byte-for-byte",
     "control deterministic/adversarial tests, canonical CI, and the live swarm-control validation path remain green before integration is declared complete"
   ],
-  "notes": "Generation-3 correction PR #329 exact head 275ba90dfe699e22b495b6f77086e8c6e845fd11 addresses all independent review blockers from prematurely merged #322: compatibility is finite identity-bound rather than timestamp-only; audited WorldEntity SYNC_REQUIRED is accepted only on its exact historical event; the exact MaterialDNA historical affects typo is isolated; forged backdated/altered/unknown-key cases fail closed. Canonical CI run 31474429537 PASS. Swarm engine-tests jobs 93724757178 and 93725140825 PASS. Trusted-base pr-ownership probes are still being blocked before semantic PR evaluation by unrelated transient worker records using unsupported status ACTIVE; do not treat those data corruptions as code evidence. Independent exact-head review is required before integration.",
+  "notes": "Independent exact-head review of PR #329 at 275ba90dfe699e22b495b6f77086e8c6e845fd11 found P0 immutable-history integrity blockers. The facade still calls strict validation before historical provenance checks, so already-laundered strict-valid rewrites can bypass compatibility identity entirely. Its fallback also binds only eventId plus selected fields rather than exact audited relative path/full immutable bytes, leaving historical-ID replay/mutation possible. Required correction: check known historical exceptions before generic strict validation, pin exact audited path+blob/bytes/digest, reject duplicate/replayed event IDs, and add adversarial regressions for strict-valid laundering, one-byte mutations, and cloned IDs under another path. Review 4904461613 and event evt-20260811-084930-r6d1v9-event-compat-review-block record the hold. No historical event should be rewritten to make validation green.",
   "tags": ["control-repair", "red-ci", "pr-ownership", "hero-gate"]
 }
