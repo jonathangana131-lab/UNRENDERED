@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:40:25+00:00",
-  "lastSeenAt": "2026-08-11T09:45:40+00:00",
-  "laneId": "HG-PHYSICS-CHAIR-GEOMETRY",
+  "lastSeenAt": "2026-08-11T09:51:10+00:00",
+  "laneId": "HG-BACKFILL-REALITY",
   "slotId": "primary",
-  "branch": "agent/physics/HG-PHYSICS-CHAIR-GEOMETRY-k8v3p6r1-g2",
-  "notes": "Generation-2 current-main replay of the already source-audited office-chair authored geometry/version/COM repair. Reuse exact #339 target blobs, run exact-head gates, then require fresh independent review by another worker. No Studio/contact claim."
+  "branch": "agent/reality/HG-BACKFILL-REALITY-k8v3p6r1-g2",
+  "notes": "Generation-2 current-main salvage of the already source-approved ResolvedRegionRecipe v2/v1 hostile schema-key no-execute repair. Reuse exact #306 three-file blobs if current-main targets are unchanged, run exact-head gates, then require fresh independent review by another worker. No Studio claim."
 }
