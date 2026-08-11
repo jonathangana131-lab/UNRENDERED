@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q6m2v8k5",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T09:01:03+00:00",
-  "lastSeenAt": "2026-08-11T09:36:11+00:00",
+  "lastSeenAt": "2026-08-11T09:42:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-geometry",
   "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-q6m2v8k5",
-  "notes": "Completed Fidelity and ObjectGenome audits plus WorldEntity/MaterialDNA findings; now mining Physics geometry for one concrete non-duplicate source-depth gap while shared event-history recovery remains independently owned. No Studio evidence claimed."
+  "notes": "Completed independent Fidelity and ObjectGenome exact-head audits plus new WorldEntity diagnostic-byte, MaterialDNA validation-budget, and Physics fixture mass/COM findings. All claims released. Shared history-continuity recovery remains independently owned by PR #351; reviewer slot is not scheduler-unlocked while lane state is READY. Main remains green at ae83c0ef470eb2e73d99be41fd3561ede30c40e1. No Studio evidence claimed."
 }
