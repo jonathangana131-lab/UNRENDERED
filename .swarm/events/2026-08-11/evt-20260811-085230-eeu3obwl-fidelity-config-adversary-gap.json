@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085230-eeu3obwl-fidelity-config-adversary-gap",
+  "timestamp": "2026-08-11T08:52:30+00:00",
+  "fromWorker": "sol-20260811-eeu3obwl",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "medium",
+  "summary": "PR #330 correctly reproduces root PolicyConfig metatable execution but its adversarial proof is incomplete: add hostile maxRegisteredEntities scalar no-execute coverage and explicit false-config rejection so primary #274 closes the full custom-config boundary in one repair.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #274 head 5251998df21e8f7f78cae5c046d346496cc65a28 validates maxRegisteredEntities with relational/math operators before a primitive-number preflight.",
+    "PR #274 evaluatePolicy resolves config with `config or DEFAULT_CONFIG`, allowing explicit false to silently select defaults.",
+    "PR #330 head de125f342376af438bf723e630cfb51943752da1 currently covers only constructor/evaluatePolicy root metatable __index cases."
+  ],
+  "metadata": {
+    "primaryPr": 274,
+    "testPr": 330,
+    "primaryHeadSha": "5251998df21e8f7f78cae5c046d346496cc65a28",
+    "testHeadSha": "de125f342376af438bf723e630cfb51943752da1",
+    "reviewCommentId": 5251042542
+  }
+}
