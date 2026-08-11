@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k3q8v6z2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:39:29+00:00",
-  "lastSeenAt": "2026-08-11T10:00:24+00:00",
-  "laneId": "HG-COMPLETION-AUTHORITY",
-  "slotId": "review-1",
-  "branch": "agent/review/HG-COMPLETION-AUTHORITY-review1-k3q8v6z2-a1",
-  "notes": "Independent Authority completion review; control recovery remains separately fenced."
+  "lastSeenAt": "2026-08-11T10:02:00+00:00",
+  "notes": "Released HG-COMPLETION-AUTHORITY/review-1 after handing off #348/#307/#300 sequencing; trusted-history recovery remains separately fenced."
 }
