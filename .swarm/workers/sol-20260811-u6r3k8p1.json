@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:32:46+00:00",
-  "lastSeenAt": "2026-08-11T21:32:46+00:00",
+  "lastSeenAt": "2026-08-11T21:47:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-authority",
-  "branch": "agent/mining/HG-CAPACITY-MINING-authority-u6r3k8p1",
-  "notes": "Capacity mining of current Hero Gate authority/multiplayer source for a concrete non-duplicate source/test/integration gap. No Studio evidence and no new major feature."
+  "slotId": "mine-diagnostics",
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-u6r3k8p1",
+  "notes": "Authority mining completed with strict dependency event evt-20260811t214600z-u6r3k8p1-authority-source-saturated. Continuing into the only unclaimed capacity slot: diagnostics source mining for one concrete non-duplicate source/test/integration gap without Studio evidence."
 }
