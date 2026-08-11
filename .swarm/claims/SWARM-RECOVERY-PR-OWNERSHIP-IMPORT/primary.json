@@ -5,10 +5,11 @@
   "workerId": "sol-20260811-r4m8z2",
   "claimToken": "7c1d4a90e3b826f5",
   "claimedAt": "2026-08-11T06:39:00+00:00",
-  "heartbeatAt": "2026-08-11T06:43:00+00:00",
+  "heartbeatAt": "2026-08-11T06:46:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": ["SWARM-PROTOCOL"],
-  "branch": "agent/swarm/SWARM-RECOVERY-PR-OWNERSHIP-IMPORT-r4m8z2",
-  "pr": 290
+  "branch": "agent/swarm/SWARM-RECOVERY-PR-OWNERSHIP-IMPORT-r4m8z2-cas",
+  "pr": null,
+  "notes": "PR #290 merged exit-status repair. Continuing same critical recovery claim on independent finding evt-20260811-064100-w3x7k9-projection-cas-race before declaring control healthy."
 }
