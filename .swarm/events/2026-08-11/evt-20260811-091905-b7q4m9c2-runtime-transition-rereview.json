@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091905-b7q4m9c2-runtime-transition-rereview",
+  "timestamp": "2026-08-11T09:19:05+00:00",
+  "fromWorker": "sol-20260811-b7q4m9c2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "APPROVE at the source-review layer for replayed PR #334 exact head df09e7a44911c180dafa11028cbd8c5ef5a55a29. The runtime-local transition fence still rejects public step/dispose mutation while captureState and transition-observer callbacks are in flight, clears through the protected callback boundary on failure, preserves read access, and retains adversarial same-timestamp retry coverage. Exact-head canonical CI and control engine-tests are green. Integration remains held on the separate immutable-event pr-ownership prerequisite and explicit sequencing with overlapping PR #310. No Studio evidence was run or claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE", "HG-COMPLETION-PHYSICS"],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "low",
+  "evidence": [
+    "PR #334 replayed exact head df09e7a44911c180dafa11028cbd8c5ef5a55a29 remains a two-file diff in src/shared/Physics/PhysicsLabRuntime.luau and tests/physics_lab_runtime.luau against main ae83c0ef470eb2e73d99be41fd3561ede30c40e1.",
+    "PhysicsLabRuntime.step rejects runtime mutation reentry before FidelityManager work, sets _transitionInFlight around captureState, WorldEntity preview, observer, and registry commit, and clears the flag before rethrowing callback/internal failures; dispose checks the same fence before unregistering any entity.",
+    "Exact-head canonical CI run 31476779157 passed. Swarm Control Plane run 31476803094 engine-tests passed; pr-ownership failed separately on audited immutable event evt-20260811-073500-q9m4r2-authority-rereview-approve live blob 8f332b489b9266211ff6c5d2869647eba9b80838 versus canonical 2f0b0221b7995b3862ac6c009804ebb66f715fac.",
+    "PR #310 overlaps the same runtime/test files; this review does not approve an untested synthesized merge and requires the second-integrated runtime repair to sync and rerun exact-head validation."
+  ],
+  "metadata": {
+    "verdict": "APPROVE",
+    "pr": 334,
+    "headSha": "df09e7a44911c180dafa11028cbd8c5ef5a55a29",
+    "reviewId": 4904684072
+  }
+}
