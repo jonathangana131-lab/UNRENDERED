@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime entity-ID boundary fence",
   "objective": "Fail closed on malformed runtime entityId inputs before registry lookup, diagnostics, or transition mutation can execute caller-controlled behavior, while preserving the permanent Physics Lab's canonical recipe and transition-authority invariants.",
   "priority": 4975,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -49,6 +49,6 @@
     "pure regressions cover malformed lookup/getFidelity/step boundaries; no Roblox Studio, viewport, physical-contact, or two-client evidence claim",
     "independent review required before integration"
   ],
-  "notes": "Materialized from HG-CAPACITY-MINING FINDING evt-20260811t211406z-v9q2m7c4-physics-runtime-entityid-boundary. Current main is ae83c0ef470eb2e73d99be41fd3561ede30c40e1. PR #310 (recipe fence) and PR #388 (transition fence) overlap the same runtime/test files and are independently source-approved but blocked on control-plane recovery/integration sequencing; this lane must not erase either invariant when eventually synthesized. Static/source-only lane; no Studio evidence required or claimed.",
+  "notes": "Materialized from HG-CAPACITY-MINING FINDING evt-20260811t211406z-v9q2m7c4-physics-runtime-entityid-boundary. Implementation is PR #402 exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42 against unchanged main ae83c0ef470eb2e73d99be41fd3561ede30c40e1. Canonical CI run #1015 passed all product gates on that exact head. Swarm Control Plane engine tests pass, but live pr-ownership is globally blocked before lane evaluation by unrelated immutable control-history event 210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json; recovery is owned elsewhere. PR #310 (recipe fence) and PR #388 (transition fence) overlap the same runtime/test files and are independently source-approved but blocked on recovery/integration sequencing; final synthesis must preserve all three invariants. Static/source-only lane; no Studio evidence required or claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "physics-runtime"]
 }
