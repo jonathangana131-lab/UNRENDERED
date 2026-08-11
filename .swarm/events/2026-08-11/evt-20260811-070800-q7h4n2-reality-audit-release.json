@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070800-q7h4n2-reality-audit-release",
+  "timestamp": "2026-08-11T07:08:00+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "info",
+  "summary": "Reality/replay audit slot complete and released. PR #282 source logic is consistent with ADR 0002 canonical StableId spelling and ResolvedRegionRecipe v2 ingress. The only current merge blocker observed is procedural: latest Swarm Control Plane run 31466425187 used a stale PR merge/workflow generation and crashed importing swarmctl_hardening_base before ownership enforcement. Primary should synchronize/retrigger against current main and require a fresh fail-closed ownership PASS before integration. No Studio evidence was requested or claimed.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": ["evt-20260811-070720-q7h4n2-pr282-control-rootcause.json"],
+  "metadata": {
+    "claimToken": "6d2fa81c49b735e0",
+    "reviewedPr": 282,
+    "reviewedHead": "3696decd5b5407ac5f676775d94b47c7f0c63a45"
+  }
+}
