@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-v9q2m7c4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T21:00:21+00:00",
+  "lastSeenAt": "2026-08-11T21:00:21+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "test-adversary",
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-v9q2m7c4",
+  "notes": "Independent generation-8 adversarial verification targeting PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962."
+}
