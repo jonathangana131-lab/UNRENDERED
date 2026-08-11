@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-wea7q3",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T08:19:05+00:00",
+  "lastSeenAt": "2026-08-11T08:19:05+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-wea7q3",
+  "notes": "Independent source-only WorldEntity invariant/aliasing/persistence audit; avoid duplicating the live generation-3 test-adversary worker."
+}
