@@ -98,7 +98,11 @@ local function isPositiveInteger(value: any): boolean
 	return isNonNegativeInteger(value) and value >= 1
 end
 
-local function inspectExactTableShape(value: any, label: string, allowedKeys: { [any]: boolean }): (boolean, string?)
+local function inspectExactTableShape(
+	value: any,
+	label: string,
+	allowedKeys: { [any]: boolean }
+): (boolean, string?)
 	if getmetatable(value) ~= nil then
 		return false, `{label} must not have a metatable`
 	end
@@ -175,7 +179,8 @@ function PhysicsLabValidationContract.inspectSnapshot(snapshot: any): (boolean, 
 	if type(snapshot.counts) ~= "table" then
 		return false, "snapshot.counts must be a table"
 	end
-	local countsShapeOk, countsShapeError = inspectExactTableShape(snapshot.counts, "snapshot.counts", COUNT_KEY_SET)
+	local countsShapeOk, countsShapeError =
+		inspectExactTableShape(snapshot.counts, "snapshot.counts", COUNT_KEY_SET)
 	if not countsShapeOk then
 		return false, countsShapeError
 	end
