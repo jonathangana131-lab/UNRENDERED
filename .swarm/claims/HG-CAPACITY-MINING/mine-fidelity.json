@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "workerId": "sol-20260811-p7q4n8",
+  "claimToken": "6a2f8d1c4e7b9053",
+  "claimedAt": "2026-08-11T09:44:42+00:00",
+  "heartbeatAt": "2026-08-11T09:44:42+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-p7q4n8",
+  "pr": null,
+  "notes": "Mine current FidelityManager source/tests/active PRs for one concrete non-duplicate invariant, defect, test gap, or bounded follow-up lane. No production implementation or Studio evidence under this slot."
+}
