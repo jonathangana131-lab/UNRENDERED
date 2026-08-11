@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-q6x4m9p2",
+  "claimToken": "d2a7f5c1e8b40963",
+  "claimedAt": "2026-08-11T12:25:00+00:00",
+  "heartbeatAt": "2026-08-11T12:25:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-q6x4m9p2",
+  "pr": null,
+  "notes": "Parallel adversarial pass for a defect distinct from already-owned #375 identityParts metatable/no-execute gap. Inspect generation-5 retained head/current main for malformed-input, identity, ownership, transform, material-reference, state-binding, or boundedness holes; tests-only unless lane state explicitly requires source repair."
+}
