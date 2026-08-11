@@ -5,7 +5,7 @@
   "title": "ObjectGenome adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete ObjectGenome shape, component, ownership, fingerprint, transform, material-reference, state-binding, immutability, or malformed-input defects without depending on Studio.",
   "priority": 5150,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Objects/ObjectGenome*.luau", "tests/object_genome*.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"ObjectGenome contract and ownership auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/object_genome*.luau","Docs/OBJECT_GENOME.md"]}
   ],
   "acceptance": ["inspect current main and existing contract-lock tests", "prefer a concrete defect or missing invariant over speculative redesign", "new behavior is covered by deterministic regression tests", "preserve canonical identity and plain-data boundaries", "publish cross-lane findings as structured events"],
-  "notes": "Generation-5 successor PR #369 exact head 08ce8d7093ceb36a85af58510f65ef8e9b33c154 remains green for its prior decoder/order/bounds/ownership closures, but new test-adversary PR #375 exact head 1065bb0d2ad0f183569f3e160e68189ad24402b1 establishes isolated executable RED for a distinct public identity boundary: ObjectGenome.identityParts() dereferences metatable-backed caller input before proving plain data, allowing caller __index execution. CI 31488981414 passes format/lint/Luau/static/control stages then fails Pure Luau exactly at the identityParts no-execute assertion; the rest of the contract-lock suite continues green. Lane returned to NEEDS_CHANGES so the active primary must absorb equivalent coverage and close identityParts before caller field reads, preserving the stable identity tuple/algorithm and all prior #369 closures. Global pr-ownership remains separately blocked on SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY. No Studio evidence applicable or claimed.",
+  "notes": "Generation-6 successor PR #380 exact head f528b2187b06f73d97ef14fddba6caf9ca0055a4 preserves every reviewed generation-5 closure and absorbs the independent #375 expected-red identityParts no-execute regression. Relative to reviewed generation-5 head 08ce8d7093ceb36a85af58510f65ef8e9b33c154, the complete delta is exactly ObjectGenome.luau +1/-1 and tests/object_genome_contract_lock.luau +24/-0: identityParts now validates canonical plain data before identity-field dereference and identityKey reuses that validated boundary without changing the StableId namespace, identity tuple, schema/version, or valid outputs. Canonical CI 31491357531 and Swarm run 31491357582 engine-tests are green on the exact head. Live pr-ownership remains fail-closed only on SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY's audited immutable-event byte mismatch and is not bypassed. Superseded PRs #369 and #375 are closed. Lane is REVIEW for fresh independent exact-head source audit of #380; no Roblox Studio/engine evidence is applicable or claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
