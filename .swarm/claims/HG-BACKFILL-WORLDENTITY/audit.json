@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-p6m2x8v4",
+  "claimToken": "8d2f6a1c9b4e7053",
+  "claimedAt": "2026-08-11T11:49:00+00:00",
+  "heartbeatAt": "2026-08-11T11:49:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-p6m2x8v4",
+  "pr": 293,
+  "notes": "Fresh independent completion audit of WorldEntity PR #293 after prior audit slot release. Verify current exact source against expected-red registry identity adversaries #350/#364, lane-scope cleanliness, current-main synchronization, and persistent-state regression absorption before verdict."
+}
