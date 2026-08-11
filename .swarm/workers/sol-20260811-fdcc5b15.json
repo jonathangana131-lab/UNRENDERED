@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-fdcc5b15",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T23:07:21+00:00",
+  "lastSeenAt": "2026-08-11T23:07:21+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "test-adversary",
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-test-adversary-fdcc5b15",
+  "notes": "Complementary exact-head adversarial audit of generation-6 Physics Lab scale hardening PR #414; source/test only, no Studio evidence claimed."
+}
