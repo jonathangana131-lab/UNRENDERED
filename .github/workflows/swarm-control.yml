@@ -35,13 +35,15 @@ jobs:
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
           CONTROL_SHA="$(git rev-parse origin/swarm-control)"
 
-          # The one-time reset crosses two known malformed mutable worker-state
-          # transitions. Prove both the bad transition and its exact repair are in
-          # the reviewed first-parent ancestry before this candidate can be named.
+          # The one-time reset crosses only these reviewed malformed mutable
+          # worker-state transitions. Prove each invalid commit precedes its exact
+          # repair, and each repair precedes the exact bootstrap candidate.
           git merge-base --is-ancestor fa5b8f163603fa918c21b28c63bd20e6c25a2add 7c62ff9a7b92c4ebe43c38323a5946e04881d3b7
           git merge-base --is-ancestor 7c62ff9a7b92c4ebe43c38323a5946e04881d3b7 "$CONTROL_SHA"
           git merge-base --is-ancestor a99ff757b842fa91ddd893d19fd1d826890ce306 a193dd686323c27a7191d525b064c4257120de21
           git merge-base --is-ancestor a193dd686323c27a7191d525b064c4257120de21 "$CONTROL_SHA"
+          git merge-base --is-ancestor 57245c334fdc19cae855796066f783fb64492c51 db830924aa0b65a74c60ee345448f57381bbe137
+          git merge-base --is-ancestor db830924aa0b65a74c60ee345448f57381bbe137 "$CONTROL_SHA"
 
           mkdir -p "$RUNNER_TEMP/bootstrap-control"
           git archive "$CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/bootstrap-control"
@@ -183,7 +185,7 @@ jobs:
               "validatedAt": sys.argv[3],
               "validatorMainSha": sys.argv[4],
               "resetId": "reset-20260811-history-continuity",
-              "resetReason": "Reviewed finite reset quarantines four exact rewritten immutable event blobs with first-write provenance and explicitly crosses invalid worker-status transitions fa5b8f16->7c62ff9a and a99ff757->a193dd68; all later authority is strict append-only history.",
+              "resetReason": "Reviewed finite reset quarantines four exact rewritten immutable event blobs with first-write provenance and explicitly crosses three invalid worker-status transitions repaired at 7c62ff9a, a193dd68, and db830924; all later authority is strict append-only/trusted history.",
               "bootstrap": False,
           }
           with open('.swarm/trust.json', 'w', encoding='utf-8') as handle:
