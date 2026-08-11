@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090856-62db19aa-runtime-canonical-state-unbounded-scan",
+  "timestamp": "2026-08-11T09:08:56+00:00",
+  "fromWorker": "sol-20260811-62db19aa",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Active PhysicsLabRuntime recipe-fence PR #310 head 26685a0a adds canonical persistent-state equality before WorldEntity registration, but plainValuesEqual performs a complete pairs() count of each caller-owned candidate table after matching canonical keys. For a canonical empty/small state, a forged candidate can preserve every canonical value and add an arbitrarily wide set of extra keys, forcing unbounded constructor work before the WorldEntity structural budget can reject it. The canonical recipe fence should reject over-wide candidate state with work bounded by the canonical shape (for example abort candidate counting as soon as it exceeds canonicalCount) or consume a project-owned bounded plain-state validation primitive before equality.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE", "HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #310 exact head 26685a0a479ea890178c8be4ea56e7e2403f011f calls plainValuesEqual(canonicalRecord.persistentState, record.persistentState, {}) inside assertCanonicalRecipe before createRegistry()/registry.register().",
+    "plainValuesEqual counts every entry with `for _ in pairs(candidateTable) do candidateCount += 1 end` and only compares candidateCount to canonicalCount after the full traversal; it has no node/work ceiling or early exit when candidateCount exceeds canonicalCount.",
+    "A candidate state that matches all canonical keys but contains many extra keys therefore reaches the full candidate scan even though it is guaranteed noncanonical. For a canonical empty table, every extra key is needless work before rejection.",
+    "WorldEntity bounded persistentState work is being hardened separately in PR #293, but that guard is downstream of this new runtime canonical-state matcher and cannot bound work already spent in assertCanonicalRecipe.",
+    "Existing PR #310 regressions cover metatable/no-execute wrappers, provenance, population, initial state mismatch, and revisions, but do not constrain candidate-state comparison work."
+  ]
+}
