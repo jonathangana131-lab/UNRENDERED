@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084850-8d9cde53-pr329-review",
+  "timestamp": "2026-08-11T08:48:50+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "critical",
+  "summary": "REQUEST_CHANGES on legitimate SWARM-PROTOCOL owner PR #329 exact head 275ba90dfe699e22b495b6f77086e8c6e845fd11. The patch removes the broad timestamp-only fallback for unlisted malformed events and correctly adds finite historical identities including SYNC_REQUIRED and MaterialDNA affects, but its strict-first ordering silently accepts the already-laundered normalized cart-review bytes instead of enforcing the audited first-write top-level slotId shape. In addition, semantic subset pinning is insufficient while failed immutable transitions can become future baselines; allowlisted historical exceptions need exact audited path/blob identity until trusted-history continuity is repaired.",
+  "affects": ["SWARM-RECOVERY-EVENT-COMPAT", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "PR #329 head 275ba90dfe699e22b495b6f77086e8c6e845fd11; canonical CI 31474429537 SUCCESS.",
+    "Historical cart event at ref 54b28d6e6cd9de972cc63801a50b33a9ba0299dd has top-level slotId='audit'; current authoritative swarm-control has metadata.slotId='audit' and no top-level slotId after failed mutation ebc699fc416346e5a6dc6cc02f6d992b635f205f was later laundered into a PASS state.",
+    "PR #329 calls _STRICT_VALIDATE_EVENT first and consults _HISTORICAL_EVENT_COMPAT only on strict failure; the current normalized cart bytes therefore bypass the historical rule entirely.",
+    "Authority/WorldEntity/cart compatibility rules pin selected semantic fields rather than complete immutable blobs, leaving listed identities vulnerable to the already-confirmed failed-transition laundering class for otherwise-unpinned bytes.",
+    "GitHub independent review 4904428961 records the exact-head REQUEST_CHANGES result."
+  ],
+  "metadata": {
+    "pr": 329,
+    "headSha": "275ba90dfe699e22b495b6f77086e8c6e845fd11",
+    "result": "REQUEST_CHANGES",
+    "githubReviewId": 4904428961,
+    "canonicalCiRun": 31474429537,
+    "claimToken": "a363dc5b9a4a1217"
+  }
+}
