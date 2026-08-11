@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T06:16:00+00:00",
-  "lastSeenAt": "2026-08-11T07:08:30+00:00",
+  "lastSeenAt": "2026-08-11T07:31:40+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-went7k3",
-  "notes": "MaterialDNA backfill integrated and reconciled. Continuing in the highest-value free active review slot: ObjectGenome contract/ownership audit."
+  "slotId": "test-adversary",
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-q7n4m9",
+  "notes": "Audit slot handed off at a clean prerequisite boundary. Took over stale ObjectGenome test-adversary generation 2 to salvage and synchronize PR #277 instead of rewriting its existing one-file hostile plain-data regression slice."
 }
