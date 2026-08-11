@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063400-q9x4m2-authority-primary-review",
+  "timestamp": "2026-08-11T06:34:00+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "medium",
+  "summary": "Reviewed current primary branch addition to tests/hero_gate_contract_integration.luau. The checks are useful as a narrow bootstrap-ownership regression, but they must not be described as proving multiplayer authority, independent client observations, or teardown-safe evidence. They are static source assertions only; true HG151-TWOCLIENT remains unverified.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT"],
+  "evidence": [
+    "Primary branch checks server Bootstrap text for PhysicsLabStudioHarness.start(workspace) and RunService:IsServer().",
+    "Primary branch checks client Bootstrap text for RunService:IsClient() and absence of three named server Physics Lab modules.",
+    "No RemoteEvent/RemoteFunction observation path, two distinct client binding, request correlation, duplicate/stale observation rejection, or teardown result handoff is exercised by these additions."
+  ],
+  "verdict": "APPROVE_NARROW_SCOPE_WITH_CLAIM_LIMIT"
+}
