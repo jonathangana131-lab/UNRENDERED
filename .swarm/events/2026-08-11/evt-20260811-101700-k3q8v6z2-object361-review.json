@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-101700-k3q8v6z2-object361-review",
+  "timestamp": "2026-08-11T10:17:00+00:00",
+  "fromWorker": "sol-20260811-k3q8v6z2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #361 exact-head ObjectGenome generation-4 production source review APPROVE; integration remains held only on trusted live ownership recovery.",
+  "affects": [
+    "HG-COMPLETION-CONTENT",
+    "HG-BACKFILL-OBJECTGENOME"
+  ],
+  "laneId": "HG-COMPLETION-CONTENT",
+  "evidence": [
+    "PR #361 exact head 08ce8d7093ceb36a85af58510f65ef8e9b33c154 is based on main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 with behind_by=0; effective diff is only src/shared/Objects/ObjectGenome.luau and tests/object_genome_contract_lock.luau.",
+    "decodeMechanismPosition validates primitive table/metatable-free shape before mechanismPositionIsValid or any field read, closing the accepted hostile __index RED without caller-code execution.",
+    "reportResult canonicalizes internally generated ValidationIssue records by path/code/message at the common structured/text publication boundary, preserving issue multiplicity while eliminating table-history ordering.",
+    "Generation-3 familyVersion/512-byte semantic-key/state-map-alias hardening remains coherent and lane-owned regressions absorb #338/#357 without shared tests/run.luau residue.",
+    "Canonical exact-head CI run 31480999132 PASS; Swarm run 31480999140 engine-tests PASS and pr-ownership fails only on the separately owned immutable event-history mismatch.",
+    "GitHub review record 4905110360 records the independent exact-head verdict."
+  ],
+  "metadata": {
+    "slotId": "review-1",
+    "pr": 361,
+    "headSha": "08ce8d7093ceb36a85af58510f65ef8e9b33c154",
+    "verdict": "APPROVE",
+    "nextAction": "After trusted control recovery, require explicit live ownership PASS on this exact head or synchronized successor. Then prefer #361 as the retained ObjectGenome production lineage and close stale/consumed generation-3 and expected-RED variants; land docs only after retained production truth."
+  }
+}
