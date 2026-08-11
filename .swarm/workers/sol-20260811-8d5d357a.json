@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-8d5d357a",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T23:08:18+00:00",
-  "lastSeenAt": "2026-08-11T23:36:28+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-8d5d357a-g1",
-  "notes": "Independent exact-head audit of PR #414 at 51ffc16fb2f5864cd4874710a7517e94dd5422b8, with stacked adversarial PR #418 reviewed for retained regression requirements."
+  "lastSeenAt": "2026-08-11T23:39:05+00:00",
+  "notes": "Independent geometry audit completed. PR #414 production source passed no-execute/finite-output review, but lane returned to NEEDS_CHANGES until equivalent current PR #418 behavioral reverse-overflow regression is absorbed into the retained primary/successor and rerun/re-reviewed. Durable verdict evt-sol-20260811-8d5d357a-review-result-physics-scale-g6-233820; GitHub review comment 4911684469."
 }
