@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "workerId": "sol-20260811-m7q2v9c4",
+  "claimToken": "6b1d8c3e9a4f7052",
+  "claimedAt": "2026-08-11T12:48:10+00:00",
+  "heartbeatAt": "2026-08-11T12:48:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-m7q2v9c4",
+  "pr": null,
+  "notes": "Inspect current diagnostics source plus active diagnostics/instance-binding closure and existing reviews for one concrete non-duplicate atomicity, lifetime, boundedness, no-execute, or evidence-integrity gap provable without Roblox Studio. Publish a structured finding only; do not claim engine diagnostics evidence."
+}
