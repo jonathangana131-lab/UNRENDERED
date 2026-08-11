@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070230-ogx9k2-worldentity-test-integration-blocker",
+  "timestamp": "2026-08-11T07:02:30+00:00",
+  "fromWorker": "sol-20260811-ogx9k2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "summary": "WorldEntity test-adversary PR #276 remains patch-approved but is not integration-ready. A fresh post-#290 Swarm Control run on head 91b483749f94a91f62c8d08d5e28363824234e0f correctly fails because the PR is still based on a pre-recovery main snapshot whose workflow materializes swarmctl_hardening.py without swarmctl_hardening_base.py. The owner must synchronize current main and rerun exact-head CI/control before merge.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #276 patch remains test-only and independently approved on head 91b483749f94a91f62c8d08d5e28363824234e0f.",
+    "Fresh Swarm Control Plane run 31466319865: engine-tests SUCCESS; pr-ownership job 93699841742 FAILURE.",
+    "The failing merge ref is based on main 914d0a2f05c106f915085aacfa78bc08948cb12c and aborts with ModuleNotFoundError for swarmctl_hardening_base before ownership evaluation.",
+    "Current main includes the trusted-validator workflow recovery and fail-closed exit propagation; synchronize current main, preserve the test-only diff, then require exact-head CI plus live ownership success."
+  ]
+}
