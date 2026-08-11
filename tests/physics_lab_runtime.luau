@@ -274,6 +274,50 @@ local function run(): number
 		not originProxyAccepted and originLookups == 0
 	)
 
+	local recordKeyStringifyCalls = 0
+	local hostileRecordKeyEntities = copyEntities(recipe)
+	local hostileRecordKeyEntry = table.clone(hostileRecordKeyEntities[1])
+	local hostileRecord = table.clone(hostileRecordKeyEntry.entity)
+	local hostileRecordKey = setmetatable({}, {
+		__tostring = function()
+			recordKeyStringifyCalls += 1
+			return "hostile-record-key"
+		end,
+	})
+	hostileRecord[hostileRecordKey] = true
+	hostileRecordKeyEntry.entity = hostileRecord
+	hostileRecordKeyEntities[1] = hostileRecordKeyEntry
+	local hostileRecordKeyAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, hostileRecordKeyEntities))
+	end)
+	expect(
+		"runtime rejects non-string record schema keys without executing __tostring",
+		not hostileRecordKeyAccepted and recordKeyStringifyCalls == 0
+	)
+
+	local originKeyStringifyCalls = 0
+	local hostileOriginKeyEntities = copyEntities(recipe)
+	local hostileOriginKeyEntry = table.clone(hostileOriginKeyEntities[1])
+	local hostileOriginKeyRecord = table.clone(hostileOriginKeyEntry.entity)
+	local hostileOrigin = table.clone(hostileOriginKeyRecord.origin)
+	local hostileOriginKey = setmetatable({}, {
+		__tostring = function()
+			originKeyStringifyCalls += 1
+			return "hostile-origin-key"
+		end,
+	})
+	hostileOrigin[hostileOriginKey] = true
+	hostileOriginKeyRecord.origin = hostileOrigin
+	hostileOriginKeyEntry.entity = hostileOriginKeyRecord
+	hostileOriginKeyEntities[1] = hostileOriginKeyEntry
+	local hostileOriginKeyAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, hostileOriginKeyEntities))
+	end)
+	expect(
+		"runtime rejects non-string origin schema keys without executing __tostring",
+		not hostileOriginKeyAccepted and originKeyStringifyCalls == 0
+	)
+
 	local keyStringifyCalls = 0
 	local hostileKeyEntities = copyEntities(recipe)
 	local hostileKeyEntry = table.clone(hostileKeyEntities[1])
@@ -377,6 +421,24 @@ local function run(): number
 		PhysicsLabRuntime.new(recipeCopy(recipe, forgedStateEntities))
 	end)
 	expect("runtime rejects noncanonical initial persistent state", not forgedStateAccepted)
+
+	local overWideState = {}
+	for index = 1, 4097 do
+		overWideState[`extra-{index}`] = index
+	end
+	local overWideStateEntities = copyEntities(recipe)
+	local overWideStateEntry = table.clone(overWideStateEntities[1])
+	local overWideStateRecord = table.clone(overWideStateEntry.entity)
+	overWideStateRecord.persistentState = overWideState
+	overWideStateEntry.entity = overWideStateRecord
+	overWideStateEntities[1] = overWideStateEntry
+	local overWideStateAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, overWideStateEntities))
+	end)
+	expect(
+		"runtime rejects over-wide noncanonical persistent state at the canonical comparison fence",
+		not overWideStateAccepted
+	)
 
 	local forgedStateRevisionEntities = copyEntities(recipe)
 	local forgedStateRevisionEntry = table.clone(forgedStateRevisionEntities[1])
