@@ -29,6 +29,7 @@ jobs:
           python3 tools/swarm/test_swarmctl_hardening.py
           python3 tools/swarm/test_audit_history_recovery.py
           python3 tools/swarm/test_trusted_history_chain.py
+          python3 tools/swarm/test_swarm_history_recovery_extension.py
           python3 tools/swarm/swarmctl.py simulate --workers 30
           python3 tools/swarm/swarmctl_hardening.py simulate --workers 30
       - name: Read-only exact trust-bootstrap candidate
@@ -37,7 +38,7 @@ jobs:
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
           CONTROL_SHA="$(git rev-parse origin/swarm-control)"
 
-          # Keep the one-time mutable-history reset manifest in one audited source.
+          # Keep the one-time mutable-history reset manifest in audited finite data.
           # Every invalid commit must precede its exact repair, and every repair
           # must precede the exact bootstrap candidate before a trust pair is emitted.
           TRANSITIONS_FILE="$RUNNER_TEMP/finite-worker-transitions.txt"
@@ -58,19 +59,21 @@ jobs:
           done < "$TRANSITIONS_FILE"
 
           # Every malformed immutable event is an exact quarantine-only artifact.
-          # Preserve the original reviewed manifest as a stable audit subset while
-          # normalized rows also carry exact filenames for path-divergent legacy HANDOFFs.
+          # Preserve the original reviewed manifest and verify each later measured
+          # extension row by exact filename, first-write commit, and Git blob.
           MALFORMED_FILE="$RUNNER_TEMP/malformed-event-quarantine.txt"
           python3 - "$MALFORMED_FILE" <<'PY'
           import sys
           from pathlib import Path
           sys.path.insert(0, "tools/swarm")
+          import swarm_history_recovery_extension as extension
           import swarm_history_recovery_manifest as recovery
           assert recovery.MALFORMED_EVENT_QUARANTINE
+          rows = recovery.malformed_event_quarantine_rows() + extension.MALFORMED_EVENT_QUARANTINE_ROWS
           Path(sys.argv[1]).write_text(
               "".join(
                   f"{event_id} {filename} {first_write} {blob_sha}\n"
-                  for event_id, filename, first_write, blob_sha in recovery.malformed_event_quarantine_rows()
+                  for event_id, filename, first_write, blob_sha in rows
               ),
               encoding="utf-8",
           )
@@ -243,6 +246,7 @@ jobs:
           python3 tools/swarm/test_swarmctl_hardening.py
           python3 tools/swarm/test_audit_history_recovery.py
           python3 tools/swarm/test_trusted_history_chain.py
+          python3 tools/swarm/test_swarm_history_recovery_extension.py
           python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/control-after/.swarm"
           python3 tools/swarm/swarmctl_hardening.py simulate --workers 30
       - name: Validate every transition from last trusted history snapshot
