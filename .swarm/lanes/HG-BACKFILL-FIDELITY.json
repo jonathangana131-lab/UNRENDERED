@@ -5,7 +5,7 @@
   "title": "FidelityManager adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete fidelity transition, rejected-step atomicity, finite-state, deterministic ordering, entity-id boundary, or resource-accounting defects without depending on Studio.",
   "priority": 5050,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/FidelityManager.luau", "tests/fidelity_manager*.luau"],
@@ -17,5 +17,5 @@
   ],
   "acceptance": ["target concrete finite-state or atomicity gaps", "preserve deterministic ordering", "new behavior has adversarial regression coverage", "no Studio claim is required", "publish findings that affect other lanes"],
   "tags": ["backfill", "hero-gate", "source-only"],
-  "notes": "Audit sol-20260811-befff499 found no new production defect on PR #335 exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102, but completion requires absorbing stacked nested-unwind regression PR #367 at 827ce0cf63ca5f322502de883beb9f43581c69f2 and rerunning combined exact-head canonical CI. Integration must remain fail-closed until the separate trusted-history recovery restores live pr-ownership; recovery PR #371 is currently blocked on preservation-safe handling of noncanonical immutable historical event records."
+  "notes": "Generation-4 successor PR #385 consolidates retained #335 production hardening plus stacked #367 nested transition unwind/retry regression at exact head 827ce0cf63ca5f322502de883beb9f43581c69f2. Fresh canonical CI run 31532320675 is green end-to-end and Swarm engine-tests in run 31532320705 are green. Await a fresh independent exact-head Fidelity review and a genuine live pr-ownership PASS after the separately owned trusted-history recovery; do not bypass the current fail-closed ownership gate."
 }
