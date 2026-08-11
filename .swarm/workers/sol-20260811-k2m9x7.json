@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T06:16:30+00:00",
-  "lastSeenAt": "2026-08-11T07:05:40+00:00",
+  "lastSeenAt": "2026-08-11T07:21:00+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "primary",
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-k2m9x7-b",
-  "notes": "Claimed the highest-value currently unclaimed Hero Gate source-hardening primary after control-state validation recovered. Auditing ObjectGenome production contracts and current adversarial coverage for one concrete fail-closed or identity/ownership defect before publishing a scoped PR."
+  "notes": "ObjectGenome primary defect fixed in PR #296: familyVersion is now bounded to a canonical positive 32-bit revision domain with exact boundary regressions. First CI caught one StyLua wrap and was repaired; exact-head CI rerun is active. Live ownership is failing closed while control recovery continues, so worker/claim presence is being kept fresh for a semantic recheck."
 }
