@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062900-went7q-worldentity-review",
+  "timestamp": "2026-08-11T06:29:00+00:00",
+  "fromWorker": "sol-20260811-went7q",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "summary": "PR #271 is ready for independent WorldEntity audit. Head 65f37ccd has canonical CI PASS after folding direct ownership regressions into the enumerated registry-shape suite. Review should focus on identity/snapshot semantics, aliasing, same-fidelity transition behavior, revision preservation, and whether defensive ownership cost is appropriate at explicit lifecycle boundaries. Merge remains blocked by the separately reported current-main Swarm PR-checker import regression.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #271 head 65f37ccddc4e4229722166acacd4fdcc02958eb9.",
+    "Canonical CI run 31464792347 concluded success.",
+    "Test-adversary wiring finding evt-20260811-061900-w3x7k9-worldentity-test-wiring was addressed by moving assertions into tests/world_entity_registry_shape.luau.",
+    "Shared control blocker is recorded separately as evt-20260811-062700-went7q-pr-checker-import."
+  ]
+}
