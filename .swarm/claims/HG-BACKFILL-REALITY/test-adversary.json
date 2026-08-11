@@ -2,13 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-REALITY",
   "slotId": "test-adversary",
-  "workerId": "sol-20260811-q8n4z7",
-  "claimToken": "f3d9a07c6e2b4185",
-  "claimedAt": "2026-08-11T07:10:30+00:00",
-  "heartbeatAt": "2026-08-11T07:12:30+00:00",
+  "workerId": "sol-20260811-m8q2v7",
+  "claimToken": "3f8c1a6d92b740e5",
+  "claimedAt": "2026-08-11T08:00:00+00:00",
+  "heartbeatAt": "2026-08-11T08:00:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 2,
+  "generation": 3,
   "resources": [],
   "branch": "agent/reality/HG-BACKFILL-REALITY-tests-q8n4z7",
-  "pr": 294
+  "pr": 294,
+  "takeoverOf": "sol-20260811-q8n4z7",
+  "notes": "Generation-3 stale takeover of PR #294 after the prior lease expired at 07:42:30Z. Preserve/synchronize the test-only replay boundary work onto current main, rerun exact-head CI/ownership, and obtain fresh independent review before integration."
 }
