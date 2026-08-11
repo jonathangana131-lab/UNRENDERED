@@ -50,6 +50,13 @@ local function assertActive(self: Runtime): ()
 	assert(not self._disposed, "PhysicsLabRuntime is disposed")
 end
 
+local function assertPlainTable(value: unknown, message: string): any
+	assert(type(value) == "table", message)
+	local tableValue = value :: any
+	assert(getmetatable(tableValue) == nil, message)
+	return tableValue
+end
+
 local function plainValuesEqual(canonical: unknown, candidate: unknown, seen: { [any]: boolean }): boolean
 	if type(canonical) ~= type(candidate) then
 		return false
@@ -83,66 +90,77 @@ local function plainValuesEqual(canonical: unknown, candidate: unknown, seen: { 
 end
 
 local function assertCanonicalRecipe(recipe: Recipe): ()
-	assert(recipe.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION, "unsupported Physics Lab recipe schema")
-	assert(recipe.recipeKey == PhysicsLabRecipe.RECIPE_KEY, "unexpected Physics Lab recipe key")
-	assert(recipe.worldId == CANONICAL_RECIPE.worldId, "unexpected Physics Lab WorldId")
-	assert(recipe.regionId == CANONICAL_RECIPE.regionId, "unexpected Physics Lab RegionId")
+	local recipeTable = assertPlainTable(recipe, "Physics Lab runtime recipe must be a plain table")
+	assert(recipeTable.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION, "unsupported Physics Lab recipe schema")
+	assert(recipeTable.recipeKey == PhysicsLabRecipe.RECIPE_KEY, "unexpected Physics Lab recipe key")
+	assert(recipeTable.worldId == CANONICAL_RECIPE.worldId, "unexpected Physics Lab WorldId")
+	assert(recipeTable.regionId == CANONICAL_RECIPE.regionId, "unexpected Physics Lab RegionId")
+
+	local entities = assertPlainTable(
+		recipeTable.entities,
+		"Physics Lab runtime recipe entities must be a plain table"
+	)
 	assert(
-		#recipe.entities == #CANONICAL_RECIPE.entities,
+		#entities == #CANONICAL_RECIPE.entities,
 		"Physics Lab runtime requires the complete canonical entity population"
 	)
 
 	local seenKeys: { [string]: boolean } = {}
 	local seenCount = 0
-	for _, entityRecipe in ipairs(recipe.entities) do
+	for _, rawEntityRecipe in ipairs(entities) do
 		seenCount += 1
-		local canonical = CANONICAL_ENTITIES_BY_KEY[entityRecipe.key]
-		assert(canonical ~= nil, `unknown Physics Lab recipe entity key: {entityRecipe.key}`)
-		assert(not seenKeys[entityRecipe.key], `duplicate Physics Lab recipe entity key: {entityRecipe.key}`)
-		seenKeys[entityRecipe.key] = true
-
-		local record = entityRecipe.entity
-		local canonicalRecord = canonical.entity
-		assert(record.id == canonicalRecord.id, `Physics Lab recipe key/id mismatch: {entityRecipe.key}`)
-		assert(
-			record.kind == canonicalRecord.kind,
-			`Physics Lab recipe entity kind mismatch: {entityRecipe.key}`
+		local entityRecipe = assertPlainTable(
+			rawEntityRecipe,
+			"Physics Lab runtime entity recipe must be a plain table"
 		)
+		local entityKey = entityRecipe.key
+		assert(type(entityKey) == "string", "Physics Lab recipe entity key must be a string")
+
+		local canonical = CANONICAL_ENTITIES_BY_KEY[entityKey]
+		assert(canonical ~= nil, `unknown Physics Lab recipe entity key: {entityKey}`)
+		assert(not seenKeys[entityKey], `duplicate Physics Lab recipe entity key: {entityKey}`)
+		seenKeys[entityKey] = true
+
+		local record = assertPlainTable(
+			entityRecipe.entity,
+			`Physics Lab recipe entity record must be a plain table: {entityKey}`
+		)
+		local origin = assertPlainTable(
+			record.origin,
+			`Physics Lab recipe entity origin must be a plain table: {entityKey}`
+		)
+		local canonicalRecord = canonical.entity
+		assert(record.id == canonicalRecord.id, `Physics Lab recipe key/id mismatch: {entityKey}`)
+		assert(record.kind == canonicalRecord.kind, `Physics Lab recipe entity kind mismatch: {entityKey}`)
 		assert(
 			record.fidelity == canonicalRecord.fidelity,
-			`Physics Lab recipe initial fidelity mismatch: {entityRecipe.key}`
+			`Physics Lab recipe initial fidelity mismatch: {entityKey}`
 		)
 		assert(
 			record.stateRevision == canonicalRecord.stateRevision,
-			`Physics Lab recipe state revision mismatch: {entityRecipe.key}`
+			`Physics Lab recipe state revision mismatch: {entityKey}`
 		)
 		assert(
 			record.representationRevision == canonicalRecord.representationRevision,
-			`Physics Lab recipe representation revision mismatch: {entityRecipe.key}`
+			`Physics Lab recipe representation revision mismatch: {entityKey}`
 		)
 		assert(
 			plainValuesEqual(canonicalRecord.persistentState, record.persistentState, {}),
-			`Physics Lab recipe initial persistent state mismatch: {entityRecipe.key}`
+			`Physics Lab recipe initial persistent state mismatch: {entityKey}`
+		)
+		assert(origin.worldId == recipeTable.worldId, `Physics Lab entity WorldId mismatch: {entityKey}`)
+		assert(origin.regionId == recipeTable.regionId, `Physics Lab entity RegionId mismatch: {entityKey}`)
+		assert(
+			origin.generator == canonicalRecord.origin.generator,
+			`Physics Lab entity generator mismatch: {entityKey}`
 		)
 		assert(
-			record.origin.worldId == recipe.worldId,
-			`Physics Lab entity WorldId mismatch: {entityRecipe.key}`
+			origin.generatorVersion == canonicalRecord.origin.generatorVersion,
+			`Physics Lab entity generator version mismatch: {entityKey}`
 		)
 		assert(
-			record.origin.regionId == recipe.regionId,
-			`Physics Lab entity RegionId mismatch: {entityRecipe.key}`
-		)
-		assert(
-			record.origin.generator == canonicalRecord.origin.generator,
-			`Physics Lab entity generator mismatch: {entityRecipe.key}`
-		)
-		assert(
-			record.origin.generatorVersion == canonicalRecord.origin.generatorVersion,
-			`Physics Lab entity generator version mismatch: {entityRecipe.key}`
-		)
-		assert(
-			record.origin.recipeKey == canonicalRecord.origin.recipeKey,
-			`Physics Lab entity recipe provenance mismatch: {entityRecipe.key}`
+			origin.recipeKey == canonicalRecord.origin.recipeKey,
+			`Physics Lab entity recipe provenance mismatch: {entityKey}`
 		)
 	end
 	assert(
