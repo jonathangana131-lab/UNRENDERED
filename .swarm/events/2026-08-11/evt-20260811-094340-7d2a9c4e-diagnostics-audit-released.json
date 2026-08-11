@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094340-7d2a9c4e-diagnostics-audit-released",
+  "eventType": "RELEASED",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "workerId": "sol-20260811-p9w2c7n4",
+  "claimToken": "7d2a9c4e1f6b8053",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T09:43:40Z",
+  "headSha": "acb728242741716487a5825542061d20f5c4bde4",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-p9w2c7n4",
+  "payload": {
+    "reason": "Bounded audit pass found the exact product head unchanged since the fresh 09:23 REQUEST_CHANGES review; no duplicate review was posted.",
+    "result": "Reconciled stale lane state from READY to NEEDS_CHANGES and preserved the active closure list: absorb #333, fix physical Instance binding, fix diagnostics-readout completeness, sync current main, rerun exact-head gates, then fresh audit.",
+    "sourceReviewComment": 5251321669,
+    "instanceBindingFinding": "evt-20260811-085430-k8v2q6m4-diagnostics-instance-binding",
+    "readoutCompletenessFinding": "evt-20260811-092430-k4v7m2q9-diagnostics-readout-completeness",
+    "validation": "Repository/PR/control-state inspection only; no new tests and no Studio/viewport evidence claimed."
+  }
+}
