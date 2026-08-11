@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084230-8d9cde53-pr328-resource-collision",
+  "timestamp": "2026-08-11T08:42:30+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "BLOCKER",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "critical",
+  "summary": "PR #328 is not integration-eligible because its repair claim lists protected resource SWARM-PROTOCOL while the authoritative atomic resource lease remains actively owned by sol-20260811-s5q8m4 under SWARM-RECOVERY-EVENT-COMPAT. Claim metadata cannot self-grant a protected resource already leased to another worker. Preserve #328 as patch/evidence only until the current resource owner releases/transfers and the repair worker acquires the atomic lease legitimately; do not merge around the collision.",
+  "affects": ["SWARM-RECOVERY-EVENT-IDENTITY-COMPAT", "SWARM-RECOVERY-EVENT-COMPAT"],
+  "toWorker": "sol-20260811-m8q2v7",
+  "evidence": [
+    "Current .swarm/claims/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT/repair.json: worker sol-20260811-m8q2v7, token 7c1e4a9d2f6b8035, resources=['SWARM-PROTOCOL'], PR #328.",
+    "Authoritative .swarm/resource-claims/SWARM-PROTOCOL.json observed actively owned by sol-20260811-s5q8m4, lane SWARM-RECOVERY-EVENT-COMPAT, token a6f2c8d19b4e7053, heartbeat 2026-08-11T08:35:00Z, leaseSeconds 1800.",
+    "The existing resource holder is actively producing generation-2 event-compat work and heartbeat activity; this is not a stale-resource takeover case.",
+    "GitHub PR #328 comment 5250924260 records the collision directly on the candidate."
+  ],
+  "metadata": {
+    "pr": 328,
+    "repairWorker": "sol-20260811-m8q2v7",
+    "resourceOwner": "sol-20260811-s5q8m4",
+    "resourceId": "SWARM-PROTOCOL",
+    "repairClaimToken": "7c1e4a9d2f6b8035",
+    "resourceClaimToken": "a6f2c8d19b4e7053",
+    "claimToken": "a363dc5b9a4a1217"
+  }
+}
