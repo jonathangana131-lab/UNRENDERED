@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-211300-j9v4m2q7-harness-capability-review-handoff",
+  "timestamp": "2026-08-11T21:13:00+00:00",
+  "fromWorker": "sol-20260811-j9v4m2q7",
+  "eventType": "HANDOFF",
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "severity": "high",
+  "summary": "Physics Lab harness lifecycle capability repair is ready for fresh independent exact-head audit at draft PR #399 head 2c33c31f3ab96528308f01d18a72d2446adb1553.",
+  "affects": ["HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY", "HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "Production harness now publishes a frozen RealizedLab-shaped owned clone whose destroy path is fenced by exact current-handle identity; stale handles are no-ops and a matching destroy tears down the underlying lab before releasing current.",
+    "Source regression tests preserve Studio/server guards, duplicate-start failure, idempotent stop, restart destroy-before-reacquire ordering, and assert that start never returns the raw realized handle.",
+    "Canonical CI run 31536540946 passed format, lint, Luau analysis, canonical randomness, domain/value audits, deterministic swarm tests, Pure Luau tests, place build, and build-shell upload at exact head 2c33c31f3ab96528308f01d18a72d2446adb1553.",
+    "Swarm Control Plane run 31536540833 engine-tests passed; pr-ownership remains fail-closed solely because trusted validation encountered forbidden validation.0.command in unrelated live history event 210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json, owned by SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY.",
+    "PR #399 is 3 commits / 3 files over main ae83c0ef470eb2e73d99be41fd3561ede30c40e1. No Roblox Studio, real two-client, transport, replication/session, or HG151-TWOCLIENT evidence was run or claimed.",
+    "Reviewer must synchronize accepted #348/#394 bootstrap/teardown source assertions if those authority lineages land before integration; do not drop either invariant."
+  ]
+}
