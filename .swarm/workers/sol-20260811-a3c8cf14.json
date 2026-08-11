@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-a3c8cf14",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T09:00:30+00:00",
-  "lastSeenAt": "2026-08-11T09:19:00+00:00",
-  "laneId": null,
-  "slotId": null,
+  "lastSeenAt": "2026-08-11T09:20:00+00:00",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-2",
   "branch": "agent/review/HG-COMPLETION-PHYSICS-review2-a3c8cf14",
-  "notes": "Completed independent Physics completion review. PR #334 exact head is REQUEST_CHANGES: public runtime facade leaks registry/fidelity authority capabilities and transaction state to callbacks. Review event evt-20260811-091806-a3c8cf14-runtime-transition-capability-leak; review id 4904676564. No Studio evidence claimed."
+  "notes": "Exact-head adversarial re-review of PR #334 after capability-leak repair; no Studio evidence claimed."
 }
