@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075900-p6v4n8-worldentity-state-complexity-revalidated",
+  "timestamp": "2026-08-11T07:59:00+00:00",
+  "fromWorker": "sol-20260811-p6v4n8",
+  "eventType": "FINDING",
+  "summary": "Current-head revalidation of the WorldEntity persistentState complexity finding: PR #293 advanced during mining to c301d8403d3c1b93ee3b2988f80e9d1e689eb33d, and that exact head still recursively traverses/clones all acyclic persistentState nodes with no depth or aggregate-node budget. This supersedes only the stale head reference in evt-20260811-075600-p6v4n8-worldentity-state-complexity; the finding itself is unchanged. Treat the proposed depth/node fail-closed bound as a new Hero-Gate interface-depth blocker to consume or explicitly disposition before #293 integration.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "HIGH",
+  "evidence": [
+    "Exact head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d src/shared/Reality/WorldEntity.luau: clonePlainValue(value,path,seen) recursively calls clonePlainValue for each child while tracking cycles only; cloneState invokes it without depth/node accounting.",
+    "At the same exact head, WorldEntity.new/captureState/transition and registry ownership paths all clone persistent state before canonical mutation is committed, so a depth/node ceiling can fail closed without changing accepted identity or lifecycle semantics.",
+    "No runtime failure threshold is claimed: this miner performed static exact-head inspection only. The implementation/test leaf should choose measured/documented limits and prove at/below/above boundary behavior plus zero registry/revision/diagnostic side effects on rejection."
+  ]
+}
