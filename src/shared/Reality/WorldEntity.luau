@@ -60,6 +60,8 @@ WorldEntity.Fidelity = table.freeze({
 
 WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY = 64
 
+local MAX_SAFE_INTEGER = 9007199254740991
+
 local FIDELITY_RANK: { [string]: number } = table.freeze({
 	F0 = 0,
 	F1 = 1,
@@ -94,6 +96,16 @@ local ORIGIN_KEYS: { [string]: boolean } = table.freeze({
 	recipeKey = true,
 })
 
+local function safeValueLabel(value: unknown): string
+	local valueType = type(value)
+	if valueType == "string" then
+		return value :: string
+	elseif valueType == "number" or valueType == "boolean" or valueType == "nil" then
+		return tostring(value)
+	end
+	return `<{valueType}>`
+end
+
 local function assertNonEmpty(name: string, value: string): ()
 	assert(value ~= "", `{name} must not be empty`)
 	assert(string.find(value, "%c") == nil, `{name} must not contain control characters`)
@@ -106,26 +118,33 @@ local function checkedNonEmpty(name: string, value: unknown): string
 	return stringValue
 end
 
-local function assertFiniteNumber(path: string, value: number): ()
-	assert(value == value and value > -math.huge and value < math.huge, `{path} must be finite`)
-end
-
-local function checkedFiniteNumber(path: string, value: unknown): number
+local function assertFiniteNumber(path: string, value: unknown): number
 	assert(type(value) == "number", `{path} must be a number`)
 	local numericValue = value :: number
-	assertFiniteNumber(path, numericValue)
+	assert(
+		numericValue == numericValue and numericValue > -math.huge and numericValue < math.huge,
+		`{path} must be finite`
+	)
 	return numericValue
 end
 
+local function checkedFiniteNumber(path: string, value: unknown): number
+	return assertFiniteNumber(path, value)
+end
+
 local function assertNonNegativeInteger(path: string, value: unknown): number
-	assert(type(value) == "number", `{path} must be a number`)
-	local numericValue = value :: number
-	assertFiniteNumber(path, numericValue)
+	local numericValue = assertFiniteNumber(path, value)
 	assert(
 		numericValue >= 0 and numericValue == math.floor(numericValue),
 		`{path} must be a non-negative integer`
 	)
+	assert(numericValue <= MAX_SAFE_INTEGER, `{path} must not exceed the maximum safe integer`)
 	return numericValue
+end
+
+local function incrementRevision(path: string, value: number): number
+	assert(value < MAX_SAFE_INTEGER, `{path} has exhausted the safe integer revision range`)
+	return value + 1
 end
 
 local function assertExactRecordShape(value: unknown, allowedKeys: { [string]: boolean }, path: string): any
@@ -133,10 +152,10 @@ local function assertExactRecordShape(value: unknown, allowedKeys: { [string]: b
 	local source = value :: any
 	assert(getmetatable(source) == nil, `{path} must not have a metatable`)
 	for key in pairs(source) do
-		assert(
-			type(key) == "string" and allowedKeys[key] == true,
-			`{path} contains unknown schema key {tostring(key)}`
-		)
+		if type(key) ~= "string" then
+			error(`{path} contains unknown non-string schema key of type {type(key)}`)
+		end
+		assert(allowedKeys[key] == true, `{path} contains unknown schema key {key}`)
 	end
 	return source
 end
@@ -146,7 +165,7 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 	if valueType == "nil" or valueType == "boolean" or valueType == "string" then
 		return value
 	elseif valueType == "number" then
-		assertFiniteNumber(path, value :: number)
+		assertFiniteNumber(path, value)
 		return value
 	elseif valueType ~= "table" then
 		error(`{path} must contain plain data, got {valueType}`)
@@ -193,11 +212,8 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 	return table.freeze(copy)
 end
 
-local function cloneState(state: PlainData?): PlainData
+local function cloneState(state: PlainData): PlainData
 	local source: any = state
-	if source == nil then
-		source = {}
-	end
 	assert(type(source) == "table", "persistentState must be a table")
 	assert(getmetatable(source) == nil, "persistentState must not contain metatables")
 	for key in pairs(source) do
@@ -207,6 +223,13 @@ local function cloneState(state: PlainData?): PlainData
 		)
 	end
 	return clonePlainValue(source, "persistentState", {}) :: PlainData
+end
+
+local function cloneOptionalState(state: PlainData?): PlainData
+	if state == nil then
+		return cloneState({})
+	end
+	return cloneState(state)
 end
 
 local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
@@ -260,8 +283,8 @@ function WorldEntity.isFidelity(value: unknown): boolean
 end
 
 function WorldEntity.fidelityRank(fidelity: Fidelity): number
-	local rank = FIDELITY_RANK[fidelity]
-	assert(rank ~= nil, `invalid fidelity {tostring(fidelity)}`)
+	local rank = if type(fidelity) == "string" then FIDELITY_RANK[fidelity] else nil
+	assert(rank ~= nil, `invalid fidelity {safeValueLabel(fidelity)}`)
 	return rank
 end
 
@@ -273,7 +296,7 @@ local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
 	)
 	local kind = checkedNonEmpty("WorldEntityRecord.kind", source.kind)
 	assert(type(source.origin) == "table", "WorldEntityRecord.origin must be a table")
-	assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {tostring(source.fidelity)}`)
+	assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {safeValueLabel(source.fidelity)}`)
 	assert(type(source.persistentState) == "table", "WorldEntityRecord.persistentState must be a table")
 
 	local stateRevision = assertNonNegativeInteger("WorldEntityRecord.stateRevision", source.stateRevision)
@@ -305,7 +328,7 @@ function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord
 	if source.fidelity == nil then
 		fidelity = "F0"
 	else
-		assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {tostring(source.fidelity)}`)
+		assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {safeValueLabel(source.fidelity)}`)
 		fidelity = source.fidelity :: Fidelity
 	end
 
@@ -320,19 +343,20 @@ function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord
 		kind = kind,
 		origin = origin,
 		fidelity = fidelity,
-		persistentState = cloneState(persistentState),
+		persistentState = cloneOptionalState(persistentState),
 		stateRevision = 0,
 		representationRevision = 0,
 	})
 end
 
 function WorldEntity.captureState(record: WorldEntityRecord, capturedState: PlainData): WorldEntityRecord
+	local ownedRecord = ownRecord(record)
 	return cloneRecord(
-		record,
-		record.fidelity,
+		ownedRecord,
+		ownedRecord.fidelity,
 		cloneState(capturedState),
-		record.stateRevision + 1,
-		record.representationRevision
+		incrementRevision("WorldEntityRecord.stateRevision", ownedRecord.stateRevision),
+		ownedRecord.representationRevision
 	)
 end
 
@@ -341,18 +365,19 @@ function WorldEntity.transition(
 	target: Fidelity,
 	capturedState: PlainData?
 ): WorldEntityRecord
-	assert(WorldEntity.isFidelity(target), `invalid fidelity {tostring(target)}`)
-	if target == record.fidelity then
+	local ownedRecord = ownRecord(record)
+	assert(WorldEntity.isFidelity(target), `invalid fidelity {safeValueLabel(target)}`)
+	if target == ownedRecord.fidelity then
 		if capturedState == nil then
-			return record
+			return ownedRecord
 		end
-		return WorldEntity.captureState(record, capturedState)
+		return WorldEntity.captureState(ownedRecord, capturedState)
 	end
 
-	local currentRank = WorldEntity.fidelityRank(record.fidelity)
+	local currentRank = WorldEntity.fidelityRank(ownedRecord.fidelity)
 	local targetRank = WorldEntity.fidelityRank(target)
-	local nextState = record.persistentState
-	local nextStateRevision = record.stateRevision
+	local nextState = ownedRecord.persistentState
+	local nextStateRevision = ownedRecord.stateRevision
 
 	if targetRank < currentRank then
 		assert(
@@ -360,7 +385,7 @@ function WorldEntity.transition(
 			"demotion requires captured persistent state before representation teardown"
 		)
 		nextState = cloneState(capturedState)
-		nextStateRevision += 1
+		nextStateRevision = incrementRevision("WorldEntityRecord.stateRevision", ownedRecord.stateRevision)
 	else
 		assert(
 			capturedState == nil,
@@ -368,23 +393,26 @@ function WorldEntity.transition(
 		)
 	end
 
-	return cloneRecord(record, target, nextState, nextStateRevision, record.representationRevision + 1)
+	return cloneRecord(
+		ownedRecord,
+		target,
+		nextState,
+		nextStateRevision,
+		incrementRevision("WorldEntityRecord.representationRevision", ownedRecord.representationRevision)
+	)
 end
 
 function WorldEntity.createRegistry(duplicateDiagnosticCapacity: number?): Registry
-	local capacity = duplicateDiagnosticCapacity or WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY
-	assertFiniteNumber("duplicateDiagnosticCapacity", capacity)
-	assert(
-		capacity >= 0 and capacity == math.floor(capacity),
-		"duplicateDiagnosticCapacity must be a non-negative integer"
-	)
+	local capacity = if duplicateDiagnosticCapacity == nil
+		then WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY
+		else assertNonNegativeInteger("duplicateDiagnosticCapacity", duplicateDiagnosticCapacity)
 
 	local records: { [WorldEntityId]: WorldEntityRecord } = {}
 	local duplicates: { DuplicateIdentityDiagnostic } = {}
 
 	local function getRegistered(entityId: WorldEntityId): WorldEntityRecord
 		local record = records[entityId]
-		assert(record ~= nil, `unknown WorldEntityId: {entityId}`)
+		assert(record ~= nil, `unknown WorldEntityId: {safeValueLabel(entityId)}`)
 		return record
 	end
 
