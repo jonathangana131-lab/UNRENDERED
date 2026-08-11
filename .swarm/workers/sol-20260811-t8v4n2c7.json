@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-t8v4n2c7",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T20:13:14+00:00",
-  "lastSeenAt": "2026-08-11T20:17:32+00:00",
-  "laneId": "HG-COMPLETION-AUTHORITY",
-  "slotId": "review-1",
-  "branch": "agent/review/HG-COMPLETION-AUTHORITY-review-1-t8v4n2c7",
-  "notes": "Reviewing exact head of PR #382 under the priority-10000 authority completion queue; test-only teardown recovery."
+  "lastSeenAt": "2026-08-11T20:29:20+00:00",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "test-adversary",
+  "branch": "agent/authority/HG-BACKFILL-AUTHORITY-tests-t8v4n2c7-g3",
+  "notes": "Published ready-for-review PR #390 exact head f8a66f65 with canonical CI + engine-tests green; implementation/resource claims released. Integration remains held on global trusted pr-ownership recovery and fresh independent review."
 }
