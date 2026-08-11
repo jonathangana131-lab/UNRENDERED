@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091115-o8a4r7-history-resource-dependency",
+  "timestamp": "2026-08-11T09:11:15+00:00",
+  "fromWorker": "sol-20260811-o8a4r7",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "summary": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY is the active red-control recovery prerequisite after #329, but its required exclusive SWARM-PROTOCOL resource is currently leased by SWARM-V22-THROUGHPUT. Do not steal or overwrite the live lease; checkpoint/yield the throughput resource so the dedicated continuity recovery can claim primary, then resume throughput after control validity is restored.",
+  "affects": [
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "SWARM-V22-THROUGHPUT"
+  ],
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "severity": "high",
+  "evidence": [
+    "SWARM-RECOVERY-EVENT-COMPAT is DONE after PR #329 merged as ae83c0ef470eb2e73d99be41fd3561ede30c40e1; its lane names SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY as the active blocker.",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY is READY and requires resource SWARM-PROTOCOL.",
+    "Live .swarm/resource-claims/SWARM-PROTOCOL.json is owned by sol-20260811-2b51a8 for SWARM-V22-THROUGHPUT with a live 1800-second lease acquired at 2026-08-11T09:05:10Z.",
+    "Docs/SWARM_CONTROL_PLANE.md recovery policy requires one dedicated recovery lane while control CI is red and stops ordinary new primary implementation."
+  ],
+  "metadata": {
+    "resourceId": "SWARM-PROTOCOL",
+    "blockingLane": "SWARM-V22-THROUGHPUT",
+    "blockingWorker": "sol-20260811-2b51a8",
+    "recommendedDisposition": "yield-resource-to-critical-recovery"
+  }
+}
