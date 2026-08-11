@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-bbd7b1e6",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T09:40:14+00:00",
+  "lastSeenAt": "2026-08-11T09:40:14+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-bbd7b1e6",
+  "notes": "Attempting the source-only WorldEntity adversarial regression slot; ownership depends on successful atomic claim/resource acquisition."
+}
