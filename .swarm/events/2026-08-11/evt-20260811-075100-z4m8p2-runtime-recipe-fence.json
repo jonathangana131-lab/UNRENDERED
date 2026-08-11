@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075100-z4m8p2-runtime-recipe-fence",
+  "timestamp": "2026-08-11T07:51:00+00:00",
+  "fromWorker": "sol-20260811-z4m8p2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "PhysicsLabRuntime.new() claims authority for the deterministic permanent lab but only checks schemaVersion, recipeKey, and a non-empty entity array. A caller can therefore supply the canonical recipe key with a forged top-level WorldId/RegionId or a strict subset/substitution of the canonical 20 entities and obtain a valid runtime whose authority no longer corresponds to PhysicsLabRecipe.build(). The production Realizer currently passes PhysicsLabRecipe.build() directly, so this is a source-boundary hardening gap rather than accepted Studio evidence or a current Workspace divergence. Add a narrow fail-closed constructor fence that verifies canonical lab provenance and exactly one canonical key/id pair for the complete recipe population before runtime registration, with pure regressions for provenance mismatch and subset/substitution.",
+  "affects": ["HERO-GATE", "HG-BACKFILL-PHYSICS-RUNTIME"],
+  "evidence": [
+    "src/shared/Physics/PhysicsLabRuntime.luau new(recipe) asserts only schemaVersion, recipeKey, and #recipe.entities > 0 before registering every supplied record.",
+    "tests/physics_lab_recipe.luau independently locks PhysicsLabRecipe.build() to 20 deterministic entities, required keys, unique StableIds, and entity origins bound to the canonical WorldId/RegionId.",
+    "Docs/PHYSICS_LAB.md defines PhysicsLabRecipe as the owner of stable lab/world/entity identity, while merged PR #189 describes PhysicsLabRuntime as registering exactly the current recipe population.",
+    "Current production PhysicsLabRealizer.realize() builds the canonical recipe internally, so no Roblox Studio PASS/FAIL inference follows from this source finding."
+  ],
+  "metadata": {
+    "claimToken": "4d8a2c7f1e9b6035"
+  }
+}
