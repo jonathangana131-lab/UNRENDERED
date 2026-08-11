@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-ogx9k2",
   "claimToken": "c7d8a4e16b935f20",
   "claimedAt": "2026-08-11T07:05:00+00:00",
-  "heartbeatAt": "2026-08-11T07:07:00+00:00",
+  "heartbeatAt": "2026-08-11T07:17:00+00:00",
   "leaseSeconds": 1800,
   "generation": 2,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-ogx9k2",
   "pr": 293,
   "takeoverOf": "sol-20260811-went7q",
-  "notes": "Took over after the prior primary lease expired at 2026-08-11T06:57:30Z. Preserving PR #271 and its branch as evidence; PR #293 owns the lifecycle boundary hardening on a fresh current-main branch with the required exclusive REALITY-CONTRACT writer lease."
+  "notes": "Generation-2 takeover PR #293 now also safe-bounds origin.generatorVersion per independent audit; exact-head CI/control are running with the exclusive REALITY-CONTRACT writer lease."
 }
