@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "test-adversary",
-  "workerId": "sol-20260811-6v4k9n2c",
-  "claimToken": "6f1a9c3d7e2b8054",
-  "claimedAt": "2026-08-11T21:19:20+00:00",
-  "heartbeatAt": "2026-08-11T21:28:29+00:00",
+  "workerId": "sol-20260811-k3p8v6m1",
+  "claimToken": "a4e9c2f7b1d63805",
+  "claimedAt": "2026-08-11T22:12:05+00:00",
+  "heartbeatAt": "2026-08-11T22:12:05+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-test-adversary-6v4k9n2c",
+  "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-test-adversary-k3p8v6m1-g2",
   "pr": 395,
-  "notes": "Adversarial regression pass on generation-8 ObjectGenome PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; target concrete missing malformed-input/identity invariant without duplicating audit work."
+  "notes": "Generation-2 stale takeover after prior heartbeat expired. Continue duplicate-aware adversarial pass on PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; first resolve prior worker's canonical-string resource-boundary candidate against existing findings/tests before publishing or editing."
 }
