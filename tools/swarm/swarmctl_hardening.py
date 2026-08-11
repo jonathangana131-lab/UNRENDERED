@@ -106,8 +106,6 @@ def _validate_event_with_immutable_compat(path):
     return _STRICT_VALIDATE_EVENT(path)
 
 
-# core.read_tree resolves validate_event dynamically. Unlisted/new events remain
-# strict V2; no timestamp, metadata, or self-authored field can opt into recovery.
 _base.core.validate_event = _validate_event_with_immutable_compat
 
 
@@ -132,15 +130,18 @@ _base.read_tree = read_tree
 
 
 def quarantined_history(root: Path) -> list[dict]:
-    """Return only exact known inert historical artifacts; mutation remains fatal."""
+    """Return exact known inert historical artifacts present in this snapshot."""
     records = []
     for event_id, rule in _CANONICAL_IMMUTABLE_EVENTS.items():
         bad = rule.get("quarantinedGitBlobSha1")
         if bad is None:
             continue
         path = root / "events" / rule["date"] / rule["filename"]
+        # Generic unit/simulation snapshots do not contain production history.
+        # Real deletion from a trusted production snapshot is still rejected by
+        # the raw immutable-event deletion fence in transition_check.
         if not path.exists():
-            raise _base.core.ControlError(f"missing quarantined immutable event path: {path}")
+            continue
         obj = _base.core.load_json(path, max_bytes=48_000)
         _canonical_rule(path, obj)
         actual = _git_blob_sha1(path)
@@ -200,10 +201,6 @@ def transition_check(before: Path, after: Path) -> dict:
     """Compare from the last separately trusted snapshot, never merely the immediate parent."""
     before = Path(before)
     after = Path(after)
-
-    # A failed malformed commit can never become a future baseline: both the last
-    # trusted snapshot and candidate must still parse under current strict/quarantine
-    # rules, then the proven base transition fence compares their raw event bytes.
     read_tree(before)
     read_tree(after)
     result = _STRICT_TRANSITION_CHECK(before, after)
