@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-31c7e8a4",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-11T12:06:30+00:00",
+  "lastSeenAt": "2026-08-11T12:06:30+00:00",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-31c7e8a4",
+  "notes": "Independent exact-head source-only audit of generation-5 authority PR #348. Verify wrong-context guard ordering, server-only Physics Lab ownership, client exclusion, exact current-main scope, and offline evidence boundaries without claiming two real clients."
+}
