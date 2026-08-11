@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""V2.1 regression suite layered on the proven hardening tests."""
+"""V2.1 trusted-history regression suite layered on the proven hardening tests."""
 from pathlib import Path
 import runpy
 import tempfile
@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 
 from test_swarmctl_hardening_base import *  # retain every existing hardening test
+from test_swarm_trusted_history import *  # canonical entrypoint also executes history continuity tests
 import swarmctl_hardening as hard
 
 
@@ -242,7 +243,7 @@ class WorkflowSnapshotFenceRegressionTests(unittest.TestCase):
         self.assertIn('python3 tools/swarm/swarmctl_hardening.py render --root "$RUNNER_TEMP/control-health/.swarm"', health_job)
         self.assertIn('cp -R "$RUNNER_TEMP/control-health/.swarm/generated/." .swarm/generated/', health_job)
         self.assertIn("git add .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json .swarm/generated", health_job)
-        self.assertIn("validation fence [swarm-generated]", health_job)
+        self.assertIn("validation fence [swarm-health]", health_job)
         self.assertLess(
             health_job.index('render --root "$RUNNER_TEMP/control-health/.swarm"'),
             health_job.index('cp -R "$RUNNER_TEMP/control-health/.swarm/generated/." .swarm/generated/'),
