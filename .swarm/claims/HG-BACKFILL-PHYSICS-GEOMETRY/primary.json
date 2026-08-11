@@ -2,13 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "primary",
-  "workerId": "sol-20260811-v8k3p6",
-  "claimToken": "a91c5e73d4b2608f",
-  "claimedAt": "2026-08-11T07:46:30+00:00",
-  "heartbeatAt": "2026-08-11T08:18:00+00:00",
+  "workerId": "sol-20260811-k8v3p6r1",
+  "claimToken": "8c4e1a7d3b2f9065",
+  "claimedAt": "2026-08-11T10:01:00+00:00",
+  "heartbeatAt": "2026-08-11T10:01:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 2,
+  "generation": 3,
   "resources": [],
-  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-v8k3p6-g2",
-  "pr": 303
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-k8v3p6r1-g3",
+  "pr": null,
+  "takeoverOf": "sol-20260811-v8k3p6",
+  "notes": "Generation-3 stale takeover on current main. Preserve #303 plain-data/no-execute and exact-nil tolerance hardening, absorb expected-red #346 safe-integer bounds and #356 canonical rootName identity closure into the same two-file validation boundary, run exact-head gates, then require fresh independent review by another worker. No Studio evidence claim."
 }
