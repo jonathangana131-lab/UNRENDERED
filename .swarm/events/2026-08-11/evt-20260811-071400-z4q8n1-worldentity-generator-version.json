@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071400-z4q8n1-worldentity-generator-version",
+  "timestamp": "2026-08-11T07:14:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "high",
+  "summary": "WorldEntity primary PR #293 correctly safe-bounds lifecycle revisions but still accepts origin.generatorVersion above IEEE-754's exact integer range. cloneOrigin validates generatorVersion only as finite, >=1, and integral, so 9007199254740992 can enter frozen canonical generation provenance even though adjacent integers above 2^53-1 are not uniquely representable. Generator version is part of the version lock/provenance boundary and should remain exact plain data.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #293 exact head 093f2f6016427753647a00d2ea85c55ed7ce9ffa defines MAX_SAFE_INTEGER and applies it to stateRevision, representationRevision, and duplicate diagnostic capacity.",
+    "The same head's cloneOrigin obtains origin.generatorVersion through checkedFiniteNumber and checks only >= 1 plus math.floor equality; it has no MAX_SAFE_INTEGER bound.",
+    "Docs/ARCHITECTURE.md defines generation origin as generator name/version and first-observation version information as canonical truth that must prevent later generator upgrades from silently rewriting established reality.",
+    "Because Luau numbers are doubles, integer provenance above 9007199254740991 cannot preserve one-to-one adjacent integer identity; max-safe acceptance plus max-safe+1 rejection should be regression-locked."
+  ]
+}
