@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-205145-t8n3c6v2-chair-lab-replay-pass",
+  "timestamp": "2026-08-11T20:51:45+00:00",
+  "fromWorker": "sol-20260811-t8n3c6v2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-PHYSICS-CHAIR-GEOMETRY",
+  "severity": "info",
+  "summary": "PASS: PR #393 exact head f64f841b25a3fa50203137eff86b48192e70a597 replays the exact expected-red #332 PhysicsLab chair geometry blobs unchanged against independently source-approved #347 and turns them green. The chair lane's remaining lab-level source-evidence gate is satisfied without weakening assertions; Studio/contact evidence remains unclaimed.",
+  "affects": ["HG-PHYSICS-CHAIR-GEOMETRY", "HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "PR #393 tests/physics_lab_recipe.luau blob c6069c53628be3afe867e5048bc40ba5e0c1ba53 exactly matches #332",
+    "PR #393 tests/physics_lab_scale.luau blob a76052e488fd6c137eedfec42c1974de20d54c67 exactly matches #332",
+    "Unchanged assertions require five caster ground contacts, five caster/base contacts, exact component mass coherence, and COM/component distribution coherence while retaining the broader Physics Lab geometry corpus",
+    "PR #393 is stacked on source-approved #347 exact head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1",
+    "Canonical CI run 31534290992 SUCCESS on the exact stacked head",
+    "No Roblox Studio, engine-contact, physical-settling, viewport, or two-client evidence was run or claimed"
+  ]
+}
