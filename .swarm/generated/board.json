@@ -1,15 +1,5 @@
 {
-  "activeClaims": [
-    {
-      "branch": "agent/swarm/v21-capacity-v21fix",
-      "expiresAt": "2026-08-11T06:26:30+00:00",
-      "generation": 1,
-      "laneId": "SWARM-V21-CAPACITY",
-      "pr": null,
-      "slotId": "primary",
-      "workerId": "sol-20260811-v21fix"
-    }
-  ],
+  "activeClaims": [],
   "blockedLanes": [
     {
       "laneId": "HERO-DOOR",
@@ -23,7 +13,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T06:02:08.571747+00:00",
+  "generatedAt": "2026-08-11T06:02:46.123400+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "5ee9091eb9d7af665a990381b0133d8ccedea503",
@@ -33,7 +23,7 @@
     "workflowRunId": 31463572108
   },
   "metrics": {
-    "activeClaims": 1,
+    "activeClaims": 0,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -43,7 +33,7 @@
       "INTEGRATION_RESULT": 3,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T06:02:08.571747+00:00",
+    "generatedAt": "2026-08-11T06:02:46.123400+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -651,7 +641,7 @@
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 1,
+      "activeOwners": 0,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "SWARM-PROTOCOL",
@@ -681,10 +671,10 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "0a3aafc340634f62f9b45ad2169ab1628a0d30d8579ad955950be609839f990c",
+  "stateDigest": "7b81d1e6a896ff32e1e019d5499d65c5d8263913938f0304310a5017967baccd",
   "summary": {
-    "activeClaims": 1,
-    "activeResourceClaims": 1,
+    "activeClaims": 0,
+    "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
     "lanes": 21,
     "readySlots": 35,
