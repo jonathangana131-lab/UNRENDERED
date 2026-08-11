@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-p6r4n8x2",
+  "claimToken": "9e4b1c7a3d5f8026",
+  "claimedAt": "2026-08-11T21:52:00+00:00",
+  "heartbeatAt": "2026-08-11T21:52:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-p6r4n8x2-g2",
+  "pr": 389,
+  "notes": "Fresh exact-head audit of #389 after newer expected-red adversarial PR #406 proved malformed scale scalars can execute caller __eq before primitive-number rejection. Re-evaluate prior SOURCE passes against this new evidence; no Studio/contact claims."
+}
