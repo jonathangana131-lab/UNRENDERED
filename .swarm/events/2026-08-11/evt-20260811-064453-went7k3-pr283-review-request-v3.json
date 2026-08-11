@@ -14,7 +14,7 @@
     "The prior StyLua trailing-newline blocker is fixed.",
     "The adversarial throwing unknown-key formatter regression from PR #272 is preserved and passes, proving malformed input cannot abort MaterialDNA validation through unknown-key formatting.",
     "Codex P2 full-catalog sealing is addressed by keyed bidirectional catalog/golden coverage plus count equality, so an added unsealed fixture or stale golden fails the suite.",
-    "Production MaterialDNA identity remains {id, recipeVersion}; no competing runtime fingerprint identity was introduced."
-  ],
-  "nextAction": "Independent HG-BACKFILL-MATERIALDNA/audit worker should accept or request changes on exact head 11334326196adba5ced6c50ffe32e856a047c2b9. Primary must not self-approve or merge before that review."
+    "Production MaterialDNA identity remains {id, recipeVersion}; no competing runtime fingerprint identity was introduced.",
+    "Independent HG-BACKFILL-MATERIALDNA audit acceptance or requested changes on the exact head was the required next action; primary self-approval was not sufficient."
+  ]
 }
