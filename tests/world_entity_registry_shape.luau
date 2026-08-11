@@ -183,6 +183,112 @@ local function run(): number
 		string.find(tostring(wrongWorldIdError), "origin.worldId must be a string", 1, true) ~= nil
 	)
 
+	local maxDepth = 64
+	local maxNodes = 4096
+	local maxStringBytes = 65536
+	expect("persistent-state depth budget is explicit", WorldEntity.MAX_PERSISTENT_STATE_DEPTH == maxDepth)
+	expect("persistent-state node budget is explicit", WorldEntity.MAX_PERSISTENT_STATE_NODES == maxNodes)
+	expect(
+		"persistent-state string-byte budget is explicit",
+		WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES == maxStringBytes
+	)
+
+	local exactDepthState = {}
+	local exactDepthCursor = exactDepthState
+	for _ = 1, maxDepth do
+		local child = {}
+		exactDepthCursor.child = child
+		exactDepthCursor = child
+	end
+	local exactDepthSpec = makeSpec()
+	exactDepthSpec.persistentState = exactDepthState
+	local exactDepthAccepted = newResult(exactDepthSpec)
+	expect("accepts state at exact owned depth budget", exactDepthAccepted)
+
+	local overDepthState = {}
+	local overDepthCursor = overDepthState
+	for _ = 1, maxDepth + 1 do
+		local child = {}
+		overDepthCursor.child = child
+		overDepthCursor = child
+	end
+	local overDepthSpec = makeSpec()
+	overDepthSpec.persistentState = overDepthState
+	local overDepthAccepted = newResult(overDepthSpec)
+	expect("rejects state beyond owned depth budget", not overDepthAccepted)
+
+	local exactWideState = {}
+	for index = 1, maxNodes - 1 do
+		exactWideState[`key-{index}`] = index
+	end
+	local exactWideSpec = makeSpec()
+	exactWideSpec.persistentState = exactWideState
+	local exactWideAccepted = newResult(exactWideSpec)
+	expect("accepts flat state at exact owned node budget", exactWideAccepted)
+
+	local overWideState = {}
+	for index = 1, maxNodes do
+		overWideState[`key-{index}`] = index
+	end
+	local overWideSpec = makeSpec()
+	overWideSpec.persistentState = overWideState
+	local overWideAccepted = newResult(overWideSpec)
+	expect("rejects flat state beyond owned node budget", not overWideAccepted)
+
+	local payloadKey = "payload"
+	local exactByteSpec = makeSpec()
+	exactByteSpec.persistentState = {
+		[payloadKey] = string.rep("x", maxStringBytes - #payloadKey),
+	}
+	local exactByteAccepted = newResult(exactByteSpec)
+	expect("accepts state at exact cumulative string-byte budget", exactByteAccepted)
+
+	local overByteSpec = makeSpec()
+	overByteSpec.persistentState = {
+		[payloadKey] = string.rep("x", maxStringBytes - #payloadKey + 1),
+	}
+	local overByteAccepted = newResult(overByteSpec)
+	expect("rejects state beyond cumulative string-byte budget", not overByteAccepted)
+
+	local atomicRegistry = WorldEntity.createRegistry()
+	local atomicEntity = WorldEntity.new({
+		id = "entity:state-budget-atomicity",
+		kind = "office-chair",
+		origin = {
+			worldId = "world:0000000000000001",
+			regionId = "region:office-a",
+			generator = "objects.office",
+			generatorVersion = 1,
+			recipeKey = "chair/state-budget-atomicity",
+		},
+		fidelity = "F2",
+		persistentState = { open = false },
+	})
+	local atomicRegistered = WorldEntity.register(atomicRegistry, atomicEntity)
+	expect("registers state-budget atomicity fixture", atomicRegistered)
+	local oversizedState = {
+		payload = string.rep("x", maxStringBytes),
+	}
+	local beforeRejectedCapture = WorldEntity.get(atomicRegistry, atomicEntity.id)
+	local rejectedCaptureAccepted = pcall(function()
+		WorldEntity.captureRegistered(atomicRegistry, atomicEntity.id, oversizedState)
+	end)
+	expect("registered capture rejects over-budget state", not rejectedCaptureAccepted)
+	expect(
+		"rejected over-budget capture preserves registry record atomically",
+		WorldEntity.get(atomicRegistry, atomicEntity.id) == beforeRejectedCapture
+	)
+
+	local beforeRejectedDemotion = WorldEntity.get(atomicRegistry, atomicEntity.id)
+	local rejectedDemotionAccepted = pcall(function()
+		WorldEntity.transitionRegistered(atomicRegistry, atomicEntity.id, "F1", oversizedState)
+	end)
+	expect("registered demotion rejects over-budget state", not rejectedDemotionAccepted)
+	expect(
+		"rejected over-budget demotion preserves registry record atomically",
+		WorldEntity.get(atomicRegistry, atomicEntity.id) == beforeRejectedDemotion
+	)
+
 	return failures
 end
 
