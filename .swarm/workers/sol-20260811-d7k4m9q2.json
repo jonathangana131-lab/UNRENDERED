@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-d7k4m9q2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T21:58:10+00:00",
+  "lastSeenAt": "2026-08-11T22:11:20+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "primary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-d7k4m9q2-g6",
-  "notes": "Generation-6 stale takeover preserving #397; add a practical duplicate-diagnostic capacity ceiling plus exact regressions, then require independent review."
+  "notes": "Generation-6 successor PR #413 exact head b56c95e79e6e7352b177d6b6bc6cce0bb993f3bf is source/test complete: direct #397 delta +16/-0 across two files, canonical CI 31541132474 PASS, Swarm engine-tests PASS. Lane remains NEEDS_CHANGES and PR draft until trusted pr-ownership is restored, then requires fresh independent exact-head review. Primary/resource leases released."
 }
