@@ -13,6 +13,7 @@
   "writeScopes": [
     "tools/swarm/**",
     ".github/workflows/swarm-control.yml",
+    ".github/workflows/ci.yml",
     ".github/pull_request_template.md",
     "Docs/SWARM_CONTROL_PLANE.md",
     "Docs/SWARM_PROTOCOL.md",
@@ -22,7 +23,7 @@
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
     {"slotId": "primary", "role": "Control-plane hardening implementer", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 900},
-    {"slotId": "tests-1", "role": "Adversarial distributed-systems tests", "exclusive": true, "availableWhen": ["READY", "IMPLEMENTING", "REVIEW"], "priorityBoost": 550, "writeScopes": ["tools/swarm/test_swarmctl.py"]},
+    {"slotId": "tests-1", "role": "Adversarial distributed-systems tests", "exclusive": true, "availableWhen": ["READY", "IMPLEMENTING", "REVIEW"], "priorityBoost": 550, "writeScopes": ["tools/swarm/test_swarmctl.py", "tools/swarm/test_swarmctl_hardening.py"]},
     {"slotId": "reviewer-1", "role": "Independent control-plane security/reliability review", "exclusive": true, "availableWhen": ["REVIEW"], "requiresIndependentFrom": "primary", "priorityBoost": 700},
     {"slotId": "integration", "role": "Control-plane integration", "exclusive": true, "availableWhen": ["INTEGRATION_READY"], "requiresIndependentFrom": "primary", "priorityBoost": 800}
   ],
