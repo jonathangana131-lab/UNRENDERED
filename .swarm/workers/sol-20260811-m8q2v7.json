@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:45:26+00:00",
-  "lastSeenAt": "2026-08-11T08:04:00+00:00",
+  "lastSeenAt": "2026-08-11T08:15:00+00:00",
   "laneId": "HG-BACKFILL-REALITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-REALITY-tests-m8q2v7-g3",
-  "notes": "Generation-3 takeover is now PR #312 on current main. Exact-head canonical CI is green; live ownership is being retried after the unrelated invalid-worker-status control-state break was corrected."
+  "notes": "PR #312 is on current main with canonical CI green. Control-plane validation is healthy again; exact-head ownership rerun and fresh independent review remain before integration."
 }
