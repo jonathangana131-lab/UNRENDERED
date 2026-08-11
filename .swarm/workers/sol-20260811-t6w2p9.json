@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-t6w2p9",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T06:17:30+00:00",
-  "lastSeenAt": "2026-08-11T06:37:00+00:00",
+  "lastSeenAt": "2026-08-11T06:39:00+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-RUNTIME",
   "slotId": "test-adversary",
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-tests-t6w2p9",
-  "notes": "PR #284 exact head e531ca8a0cb98291bf8529e1143079dec0ecb74e is green in canonical CI and Swarm ownership after #288 recovery; Codex P2 addressed; awaiting independent swarm review/integration."
+  "notes": "PR #284 merged as fe07bf46a8450e855470e3d723ef2abb01a1e149 after independent swarm review; exact-head CI/ownership were green and post-merge main CI 31465801287 passed. Claim released cleanly."
 }
