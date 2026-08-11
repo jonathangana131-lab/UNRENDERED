@@ -8,16 +8,16 @@
     "INTEGRATION_RESULT": 3,
     "RECOVERY": 1
   },
-  "generatedAt": "2026-08-11T05:54:20.588251+00:00",
+  "generatedAt": "2026-08-11T05:54:34.749646+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED_EXTERNAL": 1,
     "DONE": 5,
     "LOCKED": 1,
-    "READY": 11
+    "READY": 12
   },
   "note": "Gross lines written are diagnostic, not a success metric.",
-  "readySlots": 24,
+  "readySlots": 27,
   "reviewBacklog": 0,
   "schemaVersion": 1,
   "staleClaims": 0

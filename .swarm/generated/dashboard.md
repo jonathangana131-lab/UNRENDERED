@@ -1,14 +1,14 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T05:54:20.588251+00:00`
+Generated: `2026-08-11T05:54:34.749646+00:00`
 
 Canonical main: **GREEN** `10d3f6992ff243a9268ed8629893faf4fc40791c`
 
-State digest: `572ff4f8378b147e3a32c49c3a7633bf57bc95bd82c64a26d19e5a3e042c899b`
+State digest: `a6679bc0909f1469eafb0144f054849cdbd90679e848ffbd102ddafd2c95b902`
 
 ## Summary
 
-- ready slots: **24**
+- ready slots: **27**
 - active claims: **0**
 - stale claims: **0**
 - blocked-external lanes: **1**
@@ -35,10 +35,13 @@ State digest: `572ff4f8378b147e3a32c49c3a7633bf57bc95bd82c64a26d19e5a3e042c899b`
 - `HG-BACKFILL-DIAGNOSTICS/primary` — **Diagnostics source hardening** — score 5150 — dependencies satisfied; resources available
 - `HG-BACKFILL-PHYSICS-GEOMETRY/test-adversary` — **Geometry, clearance, and reachability property tests** — score 5120 — dependencies satisfied
 - `HG-BACKFILL-REALITY/audit` — **WorldId, seed, and replay invariant auditor** — score 5120 — dependencies satisfied
+- `HG-BACKFILL-AUTHORITY/primary` — **Server/client authority source hardening** — score 5100 — dependencies satisfied; resources available
 - `HG-BACKFILL-DIAGNOSTICS/test-adversary` — **Diagnostics lifecycle and no-drift test author** — score 5070 — dependencies satisfied
 - `HG-BACKFILL-PHYSICS-RUNTIME/audit` — **Runtime ownership and drift auditor** — score 5070 — dependencies satisfied
+- `HG-BACKFILL-AUTHORITY/test-adversary` — **Canonical agreement and teardown fixture author** — score 5020 — dependencies satisfied
 - `HG-BACKFILL-PHYSICS-GEOMETRY/audit` — **Physics recipe realism and validation auditor** — score 5020 — dependencies satisfied
 - `HG-BACKFILL-DIAGNOSTICS/audit` — **Diagnostics failure-path and capture-contract auditor** — score 4970 — dependencies satisfied
+- `HG-BACKFILL-AUTHORITY/audit` — **Two-client authority and trust-boundary auditor** — score 4920 — dependencies satisfied
 
 ## Active claims
 
