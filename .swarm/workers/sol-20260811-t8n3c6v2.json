@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T20:15:10+00:00",
-  "lastSeenAt": "2026-08-11T20:28:07+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-runtime",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-t8n3c6v2",
-  "notes": "Mining active PhysicsLabRuntime recipe-fence and transition-fence lineages for a concrete non-duplicate integration/invariant gap after review slots raced."
+  "lastSeenAt": "2026-08-11T20:30:00+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-audit-t8n3c6v2",
+  "notes": "Fresh independent exact-head source audit of generation-3 PR #388; preempted lower-priority runtime capacity mining after discovering this free REVIEW slot."
 }
