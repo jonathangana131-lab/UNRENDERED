@@ -19,11 +19,14 @@ local function run(): number
 		return string.find(source, needle, 1, true)
 	end
 
-	local directRepresentationsStart = position("local function directRepresentations(model: Model): { Instance }")
-	local directRepresentationsEnd = position("\nlocal function adorneeFor(representation: Instance): BasePart")
+	local directRepresentationsStart =
+		position("local function directRepresentations(model: Model): { Instance }")
+	local directRepresentationsEnd =
+		position("\nlocal function adorneeFor(representation: Instance): BasePart")
 	local directRepresentationsSource = nil
 	if directRepresentationsStart ~= nil and directRepresentationsEnd ~= nil then
-		directRepresentationsSource = string.sub(source, directRepresentationsStart, directRepresentationsEnd - 1)
+		directRepresentationsSource =
+			string.sub(source, directRepresentationsStart, directRepresentationsEnd - 1)
 	end
 	local representedCountMetric = directRepresentationsSource ~= nil
 		and string.find(directRepresentationsSource, '"UNRENDERED_RepresentedCount"', 1, true)
@@ -34,12 +37,20 @@ local function run(): number
 			string.find(directRepresentationsSource, "assert(", 1, true)
 			or string.find(directRepresentationsSource, "error(", 1, true)
 		)
-	local preflightDefinition = position("local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model)")
-	local captureDefinition = position("function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab): Snapshot")
+	local preflightDefinition =
+		position("local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model)")
+	local captureDefinition = position(
+		"function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab): Snapshot"
+	)
 	local preflightEnumeration = position("for _, representation in ipairs(directRepresentations(model)) do")
 	local captureEnumeration = nil
 	if captureDefinition ~= nil then
-		captureEnumeration = string.find(source, "for _, representation in ipairs(directRepresentations(model)) do", captureDefinition, true)
+		captureEnumeration = string.find(
+			source,
+			"for _, representation in ipairs(directRepresentations(model)) do",
+			captureDefinition,
+			true
+		)
 	end
 
 	local preflight = position("local plans = preflightReadouts(lab, model)")
