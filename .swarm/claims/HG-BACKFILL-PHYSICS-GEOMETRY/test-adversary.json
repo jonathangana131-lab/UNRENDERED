@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-s6q2m9v4",
+  "claimToken": "e7b2c9a14f6d8035",
+  "claimedAt": "2026-08-11T23:10:55+00:00",
+  "heartbeatAt": "2026-08-11T23:10:55+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-s6q2m9v4",
+  "pr": 414,
+  "notes": "Independent adversarial test depth on generation-6 PR #414 exact head 51ffc16fb2f5864cd4874710a7517e94dd5422b8. Inspect for a concrete non-duplicate scale/validation false-pass or malformed-input gap; source-only and no Studio evidence."
+}
