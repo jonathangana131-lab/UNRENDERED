@@ -4,7 +4,7 @@
   "epicId": "HERO-GATE",
   "title": "Restore immutable review-event compatibility",
   "objective": "Unblock trusted control validation without rewriting immutable historical events by narrowly accepting the already-emitted benign structured review fields at the V2.1 compatibility facade, while keeping new event writes strict and preserving immutable-byte transition fencing.",
-  "priority": 10001,
+  "priority": 10000,
   "state": "READY",
   "mode": "exclusive",
   "dependencies": [],
