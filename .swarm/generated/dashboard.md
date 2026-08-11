@@ -1,10 +1,10 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:05:02.106942+00:00`
+Generated: `2026-08-11T07:05:25.633231+00:00`
 
 Canonical main: **GREEN** `7de385295dd17112226dd4cd173bd707178e17bc`
 
-State digest: `12d9f6a163a833d71d68d4cb0bc412f30572f4d8661014d912f3f00ff1fb5dbb`
+State digest: `d43c0785383c59a63d132a39ff8e205ecd2c653afc04eba2759fce0be0ee6c38`
 
 ## Summary
 
@@ -15,7 +15,7 @@ State digest: `12d9f6a163a833d71d68d4cb0bc412f30572f4d8661014d912f3f00ff1fb5dbb`
 
 ## Ready slots
 
-- `HG-BACKFILL-OBJECTGENOME/primary` — **ObjectGenome source hardening** — score 5450 — dependencies satisfied; resources available
+- `HG-BACKFILL-MATERIALDNA/primary` — **MaterialDNA source hardening** — score 5400 — dependencies satisfied; resources available
 - `HG-BACKFILL-MATERIALDNA/test-adversary` — **MaterialDNA schema and hostile-input tests** — score 5320 — dependencies satisfied
 - `HG-BACKFILL-OBJECTGENOME/audit` — **ObjectGenome contract and ownership auditor** — score 5270 — dependencies satisfied
 - `HG-BACKFILL-MATERIALDNA/audit` — **MaterialDNA contract and fixture auditor** — score 5220 — dependencies satisfied
@@ -41,7 +41,7 @@ State digest: `12d9f6a163a833d71d68d4cb0bc412f30572f4d8661014d912f3f00ff1fb5dbb`
 - `HG-BACKFILL-FIDELITY/audit` → `sol-20260811-x7n4k2`; lease to `2026-08-11T07:34:30+00:00`
 - `HG-BACKFILL-FIDELITY/primary` → `sol-20260811-w3n8k2`; lease to `2026-08-11T07:31:17+00:00`
 - `HG-BACKFILL-FIDELITY/test-adversary` → `sol-20260811-30a8e397`; lease to `2026-08-11T07:32:00+00:00`
-- `HG-BACKFILL-MATERIALDNA/primary` → `sol-20260811-went7k3`; lease to `2026-08-11T07:14:53+00:00`
+- `HG-BACKFILL-OBJECTGENOME/primary` → `sol-20260811-k2m9x7`; lease to `2026-08-11T07:35:30+00:00`
 - `HG-BACKFILL-OBJECTGENOME/test-adversary` → `sol-20260811-q7n4m9`; lease to `2026-08-11T07:20:00+00:00`
 - `HG-BACKFILL-PHYSICS-GEOMETRY/primary` → `sol-20260811-j6r2v8`; lease to `2026-08-11T07:15:00+00:00`
 - `HG-BACKFILL-REALITY/audit` → `sol-20260811-q7h4n2`; lease to `2026-08-11T07:44:30+00:00`

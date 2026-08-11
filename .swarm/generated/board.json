@@ -55,13 +55,13 @@
       "workerId": "sol-20260811-30a8e397"
     },
     {
-      "branch": "agent/materials/HG-BACKFILL-MATERIALDNA-went7k3",
-      "expiresAt": "2026-08-11T07:14:53+00:00",
+      "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-k2m9x7-b",
+      "expiresAt": "2026-08-11T07:35:30+00:00",
       "generation": 1,
-      "laneId": "HG-BACKFILL-MATERIALDNA",
-      "pr": 283,
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "pr": null,
       "slotId": "primary",
-      "workerId": "sol-20260811-went7k3"
+      "workerId": "sol-20260811-k2m9x7"
     },
     {
       "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-q7n4m9",
@@ -158,7 +158,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:05:02.106942+00:00",
+  "generatedAt": "2026-08-11T07:05:25.633231+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "7de385295dd17112226dd4cd173bd707178e17bc",
@@ -177,14 +177,14 @@
       "DEPENDENCY_DISCOVERED": 3,
       "EVIDENCE_RESULT": 5,
       "EXTERNAL_BLOCKER": 1,
-      "FINDING": 33,
+      "FINDING": 34,
       "HANDOFF": 16,
       "INTEGRATION_RESULT": 5,
       "RECOVERY": 2,
       "REVIEW_REQUEST": 22,
       "REVIEW_RESULT": 27
     },
-    "generatedAt": "2026-08-11T07:05:02.106942+00:00",
+    "generatedAt": "2026-08-11T07:05:25.633231+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -200,15 +200,15 @@
   },
   "readySlots": [
     {
-      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "laneId": "HG-BACKFILL-MATERIALDNA",
       "reason": "dependencies satisfied; resources available",
       "resources": [],
-      "role": "ObjectGenome source hardening",
-      "score": 5450,
+      "role": "MaterialDNA source hardening",
+      "score": 5400,
       "slotId": "primary",
       "writeScopes": [
-        "src/shared/Objects/ObjectGenome*.luau",
-        "tests/object_genome*.luau"
+        "src/shared/Materials/*.luau",
+        "tests/materialdna*.luau"
       ]
     },
     {
@@ -412,27 +412,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
-        "HG-BACKFILL-AUTHORITY",
-        "PR-291"
-      ],
-      "eventId": "evt-20260811-065134-q9x4m2-recovery-cas-review",
-      "eventType": "REVIEW_RESULT",
-      "evidence": [
-        "PR #291 head 3d4bf3bcba28e8ca8451e1631b9afa652bfc88dc.",
-        "PR #291 exact-head canonical CI run 31466418119 succeeded and engine tests succeeded.",
-        "Latest post-#290 ownership runs fail nonzero on invalid legacy worker records, demonstrating the validator is now fail-closed rather than false-green.",
-        "Workers q7h4n2 and r6k2p9 were normalized by 06:51Z; additional live-state validation is still required before positive acceptance."
-      ],
-      "fromWorker": "sol-20260811-q9x4m2",
-      "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "External review of PR #291 at head 3d4bf3bcba28e8ca8451e1631b9afa652bfc88dc finds the immutable-snapshot publication fence structurally sound. Control projection and health publication derive from one captured control SHA and reuse that same SHA as the CAS fence; a concurrent advance fails at the equality check or final ordinary non-force push. Review result: approve code pending operational acceptance. Operational recovery remains incomplete until live control state validates and a real product PR produces an explicit semantic ownership PASS under the repaired trusted path.",
-      "timestamp": "2026-08-11T06:51:34+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-FIDELITY"
@@ -718,6 +697,25 @@
     },
     {
       "affects": [
+        "HG-BACKFILL-FIDELITY"
+      ],
+      "eventId": "evt-20260811-070440-x7n4k2-fidelity-no-execute",
+      "eventType": "FINDING",
+      "evidence": [
+        "PR #274 head f98356603608dd8682dba08f0281753082074070 validateInputs immediately dereferences inputs.distanceStuds, inputs.visible, inputs.directlyObserved, and remaining fields without a prior metatable/plain-table check.",
+        "PR #278 head 0ab224b7c6a69c40db31523794ccd9c74c7bc77e constructs an empty table with __index, expects rejection before any metamethod execution, and reports the current source executes __index 19 times while accepting the synthetic values.",
+        "The accepted metatable-backed future evaluation can advance temporal state and make a later valid earlier-timestamp retry fail, so this is both a no-execute boundary and failure-atomicity issue.",
+        "Audit PR #292 head 9bd79140a83379d3f80ddcb86a75528cf2d5e133 documents the metatable-free input requirement; canonical CI validate is green on that docs-only head."
+      ],
+      "fromWorker": "sol-20260811-x7n4k2",
+      "laneId": "HG-BACKFILL-FIDELITY",
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "Fidelity PolicyInputs violates the documented plain-data/no-execute boundary on primary PR #274 head f98356603608dd8682dba08f0281753082074070. validateInputs reads input fields before establishing that the top-level record is a plain metatable-free table, so a hostile __index metamethod can execute code and synthesize accepted policy scalars. Test-adversary PR #278 head 0ab224b7c6a69c40db31523794ccd9c74c7bc77e reproduces acceptance, metamethod execution, and temporal-state poisoning. Source must reject a non-nil metatable before the first field read; audit PR #292 now records that contract explicitly.",
+      "timestamp": "2026-08-11T07:04:40+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-WORLDENTITY"
       ],
       "eventId": "evt-20260811-070600-w3x7k9-worldentity-sync-rereview",
@@ -869,7 +867,7 @@
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 0,
+      "activeOwners": 1,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "REALITY-CONTRACT",
@@ -892,10 +890,10 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "12d9f6a163a833d71d68d4cb0bc412f30572f4d8661014d912f3f00ff1fb5dbb",
+  "stateDigest": "d43c0785383c59a63d132a39ff8e205ecd2c653afc04eba2759fce0be0ee6c38",
   "summary": {
     "activeClaims": 16,
-    "activeResourceClaims": 1,
+    "activeResourceClaims": 2,
     "blockedExternalLanes": 1,
     "lanes": 24,
     "readySlots": 17,
