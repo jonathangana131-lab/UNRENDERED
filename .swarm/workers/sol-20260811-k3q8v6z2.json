@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k3q8v6z2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:39:29+00:00",
-  "lastSeenAt": "2026-08-11T09:39:29+00:00",
-  "laneId": "HG-COMPLETION-PHYSICS",
-  "slotId": "review-1",
-  "branch": "agent/review/HG-COMPLETION-PHYSICS-review1-k3q8v6z2",
-  "notes": "Independent completion review for active Hero Gate Physics backlog; no Studio evidence retry and no product implementation before claim."
+  "lastSeenAt": "2026-08-11T10:03:00+00:00",
+  "notes": "Released HG-COMPLETION-PHYSICS/review-1 after independent exact-head source reviews for PRs #347, #349, and #352 plus durable handoff; no Studio retry and no ownership bypass."
 }
