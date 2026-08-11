@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120417-m7q2v9c4-runtime-recipe-review",
+  "timestamp": "2026-08-11T12:04:17+00:00",
+  "fromWorker": "sol-20260811-m7q2v9c4",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "severity": "medium",
+  "summary": "Independent lane-owned audit of PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d: SOURCE PASS, integration HOLD. No additional constructor-fence source defect found; integration must wait for higher-priority overlapping transition-fence #366, then replay this fence on fresh current main and revalidate/re-review.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"],
+  "evidence": [
+    "Canonical authority checks execute before registry/FidelityManager construction and preserve the canonical PhysicsLabRecipe.build() path.",
+    "Metatable-backed recipe/list/entity/record/origin wrappers and hostile non-string identity/schema keys reject before caller metamethod execution.",
+    "WorldId/RegionId, dense complete entity population, unique key/id mapping, kind/fidelity/revisions/origin, and initial persistent state are fenced; oversized candidate-state comparison exits after canonicalCount+1 work.",
+    "Exact PR head is behind current main by 2 and overlaps both changed files with current-main PR #366, so this review is not merge authorization."
+  ]
+}
