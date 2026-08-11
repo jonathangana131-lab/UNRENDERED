@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "epicId": "HERO-GATE",
+  "title": "Authority completion queue",
+  "objective": "Drain current authority/multiplayer/teardown PR backlog into retained main changes before spawning more authority primaries. Review exact heads, salvage non-overlapping adversarial work, reconcile superseded lineages, and integrate only after required evidence is green.",
+  "priority": 10000,
+  "state": "REVIEW",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["Docs/**"],
+  "resources": [],
+  "slots": [
+    {"slotId":"review-1","role":"Authority exact-head reviewer","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":1000,"writeScopes":["Docs/**"]},
+    {"slotId":"review-2","role":"Authority adversarial spot-check reviewer","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":950,"writeScopes":["Docs/**"]},
+    {"slotId":"integration","role":"Authority merge-train integrator","exclusive":true,"availableWhen":["REVIEW","INTEGRATION_READY"],"priorityBoost":900,"writeScopes":["Docs/**"]},
+    {"slotId":"reconcile","role":"Authority PR lineage reconciler","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":850,"writeScopes":["Docs/**"]}
+  ],
+  "acceptance": ["self-review by implementer is expected before independent review", "low-risk test-only work may close after self-review plus exact-head CI/ownership", "authority/runtime trust changes require independent full review", "merge retained value and close superseded duplicates", "never claim two-client Studio evidence from source-only work"],
+  "tags": ["completion", "review", "integration", "authority", "hero-gate"]
+}
