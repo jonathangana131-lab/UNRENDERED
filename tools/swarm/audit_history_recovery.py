@@ -31,24 +31,22 @@ def _git(git_root: Path, *args: str) -> str:
     return result.stdout.strip()
 
 
-def _path_from_error(root: Path, error: str) -> Path:
-    raw = error.split(":", 1)[0]
-    path = Path(raw)
-    if not path.is_absolute():
-        path = (root / path).resolve()
-    else:
-        path = path.resolve()
+def _event_provenance(
+    root: Path,
+    git_root: Path,
+    control_sha: str,
+    path: Path,
+    error: str,
+) -> dict:
     root_resolved = root.resolve()
+    path = path.resolve()
     try:
-        path.relative_to(root_resolved)
+        rel = path.relative_to(root_resolved).as_posix()
     except ValueError as exc:
-        raise hard.core.ControlError(f"validation error escaped recovery root: {error}") from exc
-    return path
+        raise hard.core.ControlError(f"invalid event escaped recovery root: {path}") from exc
+    if not rel.startswith("events/"):
+        raise hard.core.ControlError(f"invalid event is outside authoritative event history: {path}")
 
-
-def _event_provenance(root: Path, git_root: Path, control_sha: str, error: str) -> dict:
-    path = _path_from_error(root, error)
-    rel = path.relative_to(root.resolve()).as_posix()
     repo_path = f".swarm/{rel}"
     additions = _git(
         git_root,
@@ -77,7 +75,7 @@ def _event_provenance(root: Path, git_root: Path, control_sha: str, error: str) 
     ).splitlines()
     return {
         "path": repo_path,
-        "error": error.split(":", 1)[1].strip() if ":" in error else error,
+        "error": error,
         "firstWriteCommit": first_commit,
         "firstWriteGitBlobSha1": first_blob,
         "currentGitBlobSha1": current_blob,
@@ -87,12 +85,26 @@ def _event_provenance(root: Path, git_root: Path, control_sha: str, error: str) 
     }
 
 
+def _invalid_event_provenance(root: Path, git_root: Path, control_sha: str) -> list[dict]:
+    """Validate known file paths directly; never infer provenance paths from error text."""
+    events_dir = root / "events"
+    if not events_dir.is_dir():
+        return []
+
+    records: list[dict] = []
+    for path in sorted(events_dir.glob("*/*.json")):
+        try:
+            hard._validate_event_with_immutable_compat(path)
+        except hard.core.ControlError as exc:
+            records.append(_event_provenance(root, git_root, control_sha, path, str(exc)))
+    return records
+
+
 def build_inventory(root: Path, git_root: Path, control_sha: str) -> dict:
     root = root.resolve()
     git_root = git_root.resolve()
-    invalid_events = hard._invalid_event_errors(root)
+    events = _invalid_event_provenance(root, git_root, control_sha)
     invalid_workers = hard._invalid_worker_statuses(root)
-    events = [_event_provenance(root, git_root, control_sha, error) for error in invalid_events]
     return {
         "schemaVersion": 1,
         "controlSha": control_sha,
