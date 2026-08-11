@@ -115,6 +115,40 @@ local function run(): number
 		expect("new keeps plain state", validEntity.persistentState.open == false)
 	end
 
+	local maxSafeGeneratorSpec = makeSpec()
+	maxSafeGeneratorSpec.id = "entity:max-safe-generator-new"
+	maxSafeGeneratorSpec.origin.generatorVersion = MAX_SAFE_INTEGER
+	local maxSafeGeneratorNewAccepted, maxSafeGeneratorEntity = newResult(maxSafeGeneratorSpec)
+	expect("new accepts maximum safe generator version", maxSafeGeneratorNewAccepted)
+	if maxSafeGeneratorNewAccepted then
+		expect(
+			"new preserves maximum safe generator version exactly",
+			maxSafeGeneratorEntity.origin.generatorVersion == MAX_SAFE_INTEGER
+		)
+	end
+
+	local unsafeGeneratorSpec = makeSpec()
+	unsafeGeneratorSpec.id = "entity:unsafe-generator-new"
+	unsafeGeneratorSpec.origin.generatorVersion = MAX_SAFE_INTEGER + 1
+	local unsafeGeneratorNewAccepted = newResult(unsafeGeneratorSpec)
+	expect("new rejects generator version beyond safe integer range", not unsafeGeneratorNewAccepted)
+
+	local maxSafeGeneratorRecord = makeRecord()
+	maxSafeGeneratorRecord.id = "entity:max-safe-generator-registry"
+	maxSafeGeneratorRecord.origin.generatorVersion = MAX_SAFE_INTEGER
+	expect(
+		"registry accepts maximum safe generator version",
+		registerAccepts(maxSafeGeneratorRecord)
+	)
+
+	local unsafeGeneratorRecord = makeRecord()
+	unsafeGeneratorRecord.id = "entity:unsafe-generator-registry"
+	unsafeGeneratorRecord.origin.generatorVersion = MAX_SAFE_INTEGER + 1
+	expect(
+		"registry rejects generator version beyond safe integer range",
+		not registerAccepts(unsafeGeneratorRecord)
+	)
+
 	local specIndexCalls = 0
 	local forgedSpec = setmetatable({}, {
 		__index = function(_, key)
