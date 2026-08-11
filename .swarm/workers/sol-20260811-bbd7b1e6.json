@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-bbd7b1e6",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:40:14+00:00",
-  "lastSeenAt": "2026-08-11T09:40:14+00:00",
-  "laneId": "HG-BACKFILL-WORLDENTITY",
-  "slotId": "test-adversary",
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-bbd7b1e6",
-  "notes": "Attempting the source-only WorldEntity adversarial regression slot; ownership depends on successful atomic claim/resource acquisition."
+  "lastSeenAt": "2026-08-11T10:17:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Go cycle completed with all claims released. Published WorldEntity mining-exhaustion finding; diagnostics canonical-root provenance finding on #327; REQUEST_CHANGES review for #350 missing captureRegistered/transitionRegistered hostile-ID coverage; APPROVE expected-red Physics root-identity evidence on #356; and BLOCK exact-head ObjectGenome generation-4 PR #361 because canonical CI stops at Luau analysis before Pure Luau/build validation. Critical SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY remains READY with its primary actively owned; its independent reviewer slot is not yet unlocked."
 }
