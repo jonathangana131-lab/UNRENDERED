@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "primary",
-  "workerId": "sol-20260811-v7k3m9",
-  "claimToken": "e4c91a7d2b6f3058",
-  "claimedAt": "2026-08-11T08:41:09+00:00",
-  "heartbeatAt": "2026-08-11T09:11:26+00:00",
+  "workerId": "sol-20260811-jik0g141",
+  "claimToken": "e72a2f22f55f0d5a",
+  "claimedAt": "2026-08-11T09:42:45+00:00",
+  "heartbeatAt": "2026-08-11T09:42:45+00:00",
   "leaseSeconds": 1800,
-  "generation": 3,
+  "generation": 4,
   "resources": [],
-  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-v7k3m9-g3",
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-jik0g141-g4",
   "pr": 336,
-  "takeoverOf": "sol-20260811-j6m2q8",
-  "notes": "Generation-3 ObjectGenome primary recovery on current-main base. Draft PR #336 now has a narrow production diff: signed-32 familyVersion bound, 512-byte nested semantic-key bound, and ObjectState mutable-map alias rejection, with generation-3 regressions. Connector formatting churn was removed; exact head a28d1a6d99533e3ce64a660859306d298ad98570 is awaiting canonical CI and fresh independent audit."
+  "takeoverOf": "sol-20260811-v7k3m9",
+  "notes": "Generation-4 stale-claim recovery after reviewing PR #336 and audit comments. Close only the two accepted blockers (decoder metatable no-execute and deterministic diagnostic order), remove out-of-scope duplicate runner/test artifacts, sync current main, validate, and update PR evidence."
 }
