@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-32pf6uw1",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T08:39:52+00:00",
-  "lastSeenAt": "2026-08-11T08:53:05+00:00",
-  "notes": "Completed HG-CAPACITY-MINING/mine-fidelity. Published evt-20260811-085230-32pf6uw1-fidelity-mining-no-duplicate after excluding already-owned PolicyConfig work; no new Fidelity lane recommended. Claim released."
+  "lastSeenAt": "2026-08-11T08:55:09+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-32pf6uw1",
+  "notes": "Completed Fidelity mining and released it; now mining PhysicsLabRuntime for one concrete non-duplicate source-depth gap around active runtime recipe-fence work."
 }
