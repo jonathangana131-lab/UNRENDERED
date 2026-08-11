@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exact-data guards for the generation-4 finite recovery extension."""
+"""Exact-data guards for the finite trusted-history recovery extension."""
 from __future__ import annotations
 
 import unittest
@@ -19,9 +19,18 @@ class RecoveryExtensionTests(unittest.TestCase):
 
     def test_measured_quarantine_rows_are_exact_and_unique(self):
         rows = extension.MALFORMED_EVENT_QUARANTINE_ROWS
-        self.assertEqual(len(rows), 11)
+        self.assertEqual(len(rows), 12)
         self.assertEqual(len({row[0] for row in rows}), len(rows))
         self.assertEqual(len({row[1] for row in rows}), len(rows))
+        self.assertIn(
+            (
+                "evt-20260811T210500Z-sol-20260811-c7p4m8v2-handoff-content-reconciliation",
+                "210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json",
+                "be4caea3394068a2883045842bf1d132e37cd157",
+                "713d54c453faa65e89875e69499444d5a7644d3f",
+            ),
+            rows,
+        )
         self.assertIn(
             (
                 "evt-20260811-210840-c9v2m7q4-diagnostics-duplicate-root-expected-red",
