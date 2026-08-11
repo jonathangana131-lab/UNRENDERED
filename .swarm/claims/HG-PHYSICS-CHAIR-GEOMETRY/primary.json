@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-PHYSICS-CHAIR-GEOMETRY",
+  "slotId": "primary",
+  "workerId": "sol-20260811-k4v7m2q9",
+  "claimToken": "2c7e91a4d8b5306f",
+  "claimedAt": "2026-08-11T09:27:00+00:00",
+  "heartbeatAt": "2026-08-11T09:27:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-PHYSICS-CHAIR-GEOMETRY-resync-k4v7m2q9",
+  "pr": null,
+  "notes": "Fresh current-main salvage of source-clean PR #339 after independent SYNC_REQUIRED. Reapply the same bounded officeChair v2 support/COM/golden/test patch on main@ae83c0e, validate exact head, then request fresh audit; preserve #332 evidence sequencing."
+}
