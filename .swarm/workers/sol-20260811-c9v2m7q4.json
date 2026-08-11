@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-c9v2m7q4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T20:57:30+00:00",
-  "lastSeenAt": "2026-08-11T21:31:20+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-runtime",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-c9v2m7q4",
-  "notes": "Continuing after diagnostics/ObjectGenome/WorldEntity work. Mining current Physics Lab runtime plus active recipe-fence and transition-fence lineages for one concrete non-duplicate bounded correctness/integration gap; docs/event only, no Studio claims."
+  "lastSeenAt": "2026-08-11T21:35:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed diagnostics audit/expected-red #396, ObjectGenome generation-8 corroboration, WorldEntity retained-text capacity finding, and Physics runtime canonical entity-container capacity finding evt-20260811-213400-c9v2m7q4-runtime-recipe-entity-container-shape. All claims released; no Studio/viewport/two-client evidence claimed."
 }
