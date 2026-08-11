@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-s56t3v9",
   "claimToken": "c7e2a91d5f8b3064",
   "claimedAt": "2026-08-11T21:03:00+00:00",
-  "heartbeatAt": "2026-08-11T21:03:00+00:00",
+  "heartbeatAt": "2026-08-11T21:06:30+00:00",
   "leaseSeconds": 1800,
   "generation": 5,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-s56t3v9-g5",
-  "pr": null,
-  "notes": "Generation-5 completion successor. Start from PR #379 exact head bf1229a6aec4b5664c51deac704d28f22c19a379 (which contains PR #378 source) and absorb PR #386 numeric-ceiling tests."
+  "pr": 397,
+  "notes": "Generation-5 completion successor published as draft PR #397 at exact head 83850e9f2bab4572de800428fb510b6b75fc2c45. It preserves #378 source, absorbs #379 hostile no-execute tests and #386 numeric-ceiling tests; fresh exact-head CI/review required."
 }
