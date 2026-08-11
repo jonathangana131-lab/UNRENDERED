@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:47:00+00:00",
-  "lastSeenAt": "2026-08-11T07:47:00+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/tests/HG-BACKFILL-DIAGNOSTICS-test-z4m8p2",
-  "notes": "Source-only diagnostics adversarial depth pass; no Studio evidence claim and no speculative bridge retry."
+  "lastSeenAt": "2026-08-11T07:49:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/audit/HG-CAPACITY-MINING-mine-physics-runtime-z4m8p2",
+  "notes": "Lost the diagnostics test claim race and rerouted per scheduler. Mining current Physics runtime source/tests and recent active PRs for one concrete non-duplicate Hero-Gate depth gap; no Studio evidence claim."
 }
