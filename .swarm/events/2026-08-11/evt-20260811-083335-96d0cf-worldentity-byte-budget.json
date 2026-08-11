@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083335-96d0cf-worldentity-byte-budget",
+  "timestamp": "2026-08-11T08:33:35+00:00",
+  "fromWorker": "sol-20260811-96d0cf",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "high",
+  "summary": "WorldEntity persistentState remains unbounded by payload bytes even if the active deep/wide structural-limit work lands. clonePlainValue treats strings as terminal plain values and string keys are only required to be non-empty, so a shallow one-node state can carry an arbitrarily large string value or key and bypass node/depth budgets. The owned persistence traversal budget should account for total string bytes as well as structural work.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "Current main src/shared/Reality/WorldEntity.luau returns string values unchanged in clonePlainValue and applies no length/byte accounting to nested or top-level persistentState string keys.",
+    "A shallow repro such as persistentState = { payload = string.rep('x', N) } remains one/few nodes at tiny depth for arbitrary N; likewise a single string.rep('k', N) key is accepted structurally.",
+    "PR #321 exact head 265dcc4892a004b040cf04183d65ba8e2eb9e493 adds depth/width structural regressions but no byte-budget regression, so turning those tests green alone would not close this persistence/memory boundary.",
+    "GitHub review 4904362411 records the complementary finding. Recommended coverage is shallow oversized string value and key rejection plus a normal near-limit acceptance case against a project-owned byte budget/diagnostic."
+  ],
+  "metadata": {
+    "pr": 321,
+    "headSha": "265dcc4892a004b040cf04183d65ba8e2eb9e493",
+    "verdict": "NEEDS_BYTE_BUDGET_COVERAGE"
+  }
+}
