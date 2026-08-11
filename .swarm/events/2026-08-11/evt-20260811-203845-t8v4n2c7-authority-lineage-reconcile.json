@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-203845-t8v4n2c7-authority-lineage-reconcile",
+  "timestamp": "2026-08-11T20:38:45+00:00",
+  "fromWorker": "sol-20260811-t8v4n2c7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "HG-COMPLETION-AUTHORITY reconciliation: retain generation-5 primary PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3 as the bootstrap-context authority base. Independently passed teardown successor PR #390 exact head f8a66f65dff914e919bb7709ac4139e87fe0a05b overlaps #348 only in tests/hero_gate_contract_integration.luau: #348 adds the fs-backed server/client bootstrap source-order and client-exclusion regression; #390 adds the lane-owned hero_gate_authority_teardown require/invocation while its dedicated fixture locks assertStudioServer plus start/stop/restart ownership ordering. These contracts are complementary and neither may overwrite the other. Final authority product integration must use one fresh combined exact head descended from #348 that preserves #348's three-file primary payload and replays #390's two-file test-adversary delta on top, yielding a stack-local diff of only tests/hero_gate_authority_teardown.luau plus tests/hero_gate_contract_integration.luau. Rerun canonical CI, live trusted pr-ownership, and fresh independent review on the combined head; do not merge #390 standalone after #348 because stale-base conflict resolution could silently drop either regression. #382 remains superseded provenance only after the combined retained lineage is accepted/integrated. No Studio/two-client evidence claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG-COMPLETION-AUTHORITY"]
+}
