@@ -78,9 +78,8 @@ local function bindOwnedHandle(realized: RealizedLab): (RealizedLab, () -> boole
 			if not cleanupComplete then
 				destroyRealized()
 			end
-			if cleanupComplete and current == nil then
-				currentReconcile = nil
-			end
+			-- This callback may outlive its ownership generation. Reconciliation-token
+			-- retirement is intentionally owned by reconcileCurrent(), which identity-fences it.
 		end)
 	end
 
