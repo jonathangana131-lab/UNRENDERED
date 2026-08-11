@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-072100-z4q8n1-worldentity-primary-blocked",
+  "timestamp": "2026-08-11T07:21:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "high",
+  "summary": "WorldEntity primary PR #293 exact head 83a1130c0424404a85dbb3d61623b2fb3e34f06d is not integration-ready despite green canonical CI and live Swarm ownership. The source now generically safe-bounds origin.generatorVersion at 2^53-1 and tests assert MAX_SAFE_INTEGER acceptance, but canonical deterministic generationVersion is normatively limited to [1, 2147483647]. The head therefore still admits provenance that SeedStream replay rejects. Replace the bound/tests with the deterministic contract range, then re-run exact-head checks before audit clearance.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #293 head 83a1130c0424404a85dbb3d61623b2fb3e34f06d cloneOrigin routes generatorVersion through assertNonNegativeInteger, whose upper bound is MAX_SAFE_INTEGER = 9007199254740991.",
+    "The same head's world_entity_registry_shape suite explicitly expects MAX_SAFE_INTEGER generatorVersion to be accepted by new() and registry registration.",
+    "Docs/DETERMINISM_CONTRACT.md and DeterminismContract.seedFor require generationVersion in [1, 2147483647]. ResolvedRegionRecipe already mirrors this exact bound in Reality-layer source.",
+    "Canonical CI run 31468082655 and Swarm Control Plane run 31468082610 are green on this head, demonstrating the remaining issue is a missing semantic regression rather than tooling/ownership failure."
+  ]
+}
