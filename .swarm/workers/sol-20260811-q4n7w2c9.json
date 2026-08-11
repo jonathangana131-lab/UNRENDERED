@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q4n7w2c9",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:00:20+00:00",
-  "lastSeenAt": "2026-08-11T09:17:20+00:00",
-  "laneId": "HG-BACKFILL-FIDELITY",
-  "slotId": "audit",
-  "branch": "agent/physics/HG-BACKFILL-FIDELITY-audit-q4n7w2c9",
-  "notes": "WorldEntity, ObjectGenome, and MaterialDNA counter audits completed/handoff published. Reviewing current-main FidelityManager generation-3 salvage PR #335."
+  "lastSeenAt": "2026-08-11T09:20:35+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Go cycle complete: independent audits published for WorldEntity, ObjectGenome, MaterialDNA repairCount, and FidelityManager. New global pr-ownership blocker localized to immutable-event history continuity and handed to the already-owned priority recovery lane; no active claim retained."
 }
