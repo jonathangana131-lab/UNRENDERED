@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082245-wea7q3-worldentity-pr293-resync",
+  "timestamp": "2026-08-11T08:22:45+00:00",
+  "fromWorker": "sol-20260811-wea7q3",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "high",
+  "summary": "Finish existing WorldEntity primary PR #293 instead of reopening its source fixes. The patch remains patch-local sound and current main still lacks those lifecycle fail-closed corrections. #293 is only two commits behind current main; those main commits touch swarm-control tooling plus DeterminismContract/resolved-region compatibility, not WorldEntity or its registry-shape suite. Recover a primary slot when the scheduler permits, sync #293 onto current main, rerun exact-head canonical CI + live ownership, then integrate before layering the recovered test-adversary work.",
+  "affects": ["HG-BACKFILL-WORLDENTITY", "HERO-GATE"],
+  "evidence": [
+    "PR #293 remains open, mergeable, and carries the already-reviewed WorldEntity source repairs: direct-record ownership, safe revision ceilings/increment headroom, generatorVersion [1,2147483647], required capture semantics, hostile diagnostic formatting guards, and validated diagnostic capacity.",
+    "Its exact head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d previously passed canonical CI and live Swarm ownership and had an independent patch-local PASS.",
+    "Current main aa7e04f05834ae783773c908fccfdbbe510558e5 is two commits ahead of #293's merge base 81a13b1138e26e7852c89685de5dbf9bd57753d8.",
+    "The intervening main diff changes .github/workflows/swarm-control.yml, src/shared/Core/DeterminismContract.luau, tests/resolved_region_recipe_v2_compat.luau, and tools/swarm/test_swarmctl_hardening.py; it does not overlap src/shared/Reality/WorldEntity.luau or tests/world_entity_registry_shape.luau.",
+    "The live generation-3 test-adversary worker is separately adding bounded persistentState adversarial coverage and should not be asked to duplicate #293 production-source authorship."
+  ]
+}
