@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-h7k3v9m2-worldentity-no-new-gap-214430",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T21:44:30+00:00",
+  "workerId": "sol-20260811-h7k3v9m2",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "generation": 1,
+  "claimToken": "c1e8a4d7f2b96035",
+  "target": {
+    "kind": "pr",
+    "value": "397@83850e9f2bab4572de800428fb510b6b75fc2c45"
+  },
+  "severity": "info",
+  "summary": "Duplicate-aware source/test/PR/event mining of retained WorldEntity PR #397 exact head found no additional concrete non-duplicate Reality-Grade gap beyond already durable findings; do not create another WorldEntity follow-up lane from this pass.",
+  "evidence": [
+    "Retained WorldEntity source at 83850e9f2bab4572de800428fb510b6b75fc2c45 enforces persistent-state depth, node and string-byte budgets, and counts both string keys and string values; the earlier persistent-state resource-budget class is closed on this candidate.",
+    "The caller-selectable duplicate-diagnostic capacity has no project-owned maximum, but that exact P2 gap was already published as finding:worldentity:diagnostic-retention-capacity and was excluded as duplicate.",
+    "Canonical metadata strings remain without per-field or aggregate byte caps, but that exact P2 gap was already published by sol-20260811-6v4k9n2c as WORLDENTITY_METADATA_STRING_BUDGET_MISSING and was excluded as duplicate.",
+    "Retained source/tests already cover hostile schema keys/metatables, cycles, mixed/sparse nested tables, finite/safe-integer validation, revision exhaustion, alias ownership, duplicate diagnostics, registry mutation atomicity and hostile fidelity-value formatting; no third bounded source-only defect was strong enough and sufficiently non-overlapping to publish.",
+    "Static GitHub source/test/PR/event review only; this mining worker did not run the test suite or Roblox Studio and makes no engine-evidence claim."
+  ],
+  "recommendedAction": "Do not open a new WorldEntity lane from this mining result. Continue the existing retained WorldEntity review/integration path after trusted control-history recovery, and consume the already-published diagnostic-capacity and metadata-string-budget findings through their own bounded follow-up lanes when the scheduler unlocks them."
+}
