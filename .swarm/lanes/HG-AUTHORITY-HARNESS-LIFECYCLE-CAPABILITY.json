@@ -5,7 +5,7 @@
   "title": "Physics Lab harness lifecycle capability fence",
   "objective": "Close the confirmed source-only ownership hole where PhysicsLabStudioHarness.get() exposes the raw RealizedLab.destroy() capability and can leave the harness bound to a destroyed lab, without broadening into multiplayer transport or Studio evidence work.",
   "priority": 4830,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/hero_gate_authority_teardown.luau", "tests/hero_gate_contract_integration.luau"],
@@ -26,6 +26,6 @@
     "do not claim Roblox Studio, real two-client, replication/session, transport, or HG151-TWOCLIENT evidence from source-only validation",
     "canonical CI, live pr-ownership after the separately owned trusted-history recovery, and fresh independent exact-head review are required before integration"
   ],
-  "notes": "REVIEW on generation-2 successor PR #403 exact head 5f844842b980f7c68cebe0a437cb9b1c8d94947b. The successor preserves the RealizedLab-shaped diagnostics surface but binds Model Destroying/AncestryChanged to exact harness ownership: external destroy or reparent invalidates the owned handle, clears current immediately, disconnects lifecycle signals, and defers underlying realizer cleanup; controlled stop/restart suppress external invalidation and preserve destroy-before-release ordering. Canonical CI run 31537665202 validate job 93932550769 PASS; Swarm engine-tests 93932550775 PASS. Live pr-ownership remains fail-closed on unrelated trusted event-history key validation.0.command in 210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json; do not waive. Fresh independent exact-head review required. No Roblox Studio/two-client evidence is claimed. PR #399 is superseded by #403 for this lane.",
+  "notes": "NEEDS_CHANGES after independent generation-2 audit of PR #403 exact head 5f844842b980f7c68cebe0a437cb9b1c8d94947b. REVIEW_RESULT evt-20260811T213800Z-sol-20260811-g7m4q9v2-harness-lifecycle-audit-request-changes found that ownership invalidation still depends on Destroying/AncestryChanged callback scheduling: with deferred signal delivery an external destroy/reparent can mutate the Model while private current remains observable until the queued callback runs, so get/start/restart can still observe stale ownership. Repair must synchronously reconcile model ownership/liveness before get() returns and before start/restart exclusivity decisions, while retaining lifecycle signals as cleanup hooks, and add a regression for the pre-callback window. Canonical CI run 31537665202 PASS; exact-head Swarm engine-tests in run 31537922707 PASS. Live pr-ownership remains separately fail-closed behind trusted event-history recovery; do not waive. No Roblox Studio/two-client evidence is claimed. PR #399 remains superseded by #403.",
   "tags": ["hero-gate", "source-only", "authority", "lifecycle", "prerequisite"]
 }
