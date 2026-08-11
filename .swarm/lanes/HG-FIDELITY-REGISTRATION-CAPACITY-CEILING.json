@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+  "epicId": "HERO-GATE",
+  "title": "Bound FidelityManager registration capacity",
+  "objective": "Close the source-only bounded-state defect where a caller can configure maxRegisteredEntities to an impractically enormous finite integer and thereby remove the project-owned registration envelope, without changing F0-F4 policy or claiming engine evidence.",
+  "priority": 5060,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    "src/shared/Physics/FidelityManager.luau",
+    "tests/fidelity_manager*.luau",
+    "Docs/FIDELITY_MANAGER.md"
+  ],
+  "resources": [],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Fidelity registration-capacity ceiling repair",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 300,
+      "writeScopes": [
+        "src/shared/Physics/FidelityManager.luau",
+        "tests/fidelity_manager*.luau",
+        "Docs/FIDELITY_MANAGER.md"
+      ]
+    },
+    {
+      "slotId": "audit",
+      "role": "Independent bounded-state reviewer",
+      "exclusive": true,
+      "availableWhen": ["REVIEW", "INTEGRATION_READY"],
+      "priorityBoost": 140,
+      "requiresIndependentFrom": "primary",
+      "writeScopes": [
+        "tests/fidelity_manager*.luau",
+        "Docs/FIDELITY_MANAGER.md"
+      ]
+    }
+  ],
+  "acceptance": [
+    "maxRegisteredEntities remains configurable with the existing 4096 default but has an explicit project-owned finite upper ceiling",
+    "the ceiling is a defensive memory/state envelope rather than a claimed device-performance budget",
+    "exact maximum is accepted and maximum plus one is rejected before manager state is constructed or policy evaluation proceeds",
+    "malformed scalar and metatable no-execute behavior from retained PR #385 remains intact",
+    "registration-capacity rejection accounting semantics for actual full managers remain unchanged",
+    "F0-F4 selection, hysteresis, transition atomicity, WorldEntity identity, Roblox representation, networking, and persistence contracts do not change",
+    "pure deterministic regressions cover the exact maximum and maximum-plus-one constructor/pure-policy boundaries",
+    "Docs/FIDELITY_MANAGER.md distinguishes the project-owned safety ceiling from later measured runtime profile tuning",
+    "canonical CI, live pr-ownership after the separately owned trusted-history recovery, and fresh independent exact-head review are required before integration",
+    "no Roblox Studio, viewport, contact, or two-client evidence is claimed"
+  ],
+  "notes": "Created from capacity-mining finding evt-20260811-231030-r8n4m2q6-fidelity-registration-capacity-ceiling. Retained Fidelity source lineage is PR #385 at 827ce0cf63ca5f322502de883beb9f43581c69f2 with stacked test-only PR #398; preserve those invariants and keep this delta narrow."
+}
