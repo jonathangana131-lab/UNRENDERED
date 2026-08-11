@@ -102,6 +102,21 @@ Transport state such as `COMPLETED` is not a semantic status. Unknown/non-PASS t
 
 `20260810-005-reality-hero-gate` emitted a useful lifecycle-style simulation signal, but an earlier bridge status layer incorrectly promoted it to composite `PASS`. The bridge durable record has been corrected to `FAIL`. Do not cite that request as #151 closure or as permission to unlock the door/chair/player epics.
 
+### Failure diagnostics are non-evidence telemetry
+
+For non-PASS runs, bridge `result.json` may include a schema-v1 `failureDiagnostics` object. It exists only to classify where a request stopped and to make infrastructure failures inspectable without publishing arbitrary raw Studio log text.
+
+The current contract includes:
+
+- `rawStatus`, `phase`, `rawLogPresent`, and `rawLogBytes`,
+- request-bound `markerCounts` derived only from the log suffix beginning at the first exact `STUDIO_EXECUTOR_REQUEST_ID=<requestId>` marker,
+- runner-owned `elapsedSeconds` and `timeoutSeconds`,
+- runner-owned booleans `watchdogExpired`, `studioAliveAtLoopEnd`, `captureAttempted`, and `captureSucceeded`.
+
+`failureDiagnostics` is never passed to `evaluate_evidence.py` and can never make a row PASS. It must not be treated as gameplay, physics, authority, diagnostics, or capture evidence. Pre-request launch/session noise is deliberately excluded from request-bound marker counts so an old or unrelated Studio log cannot make a failed run appear to have progressed farther than it did.
+
+A phase such as `NO_REQUEST_BOUND_LOG` means the bridge observed no exact request-bound marker at all. In that state, no fixed-driver Luau/gameplay result was observed for the request, even if a raw launch log exists or the Studio process briefly started. Treat the row as infrastructure non-evidence, preserve the failure for diagnosis, and do not infer a source regression or queue another speculative evidence run while the known display/session preflight remains red.
+
 ---
 
 ## Truthful Capture Mode Reporting
@@ -122,7 +137,7 @@ Capture provenance does not replace behavioral evidence. A screenshot can suppor
 
 Durable results are published to `results/<requestId>/` in `UNRENDERED-STUDIO-BRIDGE`:
 
-- `result.json` — source SHA, job type, evaluator-derived status, environment/capture metadata, and machine evidence.
+- `result.json` — source SHA, job type, evaluator-derived status, environment/capture metadata, machine evidence, and non-PASS `failureDiagnostics` when available.
 - `summary.md` — human-readable interpretation and evidence summary.
 - `screenshot.png` — when capture was requested and succeeded.
 - GitHub Actions raw-log artifact — request-bound Studio output used for diagnosis/review.
