@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+  "epicId": "HERO-GATE",
+  "title": "Seal immutable event compatibility by exact identity",
+  "objective": "Repair the merged V2.1 event compatibility facade so only audited immutable historical event identities can bypass legacy schema defects, including the exact MaterialDNA malformed affects record, while fresh/backdated writes fail closed.",
+  "priority": 10000,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    "tools/swarm/swarmctl_hardening.py",
+    "tools/swarm/test_swarmctl_hardening.py"
+  ],
+  "resources": ["SWARM-PROTOCOL"],
+  "slots": [
+    {
+      "slotId": "repair",
+      "role": "Critical exact-identity compatibility repair",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 1000,
+      "writeScopes": [
+        "tools/swarm/swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening.py"
+      ]
+    },
+    {
+      "slotId": "reviewer-1",
+      "role": "Independent security verifier",
+      "exclusive": true,
+      "availableWhen": ["REVIEW", "INTEGRATION_READY"],
+      "priorityBoost": 1000,
+      "requiresIndependentFrom": "repair",
+      "writeScopes": [
+        "tools/swarm/swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening.py"
+      ]
+    }
+  ],
+  "acceptance": [
+    "the exact immutable MaterialDNA event blob 9a7f679ea84600d6a28a8bef02436e5f85fd857e validates without modifying its bytes",
+    "legacy review compatibility is gated by audited immutable identities rather than self-authored timestamps alone",
+    "a newly added or modified event with a forged historical timestamp fails closed",
+    "unknown malformed affects remain rejected for every non-allowlisted event",
+    "transition-check still rejects historical event rewrites and deletions byte-for-byte",
+    "canonical CI and swarm hardening tests are green on the exact head"
+  ],
+  "notes": "Red control prerequisite after merged PR #322: live swarm-control run 31473696812 still fails on evt-20260811-081620-mat8c3r1-materialdna-key-grammar invalid affects, and independent #322 reviews also proved the timestamp-only legacy path is forgeable by fresh backdated writes.",
+  "tags": ["control-repair", "red-ci", "security", "hero-gate"]
+}
