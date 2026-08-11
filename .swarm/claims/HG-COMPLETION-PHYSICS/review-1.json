@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-j9v4m2c7",
+  "claimToken": "6d2f9a4c1b7e8053",
+  "claimedAt": "2026-08-11T21:03:00+00:00",
+  "heartbeatAt": "2026-08-11T21:03:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-review-1-j9v4m2c7",
+  "pr": 388,
+  "notes": "Independent exact-head completion review of PR #388 runtime transition mutation fence; no source edits or Studio evidence claims."
+}
