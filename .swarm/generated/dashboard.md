@@ -1,15 +1,15 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:08:15.375034+00:00`
+Generated: `2026-08-11T07:08:29.043924+00:00`
 
 Canonical main: **GREEN** `7de385295dd17112226dd4cd173bd707178e17bc`
 
-State digest: `8627e7cbd7ad6332d8f33a5ee0a77e9a935e9d8b4f1e0c3615de33b2df5d0e43`
+State digest: `88917cd54c365851dba7bc9fa645428a1085c6ed53f2cf08223f841a4c7732b6`
 
 ## Summary
 
-- ready slots: **14**
-- active claims: **16**
+- ready slots: **15**
+- active claims: **15**
 - stale claims: **1**
 - blocked-external lanes: **1**
 
@@ -17,6 +17,7 @@ State digest: `8627e7cbd7ad6332d8f33a5ee0a77e9a935e9d8b4f1e0c3615de33b2df5d0e43`
 
 - `HG-BACKFILL-DIAGNOSTICS/primary` — **Diagnostics source hardening** — score 5150 — dependencies satisfied; resources available
 - `HG-BACKFILL-PHYSICS-GEOMETRY/test-adversary` — **Geometry, clearance, and reachability property tests** — score 5120 — dependencies satisfied
+- `HG-BACKFILL-REALITY/audit` — **WorldId, seed, and replay invariant auditor** — score 5120 — dependencies satisfied
 - `HG-BACKFILL-AUTHORITY/primary` — **Server/client authority source hardening** — score 5100 — dependencies satisfied; resources available
 - `HG-BACKFILL-DIAGNOSTICS/test-adversary` — **Diagnostics lifecycle and no-drift test author** — score 5070 — dependencies satisfied
 - `HG-BACKFILL-AUTHORITY/test-adversary` — **Canonical agreement and teardown fixture author** — score 5020 — dependencies satisfied
@@ -41,7 +42,6 @@ State digest: `8627e7cbd7ad6332d8f33a5ee0a77e9a935e9d8b4f1e0c3615de33b2df5d0e43`
 - `HG-BACKFILL-OBJECTGENOME/primary` → `sol-20260811-k2m9x7`; lease to `2026-08-11T07:35:30+00:00`
 - `HG-BACKFILL-OBJECTGENOME/test-adversary` → `sol-20260811-q7n4m9`; lease to `2026-08-11T07:20:00+00:00`
 - `HG-BACKFILL-PHYSICS-GEOMETRY/primary` → `sol-20260811-j6r2v8`; lease to `2026-08-11T07:15:00+00:00`
-- `HG-BACKFILL-REALITY/audit` → `sol-20260811-q7h4n2`; lease to `2026-08-11T07:44:30+00:00`
 - `HG-BACKFILL-REALITY/primary` → `sol-20260811-q9m4r2`; lease to `2026-08-11T07:29:00+00:00`
 - `HG-BACKFILL-REALITY/test-adversary` → `sol-20260811-r9t4n2`; lease to `2026-08-11T07:08:30+00:00`
 - `HG-BACKFILL-WORLDENTITY/audit` → `sol-20260811-z4q8n1`; lease to `2026-08-11T07:46:00+00:00`

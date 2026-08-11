@@ -82,15 +82,6 @@
       "workerId": "sol-20260811-j6r2v8"
     },
     {
-      "branch": "agent/reality/151-v1-replay-audit-q7h4n2",
-      "expiresAt": "2026-08-11T07:44:30+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-REALITY",
-      "pr": null,
-      "slotId": "audit",
-      "workerId": "sol-20260811-q7h4n2"
-    },
-    {
       "branch": "agent/reality/HG-BACKFILL-REALITY-q9m4r2",
       "expiresAt": "2026-08-11T07:29:00+00:00",
       "generation": 1,
@@ -158,7 +149,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:08:15.375034+00:00",
+  "generatedAt": "2026-08-11T07:08:29.043924+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "7de385295dd17112226dd4cd173bd707178e17bc",
@@ -168,7 +159,7 @@
     "workflowRunId": 31466029227
   },
   "metrics": {
-    "activeClaims": 16,
+    "activeClaims": 15,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -181,10 +172,10 @@
       "HANDOFF": 17,
       "INTEGRATION_RESULT": 6,
       "RECOVERY": 2,
-      "REVIEW_REQUEST": 23,
+      "REVIEW_REQUEST": 24,
       "REVIEW_RESULT": 28
     },
-    "generatedAt": "2026-08-11T07:08:15.375034+00:00",
+    "generatedAt": "2026-08-11T07:08:29.043924+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -193,7 +184,7 @@
       "READY": 12
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 14,
+    "readySlots": 15,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 1
@@ -227,6 +218,22 @@
         "tests/physics_lab_recipe.luau",
         "tests/physics_lab_scale.luau",
         "tests/physics_lab_validation_contract.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-REALITY",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "WorldId, seed, and replay invariant auditor",
+      "score": 5120,
+      "slotId": "audit",
+      "writeScopes": [
+        "src/shared/Reality/*.luau",
+        "src/shared/Core/*.luau",
+        "tests/resolved_region_recipe*.luau",
+        "tests/reality_versions.luau",
+        "tests/deterministic_rng.luau",
+        "tests/stable_id_headless.luau"
       ]
     },
     {
@@ -379,25 +386,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-REALITY",
-        "PR-282"
-      ],
-      "eventId": "evt-20260811-070100-q9m4r2-pr282-rereview",
-      "eventType": "REVIEW_REQUEST",
-      "evidence": [
-        "Exact head a2785f04f0fff74c9e78bfe3d79702376dad271b is based directly on main@ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and changes only src/shared/Core/DeterminismContract.luau plus tests/resolved_region_recipe_v2_compat.luau.",
-        "Canonical CI run 31466997896 succeeded on the exact head.",
-        "Previous independent review found the identical semantic patch replay-safe but correctly required a fresh post-sync ownership run and exact-head review."
-      ],
-      "fromWorker": "sol-20260811-q9m4r2",
-      "laneId": "HG-BACKFILL-REALITY",
-      "schemaVersion": 1,
-      "severity": "info",
-      "summary": "PR #282 was synchronized onto main@ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and the previously reviewed two-file StableId canonical-spelling patch was reapplied unchanged in effect. Please independently re-review exact head a2785f04f0fff74c9e78bfe3d79702376dad271b for Reality/replay compatibility. Exact-head canonical CI 31466997896 is green. Integration remains separately blocked on fail-closed Swarm pr-ownership while live control state validation is globally red.",
-      "timestamp": "2026-08-11T07:01:00+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-WORLDENTITY"
@@ -637,6 +625,24 @@
     },
     {
       "affects": [
+        "HG-BACKFILL-REALITY"
+      ],
+      "eventId": "evt-20260811-070820-q9m4r2-pr282-exact-head-review",
+      "eventType": "REVIEW_REQUEST",
+      "evidence": [
+        "PR #282 exact head a2785f04f0fff74c9e78bfe3d79702376dad271b changes only src/shared/Core/DeterminismContract.luau and tests/resolved_region_recipe_v2_compat.luau.",
+        "Exact-head canonical CI run 31466997896 passed.",
+        "Prior independent review on pre-sync head 3696decd5b5407ac5f676775d94b47c7f0c63a45 found no code-level blocker and confirmed no StableId v1 output-byte change; fresh exact-head review remains required after synchronization."
+      ],
+      "fromWorker": "sol-20260811-q9m4r2",
+      "laneId": "HG-BACKFILL-REALITY",
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "Independent Reality/replay re-review requested for PR #282 exact head a2785f04f0fff74c9e78bfe3d79702376dad271b after synchronization onto current main. The semantic patch is unchanged from the previously non-blocking review; exact-head canonical CI 31466997896 is green. Do not integrate until this exact head is independently reviewed and fail-closed Swarm ownership is green.",
+      "timestamp": "2026-08-11T07:08:20+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-OBJECTGENOME",
         "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT"
       ],
@@ -865,13 +871,13 @@
       "workerId": "sol-20260811-r6k2p9"
     }
   ],
-  "stateDigest": "8627e7cbd7ad6332d8f33a5ee0a77e9a935e9d8b4f1e0c3615de33b2df5d0e43",
+  "stateDigest": "88917cd54c365851dba7bc9fa645428a1085c6ed53f2cf08223f841a4c7732b6",
   "summary": {
-    "activeClaims": 16,
+    "activeClaims": 15,
     "activeResourceClaims": 2,
     "blockedExternalLanes": 1,
     "lanes": 24,
-    "readySlots": 14,
+    "readySlots": 15,
     "staleClaims": 1,
     "workers": 46
   }
