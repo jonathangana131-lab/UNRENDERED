@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091330-8d9cde53-ramp-entry-lip",
+  "timestamp": "2026-08-11T09:13:30+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Permanent Physics Lab ramp has a distinct authored contact-geometry defect not covered by the active chair/cart repairs. PhysicsLabRecipe authors the incline-contact primitive as a 3.0m x 0.20m box centered at y=0.42m with rotationDeg.z=-14 while the carpet floor top is y=0. Transforming the low-end x=+1.5m corners gives bottom y=-0.039912416m and top/walking-surface y=+0.154146729m: the solid penetrates about 4.0cm into the floor yet presents about a 15.4cm vertical entry lip before the incline. That contaminates the intended incline-contact scenario with a step-up impact and should be closed by a bounded recipe/test lane rather than normalized as lab geometry.",
+  "affects": ["HERO-GATE", "HG151-PHYSICS"],
+  "evidence": [
+    "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 src/shared/Physics/PhysicsLabRecipe.luau: floor is sizeY=0.20 centered y=-0.10, so authored floor top is exactly y=0; ramp is size=(3.0,0.20,1.25), center y=0.42, rotation z=-14 degrees.",
+    "For a box rotated about Z, y'=centerY + localX*sin(theta) + localY*cos(theta). At the descending x=+1.5m end and theta=-14deg: bottom corner localY=-0.10 -> y=-0.039912416m; top corner localY=+0.10 -> y=0.154146729m.",
+    "The ramp role is explicitly 'incline contact test', so a 15.4cm vertical lip is not a neutral cosmetic gap: the physical player/body must first solve a step/impact before experiencing the intended continuous slope.",
+    "tests/physics_lab_recipe.luau validates deterministic shell identity, materials, object contracts, and detailed door geometry but contains no primitive ramp/floor contact invariant.",
+    "Repository/PR search found no existing ramp/incline PhysicsLab repair. Active PR #311 is rolling-cart authored geometry; PR #332 is chair caster/COM adversarial evidence, so this finding is non-duplicate."
+  ],
+  "metadata": {
+    "mainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "sourcePath": "src/shared/Physics/PhysicsLabRecipe.luau",
+    "testPath": "tests/physics_lab_recipe.luau",
+    "lowEndBottomY": -0.03991241602710127,
+    "lowEndTopY": 0.15414672922809802,
+    "floorTopY": 0,
+    "recommendedLane": "HG-PHYSICS-RAMP-ENTRY-GEOMETRY",
+    "recommendedAcceptance": "preserve the ramp as a deterministic incline-contact primitive while requiring its low-end traversable top surface to meet the authored floor plane within a small explicit tolerance; retain bounded floor embed/support without a step-height entry lip; add exact source-only transformed-corner regression; do not claim Studio contact evidence",
+    "claimToken": "e5a19c7d3b6f2048"
+  }
+}
