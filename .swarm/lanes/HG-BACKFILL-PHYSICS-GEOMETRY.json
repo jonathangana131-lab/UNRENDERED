@@ -5,7 +5,7 @@
   "title": "Physics Lab geometry and recipe depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete recipe geometry, scale, support reachability, door-proxy manufacturability, COM, clearance, component, or validation-contract defects without requiring Studio.",
   "priority": 4900,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/PhysicsLabRecipe.luau", "src/shared/Physics/PhysicsLabScale.luau", "src/shared/Physics/PhysicsLabValidationContract.luau", "tests/physics_lab_recipe.luau", "tests/physics_lab_scale.luau", "tests/physics_lab_validation_contract.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"Physics recipe realism and validation auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/physics_lab_recipe.luau","tests/physics_lab_validation_contract.luau","Docs/PHYSICS_LAB_VALIDATION.md"]}
   ],
   "acceptance": ["target measurable geometry/contract gaps", "do not turn the lab proxy into the locked Hero Door feature", "all geometry changes preserve deterministic recipes", "new invariants get tests", "do not claim engine contact proof from source-only work"],
-  "notes": "Generation-4 successor PR #376 exact head 6e91faaf87ec2251f0390773061663d0ffa22ccb preserves reviewed #363 hardening and absorbs expected-red #368. Canonical CI 31489364362 and Swarm engine-tests 31489364557 are green for that head, but fresh test-adversary PR #383 at 00913c5fc8b0b0f305fd5616191ba00325045270 exposes a distinct PhysicsLabScale derived-output overflow: finite 1e308 meters passes the input fence and conversion can emit math.huge. Canonical CI 31532236482 passes format/lint/Luau/randomness/domain/plain-data/swarm tests then fails exactly the new Pure Luau scale regression. Lane returned to NEEDS_CHANGES for primary absorption of the regression plus an output-finiteness fence; do not merge #383 independently. Live pr-ownership remains separately fail-closed on trusted-history recovery. No Studio evidence claimed.",
+  "notes": "Generation-5 successor PR #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401 preserves reviewed generation-4 #376 validation-contract hardening and absorbs expected-red #383. PhysicsLabScale now validates both finite input and finite derived output before returning SI/stud conversion results; the focused 1e308 meter overflow regression is locked. Canonical CI run 31532629852 is SUCCESS through format/lint/Luau/randomness/domain/plain-data/swarm/Pure Luau/place build/upload. Swarm run 31532629908 engine-tests is SUCCESS; pr-ownership remains separately fail-closed only on audited immutable-event history mismatch (live blob 8f332b489b9266211ff6c5d2869647eba9b80838 vs canonical 2f0b0221b7995b3862ac6c009804ebb66f715fac). Lane is back in REVIEW and requires fresh independent exact-head source audit before integration. #376/#383 are superseded by #389. No Studio/contact evidence claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
