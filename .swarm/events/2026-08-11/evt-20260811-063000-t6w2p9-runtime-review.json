@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063000-t6w2p9-runtime-review",
+  "timestamp": "2026-08-11T06:30:00+00:00",
+  "fromWorker": "sol-20260811-t6w2p9",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME",
+  "severity": "normal",
+  "summary": "PR #284 is ready for independent review. It adds executed adversarial PhysicsLabRuntime coverage for malformed demotion capture atomicity/retry and 64 transition cycles with bounded identity/metrics. Canonical CI 31465200229 is green on exact head c00ff611e40e777090b542db139aee57d21e050e. Swarm PR ownership remains globally blocked by the unrelated current-main missing swarmctl_hardening_base materialization defect.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME"],
+  "evidence": [
+    "PR #284 changes only tests/physics_lab_runtime_transition_required.luau, an existing suite enumerated by tests/run.luau.",
+    "CI run 31465200229 passed format, lint, Luau analysis, audits, pure Luau tests, and Rojo build.",
+    "Swarm Control Plane run 31465200292 fails before lane ownership evaluation because trusted swarmctl_hardening.py cannot import swarmctl_hardening_base."
+  ]
+}
