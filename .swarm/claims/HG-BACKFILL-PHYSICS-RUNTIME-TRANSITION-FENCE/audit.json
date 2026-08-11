@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+  "slotId": "audit",
+  "workerId": "sol-20260811-r7n4c2x9",
+  "claimToken": "9f2c7a61d4e8b305",
+  "claimedAt": "2026-08-11T11:55:15+00:00",
+  "heartbeatAt": "2026-08-11T11:55:15+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-r7n4c2x9",
+  "pr": 366,
+  "notes": "Independent exact-head source-only audit of PR #366 at current generation-2 head; verify pre-mutation callback rejection, retryability, guard cleanup, deterministic ordering, normal teardown stability, current-main ancestry, and overlap/integration safety with runtime recipe-fence PR #310."
+}
