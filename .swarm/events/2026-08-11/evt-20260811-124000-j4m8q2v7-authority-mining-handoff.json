@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-124000-j4m8q2v7-authority-mining-handoff",
+  "eventType": "HANDOFF",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "workerId": "sol-20260811-j4m8q2v7",
+  "claimToken": "2f7c9a4e1b6d8053",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T12:40:00Z",
+  "headSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-contract-j4m8q2v7",
+  "payload": {
+    "summary": "Authority capacity mining completed with a distinct PhysicsLabStudioHarness lifecycle-capability finding; no source/test files were changed and no Studio run was queued.",
+    "findingEvent": "evt-20260811-123820-j4m8q2v7-authority-harness-destroy-capability",
+    "relatedTeardownPr": 307,
+    "reviewCommentId": 4906226096,
+    "recommendedLaneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "nextActions": [
+      "centralize harness-owned lab destruction so callers cannot leave private current bound to a disposed RealizedLab",
+      "add deterministic source/pure regression for out-of-band destroy/stale-current behavior",
+      "preserve existing stop/restart sequencing and Studio/server guards",
+      "do not conflate the repair with true two-client or Studio evidence"
+    ],
+    "validation": "Source inspection on exact main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 plus PR #307 exact teardown fixture; no runtime or Studio execution claimed."
+  }
+}
