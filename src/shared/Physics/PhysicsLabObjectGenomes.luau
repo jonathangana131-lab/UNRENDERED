@@ -131,7 +131,7 @@ for _, caster in ipairs(casterPositions) do
 		materialKey = "material.v1.chair-caster.polymer-rubber",
 		materialRecipeVersion = 1,
 		massKg = 0.4,
-		localPositionM = { x = caster.x, y = -0.42, z = caster.z },
+		localPositionM = { x = caster.x, y = -0.425, z = caster.z },
 		localRotationDeg = zero,
 		dimensionsM = { x = 0.10, y = 0.10, z = 0.05 },
 		supportKeys = {},
@@ -207,7 +207,9 @@ local cartAffordances: { AffordanceSpec } = {
 local rollingCart: Genome = {
 	schemaVersion = ObjectGenome.SCHEMA_VERSION,
 	familyId = "lab-cart.utility",
-	familyVersion = 1,
+	-- Ground-contact geometry changed in revision 2; do not silently rewrite
+	-- the canonical recipe behind the previous family version.
+	familyVersion = 2,
 	variantKey = "two-shelf",
 	provenance = {
 		manufacturerFamily = "Keystone Institutional Equipment",
@@ -221,7 +223,7 @@ local rollingCart: Genome = {
 	},
 	massKg = 15.6,
 	massLimitsKg = { min = 12, max = 24 },
-	centerOfMassM = { x = 0, y = -0.12, z = 0 },
+	centerOfMassM = { x = 0, y = -0.17435897435897435, z = 0 },
 	components = cartComponents,
 	mechanisms = cartMechanisms,
 	affordances = cartAffordances,
