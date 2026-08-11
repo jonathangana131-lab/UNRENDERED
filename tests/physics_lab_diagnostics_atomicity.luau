@@ -19,6 +19,43 @@ local function run(): number
 		return string.find(source, needle, 1, true)
 	end
 
+	local directRepresentationsStart = position(
+		"local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model: Model): { Instance }"
+	)
+	local directRepresentationsEnd =
+		position("\nlocal function adorneeFor(representation: Instance): BasePart")
+	local directRepresentationsSource = nil
+	if directRepresentationsStart ~= nil and directRepresentationsEnd ~= nil then
+		directRepresentationsSource =
+			string.sub(source, directRepresentationsStart, directRepresentationsEnd - 1)
+	end
+	local representedCountMetric = directRepresentationsSource ~= nil
+		and string.find(directRepresentationsSource, '"UNRENDERED_RepresentedCount"', 1, true)
+	local representedCountEquality = directRepresentationsSource ~= nil
+		and string.find(directRepresentationsSource, "#representations == expectedRepresentedCount", 1, true)
+	local uniqueRepresentationIds = directRepresentationsSource ~= nil
+		and string.find(directRepresentationsSource, "not seenEntityIds[entityId]", 1, true)
+	local exactInstanceOwnership = directRepresentationsSource ~= nil
+		and string.find(directRepresentationsSource, "lab.ownsRepresentation(entityId, child)", 1, true)
+	local booleanOnlyMembership = directRepresentationsSource ~= nil
+		and string.find(directRepresentationsSource, "lab.isRepresented(entityId)", 1, true)
+	local preflightDefinition =
+		position("local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model)")
+	local captureDefinition = position(
+		"function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab): Snapshot"
+	)
+	local preflightEnumeration =
+		position("for _, representation in ipairs(directRepresentations(lab, model)) do")
+	local captureEnumeration = nil
+	if captureDefinition ~= nil then
+		captureEnumeration = string.find(
+			source,
+			"for _, representation in ipairs(directRepresentations(lab, model)) do",
+			captureDefinition,
+			true
+		)
+	end
+
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
 	local rootName = position("folder.Name = DIAGNOSTICS_ROOT_NAME")
@@ -32,7 +69,39 @@ local function run(): number
 	local transactionEnd = position("\tend)\n\n\tif not ok then")
 	local rollback = position("folder:Destroy()")
 	local propagate = position("error(result, 0)")
+	local evidenceDisable = position("\tPhysicsLabStudioDiagnostics.disable(lab)")
+	local evidenceBaseline = position("\tlocal baseline = Validation.captureFull(lab.model)")
+	local evidenceInitial = position("\tlocal initial = PhysicsLabStudioDiagnostics.capture(lab)")
+	local evidenceEnable = position("\t\tlocal enabled = PhysicsLabStudioDiagnostics.enable(lab)")
+	local evidenceDisableCycle = position("\t\tlocal disabled = PhysicsLabStudioDiagnostics.disable(lab)")
+	local evidenceOffSnapshot = position("\t\tlocal offSnapshot = Validation.captureFull(lab.model)")
+	local evidenceComparison = position("Validation.compare(baseline, offSnapshot, 0.001)")
+	local evidenceDeltaCheck = position("for countName, delta in pairs(comparison.delta) do")
+	local evidenceEnvelopeCheck = position("assert(comparison.envelope.ok")
+	local evidenceCheckpointsFreeze = position("\ttable.freeze(checkpoints)")
+	local evidenceFinalSnapshot = position("\tlocal finalSnapshot = PhysicsLabStudioDiagnostics.capture(lab)")
+	local evidenceFinalState = position("finallyEnabled = finalSnapshot.enabled")
+	local evidenceFreeze = position("\ttable.freeze(evidence)")
 
+	expect(
+		"direct representation enumeration proves authoritative count and exact Instance ownership",
+		directRepresentationsSource ~= nil
+			and representedCountMetric ~= nil
+			and representedCountEquality ~= nil
+			and uniqueRepresentationIds ~= nil
+			and exactInstanceOwnership ~= nil
+			and booleanOnlyMembership == nil
+	)
+	expect(
+		"standalone preflight and capture both consume the authoritative-set enumeration",
+		preflightDefinition ~= nil
+			and captureDefinition ~= nil
+			and preflightEnumeration ~= nil
+			and captureEnumeration ~= nil
+			and preflightDefinition < preflightEnumeration
+			and preflightEnumeration < captureDefinition
+			and captureDefinition < captureEnumeration
+	)
 	expect(
 		"all readout dependencies are preflighted before the owned root is parented",
 		preflight ~= nil and parentMutation ~= nil and preflight < parentMutation
@@ -76,6 +145,44 @@ local function run(): number
 			and transactionEnd ~= nil
 			and transactionEnd < rollback
 			and rollback < propagate
+	)
+	expect(
+		"toggle evidence establishes its baseline only after forcing diagnostics off",
+		evidenceDisable ~= nil
+			and evidenceBaseline ~= nil
+			and evidenceInitial ~= nil
+			and evidenceDisable < evidenceBaseline
+			and evidenceBaseline < evidenceInitial
+	)
+	expect(
+		"each evidence cycle disables diagnostics before the comparable off snapshot",
+		evidenceEnable ~= nil
+			and evidenceDisableCycle ~= nil
+			and evidenceOffSnapshot ~= nil
+			and evidenceEnable < evidenceDisableCycle
+			and evidenceDisableCycle < evidenceOffSnapshot
+	)
+	expect(
+		"resource and envelope no-drift checks are derived from the off snapshot",
+		evidenceOffSnapshot ~= nil
+			and evidenceComparison ~= nil
+			and evidenceDeltaCheck ~= nil
+			and evidenceEnvelopeCheck ~= nil
+			and evidenceOffSnapshot < evidenceComparison
+			and evidenceComparison < evidenceDeltaCheck
+			and evidenceDeltaCheck < evidenceEnvelopeCheck
+	)
+	expect(
+		"final evidence publishes diagnostics state only after the whole cycle loop",
+		evidenceDisableCycle ~= nil
+			and evidenceCheckpointsFreeze ~= nil
+			and evidenceFinalSnapshot ~= nil
+			and evidenceFinalState ~= nil
+			and evidenceFreeze ~= nil
+			and evidenceDisableCycle < evidenceCheckpointsFreeze
+			and evidenceCheckpointsFreeze < evidenceFinalSnapshot
+			and evidenceFinalSnapshot < evidenceFinalState
+			and evidenceFinalState < evidenceFreeze
 	)
 
 	return failures
