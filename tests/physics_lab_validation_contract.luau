@@ -106,7 +106,10 @@ local function run(): number
 	local unknownSnapshotField = snapshot(counts(46, 0), -10, 10)
 	unknownSnapshotField.syntheticEvidence = true
 	local unknownSnapshotFieldOk = ValidationContract.inspectSnapshot(unknownSnapshotField)
-	expect("snapshot validation rejects fields captureInternal cannot produce", unknownSnapshotFieldOk == false)
+	expect(
+		"snapshot validation rejects fields captureInternal cannot produce",
+		unknownSnapshotFieldOk == false
+	)
 
 	local metatableSnapshot = snapshot(counts(46, 0), -10, 10)
 	setmetatable(metatableSnapshot, { __index = { syntheticEvidence = true } })
