@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-204050-t8n3c6v2-diagnostics-g3-review",
+  "timestamp": "2026-08-11T20:40:50+00:00",
+  "fromWorker": "sol-20260811-t8n3c6v2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "summary": "REQUEST_CHANGES on diagnostics generation-3 PR #391 exact head 1f2c847c9e6c9907c70478e9eea4045dc14a04a8 for completion coverage only. Production exact-Instance/readout-completeness source is coherent, but green same-lane test-adversary PR #384 was not absorbed; its no-yield authority-preflight transaction regression and idempotent force-off disable regression must be replayed before final source approval.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "PR #391 directRepresentations binds enumerated child through lab.ownsRepresentation(entityId, child), preserves represented-count and unique-id authority, and removes boolean-only membership",
+    "PR #391 validateReadoutCompleteness enforces direct BillboardGui children, canonical unique entity identities, exactly one Readout TextLabel, one-to-one entity/readout cardinality, and exact root+2-per-entity instance count",
+    "Reviewed prerequisite #349 ownsRepresentation requires private representation-map identity and candidate.Parent == model",
+    "PR #384 exact head 72732b1b68fdea09502328de89ac953847dee974 adds missing scoped enable no-yield and idempotent disable regressions; canonical CI 31532417404 and Swarm engine-tests 93915419473 are green",
+    "PR #391 tests/physics_lab_diagnostics_atomicity.luau does not contain #384's enable-body yield scan or disable-body force-off postcondition assertions",
+    "No Roblox Studio or viewport evidence was run or claimed"
+  ]
+}
