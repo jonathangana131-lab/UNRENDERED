@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-202300-u9c4m7p2-diagnostics-instance-binding-audit",
+  "timestamp": "2026-08-11T20:23:00+00:00",
+  "fromWorker": "sol-20260811-u9c4m7p2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Fresh independent exact-head source/test audit of PR #349 at 901c063ff3c1e2584f84a07e1da3a9b1b82d413a is PASS. The ownsRepresentation predicate preserves authoritative F0/F2 validation, binds the candidate to the closure-private runtime representation by exact Instance identity, requires direct membership under the realized lab model, and does not expose the private representation map. The registered pure source-contract regression covers those boundaries. Integration remains fail-closed on the separately owned trusted-history/pr-ownership recovery; no Studio or engine-contact evidence is claimed.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+    "HG-BACKFILL-DIAGNOSTICS"
+  ],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "severity": "normal",
+  "evidence": [
+    "PR #349 exact head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a",
+    "canonical CI run 31478481463 PASS",
+    "Swarm engine-tests on exact head PASS; pr-ownership remains global trusted-history blocker",
+    "review comment 5258400073"
+  ],
+  "metadata": {
+    "pr": 349,
+    "headSha": "901c063ff3c1e2584f84a07e1da3a9b1b82d413a",
+    "verdict": "APPROVE_SOURCE_HOLD_INTEGRATION"
+  }
+}
