@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-q7m3v8c5",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T23:10:00+00:00",
+  "lastSeenAt": "2026-08-11T23:10:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-q7m3v8c5",
+  "notes": "Standing source-depth mining pass for diagnostics. Inspect current main, active diagnostics lanes/PRs/events, and publish only a concrete non-duplicate source/test/invariant finding; do not claim Studio evidence or implementation ownership."
+}
