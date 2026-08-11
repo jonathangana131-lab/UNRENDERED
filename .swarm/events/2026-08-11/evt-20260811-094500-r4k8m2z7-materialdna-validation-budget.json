@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094500-r4k8m2z7-materialdna-validation-budget",
+  "timestamp": "2026-08-11T09:45:00+00:00",
+  "fromWorker": "sol-20260811-r4k8m2z7",
+  "eventType": "FINDING",
+  "summary": "MaterialDNA's documented bounded validation boundary is not actually bounded for malformed plain data. validateKnownFields() walks every key in each closed-shape record and appends one error per unknown field; an input with arbitrarily many unknown fields therefore drives unbounded CPU and ValidationResult memory before rejection. A single arbitrarily long unknown string key is also interpolated verbatim into the retained error string even though canonical semantic keys are otherwise capped at 160 bytes. validateDenseArray() similarly scans an arbitrarily large historyEvents/anomalyModifiers table to completion before enforcing the 32/8-entry maxima. Recommend a narrow source-only one-shot MaterialDNA validation-budget lane: cap/preflight record and dense-array traversal at a small schema-derived bound, bound diagnostic key labels/error accumulation, fail closed with a project-owned structural-limit diagnostic, and add exact-limit plus one-over regressions without changing accepted canonical recipe bytes/identity. This is distinct from the active repairCount exact-integer lane and the completed no-execute/metatable lane.",
+  "affects": ["HG-BACKFILL-MATERIALDNA", "HG-BACKFILL-MATERIALDNA-COUNTERS"],
+  "severity": "MEDIUM",
+  "evidence": [
+    "Docs/MATERIAL_DNA_CONTRACT.md states recipe validation/freezing is bounded content-generation/persistence work and that validateRecipe accepts unknown persisted/generated plain data.",
+    "src/shared/Materials/MaterialDNA.luau validateKnownFields iterates pairs(record) with no cardinality fence and appends every unknown string field name verbatim into ValidationResult.errors.",
+    "src/shared/Materials/MaterialDNA.luau validateDenseArray iterates the complete candidate table before checking count > MAX_HISTORY_EVENTS/MAX_ANOMALY_MODIFIERS, so the configured maxima do not bound rejection work.",
+    "Existing materialdna_contract and materialdna_metatable_boundary regressions cover closed shapes, sparse/keyed arrays, hostile metatables and hostile __tostring keys, but do not bound oversized plain-record/array traversal or diagnostic payload size."
+  ]
+}
