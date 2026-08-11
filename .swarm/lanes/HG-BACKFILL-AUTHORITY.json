@@ -5,7 +5,7 @@
   "title": "Server authority and two-client source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden canonical server/client identity agreement contracts, evaluator fixtures, teardown-safe result handoff, and offline multiplayer authority invariants while the real two-client Studio evidence path is blocked.",
   "priority": 4800,
-  "state": "READY",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/Bootstrap.server.luau", "src/client/Bootstrap.client.luau", "tests/hero_gate_contract_integration.luau", "tests/**authority*.luau", "tests/**multiplayer*.luau"],
@@ -16,5 +16,6 @@
     {"slotId":"audit","role":"Two-client authority and trust-boundary auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/**authority*.luau","tests/**multiplayer*.luau","Docs/MULTIPLAYER_PERSISTENCE.md"]}
   ],
   "acceptance": ["do not claim two real clients from offline tests", "server remains canonical authority", "client observations are independently comparable", "teardown-safe evidence contracts fail closed", "publish findings relevant to HG151-TWOCLIENT"],
+  "notes": "Independent current-head audit of PR #316 at 983afcac3f78492b2f171afdbd888d8beee71a56 is SOURCE PASS but requires current-main synchronization before integration. Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is one commit ahead through trusted Swarm event-compatibility repair #329; compare is diverged with merge base dd8f1581115c15ce6497db827d17e98d879d0267 and behind_by=1. Replay/reconstruct the same bounded three-file patch on current main, rerun exact-head canonical CI and live fail-closed pr-ownership, then obtain fresh independent review. Durable verdict: evt-20260811-093000-r4k9m2-authority316-sync-required. No Studio/two-client evidence is claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
