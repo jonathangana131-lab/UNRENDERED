@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063900-og-validation-report-determinism-r4m8z2",
+  "timestamp": "2026-08-11T06:39:00+00:00",
+  "fromWorker": "sol-20260811-r4m8z2",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome's documented 'structured deterministic report' contract is not fully closed for invalid inputs: validation appends issues in raw pairs/next traversal order, reportResult returns that order unchanged, and support-cycle discovery starts from pairs(componentsByKey). Hash-map iteration can therefore change issue ordering; for a support cycle it can also change which back-edge/path is reported, so sorting the final list alone is insufficient. Canonical traversal (dense authored component order for cycle roots plus deterministic key ordering where map traversal emits issues) should be locked by regression coverage.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "MEDIUM",
+  "evidence": [
+    "Docs/OBJECT_GENOME.md Validation APIs: ObjectGenome.inspect(genome) returns a structured deterministic report with stable issue codes.",
+    "src/shared/Objects/ObjectGenome.luau reportResult returns the issues array without canonical sorting.",
+    "validateRecordShape / validateGenomeShape / inspectState use pairs/next while emitting issues, and support cycle roots are traversed with for componentKey in pairs(componentsByKey).",
+    "For A->B->C->A, the first map-selected cycle root determines the active-stack back edge and thus the component.support_cycle path that is emitted."
+  ]
+}
