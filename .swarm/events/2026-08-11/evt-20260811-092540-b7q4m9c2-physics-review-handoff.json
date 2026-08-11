@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092540-b7q4m9c2-physics-review-handoff",
+  "timestamp": "2026-08-11T09:25:40+00:00",
+  "fromWorker": "sol-20260811-b7q4m9c2",
+  "eventType": "HANDOFF",
+  "summary": "HG-COMPLETION-PHYSICS review-1 queue drained as far as currently safe. PR #334 replayed exact head df09e7a44911c180dafa11028cbd8c5ef5a55a29 is source-review APPROVE with canonical CI and control engine-tests green; merge remains held on the separately owned immutable-event ownership recovery and PR #310 overlap sequencing. PR #339 exact head 1f125129daa6a29069bec85a35ec51e0dd64eefe is source-review APPROVE with exact support-plane/COM closure and green canonical CI/control engine-tests; dependent expected-red PR #332 must be synchronized/rerun before evidence closure. PR #310 exact head 26685a0a479ea890178c8be4ea56e7e2403f011f is REQUEST_CHANGES for hostile non-string record/origin keys reaching WorldEntity tostring(key) plus its existing format failure; a separate bounded-work finding also remains. PR #327 remains blocked on the already-published exact Instance-binding diagnostics defect and incorporation of #333. Fidelity #335 already has a fresh independent PASS; cart #311 already has independent repaired-head approvals but needs current-main/control refresh. No Studio evidence was run or claimed. Main remains ae83c0ef470eb2e73d99be41fd3561ede30c40e1. Global pr-ownership recovery is actively owned by SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY worker sol-20260811-k4p8v2q6, so no duplicate recovery was started.",
+  "affects": ["HG-COMPLETION-PHYSICS", "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE", "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE", "HG-PHYSICS-CHAIR-GEOMETRY", "HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "low",
+  "evidence": [
+    "PR #334 current source-review event evt-20260811-091905-b7q4m9c2-runtime-transition-rereview; GitHub review 4904684072; exact-head CI 31476779157 green; control run 31476803094 engine-tests green.",
+    "PR #339 source-review event evt-20260811-092205-b7q4m9c2-chair-geometry-review; GitHub review 4904702955; exact-head CI 31476886262 green; control run 31477153089 engine-tests green.",
+    "PR #310 blocker event evt-20260811-091532-b7q4m9c2-runtime-recipe-key-review; GitHub review 4904657059. PR #327 exact Instance-binding defect was already published by evt-20260811-085430-k8v2q6m4-diagnostics-instance-binding and was not duplicated.",
+    "Current main ref is ae83c0ef470eb2e73d99be41fd3561ede30c40e1. SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY/primary is live under sol-20260811-k4p8v2q6 with SWARM-PROTOCOL resource and explicitly forbids immutable event rewrites/deletes."
+  ]
+}
