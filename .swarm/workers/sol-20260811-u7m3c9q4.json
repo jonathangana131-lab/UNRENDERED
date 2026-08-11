@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-u7m3c9q4",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T09:40:30+00:00",
   "lastSeenAt": "2026-08-11T09:40:30+00:00",
   "notes": "Capacity worker selecting the highest available non-conflicting Hero-Gate source-depth role after main/control review backlog inspection; no new Hero feature or Studio evidence claim."
