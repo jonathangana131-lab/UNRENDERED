@@ -5,31 +5,14 @@
   "title": "Recover immutable event history continuity",
   "objective": "Define and prove an explicit trusted-history continuity/reset mechanism for already-laundered immutable control events without silently rewriting published event bytes or allowing a failed transition to become a later trusted baseline.",
   "priority": 9999,
-  "state": "LOCKED",
+  "state": "READY",
   "mode": "exclusive",
-  "dependencies": [
-    {"laneId": "SWARM-RECOVERY-EVENT-COMPAT", "acceptableStates": ["DONE"]}
-  ],
+  "dependencies": [{"laneId": "SWARM-RECOVERY-EVENT-COMPAT", "acceptableStates": ["DONE"]}],
   "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR*.md", "Docs/ADRs/**"],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
-    {
-      "slotId": "primary",
-      "role": "Trusted history continuity implementation",
-      "exclusive": true,
-      "availableWhen": ["READY", "NEEDS_CHANGES"],
-      "priorityBoost": 1000,
-      "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR*.md", "Docs/ADRs/**"]
-    },
-    {
-      "slotId": "reviewer-1",
-      "role": "Independent history-integrity verifier",
-      "exclusive": true,
-      "availableWhen": ["REVIEW", "INTEGRATION_READY"],
-      "priorityBoost": 1000,
-      "requiresIndependentFrom": "primary",
-      "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR*.md", "Docs/ADRs/**"]
-    }
+    {"slotId": "primary", "role": "Trusted history continuity implementation", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 1000, "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR*.md", "Docs/ADRs/**"]},
+    {"slotId": "reviewer-1", "role": "Independent history-integrity verifier", "exclusive": true, "availableWhen": ["REVIEW", "INTEGRATION_READY"], "priorityBoost": 1000, "requiresIndependentFrom": "primary", "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR*.md", "Docs/ADRs/**"]}
   ],
   "acceptance": [
     "the recovery never silently edits or deletes already-published immutable event files",
@@ -40,6 +23,6 @@
     "adversarial tests cover failed-transition laundering, descendant-baseline laundering, duplicate/replayed event identities, and recovery-boundary abuse",
     "canonical CI and live control validation are green only after the explicit recovery contract is exercised and independently reviewed"
   ],
-  "notes": "Locked decomposition from SWARM-RECOVERY-EVENT-COMPAT. Live control currently contains laundered bytes at three audited immutable paths even though first-write Git blobs remain available: Authority canonical 2f0b0221b7995b3862ac6c009804ebb66f715fac, WorldEntity canonical f9781fd64518c01aa10b460f01aff13adc6635da, cart canonical a39220b473086229e6b1057b296342175b851af1. Compatibility PR #329 intentionally detects rather than rewrites these. This lane must not unlock until #329 receives independent review and the protocol-level recovery boundary is independently acceptable; it is also a prerequisite to resuming publisher recovery PR #315.",
+  "notes": "Unlocked immediately after independently reviewed detect-only prerequisite PR #329 merged as ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and SWARM-RECOVERY-EVENT-COMPAT reached DONE. Live control still contains laundered bytes at three audited immutable paths; this lane owns the explicit append-only/trust-continuity recovery and first-parent continuity contract. It is the active prerequisite to resuming PR #315.",
   "tags": ["control-repair", "red-ci", "history-integrity", "hero-gate"]
 }
