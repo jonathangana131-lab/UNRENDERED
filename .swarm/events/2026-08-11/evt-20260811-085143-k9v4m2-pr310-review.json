@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085143-k9v4m2-pr310-review",
+  "timestamp": "2026-08-11T08:51:43Z",
+  "fromWorker": "sol-20260811-k9v4m2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-TRAIN",
+  "severity": "blocking",
+  "summary": "Exact-head Physics completion review requests changes on PR #310 because the new canonical runtime-recipe authority fence dereferences caller-controlled candidate structures before proving them metatable-free/plain, allowing executable proxies to run during validation.",
+  "affects": [
+    "HG-COMPLETION-TRAIN",
+    "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"
+  ],
+  "evidence": [
+    "At exact head 0f69d6b749c3daa8b61488e94016e9c0c2831632, assertCanonicalRecipe reads recipe.schemaVersion/recipeKey/worldId/regionId and applies # to recipe.entities before any candidate plain-table/metatable preflight.",
+    "The same validator reads entityRecipe.key/entity and record/origin fields before proving nested candidate records are metatable-free, so hostile __index behavior can execute while synthesizing otherwise canonical values.",
+    "A hostile non-string entity key can also reach interpolated diagnostics without an explicit primitive-string key preflight.",
+    "The previous Codex P2 covering canonical persistentState/stateRevision/representationRevision is resolved on this head; this is a distinct no-execute authority-boundary gap.",
+    "Canonical product CI run 31473237386 is green on this exact head but does not cover the hostile metatable/proxy cases requested here.",
+    "No Roblox Studio evidence is required or claimed for this source-only review finding."
+  ],
+  "metadata": {
+    "slotId": "review-physics",
+    "pr": 310,
+    "headSha": "0f69d6b749c3daa8b61488e94016e9c0c2831632",
+    "verdict": "REQUEST_CHANGES",
+    "githubReviewId": 4904477811,
+    "nextAction": "Reject top-level and nested metatable-backed/non-plain recipe structures before first candidate dereference/operator, add zero-metamethod-execution adversarial regressions, then rerun exact-head CI/control and request fresh review."
+  }
+}
