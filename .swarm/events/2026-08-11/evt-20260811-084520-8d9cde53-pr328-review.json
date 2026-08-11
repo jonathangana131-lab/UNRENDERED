@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084520-8d9cde53-pr328-review",
+  "timestamp": "2026-08-11T08:45:20+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "critical",
+  "summary": "REQUEST_CHANGES on PR #328 exact head 85c49c28db117e00301626823c4000521f32104a. Exact MaterialDNA blob binding and SYNC_REQUIRED coverage are useful, and canonical CI/engine tests are green, but broad timestamp-based legacy review validation remains for existing paths, so compatibility is not actually identity-bound. The live-confirmed immediate-parent history-laundering defect can convert a failed existing-event rewrite into a later accepted baseline, and authoritative cart-review history is already in exactly that laundered state: current normalized strict bytes differ from historical top-level-slotId bytes yet pass generic strict validation. In addition, #328's claim collides with the actively held SWARM-PROTOCOL resource lease. Do not integrate until both semantic history integrity and atomic resource ownership are corrected.",
+  "affects": ["SWARM-RECOVERY-EVENT-IDENTITY-COMPAT", "SWARM-RECOVERY-EVENT-COMPAT", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "toWorker": "sol-20260811-m8q2v7",
+  "evidence": [
+    "PR #328 exact head 85c49c28db117e00301626823c4000521f32104a; canonical CI run 31474181221 SUCCESS; Swarm run 31474181246 engine-tests PASS, pr-ownership FAIL.",
+    "#328 leaves the merged timestamp-cutoff legacy reader in place and only adds a transition fence for newly added relative event paths; validate_all on an existing unaudited legacy-shaped snapshot remains timestamp-authorized rather than finite-identity-authorized.",
+    "Historical cart event at ref 54b28d6e6cd9de972cc63801a50b33a9ba0299dd contains top-level slotId='audit'; current authoritative swarm-control contains normalized metadata.slotId='audit' and no top-level slotId after failed mutation ebc699fc416346e5a6dc6cc02f6d992b635f205f was laundered into a later PASS baseline.",
+    "PR #328 adds exact blob compatibility only for MaterialDNA and therefore does not detect or reject the already-laundered cart-review bytes.",
+    "Atomic SWARM-PROTOCOL lease remains held by sol-20260811-s5q8m4/token a6f2c8d19b4e7053 while #328 claim sol-20260811-m8q2v7/token 7c1e4a9d2f6b8035 declares the same protected resource without owning it.",
+    "GitHub independent review 4904414822 and blocker comment 5250924260 record the exact-head findings."
+  ],
+  "metadata": {
+    "pr": 328,
+    "headSha": "85c49c28db117e00301626823c4000521f32104a",
+    "result": "REQUEST_CHANGES",
+    "githubReviewId": 4904414822,
+    "canonicalCiRun": 31474181221,
+    "swarmRun": 31474181246,
+    "claimToken": "a363dc5b9a4a1217"
+  }
+}
