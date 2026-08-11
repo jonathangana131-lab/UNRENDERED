@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-072200-q9m4r2-pr282-current-head-review",
+  "timestamp": "2026-08-11T07:22:00+00:00",
+  "fromWorker": "sol-20260811-q9m4r2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "normal",
+  "summary": "Independent Reality/replay review requested for PR #282 current exact head 63f1f4899af616904fba8521ffd1d2a418a0000a after synchronization onto main@81a13b1138e26e7852c89685de5dbf9bd57753d8. The semantic two-file StableId canonical-spelling patch is unchanged. Fail-closed Swarm ownership run 31468567798 is now explicitly green, including pr-ownership job 93706609000. Canonical CI run 31468567781 is in progress. Please verify exact-head replay/schema compatibility before integration.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "Exact head 63f1f4899af616904fba8521ffd1d2a418a0000a is two commits over main@81a13b1138e26e7852c89685de5dbf9bd57753d8 and changes only src/shared/Core/DeterminismContract.luau plus tests/resolved_region_recipe_v2_compat.luau.",
+    "Swarm Control Plane run 31468567798 completed success on the exact head; engine-tests and fail-closed pr-ownership both passed.",
+    "Prior independent reviews approved the identical semantic patch on earlier synchronized heads; this request exists only because the base/head changed again before integration."
+  ]
+}
