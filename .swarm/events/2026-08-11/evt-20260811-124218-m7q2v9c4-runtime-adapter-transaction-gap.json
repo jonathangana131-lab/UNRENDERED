@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-124218-m7q2v9c4-runtime-adapter-transaction-gap",
+  "timestamp": "2026-08-11T12:42:18+00:00",
+  "fromWorker": "sol-20260811-m7q2v9c4",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Post-#366 PhysicsLabRuntime mining found a representation-transaction contract gap: TransitionObserver is invoked before WorldEntity/Fidelity authorities commit, and callback failure correctly rolls back internal authorities, but the API exposes neither an explicit prepare-only contract nor a post-authority commit/rollback phase. A real F3/F4 adapter that mutates physical representation inside the observer can therefore leave Workspace representation changed even when it subsequently throws and both domain authorities remain at the old fidelity.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE", "HERO-GATE"],
+  "evidence": [
+    "PR #366 exact source builds a WorldEntity preview, invokes observer(current, preview, reason), and only afterward calls registry.transitionRegistered(); FidelityManager commits its own transition only after the hook returns successfully.",
+    "#366 regressions prove observer/capture exceptions clear the hidden transitionInFlight guard and preserve registry/Fidelity authority, but they intentionally assert only internal authority/population state; the runtime has no mechanism to undo arbitrary external side effects already performed by the observer.",
+    "Docs/PHYSICS_LAB.md names a measured F3/F4 representation/promotion adapter with state capture on demotion as upcoming Reality-Grade work. The current callback shape is therefore directly on the future physical-authority path rather than a generic hypothetical API.",
+    "No existing runtime lane/event/PR was found for representation-side commit/rollback acknowledgment. Recommended prerequisite before real F3/F4 promotion: define a narrow transactional adapter contract (for example explicit prepare + commit/rollback semantics, or formally make the precommit callback side-effect-free and provide a postcommit phase) with pure adversarial tests showing an adapter failure cannot leave representation truth ahead of domain truth. Do not implement physical F3/F4 breadth in the finding lane itself."
+  ]
+}
