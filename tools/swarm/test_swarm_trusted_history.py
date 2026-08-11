@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Adversarial regressions for the append-only trusted-history recovery."""
 from pathlib import Path
-import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -152,10 +151,10 @@ class SeparateTrustLedgerTests(unittest.TestCase):
         result = hard.verify_trusted_state(self.fx.root, trust_path)
         self.assertEqual(result["trustedStateDigest"], hard.state_digest(self.fx.root))
 
-        lane_path = self.fx.root / "lanes" / "LANE-A.json"
-        lane = core.load_json(lane_path)
-        lane["notes"] = "authoritative mutation after last trust advance"
-        write(lane_path, lane)
+        config_path = self.fx.root / "config.json"
+        config = core.load_json(config_path)
+        config["description"] = "authoritative mutation after last trust advance"
+        write(config_path, config)
         with self.assertRaises(core.ControlError):
             hard.verify_trusted_state(self.fx.root, trust_path)
 
