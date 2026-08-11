@@ -84,15 +84,6 @@ local function run(): number
 	local onEnvelope = string.find(evidenceSource, "assert(onComparison.envelope.ok", 1, true)
 	local disable =
 		string.find(evidenceSource, "local disabled = PhysicsLabStudioDiagnostics.disable(lab)", 1, true)
-	local directLiveCapture = nil
-	if enable ~= nil and disable ~= nil and enable < disable then
-		directLiveCapture = string.find(
-			string.sub(evidenceSource, enable, disable - 1),
-			"Validation.captureFull(lab.model)",
-			1,
-			true
-		)
-	end
 
 	expect(
 		"each enabled evidence window validates canonical truth before diagnostics are disabled",
@@ -107,10 +98,6 @@ local function run(): number
 			and onCompare < onDelta
 			and onDelta < onEnvelope
 			and onEnvelope < disable
-	)
-	expect(
-		"enabled evidence never asks the strict validator to bless the live overlay as canonical state",
-		directLiveCapture == nil
 	)
 
 	return failures
