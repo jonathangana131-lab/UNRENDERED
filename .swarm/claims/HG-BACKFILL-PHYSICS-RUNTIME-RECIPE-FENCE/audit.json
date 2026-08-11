@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "slotId": "audit",
+  "workerId": "sol-20260811-h8v5c1",
+  "claimToken": "4d7e9a2c61b8053f",
+  "claimedAt": "2026-08-11T08:32:30+00:00",
+  "heartbeatAt": "2026-08-11T08:32:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE-h8v5c1",
+  "pr": 310,
+  "notes": "Independent exact-head audit of PR #310 head 0f69d6b749c3daa8b61488e94016e9c0c2831632 after canonical CI green and P2 initial-state repair."
+}
