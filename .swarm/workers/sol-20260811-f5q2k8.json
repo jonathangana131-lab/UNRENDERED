@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-f5q2k8",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T08:22:30+00:00",
-  "lastSeenAt": "2026-08-11T08:22:30+00:00",
+  "lastSeenAt": "2026-08-11T08:24:30+00:00",
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-f5q2k8",
-  "notes": "Independent exact-head FidelityManager audit for primary PR #274; verify finite-state, atomicity, no-execute malformed-input, accounting, and deterministic ordering closure."
+  "notes": "Completed exact-head Fidelity source audit on PR #274. Source-local PASS; integration held because head 5251998d is 2 commits behind current main aa7e04f. Durable review 4904282531 and REVIEW_RESULT event published; claim released for synchronized-head rereview."
 }
