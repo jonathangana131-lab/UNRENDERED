@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094455-k8v3p6r1-materialdna353-review-request",
+  "timestamp": "2026-08-11T09:44:55+00:00",
+  "fromWorker": "sol-20260811-k8v3p6r1",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "severity": "normal",
+  "summary": "PR #353 generation-2 MaterialDNA salvage is ready for fresh independent review at exact head 10559afdce1a1854e7932522f6e78561736c8ed3. It reuses the exact previously source-approved #313 MaterialDNA/test blobs on current main, is 1 ahead / 0 behind with a two-file diff, and fresh canonical CI run 31478938778 plus Swarm engine-tests are green. Live pr-ownership remains globally fail-closed pending the separately owned immutable-event-history continuity recovery. Reviewer must be independent from sol-20260811-k8v3p6r1.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "evidence": [
+    "Current head 10559afdce1a1854e7932522f6e78561736c8ed3 is based directly on main ae83c0ef470eb2e73d99be41fd3561ede30c40e1; compare reports ahead_by=1, behind_by=0 and exactly MaterialDNA.luau plus materialdna_contract.luau changed.",
+    "Target blobs exactly match source-approved #313 head: MaterialDNA eb8c05f5945d6c733c7616f9b0f6e6d14e5224e3 and test e34690c553f8b6c1a6d2630a5c667fb6b8f6fa80.",
+    "Canonical CI run 31478938778 is SUCCESS on exact head; Swarm Control Plane run 31478938800 has engine-tests SUCCESS while pr-ownership fails at trusted-control enforcement.",
+    "Stale PR #313 has been closed as superseded; no Studio evidence is applicable or claimed."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "pr": 353,
+    "headSha": "10559afdce1a1854e7932522f6e78561736c8ed3",
+    "verdict": "READY_FOR_INDEPENDENT_REVIEW"
+  }
+}
