@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080335-n7c4p2-authority-guard-order",
+  "timestamp": "2026-08-11T08:03:35+00:00",
+  "fromWorker": "sol-20260811-n7c4p2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "medium",
+  "summary": "REQUEST_CHANGES on PR #297 head 2a14f54c: the new fail-closed bootstrap regression asserts presence of the server guard and authority startup but not their ordering, so moving PhysicsLabStudioHarness.start(workspace) before assert(RunService:IsServer(), ...) would still pass. Lock guard-before-start sequencing, then synchronize current main and rerun exact-head CI/ownership before fresh review.",
+  "affects": ["HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "tests/hero_gate_contract_integration.luau independently searches for the canonical server assert and PhysicsLabStudioHarness.start(workspace) but never compares their source positions.",
+    "src/server/Bootstrap.server.luau currently places assert(RunService:IsServer(), ...) before the Studio-only PhysicsLabStudioHarness.start(workspace), so the intended production ordering exists today but is not regression-locked.",
+    "Review 4904124311 records the patch-local blocker and keeps the claim boundary source-only; it does not claim real two-client Studio evidence.",
+    "PR #297 remains behind current main aa7e04f05834ae783773c908fccfdbbe510558e5 and therefore also requires current-main synchronization plus fresh canonical CI and live pr-ownership."
+  ],
+  "metadata": {
+    "claimToken": "9b4d1f6a2c8e7053",
+    "pr": 297,
+    "headSha": "2a14f54ccecae5ea0e88f288f2c9185dbf885a9e",
+    "verdict": "REQUEST_CHANGES"
+  }
+}
