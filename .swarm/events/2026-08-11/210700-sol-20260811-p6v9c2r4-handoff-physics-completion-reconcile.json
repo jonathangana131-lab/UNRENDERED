@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t210700z-p6v9c2r4-physics-completion-reconcile",
+  "timestamp": "2026-08-11T21:07:00Z",
+  "fromWorker": "sol-20260811-p6v9c2r4",
+  "eventType": "HANDOFF",
+  "summary": "Physics completion reconciliation reduced stale merge targets without changing product source. Retain #388 as the current-main runtime transition/facade lineage and preserve #310 only as the canonical-recipe invariant source for semantic synthesis onto #388; #366 is closed as superseded. Retain diagnostics prerequisite #349 plus generation-4 candidate #392; absorbed predecessors #295, #301, #327, #333, #374, and #377 are closed. Do not merge runtime histories mechanically, do not queue Studio diagnostics while OPS-STUDIO-DISPLAY is externally blocked, and do not treat source-only closure as viewport/two-client evidence.",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "affects": [
+    "HG-COMPLETION-PHYSICS",
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+    "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+    "HG-BACKFILL-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1 is current-main based, independently source-approved, and carries the whole-FidelityManager.step mutation fence plus closure-private/frozen runtime facade.",
+    "PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d is independently source-approved but stale/diverged and edits the exact same PhysicsLabRuntime.luau and tests/physics_lab_runtime.luau files; its canonical recipe/plain-data/no-execute/bounded-comparison invariant must be replayed semantically onto #388 before integration.",
+    "PR #366 generation 2 was still open despite generation-3 #388 superseding it; completion reconciliation commented and closed #366 unmerged.",
+    "Diagnostics generation-3 #391 explicitly preserved/absorbed #295, #301, #327, #333, #374, and #377 contracts while stacking on prerequisite #349; generation-4 #392 retains that source and adds lifecycle coverage. Those six stale predecessors were commented and closed unmerged; #349 and #392 remain the meaningful current chain.",
+    "Global live pr-ownership remains fail-closed under SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY / PR #387, so this handoff is sequencing/backlog cleanup and not merge authorization."
+  ]
+}
