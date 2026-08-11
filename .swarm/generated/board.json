@@ -13,7 +13,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:33:31.668536+00:00",
+  "generatedAt": "2026-08-11T05:33:43.867952+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "2ce32576a47e99a1e09e802dc7e76a0bf7bbd283",
@@ -32,7 +32,7 @@
       "INTEGRATION_RESULT": 2,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T05:33:31.668536+00:00",
+    "generatedAt": "2026-08-11T05:33:43.867952+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -170,7 +170,7 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "36afba442abc652ea2efc68b594c83e314039a38ed26cefb3a7b934cd4d37524",
+  "stateDigest": "b68c3302ad205a55605182abbe20a9946538ce06274fb4d0cf5ad497148631e3",
   "summary": {
     "activeClaims": 0,
     "activeResourceClaims": 0,
