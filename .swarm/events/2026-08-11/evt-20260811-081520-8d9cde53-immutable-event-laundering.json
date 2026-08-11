@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081520-8d9cde53-immutable-event-laundering",
+  "timestamp": "2026-08-11T08:15:20+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "critical",
+  "summary": "Swarm immutable-event enforcement is only one-transition deep and can launder a forbidden historical-event rewrite through one red control commit. A commit that mutates an existing event correctly fails transition-check, but because swarm-control itself accepts that red commit as the new branch tip, the next unrelated commit compares against the already-mutated parent. If it leaves that event unchanged, transition-check sees no change and can render a fresh validation marker whose state digest now trusts the rewritten event history. This violates the append-only event authority model and must be repaired before treating validation-fence recovery as durable.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE", "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "Main tools/swarm/swarmctl_hardening_base.py transition_check() compares immutable event bytes only between the supplied immediate before/after snapshots; it does not anchor event history to the last validated state or an immutable digest chain.",
+    "Control commit ebc699fc416346e5a6dc6cc02f6d992b635f205f normalized evt-20260811-080520-h4v8n2-cart-geometry-review.json. Run 31472270118 proved the after snapshot is structurally PASS, then failed only because transition-check detected that exact event path changed from immediate parent 54b28d6e6cd9de972cc63801a50b33a9ba0299dd.",
+    "swarm-control is not branch-protected, so the red mutation commit remains the authoritative parent for later pushes. On a descendant that leaves the normalized event bytes unchanged, the present transition_check() computes be[k] == ae[k] for that path and cannot detect that the mutation was never validated.",
+    "render() creates validation.json from only the current stateDigest after current transition success; no historical event digest/validated ancestor is included. A later successful descendant can therefore publish a PASS marker over the previously rewritten event bytes."
+  ],
+  "metadata": {
+    "reproMutationCommit": "ebc699fc416346e5a6dc6cc02f6d992b635f205f",
+    "reproRun": 31472270118,
+    "mutatedEvent": "events/2026-08-11/evt-20260811-080520-h4v8n2-cart-geometry-review.json",
+    "class": "immutable-event-history-laundering",
+    "recommendedInvariant": "A trusted validation fence must prove continuity from a previously validated control ancestor or otherwise pin immutable-event history so a failed transition cannot become a future baseline."
+  }
+}
