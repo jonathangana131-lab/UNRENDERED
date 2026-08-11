@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063100-q9x4m2-pr-ownership-repair-shape",
+  "timestamp": "2026-08-11T06:31:00+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "laneId": "SWARM-V2-HARDEN",
+  "severity": "high",
+  "summary": "Minimal control-plane repair shape confirmed: the PR trusted-validator step must materialize trusted-base tools/swarm/swarmctl_hardening_base.py beside swarmctl_hardening.py (when present) and include it in py_compile before executing the facade. Current main's facade unconditionally imports that sibling module.",
+  "affects": ["SWARM-V2-HARDEN"],
+  "evidence": [
+    "main tools/swarm/swarmctl_hardening.py begins with import swarmctl_hardening_base as _base and re-exports from that module.",
+    "main .github/workflows/swarm-control.yml materializes only swarmctl.py and swarmctl_hardening.py into RUNNER_TEMP/trusted-swarm.",
+    "PR #275 ownership run demonstrates the resulting ModuleNotFoundError before pr-check starts."
+  ]
+}
