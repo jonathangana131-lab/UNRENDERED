@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V2-HARDEN",
+  "slotId": "primary",
+  "workerId": "sol-20260811-ctl2",
+  "claimToken": "b4c9e2f7a16d5c30",
+  "claimedAt": "2026-08-11T04:58:00+00:00",
+  "heartbeatAt": "2026-08-11T04:58:00+00:00",
+  "leaseSeconds": 2400,
+  "generation": 1,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/swarm/v2-hardening-ctl2",
+  "pr": null,
+  "notes": "Claimed after live activation exposed second-order coordinator gaps."
+}
