@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-213700-z3k7m9q2-physics-scale-noexecute",
+  "timestamp": "2026-08-11T21:37:00+00:00",
+  "fromWorker": "sol-20260811-z3k7m9q2",
+  "eventType": "FINDING",
+  "summary": "PhysicsLabScale assertFinite executes equality on the caller value before proving it is a primitive number. Draft expected-red PR #406 demonstrates that a metatable-backed malformed meters scalar invokes caller __eq on the rejection path. The scale boundary should type-check number before equality/order/arithmetic and retain the zero-metamethod-execution regression.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "MEDIUM",
+  "evidence": [
+    "PR #406 is stacked directly on #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401 and changes only tests/physics_lab_scale.luau (+17/-0).",
+    "Canonical CI run 31538617979 passes format, lint, Luau analysis, canonical randomness, shared-domain, plain-data, and deterministic swarm gates, then Pure Luau fails exactly: Physics Lab scale rejects malformed meters before caller equality metamethod execution.",
+    "The existing NaN, infinity, finite meter-to-stud overflow, exact-vector, round-trip, and validation-contract assertions remain green before and after the isolated failure.",
+    "Swarm run 31538618037 engine-tests passes; pr-ownership is separately fail-closed on live control-plane worker status and is not product evidence.",
+    "No Roblox Studio, physical-contact, viewport, or two-client evidence claimed."
+  ]
+}
