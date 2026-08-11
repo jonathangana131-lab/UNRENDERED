@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "audit",
+  "workerId": "sol-20260811-y7k4m2p9",
+  "claimToken": "9c2f7a4d1e6b8053",
+  "claimedAt": "2026-08-11T21:49:00+00:00",
+  "heartbeatAt": "2026-08-11T21:49:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/audit/HG-BACKFILL-OBJECTGENOME-audit-y7k4m2p9",
+  "pr": 395,
+  "notes": "Fresh independent source-only audit of generation-8 ObjectGenome PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962. Review canonical identity/plain-data/ownership and decoder hardening; no Studio evidence claim."
+}
