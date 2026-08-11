@@ -27,24 +27,12 @@ local function run(): number
 		then string.sub(source, diagnosticsRootStart, diagnosticsRootEnd - 1)
 		else ""
 	local diagnosticsRootEnumeration = string.find(diagnosticsRootSource, "model:GetChildren()", 1, true)
-	local diagnosticsRootNameFilter = string.find(
-		diagnosticsRootSource,
-		"child.Name == DIAGNOSTICS_ROOT_NAME",
-		1,
-		true
-	)
-	local diagnosticsRootDuplicateGuard = string.find(
-		diagnosticsRootSource,
-		"duplicate Physics Lab diagnostics root",
-		1,
-		true
-	)
-	local diagnosticsRootSingleLookup = string.find(
-		diagnosticsRootSource,
-		"model:FindFirstChild(DIAGNOSTICS_ROOT_NAME)",
-		1,
-		true
-	)
+	local diagnosticsRootNameFilter =
+		string.find(diagnosticsRootSource, "child.Name == DIAGNOSTICS_ROOT_NAME", 1, true)
+	local diagnosticsRootDuplicateGuard =
+		string.find(diagnosticsRootSource, "duplicate Physics Lab diagnostics root", 1, true)
+	local diagnosticsRootSingleLookup =
+		string.find(diagnosticsRootSource, "model:FindFirstChild(DIAGNOSTICS_ROOT_NAME)", 1, true)
 
 	local directRepresentationsStart = position(
 		"local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model: Model): { Instance }"
