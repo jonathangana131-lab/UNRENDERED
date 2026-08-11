@@ -173,7 +173,7 @@ function DeterminismContract.isStableId(value: unknown, namespace: string?): boo
 	if parsedNamespace == nil or version == nil or digest == nil then
 		return false
 	end
-	if #parsedNamespace > 64 or tonumber(version) ~= DeterminismContract.StableIdVersion or #digest ~= 32 then
+	if #parsedNamespace > 64 or version ~= tostring(DeterminismContract.StableIdVersion) or #digest ~= 32 then
 		return false
 	end
 	if namespace ~= nil and parsedNamespace ~= namespace then
