@@ -13,9 +13,7 @@
     "Current production bootstraps use assert(RunService:IsServer(), \"server bootstrap must run on server\") and assert(RunService:IsClient(), \"client bootstrap must run on client\"), which is stronger than the regression currently protects.",
     "GitHub review 4903873018 records the exact-head blocker; GitHub cannot submit REQUEST_CHANGES from the same repository account, so the durable swarm verdict is authoritative for this audit slot."
   ],
-  "metadata": {
-    "pr": 297,
-    "headSha": "ac8b0d1d6f27305da551c0ed3fb46be4a4c53af1",
-    "verdict": "REQUEST_CHANGES"
-  }
+  "pr": 297,
+  "headSha": "ac8b0d1d6f27305da551c0ed3fb46be4a4c53af1",
+  "verdict": "REQUEST_CHANGES"
 }
