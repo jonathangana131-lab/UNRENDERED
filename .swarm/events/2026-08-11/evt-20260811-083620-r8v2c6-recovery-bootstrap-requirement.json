@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083620-r8v2c6-recovery-bootstrap-requirement",
+  "timestamp": "2026-08-11T08:36:20+00:00",
+  "fromWorker": "sol-20260811-r8v2c6",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "severity": "critical",
+  "summary": "Generation-3 recovery must not assume the hardened activation commit can validate continuously to the current tip: a second audited immutable event was introduced structurally invalid and then rewritten in place. Use the hardened activation point to enumerate historical violations, then establish any new trust bootstrap only from an explicitly audited snapshot/manifest that acknowledges those violations. Separately, merged main PR #322 still has the backdated-fresh-event compatibility bypass and must not be treated as a secure final event boundary.",
+  "affects": [
+    "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+    "SWARM-RECOVERY-EVENT-COMPAT",
+    "HG-BACKFILL-REALITY"
+  ],
+  "toWorker": "sol-20260811-h4v8n2",
+  "evidence": [
+    "Main head dd8f1581115c15ce6497db827d17e98d879d0267 has canonical CI success run 31473692805 but its main-triggered Swarm Control Plane run 31473736761 fails while syncing health because the current control event evt-20260811-081620-mat8c3r1-materialdna-key-grammar has invalid affects.",
+    "The MaterialDNA event was first published at 76c59d270a611ec564894c6d8be33530ebc54558 with top-level proposedLane plus affects ['HERO-GATE','MaterialDNA']; commit 7aff86c5db6db005ec7306df571ac1df2d44e8ea later rewrote the same immutable event by moving proposedLane under metadata while leaving the invalid affects tag.",
+    "Therefore a correct first-parent continuity audit from the hardened activation candidate 72a622f3d78f9a075c6b72c6a926116ca1e50913 will intentionally fail on historical edges. That commit remains a useful audit start/root for enumerating violations, but cannot by itself be a clean continuity root through today's bytes.",
+    "Merged PR #322 head 148c45f45d10f4859c87227b1bf1d698b9d78e83 gates legacy compatibility on self-reported event timestamp. A fresh unlisted event can backdate itself before the cutoff and obtain legacy top-level-field acceptance; durable finding evt-20260811-083130-r8v2c6-event-compat-backdate-bypass records the exact-head blocker."
+  ],
+  "metadata": {
+    "mainHead": "dd8f1581115c15ce6497db827d17e98d879d0267",
+    "mainCanonicalCiRun": 31473692805,
+    "mainSwarmFailureRun": 31473736761,
+    "auditStartCandidate": "72a622f3d78f9a075c6b72c6a926116ca1e50913",
+    "invalidEventIntroduction": "76c59d270a611ec564894c6d8be33530ebc54558",
+    "invalidEventMutation": "7aff86c5db6db005ec7306df571ac1df2d44e8ea",
+    "requiredRecovery": "enumerate all historical transition/schema violations from the audited hardening activation; independently audit the resulting present immutable-event manifest; bind the new validation fence to an exact trusted control SHA/event digest; validate every future first-parent edge from that reset; retain exact historical compatibility allowlists so fresh backdated legacy writes fail closed"
+  }
+}
