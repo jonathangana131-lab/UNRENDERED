@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-r4k9v2m7-diagnostics-authoritative-projection-231510",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T23:15:10+00:00",
+  "workerId": "sol-20260811-r4k9v2m7",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "generation": 1,
+  "claimToken": "4b8e1c6d9a2f7053",
+  "target": {
+    "kind": "other",
+    "value": "HG-BACKFILL-DIAGNOSTICS@183bea8da6462facb2a2429ebbc85b9b80a01869"
+  },
+  "severity": "medium",
+  "summary": "Physics Lab diagnostics still projects the readout key and representationClass from mutable exact-owned Instance metadata instead of proving those values against authoritative representation truth. An exact owned Instance can therefore be renamed or have its representation-class attribute changed to another string and standalone enable/capture can publish a coherent-looking but false diagnostic projection; the full Validation.captureFull path would reject the same state.",
+  "evidence": [
+    "At active generation-8 head 183bea8da6462facb2a2429ebbc85b9b80a01869, directRepresentations() proves exact Instance ownership with lab.ownsRepresentation(entityId, child), but preflightReadouts() sets plan.key = representation.Name and capture() sets EntityDiagnostic.key = representation.Name.",
+    "The same capture() reads UNRENDERED_RepresentationClass from the Instance and only checks nil-or-string before publishing it; record.origin.recipeKey is already available in the same authoritative WorldEntity record and is published separately as recipeKey.",
+    "PhysicsLabValidation.assertCanonicalRepresentationSet() independently proves that every direct representation Name must be a canonical recipe key and that object UNRENDERED_RepresentationClass must equal the canonical F2-anchored-proxy value. Thus these are validated representation invariants, not arbitrary display labels.",
+    "The active generation-8 primary claim is scoped only to the already-known final post-disable Heartbeat re-enable race. Search of current/retained diagnostics PR lineage found no existing authoritative-key/representation-class projection finding, so this does not duplicate that repair or PR #349 exact-Instance ownership work.",
+    "Static source/lineage audit only. This mining worker did not run Luau/CI/Studio and does not claim viewport or engine evidence."
+  ],
+  "recommendedAction": "Do not widen the in-flight generation-8 final-state repair. After it reaches review, open one narrow diagnostics evidence-integrity successor/test-adversary that mutates the exact owned representation's Name and representation-class attribute without swapping the Instance, then requires standalone preflight/enable/capture to fail closed or to project only project-owned authoritative metadata. Prefer a project-owned authoritative metadata accessor/validation seam over trusting diagnostic attributes; keep the public Snapshot plain and do not weaken PR #349 exact-Instance ownership."
+}
