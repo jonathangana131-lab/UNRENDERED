@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-z7p4n6x2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "WORKING",
   "startedAt": "2026-08-11T21:00:00+00:00",
-  "lastSeenAt": "2026-08-11T21:12:00+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-z7p4n6x2",
-  "notes": "Fresh independent exact-head audit of generation-5 Physics Lab geometry/scale PR #389."
+  "lastSeenAt": "2026-08-11T21:17:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "branch": "agent/capacity/HG-CAPACITY-MINING-diagnostics-z7p4n6x2",
+  "notes": "Mining diagnostics source/tests for a concrete non-duplicate source-only depth gap; excluding the active duplicate-root regression already owned by the diagnostics audit."
 }
