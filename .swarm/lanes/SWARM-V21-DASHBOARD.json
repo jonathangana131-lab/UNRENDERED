@@ -8,11 +8,11 @@
   "state": "READY",
   "mode": "exclusive",
   "dependencies": [],
-  "writeScopes": ["tools/swarm/swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening.py"],
+  "writeScopes": ["tools/swarm/swarmctl_hardening.py", "tools/swarm/swarmctl_hardening_base.py", "tools/swarm/test_swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening_base.py"],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
-    {"slotId":"primary","role":"Zero-slot dashboard repair implementer","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":500,"writeScopes":["tools/swarm/swarmctl_hardening.py","tools/swarm/test_swarmctl_hardening.py"]}
+    {"slotId":"primary","role":"Zero-slot dashboard repair implementer","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":500,"writeScopes":["tools/swarm/swarmctl_hardening.py","tools/swarm/swarmctl_hardening_base.py","tools/swarm/test_swarmctl_hardening.py","tools/swarm/test_swarmctl_hardening_base.py"]}
   ],
-  "acceptance": ["zero-ready-slot dashboard never recommends idle as the first action", "message directs workers through review/recovery/backfill/mining fallback", "regression test covers the zero-slot wording", "trusted ownership/resource/digest gate passes", "canonical CI passes"],
+  "acceptance": ["zero-ready-slot dashboard never recommends idle as the first action", "message directs workers through review/recovery/backfill/mining fallback", "regression test covers the zero-slot wording", "proven V2 hardening engine and tests are preserved byte-for-byte as base modules", "trusted ownership/resource/digest gate passes", "canonical CI passes"],
   "tags": ["control-repair", "capacity", "hero-gate"]
 }
