@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-CONTENT",
+  "epicId": "HERO-GATE",
+  "title": "Content-foundation completion queue",
+  "objective": "Drain ObjectGenome, MaterialDNA, FidelityManager, and related foundation PR backlog into retained main changes before spawning additional content-foundation primaries.",
+  "priority": 10000,
+  "state": "REVIEW",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["Docs/**"],
+  "resources": [],
+  "slots": [
+    {"slotId":"review-1","role":"Content-foundation exact-head reviewer","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":1000,"writeScopes":["Docs/**"]},
+    {"slotId":"review-2","role":"Content-foundation adversarial reviewer","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":950,"writeScopes":["Docs/**"]},
+    {"slotId":"integration","role":"Content-foundation merge-train integrator","exclusive":true,"availableWhen":["REVIEW","INTEGRATION_READY"],"priorityBoost":900,"writeScopes":["Docs/**"]},
+    {"slotId":"reconcile","role":"Content-foundation PR lineage reconciler","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":850,"writeScopes":["Docs/**"]}
+  ],
+  "acceptance": ["self-review by implementer is expected before handoff", "bounded tests/docs/local validation work can integrate after self-review plus exact-head CI/ownership", "schema/identity/ownership behavior requires independent review", "merge the strongest non-overlapping result and close superseded variants", "do not optimize for PR count or gross lines"],
+  "tags": ["completion", "review", "integration", "content", "hero-gate"]
+}
