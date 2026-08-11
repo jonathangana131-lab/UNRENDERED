@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-5s6d9q2k",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T21:32:36+00:00",
-  "lastSeenAt": "2026-08-11T21:32:36+00:00",
+  "lastSeenAt": "2026-08-11T21:42:50+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "test-adversary",
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-tests-5s6d9q2k",
-  "notes": "Adversarial source-only diagnostics test pass against generation-6 PR #401. No Studio/viewport evidence claim."
+  "notes": "PR #405 exact head 8e5a5b89fac1db772a2befa395ce27a2d01deeab is ready for independent review after canonical CI 31538854930 passed. Handoff published; no Studio/viewport evidence claim."
 }
