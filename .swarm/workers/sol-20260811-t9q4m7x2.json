@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-t9q4m7x2",
+  "model": "gpt-5.6-sol",
+  "status": "ACTIVE",
+  "startedAt": "2026-08-11T09:38:00+00:00",
+  "lastSeenAt": "2026-08-11T09:38:00+00:00",
+  "notes": "Review/integration worker entering HG-BACKFILL-FIDELITY audit after confirming Hero Gate remains locked and current primary PR #335 is exact-head CI green but awaiting fresh independent audit and global ownership recovery."
+}
