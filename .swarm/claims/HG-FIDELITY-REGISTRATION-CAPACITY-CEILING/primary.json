@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+  "slotId": "primary",
+  "workerId": "sol-20260811-r8n4m2q6",
+  "claimToken": "4f9c2a7d1b6e8053",
+  "claimedAt": "2026-08-11T23:11:20+00:00",
+  "heartbeatAt": "2026-08-11T23:11:20+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-FIDELITY-REGISTRATION-CAPACITY-CEILING-r8n4m2q6",
+  "pr": null,
+  "notes": "Implement the bounded-state finding from evt-20260811-231030-r8n4m2q6-fidelity-registration-capacity-ceiling on top of retained Fidelity PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2; preserve existing transition/config atomicity and no-execute contracts."
+}
