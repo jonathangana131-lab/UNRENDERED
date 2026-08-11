@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084900-v6m4q9t2-diagnostics-set-integrity",
+  "timestamp": "2026-08-11T08:49:00+00:00",
+  "fromWorker": "sol-20260811-v6m4q9t2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "summary": "Exact-head source audit of PR #327 found that represented-count equality alone does not prove Workspace representation-set integrity. A missing direct child can be replaced one-for-one by a stale/duplicate entity child while preserving UNRENDERED_RepresentedCount. The shared diagnostics enumeration should additionally require unique WorldEntityIds and lab.isRepresented(id) for every enumerated child before capture/readout publication.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "PhysicsLabRealizer.isRepresented(id) checks the runtime-owned representation map and authoritative F0/F2 fidelity boundary rather than scanning Workspace children.",
+    "Current PR #327 directRepresentations() compares only #representations to UNRENDERED_RepresentedCount; capture/preflight later call getRecord(id), which can resolve an F0 entity or a duplicated represented id without proving the enumerated physical child belongs to the authoritative representation set.",
+    "Count equality plus unique enumerated ids plus isRepresented(id) membership forms a bounded set-integrity fence without exposing the private representation map or making Workspace canonical."
+  ],
+  "metadata": {
+    "pr": 327,
+    "oldHeadSha": "779e86064ca91ddfca0c46820adeca1042ff1290",
+    "claimToken": "4d9a2c7e1b6f8053",
+    "action": "primary will patch shared enumeration and rerun exact-head CI; prior review request is superseded by the new head"
+  }
+}
