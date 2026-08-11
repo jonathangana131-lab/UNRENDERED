@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "REVIEWING",
   "startedAt": "2026-08-11T11:52:00+00:00",
-  "lastSeenAt": "2026-08-11T11:52:00+00:00",
+  "lastSeenAt": "2026-08-11T12:07:04+00:00",
   "laneId": "HG-COMPLETION-REALITY",
   "slotId": "review-1",
   "branch": "agent/review/HG-COMPLETION-REALITY-5a7d2c9e",
-  "notes": "Intended Reality completion exact-head review; drain current schema/replay/WorldEntity backlog without changing accepted historical truth."
+  "notes": "Reviewing exact-head Reality backlog. #359 already independently approved; #293 exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e has fail-closed malformed-ID blocker documented."
 }
