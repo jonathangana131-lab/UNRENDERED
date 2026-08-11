@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071100-z4q8n1-objectgenome-audit",
+  "timestamp": "2026-08-11T07:11:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "medium",
+  "summary": "Independent audit passes ObjectGenome test-adversary PR #277 exact head c887c34df03158f7fa9385ff16afe7d5734f2572 patch-locally. The branch preserves #286 StableId semantic-bound regressions and correctly covers single-axis mechanism, nested plain-table, mutable ObjectState-map, and hostile-key fail-closed boundaries. Canonical CI is green and the PR is currently mergeable. Integration remains externally blocked because live Swarm ownership validation correctly fails closed on legacy immutable event-schema compatibility during the active SWARM-RECOVERY-PR-OWNERSHIP-IMPORT incident; no ObjectGenome ownership/claim defect was observed.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME", "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT"],
+  "evidence": [
+    "PR #277 head c887c34df03158f7fa9385ff16afe7d5734f2572; canonical CI run 31466490087 is success.",
+    "Current source review confirms ObjectGenome.inspect rejects canonical metatables before semantic reads; inspectState rejects root/map metatables before traversal; unknown record/state keys use safe non-metamethod key labeling; dense arrays reject nonnumeric keys without formatting them.",
+    "PR #277 now contains an explicit seat-tilt single-axis metatable case, closing prior Codex discussion_r3755698355, and retains #286 overlong familyId/variantKey tests after sync.",
+    "Swarm Control Plane run 31466490081 repeatedly reaches engine-tests successfully but pr-ownership fails on unrelated live control-schema compatibility. Latest reviewed attempt fails on immutable event evt-20260811-064250-q9x4m2-authority-final-review-request.json because current validator rejects historical pr/headSha fields.",
+    "Recovery review on PR #291 documents that immutable historical events must not be rewritten and requires backward-compatible validator/schema handling plus a real post-recovery product ownership PASS."
+  ]
+}
