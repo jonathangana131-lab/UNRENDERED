@@ -89,6 +89,92 @@ local function run(): number
 	expectEqual("identical sequence hold blocks", metricsA.blockedByHold, metricsB.blockedByHold)
 	expectEqual("identical sequence registered count", metricsA.registered, metricsB.registered)
 
+	local nestedConfig = table.clone(FidelityManager.defaultConfig())
+	nestedConfig.promotionHoldSeconds = 0
+	nestedConfig.transitionCooldownSeconds = 0
+	local heroInputs = policyInputs({ distanceStuds = 10, directlyObserved = true })
+
+	local nestedManager = FidelityManager.new(nestedConfig)
+	nestedManager:register("entity:fidelity-nested-outer", "F0")
+	nestedManager:register("entity:fidelity-nested-inner", "F0")
+	local innerHookCalls = 0
+	local nestedOuterResult = nestedManager:step(
+		"entity:fidelity-nested-outer",
+		"F0",
+		heroInputs,
+		0,
+		function()
+			local nestedInnerResult = nestedManager:step(
+				"entity:fidelity-nested-inner",
+				"F0",
+				heroInputs,
+				0,
+				function()
+					innerHookCalls += 1
+				end
+			)
+			expectEqual("cross-entity nested transition commits inside hook", nestedInnerResult.transitioned, true)
+		end
+	)
+	expectEqual("outer transition commits after nested cross-entity step", nestedOuterResult.transitioned, true)
+	expectEqual("nested inner hook called once", innerHookCalls, 1)
+	expectEqual(
+		"nested outer observed fidelity committed",
+		nestedManager:getObservedLevel("entity:fidelity-nested-outer"),
+		"F4"
+	)
+	expectEqual(
+		"nested inner observed fidelity committed",
+		nestedManager:getObservedLevel("entity:fidelity-nested-inner"),
+		"F4"
+	)
+	local nestedMetrics = nestedManager:getMetrics()
+	expectEqual("nested transitions preserve registration count", nestedMetrics.registered, 2)
+	expectEqual("nested transitions drain F0 count", nestedMetrics.counts.F0, 0)
+	expectEqual("nested transitions commit both F4 counts", nestedMetrics.counts.F4, 2)
+	expectEqual("nested transitions count both transitions", nestedMetrics.transitions, 2)
+	expectEqual("nested transitions count both hook calls", nestedMetrics.transitionHookCalls, 2)
+
+	local rollbackManager = FidelityManager.new(nestedConfig)
+	rollbackManager:register("entity:fidelity-rollback-outer", "F0")
+	rollbackManager:register("entity:fidelity-rollback-inner", "F0")
+	local rollbackOuterAccepted = pcall(function()
+		rollbackManager:step(
+			"entity:fidelity-rollback-outer",
+			"F0",
+			heroInputs,
+			0,
+			function()
+				local innerResult = rollbackManager:step(
+					"entity:fidelity-rollback-inner",
+					"F0",
+					heroInputs,
+					0,
+					function() end
+				)
+				expectEqual("independent inner transition commits before outer failure", innerResult.transitioned, true)
+				error("intentional outer transition failure after inner commit")
+			end
+		)
+	end)
+	expectEqual("outer hook failure propagates after inner commit", rollbackOuterAccepted, false)
+	expectEqual(
+		"outer rollback preserves its prior observed fidelity",
+		rollbackManager:getObservedLevel("entity:fidelity-rollback-outer"),
+		"F0"
+	)
+	expectEqual(
+		"inner transition remains independently committed",
+		rollbackManager:getObservedLevel("entity:fidelity-rollback-inner"),
+		"F4"
+	)
+	local rollbackMetrics = rollbackManager:getMetrics()
+	expectEqual("nested rollback preserves registration count", rollbackMetrics.registered, 2)
+	expectEqual("nested rollback preserves one F0", rollbackMetrics.counts.F0, 1)
+	expectEqual("nested rollback preserves one F4", rollbackMetrics.counts.F4, 1)
+	expectEqual("nested rollback counts only inner transition", rollbackMetrics.transitions, 1)
+	expectEqual("nested rollback counts only successful inner hook", rollbackMetrics.transitionHookCalls, 1)
+
 	local _, reason = FidelityManager.evaluatePolicy(policyInputs({ visible = true }), nil, "F0")
 	expectEqual("pure policy exposes visibility reason", reason, "visibility")
 
