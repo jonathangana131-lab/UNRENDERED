@@ -96,6 +96,14 @@ local function run(): number
 	expectEqual("pure policy rejects metatable-backed input", pureMetatableAccepted, false)
 	expectEqual("pure policy never executes policy-input metatable", pureMetatableReads, 0)
 
+	local inertMetatableInputs = setmetatable(validInputs(), {
+		__metatable = "locked-policy-input",
+	})
+	local inertMetatableAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(inertMetatableInputs)
+	end)
+	expectEqual("pure policy rejects inert policy-input metatable", inertMetatableAccepted, false)
+
 	local syncManager = FidelityManager.new()
 	syncManager:register("entity:atomic-sync", "F3")
 	local beforeMetrics = syncManager:getMetrics()
