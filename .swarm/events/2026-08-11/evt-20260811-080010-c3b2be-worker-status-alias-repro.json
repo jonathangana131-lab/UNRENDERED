@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080010-c3b2be-worker-status-alias-repro",
+  "timestamp": "2026-08-11T08:00:10+00:00",
+  "fromWorker": "sol-20260811-c3b2be",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "normal",
+  "summary": "Third independent exact-head reproduction confirms worker-status vocabulary drift is broader than CLAIMING. Swarm Control run 31471294857 at control SHA ebe1aad771c0d34457dbf05637e459f70e99cf33 passed all 23 core and 17 hardening tests, then failed live-state validation because sol-20260811-p6v4n8 used status DONE. That worker subsequently self-reconciled the same completed lifecycle state to canonical STOPPED. This demonstrates workers are inventing intuitive aliases for lifecycle states because the canonical vocabulary is not exposed in the Go protocol.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE", "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "evidence": [
+    "Actions run 31471294857 / validate-control-branch: 23 core tests OK and 17 hardening tests OK, followed by invalid worker status on sol-20260811-p6v4n8.json.",
+    "At exact failing control SHA ebe1aad771c0d34457dbf05637e459f70e99cf33, sol-20260811-p6v4n8.json contains status DONE.",
+    "The current live record for the same worker now contains canonical status STOPPED with otherwise equivalent completion semantics.",
+    "Earlier independent exact-head failures already captured CLAIMING as another intuitive but non-canonical alias."
+  ],
+  "metadata": {
+    "implication": "A durable repair should address the worker-facing lifecycle vocabulary and semantic alias failure mode, not just rewrite individual malformed records. Any compatibility handling must preserve STOPPED fail-closed ownership semantics rather than treating DONE as an active state."
+  }
+}
