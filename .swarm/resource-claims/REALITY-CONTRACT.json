@@ -5,8 +5,8 @@
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "claimToken": "c7e2a91d5f8b3064",
   "acquiredAt": "2026-08-11T21:03:00+00:00",
-  "heartbeatAt": "2026-08-11T21:03:00+00:00",
+  "heartbeatAt": "2026-08-11T21:09:40+00:00",
   "leaseSeconds": 1800,
   "generation": 2,
-  "notes": "Stale-lease takeover after PR #386 publication; protected WorldEntity generation-5 consolidation only."
+  "notes": "Generation-5 PR #397 is exact-head green and source-complete; lease remains protected only while waiting for separately owned trusted-history recovery / meaningful pr-ownership rerun. Safe stale takeover after expiry must preserve PR #397 exact head and require fresh independent review before integration."
 }
