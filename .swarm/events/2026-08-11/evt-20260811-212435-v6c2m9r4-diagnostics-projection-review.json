@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-212435-v6c2m9r4-diagnostics-projection-review",
+  "timestamp": "2026-08-11T21:24:35+00:00",
+  "fromWorker": "sol-20260811-v6c2m9r4",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "info",
+  "summary": "PASS expected-red adversarial evidence on PR #400 exact head d2822eb0a580efeb28d55147b17272a4f84b107b. The audit isolates two current diagnostics projection-integrity gaps: capture does not revalidate BillboardGui.Adornee exact identity or displayed Readout.Text semantics. Do not merge #400 independently; absorb equivalent coverage into the next production diagnostics successor and enforce semantic equality, not incidental source reads.",
+  "affects": ["HG-COMPLETION-PHYSICS", "HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "PR #400 changes only tests/physics_lab_diagnostics_readout_contract.luau on the generation-4 diagnostics lineage and adds two focused source-contract assertions for capture-time Adornee and label.Text revalidation",
+    "Canonical CI run 31536644667 passes format, lint, Luau analysis, canonical randomness, shared-domain, plain-value, and deterministic Swarm gates; Pure Luau fails exactly the two new diagnostics projection assertions while neighboring diagnostics-readout assertions and the remainder of the shown suite pass",
+    "Swarm Control Plane run 31536644790 engine-tests PASS; pr-ownership remains separately fail-closed on global trusted-control recovery",
+    "Direct inspection of generation-5 successor #401 exact head 2f5603210a3d3d6af7db94b43fdfd6707b1f9b4a confirms validateReadoutCompleteness still does not read or compare BillboardGui.Adornee or label.Text",
+    "Production successor must compare exact Adornee identity to the authoritative representation target and exact/canonical displayed key-id-fidelity-fingerprint-repro semantics; superficial source-shape satisfaction is insufficient",
+    "GitHub review 4910884778 records the exact-head PASS-for-expected-red verdict; no Roblox Studio or viewport PASS/FAIL is claimed"
+  ]
+}
