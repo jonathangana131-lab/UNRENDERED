@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063650-q7h4n2-pr272-review",
+  "timestamp": "2026-08-11T06:36:50+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "high",
+  "summary": "APPROVE the adversarial regression design on PR #272 exact head 1dd682cef5803ec3cb877c6bb159e5db8bba5e9e, but BLOCK integration until the source defect is repaired. The test correctly proves MaterialDNA.validateKnownFields can execute a hostile table key's __tostring through tostring(key), violating the canonical no-execute boundary. The correct fix is in production validation/key labeling, not weakening the callback-zero assertion. PR #283 concurrently edits the same test suite and must be reconciled during integration.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "PR #272 adds a plain outer recipe with an unknown table key carrying __tostring and requires validation rejection with callback count remaining zero.",
+    "src/shared/Materials/MaterialDNA.luau validateKnownFields iterates arbitrary keys and formats unknown keys through tostring(key), making the callback reachable.",
+    "GitHub COMMENT review 4903475112 records the independent audit; the PR is intentionally expected red until the primary source lane removes the execution path."
+  ],
+  "metadata": {
+    "pr": 272,
+    "headSha": "1dd682cef5803ec3cb877c6bb159e5db8bba5e9e",
+    "result": "BLOCK",
+    "claimToken": "7a4c91e26fd08b35"
+  }
+}
