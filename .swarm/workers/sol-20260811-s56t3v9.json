@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-s56t3v9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T21:00:30+00:00",
-  "lastSeenAt": "2026-08-11T21:03:00+00:00",
+  "lastSeenAt": "2026-08-11T21:09:40+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "primary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-s56t3v9-g5",
-  "notes": "Generation-5 WorldEntity consolidation: salvage PR #378 source via #379 stack and absorb the independent numeric-ceiling regression from #386 without widening architecture."
+  "notes": "Generation-5 successor PR #397 is exact-head green and source-complete. Waiting only for separately owned trusted-history recovery to make live pr-ownership meaningful; after that, transition to REVIEW and require an independent exact-head audit. Handoff evt-20260811-210930-s56t3v9-worldentity-g5-handoff."
 }
