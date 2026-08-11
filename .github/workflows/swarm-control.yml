@@ -28,6 +28,7 @@ jobs:
           python3 tools/swarm/test_swarmctl.py
           python3 tools/swarm/test_swarmctl_hardening.py
           python3 tools/swarm/test_audit_history_recovery.py
+          python3 tools/swarm/test_trusted_history_chain.py
           python3 tools/swarm/swarmctl.py simulate --workers 30
           python3 tools/swarm/swarmctl_hardening.py simulate --workers 30
       - name: Read-only exact trust-bootstrap candidate
@@ -57,25 +58,26 @@ jobs:
           done < "$TRANSITIONS_FILE"
 
           # Every malformed immutable event is an exact quarantine-only artifact.
-          # Prove the manifest's first-add commit and blob directly from Git history;
-          # never infer a compatibility exception from the live validation failure.
+          # Preserve the original reviewed manifest as a stable audit subset while
+          # normalized rows also carry exact filenames for path-divergent legacy HANDOFFs.
           MALFORMED_FILE="$RUNNER_TEMP/malformed-event-quarantine.txt"
           python3 - "$MALFORMED_FILE" <<'PY'
           import sys
           from pathlib import Path
           sys.path.insert(0, "tools/swarm")
           import swarm_history_recovery_manifest as recovery
+          assert recovery.MALFORMED_EVENT_QUARANTINE
           Path(sys.argv[1]).write_text(
               "".join(
-                  f"{event_id} {first_write} {blob_sha}\n"
-                  for event_id, first_write, blob_sha in recovery.MALFORMED_EVENT_QUARANTINE
+                  f"{event_id} {filename} {first_write} {blob_sha}\n"
+                  for event_id, filename, first_write, blob_sha in recovery.malformed_event_quarantine_rows()
               ),
               encoding="utf-8",
           )
           PY
           [[ -s "$MALFORMED_FILE" ]] || { echo 'Malformed event quarantine manifest is empty.'; exit 1; }
-          while read -r EVENT_ID FIRST_WRITE_SHA FIRST_WRITE_BLOB; do
-            EVENT_PATH=".swarm/events/2026-08-11/${EVENT_ID}.json"
+          while read -r EVENT_ID FIRST_WRITE_FILENAME FIRST_WRITE_SHA FIRST_WRITE_BLOB; do
+            EVENT_PATH=".swarm/events/2026-08-11/${FIRST_WRITE_FILENAME}"
             mapfile -t ADD_COMMITS < <(git log --format=%H --reverse --diff-filter=A "$CONTROL_SHA" -- "$EVENT_PATH")
             [[ "${#ADD_COMMITS[@]}" -eq 1 ]] || { echo "$EVENT_ID: expected exactly one first-add commit"; exit 1; }
             [[ "${ADD_COMMITS[0]}" == "$FIRST_WRITE_SHA" ]] || { echo "$EVENT_ID: first-write commit mismatch"; exit 1; }
@@ -134,11 +136,55 @@ jobs:
       - name: Require live state to equal separately trusted state
         if: steps.trusted-validator.outputs.engine == 'hardening'
         run: |
+          # The trusted/base validator can predate verify_trusted_state; bind the
+          # separate record with standard-library shape checks plus its existing
+          # trusted state_digest primitive rather than invoking a PR-new API.
           PYTHONPATH="$RUNNER_TEMP/trusted-swarm" python3 - "$RUNNER_TEMP/swarm-state/.swarm" "$RUNNER_TEMP/swarm-trust.json" <<'PY'
+          import json
+          import re
           import sys
           from pathlib import Path
           import swarmctl_hardening as hard
-          trust = hard.verify_trusted_state(Path(sys.argv[1]), Path(sys.argv[2]))
+
+          root = Path(sys.argv[1])
+          trust_path = Path(sys.argv[2])
+          try:
+              trust = json.loads(trust_path.read_text(encoding="utf-8"))
+          except (OSError, json.JSONDecodeError) as exc:
+              raise SystemExit(f"invalid swarm trust record: {exc}")
+          if not isinstance(trust, dict):
+              raise SystemExit("swarm trust record must be an object")
+          required = {
+              "schemaVersion", "controlBranch", "trustedControlSha", "trustedStateDigest",
+              "validatedAt", "validatorMainSha", "resetId", "resetReason",
+          }
+          allowed = required | {"bootstrap"}
+          if not required.issubset(trust) or not set(trust).issubset(allowed):
+              raise SystemExit("swarm trust record has invalid keys")
+          if trust["schemaVersion"] != 1 or trust["controlBranch"] != "swarm-control":
+              raise SystemExit("swarm trust record has invalid schema or branch")
+          for key in ("trustedControlSha", "validatorMainSha"):
+              if not isinstance(trust[key], str) or re.fullmatch(r"[a-f0-9]{40}", trust[key]) is None:
+                  raise SystemExit(f"swarm trust record has invalid {key}")
+          if not isinstance(trust["trustedStateDigest"], str) or re.fullmatch(r"[a-f0-9]{64}", trust["trustedStateDigest"]) is None:
+              raise SystemExit("swarm trust record has invalid trustedStateDigest")
+          if not isinstance(trust["validatedAt"], str) or not trust["validatedAt"]:
+              raise SystemExit("swarm trust record has invalid validatedAt")
+          if not isinstance(trust["resetId"], str) or not trust["resetId"].startswith("reset-"):
+              raise SystemExit("swarm trust record has invalid resetId")
+          if not isinstance(trust["resetReason"], str) or not trust["resetReason"]:
+              raise SystemExit("swarm trust record has invalid resetReason")
+          bootstrap = trust.get("bootstrap", False)
+          if not isinstance(bootstrap, bool):
+              raise SystemExit("swarm trust record bootstrap must be bool")
+          if bootstrap:
+              raise SystemExit("swarm trust branch is still in bootstrap/reset mode")
+          actual_digest = hard.state_digest(root)
+          if actual_digest != trust["trustedStateDigest"]:
+              raise SystemExit(
+                  "live control state does not match separately trusted digest: "
+                  f"{actual_digest} != {trust['trustedStateDigest']}"
+              )
           print(f"trusted control sha={trust['trustedControlSha']} digest={trust['trustedStateDigest']}")
           PY
       - name: Enforce live ownership with trusted code
@@ -196,13 +242,17 @@ jobs:
           python3 tools/swarm/test_swarmctl.py
           python3 tools/swarm/test_swarmctl_hardening.py
           python3 tools/swarm/test_audit_history_recovery.py
+          python3 tools/swarm/test_trusted_history_chain.py
           python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/control-after/.swarm"
           python3 tools/swarm/swarmctl_hardening.py simulate --workers 30
-      - name: Validate from last trusted history snapshot
+      - name: Validate every transition from last trusted history snapshot
         run: |
-          python3 tools/swarm/swarmctl_hardening.py transition-check \
-            --before-root "$RUNNER_TEMP/control-before/.swarm" \
-            --after-root "$RUNNER_TEMP/control-after/.swarm"
+          # trusted_history_chain.py runs strict transition-check on every consecutive
+          # first-parent snapshot, so an invalid middle commit cannot be laundered by a restored descendant.
+          python3 tools/swarm/trusted_history_chain.py \
+            --git-root . \
+            --trusted-sha "$TRUSTED_CONTROL_SHA" \
+            --control-sha "$CONTROL_SHA"
       - name: Rebuild board, metrics, and validation fence
         run: python3 tools/swarm/swarmctl_hardening.py render --root "$RUNNER_TEMP/control-after/.swarm"
       - name: Advance separate trust ledger only for this exact validated control tip
