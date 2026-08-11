@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-q6m9c4v2",
+  "claimToken": "a3f7c9d2e5b18460",
+  "claimedAt": "2026-08-11T20:59:45+00:00",
+  "heartbeatAt": "2026-08-11T20:59:45+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-tests-q6m9c4v2",
+  "pr": 395,
+  "notes": "Independent adversarial test pass targeting PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; source changes only if a concrete test-proven gap is found within lane scope."
+}
