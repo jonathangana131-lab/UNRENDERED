@@ -102,8 +102,14 @@ local function run(): number
 	local malformedMetrics = malformedRuntime:snapshot().fidelity
 	expect("runtime rejects non-finite captured persistent state", not malformedCaptureAccepted)
 	expect("runtime invokes rejected capture exactly once", malformedCaptureCalls == 1)
-	expect("runtime rejects malformed captured state before representation observer", malformedObserverCalls == 0)
-	expect("malformed capture preserves WorldEntity fidelity", malformedAfter.fidelity == malformedBefore.fidelity)
+	expect(
+		"runtime rejects malformed captured state before representation observer",
+		malformedObserverCalls == 0
+	)
+	expect(
+		"malformed capture preserves WorldEntity fidelity",
+		malformedAfter.fidelity == malformedBefore.fidelity
+	)
 	expect(
 		"malformed capture preserves WorldEntity state revision",
 		malformedAfter.stateRevision == malformedBefore.stateRevision
@@ -134,7 +140,10 @@ local function run(): number
 		"recovery advances state revision exactly once",
 		recoveredRecord.stateRevision == malformedBefore.stateRevision + 1
 	)
-	expect("recovery keeps both fidelity authorities synchronized", malformedRuntime:getFidelity(malformedId) == "F0")
+	expect(
+		"recovery keeps both fidelity authorities synchronized",
+		malformedRuntime:getFidelity(malformedId) == "F0"
+	)
 	malformedRuntime:dispose()
 
 	local longCycleRuntime = PhysicsLabRuntime.new(recipe)
@@ -210,7 +219,10 @@ local function run(): number
 	local longCycleAfter = longCycleRuntime:getRecord(longCycleId)
 	local longCycleAfterSnapshot = longCycleRuntime:snapshot()
 	expect("long-cycle demotions capture exactly once per cycle", longCycleCaptures == cycleCount)
-	expect("long-cycle observers run exactly once per committed transition", longCycleObservers == cycleCount * 2)
+	expect(
+		"long-cycle observers run exactly once per committed transition",
+		longCycleObservers == cycleCount * 2
+	)
 	expect("long-cycle final fidelity is F4", longCycleAfter.fidelity == "F4")
 	expect(
 		"long-cycle state revisions advance once per demotion",
@@ -220,14 +232,26 @@ local function run(): number
 		"long-cycle representation revisions advance twice per cycle",
 		longCycleAfter.representationRevision == longCycleBefore.representationRevision + cycleCount * 2
 	)
-	expect("long-cycle transition metric matches committed transitions", longCycleAfterSnapshot.fidelity.transitions == cycleCount * 2)
-	expect("long-cycle demotion metric matches cycles", longCycleAfterSnapshot.fidelity.demotions == cycleCount)
-	expect("long-cycle promotion metric matches cycles", longCycleAfterSnapshot.fidelity.promotions == cycleCount)
+	expect(
+		"long-cycle transition metric matches committed transitions",
+		longCycleAfterSnapshot.fidelity.transitions == cycleCount * 2
+	)
+	expect(
+		"long-cycle demotion metric matches cycles",
+		longCycleAfterSnapshot.fidelity.demotions == cycleCount
+	)
+	expect(
+		"long-cycle promotion metric matches cycles",
+		longCycleAfterSnapshot.fidelity.promotions == cycleCount
+	)
 	expect(
 		"long-cycle transition-hook metric matches committed transitions",
 		longCycleAfterSnapshot.fidelity.transitionHookCalls == cycleCount * 2
 	)
-	expect("long-cycle registry population remains constant", longCycleAfterSnapshot.registered == longCycleBeforeSnapshot.registered)
+	expect(
+		"long-cycle registry population remains constant",
+		longCycleAfterSnapshot.registered == longCycleBeforeSnapshot.registered
+	)
 	expect(
 		"long-cycle FidelityManager population remains constant",
 		longCycleAfterSnapshot.fidelity.registered == longCycleBeforeSnapshot.fidelity.registered
