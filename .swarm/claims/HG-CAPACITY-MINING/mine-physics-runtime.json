@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "workerId": "sol-20260811-g5p2x8n4",
+  "claimToken": "9f3d1a7c5e2b8046",
+  "claimedAt": "2026-08-11T21:49:45+00:00",
+  "heartbeatAt": "2026-08-11T21:49:45+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-g5p2x8n4",
+  "pr": null,
+  "notes": "Mine current Physics runtime source/tests/active PR and event lineage for one concrete non-duplicate lifecycle, entity-ID, adapter, or boundedness gap. Exclude PhysicsLabScale/geometry finding already published by this worker; source-only, no Studio evidence."
+}
