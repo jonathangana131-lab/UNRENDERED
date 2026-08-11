@@ -8,7 +8,7 @@ This document defines the production protocol for submitting automated Roblox St
 - **Private Control Repository**: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE` (hosts the dedicated macOS self-hosted runner `UNRENDERED-STUDIO-MAC`).
 - **Runner Machine**: Dedicated Mac running Roblox Studio and pinned project tools.
 - **Security Boundary**: Requests are data only. `customScript`, arbitrary Luau, shell commands, executable payloads, and arbitrary source repositories are rejected.
-- **Source Boundary**: `sourceSha` must be the exact current commit resolved by the requested canonical `sourceRef`; stale or mismatched requests fail before Studio execution.
+- **Source Boundary**: `sourceSha` must be an exact 40-character commit reachable as an ancestor of the requested canonical `sourceRef`. A queued immutable request remains valid if the canonical ref advances after submission; unknown, unrelated, or diverged commits fail before Studio execution.
 - **Evidence Boundary**: A completion sentinel or screenshot is transport evidence, not semantic PASS evidence. Job-specific evaluators own PASS.
 
 ---
@@ -23,7 +23,7 @@ Commit one JSON request under `requests/` in `jonathangana131-lab/UNRENDERED-STU
 
 ### Request Schema
 
-Resolve the canonical `main` SHA immediately before creating the request; the value below is intentionally shown as a placeholder because a hard-coded example becomes stale as soon as `main` advances.
+Resolve and pin the canonical `main` commit intended for the evidence request immediately before creating it. The request keeps that exact immutable SHA even if `main` advances while the job is queued; execution later proves that the pinned commit is still reachable from the named canonical ref.
 
 ```json
 {
@@ -31,7 +31,7 @@ Resolve the canonical `main` SHA immediately before creating the request; the va
   "requestId": "20260810-001-lifecycle-example-a1",
   "sourceRepo": "jonathangana131-lab/UNRENDERED",
   "sourceRef": "main",
-  "sourceSha": "<exact-40-char-current-main-sha>",
+  "sourceSha": "<exact-40-char-pinned-canonical-sha>",
   "jobType": "physics-lab-lifecycle",
   "captureScreenshot": true,
   "requestedBy": "chatgpt-worker",
@@ -39,7 +39,7 @@ Resolve the canonical `main` SHA immediately before creating the request; the va
 }
 ```
 
-The production request validator also rejects duplicate result IDs, unsafe refs/strings, unsupported keys, unsupported job types, and a `sourceSha` that does not match the canonical remote ref.
+The production request validator also rejects duplicate result IDs, unsafe refs/strings, unsupported keys, unsupported job types, and a `sourceSha` that is not a commit reachable from the named canonical remote ref.
 
 ---
 
@@ -129,7 +129,7 @@ Durable results are published to `results/<requestId>/` in `UNRENDERED-STUDIO-BR
 
 When consuming a result for `Docs/PROJECT_STATE.md` or issue #151, verify all of the following rather than copying the top-level word `PASS` blindly:
 
-1. the result targets the intended exact canonical source SHA,
+1. the result targets the intended exact pinned source SHA and that commit is canonical under the named source ref,
 2. the job type proves the row being claimed,
 3. the evaluator contract was active for that bridge revision,
 4. raw/log provenance belongs to the same request,
