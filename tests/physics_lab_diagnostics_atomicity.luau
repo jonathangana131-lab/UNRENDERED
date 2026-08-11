@@ -19,6 +19,20 @@ local function run(): number
 		return string.find(source, needle, 1, true)
 	end
 
+	local directRepresentationsStart = position(
+		"local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model: Model): { Instance }"
+	)
+	local directRepresentationsEnd = position("\nlocal function adorneeFor(representation: Instance): BasePart")
+	local directRepresentationsSource = if directRepresentationsStart ~= nil and directRepresentationsEnd ~= nil
+		then string.sub(source, directRepresentationsStart, directRepresentationsEnd - 1)
+		else ""
+	local exactInstanceOwnership = directRepresentationsSource:find(
+		"lab.ownsRepresentation(entityId, child)",
+		1,
+		true
+	)
+	local booleanOnlyMembership = directRepresentationsSource:find("lab.isRepresented(entityId)", 1, true)
+
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
 	local rootName = position("folder.Name = DIAGNOSTICS_ROOT_NAME")
@@ -33,6 +47,10 @@ local function run(): number
 	local rollback = position("folder:Destroy()")
 	local propagate = position("error(result, 0)")
 
+	expect(
+		"direct representation enumeration binds each child to the exact runtime-owned Instance",
+		directRepresentationsStart ~= nil and exactInstanceOwnership ~= nil and booleanOnlyMembership == nil
+	)
 	expect(
 		"all readout dependencies are preflighted before the owned root is parented",
 		preflight ~= nil and parentMutation ~= nil and preflight < parentMutation
