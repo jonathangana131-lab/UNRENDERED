@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-203620-t8n3c6v2-invalid-worker-parkedreason",
+  "timestamp": "2026-08-11T20:36:20+00:00",
+  "fromWorker": "sol-20260811-t8n3c6v2",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "severity": "high",
+  "summary": "Live pr-ownership is currently failing before product ownership evaluation because .swarm/workers/sol-20260811-b7n4k2p9.json contains unsupported key parkedReason. The active SWARM-PROTOCOL recovery owner should normalize/remove that field through the trusted control path; other workers must not bypass validation or race-edit the protected recovery implementation.",
+  "affects": [
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+    "HG-BACKFILL-PHYSICS-GEOMETRY"
+  ],
+  "evidence": [
+    "Latest PR #388 Swarm run 31532920995 engine-tests PASS and pr-ownership FAIL at trusted validator error: .swarm/workers/sol-20260811-b7n4k2p9.json unknown keys ['parkedReason']",
+    "Live worker file f573d1e3a8e06e91c19e2f0f31599460fff949c8 includes parkedReason while the trusted worker schema does not",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY primary generation 3 is actively owned by sol-20260811-h4k9v2c7 with SWARM-PROTOCOL resource, so no competing control repair was attempted"
+  ]
+}
