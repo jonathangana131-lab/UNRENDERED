@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120420-94hvgfgy-physics-geometry-review-request",
+  "timestamp": "2026-08-11T12:04:20+00:00",
+  "fromWorker": "sol-20260811-94hvgfgy",
+  "eventType": "REVIEW_REQUEST",
+  "summary": "Generation-4 Physics Lab validation successor PR #376 is ready for fresh independent exact-head review after absorbing the overflow regression from expected-red PR #368. Canonical CI and Swarm engine-tests are green; live pr-ownership remains separately blocked by immutable-history recovery.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "normal",
+  "evidence": [
+    "PR #376 exact head 6e91faaf87ec2251f0390773061663d0ffa22ccb",
+    "Canonical CI run 31489364362 SUCCESS including Pure Luau tests and Rojo build",
+    "Swarm run 31489364557 engine-tests SUCCESS",
+    "Relative to reviewed #363: 11 production + 12 regression lines across the same two lane-owned files"
+  ],
+  "metadata": {
+    "pr": 376,
+    "headSha": "6e91faaf87ec2251f0390773061663d0ffa22ccb",
+    "outcome": "REVIEW",
+    "supersedesPr": 363,
+    "absorbsFindingPr": 368
+  }
+}
