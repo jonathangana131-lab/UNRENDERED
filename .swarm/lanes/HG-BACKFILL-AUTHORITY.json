@@ -5,7 +5,7 @@
   "title": "Server authority and two-client source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden canonical server/client identity agreement contracts, evaluator fixtures, teardown-safe result handoff, and offline multiplayer authority invariants while the real two-client Studio evidence path is blocked.",
   "priority": 4800,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/Bootstrap.server.luau", "src/client/Bootstrap.client.luau", "tests/hero_gate_contract_integration.luau", "tests/**authority*.luau", "tests/**multiplayer*.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"Two-client authority and trust-boundary auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/**authority*.luau","tests/**multiplayer*.luau","Docs/MULTIPLAYER_PERSISTENCE.md"]}
   ],
   "acceptance": ["do not claim two real clients from offline tests", "server remains canonical authority", "client observations are independently comparable", "teardown-safe evidence contracts fail closed", "publish findings relevant to HG151-TWOCLIENT"],
-  "notes": "Independent current-head audit of PR #316 at 983afcac3f78492b2f171afdbd888d8beee71a56 is SOURCE PASS but requires current-main synchronization before integration. Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is one commit ahead through trusted Swarm event-compatibility repair #329; compare is diverged with merge base dd8f1581115c15ce6497db827d17e98d879d0267 and behind_by=1. Replay/reconstruct the same bounded three-file patch on current main, rerun exact-head canonical CI and live fail-closed pr-ownership, then obtain fresh independent review. Durable verdict: evt-20260811-093000-r4k9m2-authority316-sync-required. No Studio/two-client evidence is claimed.",
+  "notes": "Generation-5 current-main reconstruction is PR #348 at exact head aa60103d489a055d86cf234dcc1338cf6168e4b3, based directly on main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 with ahead_by=3/behind_by=0 and exactly the intended three-file diff. Canonical CI run 31478299998 is fully green across format, lint, Luau analysis, audits, deterministic swarm tests, Pure Luau, Rojo build, and artifact upload. Live pr-ownership is fail-closed only on the separately owned global immutable-event history-continuity blocker for evt-20260811-073500-q9m4r2-authority-rereview-approve.json; SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY generation 1 owns that repair. Primary implementation is complete. A different independent reviewer must audit the new exact head after/alongside that global prerequisite; this worker's earlier PR #316 review was only the SYNC_REQUIRED trigger and cannot serve as approval. No Studio/two-client evidence is claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
