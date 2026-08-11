@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T09:01:03+00:00",
-  "lastSeenAt": "2026-08-11T09:16:30+00:00",
+  "lastSeenAt": "2026-08-11T09:24:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-q6m2v8k5",
-  "notes": "Completed independent Fidelity semantic audit; now mining WorldEntity for one concrete non-duplicate source-depth gap while shared control recovery is independently owned. No Studio evidence claimed."
+  "slotId": "mine-materialdna",
+  "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-q6m2v8k5",
+  "notes": "Completed Fidelity audit and WorldEntity capacity finding; now mining MaterialDNA for one concrete non-duplicate source-depth gap while shared history recovery is independently owned. No Studio evidence claimed."
 }
