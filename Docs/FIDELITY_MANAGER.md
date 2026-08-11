@@ -46,6 +46,8 @@ These rules keep aggregate fidelity accounting valid without copying the entire 
 
 The top-level input record must be metatable-free. Reject a non-nil metatable before the first field access so `__index` or other metamethods cannot synthesize policy values or execute code at this boundary.
 
+Scalar policy fields are runtime-validated by primitive type before equality, ordering, arithmetic, or finiteness checks. A malformed table/userdata value must fail without invoking its metamethods. The explicit `nowSeconds` input follows the same no-execute numeric boundary before monotonic-time arithmetic.
+
 All time is supplied explicitly by the caller. The policy contains no hidden clock and is deterministic for identical state/config/input/time sequences.
 
 `visible` and `directlyObserved` are strict booleans. Truthy non-boolean values such as `0` or `"false"` are malformed input and fail before policy state, mirrors, or metrics are mutated.
