@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-093145-a3c8cf14-pr310-source-pass",
+  "timestamp": "2026-08-11T09:31:45+00:00",
+  "fromWorker": "sol-20260811-a3c8cf14",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent HG-COMPLETION-PHYSICS/review-2 re-review gives SOURCE PASS to PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d. The prior metatable/no-execute, hostile schema-key stringify, and unbounded candidate-state scan blockers are resolved. Integration remains HOLD on the global immutable-event ownership/control recovery and on resynchronization if overlapping PR #334 lands first. No Studio evidence was run or claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE", "HG-COMPLETION-PHYSICS"],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "normal",
+  "evidence": [
+    "PhysicsLabRuntime now proves recipe/list/entity-recipe/record/origin wrappers are plain and metatable-free before executable dereferences/operators; entity keys are primitive strings before lookup/diagnostics.",
+    "Record/origin key schemas are preflighted as primitive strings against fixed allowed-key sets before WorldEntity authority, preventing hostile non-string key __tostring execution.",
+    "plainValuesEqual rejects metatable-backed candidate state before nested reads and stops candidate-key counting immediately once fixed canonical cardinality is exceeded.",
+    "PR CI run 31477554686 passes all canonical stages end-to-end. Swarm run 31477690399 engine-tests passes; pr-ownership fails only on audited immutable event evt-20260811-073500-q9m4r2-authority-rereview-approve.json bytes 8f332b... != trusted 2f0b02....",
+    "Validated PR merge ref bbe8f7a07f767936011965943bd1e88a10b939b5 composes exact head 647dca7a... with current main ae83c0ef.... PR #334 overlaps the same two files and the second merge must resynchronize and rerun exact-head validation."
+  ],
+  "metadata": {
+    "verdict": "SOURCE_PASS_HOLD",
+    "pr": 310,
+    "headSha": "647dca7a78159bb1bf6f61d6e3180ad082d08e2d",
+    "mergeRefSha": "bbe8f7a07f767936011965943bd1e88a10b939b5",
+    "reviewId": 4904781239,
+    "ciRun": 31477554686,
+    "controlRun": 31477690399
+  }
+}
