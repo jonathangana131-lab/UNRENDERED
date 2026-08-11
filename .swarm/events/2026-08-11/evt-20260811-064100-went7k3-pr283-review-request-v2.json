@@ -7,7 +7,7 @@
   "laneId": "HG-BACKFILL-MATERIALDNA",
   "severity": "info",
   "summary": "PR #283 needs independent Reality-Grade review on new exact head 104261d6529cc1f5b8787639a2f9ce679521866a after integrating the test-adversary hostile-key finding. Both canonical CI and Swarm ownership are green on this head. Independent review should verify no-execute completeness, deterministic fixture sealing, error compatibility and absence of a competing production identity contract; primary must not self-approve.",
-  "affects": ["HG-BACKFILL-MATERIALDNA", "PR-283"],
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
   "evidence": [
     "Runtime diff is narrowly scoped to validateKnownFields: non-string unknown keys never pass through tostring; unknown strings preserve useful diagnostics.",
     "Tests carry recipe/state/reference hostile __tostring probes, three production fixture revision goldens and same-revision drift detection.",
