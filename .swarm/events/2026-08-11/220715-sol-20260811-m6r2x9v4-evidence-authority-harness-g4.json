@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-m6r2x9v4-authority-harness-g4-evidence-220715",
+  "eventType": "EVIDENCE_RESULT",
+  "occurredAt": "2026-08-11T22:07:15+00:00",
+  "workerId": "sol-20260811-m6r2x9v4",
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "slotId": "primary",
+  "generation": 4,
+  "claimToken": "8a4d1f7c3e2b9065",
+  "target": {
+    "kind": "pull_request",
+    "value": "412@807fb042b2fe96db32bda7a5c3346788e828a758"
+  },
+  "severity": "info",
+  "summary": "Generation-4 authority harness successor is source/CI ready for fresh independent review. The cross-generation deferred currentReconcile mutation is removed, the source-contract regression is present, canonical CI passes, and Swarm deterministic engine-tests pass. The separately owned trusted pr-ownership gate remains fail-closed and is not waived.",
+  "evidence": [
+    "PR #412 exact head 807fb042b2fe96db32bda7a5c3346788e828a758 removes currentReconcile mutation from invalidateExternalLifecycle()'s deferred callback; reconcileCurrent() and controlled destroy retain identity-fenced token retirement.",
+    "tests/hero_gate_authority_teardown.luau now slices invalidateExternalLifecycle() and requires deferred teardown while asserting no `currentReconcile = nil` appears inside that stale callback scope.",
+    "Canonical CI run 31540950626 completed SUCCESS on exact head 807fb042b2fe96db32bda7a5c3346788e828a758 after restoring connector-dropped Unix EOF newlines.",
+    "Swarm Control Plane run 31540950617 job 93942956193 `engine-tests` completed SUCCESS on the same exact head.",
+    "Swarm Control Plane job 93942956243 `pr-ownership` remains FAILURE with trusted validator exit code 2; this is the separate global ownership/trusted-history gate and is not bypassed by this lane.",
+    "No local Lune/Luau checkout run, Roblox Studio, two-client, viewport, physical-contact, or runtime scheduler evidence was run or claimed in this session."
+  ],
+  "recommendedAction": "Move the lane to REVIEW on PR #412 exact head 807fb042b2fe96db32bda7a5c3346788e828a758, release the primary/SERVER-AUTHORITY leases, and require a worker independent from this generation-4 implementer to audit the generation-fence fix before integration. Keep merge fail-closed until the separately owned pr-ownership/trusted-history recovery passes."
+}
