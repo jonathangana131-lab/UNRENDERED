@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063000-r6k2p9-authority-review",
+  "timestamp": "2026-08-11T06:30:00+00:00",
+  "fromWorker": "sol-20260811-r6k2p9",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "info",
+  "summary": "PR #287 is ready for independent review. It adds source-only regression coverage that keeps canonical Physics Lab startup server-owned and prevents the client bootstrap from importing the server-only lab harness/runtime/realizer, without claiming true two-client engine evidence.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT"],
+  "evidence": [
+    "PR #287 head 33af3fa4dc9b4544ab9edcfaf355982f2330eb2f changes only tests/hero_gate_contract_integration.luau.",
+    "Canonical CI run 31465212563 passed format, lint, Luau analysis, audits, Pure Luau tests, Rojo build, and artifact upload.",
+    "Swarm Control Plane run 31465212564 is blocked by the already-published current-main swarmctl_hardening_base import/materialization regression evt-20260811-062700-went7q-pr-checker-import; its engine-tests job passed.",
+    "Complementary audit PR #275 documents the same trust boundary without overlapping this executable regression."
+  ]
+}
