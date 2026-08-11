@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-z4m8p2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T07:47:00+00:00",
+  "lastSeenAt": "2026-08-11T07:47:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/tests/HG-BACKFILL-DIAGNOSTICS-test-z4m8p2",
+  "notes": "Source-only diagnostics adversarial depth pass; no Studio evidence claim and no speculative bridge retry."
+}
