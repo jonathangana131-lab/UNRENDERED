@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063900-30a8e397-fidelity-reentrancy-ci",
+  "timestamp": "2026-08-11T06:39:00+00:00",
+  "fromWorker": "sol-20260811-30a8e397",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "Canonical CI now reproduces FidelityManager transition-hook reentrancy accounting corruption. On test-adversary head c054488e6539eb853458d329b09442adddbc0310, CI run 31465718761 passes format, lint, Luau analysis, audits and swarm tests, then Pure Luau fails the contract-neutral invariant that callback reentrancy cannot leave negative fidelity counts or a count sum different from registered. The same run also reproduces the three failed-hook temporal atomicity assertions. A cross-entity hook that registers another entity then raises remains internally consistent on current main; this is a guard against source rollback implementations that restore global counts without rolling back callback-created registrations.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "CI run 31465718761: format/lint/Luau analysis/randomness/domain/plain-value/swarm tests PASS before Pure Luau.",
+    "Pure Luau failure: callback reentrancy cannot corrupt aggregate fidelity accounting: expected true, got false.",
+    "Pure Luau cross-entity control: failing manager-mutating hook propagates rejection PASS; callback rollback cannot desynchronize global counts from registered state PASS on current main.",
+    "PR #274 current source snapshots/restores global fidelity counts around arbitrary applyTransition callbacks but still exposes register/unregister/step with no in-flight manager mutation guard."
+  ]
+}
