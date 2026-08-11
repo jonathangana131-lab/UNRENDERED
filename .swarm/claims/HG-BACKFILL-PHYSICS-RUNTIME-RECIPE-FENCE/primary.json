@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "slotId": "primary",
+  "workerId": "sol-20260811-z4m8p2",
+  "claimToken": "7a2d9c4e6b1f8053",
+  "claimedAt": "2026-08-11T07:53:00+00:00",
+  "heartbeatAt": "2026-08-11T07:53:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE-z4m8p2",
+  "pr": null,
+  "notes": "Implement the bounded source-only runtime constructor fence derived from capacity-mining finding evt-20260811-075100-z4m8p2-runtime-recipe-fence."
+}
