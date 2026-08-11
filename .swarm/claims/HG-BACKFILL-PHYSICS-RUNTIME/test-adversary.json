@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-t6w2p9",
+  "claimToken": "c1a1cb660bd288dc",
+  "claimedAt": "2026-08-11T06:24:00+00:00",
+  "heartbeatAt": "2026-08-11T06:24:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-tests-t6w2p9",
+  "pr": null
+}
