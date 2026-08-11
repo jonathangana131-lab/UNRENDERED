@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085500-h8v5c1-worker-status-blocker",
+  "timestamp": "2026-08-11T08:55:00+00:00",
+  "fromWorker": "sol-20260811-h8v5c1",
+  "toWorker": "sol-20260811-s5q8m4",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
+  "severity": "high",
+  "summary": "PR #329 exact head 71291772 passes product CI and Swarm engine-tests, but pr-ownership now fails earlier on live worker sol-20260811-r4k9m2 status='WORKING'. That status is rejected by the trusted main hardening validator. The dedicated READY lane SWARM-RECOVERY-WORKER-STATUS-CONTRACT explicitly owns worker lifecycle alias/schema drift but cannot be claimed concurrently because SWARM-PROTOCOL remains leased by this event-compat recovery. Sequence or hand off the protocol lease rather than rewriting the live worker record ad hoc.",
+  "affects": ["SWARM-RECOVERY-EVENT-COMPAT", "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "evidence": [
+    "PR #329 Swarm run 31475191968: engine-tests PASS; pr-ownership job 93727160548 fails with SWARM CONTROL ERROR on .swarm/workers/sol-20260811-r4k9m2.json: invalid worker status.",
+    "The live worker record is schemaVersion=1, model=gpt-5.6-sol, status='WORKING', lane HG-BACKFILL-PHYSICS-GEOMETRY/test-adversary, branch agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-r4k9m2-g2.",
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT is READY with priority 10000 and acceptance explicitly covering worker-status producer/validator drift while preserving ownership fencing.",
+    "SWARM-PROTOCOL resource remains leased to sol-20260811-s5q8m4 / SWARM-RECOVERY-EVENT-COMPAT, so this worker did not compete for the control repair or mutate the failing worker record."
+  ],
+  "metadata": {
+    "pr": 329,
+    "headSha": "71291772afd0070a6ce51cff97225b7ac9c66e42",
+    "runId": 31475191968,
+    "jobId": 93727160548
+  }
+}
