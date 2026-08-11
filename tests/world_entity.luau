@@ -461,6 +461,39 @@ local function run(): number
 		false
 	)
 
+	local diagnosticStringBudget = WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES
+	local oversizedDiagnosticMetadata = string.rep("x", diagnosticStringBudget + 1)
+	local oversizedDiagnosticRegistry = WorldEntity.createRegistry(1)
+	WorldEntity.register(oversizedDiagnosticRegistry, entity)
+	local oversizedDiagnosticCallAccepted = pcall(function()
+		local oversizedDuplicate = WorldEntity.new({
+			id = entity.id,
+			kind = oversizedDiagnosticMetadata,
+			origin = {
+				worldId = "world:0000000000000001",
+				generator = "objects.office",
+				generatorVersion = 1,
+				recipeKey = oversizedDiagnosticMetadata,
+			},
+		})
+		WorldEntity.register(oversizedDiagnosticRegistry, oversizedDuplicate)
+	end)
+	local oversizedDiagnosticRetentionIsBounded = not oversizedDiagnosticCallAccepted
+	if oversizedDiagnosticCallAccepted then
+		local retainedDiagnostics = WorldEntity.duplicateDiagnostics(oversizedDiagnosticRegistry)
+		oversizedDiagnosticRetentionIsBounded = #retainedDiagnostics == 0
+		if #retainedDiagnostics > 0 then
+			local retained = retainedDiagnostics[1]
+			oversizedDiagnosticRetentionIsBounded = #retained.incomingKind <= diagnosticStringBudget
+				and #retained.incomingRecipeKey <= diagnosticStringBudget
+		end
+	end
+	expectEqual(
+		"duplicate diagnostic retention does not retain metadata beyond the owned WorldEntity string budget",
+		oversizedDiagnosticRetentionIsBounded,
+		true
+	)
+
 	local invalidCapacityAccepted = pcall(function()
 		WorldEntity.createRegistry(math.huge)
 	end)
