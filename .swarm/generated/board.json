@@ -47,10 +47,10 @@
     },
     {
       "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-went7k3",
-      "expiresAt": "2026-08-11T07:48:00+00:00",
+      "expiresAt": "2026-08-11T07:54:10+00:00",
       "generation": 1,
       "laneId": "HG-BACKFILL-OBJECTGENOME",
-      "pr": null,
+      "pr": 299,
       "slotId": "audit",
       "workerId": "sol-20260811-went7k3"
     },
@@ -131,7 +131,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:23:50.488381+00:00",
+  "generatedAt": "2026-08-11T07:24:22.067649+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "064e28f2306095dadd6a514b96f397cd810ac556",
@@ -157,7 +157,7 @@
       "REVIEW_REQUEST": 29,
       "REVIEW_RESULT": 30
     },
-    "generatedAt": "2026-08-11T07:23:50.488381+00:00",
+    "generatedAt": "2026-08-11T07:24:22.067649+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -871,7 +871,7 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "c1a53e0a29e3642c2a23d55b1b8731b35438a878827d0eb44f431db047e80218",
+  "stateDigest": "7971d3ec97f49fc1adbe7aa171c22fe0d96fbc10859c40b8013b89d9ef351784",
   "summary": {
     "activeClaims": 13,
     "activeResourceClaims": 1,
