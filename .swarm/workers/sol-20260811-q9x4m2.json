@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q9x4m2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T06:20:00+00:00",
-  "lastSeenAt": "2026-08-11T07:11:04+00:00",
-  "laneId": "HG-BACKFILL-AUTHORITY",
-  "slotId": "audit",
-  "branch": "agent/authority/HG-BACKFILL-AUTHORITY-audit-q9x4m2",
-  "notes": "Authority audit PR #275 is synced through main #291. Canonical CI and fail-closed pr-ownership must be revalidated on head 44c5f18599197dd1567cea0cddd5b6430e1e63c9; independent exact-head review remains required before integration."
+  "lastSeenAt": "2026-08-11T07:15:47+00:00",
+  "notes": "Authority audit PR #275 merged as 81a13b1138e26e7852c89685de5dbf9bd57753d8 and post-merge canonical CI is green. Audit claim released; selecting the next highest-value safe unlocked review/integration or unclaimed depth slot."
 }
