@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-h9p4x7m2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T23:08:00+00:00",
-  "lastSeenAt": "2026-08-11T23:17:30+00:00",
+  "lastSeenAt": "2026-08-11T23:22:30+00:00",
   "laneId": "HG-COMPLETION-PHYSICS",
   "slotId": "review-1",
   "branch": "agent/review/HG-COMPLETION-PHYSICS-review-1-h9p4x7m2-g1",
-  "notes": "Reviewing retained Physics Lab geometry successor PR #414 exact head 51ffc16fb2f5864cd4874710a7517e94dd5422b8 through the completion queue. Verify primitive-number no-execute fence, symmetric derived-output finiteness, regression quality, and exact-head CI without duplicating implementation. No Studio evidence."
+  "notes": "Completion review finished on fresh stacked PR #418 exact head b535968753c63a044d7696eb3957b7eeece93516. Review 4911579052 and REVIEW_RESULT evt-20260811-232100-h9p4x7m2-physics-scale-test-review record NEEDS_CHANGES: raw source orderedWithin scan false-passes commented-out guards, and canonical CI 31545864914 is red at Format check. Underlying #414 production fence was not rejected. Claim released; no Studio evidence claimed."
 }
