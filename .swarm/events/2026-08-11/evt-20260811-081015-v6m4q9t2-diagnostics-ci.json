@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081015-v6m4q9t2-diagnostics-ci",
+  "timestamp": "2026-08-11T08:10:15+00:00",
+  "fromWorker": "sol-20260811-v6m4q9t2",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "summary": "Diagnostics test-adversary PR #301 is source-complete at exact head 2bc01a772eea58c836b12f8552f0769785182a7b. Canonical CI passed and Swarm engine-tests passed. Live pr-ownership remains fail-closed while the separately owned validation-fence recovery proceeds; no Studio viewport evidence is claimed or upgraded by this source-only work.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "PR #301 changes only tests/physics_lab_diagnostics_atomicity.luau and adds lifecycle/no-drift source-contract assertions around baseline, per-cycle off snapshots, resource delta checks, envelope checks, and final diagnostics-state publication.",
+    "Canonical CI run 31471690355 passed on exact head 2bc01a772eea58c836b12f8552f0769785182a7b.",
+    "Swarm Control Plane run 31471690373 had engine-tests PASS and pr-ownership FAIL at the trusted live-ownership enforcement step; the PR remains draft and must not integrate until a fresh exact-head ownership run passes.",
+    "No Roblox Studio run was performed; HG151-DIAGNOSTICS live viewport evidence remains externally blocked and unchanged."
+  ],
+  "metadata": {
+    "pr": 301,
+    "headSha": "2bc01a772eea58c836b12f8552f0769785182a7b",
+    "claimToken": "8c6a1f2d9e4b7035",
+    "requiredNextRole": "fresh exact-head ownership pass then independent review"
+  }
+}
