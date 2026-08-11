@@ -46,9 +46,12 @@ class CliExitPropagationRegressionTests(unittest.TestCase):
 
 
 class WorkflowSnapshotFenceRegressionTests(unittest.TestCase):
-    def test_control_publishers_reuse_materialized_snapshot_sha(self):
+    def workflow_text(self):
         workflow_path = Path(__file__).resolve().parents[2] / ".github" / "workflows" / "swarm-control.yml"
-        workflow = workflow_path.read_text(encoding="utf-8")
+        return workflow_path.read_text(encoding="utf-8")
+
+    def test_control_publishers_reuse_materialized_snapshot_sha(self):
+        workflow = self.workflow_text()
 
         self.assertIn("AFTER_SHA: ${{ github.sha }}", workflow)
         self.assertIn('echo "CONTROL_SHA=$AFTER_SHA" >> "$GITHUB_ENV"', workflow)
@@ -57,6 +60,28 @@ class WorkflowSnapshotFenceRegressionTests(unittest.TestCase):
         self.assertIn('git archive "$CONTROL_SHA" .swarm', workflow)
         self.assertGreaterEqual(workflow.count('EXPECTED="${CONTROL_SHA:?'), 2)
         self.assertNotIn('EXPECTED="$(git rev-parse origin/swarm-control)"', workflow)
+
+    def test_main_health_publish_carries_matching_validation_fence(self):
+        workflow = self.workflow_text()
+        health_job = workflow.split("  sync-main-health:\n", 1)[1]
+
+        self.assertIn(
+            'python3 tools/swarm/swarmctl_hardening.py render --root "$RUNNER_TEMP/control-health/.swarm"',
+            health_job,
+        )
+        self.assertIn(
+            'cp -R "$RUNNER_TEMP/control-health/.swarm/generated/." .swarm/generated/',
+            health_job,
+        )
+        self.assertIn(
+            "git add .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json .swarm/generated",
+            health_job,
+        )
+        self.assertIn("validation fence [swarm-generated]", health_job)
+        self.assertLess(
+            health_job.index('render --root "$RUNNER_TEMP/control-health/.swarm"'),
+            health_job.index('cp -R "$RUNNER_TEMP/control-health/.swarm/generated/." .swarm/generated/'),
+        )
 
 
 if __name__ == "__main__":
