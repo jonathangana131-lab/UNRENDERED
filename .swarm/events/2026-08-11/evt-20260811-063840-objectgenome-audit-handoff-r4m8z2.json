@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063840-objectgenome-audit-handoff-r4m8z2",
+  "timestamp": "2026-08-11T06:38:40+00:00",
+  "fromWorker": "sol-20260811-r4m8z2",
+  "eventType": "HANDOFF",
+  "summary": "ObjectGenome audit handoff: HIGH identity-part representability gap was fixed by primary PR #286 and independently reviewed green at exact head b351a098a24ce69eb419ace5758dbf69a2ab358f. A separate MEDIUM contract gap remains open: inspect/inspectState promise deterministic structured reports, but issue-producing map traversal and support-cycle root traversal use pairs() without canonicalization; the cycle root can change the emitted support_cycle path, so final-list sorting alone is insufficient. Durable finding: evt-20260811-063900-og-validation-report-determinism-r4m8z2. This audit worker is releasing the slot to prioritize the newly proven CRITICAL control-plane fail-open in PR ownership enforcement.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME", "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "HIGH",
+  "evidence": [
+    "PR #286 exact-head canonical CI 31465180117 passed and two independent review comments found no product-local defect in the 512-byte identity closure repair.",
+    "evt-20260811-063900-og-validation-report-determinism-r4m8z2 records the remaining deterministic-report traversal gap.",
+    "evt-20260811-063523-pr-check-fail-open-r4m8z2 records the higher-priority control-plane recovery that now preempts this audit role."
+  ]
+}
