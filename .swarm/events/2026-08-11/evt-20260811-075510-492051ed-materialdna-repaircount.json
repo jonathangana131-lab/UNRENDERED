@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075510-492051ed-materialdna-repaircount",
+  "timestamp": "2026-08-11T07:55:10+00:00",
+  "fromWorker": "sol-20260811-492051ed",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "MaterialDNA schema-v2 maintenance.repairCount accepts any finite non-negative numeric value whose floor equals itself, with no safe-integer upper bound. Canonical recipe values above 2^53-1 are therefore not injectively representable as Lua numbers: distinct conceptual repair counts can collapse before validation/canonical sealing. This is inconsistent with the contract's bounded canonical numeric domain and should fail closed at the exact IEEE-754 safe-integer boundary.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS", "HERO-GATE"],
+  "evidence": [
+    "src/shared/Materials/MaterialDNA.luau validateNonNegativeInteger checks finite, >= 0, and math.floor(value) == value but has no maximum; its only caller is maintenance.repairCount.",
+    "MaterialDNA recipeVersion is already bounded to a deterministic integer domain, while repairCount remains unbounded despite being canonical recipe content included in revision seals.",
+    "Docs/MATERIAL_DNA_CONTRACT.md states numeric plausibility ranges are finite and bounded and canonical material truth must not silently alias.",
+    "A source-only regression can accept 9007199254740991 and reject 9007199254740992 without changing existing fixtures or Studio behavior."
+  ],
+  "metadata": {
+    "recommendedLane": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+    "recommendedFix": "bound maintenance.repairCount to [0, 9007199254740991] with exact boundary regression",
+    "claimToken": "0f54c203b8a9e671"
+  }
+}
