@@ -99,14 +99,41 @@ MALFORMED_EVENT_QUARANTINE = (
     ("evt-20260811-203731-b6q1x8v3-physics-geometry-review-result", "332dbb965cdf99bc1b073d2918a67d05611a8bb7", "2744ff918561715243d489a5985bc45f321ecce5"),
 )
 
+# Some malformed legacy HANDOFF writers used a filename that does not equal eventId.
+# Keep those exact path identities separate so the original 65-row manifest digest
+# remains stable and every compatibility expansion stays reviewer-visible.
+MALFORMED_EVENT_QUARANTINE_PATHS = (
+    (
+        "evt-20260811T210500Z-sol-20260811-c7p4m8v2-handoff-content-reconciliation",
+        "210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json",
+        "be4caea3394068a2883045842bf1d132e37cd157",
+        "713d54c453faa65e89875e69499444d5a7644d3f",
+    ),
+    (
+        "evt-20260811T211000Z-sol-20260811-m5q8v2c4-handoff-physics-reconciliation",
+        "211000-sol-20260811-m5q8v2c4-handoff-physics-reconciliation.json",
+        "da63fb468a9af4ff4b1767df7c985335b5e45b08",
+        "f3ed0bc34d02a0db011ca612853c7b797201194d",
+    ),
+)
+
+
+def malformed_event_quarantine_rows() -> tuple[tuple[str, str, str, str], ...]:
+    """Return normalized (eventId, filename, first-write, blob) rows."""
+    canonical_paths = tuple(
+        (event_id, f"{event_id}.json", first_write, blob_sha)
+        for event_id, first_write, blob_sha in MALFORMED_EVENT_QUARANTINE
+    )
+    return canonical_paths + MALFORMED_EVENT_QUARANTINE_PATHS
+
 
 def quarantine_rules() -> dict[str, dict[str, str]]:
     """Return validator rules while keeping first-write provenance reviewable separately."""
     return {
         event_id: {
             "date": "2026-08-11",
-            "filename": f"{event_id}.json",
+            "filename": filename,
             "quarantineOnlyGitBlobSha1": blob_sha,
         }
-        for event_id, _first_write_commit, blob_sha in MALFORMED_EVENT_QUARANTINE
+        for event_id, filename, _first_write_commit, blob_sha in malformed_event_quarantine_rows()
     }
