@@ -13,7 +13,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:53:26.500292+00:00",
+  "generatedAt": "2026-08-11T05:53:39.643183+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "10d3f6992ff243a9268ed8629893faf4fc40791c",
@@ -32,16 +32,16 @@
       "INTEGRATION_RESULT": 3,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T05:53:26.500292+00:00",
+    "generatedAt": "2026-08-11T05:53:39.643183+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
       "DONE": 5,
       "LOCKED": 1,
-      "READY": 7
+      "READY": 8
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 12,
+    "readySlots": 15,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 0
@@ -144,6 +144,22 @@
       ]
     },
     {
+      "laneId": "HG-BACKFILL-REALITY",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [],
+      "role": "Reality/replay source hardening",
+      "score": 5300,
+      "slotId": "primary",
+      "writeScopes": [
+        "src/shared/Reality/*.luau",
+        "src/shared/Core/*.luau",
+        "tests/resolved_region_recipe*.luau",
+        "tests/reality_versions.luau",
+        "tests/deterministic_rng.luau",
+        "tests/stable_id_headless.luau"
+      ]
+    },
+    {
       "laneId": "HG-BACKFILL-FIDELITY",
       "reason": "dependencies satisfied",
       "resources": [],
@@ -180,6 +196,22 @@
       ]
     },
     {
+      "laneId": "HG-BACKFILL-REALITY",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Reality version and deterministic replay tests",
+      "score": 5220,
+      "slotId": "test-adversary",
+      "writeScopes": [
+        "src/shared/Reality/*.luau",
+        "src/shared/Core/*.luau",
+        "tests/resolved_region_recipe*.luau",
+        "tests/reality_versions.luau",
+        "tests/deterministic_rng.luau",
+        "tests/stable_id_headless.luau"
+      ]
+    },
+    {
       "laneId": "HG-BACKFILL-FIDELITY",
       "reason": "dependencies satisfied",
       "resources": [],
@@ -189,6 +221,22 @@
       "writeScopes": [
         "src/shared/Physics/FidelityManager.luau",
         "tests/fidelity_manager*.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-REALITY",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "WorldId, seed, and replay invariant auditor",
+      "score": 5120,
+      "slotId": "audit",
+      "writeScopes": [
+        "src/shared/Reality/*.luau",
+        "src/shared/Core/*.luau",
+        "tests/resolved_region_recipe*.luau",
+        "tests/reality_versions.luau",
+        "tests/deterministic_rng.luau",
+        "tests/stable_id_headless.luau"
       ]
     }
   ],
@@ -336,13 +384,13 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "8da095a2fd57c49a57a7c0a729560b42cfe6bf894fda0409095dce4120f9884a",
+  "stateDigest": "32e2a163ef7ef0160b677a8e24b6e2dfb6ce3aca32cfb605f88e8f3d7fcf8a25",
   "summary": {
     "activeClaims": 0,
     "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
-    "lanes": 14,
-    "readySlots": 12,
+    "lanes": 15,
+    "readySlots": 15,
     "staleClaims": 0,
     "workers": 24
   }

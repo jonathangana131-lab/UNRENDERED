@@ -1,14 +1,14 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T05:53:26.500292+00:00`
+Generated: `2026-08-11T05:53:39.643183+00:00`
 
 Canonical main: **GREEN** `10d3f6992ff243a9268ed8629893faf4fc40791c`
 
-State digest: `8da095a2fd57c49a57a7c0a729560b42cfe6bf894fda0409095dce4120f9884a`
+State digest: `32e2a163ef7ef0160b677a8e24b6e2dfb6ce3aca32cfb605f88e8f3d7fcf8a25`
 
 ## Summary
 
-- ready slots: **12**
+- ready slots: **15**
 - active claims: **0**
 - stale claims: **0**
 - blocked-external lanes: **1**
@@ -23,10 +23,13 @@ State digest: `8da095a2fd57c49a57a7c0a729560b42cfe6bf894fda0409095dce4120f9884a`
 - `HG-BACKFILL-FIDELITY/primary` — **FidelityManager source hardening** — score 5350 — dependencies satisfied; resources available
 - `HG-BACKFILL-MATERIALDNA/test-adversary` — **MaterialDNA schema and hostile-input tests** — score 5320 — dependencies satisfied
 - `HG-BACKFILL-WORLDENTITY/audit` — **WorldEntity invariant and aliasing auditor** — score 5320 — dependencies satisfied
+- `HG-BACKFILL-REALITY/primary` — **Reality/replay source hardening** — score 5300 — dependencies satisfied; resources available
 - `HG-BACKFILL-FIDELITY/test-adversary` — **Fidelity transition and atomicity tests** — score 5270 — dependencies satisfied
 - `HG-BACKFILL-OBJECTGENOME/audit` — **ObjectGenome contract and ownership auditor** — score 5270 — dependencies satisfied
 - `HG-BACKFILL-MATERIALDNA/audit` — **MaterialDNA contract and fixture auditor** — score 5220 — dependencies satisfied
+- `HG-BACKFILL-REALITY/test-adversary` — **Reality version and deterministic replay tests** — score 5220 — dependencies satisfied
 - `HG-BACKFILL-FIDELITY/audit` — **Fidelity state-machine auditor** — score 5170 — dependencies satisfied
+- `HG-BACKFILL-REALITY/audit` — **WorldId, seed, and replay invariant auditor** — score 5120 — dependencies satisfied
 
 ## Active claims
 
