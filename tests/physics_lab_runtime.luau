@@ -59,6 +59,70 @@ local function run(): number
 		entityRelevance = 0,
 	}
 
+	local function expectMalformedEntityIdBoundary(name, invoke)
+		local boundaryRuntime = PhysicsLabRuntime.new(recipe)
+		local stringifyCalls = 0
+		local hostileEntityId = setmetatable({}, {
+			__tostring = function()
+				stringifyCalls += 1
+				boundaryRuntime:dispose()
+				return "hostile-entity-id"
+			end,
+		})
+		local accepted = pcall(function()
+			invoke(boundaryRuntime, hostileEntityId :: any)
+		end)
+		local snapshotOk, boundarySnapshot = pcall(function()
+			return boundaryRuntime:snapshot()
+		end)
+		expect(`${name} rejects a non-string WorldEntityId`, not accepted)
+		expect(`${name} rejects before caller __tostring executes`, stringifyCalls == 0)
+		expect(
+			`${name} rejection preserves both runtime authority populations`,
+			snapshotOk
+				and boundarySnapshot.registered == #recipe.entities
+				and boundarySnapshot.fidelity.registered == #recipe.entities
+		)
+		if snapshotOk then
+			local retryOk = pcall(function()
+				local retryRecord = boundaryRuntime:getRecord(entityId)
+				assert(retryRecord.id == entityId)
+			end)
+			expect(`${name} rejection leaves an immediate valid retry available`, retryOk)
+		end
+		boundaryRuntime:dispose()
+	end
+
+	expectMalformedEntityIdBoundary("getRecord", function(boundaryRuntime, malformedEntityId)
+		boundaryRuntime:getRecord(malformedEntityId)
+	end)
+	expectMalformedEntityIdBoundary("getFidelity", function(boundaryRuntime, malformedEntityId)
+		boundaryRuntime:getFidelity(malformedEntityId)
+	end)
+	expectMalformedEntityIdBoundary("step", function(boundaryRuntime, malformedEntityId)
+		boundaryRuntime:step(malformedEntityId, noDemand, 0)
+	end)
+
+	local unknownRuntime = PhysicsLabRuntime.new(recipe)
+	local unknownEntityId = "we:physics-lab:unknown"
+	local unknownAccepted, unknownError = pcall(function()
+		unknownRuntime:getRecord(unknownEntityId)
+	end)
+	expect("valid unknown WorldEntityId still rejects", not unknownAccepted)
+	expect(
+		"valid unknown WorldEntityId keeps a safe bounded diagnostic",
+		not unknownAccepted
+			and type(unknownError) == "string"
+			and string.find(unknownError, unknownEntityId, 1, true) ~= nil
+	)
+	local unknownSnapshot = unknownRuntime:snapshot()
+	expect(
+		"valid unknown WorldEntityId rejection preserves runtime authority",
+		unknownSnapshot.registered == #recipe.entities
+			and unknownSnapshot.fidelity.registered == #recipe.entities
+	)
+	unknownRuntime:dispose()
+
 	local captureCalls = 0
 	local observerCalls = 0
 	local capturedProbe = {
