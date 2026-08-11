@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-072950-q9m4r2-diagnostics-review-approve",
+  "timestamp": "2026-08-11T07:29:50+00:00",
+  "fromWorker": "sol-20260811-q9m4r2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "normal",
+  "summary": "APPROVE source/test patch for PR #295 exact head 1814b4d08a02c9d650dea6288af9a8264e58d3c9. The twenty-cycle cap is enforced before diagnostics mutation/iteration, the canonical default/checkpoint contract remains intact, shorter manual probes remain allowed, and the patch does not claim live viewport evidence. Canonical CI 31468750759 is green. Integration remains blocked only on the separate fail-closed Swarm pr-ownership gate, whose latest run 31469035311 still fails while engine-tests pass.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "PhysicsLabStudioDiagnostics.runToggleEvidence validates cycleCount <= MAX_TOGGLE_EVIDENCE_CYCLES before disable(), baseline capture, or the evidence loop.",
+    "tests/physics_lab_diagnostics_bounds.luau is wired into the always-run hero_gate_contract_integration suite and locks default=20, max=20, validation-before-loop, and checkpoint-20 structure.",
+    "GitHub review 4903903031 records the exact-head independent source approval; no Studio PASS is claimed."
+  ],
+  "pr": 295,
+  "headSha": "1814b4d08a02c9d650dea6288af9a8264e58d3c9",
+  "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+}
