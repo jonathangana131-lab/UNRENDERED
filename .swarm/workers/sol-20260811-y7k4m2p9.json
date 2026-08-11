@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-y7k4m2p9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-11T21:31:30+00:00",
-  "lastSeenAt": "2026-08-11T21:47:05+00:00",
+  "lastSeenAt": "2026-08-11T21:48:10+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-fidelity",
   "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-y7k4m2p9-g2",
-  "notes": "Generation-2 stale recovery of FidelityManager capacity mining. Concrete gap found: returned manager exposes live mutable authoritative _states/_metrics, allowing capability holders/callbacks to bypass accounting and transition-fence invariants. Screening duplicates before publishing finding."
+  "notes": "Published BLOCKED_CHILD finding .swarm/events/2026-08-11/214731-sol-20260811-y7k4m2p9-finding-fidelitymanager-capability-seal.json. FidelityManager exposes live mutable authoritative _states/_metrics; proposed follow-up seals backing state and adds adversarial capability tests. Mining claim released; no production source edits, Lune runs, engine runs, or Studio evidence claimed."
 }
