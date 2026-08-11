@@ -42,7 +42,7 @@ local function run(): number
 	local authorityGuardBody = sliceFunction(
 		harnessSource,
 		"local function assertStudioServer(): ()",
-		"local function bindOwnedHandle(realized: RealizedLab): RealizedLab"
+		"local function reconcileCurrent(): ()"
 	)
 	expect("Studio/server authority helper remains discoverable", authorityGuardBody ~= nil)
 	if authorityGuardBody ~= nil then
@@ -64,27 +64,48 @@ local function run(): number
 		})
 	)
 
+	local reconcileBody = sliceFunction(
+		harnessSource,
+		"local function reconcileCurrent(): ()",
+		"local function bindOwnedHandle(realized: RealizedLab): (RealizedLab, () -> boolean)"
+	)
+	expect("Studio harness synchronous reconciliation helper remains discoverable", reconcileBody ~= nil)
+	if reconcileBody ~= nil then
+		expect(
+			"reconciliation executes the private liveness preflight before discarding it",
+			containsInOrder(reconcileBody, {
+				"local reconcile = currentReconcile",
+				"if reconcile == nil then",
+				"return",
+				"if reconcile() and currentReconcile == reconcile then",
+				"currentReconcile = nil",
+			})
+		)
+	end
+
 	local bindBody = sliceFunction(
 		harnessSource,
-		"local function bindOwnedHandle(realized: RealizedLab): RealizedLab",
+		"local function bindOwnedHandle(realized: RealizedLab): (RealizedLab, () -> boolean)",
 		"function PhysicsLabStudioHarness.start(parent: Instance?): RealizedLab"
 	)
 	expect("Studio harness ownership wrapper remains discoverable", bindBody ~= nil)
 	if bindBody ~= nil then
 		expect(
-			"owned handle binds lifecycle signals before publishing coordinated destroy authority",
+			"owned handle retains lifecycle signals as asynchronous cleanup hooks",
 			containsInOrder(bindBody, {
 				"local owned: RealizedLab = table.clone(realized)",
 				"local expectedParent = realized.model.Parent",
 				"local tearingDown = false",
 				"local invalidated = false",
+				"local cleanupComplete = false",
 				"local function invalidateExternalLifecycle(): ()",
 				"if tearingDown or invalidated or current ~= owned then",
 				"invalidated = true",
 				"current = nil",
 				"disconnectLifecycleSignals()",
 				"task.defer(function(): ()",
-				"realized.destroy()",
+				"if not cleanupComplete then",
+				"destroyRealized()",
 				"destroyingConnection = realized.model.Destroying:Connect(function(): ()",
 				"invalidateExternalLifecycle()",
 				"ancestryConnection = realized.model.AncestryChanged:Connect(function(): ()",
@@ -93,19 +114,38 @@ local function run(): number
 			})
 		)
 		expect(
-			"controlled destroy fences lifecycle callbacks and tears down before releasing ownership",
+			"pre-callback reconciliation detects parent drift and finishes teardown synchronously",
+			containsInOrder(bindBody, {
+				"local function reconcileExternalLifecycle(): boolean",
+				"if not invalidated then",
+				"if current ~= owned then",
+				"return true",
+				"if realized.model.Parent == expectedParent then",
+				"return false",
+				"invalidated = true",
+				"current = nil",
+				"disconnectLifecycleSignals()",
+				"if not cleanupComplete then",
+				"destroyRealized()",
+				"return cleanupComplete",
+			})
+		)
+		expect(
+			"controlled destroy reconciles stale external mutation and tears down before releasing ownership",
 			containsInOrder(bindBody, {
 				"owned.destroy = function(): ()",
 				"assertStudioServer()",
+				"reconcileExternalLifecycle()",
 				"if current ~= owned or invalidated then",
 				"return",
-				"tearingDown = true",
-				"realized.destroy()",
-				"tearingDown = false",
+				"destroyRealized()",
 				"disconnectLifecycleSignals()",
+				"invalidated = true",
 				"if current == owned then",
 				"current = nil",
-				"return table.freeze(owned)",
+				"if currentReconcile == reconcileExternalLifecycle then",
+				"currentReconcile = nil",
+				"return table.freeze(owned), reconcileExternalLifecycle",
 			})
 		)
 	end
@@ -118,13 +158,15 @@ local function run(): number
 	expect("Studio harness start function remains discoverable", startBody ~= nil)
 	if startBody ~= nil then
 		expect(
-			"start fails closed before creating a second canonical lab and publishes only the owned handle",
+			"start reconciles deferred external teardown before duplicate-owner decisions and replacement",
 			containsInOrder(startBody, {
 				"assertStudioServer()",
+				"reconcileCurrent()",
 				'assert(current == nil, "Physics Lab Studio harness already owns a realized lab")',
 				"local realized = PhysicsLabRealizer.realize(parent or workspace)",
-				"local owned = bindOwnedHandle(realized)",
+				"local owned, reconcile = bindOwnedHandle(realized)",
 				"current = owned",
+				"currentReconcile = reconcile",
 				"return owned",
 			})
 		)
@@ -139,8 +181,8 @@ local function run(): number
 	expect("Studio harness get function remains discoverable", getBody ~= nil)
 	if getBody ~= nil then
 		expect(
-			"get returns only the harness-owned coordinated handle",
-			containsInOrder(getBody, { "assertStudioServer()", "return current" })
+			"get reconciles model liveness before publishing the current handle",
+			containsInOrder(getBody, { "assertStudioServer()", "reconcileCurrent()", "return current" })
 		)
 	end
 
@@ -152,14 +194,16 @@ local function run(): number
 	expect("Studio harness stop function remains discoverable", stopBody ~= nil)
 	if stopBody ~= nil then
 		expect(
-			"stop is idempotent and destroys before releasing ownership",
+			"stop reconciles deferred external teardown and remains idempotent",
 			containsInOrder(stopBody, {
 				"assertStudioServer()",
+				"reconcileCurrent()",
 				"local active = current",
 				"if active == nil then",
 				"return",
 				"active.destroy()",
 				"current = nil",
+				"currentReconcile = nil",
 			})
 		)
 	end
@@ -172,9 +216,10 @@ local function run(): number
 	expect("Studio harness restart function remains discoverable", restartBody ~= nil)
 	if restartBody ~= nil then
 		expect(
-			"restart tears down the owned lab before reacquiring one",
+			"restart reconciles stale ownership before teardown and reacquisition",
 			containsInOrder(restartBody, {
 				"assertStudioServer()",
+				"reconcileCurrent()",
 				"PhysicsLabStudioHarness.stop()",
 				"return PhysicsLabStudioHarness.start(parent)",
 			})
