@@ -4,12 +4,12 @@
   "slotId": "primary",
   "workerId": "sol-20260811-81idx1th",
   "claimToken": "7d3c9a1f5b8e2046",
-  "claimedAt": "2026-08-11T21:53:00+00:00",
-  "heartbeatAt": "2026-08-11T21:53:00+00:00",
+  "claimedAt": "2026-08-11T21:47:00+00:00",
+  "heartbeatAt": "2026-08-11T21:47:40+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "resources": ["SERVER-AUTHORITY"],
   "branch": "agent/authority/HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY-81idx1th-g3",
-  "pr": null,
-  "notes": "Generation-3 NEEDS_CHANGES repair from #403 exact reviewed head 5f844842b980f7c68cebe0a437cb9b1c8d94947b. Close deferred Destroying/AncestryChanged stale-ownership window by synchronously reconciling model liveness before get/start/restart exclusivity decisions; preserve lifecycle signals as cleanup hooks and add pre-callback regression. Source-only; no Studio/two-client evidence claim."
+  "pr": 410,
+  "notes": "Generation-3 NEEDS_CHANGES repair from #403 exact reviewed head 5f844842b980f7c68cebe0a437cb9b1c8d94947b. PR #410 exact head f8a8361daad41e5f8b4c83a19ceca72e344d5e6f closes deferred Destroying/AncestryChanged stale-ownership window with synchronous liveness reconciliation before get/start/stop/restart lifecycle decisions. Awaiting fresh exact-head CI; source-only, no Studio/two-client evidence claim."
 }
