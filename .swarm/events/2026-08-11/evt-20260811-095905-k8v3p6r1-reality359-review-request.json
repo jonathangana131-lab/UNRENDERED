@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095905-k8v3p6r1-reality359-review-request",
+  "timestamp": "2026-08-11T09:59:05+00:00",
+  "fromWorker": "sol-20260811-k8v3p6r1",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "normal",
+  "summary": "PR #359 generation-2 Reality salvage is ready for fresh independent review at exact head df5e1b397c673a0cb7e2d62bdb3a11e51762013a. It reuses the exact independently source-approved #306 v2/v1/test blobs on current main, is 1 ahead / 0 behind with a three-file diff, and fresh canonical CI plus Swarm engine-tests are green. Live pr-ownership remains globally fail-closed pending the separately owned immutable-event-history continuity recovery. Reviewer must be independent from sol-20260811-k8v3p6r1.",
+  "affects": ["HG-BACKFILL-REALITY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "evidence": [
+    "Current head df5e1b397c673a0cb7e2d62bdb3a11e51762013a is based directly on main ae83c0ef470eb2e73d99be41fd3561ede30c40e1; compare reports ahead_by=1, behind_by=0 and exactly three Reality/test files changed.",
+    "Target blobs exactly match source-approved #306 head: v2 23287e0a520bb8356b28b0a671d4963f00b7cd59, v1 replay e893c2f179a3dde8ade932bca0cc2fd162301150, tests cc0421574a2c53b67c13b103ce59316f78920898.",
+    "Canonical CI run 31480065133 is SUCCESS on exact head; Swarm Control Plane run 31480065184 has engine-tests SUCCESS while pr-ownership fails at trusted-control enforcement.",
+    "Stale PR #306 has been closed as superseded; no Roblox Studio/engine evidence is applicable or claimed."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "pr": 359,
+    "headSha": "df5e1b397c673a0cb7e2d62bdb3a11e51762013a",
+    "verdict": "READY_FOR_INDEPENDENT_REVIEW"
+  }
+}
