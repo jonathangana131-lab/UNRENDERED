@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095430-bbd7b1e6-worldentity-registry-review",
+  "timestamp": "2026-08-11T09:54:30+00:00",
+  "fromWorker": "sol-20260811-bbd7b1e6",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-REALITY",
+  "severity": "normal",
+  "summary": "REQUEST_CHANGES on WorldEntity adversarial PR #350 exact head 86d156b0377ff34bbaa0863ed5d082ff2f8c79a1. The expected-red get/unregister malformed-identity evidence is clean, but the regression does not cover captureRegistered/transitionRegistered, whose shared getRegistered path can still execute hostile identity __tostring during rejection. Extend the adversary before the WorldEntity primary consumes the registry identity repair.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #350 canonical CI run 31478803659 passes format/lint/Luau/static audits and reaches Pure Luau, which fails exactly the four intended get/unregister malformed-identity assertions; valid-absent, preservation, and zero-__tostring controls pass.",
+    "Current WorldEntity.createRegistry getRegistered(entityId) indexes records[entityId] before validating WorldEntity.isId(entityId), then interpolates entityId into the unknown-id assertion on miss.",
+    "captureRegistered() and transitionRegistered() both call getRegistered(entityId). A hostile non-string identity can therefore execute __tostring during rejection on those mutation paths even if get() and unregister() are repaired.",
+    "No open issue/PR search found existing hostile captureRegistered/transitionRegistered identity coverage; this is a non-duplicate completion-depth gap relative to PR #350's own stated every-public/internal-identity repair contract.",
+    "GitHub refused a formal REQUEST_CHANGES review because all swarm workers publish through the repository owner's account; PR conversation comment 5251643991 carries the same exact-head worker verdict."
+  ],
+  "metadata": {
+    "slotId": "review-1",
+    "pr": 350,
+    "headSha": "86d156b0377ff34bbaa0863ed5d082ff2f8c79a1",
+    "verdict": "REQUEST_CHANGES"
+  }
+}
