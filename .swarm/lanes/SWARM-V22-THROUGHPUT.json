@@ -8,23 +8,24 @@
   "state": "READY",
   "mode": "exclusive",
   "dependencies": [],
-  "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", ".github/pull_request_template.md", "Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md", "Docs/ADR/0004-swarm-control-plane.md"],
+  "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", ".github/workflows/ci.yml", ".github/pull_request_template.md", "Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md", "Docs/ADR/0004-swarm-control-plane.md"],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
-    {"slotId":"primary","role":"Implement and prove Swarm V2.2 throughput policy","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":1000,"writeScopes":["tools/swarm/**",".github/workflows/swarm-control.yml",".github/pull_request_template.md","Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md","Docs/ADR/0004-swarm-control-plane.md"]},
-    {"slotId":"audit","role":"Adversarial review of V2.2 scheduler and review policy","exclusive":true,"availableWhen":["REVIEW","INTEGRATION_READY"],"requiresIndependentFrom":"primary","priorityBoost":800,"writeScopes":["tools/swarm/test_swarmctl_hardening.py","Docs/**"]},
+    {"slotId":"primary","role":"Implement and prove Swarm V2.2 throughput policy","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":1000,"writeScopes":["tools/swarm/**",".github/workflows/swarm-control.yml",".github/workflows/ci.yml",".github/pull_request_template.md","Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md","Docs/ADR/0004-swarm-control-plane.md"]},
+    {"slotId":"audit","role":"Adversarial review of V2.2 scheduler and review policy","exclusive":true,"availableWhen":["REVIEW","INTEGRATION_READY"],"requiresIndependentFrom":"primary","priorityBoost":800,"writeScopes":["tools/swarm/test_swarmctl_hardening.py","tools/swarm/test_swarmctl_v22.py","Docs/**"]},
     {"slotId":"integration","role":"Integrate V2.2 after exact-head gates","exclusive":true,"availableWhen":["INTEGRATION_READY"],"requiresIndependentFrom":"primary","priorityBoost":700,"writeScopes":["Docs/**"]}
   ],
   "acceptance": [
     "scheduler counts live PR-bearing claims as completion backlog",
     "soft backlog pressure boosts review/integration roles",
-    "hard backlog pressure suppresses normal new primaries and capacity mining",
-    "every new controlled PR self-reviews before acceptance",
+    "hard backlog pressure suppresses normal new primaries, audits, adversarial tests, and capacity mining while preserving red-main/control repair",
+    "every new controlled PR self-reviews its exact head before acceptance",
     "low-risk work can integrate after self-review plus CI/ownership",
     "standard work requires an independent exact-head spot check",
     "critical authority/reality/control work requires an independent exact-head full review",
     "existing pre-V2.2 PRs are grandfathered and do not fail merely for missing new metadata",
-    "30-worker simulation and deterministic/adversarial control tests pass",
+    "completion queues disappear when actual product backlog drains so they cannot self-deadlock creation",
+    "30-worker simulation and deterministic/adversarial control tests pass in canonical CI and Swarm Control Plane CI",
     "real live board exposes completion pressure and useful completion slots"
   ],
   "tags": ["control-repair", "completion", "throughput", "risk-review", "v2.2"]
