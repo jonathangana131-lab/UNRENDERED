@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "slotId": "audit",
+  "workerId": "sol-20260811-cd3bb0",
+  "claimToken": "30cc334a69636bc8",
+  "claimedAt": "2026-08-11T11:50:30+00:00",
+  "heartbeatAt": "2026-08-11T11:50:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-audit-cd3bb0",
+  "pr": 349,
+  "notes": "Independent exact-head source audit of PR #349 representation-instance authority seam; no Studio evidence claimed."
+}
