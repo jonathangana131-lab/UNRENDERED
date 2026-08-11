@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-11T06:16:00+00:00",
-  "lastSeenAt": "2026-08-11T06:18:10+00:00",
+  "lastSeenAt": "2026-08-11T06:30:00+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "test-adversary",
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-q7n4m9",
-  "notes": "Atomic claim acquired after higher-scored live slots were already owned; executing malformed-input and identity regression depth pass."
+  "notes": "PR #277 canonical CI is green; awaiting independent lane audit while reviewing primary identity-boundary fix and live lane state."
 }
