@@ -42,6 +42,38 @@ local function run(): number
 		return inputs
 	end
 
+	local function hostileNumeric()
+		local calls = 0
+		local function called()
+			calls += 1
+		end
+		local value = setmetatable({}, {
+			__eq = function()
+				called()
+				return false
+			end,
+			__lt = function()
+				called()
+				return false
+			end,
+			__le = function()
+				called()
+				return false
+			end,
+			__add = function()
+				called()
+				return 0
+			end,
+			__sub = function()
+				called()
+				return 0
+			end,
+		})
+		return value, function()
+			return calls
+		end
+	end
+
 	local clockManager = FidelityManager.new()
 	clockManager:register("entity:atomic-clock", "F0")
 	clockManager:step("entity:atomic-clock", "F0", validInputs(), 1)
@@ -94,6 +126,62 @@ local function run(): number
 	end)
 	expectEqual("pure policy rejects metatable-backed input", pureMetatableAccepted, false)
 	expectEqual("pure policy never executes policy-input metatable", pureMetatableReads, 0)
+
+	local numericFields = {
+		"distanceStuds",
+		"secondsSinceInteraction",
+		"significance",
+		"networkRelevance",
+		"entityRelevance",
+	}
+	local hostilePolicyManager = FidelityManager.new()
+	hostilePolicyManager:register("entity:atomic-hostile-numeric", "F0")
+	for _, field in numericFields do
+		local pureInputs = validInputs()
+		local pureHostile, pureCalls = hostileNumeric()
+		pureInputs[field] = pureHostile
+		local pureAccepted = pcall(function()
+			FidelityManager.evaluatePolicy(pureInputs)
+		end)
+		expectEqual(`hostile numeric {field} rejected by pure policy`, pureAccepted, false)
+		expectEqual(`hostile numeric {field} pure policy executes no metamethod`, pureCalls(), 0)
+
+		local stepInputs = validInputs()
+		local stepHostile, stepCalls = hostileNumeric()
+		stepInputs[field] = stepHostile
+		local stepAccepted = pcall(function()
+			hostilePolicyManager:step("entity:atomic-hostile-numeric", "F0", stepInputs, 100)
+		end)
+		expectEqual(`hostile numeric {field} rejected by step`, stepAccepted, false)
+		expectEqual(`hostile numeric {field} step executes no metamethod`, stepCalls(), 0)
+	end
+	local validAfterHostilePolicyAccepted = pcall(function()
+		hostilePolicyManager:step("entity:atomic-hostile-numeric", "F0", validInputs(), 1)
+	end)
+	expectEqual(
+		"hostile numeric policy fields cannot poison monotonic clock",
+		validAfterHostilePolicyAccepted,
+		true
+	)
+
+	local hostileTimeManager = FidelityManager.new()
+	hostileTimeManager:register("entity:atomic-hostile-time", "F0")
+	hostileTimeManager:step("entity:atomic-hostile-time", "F0", validInputs(), 1)
+	local hostileNowSeconds, hostileNowCalls = hostileNumeric()
+	local hostileNowAccepted = pcall(function()
+		hostileTimeManager:step(
+			"entity:atomic-hostile-time",
+			"F0",
+			validInputs(),
+			hostileNowSeconds
+		)
+	end)
+	expectEqual("hostile nowSeconds rejected", hostileNowAccepted, false)
+	expectEqual("hostile nowSeconds executes no metamethod", hostileNowCalls(), 0)
+	local validAfterHostileNowAccepted = pcall(function()
+		hostileTimeManager:step("entity:atomic-hostile-time", "F0", validInputs(), 2)
+	end)
+	expectEqual("hostile nowSeconds cannot poison monotonic clock", validAfterHostileNowAccepted, true)
 
 	local booleanManager = FidelityManager.new()
 	booleanManager:register("entity:atomic-boolean", "F0")
