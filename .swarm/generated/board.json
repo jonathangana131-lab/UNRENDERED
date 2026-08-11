@@ -32,7 +32,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:30:27.395649+00:00",
+  "generatedAt": "2026-08-11T05:31:30.960476+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "2ce32576a47e99a1e09e802dc7e76a0bf7bbd283",
@@ -49,9 +49,10 @@
     ],
     "eventCounts": {
       "EXTERNAL_BLOCKER": 1,
-      "INTEGRATION_RESULT": 1
+      "INTEGRATION_RESULT": 1,
+      "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T05:30:27.395649+00:00",
+    "generatedAt": "2026-08-11T05:31:30.960476+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -127,6 +128,26 @@
       "severity": "info",
       "summary": "First real Swarm V2 protected-scope activation PR passed live claim/branch/scope/resource enforcement plus canonical CI and merged as cb6bbc953e1687cb11a0e6afbb0d454ecd23c9b1.",
       "timestamp": "2026-08-11T04:55:00+00:00"
+    },
+    {
+      "affects": [
+        "SWARM-V2-CAS-PROOF",
+        "SWARM-V2-HARDEN"
+      ],
+      "eventId": "evt-20260811-053100-cas-proof",
+      "eventType": "RECOVERY",
+      "evidence": [
+        "old claim blob a975ebc87255f4832a6b0d951c9db6ab8f275d20",
+        "generation-2 commit 179124407e5df83ec2ac53f98e40f8d60be31d75",
+        "control run 31461852101 passed transition validation",
+        "second stale conditional update was rejected with GitHub HTTP 409"
+      ],
+      "fromWorker": "sol-20260811-cas2",
+      "laneId": "SWARM-V2-CAS-PROOF",
+      "schemaVersion": 1,
+      "severity": "info",
+      "summary": "Live stale-lease recovery proof passed: generation 2 replaced an expired generation-1 owner, the control transition validator accepted the change, and GitHub rejected a second contender that still referenced the old blob SHA.",
+      "timestamp": "2026-08-11T05:31:00+00:00"
     }
   ],
   "resources": [
@@ -168,7 +189,7 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "9392526f28baadaa24ba410706ec022713df9a4007b9b359c4a14a8d7f0b3fcd",
+  "stateDigest": "3ef3933c66e5133fba40919a7bbd9bf8f059e3a08664ab58fd3ee61c72240eb1",
   "summary": {
     "activeClaims": 2,
     "activeResourceClaims": 1,
