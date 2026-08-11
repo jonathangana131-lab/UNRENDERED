@@ -23,6 +23,7 @@ export type RealizedLab = {
 	) -> (FidelityManager.StepResult, WorldEntity.WorldEntityRecord),
 	getRecord: (entityId: string) -> WorldEntity.WorldEntityRecord,
 	isRepresented: (entityId: string) -> boolean,
+	ownsRepresentation: (entityId: string, candidate: Instance) -> boolean,
 	destroy: () -> (),
 }
 
@@ -303,6 +304,16 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 		return represented
 	end
 
+	local function ownsRepresentation(entityId: string, candidate: Instance): boolean
+		assert(not destroyed, "Physics Lab has been destroyed")
+		if not isRepresented(entityId) then
+			return false
+		end
+
+		local representation = representations[entityId]
+		return representation == candidate and candidate.Parent == model
+	end
+
 	local function captureState(record: WorldEntity.WorldEntityRecord): WorldEntity.PlainData
 		assert(
 			representations[record.id] ~= nil,
@@ -385,6 +396,7 @@ function PhysicsLabRealizer.realize(parent: Instance): RealizedLab
 		step = step,
 		getRecord = getRecord,
 		isRepresented = isRepresented,
+		ownsRepresentation = ownsRepresentation,
 		destroy = destroy,
 	})
 end
