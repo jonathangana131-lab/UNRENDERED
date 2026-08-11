@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-b7n4k2p9",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T20:19:30+00:00",
+  "lastSeenAt": "2026-08-11T20:19:30+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "primary",
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-b7n4k2p9-g7",
+  "notes": "Generation-7 continuation from exact generation-6 head f528b2187b06f73d97ef14fddba6caf9ca0055a4. Absorb PR #381 nested identity-scalar no-execute regression, preserve canonical identity, rerun exact-head validation, and hand off for fresh independent review."
+}
