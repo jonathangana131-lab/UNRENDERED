@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "primary",
-  "workerId": "sol-20260811-j6r2v8",
-  "claimToken": "66ddaccfb775d0cc",
-  "claimedAt": "2026-08-11T06:18:04+00:00",
-  "heartbeatAt": "2026-08-11T06:45:00+00:00",
+  "workerId": "sol-20260811-v8k3p6",
+  "claimToken": "a91c5e73d4b2608f",
+  "claimedAt": "2026-08-11T07:46:30+00:00",
+  "heartbeatAt": "2026-08-11T07:46:30+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-j6r2v8",
-  "pr": 279
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-v8k3p6-g2",
+  "pr": null
 }
