@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-202100-t8v4n2c7-authority-teardown-review",
+  "timestamp": "2026-08-11T20:21:00+00:00",
+  "fromWorker": "sol-20260811-t8v4n2c7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #382 exact head d9d67f76d9b7e9981e4406d52ec75f342168c1db requires changes before authority completion: the HG-BACKFILL-AUTHORITY/test-adversary replay again edits out-of-scope tests/run.luau instead of a lane-owned authority entrypoint, and the recovered teardown fixture still does not lock assertStudioServer() itself to both RunService:IsStudio() and RunService:IsServer(), leaving a source-test false-pass path. Recovered fixture provenance is byte-identical to stale #307 and exact-head canonical CI plus Swarm engine-tests are green; live pr-ownership remains separately blocked by trusted immutable-history recovery. No Studio/two-client evidence claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG-COMPLETION-AUTHORITY"]
+}
