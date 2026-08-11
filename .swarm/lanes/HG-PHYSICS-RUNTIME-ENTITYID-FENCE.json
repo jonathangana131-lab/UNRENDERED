@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
+  "epicId": "HERO-GATE",
+  "title": "Physics Lab runtime entity-ID boundary fence",
+  "objective": "Fail closed on malformed runtime entityId inputs before registry lookup, diagnostics, or transition mutation can execute caller-controlled behavior, while preserving the permanent Physics Lab's canonical recipe and transition-authority invariants.",
+  "priority": 4975,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    "src/shared/Physics/PhysicsLabRuntime.luau",
+    "tests/physics_lab_runtime*.luau",
+    "Docs/PHYSICS_LAB.md"
+  ],
+  "resources": [],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Physics runtime entity-ID boundary hardening",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 300,
+      "writeScopes": [
+        "src/shared/Physics/PhysicsLabRuntime.luau",
+        "tests/physics_lab_runtime*.luau",
+        "Docs/PHYSICS_LAB.md"
+      ]
+    },
+    {
+      "slotId": "audit",
+      "role": "Independent runtime entity-ID boundary audit",
+      "exclusive": true,
+      "requiresIndependentFrom": "primary",
+      "availableWhen": ["REVIEW"],
+      "priorityBoost": 120,
+      "writeScopes": [
+        "tests/physics_lab_runtime*.luau",
+        "Docs/PHYSICS_LAB.md"
+      ]
+    }
+  ],
+  "acceptance": [
+    "non-string or metatable-backed entityId inputs reject before caller-controlled __tostring or other diagnostic metamethod execution",
+    "rejected malformed IDs cannot dispose, recursively step, or otherwise mutate PhysicsLabRuntime authority while the rejection is formed",
+    "rejection preserves runtime active status, registry/fidelity populations, and authority synchronization; an immediate valid retry remains possible",
+    "valid but unknown WorldEntityId strings still reject with a bounded safe diagnostic and valid canonical IDs preserve existing lifecycle behavior",
+    "integration preserves both PR #310 canonical-recipe invariants and PR #388 transition-mutation/frozen-facade invariants when those lineages are synthesized",
+    "pure regressions cover malformed lookup/getFidelity/step boundaries; no Roblox Studio, viewport, physical-contact, or two-client evidence claim",
+    "independent review required before integration"
+  ],
+  "notes": "Materialized from HG-CAPACITY-MINING FINDING evt-20260811t211406z-v9q2m7c4-physics-runtime-entityid-boundary. Current main is ae83c0ef470eb2e73d99be41fd3561ede30c40e1. PR #310 (recipe fence) and PR #388 (transition fence) overlap the same runtime/test files and are independently source-approved but blocked on control-plane recovery/integration sequencing; this lane must not erase either invariant when eventually synthesized. Static/source-only lane; no Studio evidence required or claimed.",
+  "tags": ["backfill", "hero-gate", "source-only", "physics-runtime"]
+}
