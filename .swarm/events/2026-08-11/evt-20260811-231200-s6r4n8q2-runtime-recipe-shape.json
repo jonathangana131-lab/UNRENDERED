@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-231200-s6r4n8q2-runtime-recipe-shape",
+  "timestamp": "2026-08-11T23:12:00+00:00",
+  "fromWorker": "sol-20260811-s6r4n8q2",
+  "eventType": "FINDING",
+  "summary": "Capacity mining of PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754 found that assertCanonicalRecipe exact-validates WorldEntity record/origin keys but does not close the outer PhysicsLabRecipe shapes. The top-level recipe accepts unknown fields; the entities table is checked only by # and ipairs so extra map/non-array entries are ignored; and each primitive/object entity-recipe table is accepted without an exact allowed-key fence. This is a source-contract gap in the retained canonical-recipe constructor boundary. The active independent synthesis reviewer should decide whether to REQUEST_CHANGES; if repaired, add bounded regressions for extra top-level fields, extra entity-list map entries, and unknown entity-recipe fields without widening runtime architecture.",
+  "affects": ["HG-PHYSICS-RUNTIME-SYNTHESIS"],
+  "laneId": "HG-PHYSICS-RUNTIME-SYNTHESIS",
+  "severity": "MEDIUM",
+  "evidence": [
+    "PR #408 exact source head d31c100c5d3766ca14d89b046fff4cdb09086754 defines exact RECORD_KEYS and ORIGIN_KEYS fences, but assertCanonicalRecipe performs no equivalent exact-key validation on recipeTable or entityRecipe.",
+    "The same function accepts entities after assertPlainTable plus #entities == canonical count, then iterates with ipairs; a plain table containing the canonical dense array plus an extra map key is therefore outside the canonical recipe shape yet is not inspected by that loop.",
+    "PhysicsLabRecipe defines distinct fixed primitive/object recipe records with geometry/material/ObjectGenome fields, so the missing outer-shape fence is not an intentionally open arbitrary-map contract.",
+    "Current PhysicsLabRealizer builds PhysicsLabRecipe internally before constructing the runtime, so this source finding does not claim a demonstrated current Workspace divergence or engine exploit; it concerns the public runtime constructor contract and future adapter safety.",
+    "No code was changed, no executable test was run, and no Roblox Studio, viewport, contact, or two-client evidence is claimed by this mining result."
+  ]
+}
