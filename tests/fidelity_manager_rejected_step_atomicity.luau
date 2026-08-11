@@ -183,16 +183,10 @@ local function run(): number
 	local registeringFailureManager = FidelityManager.new(reentrantConfig)
 	registeringFailureManager:register("entity:atomic-register-hook", "F0")
 	local registeringFailureAccepted = pcall(function()
-		registeringFailureManager:step(
-			"entity:atomic-register-hook",
-			"F0",
-			heroInputs(),
-			0,
-			function()
-				registeringFailureManager:register("entity:atomic-register-side-effect", "F1")
-				error("intentional failure after manager mutation")
-			end
-		)
+		registeringFailureManager:step("entity:atomic-register-hook", "F0", heroInputs(), 0, function()
+			registeringFailureManager:register("entity:atomic-register-side-effect", "F1")
+			error("intentional failure after manager mutation")
+		end)
 	end)
 	expectEqual("failing manager-mutating hook propagates rejection", registeringFailureAccepted, false)
 	expectEqual(
