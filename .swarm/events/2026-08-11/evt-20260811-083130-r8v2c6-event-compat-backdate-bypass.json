@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083130-r8v2c6-event-compat-backdate-bypass",
+  "timestamp": "2026-08-11T08:31:30+00:00",
+  "fromWorker": "sol-20260811-r8v2c6",
+  "eventType": "FINDING",
+  "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
+  "severity": "critical",
+  "summary": "Exact branch head 148c45f45d10f4859c87227b1bf1d698b9d78e83 does not yet satisfy the lane's 'newly emitted top-level legacy fields still fail closed' acceptance. `_validate_event_with_immutable_compat` gates compatibility on the event's self-reported `timestamp <= 2026-08-11T08:25:00Z`; a newly created event can choose a pre-cutoff timestamp and obtain the legacy slotId/pr/headSha/verdict/nextAction surface. The file-level validator has no non-forgeable creation-time signal, so a timestamp cutoff alone cannot distinguish historical immutable bytes from a fresh backdated record.",
+  "affects": [
+    "SWARM-RECOVERY-EVENT-COMPAT",
+    "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+    "HG-BACKFILL-REALITY"
+  ],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "Lane SWARM-RECOVERY-EVENT-COMPAT acceptance explicitly requires legacy compatibility to be restricted by event type, value shape, and fixed historical cutoff while malformed or newly emitted top-level legacy fields still fail closed.",
+    "Branch 148c45f45d10f4859c87227b1bf1d698b9d78e83 computes `timestamp = parse_time(obj['timestamp'])` and permits legacy fields whenever that caller-supplied timestamp is not after `_LEGACY_EVENT_CUTOFF`; no eventId/path/hash allowlist or Git provenance is checked.",
+    "Current tests only prove a post-cutoff timestamp is rejected. They do not create a fresh event after recovery whose payload is deliberately backdated before the cutoff.",
+    "The safe file-level compatibility shape is an exact allowlist of already-observed historical event IDs (ideally eventId -> exact allowed legacy-field set) plus the existing type/value/cutoff/conflict checks; fresh unlisted events must route to the strict validator and reject the legacy keys."
+  ],
+  "metadata": {
+    "reviewedHeadSha": "148c45f45d10f4859c87227b1bf1d698b9d78e83",
+    "recommendedRegression": "Create a new unlisted event with timestamp 2026-08-11T08:05:20Z and a legacy top-level field; validate_all must reject it even though the payload timestamp predates the cutoff.",
+    "recommendedFix": "Allow compatibility only for an explicit audited set of historical event IDs/legacy field sets, then retain strict timestamp, event-type, type/shape, and metadata-conflict checks."
+  }
+}
