@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-k3q8v6z2",
+  "claimToken": "5f8a2c7d9e1b4063",
+  "claimedAt": "2026-08-11T09:39:29+00:00",
+  "heartbeatAt": "2026-08-11T09:39:29+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-review1-k3q8v6z2",
+  "pr": null
+}
