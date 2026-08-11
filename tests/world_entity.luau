@@ -321,6 +321,7 @@ local function run(): number
 			kind = "office-chair",
 			origin = {
 				worldId = "world:0000000000000001",
+				regionId = "region:office-a",
 				generator = "objects.office",
 				generatorVersion = 1,
 				recipeKey = "chair/registration-validation",
@@ -445,6 +446,16 @@ local function run(): number
 		#WorldEntity.duplicateDiagnostics(disabledDiagnosticsRegistry),
 		0
 	)
+
+	local maximumCapacityAccepted = pcall(function()
+		WorldEntity.createRegistry(WorldEntity.MAX_DUPLICATE_DIAGNOSTIC_CAPACITY)
+	end)
+	expectEqual("duplicate diagnostic capacity accepts project maximum", maximumCapacityAccepted, true)
+
+	local oversizedCapacityAccepted = pcall(function()
+		WorldEntity.createRegistry(WorldEntity.MAX_DUPLICATE_DIAGNOSTIC_CAPACITY + 1)
+	end)
+	expectEqual("duplicate diagnostic capacity rejects values above project maximum", oversizedCapacityAccepted, false)
 
 	local invalidCapacityAccepted = pcall(function()
 		WorldEntity.createRegistry(math.huge)
