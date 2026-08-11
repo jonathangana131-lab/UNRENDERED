@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "SWARM-PROTOCOL",
+  "workerId": "sol-20260811-v21fix",
+  "laneId": "SWARM-V21-CAPACITY",
+  "claimToken": "a91c4d7e2f5b8031",
+  "acquiredAt": "2026-08-11T05:56:35+00:00",
+  "heartbeatAt": "2026-08-11T05:56:35+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "notes": "Exclusive protocol-writer lease for the post-stress-test capacity repair."
+}
