@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-d7k4m9q2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T22:13:45+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-d7k4m9q2-g2",
-  "notes": "Reconciled PR #395's already-published exact-head source/test approval; lane moved to BLOCKED on global live ownership and audit claim released without duplicate review."
+  "lastSeenAt": "2026-08-11T22:14:40+00:00",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "test-adversary",
+  "branch": "agent/tests/HG-BACKFILL-FIDELITY-tests-d7k4m9q2-g4",
+  "notes": "Generation-4 stale recovery only to reconcile already-approved stacked test PR #398 onto retained production PR #385; no duplicate review or product edit."
 }
