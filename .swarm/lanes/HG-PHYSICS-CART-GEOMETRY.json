@@ -5,7 +5,7 @@
   "title": "Physics Lab rolling-cart authored geometry closure",
   "objective": "Close the two independently demonstrated source-only rolling-cart fixture defects in one bounded follow-up: make ground-supported casters contact the authored F2 ground plane and make the declared center of mass match the component mass distribution, with deterministic regressions and explicit recipe versioning.",
   "priority": 5090,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/PhysicsLabObjectGenomes.luau", "tests/physics_lab_recipe.luau"],
@@ -22,6 +22,6 @@
     "do not claim Roblox Studio contact evidence",
     "require independent review before DONE"
   ],
-  "notes": "PR #311 exact head 84408e1f8a8dfa5d99ecfcd2e14762c8e0265877 repairs the prior 0.005m caster/chassis disconnect by spanning each 0.105m caster exactly between the authored ground plane and chassis underside, recomputes component-derived COM, and adds a deterministic chassis support-contact regression. Exact-head product CI run 31473259627 is green. Independent source-only re-review is required before completion; no Roblox Studio evidence is claimed. Separate shelf/frame manufacturability debt remains out of scope under evt-20260811-081930-q2v7m5-cart-shelf-frame. Swarm ownership is independently blocked by malformed unrelated MaterialDNA event state, not by this lane's product source/tests.",
+  "notes": "Independent exact-head audit of PR #311 at 84408e1f8a8dfa5d99ecfcd2e14762c8e0265877 passes the cart source repair: caster bottom is exactly authored ground -0.475, caster top is exactly chassis underside -0.370, recipe origin y=0.475 places caster ground at world y=0, mass is 15.6kg, weighted COM y=-0.174102564... matches authored -0.1741, familyVersion=2, and focused deterministic support/contact regressions are present. Exact-head CI run 31473259627 is green and the PR remains two product files only. HOLD is integration freshness only: current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is 2 commits ahead of PR head (both swarm control-plane repairs), so primary must sync current main and rerun CI on the synchronized head before a fresh independent audit. Review 4904785930; durable finding evt-20260811-093305-4e7b1c9a-cart-audit-sync-required. No Roblox Studio evidence claimed because OPS-STUDIO-DISPLAY remains active. Separate shelf/frame manufacturability debt remains out of scope under evt-20260811-081930-q2v7m5-cart-shelf-frame.",
   "tags": ["backfill", "hero-gate", "source-only", "physics", "geometry"]
 }
