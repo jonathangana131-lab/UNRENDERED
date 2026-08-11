@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-REALITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-s5r8q2n4",
+  "claimToken": "b4e7a19c2d6f8053",
+  "claimedAt": "2026-08-11T11:53:00+00:00",
+  "heartbeatAt": "2026-08-11T11:53:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 4,
+  "resources": [],
+  "branch": "agent/reality/HG-BACKFILL-REALITY-tests-s5r8q2n4",
+  "pr": null,
+  "notes": "Generation-4 recovery of stale v1 replay adversarial coverage from PR #312 onto current main. Preserve exact accepted/rejected replay invariants; no production/schema changes and no Studio evidence claim."
+}
