@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-q8c5t2m4",
+  "claimToken": "2f8a6c1d9b4e7053",
+  "claimedAt": "2026-08-11T11:58:02+00:00",
+  "heartbeatAt": "2026-08-11T11:58:02+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-q8c5t2m4",
+  "pr": null,
+  "notes": "Physics completion-queue exact-head reviewer after publishing PR #347 chair-geometry lane audit. Review/integration backlog only; no new feature primary and no speculative Studio evidence."
+}
