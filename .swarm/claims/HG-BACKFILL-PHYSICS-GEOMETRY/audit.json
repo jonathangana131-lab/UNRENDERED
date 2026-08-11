@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-j3v6n8q2",
+  "claimToken": "e6b1c7d4a9f20358",
+  "claimedAt": "2026-08-11T23:13:24+00:00",
+  "heartbeatAt": "2026-08-11T23:13:24+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-j3v6n8q2",
+  "pr": 414,
+  "notes": "Independent exact-head audit of PR #414 at 51ffc16fb2f5864cd4874710a7517e94dd5422b8. Verify primitive-number fencing before equality/order/arithmetic, retained finite-output checks, hostile metamethod zero-execute regressions, and no scope drift. Source-only; no Studio evidence."
+}
