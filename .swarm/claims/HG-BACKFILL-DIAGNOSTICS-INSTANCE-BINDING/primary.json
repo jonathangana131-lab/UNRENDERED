@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "slotId": "primary",
+  "workerId": "sol-20260811-q5x8n3z2",
+  "claimToken": "5e1a8c3d7b2f9064",
+  "claimedAt": "2026-08-11T09:30:00+00:00",
+  "heartbeatAt": "2026-08-11T09:30:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-q5x8n3z2",
+  "pr": null,
+  "notes": "Implement the narrow exact (entityId, candidate Instance) private-representation ownership seam and dedicated pure source regression. Do not modify diagnostics production code; no Studio/viewport evidence claim."
+}
