@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090000-h8v5c1-objectgenome-com-coherence",
+  "timestamp": "2026-08-11T09:00:00+00:00",
+  "fromWorker": "sol-20260811-h8v5c1",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "medium",
+  "summary": "ObjectGenome validates aggregate component mass against genome.massKg but treats genome.centerOfMassM only as an arbitrary finite point inside the object envelope. Because ComponentSpec exposes massKg and localPositionM but no separate component-COM offset, the authored reference-pose center of mass is derivable from the canonical component graph; allowing an unrelated declared centerOfMassM creates internally contradictory physical metadata. The permanent office-chair, utility-table, and filing-cabinet fixtures all currently demonstrate this drift, so correction must be versioned rather than silently rewriting fixture truth.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "Generation-3 ObjectGenome primary branch agent/objects/HG-BACKFILL-OBJECTGENOME-v7k3m9-g3 validates componentMassKg against genome.massKg with tolerance, while centerOfMassM is checked only for finite Vec3 shape and containment inside dimensionsM.",
+    "ObjectGenome ComponentSpec already gives each canonical component massKg and localPositionM, and exposes no per-component center-of-mass offset; at the authored reference pose those fields define the available mass-distribution model.",
+    "The office-table fixture declares centerOfMassM.y=0.08 even though its four 2.4kg legs at y=-0.03, 2.0kg crossbar at y=0.15, and 15.4kg top at y=0.33 over total mass 27kg imply a substantially higher component-weighted reference-pose y center.",
+    "The office-chair and filing-cabinet fixtures likewise declare centerOfMassM values that are not the component-mass-weighted average of their own localPositionM values, proving this is existing canonical fixture drift rather than only a synthetic malformed input.",
+    "A repair should not be folded invisibly into the current generation-3 primary familyVersion/state-aliasing work: center-of-mass correction changes canonical recipe fingerprint/physical truth and therefore needs explicit fixture/version migration semantics plus deterministic regressions."
+  ]
+}
