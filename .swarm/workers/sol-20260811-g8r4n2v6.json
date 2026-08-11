@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-g8r4n2v6",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T21:00:00+00:00",
+  "lastSeenAt": "2026-08-11T21:00:00+00:00",
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "slotId": "review-1",
+  "branch": "agent/review/HG-COMPLETION-AUTHORITY-review-1-g8r4n2v6",
+  "notes": "Independent exact-head authority completion review; prioritizing combined teardown stack PR #394 without claiming Studio/two-client evidence."
+}
