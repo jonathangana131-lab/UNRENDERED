@@ -96,8 +96,16 @@ if ok then
 	error("expected injected diagnostics capture failure")
 end
 
+local injectedErrorText = tostring(injectedError)
+local expectedErrorFragment = "invalid representation class diagnostics attribute"
+local expectedFailureObserved = string.find(injectedErrorText, expectedErrorFragment, 1, true) ~= nil
+
 local rootAfterFailure = lab.model:FindFirstChild(rootName)
 assert(rootAfterFailure == nil, "failed diagnostics enable leaked its owned tree")
+assert(
+	expectedFailureObserved,
+	"injected diagnostics failure did not reach the expected capture validation: " .. injectedErrorText
+)
 
 local retry = Diagnostics.enable(lab)
 assert(retry.enabled, "clean retry did not enable diagnostics")
@@ -105,15 +113,15 @@ local retryOff = Diagnostics.disable(lab)
 assert(not retryOff.enabled, "clean retry did not disable diagnostics")
 
 print("PHYSICS_LAB_DIAGNOSTICS_FAILURE_ATOMICITY=" .. HttpService:JSONEncode({
-	injectedFailureObserved = true,
-	injectedError = tostring(injectedError),
+	injectedFailureObserved = expectedFailureObserved,
+	injectedError = injectedErrorText,
 	rootPresentAfterFailure = rootAfterFailure ~= nil,
 	retryEnabled = retry.enabled,
 	retryDisabled = not retryOff.enabled,
 }))
 ```
 
-Accepted evidence must show the injected call failed, the owned diagnostics root was absent immediately afterward, and a clean enable/disable retry succeeded. This probe validates one deliberate post-mutation failure path. It does not convert source review or CI into general proof against hard process termination; the engine evidence record must state exactly what was injected and observed.
+Accepted evidence must show the exact injected representation-class capture rejection, the owned diagnostics root was absent immediately afterward, and a clean enable/disable retry succeeded. An unrelated transient failure is not accepted as the intended experiment. This probe validates one deliberate post-mutation failure path. It does not convert source review or CI into general proof against hard process termination; the engine evidence record must state exactly what was injected and observed.
 
 ## Source-owned bounded toggle sweep
 
@@ -148,6 +156,6 @@ The diagnostics row remains open until a tester/bridge run on the exact commit e
 6. the 20-cycle sweep records zero scoped resource drift and stable full-lab envelope at required checkpoints;
 7. diagnostics are still off by default after normal bootstrap/rebuild;
 8. no unrelated same-name Instance is silently destroyed or adopted;
-9. the failure-atomicity engine probe records an injected post-mutation failure, no owned diagnostics tree afterward, and a successful clean retry.
+9. the failure-atomicity engine probe records the exact injected representation-class capture rejection, no owned diagnostics tree afterward, and a successful clean retry.
 
 CI, a successful Rojo build, or source review alone cannot satisfy these observations.
