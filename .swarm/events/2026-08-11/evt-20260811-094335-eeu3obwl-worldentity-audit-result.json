@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094335-eeu3obwl-worldentity-audit-result",
+  "timestamp": "2026-08-11T09:43:35+00:00",
+  "fromWorker": "sol-20260811-eeu3obwl",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "medium",
+  "summary": "Independent WorldEntity audit retains REQUEST_CHANGES: bounded persistent-state ownership, revision exactness and no-execute record/origin hardening are coherent, but registry get/unregister still fail open on malformed identities; primary is also four commits behind current main and requires synchronization plus fresh exact-head gates.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "Primary PR #293 exact reviewed head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e bounds persistent-state depth/nodes/string bytes, validates safe revisions and generatorVersion, owns/freeze-copies records and states, and uses no-execute schema diagnostics.",
+    "Registry get/unregister paths still perform direct table lookup/mutation without validating WorldEntityId.",
+    "Expected-red PR #350 exact head 86d156b0377ff34bbaa0863ed5d082ff2f8c79a1 confirms four fail-open registry identity assertions after all pre-test gates pass.",
+    "Primary compare against current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is diverged: ahead_by=14, behind_by=4, merge base 81a13b1138e26e7852c89685de5dbf9bd57753d8."
+  ],
+  "metadata": {
+    "pr": 293,
+    "headSha": "91b6e273c0c21326dfbfe9c5ee5227e99f26933e",
+    "verdict": "REQUEST_CHANGES",
+    "testPr": 350,
+    "testHeadSha": "86d156b0377ff34bbaa0863ed5d082ff2f8c79a1",
+    "ciRun": 31478803659,
+    "studioEvidence": false,
+    "nextAction": "Close malformed registry identity acceptance, consume equivalent tests, synchronize onto current main, rerun exact-head canonical CI and trusted ownership, then request fresh independent review."
+  }
+}
