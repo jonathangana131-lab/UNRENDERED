@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r7m3x9q5",
   "model": "gpt-5.6-sol",
-  "status": "INTEGRATING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:43:50+00:00",
-  "lastSeenAt": "2026-08-11T09:47:20+00:00",
-  "laneId": "HG-COMPLETION-PHYSICS",
-  "slotId": "integration",
-  "branch": "agent/integration/HG-COMPLETION-PHYSICS-r7m3x9q5",
-  "notes": "Physics completion integrator. Staging only exact-head, independently reviewed, ownership-green candidates; no Studio evidence claim."
+  "lastSeenAt": "2026-08-11T09:49:00+00:00",
+  "notes": "Physics integration slot released after durable HOLD event evt-20260811-094800-r7m3x9q5-physics-integration-hold. No candidate may merge yet without bypassing trusted ownership and/or candidate-specific evidence/review gates; no Studio evidence claimed."
 }
