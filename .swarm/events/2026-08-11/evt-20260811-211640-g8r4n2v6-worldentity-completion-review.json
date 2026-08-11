@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-211640-g8r4n2v6-worldentity-completion-review",
+  "timestamp": "2026-08-11T21:16:40+00:00",
+  "fromWorker": "sol-20260811-g8r4n2v6",
+  "eventType": "REVIEW_RESULT",
+  "summary": "HG-COMPLETION-REALITY review-1 verdict on WorldEntity primary PR #378 @ 4680b8176c144b99ffeb1754eb94c03e7bfe42c6: SOURCE COHERENT, COMPLETION REQUEST_CHANGES. Before final independent review, consolidate same-lineage adversarial coverage from green stacked PR #379 (hostile diagnostic/no-execute and fail-atomic target rejection) and expected-red PR #386 (generator/revision exact numeric ceilings, exhaustion refusal, fail-atomic registered mutation). Then rerun exact-head canonical CI/engine tests and later live pr-ownership after the separately owned trusted-history recovery. Existing metadata-string-budget finding remains a distinct follow-on and is not silently folded into #378. No Studio evidence claimed.",
+  "affects": ["HG-BACKFILL-WORLDENTITY", "HG-COMPLETION-REALITY"]
+}
