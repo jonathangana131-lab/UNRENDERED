@@ -71,36 +71,36 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
         value["metadata"]["slotId"] = "reviewer-1"
         return value
 
-    def event_path(self, root=None):
-        root = self.fx.root if root is None else root
-        return root / "events" / "2026-08-11" / f"{self.EVENT_ID}.json"
+    def strict_event(self, event_id):
+        return {
+            "schemaVersion": 1,
+            "eventId": event_id,
+            "timestamp": "2026-08-11T08:10:00+00:00",
+            "fromWorker": "sol-20260811-a81f",
+            "eventType": "FINDING",
+            "laneId": "LANE-A",
+            "severity": "normal",
+            "summary": "Strict event fixture.",
+            "affects": ["LANE-A"],
+        }
 
-    def rule_for(self, canonical_path, restorable_from=()):
+    def event_path(self, root=None, date="2026-08-11"):
+        root = self.fx.root if root is None else root
+        return root / "events" / date / f"{self.EVENT_ID}.json"
+
+    def rule_for(self, canonical_path):
         return {
             "date": "2026-08-11",
             "filename": canonical_path.name,
             "canonicalGitBlobSha1": hard._git_blob_sha1(canonical_path),
-            "restorableFromGitBlobSha1": set(restorable_from),
         }
 
     def test_audited_production_hashes_match_first_write_evidence(self):
         rules = hard._CANONICAL_IMMUTABLE_EVENTS
-        self.assertEqual(
-            rules["evt-20260811-073500-q9m4r2-authority-rereview-approve"]["canonicalGitBlobSha1"],
-            "2f0b0221b7995b3862ac6c009804ebb66f715fac",
-        )
-        self.assertEqual(
-            rules["evt-20260811-073650-q9m4r2-worldentity-sync-hold"]["canonicalGitBlobSha1"],
-            "f9781fd64518c01aa10b460f01aff13adc6635da",
-        )
-        self.assertEqual(
-            rules["evt-20260811-080520-h4v8n2-cart-geometry-review"]["canonicalGitBlobSha1"],
-            "a39220b473086229e6b1057b296342175b851af1",
-        )
-        self.assertEqual(
-            rules["evt-20260811-081620-mat8c3r1-materialdna-key-grammar"]["canonicalGitBlobSha1"],
-            "9a7f679ea84600d6a28a8bef02436e5f85fd857e",
-        )
+        self.assertEqual(rules["evt-20260811-073500-q9m4r2-authority-rereview-approve"]["canonicalGitBlobSha1"], "2f0b0221b7995b3862ac6c009804ebb66f715fac")
+        self.assertEqual(rules["evt-20260811-073650-q9m4r2-worldentity-sync-hold"]["canonicalGitBlobSha1"], "f9781fd64518c01aa10b460f01aff13adc6635da")
+        self.assertEqual(rules["evt-20260811-080520-h4v8n2-cart-geometry-review"]["canonicalGitBlobSha1"], "a39220b473086229e6b1057b296342175b851af1")
+        self.assertEqual(rules["evt-20260811-081620-mat8c3r1-materialdna-key-grammar"]["canonicalGitBlobSha1"], "9a7f679ea84600d6a28a8bef02436e5f85fd857e")
 
     def test_exact_canonical_blob_accepts_malformed_historical_event_without_mutation(self):
         path = self.event_path()
@@ -112,7 +112,7 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
         self.assertEqual(result["events"], 1)
         self.assertEqual(path.read_bytes(), before)
 
-    def test_known_event_strict_normalization_is_still_rejected_as_laundered_history(self):
+    def test_known_event_strict_normalization_is_rejected_as_laundered_history(self):
         path = self.event_path()
         write(path, self.canonical_event())
         rule = self.rule_for(path)
@@ -121,7 +121,7 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
             with self.assertRaises(core.ControlError):
                 hard.validate_all(self.fx.root, self.now)
 
-    def test_known_event_byte_change_fails_closed(self):
+    def test_known_event_one_byte_semantic_change_fails_closed(self):
         path = self.event_path()
         write(path, self.canonical_event())
         rule = self.rule_for(path)
@@ -142,6 +142,23 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
         with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
             with self.assertRaises(core.ControlError):
                 hard.validate_all(self.fx.root, self.now)
+
+    def test_allowlisted_event_id_cloned_under_another_date_is_rejected(self):
+        canonical = self.event_path()
+        write(canonical, self.canonical_event())
+        rule = self.rule_for(canonical)
+        clone = self.event_path(date="2026-08-12")
+        write(clone, self.canonical_event())
+        with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
+            with self.assertRaises(core.ControlError):
+                hard.validate_all(self.fx.root, self.now)
+
+    def test_generic_duplicate_strict_event_ids_are_rejected(self):
+        event_id = "evt-20260811-081000-duplicate-strict-event"
+        write(self.fx.root / "events" / "2026-08-11" / "one.json", self.strict_event(event_id))
+        write(self.fx.root / "events" / "2026-08-12" / "two.json", self.strict_event(event_id))
+        with self.assertRaises(core.ControlError):
+            hard.validate_all(self.fx.root, self.now)
 
     def test_fresh_backdated_legacy_event_cannot_enter_compatibility(self):
         value = self.canonical_event()
@@ -168,34 +185,29 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
         with self.assertRaises(core.ControlError):
             hard.validate_all(self.fx.root, self.now)
 
-    def test_transition_allows_only_exact_laundered_to_canonical_restoration(self):
+    def test_transition_still_rejects_laundered_to_canonical_rewrite(self):
         with tempfile.TemporaryDirectory() as before_dir, tempfile.TemporaryDirectory() as after_dir:
             before = Path(before_dir)
             after = Path(after_dir)
             before_path = self.event_path(before)
             after_path = self.event_path(after)
             write(before_path, self.strict_laundered_event())
-            before_sha = hard._git_blob_sha1(before_path)
             write(after_path, self.canonical_event())
-            rule = self.rule_for(after_path, {before_sha})
-            with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
-                result = hard.transition_check(before, after)
-            self.assertEqual(result["canonicalRestorations"], [f"events/2026-08-11/{after_path.name}"])
-
-    def test_transition_rejects_unapproved_historical_rewrite(self):
-        with tempfile.TemporaryDirectory() as before_dir, tempfile.TemporaryDirectory() as after_dir:
-            before = Path(before_dir)
-            after = Path(after_dir)
-            before_path = self.event_path(before)
-            after_path = self.event_path(after)
-            unexpected = self.strict_laundered_event()
-            unexpected["summary"] = "Different laundered bytes are not restorable."
-            write(before_path, unexpected)
-            write(after_path, self.canonical_event())
-            rule = self.rule_for(after_path, {"0" * 40})
+            rule = self.rule_for(after_path)
             with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
                 with self.assertRaises(core.ControlError):
                     hard.transition_check(before, after)
+
+    def test_transition_rejects_duplicate_event_id_replay_on_add(self):
+        with tempfile.TemporaryDirectory() as before_dir, tempfile.TemporaryDirectory() as after_dir:
+            before = Path(before_dir)
+            after = Path(after_dir)
+            event_id = "evt-20260811-081000-transition-duplicate"
+            write(before / "events" / "2026-08-11" / "one.json", self.strict_event(event_id))
+            write(after / "events" / "2026-08-11" / "one.json", self.strict_event(event_id))
+            write(after / "events" / "2026-08-12" / "two.json", self.strict_event(event_id))
+            with self.assertRaises(core.ControlError):
+                hard.transition_check(before, after)
 
     def test_transition_rejects_readding_known_historical_path(self):
         with tempfile.TemporaryDirectory() as before_dir, tempfile.TemporaryDirectory() as after_dir:
