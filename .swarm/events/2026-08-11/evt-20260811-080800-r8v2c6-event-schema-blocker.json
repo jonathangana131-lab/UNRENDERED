@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080800-r8v2c6-event-schema-blocker",
+  "timestamp": "2026-08-11T08:08:00+00:00",
+  "fromWorker": "sol-20260811-r8v2c6",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "severity": "critical",
+  "summary": "Live swarm-control validation is now blocked by an immutable REVIEW_RESULT event whose already-published top-level review fields pr/headSha/verdict are rejected by main's current validate_event allowed-key schema. The immutable-event transition guard forbids rewriting or deleting that historical event, so recovery must make the validator compatibly accept and strictly validate the already-published structured fields rather than mutate history.",
+  "affects": [
+    "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+    "HG-BACKFILL-REALITY"
+  ],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "Swarm Control Plane run 31471357908 reached validate-control-branch after worker-status repairs and failed on .swarm/events/2026-08-11/evt-20260811-073650-q9m4r2-worldentity-sync-hold.json: unknown keys ['headSha', 'pr', 'verdict'].",
+    "Current main tools/swarm/swarmctl.py validate_event allows only laneId/severity/evidence/toWorker/metadata beyond the required event fields, so the published review fields fail closed.",
+    "Current main transition_check rejects any changed or deleted existing event bytes; editing the offending immutable event is therefore not a valid recovery.",
+    "PR #306 exact-head canonical CI is green but live ownership cannot execute semantically until control validation is restored."
+  ],
+  "metadata": {
+    "offendingEvent": "evt-20260811-073650-q9m4r2-worldentity-sync-hold",
+    "ownershipRun": 31471106336,
+    "validationRun": 31471357908,
+    "blockedPr": 306,
+    "blockedHeadSha": "f813129849d48131da185ecf2158ff2c769d61fa",
+    "recommendedRecovery": "extend validate_event compatibly for immutable structured review fields with strict type/shape validation and regression coverage"
+  }
+}
