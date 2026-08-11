@@ -63,6 +63,15 @@ local function run(): number
 		locked.recipeFingerprint == GOLDEN_RECIPE_FINGERPRINT
 	)
 
+	local nonCanonicalWorldId = historicalV2Candidate()
+	nonCanonicalWorldId.worldId = string.gsub(GOLDEN_WORLD_ID, ":v1:", ":v01:", 1)
+	expect(
+		"v2 rejects zero-padded StableId version aliases",
+		rejects(function()
+			ResolvedRegionRecipe.lock(nonCanonicalWorldId)
+		end)
+	)
+
 	local targetVersions = historicalV2Versions()
 	targetVersions.reality = 2
 	expect(
