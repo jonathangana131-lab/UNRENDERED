@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-ogm5x8q2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T08:33:00+00:00",
+  "lastSeenAt": "2026-08-11T08:33:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-ogm5x8q2",
+  "notes": "Deep source-only ObjectGenome capacity mining. Compare current source/tests/open PRs/live events first; publish only a concrete non-duplicate next-depth finding or explicit no-gap result."
+}
