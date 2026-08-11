@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-18d7c4b2",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-11T11:56:30+00:00",
+  "lastSeenAt": "2026-08-11T11:56:30+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-overflow-18d7c4b2",
+  "notes": "Reopened independent lane audit after fresh expected-red PR #368 demonstrated derived envelope-drift overflow on primary PR #363. Verify repro, supersede stale conditional approval, and publish fail-closed blocker; no Studio evidence claimed."
+}
