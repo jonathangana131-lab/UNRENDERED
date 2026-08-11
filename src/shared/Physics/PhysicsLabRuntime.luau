@@ -46,6 +46,24 @@ for _, entityRecipe in ipairs(CANONICAL_RECIPE.entities) do
 end
 table.freeze(CANONICAL_ENTITIES_BY_KEY)
 
+local RECORD_KEYS: { [string]: boolean } = table.freeze({
+	id = true,
+	kind = true,
+	origin = true,
+	fidelity = true,
+	persistentState = true,
+	stateRevision = true,
+	representationRevision = true,
+})
+
+local ORIGIN_KEYS: { [string]: boolean } = table.freeze({
+	worldId = true,
+	regionId = true,
+	generator = true,
+	generatorVersion = true,
+	recipeKey = true,
+})
+
 local function assertActive(self: Runtime): ()
 	assert(not self._disposed, "PhysicsLabRuntime is disposed")
 end
@@ -55,6 +73,13 @@ local function assertPlainTable(value: unknown, message: string): any
 	local tableValue = value :: any
 	assert(getmetatable(tableValue) == nil, message)
 	return tableValue
+end
+
+local function assertExactStringKeys(value: any, allowedKeys: { [string]: boolean }, message: string): ()
+	for key in pairs(value) do
+		assert(type(key) == "string", message)
+		assert(allowedKeys[key] == true, message)
+	end
 end
 
 local function plainValuesEqual(canonical: unknown, candidate: unknown, seen: { [any]: boolean }): boolean
@@ -84,6 +109,10 @@ local function plainValuesEqual(canonical: unknown, candidate: unknown, seen: { 
 	local candidateCount = 0
 	for _ in pairs(candidateTable) do
 		candidateCount += 1
+		if candidateCount > canonicalCount then
+			seen[candidateTable] = nil
+			return false
+		end
 	end
 	seen[candidateTable] = nil
 	return candidateCount == canonicalCount
@@ -124,10 +153,12 @@ local function assertCanonicalRecipe(recipe: Recipe): ()
 			entityRecipe.entity,
 			`Physics Lab recipe entity record must be a plain table: {entityKey}`
 		)
+		assertExactStringKeys(record, RECORD_KEYS, `Physics Lab recipe entity record has invalid schema: {entityKey}`)
 		local origin = assertPlainTable(
 			record.origin,
 			`Physics Lab recipe entity origin must be a plain table: {entityKey}`
 		)
+		assertExactStringKeys(origin, ORIGIN_KEYS, `Physics Lab recipe entity origin has invalid schema: {entityKey}`)
 		local canonicalRecord = canonical.entity
 		assert(record.id == canonicalRecord.id, `Physics Lab recipe key/id mismatch: {entityKey}`)
 		assert(record.kind == canonicalRecord.kind, `Physics Lab recipe entity kind mismatch: {entityKey}`)
