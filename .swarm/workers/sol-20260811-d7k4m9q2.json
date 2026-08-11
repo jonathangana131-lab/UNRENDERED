@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-d7k4m9q2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T22:14:40+00:00",
+  "lastSeenAt": "2026-08-11T22:15:35+00:00",
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "test-adversary",
   "branch": "agent/tests/HG-BACKFILL-FIDELITY-tests-d7k4m9q2-g4",
-  "notes": "Generation-4 stale recovery only to reconcile already-approved stacked test PR #398 onto retained production PR #385; no duplicate review or product edit."
+  "notes": "Reconciled already-approved Fidelity production #385 plus stacked test #398; lane is BLOCKED on global live ownership, expired test-adversary claim released, and no duplicate review or product edit was made."
 }
