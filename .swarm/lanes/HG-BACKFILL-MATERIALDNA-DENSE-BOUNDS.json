@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS",
+  "epicId": "HERO-GATE",
+  "title": "MaterialDNA bounded dense-array validation work",
+  "objective": "Close the demonstrated MaterialDNA capped-array scan-order gap so history/anomaly cardinality limits bound validation work for oversized plain-data tables, without broadening material architecture or depending on Studio.",
+  "priority": 5140,
+  "state": "PROPOSED",
+  "mode": "exclusive",
+  "dependencies": ["HG-BACKFILL-MATERIALDNA-COUNTERS"],
+  "writeScopes": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"Bounded dense-array validator hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Materials/MaterialDNA.luau","tests/materialdna_contract.luau"]},
+    {"slotId":"audit","role":"MaterialDNA cardinality/work-bound auditor","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":120,"writeScopes":["tests/materialdna_contract.luau"]}
+  ],
+  "acceptance": [
+    "validateDenseArray returns false as soon as more than maxCount valid positive-integer keys have been observed instead of scanning the remaining oversized table",
+    "existing dense-array/hole/invalid-key behavior remains fail-closed and deterministic",
+    "history and anomaly caps remain 32 and canonical fixture identity/schema versions remain unchanged",
+    "add or preserve deterministic regressions for over-cap history/anomaly rejection without claiming a timing result that was not measured",
+    "no Studio or engine-evidence claim"
+  ],
+  "notes": "Capacity-mined from current main after confirming merged PR #50 intended strict MaterialDNA bounds to prevent pathological oversized payload cost. Current validateDenseArray checks entryCount > maxCount only after the pairs loop, so rejection is cardinality-bounded but scan work remains O(N) in supplied key count. Dependency avoids overlapping the active HG-BACKFILL-MATERIALDNA-COUNTERS exact-head salvage on the same production file.",
+  "tags": ["backfill", "hero-gate", "source-only", "materialdna", "performance-boundary"]
+}
