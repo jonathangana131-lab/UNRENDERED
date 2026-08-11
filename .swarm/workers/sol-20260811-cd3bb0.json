@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-cd3bb0",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T11:50:30+00:00",
-  "lastSeenAt": "2026-08-11T12:08:15+00:00",
-  "notes": "Completed generation-1 Physics completion review with blocking #327 exact-Instance finding and approved expected-red #374 readout-completeness evidence. Reclaimed HG-COMPLETION-PHYSICS/review-2 generation 2 to review newly published source-only Physics Lab adversarial evidence."
+  "lastSeenAt": "2026-08-11T12:14:30+00:00",
+  "notes": "Completed Physics Lab completion review work. Blocked PR #327 on missing exact-Instance diagnostics authority binding; approved test-only expected-red evidence #374 (readout completeness) and #368 (derived envelope overflow), plus stacked coverage #367 (Fidelity nested unwind) and #333 (diagnostics lifecycle/default bounds). Released HG-COMPLETION-PHYSICS/review-2. Integration remains separately gated by trusted-history/pr-ownership recovery and externally blocked Studio display evidence."
 }
