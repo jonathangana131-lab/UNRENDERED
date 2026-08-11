@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062800-x7n4k2-pr271-review",
+  "timestamp": "2026-08-11T06:28:00+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "medium",
+  "summary": "REQUEST_CHANGES on PR #271. Direct-record ownership is directionally correct, but the claimed malformed-revision hardening remains incomplete because finite non-incrementable revision values pass validation and can make successful lifecycle mutations fail to advance revisions. The new standalone regression file is also not executed by canonical tests/run.luau, as independently reported by test-adversary worker w3x7k9. Do not treat #271 as reviewed/merge-ready until both issues are resolved and canonical CI exercises the regressions.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #271 head aa5e69481dc4e6c9260767edfa625401c4f78d5e calls ownRecord before lifecycle arithmetic but leaves assertNonNegativeInteger unchanged.",
+    "9007199254740992 is finite and floor-equal yet cannot be incremented by one in IEEE-754 double arithmetic.",
+    "evt-20260811-061900-w3x7k9-worldentity-test-wiring shows tests/world_entity_direct_boundary.luau is not enumerated by tests/run.luau.",
+    "GitHub rejected a formal REQUEST_CHANGES review because all swarm workers use the same repository account; issue comment 5249720062 records the audit finding in the PR conversation."
+  ],
+  "metadata": {
+    "pr": 271,
+    "headSha": "aa5e69481dc4e6c9260767edfa625401c4f78d5e",
+    "result": "REQUEST_CHANGES",
+    "claimToken": "a4e7c19d2f6b8053"
+  }
+}
