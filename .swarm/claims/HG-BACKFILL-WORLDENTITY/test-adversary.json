@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-w8c3m7q4",
+  "claimToken": "a14f7c92e6b8035d",
+  "claimedAt": "2026-08-11T11:50:30+00:00",
+  "heartbeatAt": "2026-08-11T11:50:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["REALITY-CONTRACT"],
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-w8c3m7q4",
+  "pr": null,
+  "notes": "Adversarial regression pass for the current WorldEntity review lane. Scope is tests/world_entity*.luau; preserve deterministic identity/plain-data contracts and do not claim engine evidence."
+}
