@@ -260,15 +260,11 @@ local function run(): number
 	local exhaustedRepresentationRegisteredRecord = makeRecord()
 	exhaustedRepresentationRegisteredRecord.id = "entity:representation-revision-exhaustion"
 	exhaustedRepresentationRegisteredRecord.representationRevision = maxSafeInteger
-	local exhaustedRepresentationRegistered = WorldEntity.register(
-		exhaustedRepresentationRegistry,
-		exhaustedRepresentationRegisteredRecord :: any
-	)
+	local exhaustedRepresentationRegistered =
+		WorldEntity.register(exhaustedRepresentationRegistry, exhaustedRepresentationRegisteredRecord :: any)
 	expect("registers exhausted-representation atomicity fixture", exhaustedRepresentationRegistered)
-	local beforeRejectedTransition = WorldEntity.get(
-		exhaustedRepresentationRegistry,
-		exhaustedRepresentationRegisteredRecord.id
-	)
+	local beforeRejectedTransition =
+		WorldEntity.get(exhaustedRepresentationRegistry, exhaustedRepresentationRegisteredRecord.id)
 	local registeredExhaustedTransitionAccepted = pcall(function()
 		WorldEntity.transitionRegistered(
 			exhaustedRepresentationRegistry,
