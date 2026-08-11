@@ -61,7 +61,10 @@ local function run(): number
 	local maxFamilyReport = ObjectGenome.inspect(maxFamilyVersion)
 	local maxIdentityOk, maxIdentity = pcall(ObjectGenome.identityKey, maxFamilyVersion)
 	expect("accepts maximum canonical familyVersion", maxFamilyReport.ok)
-	expect("maximum familyVersion remains stable-id representable", maxIdentityOk and type(maxIdentity) == "string")
+	expect(
+		"maximum familyVersion remains stable-id representable",
+		maxIdentityOk and type(maxIdentity) == "string"
+	)
 
 	local oversizedFamilyVersion = deepCopy(Fixtures.officeChair)
 	oversizedFamilyVersion.familyVersion = 2147483648
@@ -118,7 +121,10 @@ local function run(): number
 	)
 
 	local baselineState = ObjectGenome.defaultState(Fixtures.officeChair)
-	expect("default mutable state remains valid", ObjectGenome.inspectState(Fixtures.officeChair, baselineState).ok)
+	expect(
+		"default mutable state remains valid",
+		ObjectGenome.inspectState(Fixtures.officeChair, baselineState).ok
+	)
 	expect(
 		"default mutable state maps are independently owned",
 		not rawequal(baselineState.componentWear, baselineState.componentDamage)
@@ -164,7 +170,10 @@ local function run(): number
 	allAlias.mechanismPosition = allAlias.componentWear
 	allAlias.detachedComponents = allAlias.componentWear
 	local allAliasReport = ObjectGenome.inspectState(alignedGenome, allAlias)
-	expect("rejects aliasing across every mutable semantic-map dimension", hasCode(allAliasReport, "state.collection_alias"))
+	expect(
+		"rejects aliasing across every mutable semantic-map dimension",
+		hasCode(allAliasReport, "state.collection_alias")
+	)
 
 	return failures
 end
