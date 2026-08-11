@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063700-30a8e397-fidelity-hook-reentrancy",
+  "timestamp": "2026-08-11T06:37:00+00:00",
+  "fromWorker": "sol-20260811-30a8e397",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "FidelityManager transition callbacks have an unguarded reentrancy/resource-accounting hazard. `step()` retains a mutable state reference, invokes arbitrary `applyTransition`, then unconditionally commits counts/state afterward. If the callback unregisters the same entity (a plausible lifecycle action during demotion/teardown), unregister removes the state and decrements the current count, then the outer step decrements that current count a second time and increments the desired count for an entity no longer registered, producing negative/stale fidelity counts. The public callback contract does not currently forbid manager reentrancy or unregister during the hook.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "FidelityManager.step captures `state = self._states[entityId]`, calls applyTransition, then unconditionally adjusts current/desired counts and mutates the captured state.",
+    "FidelityManager.unregister immediately decrements registered/counts and deletes `_states[entityId]` with no in-flight transition guard.",
+    "A callback that calls `manager:unregister(entityId)` therefore leaves registered=0 but outer commit drives the prior fidelity count below zero and creates a desired-level count for an unregistered entity.",
+    "Docs/FIDELITY_MANAGER.md describes the callback as the production lifecycle adapter boundary but states no non-reentrancy restriction."
+  ]
+}
