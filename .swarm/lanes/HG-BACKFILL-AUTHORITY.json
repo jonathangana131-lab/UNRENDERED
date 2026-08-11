@@ -9,7 +9,7 @@
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/Bootstrap.server.luau", "src/client/Bootstrap.client.luau", "tests/hero_gate_contract_integration.luau", "tests/**authority*.luau", "tests/**multiplayer*.luau"],
-  "resources": [],
+  "resources": ["SERVER-AUTHORITY"],
   "slots": [
     {"slotId":"primary","role":"Server/client authority source hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/server/Bootstrap.server.luau","src/client/Bootstrap.client.luau","tests/hero_gate_contract_integration.luau","tests/**authority*.luau","tests/**multiplayer*.luau"]},
     {"slotId":"test-adversary","role":"Canonical agreement and teardown fixture author","exclusive":true,"availableWhen":["READY","REVIEW","NEEDS_CHANGES"],"priorityBoost":220,"writeScopes":["tests/hero_gate_contract_integration.luau","tests/**authority*.luau","tests/**multiplayer*.luau"]},
