@@ -96,11 +96,12 @@ The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational; 
 - Private bridge repo: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE`.
 - Mac self-hosted runner: `UNRENDERED-STUDIO-MAC`.
 - The bridge uses fixed repository-owned drivers, a managed Studio RunMode executor plugin, exact source-SHA validation, request-bound log provenance, bounded CreatorOutput evidence transport, and job-specific fail-closed evaluation.
-- Historical request `20260810-005-reality-hero-gate` produced a lifecycle-style simulation signal but was incorrectly promoted to a composite Hero Gate `PASS`; that durable bridge result has been corrected to `FAIL`. It does not prove contact/traversability, diagnostics behavior, two-client authority, or device/performance rows.
+- Historical request `20260810-005-reality-hero-gate` produced a lifecycle-style simulation signal but was incorrectly promoted to a composite Hero Gate `PASS`; that durable bridge result has been corrected to `FAIL`. It does not prove the complete Hero Gate.
 - Request `20260810-015-server-smoke-managed-plugin-n7` never reached Studio because the older validator invalidated its queued SHA after public `main` advanced. It provides no engine evidence and must not be counted. The bridge now accepts an exact pinned SHA only when it is a real ancestor of the named canonical ref, so queued immutable evidence requests survive later canonical commits without accepting unrelated history.
-- Request `20260810-018-server-smoke-managed-only-sol56j8` on exact UNRENDERED SHA `d225b3fe9f6da0a389bd8e14ddbe0f4cead26efe` is durable `PASS` / `evidence accepted` after removal of the proven legacy RunMode executor collision. It records `isRunning=true`, `isServer=true`, `labModelValid=true`, `baselineOk=true`, and `playerCount=0`. This proves only the single-server smoke/bootstrap/baseline slice; it does **not** prove two-client authority, contact/traversability, diagnostics behavior, device/performance, or the composite Hero Gate.
+- Request `20260810-018-server-smoke-managed-only-sol56j8` on exact UNRENDERED SHA `d225b3fe9f6da0a389bd8e14ddbe0f4cead26efe` is durable `PASS` / `evidence accepted` after removal of the proven legacy RunMode executor collision. It records `isRunning=true`, `isServer=true`, `labModelValid=true`, `baselineOk=true`, and `playerCount=0`. This proves only the single-server smoke/bootstrap/baseline slice; it does **not** prove two-client authority, diagnostics behavior, device/performance, or the composite Hero Gate.
 - Request `20260810-025-lifecycle-current-d225-joeysol` on the same exact UNRENDERED SHA is durable `physics-lab-lifecycle` `PASS` / `evidence accepted`: 20 F2 -> F0 -> F2 cycles, checkpoints 1/5/10/20, zero resource-count deltas, zero full-lab envelope drift within the explicit 0.001 stud tolerance, stable resolved-region repro identity, and expected primitive/ObjectGenome revision advancement. This proves the lifecycle/rebuild/resource-envelope slice only.
-- Future engine evidence requests must pin an exact canonical SHA that is reachable from the named canonical ref and satisfy the job-specific evaluator. No lifecycle or single-server result may unlock the Hero Gate by itself.
+- Request `20260810-027-physical-sanity-warmup-face-sol56k8` on exact UNRENDERED SHA `face848a32ce626796d1263bed4150142ff170f2` is durable `physics-lab-physical-sanity` `PASS` / `evidence accepted`: real server RunMode, exactly one canonical lab root, canonical baseline validation, engine contact on floor + stairs 1–4 + ramp + ledge, monotonic stair order, five ObjectGenome F2 proxies, and clean temporary-probe cleanup/resource/envelope checks with exact WorldId/RegionId/fingerprint/repro identity. This accepts the current F2 shell's canonical Studio bootstrap/physical-sanity slice without claiming articulated hinge/caster/drawer behavior.
+- Future engine evidence requests must pin an exact canonical SHA that is reachable from the named canonical ref and satisfy the job-specific evaluator. No lifecycle, single-server, or physical-sanity result may unlock the Hero Gate by itself.
 
 ## Current unlock status
 
@@ -117,7 +118,7 @@ Do not start a Reality-Grade door, chair, physical-player controller, world gene
 
 ## Hero Gate exit direction
 
-The source-contract portion of the Physics Lab gate is established. The remaining gate is actual Roblox Studio/engine evidence where pure CI cannot prove behavior: contact/traversability, constraints/mechanisms as they become applicable, diagnostics behavior, two-client authority behavior, and device/performance observations.
+The source-contract portion of the Physics Lab gate is established. Accepted engine evidence now covers the source-owned lifecycle/rebuild/resource-envelope slice, single-server bootstrap/baseline smoke, and the current F2 shell's canonical Studio physical-sanity/contact slice. Remaining engine-facing work includes diagnostics behavior, true two-client canonical authority, and device/Studio performance observations; articulated mechanisms remain UNVERIFIED where the current shell intentionally provides only anchored F2 proxies.
 
 After that evidence is gathered and reviewed, update this file to explicitly unlock the next narrow Hero Feature. The intended order remains **door, chair, then physical player movement**, not a giant procedural map.
 
@@ -130,7 +131,7 @@ Workers may inspect/review/decompose them, but should not build those major syst
 ## Known external setup gaps
 
 - No published Roblox universe/place is connected to automated publishing yet.
-- The bridge now has accepted lifecycle-style and single-server execution evidence, but #151 still lacks accepted contact/traversability, diagnostics, true two-client authority, and device/performance observations.
+- The bridge now has accepted lifecycle/rebuild, single-server bootstrap/baseline, and canonical F2-shell physical-sanity/contact evidence, but #151 still lacks accepted diagnostics, true two-client authority, and device/performance observations.
 - Approved production PBR, audio and model libraries do not exist yet. Use project-owned fallbacks and do not add unlicensed content.
 
 ## Architecture migrations
@@ -150,8 +151,8 @@ Compatibility note: historical `ResolvedRegionRecipe` schema v1 remains replay-o
 
 ## Next critical outcomes
 
-1. gather real Studio physics/contact/constraint evidence for the permanent #10 lab without weakening source truth,
-2. keep source-owned lifecycle/repro/ownership evidence green and fail closed on regressions,
+1. gather the remaining real Studio diagnostics, true two-client canonical-authority, and device/performance evidence without weakening source truth,
+2. keep source-owned lifecycle/repro/ownership and accepted physical-sanity evidence green and fail closed on regressions,
 3. explicitly update this scheduler before opening the next major Hero Feature,
 4. when unlocked, deepen door/chair/physical-player work on these foundations rather than replacing them,
 5. improve the first five-minute experience only after the relevant foundations are actually unlocked and proven.
