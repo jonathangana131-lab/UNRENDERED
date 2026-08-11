@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-072820-q7h4n2-pr295-source-complete",
+  "timestamp": "2026-08-11T07:28:20+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "summary": "PR #295 source slice is complete on exact head 1814b4d08a02c9d650dea6288af9a8264e58d3c9, synchronized onto main 064e28f2306095dadd6a514b96f397cd810ac556. It consumes the bounded diagnostics workload finding by capping runToggleEvidence overrides at the documented 20-cycle proof before any iteration and adds an always-run source-contract regression. Exact-head canonical CI run 31468750759 is green. Swarm Control Plane run 31468764335 has engine-tests green, but ownership reached the hardened validator and failed only because live control state changed after its validation marker; a direct job rerun reproduced the same fence race. Dedicated recovery PR #298 / lane SWARM-RECOVERY-HEALTH-VALIDATION-FENCE is active for this exact control defect, so do not merge #295 until that repair lands and a fresh fail-closed ownership run explicitly passes. Independent exact-head Reality-Grade review is still required. No Roblox Studio run or engine evidence is claimed.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "evidence": [
+    "evt-20260811-064720-q7h4n2-diagnostics-cycle-bound.json",
+    "PR #295 exact head 1814b4d08a02c9d650dea6288af9a8264e58d3c9 changes only PhysicsLabStudioDiagnostics plus source-contract test wiring.",
+    "CI run 31468750759 completed successfully on the exact head.",
+    "Swarm Control Plane run 31468764335 engine-tests succeeded; pr-ownership jobs 93707208334 and rerun 93707463117 both failed only with 'live control state changed after its validation marker'.",
+    "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE is actively claimed by sol-20260811-diaga6r2k with PR #298."
+  ],
+  "metadata": {
+    "pr": 295,
+    "headSha": "1814b4d08a02c9d650dea6288af9a8264e58d3c9",
+    "baseSha": "064e28f2306095dadd6a514b96f397cd810ac556",
+    "ciRun": 31468750759,
+    "controlRun": 31468764335,
+    "claimToken": "1f7c4a9d62e8350b",
+    "status": "WAITING_FOR_CONTROL_RECOVERY_AND_INDEPENDENT_REVIEW"
+  }
+}
