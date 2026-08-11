@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084921-k9v4m2x7-fidelity-config-handoff",
+  "timestamp": "2026-08-11T08:49:21+00:00",
+  "fromWorker": "sol-20260811-k9v4m2x7",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "Test-adversary slot completed a novel PolicyConfig no-execute regression and handed the source repair to active primary PR #274. Draft #330 is intentionally red and must not merge as-is; it exists as executable reproduction/evidence until the primary absorbs equivalent coverage.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "Draft PR #330 head de125f342376af438bf723e630cfb51943752da1 changes only tests/fidelity_manager_rejected_step_atomicity.luau.",
+    "Canonical CI run 31474482542 proves hostile PolicyConfig acceptance with 13 constructor and 34 pure-policy __index executions.",
+    "Primary PR #274 received pre-CI finding comment 5250948760 and exact-CI handoff comment 5250989956.",
+    "Durable events evt-20260811-084129-k9v4m2x7-fidelity-config-no-execute and evt-20260811-084805-k9v4m2x7-fidelity-config-ci-evidence contain finding and CI proof.",
+    "Swarm engine-tests passed; ownership is independently blocked by unrelated invalid worker status in shared live control state and is already within the active control-recovery class."
+  ]
+}
