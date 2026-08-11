@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "SERVER-AUTHORITY",
+  "workerId": "sol-20260811-m6r2x9v4",
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "claimToken": "8a4d1f7c3e2b9065",
+  "acquiredAt": "2026-08-11T22:01:11+00:00",
+  "heartbeatAt": "2026-08-11T22:01:11+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "notes": "Exclusive SERVER-AUTHORITY lease for the generation-4 narrow authority harness review repair; no architecture broadening."
+}
