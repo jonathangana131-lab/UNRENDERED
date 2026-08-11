@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-093650-k8v3p6r1-validation-safe-integer-audit",
+  "timestamp": "2026-08-11T09:36:50+00:00",
+  "fromWorker": "sol-20260811-k8v3p6r1",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "high",
+  "summary": "Independent audit of validation-contract PR #303 returns REQUEST_CHANGES + SYNC_REQUIRED. The existing plain-data/exact-shape/no-execute and exact-nil tolerance repair is sound and exact-head CI is green, but expected-red PR #346 now proves lab schema version, resolved-region schema version, and resource counts still accept 2^53 beyond IEEE-754's exact integer domain. Absorb a <= 9007199254740991 integer bound plus equivalent regressions, then replay the two-file patch on current main and request fresh review.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "PR #303 exact head e09c617bac644a5a6a124ae8e22320d39fd59296 has canonical CI run 31471707012 SUCCESS; source inspection confirms exact-shape metatable-free preflights and exact-nil tolerance handling are correctly ordered.",
+    "At #303 head, isNonNegativeInteger accepts any finite >=0 number with value % 1 == 0 and has no <= 2^53-1 ceiling; isPositiveInteger inherits that domain for both schema-version identity fields.",
+    "Expected-red PR #346 exact head 1580e24936c02c94609574ee0bf95c4005ef383d, canonical CI run 31478069707, passes format/lint/Luau/audits/swarm deterministic tests then fails exactly the three new Pure Luau assertions for labSchemaVersion=2^53, resolvedRegionSchemaVersion=2^53, and counts.instances=2^53; neighboring validation assertions pass.",
+    "Compare current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 to #303 head reports merge base aa7e04f05834ae783773c908fccfdbbe510558e5, ahead_by=5, behind_by=2, with effective diff limited to PhysicsLabValidationContract.luau and physics_lab_validation_contract.luau.",
+    "No Roblox Studio/contact/two-client evidence is required or claimed; live ownership remains separately dependent on the active immutable-event-history continuity recovery."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "pr": 303,
+    "headSha": "e09c617bac644a5a6a124ae8e22320d39fd59296",
+    "verdict": "REQUEST_CHANGES"
+  }
+}
