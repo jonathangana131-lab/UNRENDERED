@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q9x4m2",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T06:20:00+00:00",
-  "lastSeenAt": "2026-08-11T06:42:20+00:00",
-  "notes": "Authority audit PR #275 is exact-head CI green and Swarm ownership enforcement recovered via merged #288. Audit now includes server-known caller binding, schema provenance/evaluator versioning, and count/structure consistency; live audit claim was reclaimed after critical recovery primary was already owned by another worker."
+  "lastSeenAt": "2026-08-11T06:48:25+00:00",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "audit",
+  "branch": "agent/authority/HG-BACKFILL-AUTHORITY-audit-q9x4m2",
+  "notes": "Authority audit PR #275 exact-head CI is green. Post-#290 pr-ownership now fails closed as intended and exposed additional legacy ACTIVE worker records in live control; normalized this worker to valid WORKING and published the blocking recovery finding."
 }
