@@ -218,7 +218,7 @@ end
 
 local function validateInputs(inputs: PolicyInputs): ()
 	assert(type(inputs) == "table", "policy inputs must be a plain table")
-	assert(getmetatable(inputs) == nil, "policy inputs must be metatable-free plain data")
+	assert(getmetatable(inputs :: any) == nil, "policy inputs must be metatable-free plain data")
 	validateFiniteNonNegative("distanceStuds", inputs.distanceStuds)
 	validateBoolean("visible", inputs.visible)
 	validateBoolean("directlyObserved", inputs.directlyObserved)
