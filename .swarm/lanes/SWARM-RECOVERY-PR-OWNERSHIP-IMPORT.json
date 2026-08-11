@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+  "epicId": "HERO-GATE",
+  "title": "Restore Swarm PR ownership checker imports",
+  "objective": "Repair the current-main Swarm Control Plane PR workflow regression exposed by PRs #271 and #283: trusted pr-ownership materializes swarmctl_hardening.py but omits its required swarmctl_hardening_base.py import, so ownership validation aborts before evaluating claims.",
+  "priority": 20000,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [".github/workflows/swarm-control.yml", "tools/swarm/test_swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening_base.py"],
+  "resources": ["SWARM-PROTOCOL"],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Critical PR ownership CI recovery",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 2000,
+      "writeScopes": [".github/workflows/swarm-control.yml", "tools/swarm/test_swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening_base.py"]
+    },
+    {
+      "slotId": "reviewer-1",
+      "role": "Independent recovery verifier",
+      "exclusive": true,
+      "availableWhen": ["REVIEW", "INTEGRATION_READY"],
+      "priorityBoost": 1000,
+      "requiresIndependentFrom": "primary",
+      "writeScopes": [".github/workflows/swarm-control.yml", "tools/swarm/test_swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening_base.py"]
+    }
+  ],
+  "acceptance": [
+    "pr-ownership executes the trusted hardened validator without ModuleNotFoundError",
+    "trusted validator still comes exclusively from the base branch rather than request-supplied code",
+    "existing ownership/resource/digest enforcement semantics are preserved",
+    "control-plane deterministic/adversarial tests pass",
+    "a real product PR receives a passing pr-ownership check when its live claim is valid",
+    "canonical CI remains green"
+  ],
+  "notes": "Critical recovery lane created from structured finding evt-20260811-062700-went7q-pr-checker-import after PR #283 independently reproduced the same current-main failure in Swarm Control Plane run 31464905466. While this lane is unresolved, new primary implementation claims should stop per Docs/SWARM_CONTROL_PLANE.md recovery policy.",
+  "tags": ["control-repair", "red-ci", "pr-ownership", "hero-gate"]
+}
