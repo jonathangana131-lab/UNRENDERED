@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V21-PR-OWNERSHIP-RECOVERY",
+  "epicId": "SWARM-V2",
+  "title": "Restore trusted PR ownership validator materialization",
+  "objective": "Repair the project-wide Swarm Control Plane pr-ownership failure introduced when the V2.1 hardening facade began importing swarmctl_hardening_base without the trusted-validator workflow materializing that sibling module. Keep the repair minimal, trusted-base-only, and fail closed.",
+  "priority": 10000,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    ".github/workflows/swarm-control.yml",
+    "tools/swarm/test_swarmctl_hardening.py",
+    "tools/swarm/test_swarmctl_hardening_base.py"
+  ],
+  "resources": ["SWARM-PROTOCOL"],
+  "slots": [
+    {
+      "slotId": "recovery",
+      "role": "Trusted-validator recovery implementer",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 1000,
+      "writeScopes": [
+        ".github/workflows/swarm-control.yml",
+        "tools/swarm/test_swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening_base.py"
+      ]
+    }
+  ],
+  "acceptance": [
+    "pr-ownership materializes every required hardening facade sibling strictly from origin/base before execution",
+    "trusted validator compilation and import succeed without using PR-head validator code",
+    "bootstrap behavior for pre-hardening bases remains intact",
+    "a regression test or mechanically equivalent CI assertion prevents facade dependency omission",
+    "Swarm Control Plane pr-ownership passes on the repair PR",
+    "canonical CI remains green after merge"
+  ],
+  "tags": ["control-repair", "recovery", "swarm-v2"]
+}
