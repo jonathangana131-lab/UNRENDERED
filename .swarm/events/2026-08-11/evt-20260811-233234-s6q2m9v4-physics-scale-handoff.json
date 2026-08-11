@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-233234-s6q2m9v4-physics-scale-handoff",
+  "timestamp": "2026-08-11T23:32:34+00:00",
+  "fromWorker": "sol-20260811-s6q2m9v4",
+  "eventType": "HANDOFF",
+  "summary": "Physics Lab geometry test-adversary work is published in draft PR #418 and handed to retained primary PR #414. The earlier false-passable raw-source assertion was replaced by a behavioral reverse-overflow adversary and exact-head canonical CI is green. Next action is independent re-review and absorption of equivalent coverage into the retained primary/successor; #418 must not merge independently.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "evidence": [
+    "Draft PR #418 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f; base is retained PR #414 exact head 51ffc16fb2f5864cd4874710a7517e94dd5422b8; one test file changed.",
+    "Canonical CI run 31546627454 is fully green including Pure Luau and Rojo build.",
+    "Swarm run 31546763263 engine-tests passes; pr-ownership remains fail-closed at live ownership enforcement after heartbeat refresh.",
+    "Fresh independent re-review was explicitly requested on #418; retained primary #414 received the absorption handoff comment.",
+    "No production source, Roblox Studio, viewport, physical-contact, or two-client evidence changed or was claimed."
+  ]
+}
