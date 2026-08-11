@@ -111,6 +111,26 @@ local function run(): number
 	expect("registry unregister rejects hostile non-string identity", not hostileUnregisterAccepted)
 	expect("registry unregister rejects hostile identity before __tostring", hostileIdentityCallbacks == 0)
 
+	local hostileCaptureAccepted = pcall(function()
+		WorldEntity.captureRegistered(identityRegistry, hostileIdentity :: any, {})
+	end)
+	expect("registry capture rejects hostile non-string identity", not hostileCaptureAccepted)
+	expect("registry capture rejects hostile identity before __tostring", hostileIdentityCallbacks == 0)
+	expect(
+		"rejected hostile capture preserves the registered entity",
+		WorldEntity.get(identityRegistry, identityRecord.id) ~= nil
+	)
+
+	local hostileTransitionAccepted = pcall(function()
+		WorldEntity.transitionRegistered(identityRegistry, hostileIdentity :: any, "F2", nil)
+	end)
+	expect("registry transition rejects hostile non-string identity", not hostileTransitionAccepted)
+	expect("registry transition rejects hostile identity before __tostring", hostileIdentityCallbacks == 0)
+	expect(
+		"rejected hostile transition preserves the registered entity",
+		WorldEntity.get(identityRegistry, identityRecord.id) ~= nil
+	)
+
 	local extraRecord = makeRecord()
 	extraRecord.authorityLease = "future-field"
 	expect("registry rejects unknown record field", not registerAccepts(extraRecord))
