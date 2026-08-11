@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "epicId": "HERO-GATE",
+  "title": "Diagnostics source-only depth pass",
+  "objective": "Use otherwise-idle Sol capacity to harden the Studio diagnostics code and its pure contracts while the Mac display path is blocked. Work here must improve source/test correctness without pretending to satisfy the missing live viewport evidence row.",
+  "priority": 4850,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/**diagnostic*.luau", "tests/hero_gate_contract_integration.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"Diagnostics source hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau","src/server/PhysicsLab/PhysicsLabStudioHarness.luau","tests/**diagnostic*.luau","tests/hero_gate_contract_integration.luau"]},
+    {"slotId":"test-adversary","role":"Diagnostics lifecycle and no-drift test author","exclusive":true,"availableWhen":["READY","REVIEW","NEEDS_CHANGES"],"priorityBoost":220,"writeScopes":["tests/**diagnostic*.luau","tests/hero_gate_contract_integration.luau"]},
+    {"slotId":"audit","role":"Diagnostics failure-path and capture-contract auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/**diagnostic*.luau","Docs/PHYSICS_LAB_DIAGNOSTICS.md"]}
+  ],
+  "acceptance": ["do not queue speculative Studio reruns", "do not convert source confidence into viewport PASS", "find concrete lifecycle/no-drift/failure-path gaps", "behavior changes get tests", "publish anything relevant to HG151-DIAGNOSTICS as a structured finding"],
+  "tags": ["backfill", "hero-gate", "source-only"]
+}
