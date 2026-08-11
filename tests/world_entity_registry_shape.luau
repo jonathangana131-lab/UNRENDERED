@@ -64,6 +64,47 @@ local function run(): number
 
 	expect("registry accepts exact mutable record shape", registerAccepts(makeRecord()))
 
+	local identityRegistry = WorldEntity.createRegistry()
+	local identityRecord = makeRecord()
+	local identityRegistered = WorldEntity.register(identityRegistry, identityRecord)
+	expect("identity boundary fixture registers", identityRegistered)
+	local validMissingGetAccepted, validMissingGetResult = pcall(function()
+		return WorldEntity.get(identityRegistry, "entity:valid-but-absent")
+	end)
+	expect("registry get permits a valid absent identity", validMissingGetAccepted and validMissingGetResult == nil)
+
+	local malformedGetAccepted = pcall(function()
+		WorldEntity.get(identityRegistry, "" :: any)
+	end)
+	expect("registry get rejects malformed identity instead of reporting absence", not malformedGetAccepted)
+
+	local malformedUnregisterAccepted = pcall(function()
+		WorldEntity.unregister(identityRegistry, "" :: any)
+	end)
+	expect("registry unregister rejects malformed identity instead of reporting absence", not malformedUnregisterAccepted)
+	expect(
+		"rejected malformed unregister preserves the registered entity",
+		WorldEntity.get(identityRegistry, identityRecord.id) ~= nil
+	)
+
+	local hostileIdentityCallbacks = 0
+	local hostileIdentity = setmetatable({}, {
+		__tostring = function()
+			hostileIdentityCallbacks += 1
+			error("hostile registry identity __tostring must not execute")
+		end,
+	})
+	local hostileGetAccepted = pcall(function()
+		WorldEntity.get(identityRegistry, hostileIdentity :: any)
+	end)
+	expect("registry get rejects hostile non-string identity", not hostileGetAccepted)
+	expect("registry get rejects hostile identity before __tostring", hostileIdentityCallbacks == 0)
+	local hostileUnregisterAccepted = pcall(function()
+		WorldEntity.unregister(identityRegistry, hostileIdentity :: any)
+	end)
+	expect("registry unregister rejects hostile non-string identity", not hostileUnregisterAccepted)
+	expect("registry unregister rejects hostile identity before __tostring", hostileIdentityCallbacks == 0)
+
 	local extraRecord = makeRecord()
 	extraRecord.authorityLease = "future-field"
 	expect("registry rejects unknown record field", not registerAccepts(extraRecord))
