@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:54:10+00:00",
-  "lastSeenAt": "2026-08-11T08:10:20+00:00",
+  "lastSeenAt": "2026-08-11T08:16:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-objectgenome",
-  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-h8v5c1",
-  "notes": "Control-plane prerequisite is owned by the active SWARM-PROTOCOL recovery worker; continuing non-conflicting Hero Gate capacity mining on ObjectGenome."
+  "slotId": "mine-diagnostics",
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-h8v5c1",
+  "notes": "ObjectGenome caster-axis finding published; now mining diagnostics source for a non-duplicate lifecycle/no-drift/failure-path gap while live Studio evidence remains externally blocked."
 }
