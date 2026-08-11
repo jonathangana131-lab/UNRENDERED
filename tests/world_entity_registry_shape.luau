@@ -1,6 +1,7 @@
 local WorldEntity = require("../src/shared/Reality/WorldEntity")
 
 local MAX_SAFE_INTEGER = 9007199254740991
+local MAX_GENERATOR_VERSION = 2147483647
 
 local function makeRecord()
 	return {
@@ -115,35 +116,35 @@ local function run(): number
 		expect("new keeps plain state", validEntity.persistentState.open == false)
 	end
 
-	local maxSafeGeneratorSpec = makeSpec()
-	maxSafeGeneratorSpec.id = "entity:max-safe-generator-new"
-	maxSafeGeneratorSpec.origin.generatorVersion = MAX_SAFE_INTEGER
-	local maxSafeGeneratorNewAccepted, maxSafeGeneratorEntity = newResult(maxSafeGeneratorSpec)
-	expect("new accepts maximum safe generator version", maxSafeGeneratorNewAccepted)
-	if maxSafeGeneratorNewAccepted then
+	local maxGeneratorSpec = makeSpec()
+	maxGeneratorSpec.id = "entity:max-generator-new"
+	maxGeneratorSpec.origin.generatorVersion = MAX_GENERATOR_VERSION
+	local maxGeneratorNewAccepted, maxGeneratorEntity = newResult(maxGeneratorSpec)
+	expect("new accepts maximum canonical generator version", maxGeneratorNewAccepted)
+	if maxGeneratorNewAccepted then
 		expect(
-			"new preserves maximum safe generator version exactly",
-			maxSafeGeneratorEntity.origin.generatorVersion == MAX_SAFE_INTEGER
+			"new preserves maximum canonical generator version exactly",
+			maxGeneratorEntity.origin.generatorVersion == MAX_GENERATOR_VERSION
 		)
 	end
 
-	local unsafeGeneratorSpec = makeSpec()
-	unsafeGeneratorSpec.id = "entity:unsafe-generator-new"
-	unsafeGeneratorSpec.origin.generatorVersion = MAX_SAFE_INTEGER + 1
-	local unsafeGeneratorNewAccepted = newResult(unsafeGeneratorSpec)
-	expect("new rejects generator version beyond safe integer range", not unsafeGeneratorNewAccepted)
+	local overGeneratorSpec = makeSpec()
+	overGeneratorSpec.id = "entity:over-generator-new"
+	overGeneratorSpec.origin.generatorVersion = MAX_GENERATOR_VERSION + 1
+	local overGeneratorNewAccepted = newResult(overGeneratorSpec)
+	expect("new rejects generator version beyond canonical range", not overGeneratorNewAccepted)
 
-	local maxSafeGeneratorRecord = makeRecord()
-	maxSafeGeneratorRecord.id = "entity:max-safe-generator-registry"
-	maxSafeGeneratorRecord.origin.generatorVersion = MAX_SAFE_INTEGER
-	expect("registry accepts maximum safe generator version", registerAccepts(maxSafeGeneratorRecord))
+	local maxGeneratorRecord = makeRecord()
+	maxGeneratorRecord.id = "entity:max-generator-registry"
+	maxGeneratorRecord.origin.generatorVersion = MAX_GENERATOR_VERSION
+	expect("registry accepts maximum canonical generator version", registerAccepts(maxGeneratorRecord))
 
-	local unsafeGeneratorRecord = makeRecord()
-	unsafeGeneratorRecord.id = "entity:unsafe-generator-registry"
-	unsafeGeneratorRecord.origin.generatorVersion = MAX_SAFE_INTEGER + 1
+	local overGeneratorRecord = makeRecord()
+	overGeneratorRecord.id = "entity:over-generator-registry"
+	overGeneratorRecord.origin.generatorVersion = MAX_GENERATOR_VERSION + 1
 	expect(
-		"registry rejects generator version beyond safe integer range",
-		not registerAccepts(unsafeGeneratorRecord)
+		"registry rejects generator version beyond canonical range",
+		not registerAccepts(overGeneratorRecord)
 	)
 
 	local specIndexCalls = 0
