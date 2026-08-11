@@ -5,8 +5,8 @@
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "claimToken": "3a8f6c1d9e4b2075",
   "acquiredAt": "2026-08-11T21:33:20+00:00",
-  "heartbeatAt": "2026-08-11T21:41:00+00:00",
+  "heartbeatAt": "2026-08-11T21:54:30+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
-  "notes": "Generation-4 protected lease for successor PR #404. Exact finite extension is published and fresh bootstrap/CI is pending; no generic schema broadening or immutable event rewrite/delete."
+  "notes": "Generation-4 protected lease for successor PR #404. Fresh live-tip bootstrap run 31539949440 is executing; recovery remains finite/exact with no schema broadening or immutable event rewrite/delete."
 }
