@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-faa32e59",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WAITING",
   "startedAt": "2026-08-11T11:52:25+00:00",
-  "lastSeenAt": "2026-08-11T12:00:06+00:00",
-  "notes": "Recovered stale HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE generation 3, refreshed PR #310 ownership metadata, advanced the lane to REVIEW, published review-request/handoff events, and released the primary claim. No current claim; global ownership remains blocked by separately owned immutable-history recovery."
+  "lastSeenAt": "2026-08-11T12:00:53+00:00",
+  "notes": "Generation-3 owner for PR #310 is parked in REVIEW with no product edits pending. The matching primary claim remains live solely to preserve authoritative PR ownership while an independent audit proceeds; global ownership is still fail-closed on the separately owned immutable-history recovery."
 }
