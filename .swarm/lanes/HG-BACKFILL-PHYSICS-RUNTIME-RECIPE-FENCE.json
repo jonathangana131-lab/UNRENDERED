@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime canonical-recipe fence",
   "objective": "Close the concrete source-only constructor gap found by capacity mining: PhysicsLabRuntime must fail closed before authority registration when an input bearing the canonical recipe key does not match the permanent lab's canonical WorldId/RegionId and complete key/id population.",
   "priority": 4980,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -43,6 +43,6 @@
     "do not claim Roblox Studio or engine evidence",
     "independent review required before integration"
   ],
-  "notes": "PR #310 exact head 0f69d6b749c3daa8b61488e94016e9c0c2831632 is canonical-CI green and addresses the prior Codex P2 by also fencing canonical initial persistentState/stateRevision/representationRevision. Prior audit on edb4254 is superseded; fresh independent exact-head audit is required. Swarm pr-ownership is globally blocked by unrelated invalid worker-status state. No Roblox Studio or engine evidence is claimed.",
+  "notes": "Exact-head audit on PR #310 head 0f69d6b749c3daa8b61488e94016e9c0c2831632 published REQUEST_CHANGES in evt-20260811-083620-h8v5c1-runtime-recipe-review: assertCanonicalRecipe must reject metatable-backed recipe/list/entity-recipe wrappers before any dereference/metamethod execution. The prior P2 initial persistentState/stateRevision/representationRevision repair is sound and canonical CI run 31473237386 is green. No Studio or engine evidence is claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "physics-runtime"]
 }
