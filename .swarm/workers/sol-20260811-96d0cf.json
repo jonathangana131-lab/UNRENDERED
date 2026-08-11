@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:45:43+00:00",
-  "lastSeenAt": "2026-08-11T08:17:10+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "test-adversary",
-  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-q7n4m9",
-  "notes": "Generation-3 takeover of expired ObjectGenome test-adversary PR #277. Adding deterministic regression coverage for the audited ObjectState semantic-map aliasing defect while production source remains owned by the generation-2 primary worker."
+  "lastSeenAt": "2026-08-11T08:27:20+00:00",
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "slotId": "primary",
+  "branch": "agent/physics/HG-PHYSICS-CART-GEOMETRY-primary-j4c8n2",
+  "notes": "Salvaging existing PR #311 under a fresh live primary claim. Fixing the independent review's 5 mm caster/chassis disconnect while preserving ground contact, recomputing COM, and adding deterministic contact coverage; source-only, no Studio evidence claimed."
 }
