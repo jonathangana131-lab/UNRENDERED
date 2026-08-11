@@ -15,9 +15,39 @@ local function run(): number
 	end
 
 	local source = fs.readFile(DIAGNOSTICS_SOURCE)
-	local function position(needle: string): number?
-		return string.find(source, needle, 1, true)
+	local function position(needle: string, init: number?): number?
+		return string.find(source, needle, init or 1, true)
 	end
+
+	local enableStart = position("function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab): Snapshot")
+	local enableEnd = enableStart and position("\nfunction PhysicsLabStudioDiagnostics.disable", enableStart) or nil
+	local enableSource = if enableStart ~= nil and enableEnd ~= nil
+		then string.sub(source, enableStart, enableEnd - 1)
+		else ""
+	local enablePreflight = string.find(enableSource, "local plans = preflightReadouts(lab, model)", 1, true)
+	local enableTransaction = string.find(enableSource, "local ok, result = pcall(function(): Snapshot", 1, true)
+	local enableCapture = string.find(enableSource, "return PhysicsLabStudioDiagnostics.capture(lab)", 1, true)
+	local yieldAfterPreflight = if enablePreflight ~= nil
+		then string.find(enableSource, ":Wait(", enablePreflight, true)
+		else nil
+	local taskYieldAfterPreflight = if enablePreflight ~= nil
+		then string.find(enableSource, "task.wait(", enablePreflight, true)
+		else nil
+
+	local disableStart = position("function PhysicsLabStudioDiagnostics.disable(lab: PhysicsLabRealizer.RealizedLab): Snapshot")
+	local disableEnd = disableStart and position("\nfunction PhysicsLabStudioDiagnostics.runToggleEvidence", disableStart) or nil
+	local disableSource = if disableStart ~= nil and disableEnd ~= nil
+		then string.sub(source, disableStart, disableEnd - 1)
+		else ""
+	local disableOptionalGuard = string.find(disableSource, "if folder ~= nil then", 1, true)
+	local disableDestroy = string.find(disableSource, "folder:Destroy()", 1, true)
+	local disableCapture = string.find(disableSource, "local snapshot = PhysicsLabStudioDiagnostics.capture(lab)", 1, true)
+	local disablePostcondition = string.find(
+		disableSource,
+		"not snapshot.enabled and snapshot.diagnosticInstanceCount == 0",
+		1,
+		true
+	)
 
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
@@ -40,6 +70,16 @@ local function run(): number
 	expect(
 		"Instance realization begins inside a protected transaction",
 		transaction ~= nil and parentMutation ~= nil and transaction < parentMutation
+	)
+	expect(
+		"authority preflight reaches protected capture without yielding",
+		enablePreflight ~= nil
+			and enableTransaction ~= nil
+			and enableCapture ~= nil
+			and enablePreflight < enableTransaction
+			and enableTransaction < enableCapture
+			and yieldAfterPreflight == nil
+			and taskYieldAfterPreflight == nil
 	)
 	expect(
 		"diagnostics root identity is established inside the transaction before parenting",
@@ -76,6 +116,16 @@ local function run(): number
 			and transactionEnd ~= nil
 			and transactionEnd < rollback
 			and rollback < propagate
+	)
+	expect(
+		"force-off cleanup remains idempotent and verifies the disabled baseline",
+		disableOptionalGuard ~= nil
+			and disableDestroy ~= nil
+			and disableCapture ~= nil
+			and disablePostcondition ~= nil
+			and disableOptionalGuard < disableDestroy
+			and disableDestroy < disableCapture
+			and disableCapture < disablePostcondition
 	)
 
 	return failures
