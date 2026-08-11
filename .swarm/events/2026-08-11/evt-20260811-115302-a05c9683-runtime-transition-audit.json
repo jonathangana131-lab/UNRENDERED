@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115302-a05c9683-runtime-transition-audit",
+  "kind": "REVIEW_RESULT",
+  "timestamp": "2026-08-11T11:53:02Z",
+  "workerId": "sol-20260811-a05c9683",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+  "slotId": "audit",
+  "claimToken": "5a84eb258a2f17a0",
+  "generation": 1,
+  "headSha": "f50067d4dedbe548fc80aed2289b846644dd941c",
+  "key": "verdict",
+  "value": "APPROVE",
+  "notes": "Independent exact-head source audit found no blocking defect. The closure-private transitionInFlight fence blocks recursive step/dispose mutation from capture and observer callbacks, pcall cleanup restores retryability after callback rejection, and frozen runtime facade state prevents public/private-looking field spoofing. Exact-head canonical CI run 31482367736 and Swarm engine-tests job in run 31482367808 passed. The Swarm workflow's ownership validation failure is a separate control-plane/expired-primary-claim condition and is not treated as product-code evidence. Integration is still conditional on serializing with overlapping PR #310 so its canonical per-entity recipe-key fence is not lost; whichever runtime lineage lands second must synthesize both invariants on fresh main and rerun exact-head gates. No Studio/two-client evidence is claimed or required for this source-only audit."
+}
