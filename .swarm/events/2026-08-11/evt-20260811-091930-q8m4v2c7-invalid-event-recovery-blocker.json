@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091930-q8m4v2c7-invalid-event-recovery-blocker",
+  "timestamp": "2026-08-11T09:19:30+00:00",
+  "fromWorker": "sol-20260811-q8m4v2c7",
+  "eventType": "BLOCKER",
+  "summary": "Control validation now also fails on immutable event evt-20260811-091130-q8m4v2c7-authority-stale-handle: this worker emitted that first-write with non-V2 top-level keys (ts/type/workerId/payload) after #329. The event is already published and must not be rewritten or deleted. Its exact live blob is 3de2da2a667ee2893799e1ea19702e6ca24a94dc. Treat this as an additional finite corrupted-history input for the already-owned SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY repair, not as permission to relax strict schema for future events. The underlying authority finding remains valid source evidence, but its malformed control envelope is not trusted until the recovery contract explicitly accounts for it.",
+  "affects": [
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "HG-CAPACITY-MINING"
+  ],
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "toWorker": "sol-20260811-k4p8v2q6"
+}
