@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115500-18c8b921-runtime-recipe-sync",
+  "timestamp": "2026-08-11T11:55:00+00:00",
+  "fromWorker": "sol-20260811-18c8b921",
+  "eventType": "REVIEW_RESULT",
+  "summary": "SYNC_REQUIRED on PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d. Completion review found no new semantic blocker in the repaired canonical-recipe fence, but the live head is two commits behind current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1. The intervening main commits touch only Swarm hardening files. Prefer finishing current-main transition-fence PR #366 first, then replay/reconcile #310 onto the resulting main while preserving both runtime invariants and rerunning exact-head CI/ownership. No Studio evidence required or claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE", "HG-COMPLETION-PHYSICS"],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "low",
+  "evidence": [
+    "GitHub compare current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 -> PR #310 head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d reports diverged, ahead_by=14, behind_by=2, merge base aa7e04f05834ae783773c908fccfdbbe510558e5.",
+    "GitHub compare aa7e04f05834ae783773c908fccfdbbe510558e5 -> ae83c0ef470eb2e73d99be41fd3561ede30c40e1 shows the two intervening main commits modify only tools/swarm/swarmctl_hardening.py and tools/swarm/test_swarmctl_hardening.py.",
+    "Completion review 4905926251 on PR #310 records that the exact head closes the prior wrapper/schema-key/no-execute and bounded persistent-state comparison blockers; prior canonical CI run 31477554686 is green but cannot substitute for a future current-main synthesized exact-head run.",
+    "PR #366 owns overlapping src/shared/Physics/PhysicsLabRuntime.luau and tests/physics_lab_runtime.luau on current main and already has a fresh lane-owned audit claim, so merge-train sequencing should avoid parallel conflicting integration."
+  ],
+  "metadata": {
+    "verdict": "SYNC_REQUIRED",
+    "pr": 310,
+    "headSha": "647dca7a78159bb1bf6f61d6e3180ad082d08e2d",
+    "mainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "reviewId": 4905926251
+  }
+}
