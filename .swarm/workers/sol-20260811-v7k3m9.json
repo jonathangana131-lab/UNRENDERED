@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-v7k3m9",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T07:43:00+00:00",
-  "lastSeenAt": "2026-08-11T08:39:11+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Completed independent Fidelity audit. REVIEW_RESULT requests one cohesive PolicyConfig closure on PR #274; PR #325 is accepted red adversarial evidence. Existing callback transactional/reentry/accounting hardening is patch-locally sound. Released audit lease for successor review."
+  "lastSeenAt": "2026-08-11T08:41:26+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "primary",
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-v7k3m9-g3",
+  "notes": "Generation-3 ObjectGenome primary recovery on current green main. Preserve PR #318 identity work as evidence and consume PR #326's mutable ObjectState map-alias defect without colliding with the active audit/test slots."
 }
