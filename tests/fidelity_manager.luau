@@ -319,6 +319,64 @@ local function run(): number
 	expectEqual("nested retry counts both transitions", nestedRetryMetrics.transitions, 2)
 	expectEqual("nested retry counts both promotions", nestedRetryMetrics.promotions, 2)
 
+	local isolationManager = FidelityManager.new(nestedConfig)
+	local isolationOuterId = "entity:nested-isolation-outer"
+	local isolationInnerId = "entity:nested-isolation-inner"
+	isolationManager:register(isolationOuterId, "F0")
+	isolationManager:register(isolationInnerId, "F0")
+	local isolationInnerHookCalled = false
+	local isolationOuterAccepted = pcall(function()
+		isolationManager:step(isolationOuterId, "F0", nestedHeroInputs, 0, function()
+			local innerResult = isolationManager:step(
+				isolationInnerId,
+				"F0",
+				nestedHeroInputs,
+				0,
+				function()
+					isolationInnerHookCalled = true
+				end
+			)
+			expectEqual("cross-entity inner transition commits before outer failure", innerResult.transitioned, true)
+			error("intentional outer transition failure after independent inner commit")
+		end)
+	end)
+	expectEqual("outer callback failure remains rejected after inner commit", isolationOuterAccepted, false)
+	expectEqual("successful inner hook executed before outer failure", isolationInnerHookCalled, true)
+	expectEqual(
+		"outer failure rolls back only outer fidelity",
+		isolationManager:getObservedLevel(isolationOuterId),
+		"F0"
+	)
+	expectEqual(
+		"outer failure preserves independent inner fidelity commit",
+		isolationManager:getObservedLevel(isolationInnerId),
+		"F4"
+	)
+	local isolationFailureMetrics = isolationManager:getMetrics()
+	expectEqual("cross-entity failure preserves registrations", isolationFailureMetrics.registered, 2)
+	expectEqual("cross-entity failure keeps one outer F0", isolationFailureMetrics.counts.F0, 1)
+	expectEqual("cross-entity failure keeps one committed inner F4", isolationFailureMetrics.counts.F4, 1)
+	expectEqual("cross-entity failure counts only inner hook", isolationFailureMetrics.transitionHookCalls, 1)
+	expectEqual("cross-entity failure counts only inner transition", isolationFailureMetrics.transitions, 1)
+	expectEqual("cross-entity failure counts only inner promotion", isolationFailureMetrics.promotions, 1)
+
+	local isolationRetryResult = isolationManager:step(
+		isolationOuterId,
+		"F0",
+		nestedHeroInputs,
+		0.1,
+		function() end
+	)
+	expectEqual("outer fence clears after failure for independent retry", isolationRetryResult.transitioned, true)
+	expectEqual("outer retry reaches hero fidelity", isolationManager:getObservedLevel(isolationOuterId), "F4")
+	expectEqual("inner fidelity remains committed through outer retry", isolationManager:getObservedLevel(isolationInnerId), "F4")
+	local isolationRetryMetrics = isolationManager:getMetrics()
+	expectEqual("cross-entity retry drains F0 accounting", isolationRetryMetrics.counts.F0, 0)
+	expectEqual("cross-entity retry leaves both entities at F4", isolationRetryMetrics.counts.F4, 2)
+	expectEqual("cross-entity retry counts both successful hooks", isolationRetryMetrics.transitionHookCalls, 2)
+	expectEqual("cross-entity retry counts both transitions", isolationRetryMetrics.transitions, 2)
+	expectEqual("cross-entity retry counts both promotions", isolationRetryMetrics.promotions, 2)
+
 	return failures
 end
 
