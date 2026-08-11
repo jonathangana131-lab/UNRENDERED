@@ -25,9 +25,9 @@ The visual labels are diagnostic representation only. They are never canonical w
 
 The diagnostics boundary must be fail-closed as well as leak-free. A failed diagnostics-on attempt must not leave a partial owned tree that changes the next observation or causes the next enable attempt to fail as "already enabled."
 
-Current source does not yet prove that invariant for every assertion path: `enable()` creates and parents the owned diagnostics folder before it has preflighted every realized representation, authoritative record, required identity attribute, and usable `BasePart` adornee. If any later validation/assertion fails, the partially-created folder can remain under the lab root. This is a source-level audit finding, **not** a claim that the engine evidence row has failed or passed.
+The source path was hardened by PR #285, merged as `f4c4e4a2f89caba4d258669417f85206f96d4e98`. `enable()` now preflights the realized representations, authoritative records, required identity/fidelity attributes, and usable `BasePart` adornees before mutating the lab. Root identity/ownership, root parenting, child realization, and the final machine-readable capture execute inside one protected transaction. Every `BillboardGui` and `TextLabel` is attached to that owned subtree before later fallible configuration, and a failed transaction destroys the exact folder created by that call before propagating the original error. The unrelated same-name-object refusal remains fail-closed.
 
-Until the implementation is hardened, evidence collection must treat any interrupted/errored diagnostics-on attempt as contaminated. Explicitly disable/clean the owned diagnostics tree and re-establish the canonical lab baseline before collecting a new candidate observation. A production fix should make enable failure-atomic by validating all required inputs before mutation or by guaranteed rollback of every owned Instance created during a failed attempt. The fix requires a regression test for an injected mid-enable failure and must preserve the rule that an unrelated same-name object is never adopted or destroyed.
+`tests/physics_lab_diagnostics_atomicity.luau`, executed through the normal Hero Gate pure suite, guards those source-ordering invariants while the Studio display path is unavailable. That test is **source-only evidence**: it does not prove Roblox Instance runtime behavior, viewport behavior, or the failure path in a real Studio server. An independent source audit found no additional source change required before #285 integration, but the #151 diagnostics row still requires the engine observation below.
 
 ## Manual server procedure
 
@@ -55,6 +55,65 @@ print("PHYSICS_LAB_DIAGNOSTICS_OFF=" .. HttpService:JSONEncode(disabled))
 ```
 
 A successful command block is only a candidate observation. Record exact source SHA, Studio version/channel, OS, server/client topology, screenshot/capture provenance, and the emitted evidence before updating the #151 matrix.
+
+## Failure-atomicity engine probe
+
+Run this only from the **server** Command Bar after establishing a clean diagnostics-off baseline. The probe deliberately injects a capture-time validation failure *after* preflight by temporarily changing one representation's optional `UNRENDERED_RepresentationClass` attribute from its valid value to a number. That causes the final diagnostics capture to reject the representation after the owned diagnostics tree has been realized, exercising rollback rather than only preflight rejection.
+
+```luau
+local ServerScriptService = game:GetService("ServerScriptService")
+local HttpService = game:GetService("HttpService")
+
+local PhysicsLab = ServerScriptService.UNRENDERED_Server.PhysicsLab
+local Harness = require(PhysicsLab.PhysicsLabStudioHarness)
+local Diagnostics = require(PhysicsLab.PhysicsLabStudioDiagnostics)
+
+local lab = assert(Harness.get(), "Physics Lab bootstrap handle is missing")
+local rootName = "UNRENDERED_PhysicsLabDiagnostics"
+assert(lab.model:FindFirstChild(rootName) == nil, "start from diagnostics-off baseline")
+
+local target = nil
+for _, child in ipairs(lab.model:GetChildren()) do
+	if child:GetAttribute("UNRENDERED_WorldEntityId") ~= nil then
+		target = child
+		break
+	end
+end
+assert(target ~= nil, "no realized Physics Lab representation found")
+
+local originalRepresentationClass = target:GetAttribute("UNRENDERED_RepresentationClass")
+target:SetAttribute("UNRENDERED_RepresentationClass", 151285)
+
+local ok, injectedError = pcall(function()
+	Diagnostics.enable(lab)
+end)
+
+-- Restore canonical diagnostic metadata before any retry or assertion can abort.
+target:SetAttribute("UNRENDERED_RepresentationClass", originalRepresentationClass)
+
+if ok then
+	Diagnostics.disable(lab)
+	error("expected injected diagnostics capture failure")
+end
+
+local rootAfterFailure = lab.model:FindFirstChild(rootName)
+assert(rootAfterFailure == nil, "failed diagnostics enable leaked its owned tree")
+
+local retry = Diagnostics.enable(lab)
+assert(retry.enabled, "clean retry did not enable diagnostics")
+local retryOff = Diagnostics.disable(lab)
+assert(not retryOff.enabled, "clean retry did not disable diagnostics")
+
+print("PHYSICS_LAB_DIAGNOSTICS_FAILURE_ATOMICITY=" .. HttpService:JSONEncode({
+	injectedFailureObserved = true,
+	injectedError = tostring(injectedError),
+	rootPresentAfterFailure = rootAfterFailure ~= nil,
+	retryEnabled = retry.enabled,
+	retryDisabled = not retryOff.enabled,
+}))
+```
+
+Accepted evidence must show the injected call failed, the owned diagnostics root was absent immediately afterward, and a clean enable/disable retry succeeded. This probe validates one deliberate post-mutation failure path. It does not convert source review or CI into general proof against hard process termination; the engine evidence record must state exactly what was injected and observed.
 
 ## Source-owned bounded toggle sweep
 
@@ -89,6 +148,6 @@ The diagnostics row remains open until a tester/bridge run on the exact commit e
 6. the 20-cycle sweep records zero scoped resource drift and stable full-lab envelope at required checkpoints;
 7. diagnostics are still off by default after normal bootstrap/rebuild;
 8. no unrelated same-name Instance is silently destroyed or adopted;
-9. a failed/interrupted diagnostics-on attempt cannot leave a partial owned diagnostics tree or poison the next candidate observation.
+9. the failure-atomicity engine probe records an injected post-mutation failure, no owned diagnostics tree afterward, and a successful clean retry.
 
 CI, a successful Rojo build, or source review alone cannot satisfy these observations.
