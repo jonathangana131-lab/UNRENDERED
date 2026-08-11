@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092945-eeu3obwl-validation-safe-integer-gap",
+  "timestamp": "2026-08-11T09:29:45+00:00",
+  "fromWorker": "sol-20260811-eeu3obwl",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "medium",
+  "summary": "PhysicsLabValidationContract still accepts integer-valued schema identity and resource-count fields beyond IEEE-754's exact integer range, allowing distinct JSON evidence integers to alias after decode; expected-red PR #346 pins the fail-closed boundary.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "PR #303 head e09c617bac644a5a6a124ae8e22320d39fd59296 uses isFinite(value) plus integer/modulo/order checks but no <= 9007199254740991 exactness ceiling in isNonNegativeInteger/isPositiveInteger.",
+    "labSchemaVersion and resolvedRegionSchemaVersion use isPositiveInteger; every resource count uses isNonNegativeInteger.",
+    "Docs/PHYSICS_LAB_VALIDATION.md defines these snapshots as JSON evidence identity and requires before/after comparisons to reject different lab/resolved schema truth.",
+    "Expected-red draft PR #346 exact head ab3c63a2a6a37c1bfe07da1bf23000864cb86558 changes only tests/physics_lab_validation_contract.luau and requires rejection of MAX_SAFE_INTEGER + 1 for both schema-version fields and counts.instances.",
+    "PR #303 is also two commits behind current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and must synchronize after consuming the repair."
+  ],
+  "metadata": {
+    "sourcePr": 303,
+    "sourceHeadSha": "e09c617bac644a5a6a124ae8e22320d39fd59296",
+    "testPr": 346,
+    "testHeadSha": "ab3c63a2a6a37c1bfe07da1bf23000864cb86558",
+    "reviewCommentId": 5251378739,
+    "requiredMaximum": 9007199254740991,
+    "studioEvidence": false,
+    "nextAction": "Primary consumes equivalent safe-integer source/test coverage, synchronizes current main, reruns exact-head canonical CI and trusted ownership, then requests fresh independent audit."
+  }
+}
