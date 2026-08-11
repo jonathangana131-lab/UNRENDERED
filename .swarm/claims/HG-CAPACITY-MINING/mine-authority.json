@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-q8m4v2c7",
   "claimToken": "4c7e1a9d2b6f8053",
   "claimedAt": "2026-08-11T09:04:30+00:00",
-  "heartbeatAt": "2026-08-11T09:04:30+00:00",
-  "leaseSeconds": 1800,
+  "heartbeatAt": "2026-08-11T09:12:00+00:00",
+  "leaseSeconds": 300,
   "generation": 3,
   "resources": [],
   "branch": "agent/mining/HG-CAPACITY-MINING-authority-q8m4v2c7-g3",
   "pr": null,
-  "notes": "Generation-3 takeover of intentionally expired reusable authority-mining slot after inspecting prior event evt-20260811-084830-q5x8n3z2-authority-workspace-parent, confirming no handoff and no PR. Prior Workspace-parent finding is preserved; this pass must find a distinct non-duplicate authority gap or publish an explicit no-new-gap result."
+  "notes": "Completed current pass; distinct P1 authority-stale-handle-lifetime finding published at evt-20260811-091130-q8m4v2c7-authority-stale-handle. No product source changed and no Studio evidence claimed. Slot intentionally expires for reuse after preserving the prior Workspace-parent finding."
 }
