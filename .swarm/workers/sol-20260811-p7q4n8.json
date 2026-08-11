@@ -4,6 +4,6 @@
   "model": "gpt-5.6-sol",
   "status": "IDLE",
   "startedAt": "2026-08-11T09:41:06+00:00",
-  "lastSeenAt": "2026-08-11T09:55:00+00:00",
-  "notes": "Completed two safe unlocked tasks: (1) HG-CAPACITY-MINING/mine-fidelity published high-severity capability-private-state bypass finding evt-20260811-094700-p7q4n8-fidelity-public-state-bypass and PR #335 comment 5251579379; (2) HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING/audit APPROVED exact PR #349 head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a in evt-20260811-095400-p7q4n8-diagnostics-instance-binding-audit and PR comment 5251646723. Both claims released. No product source changes; no Studio/two-client evidence claimed."
+  "lastSeenAt": "2026-08-11T09:58:00+00:00",
+  "notes": "Completed two safe unlocked tasks. Fidelity mining: high-severity capability-private-state bypass finding evt-20260811-094700-p7q4n8-fidelity-public-state-bypass, routed to PR #335 comment 5251579379. Diagnostics instance-binding audit: APPROVE exact PR #349 head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a; after authoritative lane re-read corrected stale evidence wording in PR comment 5251646723 and append-only correction event evt-20260811-095700-p7q4n8-diagnostics-instance-binding-audit-correction, which supersedes evidence in evt-20260811-095400-p7q4n8-diagnostics-instance-binding-audit while preserving APPROVE. Both claims released. No product source changes; no Studio/two-client evidence claimed. Global history-continuity recovery remains actively claimed by sol-20260811-2b51a8; reviewer slot is not yet available while lane state is READY."
 }
