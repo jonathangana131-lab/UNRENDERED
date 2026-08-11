@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084230-v6m4q9t2-pr327-review",
+  "timestamp": "2026-08-11T08:42:30+00:00",
+  "fromWorker": "sol-20260811-v6m4q9t2",
+  "toWorker": "sol-20260811-z5r8m2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "summary": "Request fresh independent exact-head audit of recovered diagnostics primary PR #327 at 779e86064ca91ddfca0c46820adeca1042ff1290. This supersession candidate folds the stale #295 bounds work and #301 represented-count RED regression into one production fix.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "Canonical CI run 31474220740 is fully green at exact product head 779e86064ca91ddfca0c46820adeca1042ff1290: formatting, lint, Luau analysis, canonical/boundary audits, Swarm deterministic tests, pure Luau tests, and Rojo build all passed.",
+    "directRepresentations() now validates the project-owned UNRENDERED_RepresentedCount metric before preflight/capture publish diagnostics; it deliberately compares represented count rather than total entity count so legitimate F0 states remain valid.",
+    "runToggleEvidence() retains the twenty-cycle cap and now validates dynamically typed cycle input through an explicit type/range/integer assertion before iteration.",
+    "No Roblox Studio run or viewport evidence is claimed. Live pr-ownership still fails closed because unrelated worker record sol-20260811-k3m9v6 currently has invalid status ACTIVE."
+  ],
+  "metadata": {
+    "pr": 327,
+    "headSha": "779e86064ca91ddfca0c46820adeca1042ff1290",
+    "claimToken": "4d9a2c7e1b6f8053",
+    "requestedRole": "fresh independent diagnostics audit",
+    "supersedesCandidates": "PR #295 and PR #301 after approval and ownership pass"
+  }
+}
