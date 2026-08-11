@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-8d5d357a",
+  "claimToken": "d8e51a7c3f6b2049",
+  "claimedAt": "2026-08-11T23:36:10+00:00",
+  "heartbeatAt": "2026-08-11T23:36:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-8d5d357a-g1",
+  "pr": 414,
+  "notes": "Independent exact-head audit of PR #414 at 51ffc16fb2f5864cd4874710a7517e94dd5422b8, including the newer stacked adversarial coverage in PR #418. Verify primitive-number no-execute fencing, symmetric derived-output postconditions, behavioral regression strength, scope, and integration readiness. Source/test review only; no Studio evidence."
+}
