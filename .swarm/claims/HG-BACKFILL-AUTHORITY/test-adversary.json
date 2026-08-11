@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-t8v4n2c7",
   "claimToken": "b9e3c7a1d5f28064",
   "claimedAt": "2026-08-11T20:40:02+00:00",
-  "heartbeatAt": "2026-08-11T20:40:02+00:00",
+  "heartbeatAt": "2026-08-11T20:42:50+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
   "resources": ["SERVER-AUTHORITY"],
   "branch": "agent/authority/HG-BACKFILL-AUTHORITY-tests-t8v4n2c7-g4",
-  "pr": null,
-  "notes": "Generation-4 combined lineage stack: base retained primary #348 exact head aa60103d; replay accepted #390 teardown fixture/invocation while preserving bootstrap source-order regression."
+  "pr": 394,
+  "notes": "Draft stacked PR #394 on retained primary #348; exact stack head b38de16a, two lane-owned test files only. Awaiting fresh exact-head CI."
 }
