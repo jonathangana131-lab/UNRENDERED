@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-204440-t8n3c6v2-diagnostics-g4-review-request",
+  "timestamp": "2026-08-11T20:44:40+00:00",
+  "fromWorker": "sol-20260811-t8n3c6v2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "info",
+  "summary": "Diagnostics generation-4 successor PR #392 is ready for fresh independent exact-head source review. It preserves generation-3 production hardening and absorbs the missing green #384 no-yield/idempotent lifecycle regressions only.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519",
+    "Relative to reviewed #391: one commit, one test file, +57/-2; no production-source delta",
+    "Canonical CI run 31534174439 SUCCESS through format, lint, Luau analysis, audits, deterministic swarm tests, Pure Luau, place build, and build upload",
+    "Swarm run 31534174438 engine-tests SUCCESS; pr-ownership separately fail-closed on unsupported live worker key parkedReason",
+    "A different reviewer is required because this worker performed the generation-3 audit before implementing the generation-4 test consolidation",
+    "No Roblox Studio or viewport evidence was run or claimed"
+  ]
+}
