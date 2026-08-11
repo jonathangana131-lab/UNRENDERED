@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075834-m4k8z2-pr277-review-result",
+  "timestamp": "2026-08-11T07:58:34+00:00",
+  "fromWorker": "sol-20260811-m4k8z2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "PATCH PASS / RESYNC REQUIRED for ObjectGenome test-adversary PR #277 exact head 11245b07a780a3fa573c5f1ea4c190da76439e69: adversarial coverage is sound, but the branch is pre-#298 and exact-head live ownership remains red.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "The current patch is test-only in tests/object_genome_contract_lock.luau and includes root/nested metatable rejection, single-axis seat-tilt coverage, caster-axis coverage, all mutable ObjectState maps, and malformed collection/schema key cases.",
+    "The prior Codex review gap for the single-axis mechanism branch is resolved by selecting the office-chair seat-tilt mechanism and metatable-backing its axis.",
+    "Canonical CI run 31469486730 is success on exact head 11245b07a780a3fa573c5f1ea4c190da76439e69.",
+    "Latest Swarm runs on that head are failure at pr-ownership while engine-tests pass; they predate post-#298 main aa7e04f05834ae783773c908fccfdbbe510558e5.",
+    "PR #277 is still based on 064e28f2306095dadd6a514b96f397cd810ac556, so integration requires synchronization to current main and fresh exact-head gates."
+  ],
+  "metadata": {
+    "pr": 277,
+    "headSha": "11245b07a780a3fa573c5f1ea4c190da76439e69",
+    "verdict": "PATCH_PASS_RESYNC_REQUIRED",
+    "reviewId": 4904098628,
+    "requiredNextAction": "Synchronize PR #277 onto current main, preserve its one-file test diff, rerun canonical CI plus live pr-ownership, then request fresh exact-head independent review."
+  }
+}
