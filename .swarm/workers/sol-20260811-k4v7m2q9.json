@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k4v7m2q9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T09:01:00+00:00",
-  "lastSeenAt": "2026-08-11T09:39:30+00:00",
+  "lastSeenAt": "2026-08-11T09:47:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-fidelity",
   "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-k4v7m2q9",
-  "notes": "Post-hardening FidelityManager capacity scan after #335/#343; looking only for a concrete non-duplicate deterministic/state/accounting/config gap."
+  "notes": "Stopped with no live claims after publishing PR #347 current-main chair resync, multiple review/mining findings, and evt-20260811-094700-k4v7m2q9-session-handoff. Critical immutable-history recovery PR #351 and all fresh review/mining slots are actively owned by other workers; final mine-worldentity atomic create lost cleanly. No Studio evidence claimed."
 }
