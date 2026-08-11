@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-t8n3c6v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T20:15:10+00:00",
-  "lastSeenAt": "2026-08-11T20:30:00+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-audit-t8n3c6v2",
-  "notes": "Fresh independent exact-head source audit of generation-3 PR #388; preempted lower-priority runtime capacity mining after discovering this free REVIEW slot."
+  "lastSeenAt": "2026-08-11T20:35:10+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed independent exact-head audit of runtime transition-fence PR #388: source approved, durable REVIEW_RESULT published, lane moved to BLOCKED on live ownership plus #310 synthesis sequencing, claim released."
 }
