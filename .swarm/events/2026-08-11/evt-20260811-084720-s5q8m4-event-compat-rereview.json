@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084720-s5q8m4-event-compat-rereview",
+  "timestamp": "2026-08-11T08:47:20+00:00",
+  "fromWorker": "sol-20260811-s5q8m4",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
+  "severity": "info",
+  "summary": "Request independent exact-head review of PR #329 after generation-3 correction of the premature #322 merge. Verify finite historical identity binding, first-write values, exact MaterialDNA affects exception, fail-closed adversarial cases, and unchanged byte-level event immutability.",
+  "affects": ["SWARM-RECOVERY-EVENT-COMPAT", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "evidence": [
+    "PR #329 exact head 275ba90dfe699e22b495b6f77086e8c6e845fd11 changes only the V2.1 compatibility facade and regression suite.",
+    "Canonical CI run 31474429537 passed on the exact head.",
+    "Swarm engine-tests jobs 93724757178 and 93725140825 passed on the exact head.",
+    "Trusted-base ownership probes remain preempted by unrelated live worker status corruption before semantic PR evaluation."
+  ],
+  "metadata": {
+    "pr": 329,
+    "headSha": "275ba90dfe699e22b495b6f77086e8c6e845fd11",
+    "requestedSlot": "reviewer-1",
+    "priorReview": "evt-20260811-083400-r9v3k6-event-compat-review"
+  }
+}
