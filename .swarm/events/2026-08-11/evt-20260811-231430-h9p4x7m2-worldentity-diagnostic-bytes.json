@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-231430-h9p4x7m2-worldentity-diagnostic-bytes",
+  "timestamp": "2026-08-11T23:14:30+00:00",
+  "fromWorker": "sol-20260811-h9p4x7m2",
+  "eventType": "FINDING",
+  "summary": "WorldEntity generation-6 bounds duplicate diagnostic count but retained diagnostics still copy caller-sized kind and recipeKey strings. Draft expected-red PR #417 stacks one adversarial regression directly on retained PR #413 and shows canonical Pure Luau failure after all earlier static/domain/audit gates pass. Bound retained diagnostic metadata bytes or reject oversized metadata before retention, then absorb the regression into the retained successor lineage.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "MEDIUM",
+  "evidence": [
+    "PR #417 exact head 41be04102188381c2bbac08b3c5ceabf07a49e37 is stacked on #413 exact head b56c95e79e6e7352b177d6b6bc6cce0bb993f3bf and changes only tests/world_entity.luau (+33/-0).",
+    "Canonical CI run 31545595441 passes format, lint, Luau analysis, canonical randomness, shared-domain, plain-data, and deterministic swarm gates; Pure Luau tests then fail and build/upload are skipped.",
+    "The regression supplies duplicate kind and recipeKey metadata one byte above MAX_PERSISTENT_STATE_STRING_BYTES and accepts either fail-closed rejection or a retained diagnostic projection bounded to that existing WorldEntity-owned string budget.",
+    "Swarm run 31545595460 engine-tests passes; pr-ownership fails separately at live-ownership enforcement while SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY remains independently owned.",
+    "No Roblox Studio, physical-contact, viewport, or two-client evidence claimed."
+  ]
+}
