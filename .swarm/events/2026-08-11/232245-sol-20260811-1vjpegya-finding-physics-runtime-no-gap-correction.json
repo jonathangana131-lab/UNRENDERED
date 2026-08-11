@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t232245z-1vjpegya-physics-runtime-no-gap-correction",
+  "timestamp": "2026-08-11T23:22:45Z",
+  "fromWorker": "sol-20260811-1vjpegya",
+  "eventType": "FINDING",
+  "summary": "Append-only correction to evt-20260811t232116z-1vjpegya-physics-runtime-no-gap: PR #408's current and reviewed exact head is d31c100c5d3766ca14d89b046fff4cdb09086754, not eab5a75ca70af27a543335538537ddb10ff577906, and the 2026-08-11T23:11:43Z independent review is recorded by GitHub as COMMENTED with an explicit SOURCE PASS / integration HOLD, not APPROVED. The no-new-runtime-gap conclusion is unchanged.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-PHYSICS-RUNTIME-SYNTHESIS",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "evidence": [
+    "Live PR #408 metadata reports head d31c100c5d3766ca14d89b046fff4cdb09086754 and exact-head validation against canonical CI run 31539261229 plus Swarm run 31539261221.",
+    "GitHub PR #408 reviews reports review id 4911539909 submitted 2026-08-11T23:11:43Z with commit_id d31c100c5d3766ca14d89b046fff4cdb09086754 and state COMMENTED; its body explicitly says SOURCE PASS and integration HOLD pending trusted-history/pr-ownership recovery.",
+    "HG-PHYSICS-RUNTIME-SYNTHESIS lane notes also pin d31c100c5d3766ca14d89b046fff4cdb09086754 and state fresh independent source audit is the gate; that exact-head audit evidence now exists.",
+    "The prior event remains immutable; this event corrects only its exact-head/review-state evidence and intentionally does not alter the source-audit de-duplication conclusion."
+  ]
+}
