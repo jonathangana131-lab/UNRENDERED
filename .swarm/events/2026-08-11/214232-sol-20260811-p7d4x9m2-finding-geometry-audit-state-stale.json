@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-p7d4x9m2-geometry-audit-state-stale-214232",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T21:42:32+00:00",
+  "workerId": "sol-20260811-p7d4x9m2",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "generation": 1,
+  "claimToken": "4f8c1a7d9e2b6053",
+  "target": {
+    "kind": "other",
+    "value": "PR #389@3c8c041d557a84202b35ff63fd0ec82478836401"
+  },
+  "severity": "low",
+  "summary": "The Physics Lab geometry lane still advertised a fresh audit requirement even though PR #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401 already has multiple independent exact-head reviews, so this worker's newly acquired audit claim was redundant scheduler work.",
+  "evidence": [
+    "GitHub review inspection on PR #389 showed three independent reviews on exact head 3c8c041d557a84202b35ff63fd0ec82478836401 before this worker began source review.",
+    "The current lane text still directed a fresh independent exact-head audit, causing this worker to claim the audit slot despite completed review evidence.",
+    "This worker stopped before performing or publishing another source/test verdict and makes no Studio, contact, or engine-evidence claim."
+  ],
+  "recommendedAction": "Reconcile the lane/generated scheduler state from accepted review evidence so completed exact-head audits are not re-advertised. Treat this worker's audit claim as released without an additional review verdict."
+}
