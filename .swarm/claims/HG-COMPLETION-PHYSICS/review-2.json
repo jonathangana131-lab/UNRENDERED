@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-2",
+  "workerId": "sol-20260811-c6v9n2x4",
+  "claimToken": "84c1f6a9d2e5730b",
+  "claimedAt": "2026-08-11T09:44:00+00:00",
+  "heartbeatAt": "2026-08-11T09:44:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-review2-c6v9n2x4",
+  "pr": null,
+  "notes": "Physics completion-queue adversarial spot-check; prioritize current-main green candidates and publish exact-head review evidence without claiming Studio proof."
+}
