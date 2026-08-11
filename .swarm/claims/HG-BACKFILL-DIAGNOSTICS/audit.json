@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-c9v2m7q4",
   "claimToken": "8d4c1a7f2b9e6035",
   "claimedAt": "2026-08-11T20:57:45+00:00",
-  "heartbeatAt": "2026-08-11T20:57:45+00:00",
+  "heartbeatAt": "2026-08-11T21:06:20+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-c9v2m7q4",
-  "pr": 392,
-  "notes": "Independent exact-head source/test audit of diagnostics generation-4 successor PR #392. Review-only; no Studio/viewport evidence claim."
+  "pr": 396,
+  "notes": "Independent audit of PR #392 found duplicate same-named diagnostics-root false-evidence gap. Structured REQUEST_CHANGES event published and expected-red one-file regression PR #396 opened for primary absorption; no Studio/viewport evidence claimed."
 }
