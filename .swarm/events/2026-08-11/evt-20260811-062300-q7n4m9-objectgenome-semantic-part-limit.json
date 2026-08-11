@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062300-q7n4m9-objectgenome-semantic-part-limit",
+  "timestamp": "2026-08-11T06:23:00+00:00",
+  "fromWorker": "sol-20260811-q7n4m9",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "high",
+  "summary": "ObjectGenome.inspect currently accepts familyId/variantKey values longer than 512 bytes because isSemanticKey has no byte bound, but ObjectGenome.identityKey then passes those validated fields into StableId.fromParts, whose deterministic contract asserts each semantic part is <=512 bytes. This creates a validation-success/identity-crash boundary on canonical ObjectGenome data. Primary should make inspect reject over-limit identity semantic parts (while preserving the 512-byte boundary) and tests should lock the behavior.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "src/shared/Objects/ObjectGenome.luau isSemanticKey only checks lowercase semantic syntax and does not bound byte length.",
+    "ObjectGenome.identityParts includes familyId and variantKey, and identityKey validates then calls StableId.fromParts.",
+    "src/shared/Core/DeterminismContract.luau stableId asserts every semantic part is <=512 bytes."
+  ]
+}
