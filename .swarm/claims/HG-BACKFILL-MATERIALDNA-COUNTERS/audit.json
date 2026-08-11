@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
   "slotId": "audit",
-  "workerId": "sol-20260811-z8r4n6c2",
-  "claimToken": "6e2b9c4a1f7d8053",
-  "claimedAt": "2026-08-11T20:18:00+00:00",
-  "heartbeatAt": "2026-08-11T20:18:00+00:00",
+  "workerId": "sol-20260811-d7k4m9q2",
+  "claimToken": "7c4e1a9d2b6f8053",
+  "claimedAt": "2026-08-11T21:37:20+00:00",
+  "heartbeatAt": "2026-08-11T21:37:20+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/review/HG-BACKFILL-MATERIALDNA-COUNTERS-audit-z8r4n6c2-g1",
+  "branch": "agent/review/HG-BACKFILL-MATERIALDNA-COUNTERS-audit-d7k4m9q2-g2",
   "pr": 353,
-  "notes": "Fresh independent exact-head source/test audit of REVIEW-ready generation-2 MaterialDNA counter repair PR #353; verify exact safe-integer boundary, no-execute validation ordering, fixture/identity preservation, and scope integrity."
+  "notes": "Generation-2 stale takeover of expired independent audit slot for REVIEW-ready PR #353 exact head 10559afdce1a1854e7932522f6e78561736c8ed3. Verify exact safe-integer repairCount boundary, primitive/no-execute validation ordering, fixture/identity preservation, and scope integrity. No Studio evidence."
 }
