@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
+  "slotId": "primary",
+  "workerId": "sol-20260811-s5q8m4",
+  "claimToken": "a6f2c8d19b4e7053",
+  "claimedAt": "2026-08-11T08:35:00+00:00",
+  "heartbeatAt": "2026-08-11T08:35:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-COMPAT-s5q8m4-g2",
+  "pr": null,
+  "notes": "Generation-2 repair after PR #322 was prematurely merged and independent review moved the lane to NEEDS_CHANGES. Preserves the existing protocol lease/token and carries only the finite audited identity correction."
+}
