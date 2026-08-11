@@ -118,6 +118,23 @@ Capture provenance does not replace behavioral evidence. A screenshot can suppor
 
 ---
 
+## Non-PASS Failure Diagnostics
+
+Non-PASS bridge results may include a bounded `failureDiagnostics` object. This is runner/infrastructure telemetry for debugging only; it is never an alternate evidence payload and cannot promote a result to PASS.
+
+Schema-v1 failure diagnostics may report:
+
+- the preserved raw transport status and a derived execution phase,
+- whether a raw log exists and its byte count,
+- counts for whitelisted execution markers scoped from the first exact request-bound marker onward,
+- runner-owned elapsed/timeout seconds and whether the watchdog actually expired,
+- whether the owned Studio process was still alive when the polling loop ended,
+- whether screenshot capture was attempted and whether it succeeded.
+
+Arbitrary raw-log text is not copied into `result.json` or `summary.md`; raw logs remain artifact-only. A phase such as `NO_REQUEST_BOUND_LOG` or zero marker counts means the run did not reach that engine evidence stage. It must remain non-evidence even when the telemetry precisely identifies an infrastructure failure.
+
+---
+
 ## Consuming Execution Results
 
 Durable results are published to `results/<requestId>/` in `UNRENDERED-STUDIO-BRIDGE`:
