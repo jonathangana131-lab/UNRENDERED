@@ -23,14 +23,14 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:57:41.532695+00:00",
+  "generatedAt": "2026-08-11T06:01:35.937174+00:00",
   "mainHealth": {
     "conclusion": "success",
-    "headSha": "10d3f6992ff243a9268ed8629893faf4fc40791c",
+    "headSha": "5ee9091eb9d7af665a990381b0133d8ccedea503",
     "schemaVersion": 1,
     "status": "GREEN",
-    "updatedAt": "2026-08-11T05:39:38+00:00",
-    "workflowRunId": 31462340557
+    "updatedAt": "2026-08-11T06:01:24+00:00",
+    "workflowRunId": 31463572108
   },
   "metrics": {
     "activeClaims": 1,
@@ -42,13 +42,13 @@
       "INTEGRATION_RESULT": 3,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T05:57:41.532695+00:00",
+    "generatedAt": "2026-08-11T06:01:35.937174+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
-      "DONE": 5,
+      "DONE": 6,
       "LOCKED": 1,
-      "READY": 14
+      "READY": 13
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
     "readySlots": 35,
@@ -659,7 +659,7 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "6e1aa92bc288a87eb2352d05a973297db93101fc81bc85325de4ed9c331430a8",
+  "stateDigest": "9505f2363cd5749e9b2d1df4dac63a91caaaaa1371010b4727c6102e981b7c25",
   "summary": {
     "activeClaims": 1,
     "activeResourceClaims": 1,
