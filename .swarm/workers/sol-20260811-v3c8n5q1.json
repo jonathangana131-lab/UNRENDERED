@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-v3c8n5q1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T20:16:00+00:00",
-  "lastSeenAt": "2026-08-11T20:39:00+00:00",
-  "notes": "Completed/released diagnostics adversary PR #384 and WorldEntity capacity finding. Now claimed HG-CAPACITY-MINING/mine-physics-runtime generation 1 after reviewing active transition-fence #388 and recipe-fence #310. Read-only product mining; no duplicate implementation or Studio evidence."
+  "lastSeenAt": "2026-08-11T20:43:00+00:00",
+  "notes": "Completed/released diagnostics adversary PR #384; completed/released WorldEntity capacity mining with FINDING evt-20260811t203200z-v3c8n5q1-worldentity-capacity; completed/released Physics runtime mining with DEPENDENCY_DISCOVERED evt-20260811t204100z-v3c8n5q1-runtime-fidelity-noexecute routed to #388/#274. Canonical product CI for #384 passes; both control-event workflow attempts reach deterministic swarm tests but remain globally blocked by unrelated malformed worker/control history under active SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY. No Studio evidence claimed."
 }
