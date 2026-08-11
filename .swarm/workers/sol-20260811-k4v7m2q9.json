@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T09:01:00+00:00",
-  "lastSeenAt": "2026-08-11T09:01:00+00:00",
-  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "lastSeenAt": "2026-08-11T09:03:00+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "audit",
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-audit-k4v7m2q9",
-  "notes": "Independent source-only WorldEntity audit/review on active PR #293 and compatible stacked regression work. No Studio evidence; no source writer lease requested."
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-audit-k4v7m2q9",
+  "notes": "Claimed independent ObjectGenome contract/ownership audit after losing the WorldEntity claim race. Reviewing active source/test work; no Studio evidence and no source writer lease."
 }
