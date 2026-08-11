@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V21-DASHBOARD",
+  "epicId": "HERO-GATE",
+  "title": "Align zero-slot dashboard with V2.1 capacity fallback",
+  "objective": "Fix the generated zero-ready-slot message so it cannot tell workers to idle before they run the V2.1 fallback chain. Add a regression test for the exact mass-stop failure mode identified by PR #269 review.",
+  "priority": 9900,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["tools/swarm/swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening.py"],
+  "resources": ["SWARM-PROTOCOL"],
+  "slots": [
+    {"slotId":"primary","role":"Zero-slot dashboard repair implementer","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":500,"writeScopes":["tools/swarm/swarmctl_hardening.py","tools/swarm/test_swarmctl_hardening.py"]}
+  ],
+  "acceptance": ["zero-ready-slot dashboard never recommends idle as the first action", "message directs workers through review/recovery/backfill/mining fallback", "regression test covers the zero-slot wording", "trusted ownership/resource/digest gate passes", "canonical CI passes"],
+  "tags": ["control-repair", "capacity", "hero-gate"]
+}
