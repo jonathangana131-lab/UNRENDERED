@@ -4,6 +4,6 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-11T06:18:00+00:00",
-  "lastSeenAt": "2026-08-11T06:18:00+00:00",
-  "notes": "Go-cycle worker. main@914d0a2f05c106f915085aacfa78bc08948cb12c inspected; Hero Gate remains active and Studio display lane externally blocked. Routing to active WorldEntity PR audit rather than duplicating a claimed primary."
+  "lastSeenAt": "2026-08-11T06:26:00+00:00",
+  "notes": "HG-BACKFILL-REALITY/test-adversary published as PR #280. Canonical CI run 31464861531 is green across format/lint/Luau/audits/Pure Luau/build. PR is ready for review. Swarm Control Plane ownership check is globally blocked by main workflow failing to materialize swarmctl_hardening_base.py; critical BLOCKER event evt-20260811-062500-r9t4n2-pr-ownership-import-blocker published."
 }
