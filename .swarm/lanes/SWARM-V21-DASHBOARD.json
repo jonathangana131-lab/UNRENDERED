@@ -5,7 +5,7 @@
   "title": "Align zero-slot dashboard with V2.1 capacity fallback",
   "objective": "Fix the generated zero-ready-slot message so it cannot tell workers to idle before they run the V2.1 fallback chain. Add a regression test for the exact mass-stop failure mode identified by PR #269 review.",
   "priority": 9900,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["tools/swarm/swarmctl_hardening.py", "tools/swarm/swarmctl_hardening_base.py", "tools/swarm/test_swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening_base.py"],
@@ -14,5 +14,6 @@
     {"slotId":"primary","role":"Zero-slot dashboard repair implementer","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":500,"writeScopes":["tools/swarm/swarmctl_hardening.py","tools/swarm/swarmctl_hardening_base.py","tools/swarm/test_swarmctl_hardening.py","tools/swarm/test_swarmctl_hardening_base.py"]}
   ],
   "acceptance": ["zero-ready-slot dashboard never recommends idle as the first action", "message directs workers through review/recovery/backfill/mining fallback", "regression test covers the zero-slot wording", "proven V2 hardening engine and tests are preserved byte-for-byte as base modules", "trusted ownership/resource/digest gate passes", "canonical CI passes"],
+  "notes": "Completed by PR #270, merged as 914d0a2f05c106f915085aacfa78bc08948cb12c after Swarm ownership enforcement, deterministic control-plane tests, and canonical CI all passed.",
   "tags": ["control-repair", "capacity", "hero-gate"]
 }
