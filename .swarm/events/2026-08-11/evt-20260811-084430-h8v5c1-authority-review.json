@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084430-h8v5c1-authority-review",
+  "timestamp": "2026-08-11T08:44:30+00:00",
+  "fromWorker": "sol-20260811-h8v5c1",
+  "eventType": "REVIEW_RESULT",
+  "summary": "APPROVE source-only exact-head review of PR #316 at 0fa7132aa8a2abf3d5a60f89ea9ccdccd6ab5981. The server/client bootstrap guards now reject wrong-context execution before ReplicatedStorage traversal, shared-tree waits, or module imports; correct-context startup remains unchanged; server-owned Physics Lab startup remains server-only; and the client bootstrap does not import the server authority modules. Exact-head canonical CI run 31472081760 passes. No Roblox Studio, real two-client, caller/session binding, or teardown-handoff evidence is claimed. Integration still requires live ownership recovery, sync to current main, and fresh exact-head CI/control validation because the primary lease is stale and global Swarm control recovery remains active.",
+  "affects": ["HG-BACKFILL-AUTHORITY"],
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "evidence": [
+    "PR #316 exact head 0fa7132aa8a2abf3d5a60f89ea9ccdccd6ab5981 changes only src/server/Bootstrap.server.luau, src/client/Bootstrap.client.luau, and tests/hero_gate_contract_integration.luau.",
+    "Server and client acquire RunService first and assert IsServer()/IsClient() before ReplicatedStorage lookup, WaitForChild, or require; server still calls PhysicsLabStudioHarness.start(workspace), while the client source references none of PhysicsLabStudioHarness/PhysicsLabRuntime/PhysicsLabRealizer.",
+    "Canonical exact-head CI run 31472081760 completed successfully. Swarm Control Plane run 31472081807 failed on global control state rather than product-source validation."
+  ],
+  "metadata": {
+    "verdict": "APPROVE",
+    "pr": 316,
+    "headSha": "0fa7132aa8a2abf3d5a60f89ea9ccdccd6ab5981",
+    "reviewId": 4904425623
+  }
+}
