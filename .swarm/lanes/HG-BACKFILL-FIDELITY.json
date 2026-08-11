@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "epicId": "HERO-GATE",
+  "title": "FidelityManager adversarial depth pass",
+  "objective": "Use otherwise-idle Sol capacity to find and fix concrete fidelity transition, rejected-step atomicity, finite-state, deterministic ordering, entity-id boundary, or resource-accounting defects without depending on Studio.",
+  "priority": 5050,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["src/shared/Physics/FidelityManager.luau", "tests/fidelity_manager*.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"FidelityManager source hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Physics/FidelityManager.luau","tests/fidelity_manager*.luau"]},
+    {"slotId":"test-adversary","role":"Fidelity transition and atomicity tests","exclusive":true,"availableWhen":["READY","REVIEW","NEEDS_CHANGES"],"priorityBoost":220,"writeScopes":["tests/fidelity_manager*.luau"]},
+    {"slotId":"audit","role":"Fidelity state-machine auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/fidelity_manager*.luau","Docs/FIDELITY_MANAGER.md"]}
+  ],
+  "acceptance": ["target concrete finite-state or atomicity gaps", "preserve deterministic ordering", "new behavior has adversarial regression coverage", "no Studio claim is required", "publish findings that affect other lanes"],
+  "tags": ["backfill", "hero-gate", "source-only"]
+}
