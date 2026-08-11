@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime transition mutation fence",
   "objective": "Close the source-only runtime lifecycle reentrancy defect found by capacity mining: transition adapters must not be able to partially dismantle or recursively mutate PhysicsLabRuntime authority while an F2/F0 fidelity transaction is in flight.",
   "priority": 4990,
-  "state": "REVIEW",
+  "state": "BLOCKED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -45,5 +45,5 @@
     "independent review required before integration"
   ],
   "pr": 388,
-  "notes": "Generation-3 stale recovery PR #388 at exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1 closes the PR #366 review blocker by holding PhysicsLabRuntime's mutation fence across the full FidelityManager.step evaluation window, including caller-owned PolicyInputs access before any representation hook. Added adversarial metatable-backed PolicyInputs regression proving dispose() is rejected before authority teardown, registry/fidelity populations remain intact and synchronized at F2, and the guard clears for immediate retry. Canonical CI run 31532785322 passed format, lint, Luau analysis, randomness/domain/plain-value audits, control-plane deterministic tests, pure Luau tests, and place build. Swarm run 31532785365 engine-tests passed. Its pr-ownership job fails only on the separately owned live immutable-event continuity blocker: audited event evt-20260811-073500-q9m4r2-authority-rereview-approve.json has non-canonical bytes (8f332b4... != 2f0b022...). No local test or Studio evidence is claimed. Independent review is required; eventual integration must synthesize overlapping canonical recipe-fence PR #310 and rerun current-main exact-head CI/pr-ownership after the control recovery lands."
+  "notes": "Generation-3 PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1 is independently SOURCE APPROVED by REVIEW_RESULT evt-20260811-203405-t8n3c6v2-runtime-transition-g3-review. The full FidelityManager.step transaction fence closes the hostile PolicyInputs pre-hook mutation window while preserving capture/observer rejection atomicity, authority synchronization, immediate retry, and normal lifecycle semantics. Canonical CI run 31532785322 is SUCCESS. Latest Swarm run 31532920995 engine-tests is SUCCESS; pr-ownership remains globally fail-closed on unrelated live control-state validation (currently worker record unknown key parkedReason), so merge authorization is withheld. Lane is BLOCKED pending trusted ownership recovery and integration sequencing. Overlapping canonical recipe-fence PR #310 must be preserved/synthesized on fresh current main, followed by exact-head canonical CI and live ownership. No Studio/two-client evidence claimed."
 }
