@@ -266,6 +266,16 @@ local function run(): number
 		table.concat(oversizedRevisionResult.errors, "; ")
 	)
 
+	local oversizedRepairCount = makeRecipe()
+	oversizedRepairCount.maintenance.repairCount = 2147483648
+	local oversizedRepairCountResult = MaterialDNA.validateRecipe(oversizedRepairCount)
+	expect(
+		"oversized maintenance repair count rejected",
+		not oversizedRepairCountResult.ok
+			and containsError(oversizedRepairCountResult, "maintenance.repairCount"),
+		table.concat(oversizedRepairCountResult.errors, "; ")
+	)
+
 	local metatableRecipe: any = makeRecipe()
 	setmetatable(metatableRecipe, {
 		__index = {
