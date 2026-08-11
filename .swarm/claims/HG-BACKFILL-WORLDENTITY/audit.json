@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-k3m9v6",
+  "claimToken": "5e1a9c7d3b8f2046",
+  "claimedAt": "2026-08-11T08:39:36+00:00",
+  "heartbeatAt": "2026-08-11T08:39:36+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-k3m9v6",
+  "pr": 293,
+  "notes": "Independent audit of active WorldEntity primary PR #293 against current contracts, adversarial test coverage, exact-head CI, and current main compatibility."
+}
