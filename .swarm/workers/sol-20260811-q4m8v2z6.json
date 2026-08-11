@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-q4m8v2z6",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-11T11:50:00+00:00",
+  "lastSeenAt": "2026-08-11T11:50:00+00:00",
+  "notes": "Independent review worker selecting the unclaimed HG-BACKFILL-REALITY audit slot after confirming main green and the control-recovery primary is separately owned."
+}
