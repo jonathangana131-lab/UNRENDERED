@@ -41,6 +41,9 @@ class RecoveryExtensionTests(unittest.TestCase):
             rows,
         )
         rules = extension.quarantine_rules()
+        expected_ids = {row[0] for row in rows}
+        self.assertEqual(len(rules), len(rows))
+        self.assertEqual(set(rules), expected_ids)
         for event_id, filename, _first_write, blob_sha in rows:
             self.assertEqual(rules[event_id]["filename"], filename)
             self.assertEqual(rules[event_id]["quarantineOnlyGitBlobSha1"], blob_sha)
