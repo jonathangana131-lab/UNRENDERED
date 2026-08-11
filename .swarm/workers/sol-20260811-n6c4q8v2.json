@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-n6c4q8v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:38:26Z",
-  "lastSeenAt": "2026-08-11T21:57:11Z",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-n6c4q8v2-g1",
-  "notes": "Independent exact-head source audit of diagnostics generation-7 PR #409 at 064670616b35b08dc5a84b52b16c976c3b72e9f7; no Studio/viewport evidence claim."
+  "lastSeenAt": "2026-08-11T22:05:12Z",
+  "notes": "Diagnostics generation-7 audit completed: primary PR #409 returned to NEEDS_CHANGES for the final-sweep re-enable race; expected-red PR #411 at 1d620472d91411be2335d9860b8471b9c1b57663 isolates the missing final-state guard. Original primary worker remains actively claimed. No Studio/viewport evidence claimed."
 }
