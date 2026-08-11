@@ -33,6 +33,23 @@ local function run(): number
 	local rollback = position("folder:Destroy()")
 	local propagate = position("error(result, 0)")
 
+	local disableCleanup = position(
+		"local folder = diagnosticsRoot(lab.model)\n\tif folder ~= nil then\n\t\tfolder:Destroy()\n\tend\n\tlocal snapshot = PhysicsLabStudioDiagnostics.capture(lab)"
+	)
+	local disablePostcondition = position("not snapshot.enabled and snapshot.diagnosticInstanceCount == 0")
+	local evidenceDisable = position("\tPhysicsLabStudioDiagnostics.disable(lab)")
+	local evidenceBaseline = position("\tlocal baseline = Validation.captureFull(lab.model)")
+	local evidenceInitial = position("\tlocal initial = PhysicsLabStudioDiagnostics.capture(lab)")
+	local evidenceEnable = position("\t\tlocal enabled = PhysicsLabStudioDiagnostics.enable(lab)")
+	local evidenceDisableCycle = position("\t\tlocal disabled = PhysicsLabStudioDiagnostics.disable(lab)")
+	local evidenceOffSnapshot = position("\t\tlocal offSnapshot = Validation.captureFull(lab.model)")
+	local evidenceComparison = position("\t\tlocal comparison = Validation.compare(baseline, offSnapshot, 0.001)")
+	local evidenceDeltaCheck = position("\t\tfor countName, delta in pairs(comparison.delta) do")
+	local evidenceEnvelopeCheck = position("\t\tassert(comparison.envelope.ok")
+	local evidenceFinalSnapshot = position("\tlocal finalSnapshot = PhysicsLabStudioDiagnostics.capture(lab)")
+	local evidenceFinalState = position("\t\tfinallyEnabled = finalSnapshot.enabled,")
+	local evidenceFreeze = position("\ttable.freeze(evidence)")
+
 	expect(
 		"all readout dependencies are preflighted before the owned root is parented",
 		preflight ~= nil and parentMutation ~= nil and preflight < parentMutation
@@ -76,6 +93,46 @@ local function run(): number
 			and transactionEnd ~= nil
 			and transactionEnd < rollback
 			and rollback < propagate
+	)
+	expect(
+		"disable owns cleanup and proves a zero-instance off state",
+		disableCleanup ~= nil and disablePostcondition ~= nil and disableCleanup < disablePostcondition
+	)
+	expect(
+		"toggle evidence establishes its canonical baseline only after forcing diagnostics off",
+		evidenceDisable ~= nil
+			and evidenceBaseline ~= nil
+			and evidenceInitial ~= nil
+			and evidenceDisable < evidenceBaseline
+			and evidenceBaseline < evidenceInitial
+	)
+	expect(
+		"each evidence cycle disables diagnostics before capturing the comparable off snapshot",
+		evidenceEnable ~= nil
+			and evidenceDisableCycle ~= nil
+			and evidenceOffSnapshot ~= nil
+			and evidenceEnable < evidenceDisableCycle
+			and evidenceDisableCycle < evidenceOffSnapshot
+	)
+	expect(
+		"resource and envelope no-drift checks are derived from the post-disable snapshot",
+		evidenceOffSnapshot ~= nil
+			and evidenceComparison ~= nil
+			and evidenceDeltaCheck ~= nil
+			and evidenceEnvelopeCheck ~= nil
+			and evidenceOffSnapshot < evidenceComparison
+			and evidenceComparison < evidenceDeltaCheck
+			and evidenceDeltaCheck < evidenceEnvelopeCheck
+	)
+	expect(
+		"final diagnostics state is captured after the cycle cleanup path and published before evidence freeze",
+		evidenceDisableCycle ~= nil
+			and evidenceFinalSnapshot ~= nil
+			and evidenceFinalState ~= nil
+			and evidenceFreeze ~= nil
+			and evidenceDisableCycle < evidenceFinalSnapshot
+			and evidenceFinalSnapshot < evidenceFinalState
+			and evidenceFinalState < evidenceFreeze
 	)
 
 	return failures
