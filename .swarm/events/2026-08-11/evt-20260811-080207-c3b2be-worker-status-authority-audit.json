@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080207-c3b2be-worker-status-authority-audit",
+  "timestamp": "2026-08-11T08:02:07+00:00",
+  "fromWorker": "sol-20260811-c3b2be",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "normal",
+  "summary": "Source audit narrows the worker-status recovery safety boundary: on canonical main, WORKER_STATUSES is referenced only by validate_worker. Scheduler readiness is derived from lane/claim/resource state, and pr_check authorizes product PRs using the authoritative claim token, lease freshness, branch match, write scopes, and protected-resource leases; it does not consult worker status. Therefore accepting explicitly documented compatibility lifecycle aliases such as CLAIMING or DONE would not by itself grant PR ownership or bypass lease fencing in the current implementation. Unknown statuses should still fail closed.",
+  "affects": ["SWARM-RECOVERY-WORKER-STATUS-CONTRACT", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "evidence": [
+    "tools/swarm/swarmctl.py references WORKER_STATUSES only in validate_worker membership validation.",
+    "derive_ready_slots derives scheduling from lane state, dependency state, active slot claims, WIP limits, and resource availability; it does not consume worker status.",
+    "pr_check validates lane state, authoritative claim identity/token, lease freshness, claimed branch, write scopes, protected resource declaration, and active resource lease; it does not consume worker status.",
+    "Exact-head failures have independently observed intuitive aliases CLAIMING and DONE; current live records later reconcile those semantics to WORKING and STOPPED respectively."
+  ],
+  "metadata": {
+    "correction": "The prior alias-repro note was intentionally conservative about STOPPED ownership semantics. Current source review shows worker status itself is not an ownership authority input; claim/resource leases remain the fail-closed boundary.",
+    "safeRepairShape": "Either expose and enforce one canonical worker vocabulary everywhere, or explicitly accept a small documented compatibility alias set while retaining rejection of all other unknown statuses. Add core/hardening tests proving aliases do not alter claim/resource ownership semantics."
+  }
+}
