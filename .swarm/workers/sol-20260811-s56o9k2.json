@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:00:00+00:00",
-  "lastSeenAt": "2026-08-11T21:00:00+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "test-adversary",
-  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-s56o9k2",
-  "notes": "Review-phase complementary adversarial pass on generation-8 PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; no Studio evidence claimed."
+  "lastSeenAt": "2026-08-11T21:01:40+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-s56o9k2",
+  "notes": "ObjectGenome test-adversary claim lost atomically to another worker; rerouted to physics-runtime capacity mining. Inspecting current source/tests/PR overlap for a concrete non-duplicate Hero-Gate depth lane; no Studio evidence claimed."
 }
