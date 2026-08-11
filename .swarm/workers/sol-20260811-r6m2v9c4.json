@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-r6m2v9c4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T20:40:30+00:00",
+  "lastSeenAt": "2026-08-11T20:40:30+00:00",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "reconcile",
+  "branch": "agent/reconcile/HG-COMPLETION-PHYSICS-r6m2v9c4",
+  "notes": "Reconcile overlapping PhysicsLabRuntime recipe-fence #310 and transition-fence #388 lineages. Preserve both reviewed invariants; no source rewrite or merge while trusted ownership is fail-closed."
+}
