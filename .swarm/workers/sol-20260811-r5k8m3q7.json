@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:32:30+00:00",
-  "lastSeenAt": "2026-08-11T21:36:15+00:00",
-  "laneId": "HG-COMPLETION-PHYSICS",
-  "slotId": "reconcile",
-  "branch": "agent/reconcile/HG-COMPLETION-PHYSICS-r5k8m3q7",
-  "notes": "Reconciling runtime PRs #310, #388, and #402 into one bounded synthesis path."
+  "lastSeenAt": "2026-08-11T21:44:30+00:00",
+  "laneId": "HG-PHYSICS-RUNTIME-SYNTHESIS",
+  "slotId": "primary",
+  "branch": "agent/physics/HG-PHYSICS-RUNTIME-SYNTHESIS-r5k8m3q7",
+  "notes": "Validating PR #408 before independent review handoff."
 }
