@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:46:31+00:00",
-  "lastSeenAt": "2026-08-11T07:51:56+00:00",
+  "lastSeenAt": "2026-08-11T07:56:18+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-pr296-m4k8z2",
-  "notes": "Fidelity PR #274 review completed with durable REQUEST_CHANGES; now independently auditing ObjectGenome primary PR #296 after the main-health validation-fence recovery landed."
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-pr277-m4k8z2",
+  "notes": "PR #296 patch audit completed (source PASS, integration blocked on red ownership). Continuing same strike team with independent exact-head adversarial-test audit for PR #277."
 }
