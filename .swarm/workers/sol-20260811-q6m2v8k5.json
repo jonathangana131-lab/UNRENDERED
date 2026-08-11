@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-q6m2v8k5",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T09:01:03+00:00",
+  "lastSeenAt": "2026-08-11T09:01:03+00:00",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "audit",
+  "branch": "agent/physics/HG-BACKFILL-FIDELITY-audit-q6m2v8k5",
+  "notes": "Independent Fidelity state-machine audit focused on fresh generation-3 primary hardening and exact-head integration readiness. No Studio evidence claimed."
+}
