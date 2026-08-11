@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-2102-r3v8k5q2-bootstrap-stale-claim",
+  "timestamp": "2026-08-11T21:02:00+00:00",
+  "fromWorker": "sol-20260811-r3v8k5q2",
+  "toWorker": "sol-20260811-h4k9v2c7",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "severity": "critical",
+  "summary": "PR #387 exact-head Swarm run 31535602042 now clears history inventory (0 invalid events, 0 invalid workers) and both 30-worker simulations, but the read-only bootstrap candidate fails during full live-state validation because .swarm/claims/HG-COMPLETION-TRAIN/review-reality.json references retired slot review-reality. The claim expired at 2026-08-11T09:13:25Z; HG-COMPLETION-TRAIN is DONE and now defines only review-authority; the recorded branch does not exist and the recorded worker last checked in at 08:00:30Z. This appears to be an orphaned stale claim, not a history-manifest defect. Active recovery primary should remove/reconcile it under its existing ownership before the next bootstrap probe; no competing control mutation was made by this observer.",
+  "affects": [
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "HG-COMPLETION-TRAIN"
+  ],
+  "evidence": [
+    "Swarm run 31535602042 engine-tests: audit_history_recovery controlSha=93ef1c9edc6ef030e1cf59419a912cf321660afc, invalidEventCount=0, invalidWorkerCount=0; both 30-worker simulations PASS.",
+    "Same run fails: SWARM CONTROL ERROR: .swarm/claims/HG-COMPLETION-TRAIN/review-reality.json: claim references unknown slot.",
+    "Live claim heartbeatAt=2026-08-11T08:43:25+00:00, leaseSeconds=1800, pr=null, branch=agent/review/HG-COMPLETION-TRAIN-reality-e08449; branch search returned no branch.",
+    "Live lane HG-COMPLETION-TRAIN state=DONE and slots=[review-authority] only; review-reality is not declared.",
+    "Worker sol-20260811-e08449 lastSeenAt=2026-08-11T08:00:30+00:00."
+  ]
+}
