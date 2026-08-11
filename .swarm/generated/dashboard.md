@@ -1,15 +1,15 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:25:07.121423+00:00`
+Generated: `2026-08-11T07:25:30.318314+00:00`
 
 Canonical main: **GREEN** `064e28f2306095dadd6a514b96f397cd810ac556`
 
-State digest: `95d2e82183b15a11adab4e8b9fd31bc80fe9c568bf864bb6e368b9d1f64901cc`
+State digest: `c9f4187d2c44b67cf6700aeee9fb3011ee33e85ced0aacfdad525181918d3915`
 
 ## Summary
 
-- ready slots: **17**
-- active claims: **13**
+- ready slots: **16**
+- active claims: **14**
 - stale claims: **2**
 - blocked-external lanes: **1**
 
@@ -23,7 +23,6 @@ State digest: `95d2e82183b15a11adab4e8b9fd31bc80fe9c568bf864bb6e368b9d1f64901cc`
 - `HG-BACKFILL-AUTHORITY/test-adversary` — **Canonical agreement and teardown fixture author** — score 5020 — dependencies satisfied
 - `HG-BACKFILL-PHYSICS-GEOMETRY/audit` — **Physics recipe realism and validation auditor** — score 5020 — dependencies satisfied
 - `HG-BACKFILL-DIAGNOSTICS/audit` — **Diagnostics failure-path and capture-contract auditor** — score 4970 — dependencies satisfied
-- `HG-BACKFILL-AUTHORITY/audit` — **Two-client authority and trust-boundary auditor** — score 4920 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-worldentity` — **Mine WorldEntity for next concrete depth lane** — score 3680 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-objectgenome` — **Mine ObjectGenome for next concrete depth lane** — score 3670 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-materialdna` — **Mine MaterialDNA for next concrete depth lane** — score 3660 — dependencies satisfied
@@ -35,6 +34,7 @@ State digest: `95d2e82183b15a11adab4e8b9fd31bc80fe9c568bf864bb6e368b9d1f64901cc`
 
 ## Active claims
 
+- `HG-BACKFILL-AUTHORITY/audit` → `sol-20260811-q9m4r2`; lease to `2026-08-11T07:53:20+00:00`
 - `HG-BACKFILL-AUTHORITY/primary` → `sol-20260811-q9x4m2`; lease to `2026-08-11T07:49:57+00:00`
 - `HG-BACKFILL-DIAGNOSTICS/primary` → `sol-20260811-q7h4n2`; lease to `2026-08-11T07:59:10+00:00`
 - `HG-BACKFILL-FIDELITY/audit` → `sol-20260811-x7n4k2`; lease to `2026-08-11T07:34:30+00:00`

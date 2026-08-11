@@ -1,6 +1,15 @@
 {
   "activeClaims": [
     {
+      "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-q9m4r2",
+      "expiresAt": "2026-08-11T07:53:20+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-AUTHORITY",
+      "pr": null,
+      "slotId": "audit",
+      "workerId": "sol-20260811-q9m4r2"
+    },
+    {
       "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-q9x4m2-g2",
       "expiresAt": "2026-08-11T07:49:57+00:00",
       "generation": 2,
@@ -131,7 +140,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:25:07.121423+00:00",
+  "generatedAt": "2026-08-11T07:25:30.318314+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "064e28f2306095dadd6a514b96f397cd810ac556",
@@ -141,7 +150,7 @@
     "workflowRunId": 31468678800
   },
   "metrics": {
-    "activeClaims": 13,
+    "activeClaims": 14,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -157,7 +166,7 @@
       "REVIEW_REQUEST": 29,
       "REVIEW_RESULT": 30
     },
-    "generatedAt": "2026-08-11T07:25:07.121423+00:00",
+    "generatedAt": "2026-08-11T07:25:30.318314+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -166,7 +175,7 @@
       "READY": 12
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 17,
+    "readySlots": 16,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 2
@@ -289,21 +298,6 @@
         "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
         "tests/**diagnostic*.luau",
         "tests/hero_gate_contract_integration.luau"
-      ]
-    },
-    {
-      "laneId": "HG-BACKFILL-AUTHORITY",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Two-client authority and trust-boundary auditor",
-      "score": 4920,
-      "slotId": "audit",
-      "writeScopes": [
-        "src/server/Bootstrap.server.luau",
-        "src/client/Bootstrap.client.luau",
-        "tests/hero_gate_contract_integration.luau",
-        "tests/**authority*.luau",
-        "tests/**multiplayer*.luau"
       ]
     },
     {
@@ -871,13 +865,13 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "95d2e82183b15a11adab4e8b9fd31bc80fe9c568bf864bb6e368b9d1f64901cc",
+  "stateDigest": "c9f4187d2c44b67cf6700aeee9fb3011ee33e85ced0aacfdad525181918d3915",
   "summary": {
-    "activeClaims": 13,
+    "activeClaims": 14,
     "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 25,
-    "readySlots": 17,
+    "readySlots": 16,
     "staleClaims": 2,
     "workers": 46
   }
