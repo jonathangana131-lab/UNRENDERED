@@ -5,7 +5,7 @@
   "title": "Content-foundation completion queue",
   "objective": "Drain ObjectGenome, MaterialDNA, FidelityManager, and related foundation PR backlog into retained main changes before spawning additional content-foundation primaries.",
   "priority": 10000,
-  "state": "REVIEW",
+  "state": "BLOCKED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["Docs/**"],
@@ -17,5 +17,6 @@
     {"slotId":"reconcile","role":"Content-foundation PR lineage reconciler","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":850,"writeScopes":["Docs/**"]}
   ],
   "acceptance": ["self-review by implementer is expected before handoff", "bounded tests/docs/local validation work can integrate after self-review plus exact-head CI/ownership", "schema/identity/ownership behavior requires independent review", "merge the strongest non-overlapping result and close superseded variants", "do not optimize for PR count or gross lines"],
-  "tags": ["completion", "review", "integration", "content", "hero-gate"]
+  "tags": ["completion", "review", "integration", "content", "hero-gate"],
+  "notes": "Reconciled content lineages: retain Fidelity #385 plus reviewed stacked test PR #398, ObjectGenome #395, and MaterialDNA #353. Their exact-head source/test reviews are already recorded in their lane-owned review queues. Keep docs companions #292/#299/#317 sequenced after source ancestry. This completion queue is blocked on the separately owned trusted-history recovery / fresh live pr-ownership gate and should not spawn duplicate reviews meanwhile."
 }
