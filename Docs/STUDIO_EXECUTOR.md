@@ -53,8 +53,11 @@ Every allowed `jobType` maps to a fixed, versioned driver in the private bridge.
 4. **`studio-datamodel-dump`** — fixed DataModel inspection driver.
 5. **`physics-lab-lifecycle`** — source-owned 20-cycle F2 → F0 → F2 lifecycle/resource/envelope/rebuild proof.
 6. **`physics-lab-server-smoke`** — narrow server-side Physics Lab harness/realizer smoke proof.
-7. **`physics-lab-two-client`** — multi-client/server-authority topology proof.
-8. **`physics-lab-hero-gate`** — composite gate identifier. A lifecycle driver result alone is deliberately insufficient to PASS this job.
+7. **`physics-lab-two-client`** — true Studio multiplayer/server-authority proof requiring at least two observed clients to agree on one canonical lab truth.
+8. **`physics-lab-physical-sanity`** — managed RunMode contact/traversability sanity across the canonical floor, stairs, ramp, ledge, and F2 ObjectGenome proxy set, with cleanup/resource/envelope checks.
+9. **`physics-lab-diagnostics`** — source-owned diagnostics default-off/on/off behavior, inspectable identity readouts, bounded 20-cycle toggle/cleanup stability, request-bound runtime logs, and live diagnostics-on capture evidence.
+10. **`physics-lab-performance-observation`** — bounded Studio/server RunMode measurement preset: engine version, canonical repro identity, 30 warmup + 120 measured Heartbeats, full-capture/restart observations, and restart resource/envelope stability. It deliberately reports `OBSERVED_NO_BUDGET`; PASS means the observations were captured and internally valid, not that a permanent frame/startup/device budget was met.
+11. **`physics-lab-hero-gate`** — composite gate identifier. A lifecycle driver result alone is deliberately insufficient to PASS this job.
 
 The managed Studio executor plugin is installed from versioned bridge source before jobs and is responsible for entering the supported Studio simulation path. The runner still requires request-bound engine logs before accepting a completion sentinel.
 
@@ -70,9 +73,9 @@ For each request the runner:
 - establishes a post-launch log epoch,
 - accepts `STUDIO_EXECUTOR_FINISHED` only from a log containing the same request marker,
 - preserves the request-bound raw log for failure diagnosis,
-- transports large Physics Lab lifecycle proof through bounded CreatorOutput chunks,
+- transports large Physics Lab lifecycle, diagnostics, and performance payloads through bounded CreatorOutput chunks,
 - checks chunk count/ordering/content consistency before reassembly,
-- merges the reassembled lifecycle proof into the compact verdict before semantic evaluation.
+- merges the reassembled row-specific proof into the compact verdict before semantic evaluation.
 
 A stale Studio log, truncated chunk stream, missing result payload, timeout, source-SHA mismatch, or evaluator rejection must fail closed.
 
@@ -85,9 +88,12 @@ A stale Studio log, truncated chunk stream, missing result payload, timeout, sou
 | Job Type | Required semantic evidence |
 |---|---|
 | **`physics-lab-lifecycle`** | Schema-v1 lifecycle result; exactly 20 cycles; canonical baseline identity/repro fields; checkpoints exactly at 1/5/10/20; zero deltas for tracked Instances/models/parts/assemblies/attachments/constraints/joints; checkpoint envelope success; both primitive and ObjectGenome samples; stable entity IDs; +20 state-revision and +40 representation-revision continuity. |
-| **`physics-lab-hero-gate`** | First validates the same strong lifecycle proof, then still fails closed because lifecycle alone does not prove the composite gate. #151 additionally requires independently reviewed contact/traversability, diagnostics behavior, two-client/server-authority behavior, and device/performance observations before scheduler unlock. |
 | **`physics-lab-server-smoke`** | Fixed server driver identity and sentinel; server execution; valid Physics Lab model; baseline validation; non-negative integer observed player count. |
-| **`physics-lab-two-client`** | Same server evidence plus at least two observed players. |
+| **`physics-lab-two-client`** | Same server foundation plus at least two observed players and two client observation reports; exactly one canonical lab root; non-empty canonical identity/entity-ID evidence per client; matching root count, identity, structure, and canonical truth across clients; managed Studio test teardown accepted. |
+| **`physics-lab-physical-sanity`** | Managed server simulation; exactly one canonical lab root; full baseline validation; required floor/stair/ramp/ledge contact target set in canonical order; every contact succeeds; stair surface order remains traversable; five F2 ObjectGenome proxies present; temporary probes cleanly removed; zero canonical resource drift; canonical envelope preserved; exact world/region/fingerprint/repro identity present. |
+| **`physics-lab-diagnostics`** | Studio server RunMode; diagnostics off by default and off at finish; live visible-readout phase reached; represented entity count matches owned BillboardGui readouts; structural and ObjectGenome identity/fidelity/revision samples are inspectable and distinct; required labels contain canonical fingerprint/repro values; 20 off-to-off toggle cycles with checkpoints at 1/5/10/20, zero tracked resource drift and envelope success; request-bound foundation/realization/visual-ready/result markers occur exactly once; a live diagnostics-on Studio capture is present. |
+| **`physics-lab-performance-observation`** | Fixed performance driver/sentinel in Studio server RunMode; explicit `OBSERVED_NO_BUDGET`; engine version plus exact canonical world/region/recipe/fingerprint/repro identity; 30 warmup and 120 measured finite positive Heartbeat samples with internally consistent min/median/mean/p95/max/total statistics; finite capture/restart observations; zero tracked restart resource drift; documented 0.001-stud envelope preserved. This row records measurements only and must not be cited as proof of a permanent performance/device budget. |
+| **`physics-lab-hero-gate`** | First validates the same strong lifecycle proof, then still fails closed because lifecycle alone does not prove the composite gate. #151 additionally requires independently reviewed contact/traversability, diagnostics behavior, two-client/server-authority behavior, and device/performance observations before scheduler unlock. |
 | Other supported smoke/capture jobs | Their fixed driver/evaluator contract; a sentinel or image alone must not be interpreted as Hero Gate evidence. |
 
 Transport state such as `COMPLETED` is not a semantic status. Unknown/non-PASS transport state cannot bypass the evaluator.
@@ -104,10 +110,11 @@ Results identify how an image was obtained:
 
 - **`NATIVE_ENGINE_RENDER`** — image generated through the supported engine render path.
 - **`STUDIO_WINDOW_CAPTURE`** — targeted macOS Roblox Studio window capture.
+- **`STUDIO_WINDOW_CAPTURE_DIAGNOSTICS_ON`** — targeted Studio-window capture taken while source-owned Physics Lab diagnostics were visibly enabled.
 - **`DISPLAY_FALLBACK`** — full-display fallback capture.
 - **`NO_CAPTURE`** — no image was captured.
 
-Capture provenance does not replace behavioral evidence. A screenshot can support visual inspection while the machine evidence separately proves lifecycle/server contracts.
+Capture provenance does not replace behavioral evidence. A screenshot can support visual inspection while the machine evidence separately proves lifecycle/server contracts. For diagnostics, the row evaluator additionally requires capture evidence tied to the live diagnostics-on phase; a post-finish screenshot cannot substitute for it.
 
 ---
 
