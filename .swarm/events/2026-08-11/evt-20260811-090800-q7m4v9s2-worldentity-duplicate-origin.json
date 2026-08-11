@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090800-q7m4v9s2-worldentity-duplicate-origin",
+  "timestamp": "2026-08-11T09:08:00+00:00",
+  "fromWorker": "sol-20260811-q7m4v9s2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "summary": "WorldEntity duplicate-ID diagnostics do not satisfy the documented both-origins contract: the diagnostic keeps kinds and recipe keys but drops worldId, regionId, generator, and generatorVersion, so materially different competing origins can become diagnostically indistinguishable. Recommend a bounded source/test follow-up after the active WorldEntity completion train rather than widening PR #293.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "Docs/ARCHITECTURE.md states that the domain registry rejects duplicate live IDs, keeps the first registration authoritative, and emits a diagnostic describing both origins.",
+    "At active PR #293 exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e, DuplicateIdentityDiagnostic contains entityId, existingKind, incomingKind, existingRecipeKey, and incomingRecipeKey only.",
+    "Registry duplicate construction copies only existing.origin.recipeKey and incoming origin.recipeKey; worldId, regionId, generator, and generatorVersion are omitted even though all are canonical GenerationOrigin fields.",
+    "Two records with the same WorldEntityId, kind, and recipeKey but different WorldId, RegionId, generator identity, or generator version therefore produce a diagnostic that cannot describe the provenance conflict that caused the duplicate.",
+    "Search of current open PR/issue titles and bodies for DuplicateIdentityDiagnostic/worldId found no active repair for this provenance-loss gap. Existing PR #276 hardens diagnostic immutability and ID boundaries, while the known registry-capacity and persistentState-budget findings are separate concerns.",
+    "This is source-only contract observability/debuggability work and claims no Studio, physics, networking, or Hero Gate evidence."
+  ],
+  "metadata": {
+    "activePr": 293,
+    "activeHeadSha": "91b6e273c0c21326dfbfe9c5ee5227e99f26933e",
+    "recommendedLaneId": "HG-WORLDENTITY-DUPLICATE-ORIGIN-DIAGNOSTIC",
+    "verdict": "ACTIONABLE_CONTRACT_FINDING",
+    "sourcePath": "src/shared/Reality/WorldEntity.luau",
+    "testPath": "tests/world_entity_registry_shape.luau"
+  }
+}
