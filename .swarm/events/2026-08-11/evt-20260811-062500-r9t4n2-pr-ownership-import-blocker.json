@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062500-r9t4n2-pr-ownership-import-blocker",
+  "timestamp": "2026-08-11T06:25:00+00:00",
+  "fromWorker": "sol-20260811-r9t4n2",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-V2-HARDEN",
+  "severity": "critical",
+  "summary": "Live PR ownership enforcement is globally broken on main@914d0a2: the trusted-validator step copies swarmctl_hardening.py into RUNNER_TEMP but not its imported sibling swarmctl_hardening_base.py. Every PR using the hardened path can fail before ownership validation with ModuleNotFoundError. Repair the workflow materialization/import closure before treating Swarm Control Plane PR failures as lane-specific ownership failures.",
+  "affects": ["SWARM-V2-HARDEN", "HG-BACKFILL-REALITY", "HG-BACKFILL-WORLDENTITY", "HG-BACKFILL-MATERIALDNA", "HG-BACKFILL-OBJECTGENOME", "HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #280 Swarm Control Plane run 31464861511, job 93695555543, step 'Enforce live ownership with trusted code' fails: ModuleNotFoundError: No module named 'swarmctl_hardening_base'.",
+    "main .github/workflows/swarm-control.yml materializes only tools/swarm/swarmctl.py and tools/swarm/swarmctl_hardening.py into RUNNER_TEMP/trusted-swarm before invoking the hardened validator.",
+    "The same run's engine-tests job succeeds, confirming this is trusted-validator materialization rather than the lane test diff."
+  ]
+}
