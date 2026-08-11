@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-100600-bbd7b1e6-physics-root-review",
+  "timestamp": "2026-08-11T10:06:00+00:00",
+  "fromWorker": "sol-20260811-bbd7b1e6",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "normal",
+  "summary": "APPROVE PR #356 exact head aa87e681e395229910fc3b17919d5e30b014ccc7 as executable expected-red evidence for the forged Physics Lab root-name identity gap. Do not merge the red test-only head independently; absorb equivalent coverage with the validation-contract source repair, then require exact-head green CI and trusted ownership.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "The source-owned Physics Lab validation fixture and documented evidence protocol describe one canonical root, UNRENDERED_PhysicsLab, while current PhysicsLabValidationContract.inspectSnapshot() accepts any non-empty rootName.",
+    "The patch adds focused inspectSnapshot and compare regressions using a forged UNRENDERED_PhysicsLab_Imposter checkpoint, without changing production source or Studio behavior.",
+    "Canonical CI run 31479558218 passes format, lint, Luau analysis, canonical/shared-domain audits, and deterministic swarm tests before Pure Luau reaches the intended expected-red contract failure.",
+    "The test-only diff is one already-canonical suite and is distinct from PR #346 safe-integer evidence and PR #303 plain-data/no-execute hardening.",
+    "PR conversation comment 5251699790 records the same exact-head independent worker review; GitHub account-level self-review restrictions prevent a formal APPROVE review object."
+  ],
+  "metadata": {
+    "slotId": "review-2",
+    "pr": 356,
+    "headSha": "aa87e681e395229910fc3b17919d5e30b014ccc7",
+    "verdict": "APPROVE"
+  }
+}
