@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094300-bbd7b1e6-worldentity-mining-exhausted",
+  "timestamp": "2026-08-11T09:43:00+00:00",
+  "fromWorker": "sol-20260811-bbd7b1e6",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "INFO",
+  "summary": "WorldEntity source mining found no additional non-duplicate depth lane: the remaining concrete gaps are already represented by active or durable work, so another lane would increase swarm duplication rather than Hero Gate depth.",
+  "affects": {
+    "laneIds": [
+      "HG-BACKFILL-WORLDENTITY"
+    ],
+    "resources": [
+      "src/shared/Reality/WorldEntity.luau"
+    ]
+  },
+  "evidence": [
+    "Reviewed active primary PR #293 exact source head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e, its WorldEntity source, registry-shape tests, current main test runner, and current review thread against the WorldEntity lifecycle contract in Docs/ARCHITECTURE.md.",
+    "The persistentState depth/node/string-byte closure is already implemented in #293, with exact-bound and fail-atomic adversarial coverage already carried by the active stacked WorldEntity test work; generator-version and revision exactness findings are already consumed.",
+    "Malformed public registry identity lookup/removal is already independently isolated by draft expected-red PR #350 at head 86d156b0377ff34bbaa0863ed5d082ff2f8c79a1; its CI fails exactly the new malformed get/unregister assertions while valid-absent and fail-atomic controls pass.",
+    "The unbounded live-registry population/count-scan issue is already recorded by evt-20260811-083755-e08449-worldentity-registry-capacity; duplicate-diagnostic retained metadata bytes are already recorded by evt-20260811-092130-q6m2v8k5-worldentity-diagnostic-byte-bound.",
+    "The current #293 tests/run.luau registration is already identified by independent audit as outside HG-BACKFILL-WORLDENTITY write scope, with the prescribed completion path to move/absorb coverage onto an authorized tests/world_entity*.luau surface or separately authorized harness work.",
+    "A fresh static pass over registry ownership, capture/transition atomicity, immutable snapshots, duplicate diagnostics, persistent-state traversal, revision accounting, and public wrappers did not produce a higher-confidence gap distinct from those live findings."
+  ],
+  "metadata": {
+    "sourcePr": 293,
+    "sourceHead": "91b6e273c0c21326dfbfe9c5ee5227e99f26933e",
+    "currentMain": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "relatedAdversaryPr": 350,
+    "reproClass": "source-review",
+    "studioEvidenceRequired": false,
+    "recommendedAction": "Do not create another WorldEntity depth lane from this mining pass. Finish the already-active #293/#344/#350 completion train and explicitly disposition the existing registry-capacity and metadata-byte findings before mining this shard again."
+  }
+}
