@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-121404-p6m2x8v4-runtime-transition-review-result",
+  "eventType": "REVIEW_RESULT",
+  "timestamp": "2026-08-11T12:14:04Z",
+  "workerId": "sol-20260811-p6m2x8v4",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+  "claimToken": "a6d2f8c3b1e97054",
+  "generation": 1,
+  "summary": "REQUEST_CHANGES on PR #366 exact head f50067d4dedbe548fc80aed2289b846644dd941c: callback-local runtime mutation fencing is sound, but current-main FidelityManager evaluates metatable-backed PolicyInputs before the runtime transition guard is raised, allowing hostile __index code to dispose runtime authority pre-hook. Require #335/equivalent protection in ancestry or extend the full-step runtime fence, then synthesize with overlapping recipe-fence #310 before integration.",
+  "evidence": [
+    "PhysicsLabRuntime.step performs assertMutationAllowed while transitionInFlight is false, then delegates to FidelityManager.step; transitionInFlight is only raised inside the later representation transition hook",
+    "Current-main FidelityManager validateInputs dereferences inputs.distanceStuds and other PolicyInputs fields without first requiring a metatable-free plain table",
+    "A hostile PolicyInputs __index can call runtime.dispose before the transition hook; dispose sees transitionInFlight false and unregisters registry/fidelity populations",
+    "PR #335 head 4a3c55d9d2046df1af6ee93710d395aedd4ea102 explicitly rejects metatable-backed PolicyInputs before field access and hostile nowSeconds/scalars before numeric operators",
+    "PR #366 exact-head canonical CI 31482367736 passes and Swarm engine-tests pass, so this is an uncovered dependency/integration defect rather than a compile/test failure",
+    "PR #310 overlaps the same PhysicsLabRuntime source/test files and must remain present in the eventual synthesized head"
+  ],
+  "links": [
+    "https://github.com/jonathangana131-lab/UNRENDERED/pull/366",
+    "https://github.com/jonathangana131-lab/UNRENDERED/pull/335",
+    "https://github.com/jonathangana131-lab/UNRENDERED/pull/310"
+  ]
+}
