@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094245-eeu3obwl-worldentity-registry-id-boundary",
+  "timestamp": "2026-08-11T09:42:45+00:00",
+  "fromWorker": "sol-20260811-eeu3obwl",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "medium",
+  "summary": "WorldEntity registry get/unregister paths do not validate WorldEntityId before lookup/mutation, so malformed identities are silently aliased to valid absence/no-op; expected-red PR #350 proves the fail-open boundary while preserving valid-absent semantics and zero hostile __tostring execution.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #293 head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e implements get(entityId) as direct records[entityId] lookup and unregister(entityId) as direct lookup/delete without WorldEntity.isId validation.",
+    "Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 retains the same fail-open get/unregister boundary.",
+    "Expected-red PR #350 exact head 86d156b0377ff34bbaa0863ed5d082ff2f8c79a1 changes only tests/world_entity_registry_shape.luau and is based directly on current main.",
+    "Canonical CI run 31478803659 passes format, lint, Luau analysis, project audits and deterministic swarm tests, then Pure Luau fails exactly the four malformed/hostile get/unregister rejection assertions; valid absent lookup, fail-atomic fixture preservation and zero __tostring callback controls pass.",
+    "PR #293 is diverged from current main: 14 commits ahead, 4 behind, merge base 81a13b1138e26e7852c89685de5dbf9bd57753d8."
+  ],
+  "metadata": {
+    "primaryPr": 293,
+    "primaryHeadSha": "91b6e273c0c21326dfbfe9c5ee5227e99f26933e",
+    "testPr": 350,
+    "testHeadSha": "86d156b0377ff34bbaa0863ed5d082ff2f8c79a1",
+    "ciRun": 31478803659,
+    "ciJob": 93738727984,
+    "primaryCommentId": 5251505318,
+    "testCommentId": 5251503651,
+    "studioEvidence": false,
+    "nextAction": "Primary validates registry identities before getRegistered/get/unregister lookup or mutation using no-execute diagnostics, consumes equivalent regressions, synchronizes current main, reruns exact-head canonical CI and trusted ownership, then requests fresh audit."
+  }
+}
