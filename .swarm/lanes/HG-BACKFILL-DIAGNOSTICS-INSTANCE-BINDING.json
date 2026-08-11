@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "epicId": "HERO-GATE",
+  "title": "Diagnostics exact representation-instance authority seam",
+  "objective": "Provide the narrow project-owned source seam needed for Physics Lab diagnostics to prove that an enumerated Workspace representation is the exact runtime-owned Instance for its canonical WorldEntity id, without exposing the private representation map or treating Workspace as canonical data.",
+  "priority": 4860,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    "src/server/PhysicsLab/PhysicsLabRealizer.luau",
+    "tests/physics_lab_realizer_representation_ownership.luau",
+    "tests/run.luau"
+  ],
+  "resources": [],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Exact Instance ownership seam implementation and pure regression",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 320,
+      "writeScopes": [
+        "src/server/PhysicsLab/PhysicsLabRealizer.luau",
+        "tests/physics_lab_realizer_representation_ownership.luau",
+        "tests/run.luau"
+      ]
+    },
+    {
+      "slotId": "audit",
+      "role": "Representation-authority boundary reviewer",
+      "exclusive": true,
+      "availableWhen": ["REVIEW"],
+      "priorityBoost": 160,
+      "writeScopes": [
+        "tests/physics_lab_realizer_representation_ownership.luau"
+      ]
+    }
+  ],
+  "acceptance": [
+    "expose a narrow project-owned predicate that receives both canonical entity id and candidate Instance and succeeds only when the candidate is the exact private runtime-owned representation for that id",
+    "keep the private representation map private and preserve conceptual/resolved/physical separation",
+    "fail closed for substitute/stale/destroyed candidates and for ids with no currently owned representation",
+    "if parent/root membership is asserted, bind it to the canonical realized lab model without making Workspace the universe database",
+    "add a pure deterministic/source-contract regression that locks exact Instance identity semantics and is registered in the canonical pure test runner",
+    "do not edit diagnostics production code in this prerequisite lane; HG-BACKFILL-DIAGNOSTICS consumes the seam after this prerequisite lands",
+    "do not claim Roblox Studio, viewport, physical-contact, or two-client evidence from source-only validation",
+    "canonical CI and fresh independent exact-head review are required before integration"
+  ],
+  "tags": ["backfill", "hero-gate", "source-only", "diagnostics", "authority-prerequisite"]
+}
