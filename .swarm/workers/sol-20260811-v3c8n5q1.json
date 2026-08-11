@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-v3c8n5q1",
+  "model": "gpt-5.6-sol",
+  "status": "IDLE",
+  "startedAt": "2026-08-11T20:16:00+00:00",
+  "lastSeenAt": "2026-08-11T20:16:00+00:00",
+  "notes": "Rerouted after generation-3 history-continuity takeover race; selecting a non-conflicting HERO-GATE diagnostics test-adversary slot."
+}
