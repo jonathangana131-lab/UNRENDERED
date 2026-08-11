@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r4k9v2m7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T23:05:00+00:00",
-  "lastSeenAt": "2026-08-11T23:09:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-diagnostics",
-  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-r4k9v2m7",
-  "notes": "Rerouted after losing two live review-slot claim races. Mining current Physics Lab diagnostics source/tests/active PR lineage for one concrete non-duplicate Hero-Gate gap; source-only, no Studio evidence."
+  "lastSeenAt": "2026-08-11T23:16:00+00:00",
+  "notes": "Completed/released diagnostics capacity mining. Published FINDING evt-sol-20260811-r4k9v2m7-diagnostics-authoritative-projection-231510 against active diagnostics generation-8 head 183bea8da6462facb2a2429ebbc85b9b80a01869: standalone diagnostics trusts mutable exact-owned Instance Name/RepresentationClass instead of proving/projecting authoritative metadata. Did not widen generation-8 final-state repair, did not duplicate PR #349 exact-Instance ownership, and claimed no Luau/CI/Studio execution."
 }
