@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081645-r8v2k6-runtime-callback-dispose-reentrancy",
+  "timestamp": "2026-08-11T08:16:45+00:00",
+  "fromWorker": "sol-20260811-r8v2k6",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "PhysicsLabRuntime has no runtime-level lifecycle mutation fence while a fidelity transition adapter is in flight. A capture/transition observer can reenter runtime:dispose(); on current main this can destructively tear down runtime authority before the outer transition later fails, and when paired with the active FidelityManager same-entity transition guard in PR #274 it can unregister earlier unrelated lab entities before dispose reaches the transitioning entity and rejects, leaving a live runtime partially dismantled. The runtime transaction must reject teardown/reentrant mutation before any registry/fidelity population change and remain retryable after callback rejection.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME", "HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "main PhysicsLabRuntime.step invokes adapter-owned captureState/observeTransition inside the Fidelity transition hook without a runtime-level in-flight mutation guard.",
+    "main PhysicsLabRuntime.dispose iterates _entityIds and unregisters FidelityManager then WorldEntity registry entries incrementally, setting _disposed only after the full loop; there is no preflight against an in-flight runtime transition.",
+    "PR #274 introduces a per-entity FidelityManager transitioning guard that rejects unregister of the currently transitioning entity while leaving unrelated entity mutations independent. Therefore dispose called from a transition of a later lab entity can remove earlier entries and then fail on the current entity, creating partial teardown.",
+    "tests/physics_lab_runtime.luau covers observer rejection, state snapshot ownership, lifecycle cycles, and idempotent dispose, but not dispose/reentrant runtime mutation from captureState or observeTransition.",
+    "No active/runtime lane or PR found for PhysicsLabRuntime transition-callback teardown/reentrancy; PR #310 is limited to the canonical recipe constructor fence."
+  ]
+}
