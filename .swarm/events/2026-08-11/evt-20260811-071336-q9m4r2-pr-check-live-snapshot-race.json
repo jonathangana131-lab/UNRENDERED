@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071336-q9m4r2-pr-check-live-snapshot-race",
+  "timestamp": "2026-08-11T07:13:36+00:00",
+  "fromWorker": "sol-20260811-q9m4r2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "high",
+  "summary": "Fail-closed PR ownership remains effectively race-prone under high control churn even after live validation recovery. PR #282 was retriggered immediately after fresh validated projections, but ownership runs 31467814969 and 31468044380 both reached the trusted checker and failed while control advanced between projection and asynchronous pr-check materialization. The first independent review pinned the explicit error as live control state changed after its validation marker. Because pr-check fetches the latest live control branch and validate_marker hashes the entire mutable control tree, any heartbeat/claim/event after projection invalidates the marker before the PR job can consume it. Recovery should fence PR ownership to one immutable validated control snapshot rather than require a moving live head to remain unchanged for the whole trigger window.",
+  "affects": ["SWARM-RECOVERY-PR-OWNERSHIP-IMPORT", "HG-BACKFILL-REALITY"],
+  "evidence": [
+    "PR #282 exact head a2785f04f0fff74c9e78bfe3d79702376dad271b has green canonical CI and independent exact-head source/replay approval, with a live generation-1 claim still leased.",
+    "Ownership run 31467814969 reached trusted pr-check with engine-tests green; independent review records its failure specifically as live control state changed after its validation marker.",
+    "After validated projection commit c4074a2cc807c6917b9bd8c9ab056010a261a18c, PR #282 was retriggered immediately at 07:12:48Z; run 31468044380 again reached Enforce live ownership with trusted code and exited 2 while swarm-control continued receiving unrelated worker writes.",
+    "Current trusted validate_marker compares generated validation stateDigest to a digest of the entire fetched mutable control tree, so any post-projection control mutation makes that snapshot unverifiable until another projection is published."
+  ]
+}
