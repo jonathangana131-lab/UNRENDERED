@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-a8f3k6m2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T23:09:37+00:00",
+  "lastSeenAt": "2026-08-11T23:09:37+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-a8f3k6m2",
+  "notes": "Independent exact-head source/test audit of retained generation-6 PR #414. Verify primitive-number no-execute fencing, preserved finite derived-output checks, regression adequacy, and absence of geometry/recipe contract drift."
+}
