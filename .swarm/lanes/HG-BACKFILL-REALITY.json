@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-REALITY",
+  "epicId": "HERO-GATE",
+  "title": "Resolved reality and replay depth pass",
+  "objective": "Use otherwise-idle Sol capacity to find and fix concrete WorldId, first-observation, version replay, v1/v2 compatibility, seed provenance, falsy-state, or deterministic reconstruction defects without depending on Studio.",
+  "priority": 5000,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["src/shared/Reality/*.luau", "src/shared/Core/*.luau", "tests/resolved_region_recipe*.luau", "tests/reality_versions.luau", "tests/deterministic_rng.luau", "tests/stable_id_headless.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"Reality/replay source hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Reality/*.luau","src/shared/Core/*.luau","tests/resolved_region_recipe*.luau","tests/reality_versions.luau"]},
+    {"slotId":"test-adversary","role":"Reality version and deterministic replay tests","exclusive":true,"availableWhen":["READY","REVIEW","NEEDS_CHANGES"],"priorityBoost":220,"writeScopes":["tests/resolved_region_recipe*.luau","tests/reality_versions.luau","tests/deterministic_rng.luau","tests/stable_id_headless.luau"]},
+    {"slotId":"audit","role":"WorldId, seed, and replay invariant auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/resolved_region_recipe*.luau","tests/reality_versions.luau","Docs/RESOLVED_REGION_RECIPE.md","Docs/DETERMINISM_CONTRACT.md"]}
+  ],
+  "acceptance": ["preserve exact current-write and legacy-read semantics", "prove any identity/version fix with deterministic fixtures", "do not rewrite version history casually", "no Studio evidence claim", "publish cross-system findings durably"],
+  "tags": ["backfill", "hero-gate", "source-only"]
+}
