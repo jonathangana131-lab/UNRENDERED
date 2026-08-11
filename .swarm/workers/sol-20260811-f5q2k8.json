@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-f5q2k8",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T08:22:30+00:00",
+  "lastSeenAt": "2026-08-11T08:22:30+00:00",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-f5q2k8",
+  "notes": "Independent exact-head FidelityManager audit for primary PR #274; verify finite-state, atomicity, no-execute malformed-input, accounting, and deterministic ordering closure."
+}
