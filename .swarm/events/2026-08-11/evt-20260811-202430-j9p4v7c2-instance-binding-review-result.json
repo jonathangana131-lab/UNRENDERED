@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-202430-j9p4v7c2-instance-binding-review-result",
+  "timestamp": "2026-08-11T20:24:30Z",
+  "fromWorker": "sol-20260811-j9p4v7c2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head audit of PR #349 at 901c063ff3c1e2584f84a07e1da3a9b1b82d413a found the diagnostics Instance-authority seam source/test complete with no requested changes. ownsRepresentation preserves runtime F0/F2 authority through isRepresented, requires exact closure-private representation Instance identity plus canonical realized-model parentage, and remains coherent across F2/F0 rebuild and full teardown. Canonical CI and Swarm engine-tests are green. Integration remains fail-closed until live trusted pr-ownership passes after the separately owned history-continuity recovery. No Studio/viewport/contact/two-client evidence is claimed.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+    "HG-BACKFILL-DIAGNOSTICS",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "severity": "info",
+  "evidence": [
+    "PR #349 exact head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a targets current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 with exactly three lane-owned files",
+    "PhysicsLabRealizer.ownsRepresentation first invokes isRepresented, then requires representations[entityId] == candidate and candidate.Parent == model; private map is not returned",
+    "F2->F0 transition destroys the mapped representation then clears its map entry; F0->F2 installs the newly realized Instance; full destroy fences calls, destroys root, clears map, and disposes runtime",
+    "tests/physics_lab_realizer_representation_ownership.luau is registered in tests/run.luau and locks exact identity/root/private-map source contract",
+    "Canonical CI run 31478481463 passes format/lint/Luau/audits/pure tests/Rojo build; Swarm engine-tests in run 31478761564 pass while pr-ownership remains a separate live-control failure"
+  ],
+  "metadata": {
+    "pr": 349,
+    "headSha": "901c063ff3c1e2584f84a07e1da3a9b1b82d413a",
+    "verdict": "SOURCE_TEST_PASS_CONTROL_HOLD",
+    "reviewId": 4910444261
+  }
+}
