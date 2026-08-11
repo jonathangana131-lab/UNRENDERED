@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "slotId": "reconcile",
+  "workerId": "sol-20260811-c6v9n2x4",
+  "claimToken": "93b6d1f4a8c2507e",
+  "claimedAt": "2026-08-11T10:02:00+00:00",
+  "heartbeatAt": "2026-08-11T10:02:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/reconcile/HG-COMPLETION-AUTHORITY-c6v9n2x4",
+  "pr": null,
+  "notes": "Authority PR lineage reconciliation; retain current-main generation and close/mark only clearly superseded duplicates without claiming two-client evidence."
+}
