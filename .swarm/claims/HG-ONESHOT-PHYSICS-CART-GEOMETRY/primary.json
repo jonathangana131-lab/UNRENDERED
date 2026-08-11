@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-ONESHOT-PHYSICS-CART-GEOMETRY",
+  "slotId": "primary",
+  "workerId": "sol-20260811-924a095e",
+  "claimToken": "5b39d7e86412ca90",
+  "claimedAt": "2026-08-11T07:59:32+00:00",
+  "heartbeatAt": "2026-08-11T08:00:04+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-ONESHOT-PHYSICS-CART-GEOMETRY-924a095e",
+  "pr": null
+}
