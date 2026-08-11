@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-210640-s56o9k2-runtime-entity-list-hidden-entry",
+  "timestamp": "2026-08-11T21:06:40+00:00",
+  "fromWorker": "sol-20260811-s56o9k2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "PhysicsLabRuntime canonical-recipe fence PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d does not validate the shape of recipe.entities itself. assertCanonicalRecipe requires #entities == canonical count and then inspects only ipairs(entities), so a caller can preserve the canonical dense 20 entries while adding an extra string-keyed (or otherwise non-ipairs) EntityRecipe carrying an unknown key/id. The constructor accepts that noncanonical population even though HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE explicitly requires rejection of unknown-key population. This is a narrow same-lane constructor-shape defect, not a request to widen the fence into physical geometry/material validation.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"],
+  "evidence": [
+    "PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d calls assertPlainTable(recipeTable.entities), asserts #entities == #CANONICAL_RECIPE.entities, and validates entries only through `for _, rawEntityRecipe in ipairs(entities) do ... end` plus seenCount. It never iterates all keys of the entities table or requires dense integer keys only.",
+    "A table containing the unchanged canonical 1..20 array plus `entities.hidden = { key = 'not-a-canonical-lab-key', ... }` retains #entities == 20 and the same 20-value ipairs traversal, so seenCount remains 20 and the hidden unknown population entry is never inspected before runtime registration succeeds.",
+    "Existing tests/physics_lab_runtime.luau on the exact head covers a strict subset, an unknown key substituted into one dense slot, duplicate dense keys, and key/id substitution, but has no regression for extra non-array/sparse keys on recipe.entities.",
+    "The lane acceptance says to reject missing, duplicate-key, unknown-key, or substituted key/id population relative to the canonical permanent Physics Lab recipe. An ignored extra EntityRecipe is therefore inside the existing lane contract rather than a new architecture requirement.",
+    "PhysicsLabRealizer currently calls PhysicsLabRecipe.build() internally, so this is source-boundary hardening only; no Studio/engine evidence is claimed."
+  ]
+}
