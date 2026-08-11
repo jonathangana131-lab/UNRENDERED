@@ -73,7 +73,10 @@ local function assertCanonicalRecipe(recipe: Recipe): ()
 		local canonicalRecord = canonical.entity
 		assert(record.id == canonicalRecord.id, `Physics Lab recipe key/id mismatch: {entityRecipe.key}`)
 		assert(record.kind == canonicalRecord.kind, `Physics Lab recipe entity kind mismatch: {entityRecipe.key}`)
-		assert(record.fidelity == canonicalRecord.fidelity, `Physics Lab recipe initial fidelity mismatch: {entityRecipe.key}`)
+		assert(
+			record.fidelity == canonicalRecord.fidelity,
+			`Physics Lab recipe initial fidelity mismatch: {entityRecipe.key}`
+		)
 		assert(record.origin.worldId == recipe.worldId, `Physics Lab entity WorldId mismatch: {entityRecipe.key}`)
 		assert(record.origin.regionId == recipe.regionId, `Physics Lab entity RegionId mismatch: {entityRecipe.key}`)
 		assert(
