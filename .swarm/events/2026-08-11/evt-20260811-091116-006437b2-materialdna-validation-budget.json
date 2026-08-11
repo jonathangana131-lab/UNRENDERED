@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091116-006437b2-materialdna-validation-budget",
+  "timestamp": "2026-08-11T09:11:16+00:00",
+  "fromWorker": "sol-20260811-006437b2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Concrete non-duplicate MaterialDNA depth gap: closed-record validation is semantically fail-closed but not operationally bounded for malformed tables. validateKnownFields iterates every supplied key and appends one diagnostic per unknown field, embedding an unknown string key verbatim. A generated/persisted plain table with arbitrarily many unknown fields and/or very large string field names can therefore make rejected validation consume unbounded scan time and error-memory proportional to hostile input, conflicting with the MaterialDNA contract's bounded generation/persistence-work claim. Existing active repair-count PRs #313/#317 and the percent-key grammar finding do not address validator work/error budgets.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-MATERIALDNA-COUNTERS"
+  ],
+  "evidence": [
+    "main src/shared/Materials/MaterialDNA.luau validateKnownFields uses pairs(record) over all supplied fields and appendError for every unknown key; unknown string keys are interpolated into diagnostics without a length cap.",
+    "validateRecipe traverses every declared nested record and accumulates all diagnostics in an errors array before returning; assertValidRecipe then table.concat's that full array. Dense history/anomaly arrays are capped, but malformed record cardinality and diagnostic count/bytes are not.",
+    "Docs/MATERIAL_DNA_CONTRACT.md explicitly characterizes validation/freezing as bounded content-generation/persistence work. The current closed-shape validator guarantees rejection semantics but does not bound work over rejected record shapes.",
+    "Repository search found no open/closed MaterialDNA validation-budget, diagnostic-budget, or field-cardinality repair. Active #313/#317 only bound maintenance.repairCount exactness; the existing key-grammar finding only removes '%' from project semantic values."
+  ],
+  "metadata": {
+    "proposedLane": {
+      "laneId": "HG-BACKFILL-MATERIALDNA-VALIDATION-BUDGET",
+      "kind": "source-hardening",
+      "scope": [
+        "src/shared/Materials/MaterialDNA.luau",
+        "tests/materialdna_contract.luau",
+        "tests/materialdna_metatable_boundary.luau"
+      ]
+    },
+    "suggestedAcceptance": [
+      "validation of malformed record shapes has a small explicit maximum diagnostic count and/or field-scan budget",
+      "unknown string field names are diagnostic-truncated or otherwise bounded without executing metamethods",
+      "ordinary valid recipes and existing exact diagnostics used by tests remain stable where practical",
+      "adversarial regressions prove very wide records and very long unknown field names fail closed with bounded error count/bytes",
+      "no schemaVersion, recipe identity, fixture content, or Studio behavior change"
+    ],
+    "claimToken": "4c7e1a903df852b6"
+  }
+}
