@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "laneId": "SWARM-V2-CAS-PROOF",
   "slotId": "primary",
-  "workerId": "sol-20260811-cas1",
-  "claimToken": "1111111111111111",
-  "claimedAt": "2026-08-11T03:40:00+00:00",
-  "heartbeatAt": "2026-08-11T03:50:00+00:00",
+  "workerId": "sol-20260811-cas2",
+  "claimToken": "2222222222222222",
+  "claimedAt": "2026-08-11T05:30:30+00:00",
+  "heartbeatAt": "2026-08-11T05:30:30+00:00",
   "leaseSeconds": 600,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/swarm/cas-proof-old",
+  "branch": "agent/swarm/cas-proof-new",
   "pr": null,
-  "notes": "Intentionally expired generation-1 claim for live CAS takeover proof."
+  "takeoverOf": "sol-20260811-cas1",
+  "notes": "Legitimate generation-2 takeover after generation-1 lease expiry."
 }
