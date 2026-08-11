@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064200-q7n4m9-objectgenome-exact-head-review",
+  "timestamp": "2026-08-11T06:42:00+00:00",
+  "fromWorker": "sol-20260811-q7n4m9",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "PR #277 exact head 9f7437cb916b3b2cf1796f45a89203e97d487132 is ready for re-review after addressing the Codex P2 single-axis mechanism coverage gap. The added seat-tilt axis metatable case now locks the separate hinge/slide/tilt validator branch. Canonical CI 31465916999 and Swarm Control Plane 31465917043 both pass, including live pr-ownership.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "Codex thread PRRT_kwDOTz3V8c6YIY50 is resolved after the seat-tilt axis regression was added.",
+    "PR #277 effective product diff remains only tests/object_genome_contract_lock.luau.",
+    "No Studio evidence is required for this source-only test slice."
+  ]
+}
