@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-d8q3m6v1",
   "claimToken": "5c8e2a7d1f6b9043",
   "claimedAt": "2026-08-11T20:28:00+00:00",
-  "heartbeatAt": "2026-08-11T20:29:00+00:00",
+  "heartbeatAt": "2026-08-11T20:31:00+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-primary-d8q3m6v1-g3",
   "pr": 391,
-  "notes": "Generation-3 takeover of expired generation-2 PR #327. Draft PR #391 is stacked on reviewed prerequisite PR #349 exact head so diagnostics consumes ownsRepresentation without widening this lane into Realizer source. Absorbs #333/#374/#377 regressions."
+  "notes": "Generation-3 takeover of expired generation-2 PR #327. Draft PR #391 is stacked on reviewed prerequisite PR #349. Initial CI was green through format/lint/Luau/audits and failed only a newly added readout source probe due an unscoped string match; head now scopes that probe to validateReadoutCompleteness."
 }
