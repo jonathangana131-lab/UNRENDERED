@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:42:00+00:00",
-  "lastSeenAt": "2026-08-11T08:58:30+00:00",
+  "lastSeenAt": "2026-08-11T09:12:00+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "test-adversary",
   "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-k8v2q6m4",
-  "notes": "Claimed ObjectGenome test-adversary after diagnostics mining. Inspecting current primary/audit work for one non-overlapping deterministic malformed-input or identity regression."
+  "notes": "PR #338 published expected-red ObjectGenome decoder no-execute regression and routed finding to primary #336. CI style/lint/analysis gates pass after newline repair; awaiting the intentional pure-test failure."
 }
