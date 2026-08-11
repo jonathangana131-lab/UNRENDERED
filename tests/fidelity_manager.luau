@@ -271,14 +271,30 @@ local function run(): number
 			end)
 		end)
 	end)
-	expectEqual("nested callback cannot reenter already-transitioning outer entity", nestedFailureAccepted, false)
-	expectEqual("nested failure leaves outer fidelity uncommitted", nestedManager:getObservedLevel(outerId), "F0")
-	expectEqual("nested failure leaves inner fidelity uncommitted", nestedManager:getObservedLevel(innerId), "F0")
+	expectEqual(
+		"nested callback cannot reenter already-transitioning outer entity",
+		nestedFailureAccepted,
+		false
+	)
+	expectEqual(
+		"nested failure leaves outer fidelity uncommitted",
+		nestedManager:getObservedLevel(outerId),
+		"F0"
+	)
+	expectEqual(
+		"nested failure leaves inner fidelity uncommitted",
+		nestedManager:getObservedLevel(innerId),
+		"F0"
+	)
 	local nestedFailureMetrics = nestedManager:getMetrics()
 	expectEqual("nested failure preserves registrations", nestedFailureMetrics.registered, 2)
 	expectEqual("nested failure preserves F0 accounting", nestedFailureMetrics.counts.F0, 2)
 	expectEqual("nested failure leaves F4 accounting empty", nestedFailureMetrics.counts.F4, 0)
-	expectEqual("nested failure counts no successful transition hooks", nestedFailureMetrics.transitionHookCalls, 0)
+	expectEqual(
+		"nested failure counts no successful transition hooks",
+		nestedFailureMetrics.transitionHookCalls,
+		0
+	)
 	expectEqual("nested failure counts no transitions", nestedFailureMetrics.transitions, 0)
 
 	local innerRetryHookCalled = false
