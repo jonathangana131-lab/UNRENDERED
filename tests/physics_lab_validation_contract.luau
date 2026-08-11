@@ -2,6 +2,8 @@ local ProductionLoader = require("./support/ProductionLoader")
 
 local ValidationContract = ProductionLoader.requireShared("Physics/PhysicsLabValidationContract")
 
+local MAX_SAFE_INTEGER = 9007199254740991
+
 local function snapshot(counts, minX, maxX)
 	return {
 		rootName = "UNRENDERED_PhysicsLab",
@@ -103,6 +105,57 @@ local function run(): number
 	local malformedOk = ValidationContract.inspectSnapshot(malformed)
 	expect("snapshot validation rejects a count that omits the root", malformedOk == false)
 
+	-- Decoded evidence must not impersonate a different root while retaining canonical recipe/world identity.
+	local noncanonicalRoot = snapshot(counts(46, 0), -10, 10)
+	noncanonicalRoot.rootName = "UNRENDERED_PhysicsLab_Imposter"
+	local noncanonicalRootOk = ValidationContract.inspectSnapshot(noncanonicalRoot)
+	expect("snapshot validation rejects a noncanonical lab root name", noncanonicalRootOk == false)
+
+	local crossRootAccepted = pcall(function()
+		ValidationContract.compare(baseline, noncanonicalRoot, 0.001)
+	end)
+	expect("before/after comparison rejects a different lab root identity", not crossRootAccepted)
+
+	local unknownSnapshotField = snapshot(counts(46, 0), -10, 10)
+	unknownSnapshotField.syntheticEvidence = true
+	local unknownSnapshotFieldOk = ValidationContract.inspectSnapshot(unknownSnapshotField)
+	expect(
+		"snapshot validation rejects fields captureInternal cannot produce",
+		unknownSnapshotFieldOk == false
+	)
+
+	local unknownCountField = snapshot(counts(46, 0), -10, 10)
+	unknownCountField.counts.unclassified = 0
+	local unknownCountFieldOk = ValidationContract.inspectSnapshot(unknownCountField)
+	expect("snapshot validation rejects unknown resource-count fields", unknownCountFieldOk == false)
+
+	local unknownEnvelopeField = snapshot(counts(46, 0), -10, 10)
+	unknownEnvelopeField.envelopeStuds.padding = 0
+	local unknownEnvelopeFieldOk = ValidationContract.inspectSnapshot(unknownEnvelopeField)
+	expect("snapshot validation rejects unknown envelope fields", unknownEnvelopeFieldOk == false)
+
+	local unknownVectorField = snapshot(counts(46, 0), -10, 10)
+	unknownVectorField.envelopeStuds.min.w = 0
+	local unknownVectorFieldOk = ValidationContract.inspectSnapshot(unknownVectorField)
+	expect("snapshot validation rejects unknown envelope-vector fields", unknownVectorFieldOk == false)
+
+	local unknownKeyToStrings = 0
+	local hostileUnknownKey = setmetatable({}, {
+		__tostring = function()
+			unknownKeyToStrings += 1
+			error("unknown key tostring executed")
+		end,
+	})
+	local hostileUnknownField = snapshot(counts(46, 0), -10, 10)
+	hostileUnknownField[hostileUnknownKey] = true
+	local hostileUnknownCallOk, hostileUnknownAccepted = pcall(function()
+		return ValidationContract.inspectSnapshot(hostileUnknownField)
+	end)
+	expect(
+		"snapshot validation rejects hostile unknown keys without formatting them",
+		hostileUnknownCallOk and hostileUnknownAccepted == false and unknownKeyToStrings == 0
+	)
+
 	local missingRootModel = snapshot(counts(46, 0), -10, 10)
 	missingRootModel.counts.models = 0
 	local missingRootModelOk = ValidationContract.inspectSnapshot(missingRootModel)
@@ -141,6 +194,35 @@ local function run(): number
 	local missingResolvedSchemaOk = ValidationContract.inspectSnapshot(missingResolvedSchema)
 	expect("snapshot validation rejects missing resolved schema identity", missingResolvedSchemaOk == false)
 
+	local safeIntegerBoundary = snapshot(counts(MAX_SAFE_INTEGER, 0), -10, 10)
+	safeIntegerBoundary.labSchemaVersion = MAX_SAFE_INTEGER
+	safeIntegerBoundary.resolvedRegionSchemaVersion = MAX_SAFE_INTEGER
+	local safeIntegerBoundaryOk = ValidationContract.inspectSnapshot(safeIntegerBoundary)
+	expect("snapshot validation accepts the exact safe-integer boundary", safeIntegerBoundaryOk == true)
+
+	local unsafeLabSchema = snapshot(counts(46, 0), -10, 10)
+	unsafeLabSchema.labSchemaVersion = MAX_SAFE_INTEGER + 1
+	local unsafeLabSchemaOk = ValidationContract.inspectSnapshot(unsafeLabSchema)
+	expect(
+		"snapshot validation rejects lab schema versions beyond exact integer range",
+		unsafeLabSchemaOk == false
+	)
+
+	local unsafeResolvedSchema = snapshot(counts(46, 0), -10, 10)
+	unsafeResolvedSchema.resolvedRegionSchemaVersion = MAX_SAFE_INTEGER + 1
+	local unsafeResolvedSchemaOk = ValidationContract.inspectSnapshot(unsafeResolvedSchema)
+	expect(
+		"snapshot validation rejects resolved schema versions beyond exact integer range",
+		unsafeResolvedSchemaOk == false
+	)
+
+	local unsafeInstanceCount = snapshot(counts(MAX_SAFE_INTEGER + 1, 0), -10, 10)
+	local unsafeInstanceCountOk = ValidationContract.inspectSnapshot(unsafeInstanceCount)
+	expect(
+		"snapshot validation rejects resource counts beyond exact integer range",
+		unsafeInstanceCountOk == false
+	)
+
 	local missingWorldSeedRef = snapshot(counts(46, 0), -10, 10)
 	missingWorldSeedRef.worldSeedRef = ""
 	local missingWorldSeedRefOk = ValidationContract.inspectSnapshot(missingWorldSeedRef)
@@ -150,6 +232,74 @@ local function run(): number
 	missingRepro.resolvedRegionReproKey = ""
 	local missingReproOk = ValidationContract.inspectSnapshot(missingRepro)
 	expect("snapshot validation rejects missing deterministic repro identity", missingReproOk == false)
+
+	local hostileRootReads = 0
+	local hostileRoot = setmetatable({}, {
+		__index = function()
+			hostileRootReads += 1
+			error("snapshot metatable executed")
+		end,
+	})
+	local hostileRootCallOk, hostileRootAccepted = pcall(function()
+		return ValidationContract.inspectSnapshot(hostileRoot)
+	end)
+	expect(
+		"snapshot validation rejects top-level metatables before field access",
+		hostileRootCallOk and hostileRootAccepted == false and hostileRootReads == 0
+	)
+
+	local hostileCountReads = 0
+	local hostileCounts = snapshot(counts(46, 0), -10, 10)
+	hostileCounts.counts = setmetatable({}, {
+		__index = function()
+			hostileCountReads += 1
+			error("count metatable executed")
+		end,
+	})
+	local hostileCountsCallOk, hostileCountsAccepted = pcall(function()
+		return ValidationContract.inspectSnapshot(hostileCounts)
+	end)
+	expect(
+		"snapshot validation rejects count metatables before count access",
+		hostileCountsCallOk and hostileCountsAccepted == false and hostileCountReads == 0
+	)
+
+	local hostileEnvelopeReads = 0
+	local hostileEnvelope = snapshot(counts(46, 0), -10, 10)
+	hostileEnvelope.envelopeStuds = setmetatable({}, {
+		__index = function()
+			hostileEnvelopeReads += 1
+			error("envelope metatable executed")
+		end,
+	})
+	local hostileEnvelopeCallOk, hostileEnvelopeAccepted = pcall(function()
+		return ValidationContract.inspectSnapshot(hostileEnvelope)
+	end)
+	expect(
+		"snapshot validation rejects envelope metatables before vector access",
+		hostileEnvelopeCallOk and hostileEnvelopeAccepted == false and hostileEnvelopeReads == 0
+	)
+
+	local hostileVectorReads = 0
+	local hostileVector = snapshot(counts(46, 0), -10, 10)
+	hostileVector.envelopeStuds.min = setmetatable({}, {
+		__index = function()
+			hostileVectorReads += 1
+			error("vector metatable executed")
+		end,
+	})
+	local hostileVectorCallOk, hostileVectorAccepted = pcall(function()
+		return ValidationContract.inspectSnapshot(hostileVector)
+	end)
+	expect(
+		"snapshot validation rejects vector metatables before axis access",
+		hostileVectorCallOk and hostileVectorAccepted == false and hostileVectorReads == 0
+	)
+
+	local protectedSnapshot = snapshot(counts(46, 0), -10, 10)
+	setmetatable(protectedSnapshot, { __metatable = "locked" })
+	local protectedSnapshotOk = ValidationContract.inspectSnapshot(protectedSnapshot)
+	expect("snapshot validation rejects protected inert metatables", protectedSnapshotOk == false)
 
 	local differentTruth = snapshot(counts(46, 0), -10, 10)
 	differentTruth.resolvedRegionFingerprint = "fingerprint:v2:different-truth"
@@ -176,6 +326,11 @@ local function run(): number
 		ValidationContract.compareFullLabEnvelope(baseline, rebuilt, -1)
 	end)
 	expect("negative envelope tolerance is rejected", not badToleranceAccepted)
+
+	local falseToleranceAccepted = pcall(function()
+		ValidationContract.compareFullLabEnvelope(baseline, rebuilt, false)
+	end)
+	expect("false envelope tolerance does not silently select the default", not falseToleranceAccepted)
 
 	return failures
 end
