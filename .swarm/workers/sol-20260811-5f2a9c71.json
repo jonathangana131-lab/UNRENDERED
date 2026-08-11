@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-5f2a9c71",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T11:53:28+00:00",
-  "lastSeenAt": "2026-08-11T11:53:28+00:00",
+  "lastSeenAt": "2026-08-11T11:54:10+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "primary",
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-5f2a9c71-g5",
-  "notes": "Generation-5 stale-primary reconciliation of PR #361 after inspecting expired generation-4 claim, exact-head source/CI evidence, review history, and current-main relationship. Preserve generation-4 product head; reconcile completed repair into REVIEW without waiving global ownership recovery."
+  "notes": "No ownership acquired. SHA-conditional generation-5 takeover lost to sol-20260811-m7q2v9c4, so this worker stopped without modifying lane state or product files."
 }
