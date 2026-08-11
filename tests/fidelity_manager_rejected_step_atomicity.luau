@@ -83,6 +83,19 @@ local function run(): number
 	end)
 	expectEqual("metatable-backed input cannot poison monotonic clock", validAfterMetatableRejected, true)
 
+	local pureMetatableReads = 0
+	local pureMetatableInputs = setmetatable({}, {
+		__index = function(_, key)
+			pureMetatableReads += 1
+			return metatableSource[key]
+		end,
+	})
+	local pureMetatableAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(pureMetatableInputs)
+	end)
+	expectEqual("pure policy rejects metatable-backed input", pureMetatableAccepted, false)
+	expectEqual("pure policy never executes policy-input metatable", pureMetatableReads, 0)
+
 	local syncManager = FidelityManager.new()
 	syncManager:register("entity:atomic-sync", "F3")
 	local beforeMetrics = syncManager:getMetrics()
