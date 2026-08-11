@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080710-e08449-worldentity-capacity",
+  "timestamp": "2026-08-11T08:07:10+00:00",
+  "fromWorker": "sol-20260811-e08449",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "summary": "WorldEntity duplicate-diagnostic retention accepts any non-negative safe-integer capacity through 9007199254740991, leaving an operationally unbounded diagnostic-retention budget. Recommend a bounded follow-up after active PR #293 lands rather than widening the in-flight primary.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "At PR #293 exact head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d, createRegistry validates duplicateDiagnosticCapacity only as a non-negative IEEE-754 safe integer and trims the duplicate diagnostics array only when its count exceeds that caller-provided capacity.",
+    "A capacity of 9007199254740991 is therefore accepted; repeated valid duplicate registrations can remain retained below that astronomical threshold, making the diagnostic queue operationally unbounded despite being numerically finite.",
+    "tests/world_entity_registry_shape.luau exercises malformed and numeric-safety capacity boundaries but does not establish a project-owned practical maximum or a retention-at-maximum regression.",
+    "Docs/QUALITY_STANDARD.md requires explicit queue-length and cache-size budgets for core foundations; this finding is distinct from #293's malformed-input and safe-integer guards.",
+    "Source-only/offline finding; no Roblox Studio, runtime physics, or real two-client evidence is claimed."
+  ],
+  "metadata": {
+    "sourcePath": "src/shared/Reality/WorldEntity.luau",
+    "testPath": "tests/world_entity_registry_shape.luau",
+    "activePr": 293,
+    "activeHeadSha": "c301d8403d3c1b93ee3b2988f80e9d1e689eb33d",
+    "recommendedLaneId": "HG-WORLDENTITY-DIAGNOSTIC-CAPACITY",
+    "verdict": "FOLLOW_UP_AFTER_ACTIVE_WORLDENTITY"
+  }
+}
