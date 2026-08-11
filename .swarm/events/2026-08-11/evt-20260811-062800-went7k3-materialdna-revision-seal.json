@@ -7,7 +7,7 @@
   "laneId": "HG-BACKFILL-MATERIALDNA",
   "severity": "high",
   "summary": "MaterialDNA documents {id, recipeVersion} as durable canonical content identity and forbids reusing a published pair for different content, but current shipped fixture tests only pinned IDs, revision numbers, validity and coherence. A valid same-revision fixture edit could therefore silently change established truth without failing the MaterialDNA suite. Independent review of PR #283 is the intended follow-up; production identity remains {id, recipeVersion} with no competing material identity framework.",
-  "affects": ["HG-BACKFILL-MATERIALDNA", "PR-283"],
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
   "evidence": [
     "Docs/MATERIAL_DNA_CONTRACT.md requires recipeVersion to increase whenever canonical material truth changes and forbids published {id, recipeVersion} reuse for different content.",
     "Pre-change tests/materialdna_contract.luau checked production fixture IDs and recipeVersion == 1 but did not seal full fixture content.",
