@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-101200-z6m2q8r4-fidelity-test-slot-reconciled",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-z6m2q8r4",
+  "claimToken": "7b2e9c4d1f6a8305",
+  "occurredAt": "2026-08-11T10:12:00Z",
+  "branch": "agent/physics/HG-BACKFILL-FIDELITY-tests-z6m2q8r4",
+  "pr": null,
+  "headSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "reasonCode": "TEST_SLOT_ALREADY_SATISFIED",
+  "summary": "The nominally open FidelityManager test-adversary slot has no non-duplicate implementation work: PR #354 already adopts the exact requested cross-entity nested-step regression, has fresh canonical green CI, and has independent source/test PASS.",
+  "evidence": [
+    "PR #354 exact payload 13ae5f8d575a534191067d8b12c6d6e13f08918c covers cross-entity nested step commit plus independent inner-commit/outer-rollback accounting.",
+    "PR #354 reports fresh canonical CI run 31478964222 fully green and Swarm engine-tests green.",
+    "Independent Fidelity audit on PR #354 records PASS on the test payload; integration remains held only by the separately owned control-plane ownership recovery.",
+    "No new branch changes were made after reconciliation, preventing duplicate test work."
+  ]
+}
