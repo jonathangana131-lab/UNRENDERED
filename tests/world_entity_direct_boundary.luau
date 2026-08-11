@@ -78,7 +78,11 @@ local function run(): number
 
 	expectEqual("direct capture owns origin", captured.origin.recipeKey, "cabinet/direct-capture")
 	expectEqual("direct capture owns captured state", captured.persistentState.open, true)
-	expectEqual("direct capture owns nested captured state", (captured.persistentState.drawer :: any).extension, 0.5)
+	expectEqual(
+		"direct capture owns nested captured state",
+		(captured.persistentState.drawer :: any).extension,
+		0.5
+	)
 	expectEqual("direct capture advances state revision", captured.stateRevision, 6)
 	expectEqual("direct capture preserves representation revision", captured.representationRevision, 7)
 
