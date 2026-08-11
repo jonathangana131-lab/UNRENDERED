@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081250-h8v5c1-objectgenome-caster-axis",
+  "timestamp": "2026-08-11T08:12:50+00:00",
+  "fromWorker": "sol-20260811-h8v5c1",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "ObjectGenome v1 validates caster swivelAxis and rollAxis independently as unit vectors but never validates their relationship. A caster whose rollAxis exactly equals its swivelAxis therefore passes the canonical recipe boundary even though wheel roll and swivel become the same degree-of-freedom axis, producing a physically degenerate/non-manufacturable caster. Add a narrow caster-axis relationship invariant and deterministic regression rather than leaving realization adapters to repair or reinterpret canonical data.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "main@aa7e04f src/shared/Objects/ObjectGenome.luau caster validation checks positive wheelRadiusM, then validateAxis(swivelAxis) and validateAxis(rollAxis); there is no dot-product/non-collinearity relationship check between the two canonical axes.",
+    "src/shared/Objects/ObjectGenomeFixtures.luau permanent office-chair casters encode swivelAxis={0,1,0} and rollAxis={1,0,0}, demonstrating the intended independent perpendicular swivel and wheel-roll degrees of freedom.",
+    "Deterministic source repro: deep-copy Fixtures.officeChair, set the first caster rollAxis to the same unit vector as swivelAxis, then ObjectGenome.inspect(genome) has no caster-axis relationship issue and remains otherwise canonical-valid.",
+    "Docs/OBJECT_GENOME.md describes caster swivelAxis/rollAxis as canonical mechanism direction vectors and prioritizes believable manufactured construction, while current object_genome tests cover unit-axis magnitude and caster persisted swivel scalar but not parallel/degenerate caster axis pairs.",
+    "Repository PR search for caster-axis orthogonality/perpendicularity found no existing repair, so this does not duplicate the active ObjectGenome hostile-boundary work."
+  ]
+}
