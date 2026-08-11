@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-t8n3c6v2",
   "claimToken": "3c7a1e9d5b2f8064",
   "claimedAt": "2026-08-11T20:42:10+00:00",
-  "heartbeatAt": "2026-08-11T20:42:10+00:00",
+  "heartbeatAt": "2026-08-11T20:43:30+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-t8n3c6v2-g4",
-  "pr": null,
-  "notes": "Generation-4 successor starts from independently reviewed #391 exact head and absorbs green same-lane test-adversary #384 lifecycle/no-yield assertions only. A different independent reviewer will be required on the new exact head."
+  "pr": 392,
+  "notes": "Generation-4 successor PR #392 starts from independently reviewed #391 exact head and absorbs green same-lane test-adversary #384 lifecycle/no-yield assertions only. A different independent reviewer will be required on the new exact head."
 }
