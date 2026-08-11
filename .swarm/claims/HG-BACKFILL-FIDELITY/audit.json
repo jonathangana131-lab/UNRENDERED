@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-k4v7m2q9",
+  "claimToken": "c3f8a1d62e947b50",
+  "claimedAt": "2026-08-11T09:34:00+00:00",
+  "heartbeatAt": "2026-08-11T09:34:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-k4v7m2q9",
+  "pr": 335,
+  "notes": "Fresh independent exact-head source audit of PR #335. No production edit or Studio evidence."
+}
