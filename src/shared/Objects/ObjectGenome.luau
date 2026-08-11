@@ -158,6 +158,7 @@ local BOUNDS_TOLERANCE_M = 0.005
 local AXIS_UNIT_TOLERANCE = 0.0001
 local ROTATION_LIMIT_DEG = 180
 local STABLE_ID_SEMANTIC_PART_MAX_BYTES = 512
+local MAX_FAMILY_VERSION = 2147483647
 
 local AFFORDANCE_KINDS = {
 	grip = true,
@@ -867,8 +868,13 @@ function ObjectGenome.inspect(value: any): ValidationResult
 			`familyId must be a stable lowercase semantic key of at most {STABLE_ID_SEMANTIC_PART_MAX_BYTES} bytes`
 		)
 	end
-	if not isPositiveInteger(value.familyVersion) then
-		addIssue(issues, "genome.family_version", "familyVersion", "familyVersion must be a positive integer")
+	if not isPositiveInteger(value.familyVersion) or value.familyVersion > MAX_FAMILY_VERSION then
+		addIssue(
+			issues,
+			"genome.family_version",
+			"familyVersion",
+			`familyVersion must be a positive integer <= {MAX_FAMILY_VERSION}`
+		)
 	end
 	if not isStableIdSemanticKey(value.variantKey) then
 		addIssue(
