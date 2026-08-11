@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-z7p4n6x2",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-11T21:00:00+00:00",
+  "lastSeenAt": "2026-08-11T21:00:00+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-z7p4n6x2",
+  "notes": "Independent exact-head audit of PR #395 generation-8 ObjectGenome decoder-shape closure."
+}
