@@ -1,10 +1,10 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:26:38.756500+00:00`
+Generated: `2026-08-11T07:29:50.631593+00:00`
 
 Canonical main: **GREEN** `064e28f2306095dadd6a514b96f397cd810ac556`
 
-State digest: `b51b63d9c6cee9f0e1c8b8c2b0b03ba02cf0c59507dc7d723416f05ca9dfe93c`
+State digest: `6abf97bd07f30f84c714d51332a8d978f687f8b68d406d59d0d4fa1a84b8e4f5`
 
 ## Summary
 
@@ -22,7 +22,7 @@ State digest: `b51b63d9c6cee9f0e1c8b8c2b0b03ba02cf0c59507dc7d723416f05ca9dfe93c`
 - `HG-BACKFILL-DIAGNOSTICS/test-adversary` — **Diagnostics lifecycle and no-drift test author** — score 5070 — dependencies satisfied
 - `HG-BACKFILL-AUTHORITY/test-adversary` — **Canonical agreement and teardown fixture author** — score 5020 — dependencies satisfied
 - `HG-BACKFILL-PHYSICS-GEOMETRY/audit` — **Physics recipe realism and validation auditor** — score 5020 — dependencies satisfied
-- `HG-BACKFILL-DIAGNOSTICS/audit` — **Diagnostics failure-path and capture-contract auditor** — score 4970 — dependencies satisfied
+- `HG-BACKFILL-AUTHORITY/audit` — **Two-client authority and trust-boundary auditor** — score 4920 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-worldentity` — **Mine WorldEntity for next concrete depth lane** — score 3680 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-objectgenome` — **Mine ObjectGenome for next concrete depth lane** — score 3670 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-materialdna` — **Mine MaterialDNA for next concrete depth lane** — score 3660 — dependencies satisfied
@@ -34,10 +34,10 @@ State digest: `b51b63d9c6cee9f0e1c8b8c2b0b03ba02cf0c59507dc7d723416f05ca9dfe93c`
 
 ## Active claims
 
-- `HG-BACKFILL-AUTHORITY/audit` → `sol-20260811-q9m4r2`; lease to `2026-08-11T07:53:20+00:00`
 - `HG-BACKFILL-AUTHORITY/primary` → `sol-20260811-q9x4m2`; lease to `2026-08-11T07:55:32+00:00`
+- `HG-BACKFILL-DIAGNOSTICS/audit` → `sol-20260811-q9m4r2`; lease to `2026-08-11T07:58:45+00:00`
 - `HG-BACKFILL-DIAGNOSTICS/primary` → `sol-20260811-q7h4n2`; lease to `2026-08-11T07:59:10+00:00`
-- `HG-BACKFILL-FIDELITY/audit` → `sol-20260811-x7n4k2`; lease to `2026-08-11T07:34:30+00:00`
+- `HG-BACKFILL-FIDELITY/audit` → `sol-20260811-x7n4k2`; lease to `2026-08-11T07:55:00+00:00`
 - `HG-BACKFILL-FIDELITY/primary` → `sol-20260811-w3n8k2`; lease to `2026-08-11T07:54:00+00:00`
 - `HG-BACKFILL-FIDELITY/test-adversary` → `sol-20260811-30a8e397`; lease to `2026-08-11T07:56:00+00:00`
 - `HG-BACKFILL-OBJECTGENOME/audit` → `sol-20260811-went7k3`; lease to `2026-08-11T07:54:10+00:00`

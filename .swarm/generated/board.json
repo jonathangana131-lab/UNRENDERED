@@ -1,15 +1,6 @@
 {
   "activeClaims": [
     {
-      "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-q9m4r2",
-      "expiresAt": "2026-08-11T07:53:20+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-AUTHORITY",
-      "pr": null,
-      "slotId": "audit",
-      "workerId": "sol-20260811-q9m4r2"
-    },
-    {
       "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-q9x4m2-g2",
       "expiresAt": "2026-08-11T07:55:32+00:00",
       "generation": 2,
@@ -17,6 +8,15 @@
       "pr": 297,
       "slotId": "primary",
       "workerId": "sol-20260811-q9x4m2"
+    },
+    {
+      "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-q9m4r2",
+      "expiresAt": "2026-08-11T07:58:45+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "pr": null,
+      "slotId": "audit",
+      "workerId": "sol-20260811-q9m4r2"
     },
     {
       "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-q7h4n2",
@@ -29,7 +29,7 @@
     },
     {
       "branch": "agent/physics/HG-BACKFILL-FIDELITY-audit-x7n4k2",
-      "expiresAt": "2026-08-11T07:34:30+00:00",
+      "expiresAt": "2026-08-11T07:55:00+00:00",
       "generation": 1,
       "laneId": "HG-BACKFILL-FIDELITY",
       "pr": 292,
@@ -140,7 +140,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:26:38.756500+00:00",
+  "generatedAt": "2026-08-11T07:29:50.631593+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "064e28f2306095dadd6a514b96f397cd810ac556",
@@ -160,13 +160,13 @@
       "EVIDENCE_RESULT": 5,
       "EXTERNAL_BLOCKER": 1,
       "FINDING": 40,
-      "HANDOFF": 19,
+      "HANDOFF": 20,
       "INTEGRATION_RESULT": 7,
       "RECOVERY": 3,
-      "REVIEW_REQUEST": 30,
-      "REVIEW_RESULT": 30
+      "REVIEW_REQUEST": 33,
+      "REVIEW_RESULT": 31
     },
-    "generatedAt": "2026-08-11T07:26:38.756500+00:00",
+    "generatedAt": "2026-08-11T07:29:50.631593+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -287,17 +287,18 @@
       ]
     },
     {
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "laneId": "HG-BACKFILL-AUTHORITY",
       "reason": "dependencies satisfied",
       "resources": [],
-      "role": "Diagnostics failure-path and capture-contract auditor",
-      "score": 4970,
+      "role": "Two-client authority and trust-boundary auditor",
+      "score": 4920,
       "slotId": "audit",
       "writeScopes": [
-        "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
-        "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
-        "tests/**diagnostic*.luau",
-        "tests/hero_gate_contract_integration.luau"
+        "src/server/Bootstrap.server.luau",
+        "src/client/Bootstrap.client.luau",
+        "tests/hero_gate_contract_integration.luau",
+        "tests/**authority*.luau",
+        "tests/**multiplayer*.luau"
       ]
     },
     {
@@ -390,106 +391,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-WORLDENTITY"
-      ],
-      "eventId": "evt-20260811-071310-q7h4n2-worldentity-audit-release",
-      "eventType": "HANDOFF",
-      "evidence": [
-        "evt-20260811-071230-q7h4n2-worldentity-generator-version-bound.json",
-        "PR #271 remains on exact head 65f37ccddc4e4229722166acacd4fdcc02958eb9 with prior REQUEST_CHANGES review 4903632483 and additional issue comment 5249983545 still applicable."
-      ],
-      "fromWorker": "sol-20260811-q7h4n2",
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "metadata": {
-        "claimToken": "5c91e7a2d4b8360f",
-        "reviewedHead": "65f37ccddc4e4229722166acacd4fdcc02958eb9",
-        "reviewedPr": 271
-      },
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "WorldEntity audit slot complete and released. PR #271 exact head 65f37cc remains blocked by the previously recorded safe-revision, hostile-formatting, required-capture, and malformed-capacity findings; this audit adds one distinct replay/provenance defect: origin.generatorVersion accepts values above the canonical DeterminismContract maximum 2147483647, allowing durable provenance that SeedStream cannot replay. Primary should consume the bound finding together with the existing blockers, then refresh current-main CI and fail-closed ownership before integration. No Studio evidence is involved.",
-      "timestamp": "2026-08-11T07:13:10+00:00"
-    },
-    {
-      "affects": [
-        "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
-        "HG-BACKFILL-REALITY"
-      ],
-      "eventId": "evt-20260811-071336-q9m4r2-pr-check-live-snapshot-race",
-      "eventType": "FINDING",
-      "evidence": [
-        "PR #282 exact head a2785f04f0fff74c9e78bfe3d79702376dad271b has green canonical CI and independent exact-head source/replay approval, with a live generation-1 claim still leased.",
-        "Ownership run 31467814969 reached trusted pr-check with engine-tests green; independent review records its failure specifically as live control state changed after its validation marker.",
-        "After validated projection commit c4074a2cc807c6917b9bd8c9ab056010a261a18c, PR #282 was retriggered immediately at 07:12:48Z; run 31468044380 again reached Enforce live ownership with trusted code and exited 2 while swarm-control continued receiving unrelated worker writes.",
-        "Current trusted validate_marker compares generated validation stateDigest to a digest of the entire fetched mutable control tree, so any post-projection control mutation makes that snapshot unverifiable until another projection is published."
-      ],
-      "fromWorker": "sol-20260811-q9m4r2",
-      "laneId": "HG-BACKFILL-REALITY",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Fail-closed PR ownership remains effectively race-prone under high control churn even after live validation recovery. PR #282 was retriggered immediately after fresh validated projections, but ownership runs 31467814969 and 31468044380 both reached the trusted checker and failed while control advanced between projection and asynchronous pr-check materialization. The first independent review pinned the explicit error as live control state changed after its validation marker. Because pr-check fetches the latest live control branch and validate_marker hashes the entire mutable control tree, any heartbeat/claim/event after projection invalidates the marker before the PR job can consume it. Recovery should fence PR ownership to one immutable validated control snapshot rather than require a moving live head to remain unchanged for the whole trigger window.",
-      "timestamp": "2026-08-11T07:13:36+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-WORLDENTITY"
-      ],
-      "eventId": "evt-20260811-071400-z4q8n1-worldentity-generator-version",
-      "eventType": "FINDING",
-      "evidence": [
-        "PR #293 exact head 093f2f6016427753647a00d2ea85c55ed7ce9ffa defines MAX_SAFE_INTEGER and applies it to stateRevision, representationRevision, and duplicate diagnostic capacity.",
-        "The same head's cloneOrigin obtains origin.generatorVersion through checkedFiniteNumber and checks only >= 1 plus math.floor equality; it has no MAX_SAFE_INTEGER bound.",
-        "Docs/ARCHITECTURE.md defines generation origin as generator name/version and first-observation version information as canonical truth that must prevent later generator upgrades from silently rewriting established reality.",
-        "Because Luau numbers are doubles, integer provenance above 9007199254740991 cannot preserve one-to-one adjacent integer identity; max-safe acceptance plus max-safe+1 rejection should be regression-locked."
-      ],
-      "fromWorker": "sol-20260811-z4q8n1",
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "WorldEntity primary PR #293 correctly safe-bounds lifecycle revisions but still accepts origin.generatorVersion above IEEE-754's exact integer range. cloneOrigin validates generatorVersion only as finite, >=1, and integral, so 9007199254740992 can enter frozen canonical generation provenance even though adjacent integers above 2^53-1 are not uniquely representable. Generator version is part of the version lock/provenance boundary and should remain exact plain data.",
-      "timestamp": "2026-08-11T07:14:00+00:00"
-    },
-    {
-      "affects": [
-        "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT"
-      ],
-      "eventId": "evt-20260811-071500-r4m8z2-pr-ownership-recovery-complete",
-      "eventType": "HANDOFF",
-      "evidence": [
-        "PR #290 merged as aec680524f69ca59693da594e16dca6c8e4095ab; hardened facade now exits with the base validator return status.",
-        "PR #291 merged as b0bf5ba664483cdcc2af061b0fb652b0aea00706; exact-head pr-ownership run 31466523712 job 93703950653 emitted JSON status PASS for this lane/slot/worker/token.",
-        "Post-merge main CI run 31467811354 completed SUCCESS across format, lint, Luau analysis, audits, deterministic/pure tests, and Rojo build.",
-        "swarm-control workflow copy synchronized to the merged main workflow at ddb802457cfb40a24573cf92875a5dfd9880136a.",
-        "Control run 31468034547 job 93704980943 used AFTER_SHA ddb802457cfb40a24573cf92875a5dfd9880136a as CONTROL_SHA, passed validation/transition checks, then failed closed with 'Control advanced; refusing stale projection.' after concurrent control activity."
-      ],
-      "fromWorker": "sol-20260811-r4m8z2",
-      "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
-      "schemaVersion": 1,
-      "severity": "HIGH",
-      "summary": "Critical PR-ownership recovery is complete. PR #290 restored fail-closed CLI exit propagation; PR #291 bound generated-projection and main-health publishers to the exact control snapshot they materialized. Exact-head pr-ownership emitted explicit PASS before #291 integration, post-merge main CI is green at b0bf5ba664483cdcc2af061b0fb652b0aea00706, and the control-branch workflow copy was synchronized to main at ddb802457cfb40a24573cf92875a5dfd9880136a. Control run 31468034547 then mechanically proved the new fence in production: it validated the exact event AFTER_SHA ddb802457cfb40a24573cf92875a5dfd9880136a, passed state/transition checks, detected that swarm-control had advanced to a4ca64a94dfa6b19e3e9976983041fef9440a5d4, and refused the stale generated projection instead of overwriting newer control state.",
-      "timestamp": "2026-08-11T07:15:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-FIDELITY"
-      ],
-      "eventId": "evt-20260811-071500-x7n4k2-fidelity-hostile-scalar",
-      "eventType": "FINDING",
-      "evidence": [
-        "PR #274 head e22c71b7b4f829f1be4c7e9911bdbb2e479a86ab defines isFinite(value: number) as value == value and relational comparisons; validateFiniteNonNegative calls isFinite without a runtime type check.",
-        "validateInputs passes distanceStuds/significance/networkRelevance/entityRelevance directly into numeric validators, so a plain top-level record can still carry a metatable-backed non-number scalar.",
-        "step passes nowSeconds directly to isFinite before any runtime type assertion, giving the same hostile-scalar path outside PolicyInputs.",
-        "MaterialDNA's production validation pattern accepts unknown and checks type(value) == 'number' before calling its isFinite helper, demonstrating the established no-execute boundary shape in this repository."
-      ],
-      "fromWorker": "sol-20260811-x7n4k2",
-      "laneId": "HG-BACKFILL-FIDELITY",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Fidelity numeric validation remains executable even after a top-level PolicyInputs metatable guard: validateUnit/validateNonNegative/validateFiniteNonNegative call comparison helpers before establishing type(value) == 'number'. In Luau, equality may invoke __eq even for the same table reference, so a metatable-free PolicyInputs record whose numeric field is a hostile table can execute its __eq inside isFinite/value==value before rejection. nowSeconds reaches isFinite directly and has the same runtime boundary shape. Harden scalar validators to type-check unknown runtime values before equality/comparison/arithmetic; keep the top-level metatable preflight as a separate guard.",
-      "timestamp": "2026-08-11T07:15:00+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-AUTHORITY",
@@ -788,6 +689,29 @@
     },
     {
       "affects": [
+        "HG-BACKFILL-AUTHORITY"
+      ],
+      "eventId": "evt-20260811-072455-q9m4r2-authority-review-block",
+      "eventType": "REVIEW_RESULT",
+      "evidence": [
+        "tests/hero_gate_contract_integration.luau currently checks serverBootstrap:find(\"RunService:IsServer()\", 1, true) and the analogous client token only.",
+        "Current production bootstraps use assert(RunService:IsServer(), \"server bootstrap must run on server\") and assert(RunService:IsClient(), \"client bootstrap must run on client\"), which is stronger than the regression currently protects.",
+        "GitHub review 4903873018 records the exact-head blocker; GitHub cannot submit REQUEST_CHANGES from the same repository account, so the durable swarm verdict is authoritative for this audit slot."
+      ],
+      "fromWorker": "sol-20260811-q9m4r2",
+      "laneId": "HG-BACKFILL-AUTHORITY",
+      "metadata": {
+        "headSha": "ac8b0d1d6f27305da551c0ed3fb46be4a4c53af1",
+        "pr": 297,
+        "verdict": "REQUEST_CHANGES"
+      },
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "BLOCK / REQUEST_CHANGES for PR #297 exact head ac8b0d1d6f27305da551c0ed3fb46be4a4c53af1. The bootstrap context regressions only search for RunService:IsServer()/IsClient() tokens, so they remain green if the fail-closed assert is weakened to an unused assignment, warning, or other non-gating expression. Strengthen the source-contract check to lock actual fail-closed guard structure/behavior. Existing server-only module ownership assertions are otherwise directionally sound; no real two-client Studio evidence is claimed.",
+      "timestamp": "2026-08-11T07:24:55+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-OBJECTGENOME"
       ],
       "eventId": "evt-20260811-072540-went7k3-pr299-review-request",
@@ -809,6 +733,100 @@
       "severity": "normal",
       "summary": "Audit companion PR #299 documents the exact canonical ObjectGenome familyVersion domain introduced by primary PR #296 and is ready for independent docs/contract review on exact head d6f19e760e3073ed0bc90ebec5c346f11c046cba.",
       "timestamp": "2026-08-11T07:25:40+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-FIDELITY"
+      ],
+      "eventId": "evt-20260811-072650-w3n8k2-pr274-review-request",
+      "eventType": "REVIEW_REQUEST",
+      "evidence": [
+        "PR #274 changes only src/shared/Physics/FidelityManager.luau and tests/fidelity_manager_rejected_step_atomicity.luau relative to its current base.",
+        "Canonical CI run 31468720518 is green on exact head 60de91b49338249c1ded74db0d722921ce2fb55d through formatting, lint, Luau analysis, audits, pure tests, deterministic tests, and Rojo build.",
+        "Swarm Control Plane run 31468786080 is green on the same exact head, including live pr-ownership and adversarial engine-tests.",
+        "Primary source now consumes all findings from test-adversary PR #278 and the source contract blockers documented by audit PR #292."
+      ],
+      "fromWorker": "sol-20260811-w3n8k2",
+      "laneId": "HG-BACKFILL-FIDELITY",
+      "metadata": {
+        "headSha": "60de91b49338249c1ded74db0d722921ce2fb55d",
+        "integrationOrder": "primary-274-before-or-with-audit-292",
+        "pr": 274
+      },
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "Primary FidelityManager PR #274 consumes the full source-only adversarial and audit closure for policy-input boundaries, registration accounting, transition-hook failure atomicity, and callback reentrancy, and is ready for independent Reality-Grade review on exact head 60de91b49338249c1ded74db0d722921ce2fb55d.",
+      "timestamp": "2026-08-11T07:26:50+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-AUTHORITY",
+        "HG151-TWOCLIENT",
+        "PR-297"
+      ],
+      "eventId": "evt-20260811-072735-q9x4m2-authority-primary-exact-review",
+      "eventType": "REVIEW_REQUEST",
+      "evidence": [
+        "Canonical CI run 31468787216 validate job 93707279564 concluded success on exact head.",
+        "Swarm Control Plane run 31468786799 engine-tests succeeded; after a fail-closed validation-marker race, rerun pr-ownership job 93707655017 emitted semantic PASS with one changed file and no protected scope touched.",
+        "No Roblox Studio evidence is claimed."
+      ],
+      "fromWorker": "sol-20260811-q9x4m2",
+      "laneId": "HG-BACKFILL-AUTHORITY",
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "Independent exact-head review requested for PR #297 at ac8b0d1d6f27305da551c0ed3fb46be4a4c53af1. The one-file generation-2 takeover salvages the stale bootstrap ownership regression onto main 064e28f2306095dadd6a514b96f397cd810ac556 while preserving newer diagnostics integration. Review must keep the claim narrow: server/client bootstrap ownership only, not true two-client authority evidence.",
+      "timestamp": "2026-08-11T07:27:35+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-AUTHORITY",
+        "PR-297"
+      ],
+      "eventId": "evt-20260811-072810-q9x4m2-authority-audit-target",
+      "eventType": "REVIEW_REQUEST",
+      "evidence": [
+        "Exact-head canonical CI run 31468787216 validate job 93707279564: success.",
+        "Exact-head ownership rerun job 93707655017: semantic PASS, one changed file, no protected scope touched.",
+        "The public stronger authority contract is already merged in #275; this PR intentionally adds only the bootstrap ownership regression."
+      ],
+      "fromWorker": "sol-20260811-q9x4m2",
+      "laneId": "HG-BACKFILL-AUTHORITY",
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "Authority audit owner: please independently review exact PR #297 head ac8b0d1d6f27305da551c0ed3fb46be4a4c53af1. Scope is the one-file source regression that server bootstrap owns PhysicsLabStudioHarness startup and client bootstrap cannot import named server-only Physics Lab modules. Do not treat it as HG151-TWOCLIENT or Studio evidence.",
+      "timestamp": "2026-08-11T07:28:10+00:00",
+      "toWorker": "sol-20260811-q9m4r2"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-DIAGNOSTICS",
+        "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"
+      ],
+      "eventId": "evt-20260811-072820-q7h4n2-pr295-source-complete",
+      "eventType": "HANDOFF",
+      "evidence": [
+        "evt-20260811-064720-q7h4n2-diagnostics-cycle-bound.json",
+        "PR #295 exact head 1814b4d08a02c9d650dea6288af9a8264e58d3c9 changes only PhysicsLabStudioDiagnostics plus source-contract test wiring.",
+        "CI run 31468750759 completed successfully on the exact head.",
+        "Swarm Control Plane run 31468764335 engine-tests succeeded; pr-ownership jobs 93707208334 and rerun 93707463117 both failed only with 'live control state changed after its validation marker'.",
+        "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE is actively claimed by sol-20260811-diaga6r2k with PR #298."
+      ],
+      "fromWorker": "sol-20260811-q7h4n2",
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "metadata": {
+        "baseSha": "064e28f2306095dadd6a514b96f397cd810ac556",
+        "ciRun": 31468750759,
+        "claimToken": "1f7c4a9d62e8350b",
+        "controlRun": 31468764335,
+        "headSha": "1814b4d08a02c9d650dea6288af9a8264e58d3c9",
+        "pr": 295,
+        "status": "WAITING_FOR_CONTROL_RECOVERY_AND_INDEPENDENT_REVIEW"
+      },
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "PR #295 source slice is complete on exact head 1814b4d08a02c9d650dea6288af9a8264e58d3c9, synchronized onto main 064e28f2306095dadd6a514b96f397cd810ac556. It consumes the bounded diagnostics workload finding by capping runToggleEvidence overrides at the documented 20-cycle proof before any iteration and adds an always-run source-contract regression. Exact-head canonical CI run 31468750759 is green. Swarm Control Plane run 31468764335 has engine-tests green, but ownership reached the hardened validator and failed only because live control state changed after its validation marker; a direct job rerun reproduced the same fence race. Dedicated recovery PR #298 / lane SWARM-RECOVERY-HEALTH-VALIDATION-FENCE is active for this exact control defect, so do not merge #295 until that repair lands and a fresh fail-closed ownership run explicitly passes. Independent exact-head Reality-Grade review is still required. No Roblox Studio run or engine evidence is claimed.",
+      "timestamp": "2026-08-11T07:28:20+00:00"
     }
   ],
   "resources": [
@@ -820,7 +838,7 @@
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 0,
+      "activeOwners": 1,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "SWARM-PROTOCOL",
@@ -869,10 +887,10 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "b51b63d9c6cee9f0e1c8b8c2b0b03ba02cf0c59507dc7d723416f05ca9dfe93c",
+  "stateDigest": "6abf97bd07f30f84c714d51332a8d978f687f8b68d406d59d0d4fa1a84b8e4f5",
   "summary": {
     "activeClaims": 14,
-    "activeResourceClaims": 1,
+    "activeResourceClaims": 2,
     "blockedExternalLanes": 1,
     "lanes": 25,
     "readySlots": 16,
