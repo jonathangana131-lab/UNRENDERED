@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-REALITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-qyz1nbtx",
+  "claimToken": "575f6e100c7f65e4",
+  "claimedAt": "2026-08-11T20:20:30+00:00",
+  "heartbeatAt": "2026-08-11T20:20:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-REALITY-audit-qyz1nbtx",
+  "pr": 359,
+  "notes": "Fresh independent exact-head audit requested by the REVIEW-state lane. Source-only review of WorldId, seed provenance, replay/version invariants and deterministic fixtures; no Studio evidence claim and no product-scope widening."
+}
