@@ -227,10 +227,10 @@ local function run(): number
 				local rise = stairTop - priorTop
 				if rise <= 0 then
 					stairsRiseMonotonic = false
-				elseif canonicalRise == nil then
-					canonicalRise = rise
-				elseif not nearlyEqual(rise, canonicalRise, EPSILON) then
+				elseif canonicalRise ~= nil and not nearlyEqual(rise, canonicalRise, EPSILON) then
 					stairsRiseMonotonic = false
+				else
+					canonicalRise = rise
 				end
 			end
 			priorStair = stair
