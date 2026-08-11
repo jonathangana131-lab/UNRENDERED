@@ -5,7 +5,7 @@
   "title": "Physics Lab harness lifecycle capability fence",
   "objective": "Close the confirmed source-only ownership hole where PhysicsLabStudioHarness.get() exposes the raw RealizedLab.destroy() capability and can leave the harness bound to a destroyed lab, without broadening into multiplayer transport or Studio evidence work.",
   "priority": 4830,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/hero_gate_authority_teardown.luau", "tests/hero_gate_contract_integration.luau"],
@@ -26,6 +26,6 @@
     "do not claim Roblox Studio, real two-client, replication/session, transport, or HG151-TWOCLIENT evidence from source-only validation",
     "canonical CI, live pr-ownership after the separately owned trusted-history recovery, and fresh independent exact-head review are required before integration"
   ],
-  "notes": "Materialized from capacity-mining findings evt-20260811-123820-j4m8q2v7-authority-harness-destroy-capability and fresh reconfirmation evt-20260811-210630-j9v4m2q7-authority-harness-capability-reconfirm. Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 still returns raw current from PhysicsLabStudioHarness.get(); authority stack PR #394 explicitly leaves this defect out of scope. Keep sequencing independent from #348/#394 except for overlapping authority tests: synchronize rather than drop their accepted bootstrap/teardown assertions. Global integration remains fail-closed behind SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY; no bypass is authorized.",
+  "notes": "REVIEW: draft PR #399 at exact head 2c33c31f3ab96528308f01d18a72d2446adb1553 closes the raw RealizedLab.destroy capability by publishing a frozen harness-owned clone whose destroy path is identity-fenced and releases current only after underlying teardown succeeds. Canonical CI run 31536540946 is green including format, lint, Luau analysis, pure tests, and place build. Swarm engine-tests in run 31536540833 are green. pr-ownership in that run remains fail-closed on unrelated live control-history event 210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json (forbidden validation.0.command), owned by SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY; this lane does not bypass it. Fresh independent exact-head audit is now required. No Roblox Studio or two-client evidence is claimed. Materialized from capacity-mining findings evt-20260811-123820-j4m8q2v7-authority-harness-destroy-capability and evt-20260811-210630-j9v4m2q7-authority-harness-capability-reconfirm; #394 explicitly leaves this defect out of scope. Keep sequencing independent from #348/#394 except overlapping authority tests: synchronize rather than drop their accepted bootstrap/teardown assertions.",
   "tags": ["hero-gate", "source-only", "authority", "lifecycle", "prerequisite"]
 }
