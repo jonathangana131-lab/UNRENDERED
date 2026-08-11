@@ -37,11 +37,19 @@ local function run(): number
 	)
 	expect(
 		"post-realization capture remains inside the protected transaction",
-		capture ~= nil and transaction ~= nil and transactionEnd ~= nil and transaction < capture and capture < transactionEnd
+		capture ~= nil
+			and transaction ~= nil
+			and transactionEnd ~= nil
+			and transaction < capture
+			and capture < transactionEnd
 	)
 	expect(
 		"failed realization destroys the owned diagnostics tree before propagating",
-		rollback ~= nil and propagate ~= nil and transactionEnd ~= nil and transactionEnd < rollback and rollback < propagate
+		rollback ~= nil
+			and propagate ~= nil
+			and transactionEnd ~= nil
+			and transactionEnd < rollback
+			and rollback < propagate
 	)
 
 	return failures
