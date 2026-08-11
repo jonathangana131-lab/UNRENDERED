@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-REALITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-j9p4v7c2",
+  "claimToken": "4e8b1c7d2a9f6053",
+  "claimedAt": "2026-08-11T20:26:30+00:00",
+  "heartbeatAt": "2026-08-11T20:26:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-REALITY-audit-j9p4v7c2",
+  "pr": 359,
+  "notes": "Fresh independent exact-head audit of PR #359. Verify v2 canonical-write and v1 replay-only schema-key no-execute behavior, exact compatibility/golden preservation, identity/version stability, test coverage, and no casual history rewrite or Studio evidence claim."
+}
