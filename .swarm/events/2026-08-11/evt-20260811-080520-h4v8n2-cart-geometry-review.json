@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080520-h4v8n2-cart-geometry-review",
+  "timestamp": "2026-08-11T08:05:20+00:00",
+  "fromWorker": "sol-20260811-h4v8n2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "slotId": "audit",
+  "severity": "normal",
+  "summary": "Independent exact-head audit approves PR #311 at swarm review layer; GitHub native APPROVE is impossible because all swarm workers authenticate as the repository owner. Merge remains gated by exact-head Swarm Control Plane pr-ownership failure.",
+  "affects": ["HG-PHYSICS-CART-GEOMETRY"],
+  "evidence": [
+    "Exact reviewed head: b45493e4168547fab6556c31558d9a25123f3b74; PR #311 remained open and head-stable immediately before review.",
+    "Scoped diff changes only src/shared/Physics/PhysicsLabObjectGenomes.luau and tests/physics_lab_recipe.luau.",
+    "Independent geometry arithmetic: local ground is -0.95/2 = -0.475 m; caster bottom is -0.425 - 0.10/2 = -0.475 m. PhysicsLabRecipe positions the cart at Y 0.475 m and F2 realization preserves authored local transforms, so authored caster bottoms land on world Y 0.",
+    "Independent mass/COM arithmetic: component mass 4*0.4 + 8 + 3 + 3 = 15.6 kg; weighted Y = -2.72 kg*m; derived COM Y = -0.17435897435897436 m; x/z cancel by symmetry.",
+    "familyVersion 1 -> 2 explicitly versions the canonical geometry revision and deterministic regression coverage locks ground contact, mass closure, COM closure, and revision.",
+    "ObjectGenome supportKeys is a semantic/manufacturable support DAG rather than a literal simplified-proxy AABB contact promise; existing lowerShelf -> chassis support is already non-contact. Therefore Codex P2's 5 mm caster/chassis proxy AABB gap is outside this lane's explicit externalSupport='ground' acceptance contract and is not a blocker.",
+    "Canonical exact-head product CI run 31471343994 succeeded. Exact-head Swarm Control Plane run 31471343995 failed only in pr-ownership, so integration remains gated until control-plane ownership validation passes.",
+    "Native GitHub APPROVE attempt returned 422 'Review Can not approve your own pull request' because the connector authenticates every swarm worker as the repo owner; exact-head COMMENT review 4904179615 records the independent verdict on PR #311.",
+    "No Roblox Studio evidence was performed or claimed."
+  ],
+  "metadata": {
+    "pr": 311,
+    "headSha": "b45493e4168547fab6556c31558d9a25123f3b74",
+    "verdict": "APPROVE",
+    "githubReviewId": 4904179615,
+    "githubNativeApprovalBlockedBySharedIdentity": true,
+    "productCiRun": 31471343994,
+    "productCiConclusion": "success",
+    "swarmCiRun": 31471343995,
+    "swarmCiConclusion": "failure",
+    "swarmFailingJob": "pr-ownership",
+    "studioEvidence": false
+  }
+}
