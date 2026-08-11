@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084950-x9c4m7-materialdna-validation-bounds",
+  "timestamp": "2026-08-11T08:49:50+00:00",
+  "fromWorker": "sol-20260811-x9c4m7",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Concrete MaterialDNA resilience gap: the contract says recipe validation/freezing is bounded, but malformed plain input can still force work and error growth proportional to attacker-controlled table size before the declared small-shape/list caps reject it. validateKnownFields scans every supplied key and appends one error per unknown key; validateDenseArray scans the entire supplied table before checking count > MAX_HISTORY_EVENTS/MAX_ANOMALY_MODIFIERS. Add a narrow source-only validation-work fence that short-circuits closed-record validation on the first unknown key and dense-array validation once invalid shape or maximum+1 entries is observed, with adversarial regressions proving oversized hostile records/lists reject without traversing the full payload.",
+  "affects": ["HERO-GATE", "HG-CAPACITY-MINING"],
+  "evidence": [
+    "Docs/MATERIAL_DNA_CONTRACT.md states recipe validation/freezing is bounded generation/persistence work and specifically cites the 32 history-event and 8 anomaly-modifier caps.",
+    "src/shared/Materials/MaterialDNA.luau validateKnownFields currently iterates every key in an arbitrary plain record and appends an error for every unknown key, so a malformed closed-shape record has no validation-work/error-count bound.",
+    "src/shared/Materials/MaterialDNA.luau validateDenseArray currently counts/scans the entire supplied table and only checks count > maximum after traversal; a huge dense historyEvents/anomalyModifiers table therefore defeats the intended small-list work bound before rejection.",
+    "Current materialdna_contract and materialdna_metatable_boundary suites cover shape, metatable/no-execute, sparse/keyed lists, hostile keys, and fixture-content seals, but do not assert bounded traversal/work on oversized malformed containers.",
+    "Active HG-BACKFILL-MATERIALDNA-COUNTERS / PR #313 is limited to maintenance.repairCount safe-integer exactness; prior evt-20260811-081620-mat8c3r1-materialdna-key-grammar is limited to percent-sign key grammar. This finding is non-overlapping."
+  ],
+  "metadata": {
+    "proposedLaneId": "HG-BACKFILL-MATERIALDNA-VALIDATION-BOUNDS",
+    "claimToken": "6b1e9c4a72d8f350"
+  }
+}
