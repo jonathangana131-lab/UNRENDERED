@@ -35,17 +35,17 @@ local function run(): number
 	local captureCall = position("diagnosticInstanceCount = validateReadoutCompleteness(folder, entities)")
 	local descendantCountShortcut = position("diagnosticInstanceCount = 1 + #folder:GetDescendants()")
 
-	expect(
-		"each diagnostics billboard carries the canonical WorldEntityId it projects",
-		identityWrite ~= nil
-	)
+	expect("each diagnostics billboard carries the canonical WorldEntityId it projects", identityWrite ~= nil)
 	expect(
 		"capture validates the readout tree through an explicit completeness boundary",
 		helper ~= nil and captureCall ~= nil and helper < captureCall
 	)
 	expect(
 		"readout validation enumerates only direct diagnostics-root children",
-		directChildren ~= nil and billboardClass ~= nil and helper < directChildren and directChildren < billboardClass
+		directChildren ~= nil
+			and billboardClass ~= nil
+			and helper < directChildren
+			and directChildren < billboardClass
 	)
 	expect(
 		"every readout identity is authoritative and unique",
