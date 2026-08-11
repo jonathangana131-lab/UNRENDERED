@@ -228,21 +228,19 @@ local function run(): number
 	expectEqual("rejected unregister callback preserves registration", unregisterMetrics.registered, 1)
 	expectEqual("rejected unregister callback preserves F0 count", unregisterMetrics.counts.F0, 1)
 	expectEqual("rejected unregister callback preserves F4 count", unregisterMetrics.counts.F4, 0)
-	expectEqual("rejected unregister callback does not count hook call", unregisterMetrics.transitionHookCalls, 0)
+	expectEqual(
+		"rejected unregister callback does not count hook call",
+		unregisterMetrics.transitionHookCalls,
+		0
+	)
 	expectEqual("rejected unregister callback does not count transition", unregisterMetrics.transitions, 0)
 	expectAccounting("rejected unregister callback", unregisterMetrics)
 
 	local unregisterRetryCalled = false
 	local unregisterRetryAccepted = pcall(function()
-		local result = unregisterManager:step(
-			"entity:atomic-unregister",
-			"F0",
-			heroInputs(),
-			0.1,
-			function()
-				unregisterRetryCalled = true
-			end
-		)
+		local result = unregisterManager:step("entity:atomic-unregister", "F0", heroInputs(), 0.1, function()
+			unregisterRetryCalled = true
+		end)
 		expectEqual("retry after rejected unregister callback commits", result.transitioned, true)
 	end)
 	expectEqual("rejected unregister callback does not poison retry clock", unregisterRetryAccepted, true)
@@ -252,13 +250,7 @@ local function run(): number
 	recursiveManager:register("entity:atomic-recursive-step", "F0")
 	local recursiveAccepted = pcall(function()
 		recursiveManager:step("entity:atomic-recursive-step", "F0", heroInputs(), 0, function()
-			recursiveManager:step(
-				"entity:atomic-recursive-step",
-				"F0",
-				heroInputs(),
-				0,
-				function() end
-			)
+			recursiveManager:step("entity:atomic-recursive-step", "F0", heroInputs(), 0, function() end)
 		end)
 	end)
 	expectEqual("transition hook cannot recursively step same entity", recursiveAccepted, false)
@@ -268,7 +260,11 @@ local function run(): number
 		"F0"
 	)
 	local recursiveMetrics = recursiveManager:getMetrics()
-	expectEqual("rejected recursive callback does not count hook call", recursiveMetrics.transitionHookCalls, 0)
+	expectEqual(
+		"rejected recursive callback does not count hook call",
+		recursiveMetrics.transitionHookCalls,
+		0
+	)
 	expectEqual("rejected recursive callback does not count transition", recursiveMetrics.transitions, 0)
 	expectAccounting("rejected recursive callback", recursiveMetrics)
 
