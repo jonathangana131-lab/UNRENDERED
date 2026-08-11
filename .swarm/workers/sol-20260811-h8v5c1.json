@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-h8v5c1",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T07:54:10+00:00",
-  "lastSeenAt": "2026-08-11T08:32:05+00:00",
-  "notes": "Transition-fence primary claim was removed by live swarm reconciliation as overflow after duplicate PR #319 appeared. Closed redundant PR #324 without merging; branch preserved with extra adversarial checks. No active claim."
+  "lastSeenAt": "2026-08-11T08:32:45+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE-h8v5c1",
+  "notes": "Independent exact-head audit of PR #310 head 0f69d6b749c3daa8b61488e94016e9c0c2831632; canonical CI green, no Studio evidence claimed."
 }
