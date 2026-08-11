@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V2-CAS-PROOF",
+  "epicId": "SWARM-V2",
+  "title": "Prove stale-claim CAS takeover fencing on real GitHub",
+  "objective": "Exercise the live claim path with an intentionally expired generation-1 owner, a valid generation-2 takeover, and a second contender attempting to replace the same old Git blob SHA. Exactly one takeover may win.",
+  "priority": 9950,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [
+    {"laneId": "SWARM-V2-ROLLOUT", "acceptableStates": ["DONE"]}
+  ],
+  "writeScopes": ["Docs/SWARM_CONTROL_PLANE.md"],
+  "resources": [],
+  "slots": [
+    {"slotId": "primary", "role": "CAS takeover proof owner", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 500},
+    {"slotId": "reviewer-1", "role": "CAS proof verifier", "exclusive": true, "availableWhen": ["REVIEW"], "requiresIndependentFrom": "primary", "priorityBoost": 300}
+  ],
+  "acceptance": [
+    "generation-1 claim is expired before takeover",
+    "generation-2 owner identifies takeoverOf generation-1 worker",
+    "transition validator accepts the legitimate takeover",
+    "second contender using stale generation-1 blob SHA is rejected by GitHub",
+    "old owner is fenced by changed worker/token/generation"
+  ],
+  "tags": ["control-repair"]
+}
