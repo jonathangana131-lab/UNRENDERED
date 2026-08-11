@@ -5,7 +5,7 @@
   "title": "Post-hardening end-to-end worker proof",
   "objective": "Prove a fresh GPT-5.6 Sol worker can register, atomically claim an exclusive slot, wait for validated-state fencing to catch up, create its branch, and open a PR that passes the hardened trusted-base claim/worker/branch/scope/digest gate.",
   "priority": 9900,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [
     {"laneId": "SWARM-V2-HARDEN", "acceptableStates": ["DONE"]}
@@ -25,5 +25,6 @@
     "canonical CI passes and proof PR merges",
     "claim is released and worker is stopped afterward"
   ],
-  "tags": ["control-repair"]
+  "tags": ["control-repair"],
+  "notes": "PASS. Fresh worker sol-20260811-e2e1 claimed before branch creation; live claim state was validated and fenced before branch creation; PR #268 passed hardened trusted-base ownership/digest enforcement in Swarm run 31462286246 and canonical CI run 31462286239, then merged as 10d3f6992ff243a9268ed8629893faf4fc40791c."
 }
