@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:04:00+00:00",
-  "lastSeenAt": "2026-08-11T21:04:00+00:00",
-  "laneId": "HG-BACKFILL-FIDELITY",
+  "lastSeenAt": "2026-08-11T21:07:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-j9m4x7s2",
-  "notes": "Independent review of the separate Fidelity cross-entity commit-isolation test stack on PR #367; review-only, no Studio evidence claim."
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-audit-j9m4x7s2",
+  "notes": "Independent exact-head representation-authority boundary review of PR #349; source/test only, no Studio evidence claim."
 }
