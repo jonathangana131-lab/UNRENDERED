@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-q5x8n3z2",
   "claimToken": "8f2c6a1d9e4b7053",
   "claimedAt": "2026-08-11T08:53:30+00:00",
-  "heartbeatAt": "2026-08-11T09:09:00+00:00",
-  "leaseSeconds": 1800,
+  "heartbeatAt": "2026-08-11T09:11:00+00:00",
+  "leaseSeconds": 300,
   "generation": 4,
   "resources": ["SERVER-AUTHORITY"],
   "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-s56r7n2-g3",
   "pr": 316,
   "takeoverOf": "sol-20260811-s56r7n2",
-  "notes": "Generation-4 stale takeover resynced PR #316 onto exact main dd8f158 with preserved reviewed three-file patch. Exact head 983afcac3f78492b2f171afdbd888d8beee71a56; canonical CI is green. SERVER-AUTHORITY is now explicitly declared and leased for the protected src/server bootstrap scope. Swarm pr-ownership still requires a healthy fresh validation marker; independent audit is active. No Studio/two-client evidence claim."
+  "notes": "Handoff published as evt-20260811-091030-q5x8n3z2-authority316-handoff. Exact head 983afcac is source-PASS with canonical CI/engine-tests green; protected scope declaration was repaired and lease intentionally released because trusted pr-ownership is globally blocked by the separately owned immutable-event compatibility repair. Minimum lease allows prompt stale takeover after control recovers. No Studio/two-client evidence claim."
 }
