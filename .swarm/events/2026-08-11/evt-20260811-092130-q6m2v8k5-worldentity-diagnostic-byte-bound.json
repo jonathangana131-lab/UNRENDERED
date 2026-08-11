@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092130-q6m2v8k5-worldentity-diagnostic-byte-bound",
+  "timestamp": "2026-08-11T09:21:30+00:00",
+  "fromWorker": "sol-20260811-q6m2v8k5",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "WARN",
+  "summary": "WorldEntity duplicate diagnostics are bounded by entry count but not by retained string bytes, so rejected duplicates can pin arbitrarily large kind/recipeKey payloads.",
+  "affects": {
+    "laneIds": [
+      "HG-BACKFILL-WORLDENTITY"
+    ],
+    "resources": [
+      "src/shared/Reality/WorldEntity.luau"
+    ]
+  },
+  "evidence": [
+    "Current WorldEntity hardening PR #293 head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e bounds persistentState depth, nodes, and string bytes, but checkedNonEmpty still imposes no byte ceiling on WorldEntity.kind or origin.worldId/regionId/generator/recipeKey.",
+    "createRegistry stores up to duplicateDiagnosticCapacity diagnostics (default 64); each rejected duplicate diagnostic retains incomingKind and incomingRecipeKey directly, so element-count boundedness does not bound retained bytes.",
+    "A caller can repeatedly submit duplicate records with the same valid id and very large metatable-free kind/recipeKey strings. The records are rejected for identity collision but their strings remain reachable through the diagnostics ring until eviction, creating a bounded-count/unbounded-memory path outside MAX_PERSISTENT_STATE_STRING_BYTES.",
+    "The deterministic core already uses 512-byte ceilings for semantic parts/scopes, demonstrating an existing project convention for bounding canonical semantic strings; the WorldEntity metadata boundary currently has no analogous limit."
+  ],
+  "metadata": {
+    "sourcePr": 293,
+    "sourceHead": "91b6e273c0c21326dfbfe9c5ee5227e99f26933e",
+    "reproClass": "source-contract",
+    "studioEvidenceRequired": false,
+    "recommendedAction": "Add explicit byte ceilings or an aggregate canonical-metadata byte budget before ownership/diagnostic retention, with boundary tests for accepted maximums and rejected oversize duplicate kind/recipeKey strings. Keep the change separate from persistentState budgeting if #293 is already integration-bound.",
+    "recommendedLane": "HG-ONESHOT-WORLDENTITY-METADATA-BYTES"
+  }
+}
