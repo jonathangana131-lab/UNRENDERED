@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-114900-b9t6q2n7-materialdna-review-pass",
+  "timestamp": "2026-08-11T11:49:00+00:00",
+  "fromWorker": "sol-20260811-b9t6q2n7",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "severity": "normal",
+  "summary": "APPROVE source/test patch for PR #353 exact head 10559afdce1a1854e7932522f6e78561736c8ed3. The repairCount validator is narrowly bounded to the IEEE-754 exact-integer domain [0, 9007199254740991], preserves primitive type-first fail-closed ordering, and has exact max/max+1 regression coverage. Canonical CI is green. Integration remains conditional on a fresh live pr-ownership PASS; the latest captured Swarm ownership run failed on unrelated invalid live worker status rather than this MaterialDNA patch. No Studio evidence is claimed.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS"],
+  "evidence": [
+    "Compare main...10559afdce1a1854e7932522f6e78561736c8ed3 is 1 ahead / 0 behind and changes only MaterialDNA.luau plus materialdna_contract.luau.",
+    "validateNonNegativeInteger is primitive-type first, rejects values above 9007199254740991, and its sole caller is maintenance.repairCount.",
+    "Canonical CI 31478938778 passes; Swarm engine-tests in 31479040437 pass; that run's pr-ownership fails on .swarm/workers/sol-20260811-fcea3ee6.json invalid worker status.",
+    "GitHub review 4905884809 records this independent exact-head audit verdict."
+  ],
+  "metadata": {
+    "pr": 353,
+    "headSha": "10559afdce1a1854e7932522f6e78561736c8ed3",
+    "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+  }
+}
