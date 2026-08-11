@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "workerId": "sol-20260811-n4c8v2m6",
+  "claimToken": "8d2c4e7a1b6f9053",
+  "claimedAt": "2026-08-11T21:20:22+00:00",
+  "heartbeatAt": "2026-08-11T21:20:22+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-n4c8v2m6",
+  "pr": 401,
+  "notes": "Independent exact-head audit of PR #401 at 2f5603210a3d3d6af7db94b43fdfd6707b1f9b4 against duplicate-root fail-closed acceptance."
+}
