@@ -32,6 +32,13 @@ export type Snapshot = {
 	entities: { EntityDiagnostic },
 }
 
+type ReadoutPlan = {
+	key: string,
+	worldEntityId: string,
+	fidelity: string,
+	adornee: BasePart,
+}
+
 local function assertStudioServer(): ()
 	assert(RunService:IsStudio(), "Physics Lab diagnostics are Studio-only")
 	assert(RunService:IsServer(), "Physics Lab diagnostics must run on the server")
@@ -79,6 +86,29 @@ local function adorneeFor(representation: Instance): BasePart
 		`diagnostics representation has no BasePart: {representation.Name}`
 	)
 	return part
+end
+
+local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model): { ReadoutPlan }
+	local plans: { ReadoutPlan } = {}
+	for _, representation in ipairs(directRepresentations(model)) do
+		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
+		local record = lab.getRecord(entityId)
+		local representedFidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity")
+		assert(
+			record.fidelity == representedFidelity,
+			`diagnostics fidelity disagrees with authoritative WorldEntity: {entityId}`
+		)
+		local plan: ReadoutPlan = {
+			key = representation.Name,
+			worldEntityId = record.id,
+			fidelity = record.fidelity,
+			adornee = adorneeFor(representation),
+		}
+		table.freeze(plan)
+		table.insert(plans, plan)
+	end
+	table.freeze(plans)
+	return plans
 end
 
 function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab): Snapshot
@@ -140,47 +170,58 @@ function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab)
 	local model = lab.model
 	assert(diagnosticsRoot(model) == nil, "Physics Lab diagnostics are already enabled")
 
-	local folder = Instance.new("Folder")
-	folder.Name = DIAGNOSTICS_ROOT_NAME
-	folder:SetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned", true)
-	folder.Parent = model
-
+	-- Validate every source needed by the readout tree before mutating the lab.
+	-- This keeps all explicit contract failures outside the ownership transaction.
 	local fingerprint = requireStringAttribute(model, "UNRENDERED_ResolvedRegionFingerprint")
 	local reproKey = requireStringAttribute(model, "UNRENDERED_ResolvedRegionReproKey")
+	local plans = preflightReadouts(lab, model)
 
-	for index, representation in ipairs(directRepresentations(model)) do
-		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
-		local record = lab.getRecord(entityId)
-		local billboard = Instance.new("BillboardGui")
-		billboard.Name = string.format("Entity_%03d_%s", index, representation.Name)
-		billboard.AlwaysOnTop = true
-		billboard.MaxDistance = 120
-		billboard.Size = UDim2.fromOffset(560, 116)
-		billboard.StudsOffsetWorldSpace = Vector3.new(0, 2, 0)
-		billboard.Adornee = adorneeFor(representation)
+	local folder = Instance.new("Folder")
 
-		local label = Instance.new("TextLabel")
-		label.Name = "Readout"
-		label.BackgroundTransparency = 0.2
-		label.Size = UDim2.fromScale(1, 1)
-		label.Font = Enum.Font.Code
-		label.TextSize = 12
-		label.TextWrapped = true
-		label.TextXAlignment = Enum.TextXAlignment.Left
-		label.TextYAlignment = Enum.TextYAlignment.Top
-		label.Text = string.format(
-			"%s | %s | fidelity=%s\nfingerprint=%s\nrepro=%s",
-			representation.Name,
-			record.id,
-			record.fidelity,
-			fingerprint,
-			reproKey
-		)
-		label.Parent = billboard
-		billboard.Parent = folder
+	-- Instance realization is transactional: every created child is parented to
+	-- the owned tree before fallible configuration, so rollback destroys all
+	-- resources created by this call before propagating the original error.
+	local ok, result = pcall(function(): Snapshot
+		folder.Name = DIAGNOSTICS_ROOT_NAME
+		folder:SetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned", true)
+		folder.Parent = model
+		for index, plan in ipairs(plans) do
+			local billboard = Instance.new("BillboardGui")
+			billboard.Parent = folder
+			billboard.Name = string.format("Entity_%03d_%s", index, plan.key)
+			billboard.AlwaysOnTop = true
+			billboard.MaxDistance = 120
+			billboard.Size = UDim2.fromOffset(560, 116)
+			billboard.StudsOffsetWorldSpace = Vector3.new(0, 2, 0)
+			billboard.Adornee = plan.adornee
+
+			local label = Instance.new("TextLabel")
+			label.Parent = billboard
+			label.Name = "Readout"
+			label.BackgroundTransparency = 0.2
+			label.Size = UDim2.fromScale(1, 1)
+			label.Font = Enum.Font.Code
+			label.TextSize = 12
+			label.TextWrapped = true
+			label.TextXAlignment = Enum.TextXAlignment.Left
+			label.TextYAlignment = Enum.TextYAlignment.Top
+			label.Text = string.format(
+				"%s | %s | fidelity=%s\nfingerprint=%s\nrepro=%s",
+				plan.key,
+				plan.worldEntityId,
+				plan.fidelity,
+				fingerprint,
+				reproKey
+			)
+		end
+		return PhysicsLabStudioDiagnostics.capture(lab)
+	end)
+
+	if not ok then
+		folder:Destroy()
+		error(result, 0)
 	end
-
-	return PhysicsLabStudioDiagnostics.capture(lab)
+	return result :: Snapshot
 end
 
 function PhysicsLabStudioDiagnostics.disable(lab: PhysicsLabRealizer.RealizedLab): Snapshot
