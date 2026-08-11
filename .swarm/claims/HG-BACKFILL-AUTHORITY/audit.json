@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-o8a4r7",
+  "claimToken": "9c4e7a1d6b2f8053",
+  "claimedAt": "2026-08-11T09:06:20+00:00",
+  "heartbeatAt": "2026-08-11T09:06:20+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-o8a4r7",
+  "pr": 316,
+  "notes": "Independent source-only trust-boundary audit of current generation-4 PR #316; verify context guards precede dependency traversal/imports, server-only Physics Lab ownership remains excluded from client bootstrap, exact-current-main synchronization is behavior-preserving, tests lock ordering without overclaiming two-client/Studio evidence, and exact-head CI scope/evidence."
+}
