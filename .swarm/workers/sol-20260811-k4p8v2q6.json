@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k4p8v2q6",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T09:00:38+00:00",
-  "lastSeenAt": "2026-08-11T09:15:30+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-k4p8v2q6-g2",
-  "notes": "Completed exact-head source-only audit of PR #293 at 91b6e273c0c21326dfbfe9c5ee5227e99f26933e. Production source passes; integration held until reviewed #331 boundary/atomicity tests are absorbed, primary is synchronized to current main, canonical CI/ownership rerun, and fresh exact-head review. Ownership retry remains fail-closed on shared historical immutable-event hash mismatch. No Roblox Studio evidence claimed."
+  "lastSeenAt": "2026-08-11T09:17:10+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "slotId": "primary",
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-k4p8v2q6",
+  "notes": "Implement explicit trusted immutable-event history continuity/reset recovery after #329 detect-only guard. Preserve published event bytes; add adversarial laundering/replay/boundary tests; validate canonical CI and live control."
 }
