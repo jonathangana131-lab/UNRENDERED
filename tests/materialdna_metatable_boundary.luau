@@ -224,6 +224,30 @@ local function run(): number
 		`callback executed {unknownRecipeKeyCallbackCount} times`
 	)
 
+	local throwingUnknownRecipeKey: any = {}
+	setmetatable(throwingUnknownRecipeKey, {
+		__tostring = function(): string
+			error("hostile unknown-key formatter executed")
+		end,
+	})
+	local throwingKeyRecipe: any = deepCopy(wallpaper)
+	throwingKeyRecipe[throwingUnknownRecipeKey] = true
+	local throwingKeyOk, throwingKeyResult = pcall(function(): any
+		return MaterialDNA.validateRecipe(throwingKeyRecipe)
+	end)
+	expect(
+		"hostile unknown recipe key cannot abort validation",
+		throwingKeyOk,
+		`validator raised {tostring(throwingKeyResult)}`
+	)
+	if throwingKeyOk then
+		expect(
+			"throwing non-string recipe key rejected",
+			not throwingKeyResult.ok,
+			table.concat(throwingKeyResult.errors, "; ")
+		)
+	end
+
 	local unknownStateKeyCallbackCount = 0
 	local hostileUnknownStateKey: any = {}
 	setmetatable(hostileUnknownStateKey, {
@@ -270,38 +294,60 @@ local function run(): number
 	)
 
 	local fixtureGoldens = {
-		{
+		CommercialWallpaperDrywall = {
 			name = "commercial wallpaper drywall",
-			recipe = fixtures.CommercialWallpaperDrywall,
 			fingerprint = "material-fixture-golden:v1:38f5424c2ba102c6bd052b085c617f7d",
 		},
-		{
+		LowPileCarpet = {
 			name = "low-pile carpet",
-			recipe = fixtures.LowPileCarpet,
 			fingerprint = "material-fixture-golden:v1:3b8c96b00254904b82c698013eac0a95",
 		},
-		{
+		PaintedMetal = {
 			name = "painted metal",
-			recipe = fixtures.PaintedMetal,
 			fingerprint = "material-fixture-golden:v1:1c7ce12a55098af3423eb992b3849680",
 		},
 	}
 
-	for _, fixture in ipairs(fixtureGoldens) do
-		local actual = fixtureFingerprint(fixture.recipe)
+	local catalogFixtureCount = 0
+	for fixtureKey, recipe in pairs(fixtures) do
+		catalogFixtureCount += 1
+		local golden = fixtureGoldens[fixtureKey]
 		expect(
-			`{fixture.name} exact recipe revision content remains locked`,
-			actual == fixture.fingerprint,
-			`expected {fixture.fingerprint}, got {actual}; bump recipeVersion for intentional canonical content changes`
+			`{fixtureKey} has an exact recipe revision golden`,
+			golden ~= nil,
+			`catalog fixture {fixtureKey} is not sealed; add a golden before publishing it`
+		)
+		if golden ~= nil then
+			local actual = fixtureFingerprint(recipe)
+			expect(
+				`{golden.name} exact recipe revision content remains locked`,
+				actual == golden.fingerprint,
+				`expected {golden.fingerprint}, got {actual}; bump recipeVersion for intentional canonical content changes`
+			)
+		end
+	end
+
+	local goldenFixtureCount = 0
+	for fixtureKey in pairs(fixtureGoldens) do
+		goldenFixtureCount += 1
+		expect(
+			`{fixtureKey} golden still maps to a catalog fixture`,
+			fixtures[fixtureKey] ~= nil,
+			`golden {fixtureKey} is stale because the catalog fixture no longer exists`
 		)
 	end
+	expect(
+		"fixture revision goldens exactly cover the production catalog",
+		goldenFixtureCount == catalogFixtureCount,
+		`catalog has {catalogFixtureCount} fixtures but the golden map has {goldenFixtureCount}`
+	)
 
 	local sameRevisionDrift = deepCopy(wallpaper)
 	sameRevisionDrift.physical.staticFriction = 0.59
 	local driftFingerprint = fixtureFingerprint(sameRevisionDrift)
 	expect(
 		"same-revision canonical fixture drift changes full-content seal",
-		driftFingerprint ~= fixtureGoldens[1].fingerprint,
+		driftFingerprint ~= fixtureGoldens.CommercialWallpaperDrywall.fingerprint,
 		"full-content seal failed to detect physical recipe drift"
 	)
 
