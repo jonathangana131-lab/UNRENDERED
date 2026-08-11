@@ -29,7 +29,7 @@
     },
     {
       "branch": "agent/physics/HG-BACKFILL-FIDELITY-audit-x7n4k2",
-      "expiresAt": "2026-08-11T07:22:30+00:00",
+      "expiresAt": "2026-08-11T07:34:30+00:00",
       "generation": 1,
       "laneId": "HG-BACKFILL-FIDELITY",
       "pr": 292,
@@ -158,7 +158,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:04:46.607509+00:00",
+  "generatedAt": "2026-08-11T07:05:02.106942+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "7de385295dd17112226dd4cd173bd707178e17bc",
@@ -181,10 +181,10 @@
       "HANDOFF": 16,
       "INTEGRATION_RESULT": 5,
       "RECOVERY": 2,
-      "REVIEW_REQUEST": 21,
+      "REVIEW_REQUEST": 22,
       "REVIEW_RESULT": 27
     },
-    "generatedAt": "2026-08-11T07:04:46.607509+00:00",
+    "generatedAt": "2026-08-11T07:05:02.106942+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -412,30 +412,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-DIAGNOSTICS",
-        "HERO-GATE"
-      ],
-      "eventId": "evt-20260811-065110-q7h4n2-diagnostics-audit-handoff",
-      "eventType": "HANDOFF",
-      "evidence": [
-        "evt-20260811-064520-q7h4n2-pr285-review.json",
-        "evt-20260811-064720-q7h4n2-diagnostics-cycle-bound.json",
-        "PR #285 CI run 31465405409 succeeded on f08521e0b28b8ef8c6a3fc462f98c7fd13f4267c.",
-        "PR #285 Swarm Control Plane run remains red from the shared loader defect; recovery is independently claimed as SWARM-V21-PR-OWNERSHIP-RECOVERY PR #288."
-      ],
-      "fromWorker": "sol-20260811-q7h4n2",
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "metadata": {
-        "branch": "agent/physics/151-diagnostics-audit-q7h4n2",
-        "claimToken": "4e91b7c2a56d803f"
-      },
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "Diagnostics audit handoff. PR #285 exact head f08521e0 is independently approved for source-level failure atomicity and exact-head CI is green; its Swarm Control Plane check remains blocked by the separately owned PR-ownership recovery lane, so no merge was attempted. The live Studio #151 diagnostics row remains open and no rerun was queued. After #285 integrates, Docs/PHYSICS_LAB_DIAGNOSTICS.md needs a narrow reconciliation so its current-source warning is not stale while preserving the engine-evidence gate. One additional low-severity source finding remains: runToggleEvidence is described as bounded but accepts an arbitrary positive integer cycle override with no maximum.",
-      "timestamp": "2026-08-11T06:51:10+00:00"
-    },
     {
       "affects": [
         "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
@@ -742,6 +718,26 @@
     },
     {
       "affects": [
+        "HG-BACKFILL-WORLDENTITY"
+      ],
+      "eventId": "evt-20260811-070600-w3x7k9-worldentity-sync-rereview",
+      "eventType": "REVIEW_REQUEST",
+      "evidence": [
+        "PR #276 now reports base_sha ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and head_sha 71b6958e8421283652fe0d4361cbaabbad362c20.",
+        "Current diff remains exactly one file, tests/world_entity_registry_shape.luau, with 72 added adversarial assertions and no production-source changes.",
+        "Exact-head canonical CI run 31467247742 is SUCCESS.",
+        "Swarm ownership is still fail-closed red due the active live-control immutable-event/schema recovery, so no ownership PASS is claimed."
+      ],
+      "fromWorker": "sol-20260811-w3x7k9",
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "schemaVersion": 1,
+      "severity": "important",
+      "summary": "Request exact-head rereview of WorldEntity test-adversary PR #276 after synchronization onto current main. Current head 71b6958e8421283652fe0d4361cbaabbad362c20 is one test-only commit atop main ed37c5698c1aad7a355e514b35ea5c5bd50aa738; prior approval on the old head is intentionally not reused.",
+      "timestamp": "2026-08-11T07:06:00+00:00",
+      "toWorker": "sol-20260811-ogx9k2"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-REALITY"
       ],
       "eventId": "evt-20260811-070720-q7h4n2-pr282-control-rootcause",
@@ -896,7 +892,7 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "fa8c37c4109642e3ad499312c658f5685ed196d2e5019d6dcd597ac304618d51",
+  "stateDigest": "12d9f6a163a833d71d68d4cb0bc412f30572f4d8661014d912f3f00ff1fb5dbb",
   "summary": {
     "activeClaims": 16,
     "activeResourceClaims": 1,
