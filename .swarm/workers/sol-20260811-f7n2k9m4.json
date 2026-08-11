@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-f7n2k9m4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T11:47:18+00:00",
-  "lastSeenAt": "2026-08-11T11:47:18+00:00",
-  "notes": "HG-BACKFILL-FIDELITY test-adversary worker; source-only transition/atomicity regression work, no Studio evidence claim."
+  "lastSeenAt": "2026-08-11T11:55:12+00:00",
+  "notes": "HG-BACKFILL-FIDELITY test-adversary PR #367 is exact-head CI green; nested cross-entity transition unwind/retry coverage is ready for integration after the separate live control-state ownership blocker clears."
 }
