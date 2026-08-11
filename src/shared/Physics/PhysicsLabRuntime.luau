@@ -31,22 +31,38 @@ export type Snapshot = {
 
 type RuntimeImpl = {
 	recipeKey: string,
-	_entityIds: { string },
-	_registry: Registry,
-	_fidelity: Manager,
-	_disposed: boolean,
-	_transitionInFlight: boolean,
 }
 
 export type Runtime = typeof(setmetatable({} :: RuntimeImpl, PhysicsLabRuntime))
 
-local function assertActive(self: Runtime): ()
-	assert(not self._disposed, "PhysicsLabRuntime is disposed")
+type RuntimeState = {
+	entityIds: { string },
+	registry: Registry,
+	fidelity: Manager,
+	disposed: boolean,
+	transitionInFlight: boolean,
+}
+
+local runtimeStates: { [Runtime]: RuntimeState } = setmetatable(
+	{} :: { [Runtime]: RuntimeState },
+	{ __mode = "k" }
+)
+
+local function stateFor(self: Runtime): RuntimeState
+	local state = runtimeStates[self]
+	assert(state ~= nil, "PhysicsLabRuntime state is unavailable")
+	return state
 end
 
-local function assertMutationAllowed(self: Runtime): ()
+local function assertActive(self: Runtime): RuntimeState
+	local state = stateFor(self)
+	assert(not state.disposed, "PhysicsLabRuntime is disposed")
+	return state
+end
+
+local function assertMutationAllowed(state: RuntimeState): ()
 	assert(
-		not self._transitionInFlight,
+		not state.transitionInFlight,
 		"PhysicsLabRuntime transition callback must not reenter runtime mutation"
 	)
 end
@@ -77,27 +93,30 @@ function PhysicsLabRuntime.new(recipe: Recipe): Runtime
 		table.insert(entityIds, record.id)
 	end
 
-	return setmetatable({
+	local runtime = setmetatable({
 		recipeKey = recipe.recipeKey,
-		_entityIds = entityIds,
-		_registry = registry,
-		_fidelity = fidelity,
-		_disposed = false,
-		_transitionInFlight = false,
-	}, PhysicsLabRuntime)
+	} :: RuntimeImpl, PhysicsLabRuntime)
+	runtimeStates[runtime] = {
+		entityIds = entityIds,
+		registry = registry,
+		fidelity = fidelity,
+		disposed = false,
+		transitionInFlight = false,
+	}
+	return table.freeze(runtime)
 end
 
 function PhysicsLabRuntime.getRecord(self: Runtime, entityId: string): WorldEntityRecord
-	assertActive(self)
-	local record = self._registry.get(entityId)
+	local state = assertActive(self)
+	local record = state.registry.get(entityId)
 	assert(record ~= nil, `unknown Physics Lab WorldEntityId: {entityId}`)
 	return record
 end
 
 function PhysicsLabRuntime.getFidelity(self: Runtime, entityId: string): FidelityLevel
-	assertActive(self)
+	local state = assertActive(self)
 	local record = PhysicsLabRuntime.getRecord(self, entityId)
-	local observed = self._fidelity:getObservedLevel(entityId)
+	local observed = state.fidelity:getObservedLevel(entityId)
 	assert(observed == record.fidelity, `Physics Lab fidelity authority diverged for {entityId}`)
 	return observed
 end
@@ -110,11 +129,11 @@ function PhysicsLabRuntime.step(
 	captureState: CaptureState?,
 	observeTransition: TransitionObserver?
 ): (StepResult, WorldEntityRecord)
-	assertActive(self)
-	assertMutationAllowed(self)
+	local state = assertActive(self)
+	assertMutationAllowed(state)
 	local current = PhysicsLabRuntime.getRecord(self, entityId)
 	assert(
-		self._fidelity:getObservedLevel(entityId) == current.fidelity,
+		state.fidelity:getObservedLevel(entityId) == current.fidelity,
 		`Physics Lab fidelity authority diverged before step for {entityId}`
 	)
 
@@ -127,8 +146,8 @@ function PhysicsLabRuntime.step(
 			toLevel: FidelityLevel,
 			reason: PolicyReason
 		): ()
-			assert(not self._transitionInFlight, "PhysicsLabRuntime transition callback reentered")
-			self._transitionInFlight = true
+			assert(not state.transitionInFlight, "PhysicsLabRuntime transition callback reentered")
+			state.transitionInFlight = true
 			local transitionSucceeded, transitionError = pcall(function(): boolean
 				assert(
 					transitionEntityId == entityId,
@@ -157,7 +176,7 @@ function PhysicsLabRuntime.step(
 					committedState = preview.persistentState
 				end
 
-				local committed = self._registry.transitionRegistered(entityId, toLevel, committedState)
+				local committed = state.registry.transitionRegistered(entityId, toLevel, committedState)
 				assert(
 					committed.fidelity == preview.fidelity,
 					"Physics Lab transition commit fidelity mismatch"
@@ -172,7 +191,7 @@ function PhysicsLabRuntime.step(
 				)
 				return true
 			end)
-			self._transitionInFlight = false
+			state.transitionInFlight = false
 			if not transitionSucceeded then
 				error(transitionError, 0)
 			end
@@ -185,37 +204,38 @@ function PhysicsLabRuntime.step(
 	-- blockedReason="transition-required" without committing either fidelity
 	-- authority. Callers with intentionally no physical representation may pass
 	-- an explicit no-op observer instead of silently advancing truth.
-	local result = self._fidelity:step(entityId, current.fidelity, inputs, nowSeconds, transitionHook)
+	local result = state.fidelity:step(entityId, current.fidelity, inputs, nowSeconds, transitionHook)
 	local nextRecord = PhysicsLabRuntime.getRecord(self, entityId)
 	assert(
-		self._fidelity:getObservedLevel(entityId) == nextRecord.fidelity,
+		state.fidelity:getObservedLevel(entityId) == nextRecord.fidelity,
 		`Physics Lab fidelity authority diverged after step for {entityId}`
 	)
 	return result, nextRecord
 end
 
 function PhysicsLabRuntime.snapshot(self: Runtime): Snapshot
-	assertActive(self)
-	local duplicates = self._registry.duplicateDiagnostics()
+	local state = assertActive(self)
+	local duplicates = state.registry.duplicateDiagnostics()
 	return table.freeze({
 		recipeKey = self.recipeKey,
-		registered = self._registry.count(),
-		fidelity = self._fidelity:getMetrics(),
+		registered = state.registry.count(),
+		fidelity = state.fidelity:getMetrics(),
 		duplicateIdentities = #duplicates,
 	})
 end
 
 function PhysicsLabRuntime.dispose(self: Runtime): ()
-	if self._disposed then
+	local state = stateFor(self)
+	if state.disposed then
 		return
 	end
-	assertMutationAllowed(self)
+	assertMutationAllowed(state)
 
-	for _, entityId in ipairs(self._entityIds) do
-		self._fidelity:unregister(entityId)
-		self._registry.unregister(entityId)
+	for _, entityId in ipairs(state.entityIds) do
+		state.fidelity:unregister(entityId)
+		state.registry.unregister(entityId)
 	end
-	self._disposed = true
+	state.disposed = true
 end
 
 return table.freeze(PhysicsLabRuntime)
