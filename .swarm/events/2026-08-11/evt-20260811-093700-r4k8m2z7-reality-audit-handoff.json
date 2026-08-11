@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-093700-r4k8m2z7-reality-audit-handoff",
+  "timestamp": "2026-08-11T09:37:00+00:00",
+  "fromWorker": "sol-20260811-r4k8m2z7",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-REALITY",
+  "summary": "Fresh Reality/replay audit rechecked PR #306 exact head f813129849d48131da185ecf2158ff2c769d61fa and found no new product-source defect beyond the already-completed independent PASS. The three-file patch remains narrowly limited to fail-closed non-string schema-key rejection in current v2 and replay-only v1 plus no-__tostring regressions; accepted identity/fingerprint/version semantics are unchanged and prior canonical CI 31471106348 is green. Integration is BLOCKED operationally: the live primary claim sol-20260811-r8v2c6 last heartbeated 2026-08-11T08:46:20Z with a 1800s lease and is stale, the branch base is behind current main, and trusted live pr-ownership cannot complete until the separately-owned immutable-event history-continuity recovery. Scheduler should salvage/take over the stale primary after inspecting PR #306, synchronize the already-reviewed effective diff onto current main, rerun exact-head CI + live ownership, and avoid reopening the accepted v1/v2 identity contract. No Studio evidence is claimed.",
+  "affects": ["HG-BACKFILL-REALITY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "verdict": "BLOCKED",
+  "subject": "PR-306",
+  "subjectSha": "f813129849d48131da185ecf2158ff2c769d61fa",
+  "evidence": [
+    "PR #306 changes only src/shared/Reality/ResolvedRegionRecipe.luau, src/shared/Reality/ResolvedRegionRecipeV1Internal.luau, and tests/resolved_region_recipe_v2_compat.luau.",
+    "The patch replaces eager tostring(key) on rejected non-string schema keys with constant type rejection in both v2 and replay-only v1 and adds zero-hostile-__tostring regressions.",
+    "PR #306 body records exact-head canonical CI run 31471106348 SUCCESS and prior independent exact-head Reality audit PASS.",
+    "HG-BACKFILL-REALITY primary claim token 8a3f4d72c1b95e60 last heartbeat is 2026-08-11T08:46:20Z with leaseSeconds 1800, so it is stale at this review time."
+  ]
+}
