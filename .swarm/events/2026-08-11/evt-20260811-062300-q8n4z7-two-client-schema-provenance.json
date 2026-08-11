@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062300-q8n4z7-two-client-schema-provenance",
+  "timestamp": "2026-08-11T06:23:00+00:00",
+  "fromWorker": "sol-20260811-q8n4z7",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "True two-client authority evidence currently omits the two canonical schema-version fields that the source-owned full Physics Lab snapshot treats as truth. Public PhysicsLabValidation requires UNRENDERED_LabSchemaVersion and UNRENDERED_ResolvedRegionSchemaVersion, but the private bridge driver_two_client canonicalIdentity/client identity payload omits both, and evaluate_evidence.py defines an exact identity key set that also omits them. Therefore a future two-client PASS can prove recipe/world/region/seed/fingerprint/repro/count agreement while never proving lab-schema or resolved-region-schema agreement. Adding the fields only in the public authority backfill would currently be rejected as unexpected by the bridge evaluator. Recommend a bounded bridge + public-contract follow-up: version the two-client identity schema, transport both positive-integer schema versions from server and each independent client, require exact parity in evaluator tests, preserve fail-closed unknown-field semantics, then have the public HG-BACKFILL-AUTHORITY lane consume that contract without inventing Instance authority. Do not retry Studio while OPS-STUDIO-DISPLAY remains red.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT", "OPS-STUDIO-DISPLAY"],
+  "evidence": [
+    "main@914d0a2 src/server/PhysicsLab/PhysicsLabValidation.luau requires UNRENDERED_LabSchemaVersion to equal PhysicsLabRecipe.schemaVersion and UNRENDERED_ResolvedRegionSchemaVersion to equal canonical resolved-region schema truth.",
+    "UNRENDERED-STUDIO-BRIDGE main studio/driver_two_client.luau expectedIdentity and studio_plugin/src/TwoClientProbe.client.lua identity include recipe/world/region/worldSeed/fingerprint/repro plus counts, but neither schema version.",
+    "UNRENDERED-STUDIO-BRIDGE main scripts/evaluate_evidence.py TWO_CLIENT_IDENTITY_* defines an exact key set without labSchemaVersion/resolvedRegionSchemaVersion; _require_two_client_identity rejects unexpected keys.",
+    "Docs/STUDIO_EXECUTOR.md says physics-lab-two-client must prove matching identity and canonical truth across clients; schema-version provenance is currently outside that proof."
+  ]
+}
