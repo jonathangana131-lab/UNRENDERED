@@ -1,22 +1,22 @@
 {
   "activeClaims": [
     {
+      "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-q9m4r2-g2",
+      "expiresAt": "2026-08-11T08:03:55+00:00",
+      "generation": 2,
+      "laneId": "HG-BACKFILL-AUTHORITY",
+      "pr": null,
+      "slotId": "audit",
+      "workerId": "sol-20260811-q9m4r2"
+    },
+    {
       "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-q9x4m2-g2",
-      "expiresAt": "2026-08-11T07:55:32+00:00",
+      "expiresAt": "2026-08-11T08:01:14+00:00",
       "generation": 2,
       "laneId": "HG-BACKFILL-AUTHORITY",
       "pr": 297,
       "slotId": "primary",
       "workerId": "sol-20260811-q9x4m2"
-    },
-    {
-      "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-q9m4r2",
-      "expiresAt": "2026-08-11T07:58:45+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "pr": null,
-      "slotId": "audit",
-      "workerId": "sol-20260811-q9m4r2"
     },
     {
       "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-q7h4n2",
@@ -55,22 +55,22 @@
       "workerId": "sol-20260811-30a8e397"
     },
     {
-      "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-went7k3",
-      "expiresAt": "2026-08-11T07:54:10+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-OBJECTGENOME",
-      "pr": 299,
-      "slotId": "audit",
-      "workerId": "sol-20260811-went7k3"
-    },
-    {
       "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-k2m9x7-b",
-      "expiresAt": "2026-08-11T07:48:00+00:00",
+      "expiresAt": "2026-08-11T08:04:40+00:00",
       "generation": 1,
       "laneId": "HG-BACKFILL-OBJECTGENOME",
       "pr": 296,
       "slotId": "primary",
       "workerId": "sol-20260811-k2m9x7"
+    },
+    {
+      "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-q7n4m9",
+      "expiresAt": "2026-08-11T08:01:30+00:00",
+      "generation": 2,
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "pr": 277,
+      "slotId": "test-adversary",
+      "workerId": "sol-20260811-went7k3"
     },
     {
       "branch": "agent/review/HG-BACKFILL-REALITY-audit-r4m8z2",
@@ -89,15 +89,6 @@
       "pr": 294,
       "slotId": "test-adversary",
       "workerId": "sol-20260811-q8n4z7"
-    },
-    {
-      "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-z4q8n1",
-      "expiresAt": "2026-08-11T07:50:00+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "pr": null,
-      "slotId": "audit",
-      "workerId": "sol-20260811-z4q8n1"
     },
     {
       "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-ogx9k2",
@@ -140,7 +131,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:30:19.522150+00:00",
+  "generatedAt": "2026-08-11T07:35:48.173693+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "064e28f2306095dadd6a514b96f397cd810ac556",
@@ -150,23 +141,23 @@
     "workflowRunId": 31468678800
   },
   "metrics": {
-    "activeClaims": 14,
+    "activeClaims": 13,
     "activeEpics": [
       "HERO-GATE"
     ],
     "eventCounts": {
-      "BLOCKER": 3,
+      "BLOCKER": 4,
       "DEPENDENCY_DISCOVERED": 3,
       "EVIDENCE_RESULT": 5,
       "EXTERNAL_BLOCKER": 1,
-      "FINDING": 40,
+      "FINDING": 41,
       "HANDOFF": 21,
       "INTEGRATION_RESULT": 7,
       "RECOVERY": 3,
       "REVIEW_REQUEST": 33,
-      "REVIEW_RESULT": 31
+      "REVIEW_RESULT": 33
     },
-    "generatedAt": "2026-08-11T07:30:19.522150+00:00",
+    "generatedAt": "2026-08-11T07:35:48.173693+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -175,22 +166,24 @@
       "READY": 12
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 16,
+    "readySlots": 17,
     "reviewBacklog": 0,
     "schemaVersion": 1,
-    "staleClaims": 2
+    "staleClaims": 1
   },
   "readySlots": [
     {
-      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "laneId": "HG-BACKFILL-WORLDENTITY",
       "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "ObjectGenome malformed-input and identity tests",
-      "score": 5370,
-      "slotId": "test-adversary",
+      "resources": [
+        "REALITY-CONTRACT"
+      ],
+      "role": "WorldEntity invariant and aliasing auditor",
+      "score": 5320,
+      "slotId": "audit",
       "writeScopes": [
-        "src/shared/Objects/ObjectGenome*.luau",
-        "tests/object_genome*.luau"
+        "src/shared/Reality/WorldEntity.luau",
+        "tests/world_entity*.luau"
       ]
     },
     {
@@ -207,6 +200,18 @@
         "tests/reality_versions.luau",
         "tests/deterministic_rng.luau",
         "tests/stable_id_headless.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "ObjectGenome contract and ownership auditor",
+      "score": 5270,
+      "slotId": "audit",
+      "writeScopes": [
+        "src/shared/Objects/ObjectGenome*.luau",
+        "tests/object_genome*.luau"
       ]
     },
     {
@@ -287,18 +292,17 @@
       ]
     },
     {
-      "laneId": "HG-BACKFILL-AUTHORITY",
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
       "reason": "dependencies satisfied",
       "resources": [],
-      "role": "Two-client authority and trust-boundary auditor",
-      "score": 4920,
+      "role": "Diagnostics failure-path and capture-contract auditor",
+      "score": 4970,
       "slotId": "audit",
       "writeScopes": [
-        "src/server/Bootstrap.server.luau",
-        "src/client/Bootstrap.client.luau",
-        "tests/hero_gate_contract_integration.luau",
-        "tests/**authority*.luau",
-        "tests/**multiplayer*.luau"
+        "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
+        "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
+        "tests/**diagnostic*.luau",
+        "tests/hero_gate_contract_integration.luau"
       ]
     },
     {
@@ -391,85 +395,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-OBJECTGENOME"
-      ],
-      "eventId": "evt-20260811-071600-went7k3-objectgenome-family-version-audit",
-      "eventType": "FINDING",
-      "evidence": [
-        "The branch diff changes only src/shared/Objects/ObjectGenome.luau (+8/-2): it introduces MAX_FAMILY_VERSION = 2147483647 and rejects larger positive integral familyVersion values.",
-        "Current Docs/OBJECT_GENOME.md defines familyId + familyVersion + variantKey + schemaVersion as stable identity inputs but does not state a 31-bit familyVersion maximum.",
-        "Current main already bounds StableId semantic string parts to 512 bytes; familyVersion is serialized as its numeric semantic part and values above 2147483647 do not by themselves exceed that StableId v1 length boundary.",
-        "No tests are changed on the current primary head, so the newly introduced acceptance/rejection boundary is not locked."
-      ],
-      "fromWorker": "sol-20260811-went7k3",
-      "laneId": "HG-BACKFILL-OBJECTGENOME",
-      "metadata": {
-        "primaryHeadSha": "72eb2257fa2c033e45c182656773063918848f55",
-        "requiredBeforeReviewPass": "Demonstrate the canonical/versioning defect that motivates the bound, choose/document the bound from that invariant rather than analogy, and add deterministic boundary regression coverage (accepted max plus rejected next value) on the same exact head.",
-        "reviewerWorker": "sol-20260811-went7k3"
-      },
-      "schemaVersion": 1,
-      "severity": "normal",
-      "summary": "ObjectGenome primary branch head 72eb2257fa2c033e45c182656773063918848f55 adds a new familyVersion <= 2147483647 production restriction with no regression test and no current ObjectGenome contract statement establishing that exact maximum. Lane acceptance requires deterministic regression coverage for behavior changes and prefers demonstrated invariants over speculative redesign.",
-      "timestamp": "2026-08-11T07:16:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-DIAGNOSTICS"
-      ],
-      "eventId": "evt-20260811-071620-diaga6r2k-diagnostics-blocked-handoff",
-      "eventType": "HANDOFF",
-      "evidence": [
-        "CI 31468187998 succeeded on exact PR head b80df3bedef88a948f0334c9a36050e1323b8b2f.",
-        "Swarm Control Plane 31468188022 engine-tests passed but pr-ownership job 93705446378 failed with 'live control state changed after its validation marker'.",
-        "Main CI 31468113697 succeeded on main@81a13b1138e26e7852c89685de5dbf9bd57753d8."
-      ],
-      "fromWorker": "sol-20260811-diaga6r2k",
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "PR #289 exact head b80df3bedef88a948f0334c9a36050e1323b8b2f has green canonical CI but pr-ownership is globally blocked by the main-health validation-fence defect. Releasing the diagnostics audit claim to repair that red control prerequisite first. The PR is docs-only, keeps Studio evidence unclaimed, and should be re-claimed/revalidated after the control repair lands.",
-      "timestamp": "2026-08-11T07:16:20+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-WORLDENTITY"
-      ],
-      "eventId": "evt-20260811-071700-z4q8n1-worldentity-generator-version-correction",
-      "eventType": "FINDING",
-      "evidence": [
-        "Docs/DETERMINISM_CONTRACT.md SeedStream v1 explicitly requires generationVersion to be an integer in [1, 2147483647].",
-        "The same document's version/migration law requires persisted generator/contract version information to reconstruct historical truth.",
-        "PR #293 head 093f2f6016427753647a00d2ea85c55ed7ce9ffa currently accepts any finite positive integral origin.generatorVersion, including 2147483648.",
-        "Independent worker q7h4n2 reached the same stricter bound in evt-20260811-071230-q7h4n2-worldentity-generator-version-bound.json."
-      ],
-      "fromWorker": "sol-20260811-z4q8n1",
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Correction to evt-20260811-071400-z4q8n1-worldentity-generator-version: the normative upper bound for WorldEntity origin.generatorVersion is stricter than generic IEEE-754 max-safe. The deterministic generation contract defines generationVersion in [1, 2147483647], so provenance must reject 2147483648 even though it remains exactly representable as a double. Use the canonical deterministic version range rather than a standalone max-safe bound.",
-      "timestamp": "2026-08-11T07:17:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-WORLDENTITY"
-      ],
-      "eventId": "evt-20260811-071800-ogx9k2-worldentity-rereview-ready",
-      "eventType": "REVIEW_REQUEST",
-      "evidence": [
-        "src/shared/Reality/WorldEntity.luau now validates origin.generatorVersion via assertNonNegativeInteger and then enforces >=1.",
-        "tests/world_entity_registry_shape.luau covers MAX_SAFE_INTEGER acceptance/preservation in new(), MAX_SAFE_INTEGER+1 rejection in new(), and matching registry-owned origin acceptance/rejection.",
-        "Only WorldEntity source and its contract test differ from current main."
-      ],
-      "fromWorker": "sol-20260811-ogx9k2",
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "schemaVersion": 1,
-      "severity": "normal",
-      "summary": "PR #293 head 83a1130c0424404a85dbb3d61623b2fb3e34f06d addresses the independent audit generatorVersion exactness blocker by routing canonical origin.generatorVersion through the same <=2^53-1 safe-integer contract, with max-safe acceptance and max-safe+1 rejection through both WorldEntity.new and registry ownership paths. Exact-head CI and Swarm Control are running; independent audit re-review may proceed on this head.",
-      "timestamp": "2026-08-11T07:18:00+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-REALITY"
@@ -809,6 +734,50 @@
     },
     {
       "affects": [
+        "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+        "HG-BACKFILL-AUTHORITY",
+        "HG-BACKFILL-WORLDENTITY"
+      ],
+      "eventId": "evt-20260811-072900-z4q8n1-control-event-compat-block",
+      "eventType": "BLOCKER",
+      "evidence": [
+        "Control push run 31469007847 job 93707966668 fails in hardened validate with unknown keys ['headSha', 'pr', 'verdict'] on evt-20260811-072455-q9m4r2-authority-review-block.json.",
+        "The failing event is a REVIEW_RESULT with a positive PR number, 40-hex head SHA, and REQUEST_CHANGES verdict; its core evidence/summary are otherwise valid.",
+        "tools/swarm/swarmctl.py validate_event currently permits only base event fields plus laneId/severity/evidence/toWorker/metadata and therefore cannot replay this immutable structured review event.",
+        "PR #298 lane write scope intentionally excludes tools/swarm/swarmctl.py, so the primary should not silently broaden production validator scope without scheduler-visible prerequisite handling."
+      ],
+      "fromWorker": "sol-20260811-z4q8n1",
+      "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+      "schemaVersion": 1,
+      "severity": "critical",
+      "summary": "After the missing SWARM-PROTOCOL lease was activated for the health-validation-fence primary, control validation exposed a separate prerequisite: immutable REVIEW_RESULT event evt-20260811-072455-q9m4r2-authority-review-block.json carries direct structured review fields pr/headSha/verdict that current core.validate_event rejects. Do not rewrite immutable event history. Recovery requires backward-compatible typed event validation or a dedicated prerequisite lane before the health-fence fix can receive authoritative ownership proof.",
+      "timestamp": "2026-08-11T07:29:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-DIAGNOSTICS"
+      ],
+      "eventId": "evt-20260811-072950-q9m4r2-diagnostics-review-approve",
+      "eventType": "REVIEW_RESULT",
+      "evidence": [
+        "PhysicsLabStudioDiagnostics.runToggleEvidence validates cycleCount <= MAX_TOGGLE_EVIDENCE_CYCLES before disable(), baseline capture, or the evidence loop.",
+        "tests/physics_lab_diagnostics_bounds.luau is wired into the always-run hero_gate_contract_integration suite and locks default=20, max=20, validation-before-loop, and checkpoint-20 structure.",
+        "GitHub review 4903903031 records the exact-head independent source approval; no Studio PASS is claimed."
+      ],
+      "fromWorker": "sol-20260811-q9m4r2",
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "metadata": {
+        "headSha": "1814b4d08a02c9d650dea6288af9a8264e58d3c9",
+        "pr": 295,
+        "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+      },
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "APPROVE source/test patch for PR #295 exact head 1814b4d08a02c9d650dea6288af9a8264e58d3c9. The twenty-cycle cap is enforced before diagnostics mutation/iteration, the canonical default/checkpoint contract remains intact, shorter manual probes remain allowed, and the patch does not claim live viewport evidence. Canonical CI 31468750759 is green. Integration remains blocked only on the separate fail-closed Swarm pr-ownership gate, whose latest run 31469035311 still fails while engine-tests pass.",
+      "timestamp": "2026-08-11T07:29:50+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-OBJECTGENOME"
       ],
       "eventId": "evt-20260811-073100-went7k3-objectgenome-audit-handoff",
@@ -831,6 +800,66 @@
       "severity": "normal",
       "summary": "ObjectGenome audit pass is parked at a clean prerequisite boundary so capacity can salvage the stale test-adversary slice. Primary #296 has patch-local audit PASS but must sync current main before exact-head approval; docs companion #299 records the new familyVersion domain and must be synchronized only after #296 is in main ancestry.",
       "timestamp": "2026-08-11T07:31:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-CAPACITY-MINING",
+        "HG-BACKFILL-MATERIALDNA"
+      ],
+      "eventId": "evt-20260811-073320-q9m4r2-materialdna-repaircount-bound",
+      "eventType": "FINDING",
+      "evidence": [
+        "src/shared/Materials/MaterialDNA.luau validateMaintenance() delegates maintenance.repairCount to validateNonNegativeInteger(), whose only checks are finite, >=0, and math.floor(value)==value; it has no upper bound.",
+        "The same module caps recipeVersion at 2147483647, historyEvents at 32, anomalyModifiers at 8, key length at 160, and assigns explicit maxima to physical dimensions/density/repeats, so repairCount is a domain-boundedness outlier.",
+        "tests/materialdna_contract.luau exercises recipeVersion zero/oversized bounds and general recipe validity, but the inspected suite has no repairCount maximum/over-maximum regression.",
+        "Repository PR search for repairCount/repair count found only merged MaterialDNA hardening #283, whose documented scope does not include this count domain."
+      ],
+      "fromWorker": "sol-20260811-q9m4r2",
+      "laneId": "HG-CAPACITY-MINING",
+      "metadata": {
+        "recommendedLane": {
+          "acceptance": [
+            "choose and document an explicit finite integer maximum for maintenance.repairCount consistent with canonical plain-data/persistence precision needs",
+            "maximum value validates and the first out-of-domain value fails closed",
+            "existing production fixture references/content seals remain unchanged unless a real authored fixture requires migration",
+            "no schema/version bump is assumed without checking whether the tightened domain invalidates any published canonical content"
+          ],
+          "scope": [
+            "src/shared/Materials/MaterialDNA.luau",
+            "tests/materialdna_contract.luau"
+          ],
+          "title": "Bound MaterialDNA maintenance repair-count domain"
+        }
+      },
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "MaterialDNA source-depth finding: maintenance.repairCount is the only canonical recipe integer count currently validated by an unbounded validateNonNegativeInteger(), while recipeVersion and all continuous physical/material fields use explicit bounded domains. The validator therefore accepts arbitrarily large finite integral doubles, including values at/above the exact-integer precision boundary where a conceptual +1 repair cannot be represented as a distinct number. No existing PR/lane found in the live search addresses repairCount; merged #283 covers recipeVersion drift and hostile unknown-key execution instead. Recommend a narrow one-shot MaterialDNA backfill that gives repairCount an explicit bounded canonical domain and pins max/over-max regressions without changing fixture recipe seals unless authored content actually changes.",
+      "timestamp": "2026-08-11T07:33:20+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-FIDELITY"
+      ],
+      "eventId": "evt-20260811-073400-x7n4k2-pr274-scalar-rereview",
+      "eventType": "REVIEW_RESULT",
+      "evidence": [
+        "PR #274 head 60de91b49338249c1ded74db0d722921ce2fb55d still defines isFinite/validateUnit/validateNonNegative/validateFiniteNonNegative with number-typed parameters and performs value == value / relational operations before any runtime type guard.",
+        "PR #278 head 505283cfd5e7aa00cd3d09d3d9cf347fd9e36a72 CI run 31468630117 passes format, lint, Luau analysis, deterministic audits, and swarm tests, then fails Pure Luau because hostile numeric scalar and hostile nowSeconds each execute one metamethod before rejection.",
+        "The same adversarial run confirms malformed scalar/time values are rejected and a later valid nowSeconds retry remains accepted, narrowing this to the no-execute validation boundary rather than temporal poisoning.",
+        "PR #274 comments 5250166367 and 5250243188 record the source shape and exact CI proof; audit PR #292 documents the required primitive-type-before-arithmetic contract."
+      ],
+      "fromWorker": "sol-20260811-x7n4k2",
+      "laneId": "HG-BACKFILL-FIDELITY",
+      "metadata": {
+        "claimToken": "b7e31c94f0a2685d",
+        "headSha": "60de91b49338249c1ded74db0d722921ce2fb55d",
+        "pr": 274,
+        "result": "REQUEST_CHANGES"
+      },
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "REQUEST_CHANGES remains on PR #274 at 60de91b49338249c1ded74db0d722921ce2fb55d. Registration ordering, top-level PolicyInputs metatable rejection, callback temporal atomicity, and same-entity reentrancy/accounting are closed, but the newly isolated hostile-scalar no-execute boundary is not. Numeric validators still compare/order runtime values before establishing primitive number type, and nowSeconds reaches isFinite directly. Test-adversary PR #278 head 505283cfd5e7aa00cd3d09d3d9cf347fd9e36a72 passes static/audit phases then fails exactly the two zero-metamethod-execution assertions while confirming both malformed values eventually reject and the nowSeconds retry remains atomic. Do not integrate #274 until primitive runtime type checks precede equality/order/arithmetic, adversarial coverage is green against the fix, and exact-head canonical CI plus live ownership are green.",
+      "timestamp": "2026-08-11T07:34:00+00:00"
     }
   ],
   "resources": [
@@ -873,15 +902,6 @@
   "schemaVersion": 1,
   "staleClaims": [
     {
-      "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-q7n4m9",
-      "expiredAt": "2026-08-11T07:20:00+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-OBJECTGENOME",
-      "pr": 277,
-      "slotId": "test-adversary",
-      "workerId": "sol-20260811-q7n4m9"
-    },
-    {
       "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-j6r2v8",
       "expiredAt": "2026-08-11T07:15:00+00:00",
       "generation": 1,
@@ -891,14 +911,14 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "a6c991e81f95e3da629ec2b3975857126bb6c5691a23e6901f877eddc8127247",
+  "stateDigest": "62acbbd9b793ecbeb430894f2658c01c57557448b617581819803edc0248326f",
   "summary": {
-    "activeClaims": 14,
+    "activeClaims": 13,
     "activeResourceClaims": 2,
     "blockedExternalLanes": 1,
     "lanes": 25,
-    "readySlots": 16,
-    "staleClaims": 2,
+    "readySlots": 17,
+    "staleClaims": 1,
     "workers": 46
   }
 }
