@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-a3f7k2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T08:21:00+00:00",
+  "lastSeenAt": "2026-08-11T08:21:00+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-a3f7k2",
+  "notes": "Independent exact-head ObjectGenome audit of generation-2 primary PR #318. Review-only unless a concrete docs/test gap is found within audit scope."
+}
