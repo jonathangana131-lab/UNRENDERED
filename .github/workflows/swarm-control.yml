@@ -44,6 +44,8 @@ jobs:
           git merge-base --is-ancestor a193dd686323c27a7191d525b064c4257120de21 "$CONTROL_SHA"
           git merge-base --is-ancestor 57245c334fdc19cae855796066f783fb64492c51 db830924aa0b65a74c60ee345448f57381bbe137
           git merge-base --is-ancestor db830924aa0b65a74c60ee345448f57381bbe137 "$CONTROL_SHA"
+          git merge-base --is-ancestor 8e631ba0da787af6c1c63f6a6dd96920ea7941f2 bf852363faa7328d6707233b72909f6c4958d910
+          git merge-base --is-ancestor bf852363faa7328d6707233b72909f6c4958d910 "$CONTROL_SHA"
 
           mkdir -p "$RUNNER_TEMP/bootstrap-control"
           git archive "$CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/bootstrap-control"
@@ -185,7 +187,7 @@ jobs:
               "validatedAt": sys.argv[3],
               "validatorMainSha": sys.argv[4],
               "resetId": "reset-20260811-history-continuity",
-              "resetReason": "Reviewed finite reset quarantines four exact rewritten immutable event blobs with first-write provenance and explicitly crosses three invalid worker-status transitions repaired at 7c62ff9a, a193dd68, and db830924; all later authority is strict append-only/trusted history.",
+              "resetReason": "Reviewed finite reset quarantines four exact rewritten immutable event blobs with first-write provenance and explicitly crosses four invalid worker-status transitions repaired at 7c62ff9a, a193dd68, db830924, and bf852363; all later authority is strict append-only/trusted history.",
               "bootstrap": False,
           }
           with open('.swarm/trust.json', 'w', encoding='utf-8') as handle:
