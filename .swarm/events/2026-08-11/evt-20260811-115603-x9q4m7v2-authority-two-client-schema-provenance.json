@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115603-x9q4m7v2-authority-two-client-schema-provenance",
+  "ts": "2026-08-11T11:56:03+00:00",
+  "type": "FINDING",
+  "workerId": "sol-20260811-x9q4m7v2",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "claimGeneration": 4,
+  "claimToken": "047442a83ec0ac8d",
+  "reason": "capacity mining: the current private two-client evidence payload omits canonical schema provenance required by the public Hero Gate authority contract",
+  "payload": {
+    "findingId": "authority-two-client-schema-provenance",
+    "recommendationId": "two-client-versioned-observation-contract",
+    "severity": "P1",
+    "title": "Two-client evidence cannot prove schema-version agreement and its observation payload has no explicit schema version",
+    "reproducibleInvariant": "Docs/MULTIPLAYER_PERSISTENCE.md requires the Hero Gate comparison to include both lab schema version and resolved-region schema version, and requires the evidence transport/evaluator schema itself to be explicitly versioned. Current bridge main studio/driver_two_client.luau and studio_plugin/src/TwoClientProbe.client.lua build canonical identity from labRecipeKey/worldId/regionId/worldSeedRef/fingerprint/repro/counts only; neither carries UNRENDERED_LabSchemaVersion nor UNRENDERED_ResolvedRegionSchemaVersion, and the client observation table has no observation/evidence schemaVersion. scripts/evaluate_evidence.py exact-shape-validates that same incomplete identity field set, so a future real two-client PASS could establish agreement on content identity while never establishing agreement on the canonical schema provenance named by the public contract.",
+    "affectedSource": "UNRENDERED-STUDIO-BRIDGE/studio/driver_two_client.luau; studio_plugin/src/TwoClientProbe.client.lua; scripts/evaluate_evidence.py; tests/test_two_client_evaluator_integrity.py; tests/test_two_client_authority.py",
+    "evidence": [
+      "UNRENDERED Docs/MULTIPLAYER_PERSISTENCE.md explicitly requires lab schema version and resolved-region schema version in canonical comparison, and says the evidence transport/evaluator schema must itself be explicitly versioned.",
+      "The production Physics Lab root already publishes UNRENDERED_LabSchemaVersion and UNRENDERED_ResolvedRegionSchemaVersion, so the missing provenance is available at the server/client observation boundary.",
+      "Bridge driver_two_client expectedIdentity omits both schema-version attributes and contains no observation schemaVersion.",
+      "Bridge TwoClientProbe.client.lua sends the same identity fields and no observation schemaVersion.",
+      "Bridge evaluate_evidence.py exact-shape enforcement protects unknown fields, but TWO_CLIENT_IDENTITY_* contains only six string identity fields plus two counts; it therefore codifies the omission rather than detecting it.",
+      "Bridge tests/test_two_client_evaluator_integrity.py constructs the same incomplete canonical identity and has no regression for missing/unknown observation schema version or divergent lab/resolved schema versions.",
+      "Search of open/all PRs in both UNRENDERED and UNRENDERED-STUDIO-BRIDGE for resolvedRegionSchemaVersion / two-client schema provenance found no active repair."
+    ],
+    "proposedLane": {
+      "kind": "bounded Hero Gate two-client evidence-contract follow-up",
+      "priority": "P1",
+      "scope": "Advance server baseline, client observation, evaluator, and tests together: add an explicit two-client observation/evidence schema version; require exact supported version; include exact non-negative integer labSchemaVersion and resolvedRegionSchemaVersion in canonical identity; reject missing/unknown versions and cross-client/server divergence; preserve actual-player binding and exact-shape fail-closed behavior. Do not claim real two-client evidence until the external Studio display path is recovered and rerun."
+    },
+    "guardrail": "This is a source/evidence-contract finding, not accepted engine evidence. Do not start a competing multiplayer framework or unlock Door/Chair/Player. Integrate as a bounded follow-up around the existing HG-BACKFILL-AUTHORITY / HG151-TWOCLIENT completion train and keep the private bridge evidence evaluator synchronized with the public contract.",
+    "duplicateCheck": "Distinct from evt-20260811-084830-q5x8n3z2-authority-workspace-parent (canonical root location) and evt-20260811-091130-q8m4v2c7-authority-stale-handle (harness lifetime ownership). This finding is specifically about versioned two-client evidence schema/provenance and affects the durable PASS contract."
+  }
+}
