@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-t6m2q9v4",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T12:07:10+00:00",
-  "lastSeenAt": "2026-08-11T12:07:10+00:00",
-  "notes": "GO continuation worker claiming unlocked HG-BACKFILL-PHYSICS-GEOMETRY audit for independent exact-head review of successor PR #376."
+  "lastSeenAt": "2026-08-11T12:12:20+00:00",
+  "notes": "Completed independent exact-head HG-BACKFILL-PHYSICS-GEOMETRY audit of PR #376 head 6e91faaf87ec2251f0390773061663d0ffa22ccb. Published review 4906021145: source/test PASS; integration held only on global trusted-history/live ownership recovery. Canonical CI 31489364362 PASS and Swarm engine-tests PASS; no local or Studio execution claimed."
 }
