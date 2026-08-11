@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063200-x7n4k2-worldentity-duplicate-origin",
+  "timestamp": "2026-08-11T06:32:00+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "low",
+  "summary": "WorldEntity duplicate diagnostics do not currently describe enough of both GenerationOrigin records to reproduce or distinguish a true StableId collision when kind and recipeKey happen to match. The architecture contract says duplicate registration emits a diagnostic describing both origins, but DuplicateIdentityDiagnostic retains only entityId, kinds, and recipe keys; worldId, optional regionId, generator, and generatorVersion are omitted. A collision across different worlds/generator versions with the same kind/recipeKey therefore produces indistinguishable diagnostic payloads. Consider carrying immutable existing/incoming origin snapshots (or equivalent complete repro fields) while preserving the bounded diagnostic history.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "Docs/ARCHITECTURE.md: registry rejects duplicate live IDs, keeps first authoritative, and emits a diagnostic describing both origins.",
+    "Docs/ADR/0002-deterministic-reality.md: StableId collisions must be detectable by registries that know the canonical identity behind an ID.",
+    "main@914d0a2 DuplicateIdentityDiagnostic contains entityId, existing/incoming kind, and existing/incoming recipeKey only; register() has both full origin records available but does not retain worldId/regionId/generator/generatorVersion in the diagnostic.",
+    "The diagnostic history is already bounded/frozen, so expanding the retained plain-data repro identity need not change registry ownership semantics."
+  ]
+}
