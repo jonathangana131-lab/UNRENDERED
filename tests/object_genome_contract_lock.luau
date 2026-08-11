@@ -253,6 +253,24 @@ local function run(): number
 		not hostileIdentityPartsOk and identityPartReads == 0
 	)
 
+	local hostileIdentityValueToStringCalls = 0
+	local hostileIdentityValue = setmetatable({}, {
+		__tostring = function()
+			hostileIdentityValueToStringCalls += 1
+			error("hostile identity scalar __tostring must not execute")
+		end,
+	})
+	local hostileIdentityScalar = deepCopy(Fixtures.officeChair)
+	hostileIdentityScalar.familyVersion = hostileIdentityValue
+	local hostileIdentityScalarOk = pcall(function()
+		ObjectGenome.identityParts(hostileIdentityScalar)
+	end)
+	expect("identityParts rejects hostile nested identity scalar", not hostileIdentityScalarOk)
+	expect(
+		"identityParts rejects hostile nested scalar before __tostring coercion",
+		hostileIdentityValueToStringCalls == 0
+	)
+
 	local unknownTopLevelShape = deepCopy(Fixtures.officeChair)
 	unknownTopLevelShape.futureField = true
 	expect(
