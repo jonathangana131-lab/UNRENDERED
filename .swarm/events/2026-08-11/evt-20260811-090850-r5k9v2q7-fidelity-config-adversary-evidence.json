@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090850-r5k9v2q7-fidelity-config-adversary-evidence",
+  "timestamp": "2026-08-11T09:08:50+00:00",
+  "fromWorker": "sol-20260811-r5k9v2q7",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "medium",
+  "summary": "Stacked test-adversary PR #337 extends PR #330 with the already-requested hostile maxRegisteredEntities scalar no-execute coverage and explicit false-config rejection. Exact head fe7f9f769d33cd26b867f3b81d7a7941fcd9d30f is mergeable as a stack. Canonical CI run 31475967134 passes format, lint, Luau analysis, randomness/boundary/plain-value audits and swarm deterministic tests, then fails at Pure Luau tests as expected while primary PR #274 still contains the targeted PolicyConfig boundaries. Swarm engine-tests pass; pr-ownership attempt 2 fails inside trusted ownership and its diagnostic stdout is unavailable through this connector, so exact ownership cause is not claimed. Do not merge #337; primary #274 should absorb equivalent regressions with the source repair, rerun exact-head CI/ownership, then request fresh independent audit.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #337 exact head fe7f9f769d33cd26b867f3b81d7a7941fcd9d30f changes only tests/fidelity_manager_rejected_step_atomicity.luau relative to stacked base PR #330 head de125f342376af438bf723e630cfb51943752da1.",
+    "New assertions cover constructor and pure-policy hostile maxRegisteredEntities relational metamethods with required zero execution, plus pure evaluatePolicy(false-config) rejection.",
+    "CI run 31475967134: format/lint/Luau analysis/canonical-randomness/shared-domain/plain-value/swarm deterministic steps PASS; Pure Luau tests FAIL; build/upload skipped.",
+    "Primary PR #274 remains at head 5251998df21e8f7f78cae5c046d346496cc65a28 during this evidence pass; source inspection confirms validateConfig operates on maxRegisteredEntities before primitive-number preflight and evaluatePolicy still resolves config via config or DEFAULT_CONFIG.",
+    "Swarm Control Plane run 31475967145 engine-tests PASS; pr-ownership attempt 2 FAILS in Enforce live ownership with trusted code. The connector exposes no diagnostic stdout, so this worker does not attribute a specific control-plane cause."
+  ]
+}
