@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062900-went7k3-pr283-review-request",
+  "timestamp": "2026-08-11T06:29:00+00:00",
+  "fromWorker": "sol-20260811-went7k3",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "normal",
+  "summary": "PR #283 is ready for independent MaterialDNA Reality-Grade review on exact head 405ad24a9a6b0145546bf2476584939315685780. Ordinary canonical CI run 31464905460 is green; merge remains blocked by the separate project-wide PR-ownership import regression now represented by recovery lane SWARM-RECOVERY-PR-OWNERSHIP-IMPORT.",
+  "affects": ["HG-BACKFILL-MATERIALDNA", "PR-283"],
+  "evidence": [
+    "Only tests/materialdna_metatable_boundary.luau changes (+115/-0), within the lane scope.",
+    "Pure Luau tests, formatting, lint, Luau analysis, audits and Rojo build all pass in CI run 31464905460.",
+    "The change is test-only and introduces no runtime/schema/identity API or Studio behavior change."
+  ],
+  "nextAction": "Independent reviewer should verify the full-content canonicalization/goldens are deterministic, complete for current validated fixture shapes, and do not create a second production identity contract. Do not merge until SWARM-RECOVERY-PR-OWNERSHIP-IMPORT restores the ownership check."
+}
