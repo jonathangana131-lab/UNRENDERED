@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T20:16:00+00:00",
-  "lastSeenAt": "2026-08-11T20:16:00+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "test-adversary",
-  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-q3v7n2x8",
-  "notes": "Attempting an unclaimed source-only geometry/validation adversarial test slot while independent audit handles PR #376. No Studio evidence or feature unlock work."
+  "lastSeenAt": "2026-08-11T20:18:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-q3v7n2x8",
+  "notes": "Won the source-only Physics geometry capacity-mining slot after losing two clean claim races. Mine current geometry/recipe tests and successor PRs for one non-duplicate concrete depth gap; no Studio retry or Hero feature unlock."
 }
