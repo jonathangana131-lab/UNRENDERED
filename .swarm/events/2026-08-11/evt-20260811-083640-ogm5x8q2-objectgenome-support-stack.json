@@ -7,7 +7,7 @@
   "laneId": "HG-CAPACITY-MINING",
   "severity": "medium",
   "summary": "Concrete ObjectGenome next-depth leaf: support-cycle validation still uses recursive DFS over an otherwise unbounded component graph, so a sufficiently deep plain acyclic support chain can turn fail-closed recipe inspection into a Luau stack failure. Preserve the accepted recipe surface by replacing the recursive cycle walk with iterative tri-color DFS and add a deterministic long-chain adversarial regression.",
-  "affects": ["HERO-GATE", "ObjectGenome"],
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-OBJECTGENOME"],
   "evidence": [
     "src/shared/Objects/ObjectGenome.luau validates components as a dense array with no explicit component-count or support-depth ceiling, then detects support cycles through a recursive local visit(componentKey) call for each support edge.",
     "The same validator already uses an explicit iterative stack for support-to-ground reachability, showing the contract does not require recursive graph traversal.",
@@ -23,6 +23,10 @@
         "src/shared/Objects/ObjectGenome.luau",
         "tests/object_genome.luau"
       ]
+    },
+    "preTrustSanitation": {
+      "originalBlobSha": "9ef4e62ffb0aac9d4b18cb19911d8d3a25535158",
+      "reason": "Untrusted FINDING had non-lane affects token ObjectGenome; normalized routing only before first swarm-trust bootstrap."
     }
   }
 }
