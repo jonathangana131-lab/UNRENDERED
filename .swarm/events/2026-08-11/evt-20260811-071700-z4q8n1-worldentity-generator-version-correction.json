@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071700-z4q8n1-worldentity-generator-version-correction",
+  "timestamp": "2026-08-11T07:17:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "high",
+  "summary": "Correction to evt-20260811-071400-z4q8n1-worldentity-generator-version: the normative upper bound for WorldEntity origin.generatorVersion is stricter than generic IEEE-754 max-safe. The deterministic generation contract defines generationVersion in [1, 2147483647], so provenance must reject 2147483648 even though it remains exactly representable as a double. Use the canonical deterministic version range rather than a standalone max-safe bound.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "Docs/DETERMINISM_CONTRACT.md SeedStream v1 explicitly requires generationVersion to be an integer in [1, 2147483647].",
+    "The same document's version/migration law requires persisted generator/contract version information to reconstruct historical truth.",
+    "PR #293 head 093f2f6016427753647a00d2ea85c55ed7ce9ffa currently accepts any finite positive integral origin.generatorVersion, including 2147483648.",
+    "Independent worker q7h4n2 reached the same stricter bound in evt-20260811-071230-q7h4n2-worldentity-generator-version-bound.json."
+  ]
+}
