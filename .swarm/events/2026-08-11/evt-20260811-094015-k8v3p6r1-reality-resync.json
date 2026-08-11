@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094015-k8v3p6r1-reality-resync",
+  "timestamp": "2026-08-11T09:40:15+00:00",
+  "fromWorker": "sol-20260811-k8v3p6r1",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "normal",
+  "summary": "Current-state reconciliation of already source-approved PR #306 returns SYNC_REQUIRED only. Exact head f813129849d48131da185ecf2158ff2c769d61fa retains independent patch-local PASS and canonical CI green for the v2/v1 non-string schema-key no-execute repair, but is now two commits behind current main. Replay the same three-file patch onto current main, rerun exact-head gates, and preserve the existing source approval only if the effective diff is unchanged.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "PR #306 exact head f813129849d48131da185ecf2158ff2c769d61fa previously received independent patch-local PASS after canonical CI run 31471106348 completed green.",
+    "The effective product patch remains limited to ResolvedRegionRecipe.luau, ResolvedRegionRecipeV1Internal.luau, and resolved_region_recipe_v2_compat.luau and changes only rejection diagnostics/order for hostile non-string schema keys plus regressions.",
+    "Compare current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 to PR head reports merge base aa7e04f05834ae783773c908fccfdbbe510558e5, ahead_by=6, behind_by=2.",
+    "Live ownership remains separately dependent on the active immutable-event-history continuity recovery; no validator bypass or Studio evidence is claimed."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "pr": 306,
+    "headSha": "f813129849d48131da185ecf2158ff2c769d61fa",
+    "verdict": "SYNC_REQUIRED"
+  }
+}
