@@ -38,6 +38,25 @@ local function run(): number
 		end
 	end
 
+	local function configWithHostileCapacity()
+		local config = table.clone(FidelityManager.defaultConfig())
+		local operatorCalls = 0
+		local hostileCapacity = setmetatable({}, {
+			__le = function()
+				operatorCalls += 1
+				return true
+			end,
+			__lt = function()
+				operatorCalls += 1
+				return true
+			end,
+		})
+		config.maxRegisteredEntities = hostileCapacity
+		return config, function()
+			return operatorCalls
+		end
+	end
+
 	local hostileNewConfig, hostileNewConfigReads = hostileConfigProxy()
 	local hostileNewConfigAccepted = pcall(function()
 		FidelityManager.new(hostileNewConfig)
@@ -51,6 +70,25 @@ local function run(): number
 	end)
 	expectEqual("pure policy rejects metatable-backed config", hostilePureConfigAccepted, false)
 	expectEqual("pure policy config rejection executes no metamethod", hostilePureConfigReads(), 0)
+
+	local hostileNewCapacityConfig, hostileNewCapacityCalls = configWithHostileCapacity()
+	local hostileNewCapacityAccepted = pcall(function()
+		FidelityManager.new(hostileNewCapacityConfig)
+	end)
+	expectEqual("constructor rejects hostile config capacity scalar", hostileNewCapacityAccepted, false)
+	expectEqual("constructor capacity rejection executes no metamethod", hostileNewCapacityCalls(), 0)
+
+	local hostilePureCapacityConfig, hostilePureCapacityCalls = configWithHostileCapacity()
+	local hostilePureCapacityAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(validInputs(), hostilePureCapacityConfig, "F0")
+	end)
+	expectEqual("pure policy rejects hostile config capacity scalar", hostilePureCapacityAccepted, false)
+	expectEqual("pure policy capacity rejection executes no metamethod", hostilePureCapacityCalls(), 0)
+
+	local falseConfigAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(validInputs(), false, "F0")
+	end)
+	expectEqual("pure policy rejects explicit false config", falseConfigAccepted, false)
 
 	local clockManager = FidelityManager.new()
 	clockManager:register("entity:atomic-clock", "F0")
