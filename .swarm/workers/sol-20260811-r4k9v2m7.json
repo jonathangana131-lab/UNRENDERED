@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T23:05:00+00:00",
-  "lastSeenAt": "2026-08-11T23:05:00+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "lastSeenAt": "2026-08-11T23:08:30+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-r4k9v2m7",
-  "notes": "Independent exact-head source/test audit of generation-6 PR #414; no production implementation or Studio evidence claim."
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-r4k9v2m7",
+  "notes": "Rerouted after losing the PR #414 audit claim race. Independent exact-head review of PR #349's narrow Realizer representation-ownership seam; source-only, no Studio evidence."
 }
