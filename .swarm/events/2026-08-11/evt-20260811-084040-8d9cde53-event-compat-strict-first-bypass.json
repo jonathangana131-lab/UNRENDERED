@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084040-8d9cde53-event-compat-strict-first-bypass",
+  "timestamp": "2026-08-11T08:40:40+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "critical",
+  "summary": "Generation-2 event-compat branch still blesses already-laundered immutable history. `_validate_event_with_immutable_compat()` calls the strict validator first and consults `_HISTORICAL_EVENT_COMPAT` only after strict rejection. Current swarm-control already contains an illegally normalized strict-shape rewrite of the cart review event, so that known historical identity now succeeds through strict validation and bypasses the audited first-write rule entirely. A live green validation from this branch would therefore ratify the exact immutable rewrite that previously failed transition-check. Known historical identities must be provenance-checked before the generic strict path, and because immediate-parent history laundering is already live, compatibility should pin the full audited immutable byte identity/digest rather than only selected semantic fields until trusted-history continuity is restored.",
+  "affects": ["SWARM-RECOVERY-EVENT-COMPAT", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "Historical parent 54b28d6e6cd9de972cc63801a50b33a9ba0299dd stores evt-20260811-080520-h4v8n2-cart-geometry-review with top-level slotId='audit' and no metadata.slotId.",
+    "Authoritative current swarm-control stores that same eventId with slotId removed from top level and metadata.slotId='audit'; this is the normalized rewrite produced by failed mutation commit ebc699fc416346e5a6dc6cc02f6d992b635f205f and later laundered into a PASS state.",
+    "Current generation-2 branch agent/swarm/SWARM-RECOVERY-EVENT-COMPAT-s5q8m4-g2 implements `_validate_event_with_immutable_compat` as strict-validate first, historical rule only on ControlError. The normalized current cart event is strict V2 shape, so its historical rule requiring legacyFields={'slotId'} is never reached.",
+    "The same branch pins only selected identity/legacy fields for known historical events, not exact full raw bytes. Because the live transition fence can launder a failed immutable rewrite through a later descendant, unpinned summary/evidence/severity/valid-affects/metadata bytes can also become a trusted baseline unless an exact historical digest or equivalent trusted-ancestor commitment is enforced."
+  ],
+  "metadata": {
+    "recoveryBranch": "agent/swarm/SWARM-RECOVERY-EVENT-COMPAT-s5q8m4-g2",
+    "historicalRef": "54b28d6e6cd9de972cc63801a50b33a9ba0299dd",
+    "failedMutationCommit": "ebc699fc416346e5a6dc6cc02f6d992b635f205f",
+    "affectedEvent": "evt-20260811-080520-h4v8n2-cart-geometry-review",
+    "recommendedInvariant": "known historical compatibility identities are verified before generic strict validation and are pinned to audited immutable bytes/digests until trusted-history continuity is repaired",
+    "claimToken": "a363dc5b9a4a1217"
+  }
+}
