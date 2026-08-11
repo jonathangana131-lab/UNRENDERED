@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V2-E2E",
+  "epicId": "SWARM-V2",
+  "title": "Post-hardening end-to-end worker proof",
+  "objective": "Prove a fresh GPT-5.6 Sol worker can register, atomically claim an exclusive slot, wait for validated-state fencing to catch up, create its branch, and open a PR that passes the hardened trusted-base claim/worker/branch/scope/digest gate.",
+  "priority": 9900,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [
+    {"laneId": "SWARM-V2-HARDEN", "acceptableStates": ["DONE"]}
+  ],
+  "writeScopes": ["Docs/SWARM_V2_E2E_PROOF.md"],
+  "resources": [],
+  "slots": [
+    {"slotId": "primary", "role": "Post-hardening E2E proof implementer", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 500},
+    {"slotId": "reviewer-1", "role": "Post-hardening E2E verifier", "exclusive": true, "availableWhen": ["REVIEW"], "requiresIndependentFrom": "primary", "priorityBoost": 300}
+  ],
+  "acceptance": [
+    "worker registration is present on live control state",
+    "exclusive claim is atomically created before branch creation",
+    "generated validation marker matches the exact authoritative live-state digest after claim",
+    "PR ownership job uses hardening validator from trusted base main",
+    "PR claim/worker/branch/scope/digest checks pass",
+    "canonical CI passes and proof PR merges",
+    "claim is released and worker is stopped afterward"
+  ],
+  "tags": ["control-repair"]
+}
