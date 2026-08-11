@@ -2,7 +2,7 @@
   "activeClaims": [
     {
       "branch": "agent/authority/HG-BACKFILL-AUTHORITY-audit-q9x4m2",
-      "expiresAt": "2026-08-11T07:18:25+00:00",
+      "expiresAt": "2026-08-11T07:41:04+00:00",
       "generation": 1,
       "laneId": "HG-BACKFILL-AUTHORITY",
       "pr": 275,
@@ -100,6 +100,15 @@
       "workerId": "sol-20260811-q9m4r2"
     },
     {
+      "branch": "agent/reality/HG-BACKFILL-REALITY-tests-q8n4z7",
+      "expiresAt": "2026-08-11T07:40:30+00:00",
+      "generation": 2,
+      "laneId": "HG-BACKFILL-REALITY",
+      "pr": null,
+      "slotId": "test-adversary",
+      "workerId": "sol-20260811-q8n4z7"
+    },
+    {
       "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-z4q8n1",
       "expiresAt": "2026-08-11T07:46:00+00:00",
       "generation": 1,
@@ -110,7 +119,7 @@
     },
     {
       "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-ogx9k2",
-      "expiresAt": "2026-08-11T07:37:00+00:00",
+      "expiresAt": "2026-08-11T07:47:00+00:00",
       "generation": 2,
       "laneId": "HG-BACKFILL-WORLDENTITY",
       "pr": 293,
@@ -149,17 +158,17 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:09:47.667472+00:00",
+  "generatedAt": "2026-08-11T07:11:37.350683+00:00",
   "mainHealth": {
     "conclusion": "success",
-    "headSha": "7de385295dd17112226dd4cd173bd707178e17bc",
+    "headSha": "b0bf5ba664483cdcc2af061b0fb652b0aea00706",
     "schemaVersion": 1,
     "status": "GREEN",
-    "updatedAt": "2026-08-11T06:42:10+00:00",
-    "workflowRunId": 31466029227
+    "updatedAt": "2026-08-11T07:09:45+00:00",
+    "workflowRunId": 31467811354
   },
   "metrics": {
-    "activeClaims": 15,
+    "activeClaims": 16,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -175,7 +184,7 @@
       "REVIEW_REQUEST": 24,
       "REVIEW_RESULT": 28
     },
-    "generatedAt": "2026-08-11T07:09:47.667472+00:00",
+    "generatedAt": "2026-08-11T07:11:37.350683+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -184,28 +193,12 @@
       "READY": 12
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 15,
+    "readySlots": 14,
     "reviewBacklog": 0,
     "schemaVersion": 1,
-    "staleClaims": 2
+    "staleClaims": 1
   },
   "readySlots": [
-    {
-      "laneId": "HG-BACKFILL-REALITY",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Reality version and deterministic replay tests",
-      "score": 5220,
-      "slotId": "test-adversary",
-      "writeScopes": [
-        "src/shared/Reality/*.luau",
-        "src/shared/Core/*.luau",
-        "tests/resolved_region_recipe*.luau",
-        "tests/reality_versions.luau",
-        "tests/deterministic_rng.luau",
-        "tests/stable_id_headless.luau"
-      ]
-    },
     {
       "laneId": "HG-BACKFILL-DIAGNOSTICS",
       "reason": "dependencies satisfied; resources available",
@@ -869,25 +862,16 @@
       "pr": 287,
       "slotId": "primary",
       "workerId": "sol-20260811-r6k2p9"
-    },
-    {
-      "branch": "agent/reality/HG-BACKFILL-REALITY-tests-r9t4n2",
-      "expiredAt": "2026-08-11T07:08:30+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-REALITY",
-      "pr": 280,
-      "slotId": "test-adversary",
-      "workerId": "sol-20260811-r9t4n2"
     }
   ],
-  "stateDigest": "eba6b7dac5daded4b3f354979e20f13bf6f4991fb1f61039f3e8b5a42cb92549",
+  "stateDigest": "14799a31d06e549ceff0895cb445b8c4fea79db2fc430c03499e5f96ace541c2",
   "summary": {
-    "activeClaims": 15,
+    "activeClaims": 16,
     "activeResourceClaims": 2,
     "blockedExternalLanes": 1,
     "lanes": 24,
-    "readySlots": 15,
-    "staleClaims": 2,
+    "readySlots": 14,
+    "staleClaims": 1,
     "workers": 46
   }
 }

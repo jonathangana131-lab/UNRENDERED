@@ -1,5 +1,5 @@
 {
-  "activeClaims": 15,
+  "activeClaims": 16,
   "activeEpics": [
     "HERO-GATE"
   ],
@@ -15,7 +15,7 @@
     "REVIEW_REQUEST": 24,
     "REVIEW_RESULT": 28
   },
-  "generatedAt": "2026-08-11T07:09:47.667472+00:00",
+  "generatedAt": "2026-08-11T07:11:37.350683+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED_EXTERNAL": 1,
@@ -24,8 +24,8 @@
     "READY": 12
   },
   "note": "Gross lines written are diagnostic, not a success metric.",
-  "readySlots": 15,
+  "readySlots": 14,
   "reviewBacklog": 0,
   "schemaVersion": 1,
-  "staleClaims": 2
+  "staleClaims": 1
 }
