@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-p6v2m8q4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T12:01:30+00:00",
+  "lastSeenAt": "2026-08-11T12:01:30+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "primary",
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-p6v2m8q4-g4",
+  "notes": "Generation-4 current-main recovery of NEEDS_CHANGES ObjectGenome lane. Preserve generation-3 boundary fixes; close decoder no-execute and deterministic diagnostic ordering blockers; keep runner/tests in declared scope; no Studio evidence claim."
+}
