@@ -23,6 +23,11 @@ FINITE_WORKER_TRANSITIONS = (
     ("d1aa5e7b12b4d8e9917bb77dab3225e4dee4deb8", "a888f8d1c25050e26427fb40945002585741d618"),
     ("8bca8ca61902faf25efe9ef3a004ec032f132c5d", "5f0cb1f3d5618c3816e008adb6951b83de5c861e"),
     ("66e482d3b424c63c4bed277aafa897f0fa051bbc", "96f1bce06bb69738dc737ec01f51170ffdaa3667"),
+    ("eeb0e1588f1daf3bb1a556b641bd0c46d172b83f", "0b7bd8164ffbc2846a6fe6036965535df7e1edc9"),
+    ("d37f0480847b77459c3c23d7a020a94a40e69980", "489bb9662be6774bae676c17101c04f1bc74453a"),
+    ("38b8da43ae73ecc2e25159e636811079f75dc984", "d2b77a7eb6924a58b98651a118a12a5ba89f74c3"),
+    ("22ebea9fbe0761c34905b1e0cc5a025f2ce32798", "c58b15a40b3a955ac9219a956c9230b0e0eba869"),
+    ("23dd0ab94d7773349d7250704c61a9585a771db3", "3b6c6708fb3eed9846ca60b98e1a912c308cb605"),
 )
 
 # (eventId, exact first-write commit, exact quarantine-only Git blob SHA-1)
@@ -90,6 +95,8 @@ MALFORMED_EVENT_QUARANTINE = (
     ("evt-20260811-124820-j4m8q2v7-physics-geometry-mining-no-new-lane", "8f54c1ce9ddfdf1110466ba5e13ca8dc3863fc20", "8f3085b4c1a92293ca33f7debb8ef8a6d4fca1db"),
     ("evt-20260811-201639-befff499-fidelity-review-result", "83fb0a3f9efd522d413807f01cbe352dd4267ae6", "0af357fffacb5a17a64815cabd5ec6150986ef50"),
     ("evt-20260811-202049-befff499-fidelity-generation4-handoff", "92036da7b1f20f7a0fb2e48e0589cbb3be2722cc", "16bea9cb03caea25ac33e0459f6ca822401c639c"),
+    ("evt-20260811-203400-q3m7v9c2-objectgenome-bounds-finding", "f6468caadf0675dec0b51e54a7f5a0824be90771", "f2f4e143b91cb105aca9fe404eb7b383ef536f55"),
+    ("evt-20260811-203731-b6q1x8v3-physics-geometry-review-result", "332dbb965cdf99bc1b073d2918a67d05611a8bb7", "2744ff918561715243d489a5985bc45f321ecce5"),
 )
 
 
