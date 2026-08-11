@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-211230-c9v2m7q4-objectgenome-g8-audit-corroboration",
+  "timestamp": "2026-08-11T21:12:30+00:00",
+  "fromWorker": "sol-20260811-c9v2m7q4",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "info",
+  "summary": "PASS corroboration on ObjectGenome generation-8 PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; no additional patch-local decoder bypass or contract regression found. Integration remains held only on the separately owned trusted-history/pr-ownership recovery.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "Exact generation-8 delta from 0250b26afa018959f1aec450830680361d1a3dc2 is four commits ahead, zero behind, and changes only src/shared/Objects/ObjectGenome.luau (+92/-2) plus tests/object_genome_contract_lock.luau (+55/-0)",
+    "standaloneMechanismIsCanonical() requires a plain exact kind-specific mechanism record, raw required-field presence, bounded semantic keys, non-self frame/catch references, positive caster/latch dimensions, exact finite unit axes, finite interpolation spans, and authored-zero inclusion where applicable",
+    "Those local invariants match full ObjectGenome.inspect() mechanism validation; cross-component existence remains correctly outside the standalone record boundary",
+    "Regression coverage preserves canonical caster/latch decode and rejects metatable-backed, incomplete, undeclared-field, and undeclared nested-axis decoder inputs",
+    "Canonical CI run 31535562114 exact head is green through format, lint, Luau analysis, architecture audits, Pure Luau tests, Rojo build, and artifact upload",
+    "Swarm engine-tests job 93925716939 passes; pr-ownership job 93925717016 remains separately fail-closed on trusted live control-plane state",
+    "No Roblox Studio/engine-runtime evidence is applicable or claimed"
+  ]
+}
