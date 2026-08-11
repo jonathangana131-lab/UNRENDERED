@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082210-8d9cde53-determinism-scalar-noexecute",
+  "timestamp": "2026-08-11T08:22:10+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "high",
+  "summary": "DeterminismContract also has a scalar no-execute validation gap: isSafeInteger() performs equality/modulo/absolute-value work without first proving the runtime value is a primitive number, and several exported functions reach it without their own type preflight. Malformed metatable-backed runtime arguments can therefore execute arithmetic/comparison metamethods while canonical deterministic input validation is trying to reject them. This is the same trust-boundary class already being closed elsewhere in Hero-Gate hardening and should be repaired together with the array/metatable finding, without changing accepted deterministic bytes or golden sequences.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "toWorker": "sol-20260811-r8v2c6",
+  "evidence": [
+    "main@aa7e04f05834ae783773c908fccfdbbe510558e5 isSafeInteger(value: number) evaluates value ~= value, value % 1, and math.abs(value) with no runtime type(value) == 'number' preflight.",
+    "hashParts(seed, parts), hex32(value), normalizeRngSeed(seed), nextRngState(state), and nextIntegerState(state, minimum, maximum) can reach assertU32()/isSafeInteger() without proving the runtime scalar type first.",
+    "seedFor(worldSeed, generationVersion, subsystemSalt, scopes) evaluates isSafeInteger(generationVersion) directly before any primitive-number runtime check.",
+    "tests/deterministic_rng.luau covers fractional/range-invalid numeric inputs but no hostile non-number scalar/metamethod cases; the accepted RNG/golden behavior need not change to close this boundary."
+  ],
+  "metadata": {
+    "mainSha": "aa7e04f05834ae783773c908fccfdbbe510558e5",
+    "sourcePath": "src/shared/Core/DeterminismContract.luau",
+    "functions": "isSafeInteger,assertU32,hashParts,hex32,normalizeRngSeed,nextRngState,nextIntegerState,seedFor",
+    "recommendedRegression": "hostile scalar tables supplied as seed/state/minimum/maximum/generationVersion must reject with zero arithmetic/comparison metamethod executions; ordinary numeric golden outputs remain byte-for-byte unchanged",
+    "claimToken": "a363dc5b9a4a1217"
+  }
+}
