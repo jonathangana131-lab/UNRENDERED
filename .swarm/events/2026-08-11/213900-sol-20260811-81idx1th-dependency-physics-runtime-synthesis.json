@@ -1,0 +1,61 @@
+{
+  "eventVersion": 1,
+  "eventId": "evt-20260811-213900-81idx1th-physics-runtime-synthesis",
+  "type": "DEPENDENCY_DISCOVERED",
+  "category": "HANDOFF",
+  "at": "2026-08-11T21:39:00+00:00",
+  "workerId": "sol-20260811-81idx1th",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-81idx1th",
+  "pr": null,
+  "headSha": null,
+  "mainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "ci": {
+    "provider": "local",
+    "state": "not_run",
+    "url": null
+  },
+  "summary": "Physics Lab runtime has three independently accepted overlapping hardening lineages but no singular live synthesis owner; a bounded integration lineage is required to preserve all three invariants together.",
+  "details": [
+    "PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d fences PhysicsLabRuntime construction to the canonical Physics Lab recipe, population, provenance, initial state, and revision contract.",
+    "PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1 moves mutable runtime state behind a closure-private/frozen facade and fences the entire FidelityManager.step transaction against hostile callback/input reentrancy.",
+    "PR #402 exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42 validates every runtime EntityId boundary with WorldEntity.isId before registry access or diagnostic formatting, protecting malformed-ID rejection paths outside the transition fence.",
+    "All three open lineages modify src/shared/Physics/PhysicsLabRuntime.luau and tests/physics_lab_runtime.luau. Their PR/lane text explicitly requires final integration to preserve the sibling invariants rather than merge/replay one lineage in isolation.",
+    "The earlier 21:10 UTC Physics runtime reconciliation handoff covers #310/#388 and predates #402, so the integration obligation has grown since that handoff.",
+    "No dedicated live Physics runtime synthesis lane/claim/PR was found during this capacity-mining pass. Recommend one bounded HG-PHYSICS-RUNTIME-SYNTHESIS lineage after the separate global pr-ownership/event-history recovery permits integration.",
+    "Suggested acceptance: synthesize all three exact accepted invariants onto then-current main, retain the combined adversarial tests, run fresh canonical push-eligible CI, and obtain a fresh independent exact-head source audit. This remains source-only; do not claim Roblox Studio, viewport, physical-contact, or two-client evidence."
+  ],
+  "evidence": [
+    {
+      "kind": "source",
+      "ref": "src/shared/Physics/PhysicsLabRuntime.luau@ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+      "result": "Current main predates all three pending runtime hardening lineages."
+    },
+    {
+      "kind": "pr",
+      "ref": "#310@647dca7a78159bb1bf6f61d6e3180ad082d08e2d",
+      "result": "Open canonical-recipe runtime fence; exact-head canonical CI and independent source review are reported PASS; PR notes require synchronization with overlapping runtime repairs."
+    },
+    {
+      "kind": "pr",
+      "ref": "#388@89eb1c890d63de9b4e407caee215b6065b6ddac1",
+      "result": "Open full-step transition-mutation fence; PR explicitly blocks isolated merge until #310 invariant is preserved in final integration."
+    },
+    {
+      "kind": "pr",
+      "ref": "#402@4b75bd054eb6a1b3b03d0a868aea46df41d3db42",
+      "result": "Open EntityId preflight fence; exact-head canonical CI is reported PASS and PR explicitly requires preserving both #310 and #388."
+    },
+    {
+      "kind": "scheduler",
+      "ref": ".swarm/events/2026-08-11/211000-sol-20260811-m5q8v2c4-handoff-physics-reconciliation.json",
+      "result": "Earlier reconciliation handoff identified the #310/#388 overlap but predates #402."
+    },
+    {
+      "kind": "test",
+      "ref": "HG-CAPACITY-MINING/mine-physics-runtime source/PR/scheduler audit",
+      "result": "not_run: this worker changed no production code and claims no executable or Studio evidence."
+    }
+  ]
+}
