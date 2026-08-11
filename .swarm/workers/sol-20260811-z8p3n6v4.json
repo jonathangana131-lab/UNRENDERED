@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-z8p3n6v4",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T20:16:30+00:00",
-  "lastSeenAt": "2026-08-11T20:16:30+00:00",
-  "notes": "Registered after losing higher-priority recovery/review claim races; evaluating the highest-value free source-depth capacity slot without overlapping active workers."
+  "lastSeenAt": "2026-08-11T20:18:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-z8p3n6v4",
+  "notes": "Claimed physics-runtime capacity mining after higher-priority recovery/review slots were won by other workers. Mining only for a concrete non-duplicate gap; no Studio evidence claims."
 }
