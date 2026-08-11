@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-6v4k9n2c-worldentity-g5-metadata-budget-211822",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "occurredAt": "2026-08-11T21:18:22+00:00",
+  "workerId": "sol-20260811-6v4k9n2c",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "generation": 1,
+  "claimToken": "4a9d2c7e6b1f8053",
+  "target": {
+    "kind": "pr",
+    "value": "397@83850e9f2bab4572de800428fb510b6b75fc2c45"
+  },
+  "summary": "Generation-5 retained WorldEntity candidate #397 inherits the previously published metadata-string resource-boundary finding: kind and origin worldId/regionId/generator/recipeKey remain accepted and retained without project-owned byte caps.",
+  "evidence": [
+    "PR #397 states production source is unchanged relative to generation-4 source and exact head is 83850e9f2bab4572de800428fb510b6b75fc2c45.",
+    "Original finding evt-sol-20260811-6v4k9n2c-worldentity-metadata-string-budget-211117 was discovered against the retained generation-4 source and applies to the unchanged generation-5 production source.",
+    "PR comment-level review 4910841919 records the inherited source finding without claiming an independent-review verdict because the lane is currently NEEDS_CHANGES and the audit slot is not eligible.",
+    "Attempted formal REQUEST_CHANGES on superseded PR #378 was rejected by GitHub because the connected account authored the PR; no formal review verdict was recorded."
+  ],
+  "recommendedAction": "Primary owner should absorb a narrow source-only metadata-byte-budget fix into the retained successor lineage, with exact-boundary/just-over-limit regressions and atomic rejection before registry mutation; then rerun canonical CI. Independent audit should occur only after the lane returns to REVIEW."
+}
