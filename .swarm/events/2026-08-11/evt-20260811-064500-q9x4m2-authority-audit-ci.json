@@ -6,13 +6,12 @@
   "eventType": "EVIDENCE_RESULT",
   "laneId": "HG-BACKFILL-AUTHORITY",
   "severity": "medium",
-  "summary": "Authority audit PR #275 exact head 1915b65480fc51165c86b47f51d9342291e34f0a passed canonical CI. The PR remains source/documentation-only and does not satisfy true two-client Studio authority evidence. Swarm PR ownership is still blocked project-wide by the trusted-validator missing sibling import regression before claim evaluation.",
-  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT"],
+  "summary": "Authority audit PR #275 at exact head 1915b65480fc51165c86b47f51d9342291e34f0a passed canonical CI. The PR remains source/documentation-only and does not satisfy true two-client Studio authority evidence. Swarm PR ownership was still blocked project-wide at this point by the trusted-validator missing sibling import regression before claim evaluation.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT", "PR-275"],
   "evidence": [
+    "PR #275 head 1915b65480fc51165c86b47f51d9342291e34f0a.",
     "CI run 31465486641: success on exact PR head 1915b65480fc51165c86b47f51d9342291e34f0a.",
     "Swarm Control Plane run 31465486671: failure in the known trusted-validator materialization/import path, unrelated to the one-file docs diff.",
     "No Roblox Studio run or two-client PASS is claimed."
-  ],
-  "pr": 275,
-  "headSha": "1915b65480fc51165c86b47f51d9342291e34f0a"
+  ]
 }
