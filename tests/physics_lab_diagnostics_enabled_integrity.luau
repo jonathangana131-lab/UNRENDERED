@@ -22,12 +22,8 @@ local function run(): number
 		then string.sub(source, sweepStart, sweepEnd - 1)
 		else ""
 
-	local enabledSnapshot = string.find(
-		sweepSource,
-		"local enabled = PhysicsLabStudioDiagnostics.enable(lab)",
-		1,
-		true
-	)
+	local enabledSnapshot =
+		string.find(sweepSource, "local enabled = PhysicsLabStudioDiagnostics.enable(lab)", 1, true)
 	local disabledSnapshot = enabledSnapshot
 		and string.find(
 			sweepSource,
