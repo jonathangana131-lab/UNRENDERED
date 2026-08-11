@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "epicId": "HERO-GATE",
+  "title": "MaterialDNA canonical counter exactness",
+  "objective": "Close the demonstrated MaterialDNA maintenance.repairCount integer-aliasing boundary without broadening material architecture or depending on Studio.",
+  "priority": 5150,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau", "Docs/MATERIAL_DNA_CONTRACT.md"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"MaterialDNA canonical counter hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Materials/MaterialDNA.luau","tests/materialdna_contract.luau"]},
+    {"slotId":"audit","role":"MaterialDNA counter exactness auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/materialdna_contract.luau","Docs/MATERIAL_DNA_CONTRACT.md"]}
+  ],
+  "acceptance": [
+    "maintenance.repairCount rejects integers above the exact IEEE-754 safe-integer boundary",
+    "exact boundary behavior is deterministic and regression-tested",
+    "existing fixtures and recipe identity remain unchanged",
+    "no new MaterialDNA identity or migration framework",
+    "no Studio evidence claim"
+  ],
+  "tags": ["backfill", "hero-gate", "source-only", "materialdna"]
+}
