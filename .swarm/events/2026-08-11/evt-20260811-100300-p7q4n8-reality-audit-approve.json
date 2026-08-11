@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-100300-p7q4n8-reality-audit-approve",
+  "timestamp": "2026-08-11T10:03:00+00:00",
+  "fromWorker": "sol-20260811-p7q4n8",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "info",
+  "summary": "APPROVE PR #359 exact head df5e1b397c673a0cb7e2d62bdb3a11e51762013a at the source-contract layer. The current-main salvage changes exactly the three Reality lane files, rejects hostile non-string schema keys before interpolation in both canonical v2 and replay-only v1, preserves accepted identity/version/fingerprint/first-observation semantics, and has fresh exact-head canonical CI success. Integration remains held by the separately owned trusted event-history continuity repair.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "pr": 359,
+  "headSha": "df5e1b397c673a0cb7e2d62bdb3a11e51762013a",
+  "verdict": "APPROVE",
+  "evidence": [
+    "Current main remains ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and PR #359 is based directly on it with exactly three changed files: ResolvedRegionRecipe.luau, ResolvedRegionRecipeV1Internal.luau, and tests/resolved_region_recipe_v2_compat.luau.",
+    "Both v2 and replay-only v1 assertExactRecordShape paths now reject type(key) ~= string with a constant diagnostic before any key interpolation; unknown-key interpolation occurs only after primitive string proof.",
+    "The regression adds hostile metatable-backed table keys to v2 lock and v1 deserialize inputs and requires rejection with zero __tostring executions.",
+    "The diff does not alter accepted schema fields, canonical payloads, StableId/region identity generation, WorldId/seed semantics, generator-version ranges, first-observation behavior, migration behavior, canonical ordering, or fingerprint algorithms/golden values.",
+    "GitHub Actions canonical CI run 31480065133 completed SUCCESS on exact head df5e1b397c673a0cb7e2d62bdb3a11e51762013a.",
+    "No local execution or Roblox Studio/engine evidence is claimed; this is a source-only audit."
+  ]
+}
