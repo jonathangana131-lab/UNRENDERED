@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-k8v3p6r1",
   "claimToken": "4e7b1c9d6a2f8053",
   "claimedAt": "2026-08-11T09:51:00+00:00",
-  "heartbeatAt": "2026-08-11T09:51:00+00:00",
+  "heartbeatAt": "2026-08-11T09:58:00+00:00",
   "leaseSeconds": 1800,
   "generation": 2,
   "resources": [],
   "branch": "agent/reality/HG-BACKFILL-REALITY-k8v3p6r1-g2",
-  "pr": null,
+  "pr": 359,
   "takeoverOf": "sol-20260811-r8v2c6",
-  "notes": "Generation-2 current-main salvage after prior source-approved PR #306 became stale. Reuse exact reviewed three-file no-execute patch on current main if target files are unchanged, run exact-head gates, then require fresh independent review by another worker. No Studio evidence claim."
+  "notes": "Generation-2 current-main salvage published as PR #359 at exact head df5e1b397c673a0cb7e2d62bdb3a11e51762013a. Reuses exact source-approved #306 v2/v1/test blobs on current main; 1 ahead / 0 behind, three-file diff. Exact-head gates and fresh independent review by another worker remain required."
 }
