@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120300-q8m3v7k2-authority-mining-saturated",
+  "timestamp": "2026-08-11T12:03:00+00:00",
+  "fromWorker": "sol-20260811-q8m3v7k2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "summary": "Authority source-depth mining found no third non-duplicate gap worth opening another lane. Exact-head primary #348 is already independently SOURCE/TEST PASS and blocked only by the global trusted-history ownership recovery. The two distinct residual source-only follow-ups are already recorded on #300 and #307 with concrete replay requirements; finish/replay those after #348 rather than spawning more authority work.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG-CAPACITY-MINING"],
+  "evidence": [
+    "HG-BACKFILL-AUTHORITY is REVIEW with generation-5 primary #348 at aa60103d489a055d86cf234dcc1338cf6168e4b3, exact current-main ancestry, canonical CI green, and multiple independent SOURCE/TEST PASS reviews; pr-ownership is fail-closed on the separately owned immutable-event history-continuity prerequisite.",
+    "PR #300 retains unique deployment-boundary value but its exact-path-only Rojo test has an already-recorded false-pass path: replicated src/server descendants can evade exact directory counting. Completion review 4905901236 requires a subtree-aware ReplicatedStorage exclusion plus a mutated-project regression on replay after #348.",
+    "PR #307 retains unique teardown-ownership value but is stale/out-of-scope through tests/run.luau; completion review 4904910601 already prescribes lane-owned replay wiring, and review 4905952842 additionally requires binding assertStudioServer() itself to both IsStudio() and IsServer() so helper-call text cannot false-pass after helper weakening.",
+    "Docs/MULTIPLAYER_PERSISTENCE.md explicitly keeps real two-client/session/replication authority UNVERIFIED until accepted Studio evidence; the display preflight is red, so source mining must not invent that engine evidence or queue speculative retries."
+  ],
+  "metadata": {
+    "mainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "primaryPr": 348,
+    "primaryHeadSha": "aa60103d489a055d86cf234dcc1338cf6168e4b3",
+    "retainedFollowups": [300, 307],
+    "result": "NO_NEW_NON_DUPLICATE_GAP"
+  }
+}
