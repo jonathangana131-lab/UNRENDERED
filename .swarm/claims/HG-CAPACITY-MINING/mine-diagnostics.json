@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "workerId": "sol-20260811-z8k4m6p2",
+  "claimToken": "7c2e9a4d1f6b8035",
+  "claimedAt": "2026-08-11T21:10:00+00:00",
+  "heartbeatAt": "2026-08-11T21:10:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-z8k4m6p2",
+  "pr": null,
+  "notes": "Mine current diagnostics source/tests/active review lineage for one concrete non-duplicate source-depth gap while Studio display remains externally blocked."
+}
