@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "primary",
-  "workerId": "sol-20260811-ogx9k2",
-  "claimToken": "c7d8a4e16b935f20",
-  "claimedAt": "2026-08-11T07:05:00+00:00",
-  "heartbeatAt": "2026-08-11T07:37:00+00:00",
+  "workerId": "sol-20260811-96d0cf",
+  "claimToken": "7a4c31e8d9f062b5",
+  "claimedAt": "2026-08-11T08:34:10+00:00",
+  "heartbeatAt": "2026-08-11T08:34:10+00:00",
   "leaseSeconds": 1800,
-  "generation": 2,
+  "generation": 3,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-ogx9k2",
   "pr": 293,
-  "takeoverOf": "sol-20260811-went7q",
-  "notes": "Generation-2 takeover PR #293 is preserved while red swarm-control recovery takes precedence; exact-head product CI/review were green before subsequent main movement."
+  "takeoverOf": "sol-20260811-ogx9k2",
+  "notes": "Generation-3 takeover of stale WorldEntity primary, preserving PR #293 and the existing branch. Finish the active source hardening by integrating deterministic persistentState structural + byte budgets required by PR #321/audit findings, synchronize against current main as safely as connector capabilities allow, and preserve prior lifecycle fixes."
 }
