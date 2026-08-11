@@ -5,8 +5,8 @@
   "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
   "claimToken": "7c1d4a90e3b826f5",
   "acquiredAt": "2026-08-11T06:39:00+00:00",
-  "heartbeatAt": "2026-08-11T06:51:30+00:00",
+  "heartbeatAt": "2026-08-11T07:00:29+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
-  "notes": "Critical control-plane recovery: fail-closed PR ownership is merged; continuing protected recovery through snapshot-fenced generated projection and health publication in PR #291."
+  "notes": "Critical control-plane recovery: fail-closed PR ownership is merged; continuing protected recovery through snapshot fencing and safe legacy immutable-event compatibility without historical rewrites."
 }
