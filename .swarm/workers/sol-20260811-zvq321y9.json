@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-zvq321y9",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T21:07:00+00:00",
-  "lastSeenAt": "2026-08-11T21:26:00+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "primary",
-  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-zvq321y9-g5",
-  "notes": "Generation-6 PR #401 exact head 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d is ready for independent review. Canonical CI 31537711126 PASS; Swarm engine-tests PASS; global pr-ownership recovery remains separate. Generation 6 absorbed concurrent #400 Adornee/label.Text expected-red evidence while preserving generation-5 duplicate-root repair. This worker must not self-approve."
+  "lastSeenAt": "2026-08-11T21:29:00+00:00",
+  "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
+  "slotId": "audit",
+  "branch": "agent/review/HG-PHYSICS-RUNTIME-ENTITYID-FENCE-audit-zvq321y9",
+  "notes": "Independent exact-head audit of PR #402 at 4b75bd054eb6a1b3b03d0a868aea46df41d3db42. Review malformed/hostile entityId rejection order, safe diagnostics, state preservation, immediate valid retry, and compatibility with retained #310/#388 runtime invariants."
 }
