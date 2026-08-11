@@ -1,3 +1,4 @@
+local fs = require("@lune/fs")
 local ProductionLoader = require("./support/ProductionLoader")
 local runPhysicsLabDiagnosticsAtomicity = require("./physics_lab_diagnostics_atomicity")
 
@@ -18,6 +19,33 @@ local function run(): number
 		else
 			print(`PASS hero-contract {name}`)
 		end
+	end
+
+	local serverBootstrap = fs.readFile("src/server/Bootstrap.server.luau")
+	local clientBootstrap = fs.readFile("src/client/Bootstrap.client.luau")
+	local serverAuthorityModules = {
+		"PhysicsLabStudioHarness",
+		"PhysicsLabRuntime",
+		"PhysicsLabRealizer",
+	}
+
+	expect(
+		"server bootstrap owns Physics Lab startup",
+		serverBootstrap:find("PhysicsLabStudioHarness.start(workspace)", 1, true) ~= nil
+	)
+	expect(
+		"server bootstrap fails closed outside server context",
+		serverBootstrap:find("RunService:IsServer()", 1, true) ~= nil
+	)
+	expect(
+		"client bootstrap fails closed outside client context",
+		clientBootstrap:find("RunService:IsClient()", 1, true) ~= nil
+	)
+	for _, moduleName in ipairs(serverAuthorityModules) do
+		expect(
+			`client bootstrap cannot own server Physics Lab authority via {moduleName}`,
+			clientBootstrap:find(moduleName, 1, true) == nil
+		)
 	end
 
 	local genome = Fixtures.officeTable
