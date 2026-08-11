@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-n7c4p2",
   "claimToken": "c4a91e7b2d583f60",
   "claimedAt": "2026-08-11T08:31:12+00:00",
-  "heartbeatAt": "2026-08-11T08:31:12+00:00",
+  "heartbeatAt": "2026-08-11T08:37:46+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
   "resources": [],
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-n7c4p2-g4",
-  "pr": null,
+  "pr": 326,
   "takeoverOf": "sol-20260811-96d0cf",
-  "notes": "Generation-4 takeover after the prior test claim released. Rebuild the validated hostile-boundary tests on current main and broaden the newly confirmed ObjectState alias regression so all semantically distinct mutable maps must own distinct tables, including compatible wear/damage versus mechanismPosition domains. Test-only; production source remains with active primary owner."
+  "notes": "Generation-4 focused current-main alias adversary. PR #326 isolates the confirmed ObjectState semantic-map ownership defect in two files and broadens coverage from wear/damage to a valid wear/mechanismPosition cross-domain alias. PR #277 remains preserved for its separate hostile metatable/key-boundary tests rather than being copied wholesale from a stale base. Production source remains with the active primary owner; this test PR is intentionally red until that source fix lands."
 }
