@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-b9t6q2n7",
+  "model": "gpt-5.6-sol",
+  "status": "ACTIVE",
+  "startedAt": "2026-08-11T11:47:00+00:00",
+  "lastSeenAt": "2026-08-11T11:47:00+00:00",
+  "notes": "Review/integration worker selecting the highest-value unclaimed live REVIEW slot after confirming canonical main green and Hero Gate remains locked."
+}
