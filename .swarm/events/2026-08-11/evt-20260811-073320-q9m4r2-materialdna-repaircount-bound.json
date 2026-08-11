@@ -14,16 +14,14 @@
     "tests/materialdna_contract.luau exercises recipeVersion zero/oversized bounds and general recipe validity, but the inspected suite has no repairCount maximum/over-maximum regression.",
     "Repository PR search for repairCount/repair count found only merged MaterialDNA hardening #283, whose documented scope does not include this count domain."
   ],
-  "metadata": {
-    "recommendedLane": {
-      "title": "Bound MaterialDNA maintenance repair-count domain",
-      "scope": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau"],
-      "acceptance": [
-        "choose and document an explicit finite integer maximum for maintenance.repairCount consistent with canonical plain-data/persistence precision needs",
-        "maximum value validates and the first out-of-domain value fails closed",
-        "existing production fixture references/content seals remain unchanged unless a real authored fixture requires migration",
-        "no schema/version bump is assumed without checking whether the tightened domain invalidates any published canonical content"
-      ]
-    }
+  "recommendedLane": {
+    "title": "Bound MaterialDNA maintenance repair-count domain",
+    "scope": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau"],
+    "acceptance": [
+      "choose and document an explicit finite integer maximum for maintenance.repairCount consistent with canonical plain-data/persistence precision needs",
+      "maximum value validates and the first out-of-domain value fails closed",
+      "existing production fixture references/content seals remain unchanged unless a real authored fixture requires migration",
+      "no schema/version bump is assumed without checking whether the tightened domain invalidates any published canonical content"
+    ]
   }
 }
