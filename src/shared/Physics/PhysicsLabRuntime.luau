@@ -91,9 +91,12 @@ function PhysicsLabRuntime.new(recipe: Recipe): Runtime
 		table.insert(entityIds, record.id)
 	end
 
-	local runtime = setmetatable({
-		recipeKey = recipe.recipeKey,
-	} :: RuntimeImpl, PhysicsLabRuntime)
+	local runtime = setmetatable(
+		{
+			recipeKey = recipe.recipeKey,
+		} :: RuntimeImpl,
+		PhysicsLabRuntime
+	)
 	runtimeStates[runtime] = {
 		entityIds = entityIds,
 		registry = registry,
