@@ -1,4 +1,5 @@
 local ProductionLoader = require("./support/ProductionLoader")
+local runSynthesis = require("./physics_lab_runtime_synthesis")
 
 local PhysicsLabRecipe = ProductionLoader.requireShared("Physics/PhysicsLabRecipe")
 local PhysicsLabRuntime = ProductionLoader.requireShared("Physics/PhysicsLabRuntime")
@@ -280,6 +281,7 @@ local function run(): number
 	end
 	longCycleRuntime:dispose()
 
+	failures += runSynthesis()
 	return failures
 end
 
