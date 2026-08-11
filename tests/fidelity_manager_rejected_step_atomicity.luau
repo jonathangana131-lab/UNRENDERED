@@ -12,6 +12,17 @@ local function run(): number
 		end
 	end
 
+	local function expectAccounting(name, metrics)
+		local counts = metrics.counts
+		local total = counts.F0 + counts.F1 + counts.F2 + counts.F3 + counts.F4
+		expectEqual(`{name} count sum`, total, metrics.registered)
+		expectEqual(`{name} F0 non-negative`, counts.F0 >= 0, true)
+		expectEqual(`{name} F1 non-negative`, counts.F1 >= 0, true)
+		expectEqual(`{name} F2 non-negative`, counts.F2 >= 0, true)
+		expectEqual(`{name} F3 non-negative`, counts.F3 >= 0, true)
+		expectEqual(`{name} F4 non-negative`, counts.F4 >= 0, true)
+	end
+
 	local function validInputs()
 		return {
 			distanceStuds = 900,
@@ -175,6 +186,7 @@ local function run(): number
 	)
 	expectEqual("failing transition hook preserves F0 count", afterHookFailureMetrics.counts.F0, 1)
 	expectEqual("failing transition hook preserves F4 count", afterHookFailureMetrics.counts.F4, 0)
+	expectAccounting("failing transition hook", afterHookFailureMetrics)
 
 	local retryHookCalled = false
 	local retryAfterFailedFutureHookAccepted = pcall(function()
@@ -194,6 +206,99 @@ local function run(): number
 		hookManager:getObservedLevel("entity:atomic-hook"),
 		"F4"
 	)
+
+	local reentrantConfig = table.clone(FidelityManager.defaultConfig())
+	reentrantConfig.promotionHoldSeconds = 0
+	reentrantConfig.transitionCooldownSeconds = 0
+
+	local unregisterManager = FidelityManager.new(reentrantConfig)
+	unregisterManager:register("entity:atomic-unregister", "F0")
+	local unregisterAccepted = pcall(function()
+		unregisterManager:step("entity:atomic-unregister", "F0", heroInputs(), 0, function(entityId)
+			unregisterManager:unregister(entityId)
+		end)
+	end)
+	expectEqual("transition hook cannot unregister transitioning entity", unregisterAccepted, false)
+	expectEqual(
+		"rejected unregister callback preserves observed fidelity",
+		unregisterManager:getObservedLevel("entity:atomic-unregister"),
+		"F0"
+	)
+	local unregisterMetrics = unregisterManager:getMetrics()
+	expectEqual("rejected unregister callback preserves registration", unregisterMetrics.registered, 1)
+	expectEqual("rejected unregister callback preserves F0 count", unregisterMetrics.counts.F0, 1)
+	expectEqual("rejected unregister callback preserves F4 count", unregisterMetrics.counts.F4, 0)
+	expectEqual("rejected unregister callback does not count hook call", unregisterMetrics.transitionHookCalls, 0)
+	expectEqual("rejected unregister callback does not count transition", unregisterMetrics.transitions, 0)
+	expectAccounting("rejected unregister callback", unregisterMetrics)
+
+	local unregisterRetryCalled = false
+	local unregisterRetryAccepted = pcall(function()
+		local result = unregisterManager:step(
+			"entity:atomic-unregister",
+			"F0",
+			heroInputs(),
+			0.1,
+			function()
+				unregisterRetryCalled = true
+			end
+		)
+		expectEqual("retry after rejected unregister callback commits", result.transitioned, true)
+	end)
+	expectEqual("rejected unregister callback does not poison retry clock", unregisterRetryAccepted, true)
+	expectEqual("retry after rejected unregister callback invokes hook", unregisterRetryCalled, true)
+
+	local recursiveManager = FidelityManager.new(reentrantConfig)
+	recursiveManager:register("entity:atomic-recursive-step", "F0")
+	local recursiveAccepted = pcall(function()
+		recursiveManager:step("entity:atomic-recursive-step", "F0", heroInputs(), 0, function()
+			recursiveManager:step(
+				"entity:atomic-recursive-step",
+				"F0",
+				heroInputs(),
+				0,
+				function() end
+			)
+		end)
+	end)
+	expectEqual("transition hook cannot recursively step same entity", recursiveAccepted, false)
+	expectEqual(
+		"rejected recursive callback preserves observed fidelity",
+		recursiveManager:getObservedLevel("entity:atomic-recursive-step"),
+		"F0"
+	)
+	local recursiveMetrics = recursiveManager:getMetrics()
+	expectEqual("rejected recursive callback does not count hook call", recursiveMetrics.transitionHookCalls, 0)
+	expectEqual("rejected recursive callback does not count transition", recursiveMetrics.transitions, 0)
+	expectAccounting("rejected recursive callback", recursiveMetrics)
+
+	local crossEntityManager = FidelityManager.new(reentrantConfig)
+	crossEntityManager:register("entity:atomic-cross-outer", "F0")
+	local crossEntityAccepted = pcall(function()
+		crossEntityManager:step("entity:atomic-cross-outer", "F0", heroInputs(), 0, function()
+			crossEntityManager:register("entity:atomic-cross-created", "F2")
+			error("intentional callback failure after cross-entity mutation")
+		end)
+	end)
+	expectEqual("failing hook after cross-entity mutation propagates rejection", crossEntityAccepted, false)
+	expectEqual(
+		"cross-entity mutation keeps outer fidelity uncommitted",
+		crossEntityManager:getObservedLevel("entity:atomic-cross-outer"),
+		"F0"
+	)
+	expectEqual(
+		"cross-entity mutation remains independently registered",
+		crossEntityManager:getObservedLevel("entity:atomic-cross-created"),
+		"F2"
+	)
+	local crossEntityMetrics = crossEntityManager:getMetrics()
+	expectEqual("cross-entity mutation preserves two registrations", crossEntityMetrics.registered, 2)
+	expectEqual("cross-entity mutation preserves outer F0 count", crossEntityMetrics.counts.F0, 1)
+	expectEqual("cross-entity mutation preserves created F2 count", crossEntityMetrics.counts.F2, 1)
+	expectEqual("cross-entity failure leaves F4 count zero", crossEntityMetrics.counts.F4, 0)
+	expectEqual("cross-entity failure does not count hook call", crossEntityMetrics.transitionHookCalls, 0)
+	expectEqual("cross-entity failure does not count transition", crossEntityMetrics.transitions, 0)
+	expectAccounting("cross-entity failing callback", crossEntityMetrics)
 
 	return failures
 end
