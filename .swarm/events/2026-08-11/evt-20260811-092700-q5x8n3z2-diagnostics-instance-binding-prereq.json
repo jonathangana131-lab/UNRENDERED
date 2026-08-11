@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092700-q5x8n3z2-diagnostics-instance-binding-prereq",
+  "timestamp": "2026-08-11T09:27:00+00:00",
+  "fromWorker": "sol-20260811-q5x8n3z2",
+  "eventType": "DEPENDENCY",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "summary": "Diagnostics PR #327 cannot legally close its remaining exact-Instance authority blocker inside the current lane because the required seam belongs in src/server/PhysicsLab/PhysicsLabRealizer.luau, outside HG-BACKFILL-DIAGNOSTICS write scope. No open PR or live lane was found owning the exact candidate-Instance binding work. Created READY leaf lane HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING under HERO-GATE with narrowly bounded Realizer + dedicated pure regression + canonical test-runner scope. That prerequisite must expose an exact (entityId, candidateInstance) private-representation ownership predicate without exposing the raw map; diagnostics should consume it only after the prerequisite integrates. This is source-only prerequisite decomposition, not a Door/Chair/Player feature unlock, and no Studio/viewport evidence is claimed.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING"
+  ],
+  "evidence": [
+    "HG-BACKFILL-DIAGNOSTICS writeScopes do not include src/server/PhysicsLab/PhysicsLabRealizer.luau.",
+    "PR #327 directRepresentations() passes only entityId into lab.isRepresented(); PhysicsLabRealizer.isRepresented() checks private-map presence rather than candidate Instance identity.",
+    "Open-PR searches for PhysicsLabRealizer and candidate-instance representation ownership found no distinct implementation owning this exact gap.",
+    "The new prerequisite lane owns only PhysicsLabRealizer, a dedicated representation-ownership regression, and tests/run.luau; no protected resource is required by current .swarm/config.json for those paths."
+  ],
+  "metadata": {
+    "blockedPr": 327,
+    "blockedHeadSha": "acb728242741716487a5825542061d20f5c4bde4",
+    "prerequisiteLane": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+    "reviewCommentId": 5251321669
+  }
+}
