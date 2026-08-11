@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084200-v7k3m9-fidelity-config-edgecases",
+  "timestamp": "2026-08-11T08:42:00+00:00",
+  "fromWorker": "sol-20260811-v7k3m9",
+  "eventType": "FINDING",
+  "summary": "Fidelity audit addendum: the PolicyConfig closure must also preflight maxRegisteredEntities before relational/math operators and must default exported evaluatePolicy config only on exact nil. Current PR #274 head 5251998df21e8f7f78cae5c046d346496cc65a28 can execute hostile relational metamethods from a plain config whose maxRegisteredEntities is a table, because validateConfig evaluates >=, <, and math.floor before a primitive-number guard. Separately, evaluatePolicy uses config or DEFAULT_CONFIG, so explicit false silently selects defaults instead of failing closed. These are part of the same no-execute/malformed-input boundary already blocking PR #274, not new feature work; PR #325 has been asked to extend its adversarial proof accordingly.",
+  "affects": ["HERO-GATE", "HG-BACKFILL-FIDELITY"],
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "HIGH",
+  "evidence": [
+    "PR #274 audit addendum review 4904336152 records both cases on exact head 5251998df21e8f7f78cae5c046d346496cc65a28.",
+    "PR #325 audit review 4904334272 requests adversarial regressions for hostile maxRegisteredEntities and explicit false config.",
+    "FidelityManager.validateConfig begins with maxRegisteredEntities relational/math operators before any type guard for that field.",
+    "FidelityManager.evaluatePolicy currently resolves config with `config or DEFAULT_CONFIG`, making explicit false indistinguishable from omitted nil at runtime."
+  ]
+}
