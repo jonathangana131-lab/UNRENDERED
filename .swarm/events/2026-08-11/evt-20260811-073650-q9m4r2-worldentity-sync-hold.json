@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-073650-q9m4r2-worldentity-sync-hold",
+  "timestamp": "2026-08-11T07:36:50+00:00",
+  "fromWorker": "sol-20260811-q9m4r2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "summary": "PR #293 requires current-main synchronization before integration. No new WorldEntity-local code blocker was found. Exact head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d carries the prior patch-local PASS, but current main is 064e28f2306095dadd6a514b96f397cd810ac556 and compare reports ahead 9 / behind 1. Because #282 tightened shared StableId validation after this head's reviewed base, the primary should sync main, rerun canonical CI and fail-closed ownership, and request exact-head re-review before integration.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "GitHub compare current main 064e28f2306095dadd6a514b96f397cd810ac556 to PR head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d reports status diverged, ahead_by=9, behind_by=1, merge base 81a13b1138e26e7852c89685de5dbf9bd57753d8.",
+    "The current-main delta after the reviewed base includes merged #282, which tightens the shared DeterminismContract StableId validation boundary used by Reality-domain consumers.",
+    "GitHub review 4903949941 records the synchronization requirement; no Studio evidence is involved."
+  ],
+  "pr": 293,
+  "headSha": "c301d8403d3c1b93ee3b2988f80e9d1e689eb33d",
+  "verdict": "SYNC_REQUIRED"
+}
