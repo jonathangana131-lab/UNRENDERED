@@ -233,8 +233,10 @@ local function validateKnownFields(
 	allowed: { [string]: boolean }
 ): ()
 	for key in pairs(record) do
-		if type(key) ~= "string" or allowed[key] ~= true then
-			appendError(errors, `{path} contains unknown field {tostring(key)}`)
+		if type(key) ~= "string" then
+			appendError(errors, `{path} contains unknown non-string field key of type {type(key)}`)
+		elseif allowed[key] ~= true then
+			appendError(errors, `{path} contains unknown field {key}`)
 		end
 	end
 end
