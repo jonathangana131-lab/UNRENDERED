@@ -155,20 +155,30 @@ local function levelIndex(level: FidelityLevel): number
 	return LEVEL_INDEX[level]
 end
 
-local function isFinite(value: number): boolean
-	return value == value and value > -math.huge and value < math.huge
+local function isFinite(value: unknown): boolean
+	if type(value) ~= "number" then
+		return false
+	end
+	local numericValue = value :: number
+	return numericValue == numericValue and numericValue > -math.huge and numericValue < math.huge
 end
 
-local function validateUnit(name: string, value: number): ()
-	assert(value == value and value >= 0 and value <= 1, `{name} must be in [0, 1]`)
+local function validateUnit(name: string, value: unknown): ()
+	assert(type(value) == "number", `{name} must be a number`)
+	local numericValue = value :: number
+	assert(numericValue == numericValue and numericValue >= 0 and numericValue <= 1, `{name} must be in [0, 1]`)
 end
 
-local function validateNonNegative(name: string, value: number): ()
-	assert(value == value and value >= 0, `{name} must be non-negative`)
+local function validateNonNegative(name: string, value: unknown): ()
+	assert(type(value) == "number", `{name} must be a number`)
+	local numericValue = value :: number
+	assert(numericValue == numericValue and numericValue >= 0, `{name} must be non-negative`)
 end
 
-local function validateFiniteNonNegative(name: string, value: number): ()
-	assert(isFinite(value) and value >= 0, `{name} must be finite and non-negative`)
+local function validateFiniteNonNegative(name: string, value: unknown): ()
+	assert(type(value) == "number", `{name} must be a number`)
+	local numericValue = value :: number
+	assert(isFinite(numericValue) and numericValue >= 0, `{name} must be finite and non-negative`)
 end
 
 local function validateBoolean(name: string, value: unknown): ()
@@ -544,7 +554,7 @@ function FidelityManager.step(
 	assert(not state.transitioning, `fidelity transition callback must not reenter step: {entityId}`)
 	assert(isLevel(currentLevel), "currentLevel must be F0-F4")
 	assert(
-		isFinite(nowSeconds) and nowSeconds >= state.lastEvaluatedAt,
+		type(nowSeconds) == "number" and isFinite(nowSeconds) and nowSeconds >= state.lastEvaluatedAt,
 		"nowSeconds must be finite and monotonic per entity"
 	)
 
