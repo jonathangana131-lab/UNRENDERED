@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095430-r7m3x9q5-content-lineage-reconcile",
+  "timestamp": "2026-08-11T09:54:30+00:00",
+  "fromWorker": "sol-20260811-r7m3x9q5",
+  "eventType": "INTEGRATION_RESULT",
+  "summary": "Content-foundation lineage reconciliation completed without merging source: closed stale ObjectGenome primaries #296 and #318 as superseded by the live generation-4 #336 path, and redirected retained docs companions #299/#317/#292 to their current source prerequisites #336/#353/#335. Expected-red/adversarial PRs remain open until active source heads consume their evidence and satisfy exact-head review/ownership gates.",
+  "affects": [
+    "HG-COMPLETION-CONTENT",
+    "HG-BACKFILL-OBJECTGENOME",
+    "HG-BACKFILL-MATERIALDNA-COUNTERS",
+    "HG-BACKFILL-FIDELITY"
+  ],
+  "laneId": "HG-COMPLETION-CONTENT",
+  "severity": "low",
+  "evidence": [
+    "PR #296 closed unmerged with an explicit supersession comment; its familyVersion contract is retained by the active ObjectGenome production lineage.",
+    "PR #318 closed unmerged with an explicit supersession comment; live HG-BACKFILL-OBJECTGENOME generation-4 claim owns PR #336 and names #318 as prior evidence rather than an independent merge path.",
+    "PR #299 remains open but now points to #336 as the source prerequisite instead of stale #296/#318.",
+    "PR #317 remains open but now points to current-main MaterialDNA salvage #353 instead of closed #313.",
+    "PR #292 remains open but now points to current-main Fidelity salvage #335 instead of stale #274.",
+    "No expected-red/adversarial evidence branch was closed; no product source, Roblox Studio, networking, persistence, or engine evidence was changed or claimed."
+  ],
+  "metadata": {
+    "verdict": "RECONCILED",
+    "closedPrs": [296, 318],
+    "retainedDocsPrs": [299, 317, 292],
+    "activeSourcePrs": [336, 353, 335]
+  }
+}
