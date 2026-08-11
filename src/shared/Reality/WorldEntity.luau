@@ -61,6 +61,7 @@ WorldEntity.Fidelity = table.freeze({
 WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY = 64
 
 local MAX_SAFE_INTEGER = 9007199254740991
+local MAX_GENERATOR_VERSION = 2147483647
 
 local FIDELITY_RANK: { [string]: number } = table.freeze({
 	F0 = 0,
@@ -237,7 +238,10 @@ local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
 	end
 	local generator = checkedNonEmpty("origin.generator", source.generator)
 	local generatorVersion = assertNonNegativeInteger("origin.generatorVersion", source.generatorVersion)
-	assert(generatorVersion >= 1, "origin.generatorVersion must be a positive integer")
+	assert(
+		generatorVersion >= 1 and generatorVersion <= MAX_GENERATOR_VERSION,
+		`origin.generatorVersion must be in [1, {MAX_GENERATOR_VERSION}]`
+	)
 	local recipeKey = checkedNonEmpty("origin.recipeKey", source.recipeKey)
 
 	return table.freeze({
