@@ -15,41 +15,35 @@ from swarmctl_hardening_base import *  # re-export the proven engine API
 
 
 _STRICT_VALIDATE_EVENT = _base.core.validate_event
+_STRICT_READ_TREE = _base.read_tree
+_STRICT_TRANSITION_CHECK = _base.transition_check
 
 # Four immutable events were emitted before every writer converged on the strict
 # V2 event shape. Three were later rewritten after their first transition failure,
-# and a later projection incorrectly blessed those rewritten bytes. Recovery must
-# therefore distinguish canonical first-write bytes from the known laundered live
-# variants instead of treating a self-authored timestamp as provenance.
-#
-# The canonical hashes below are Git blob SHA-1 values returned by GitHub for each
-# audited first-published event. `restorableFromGitBlobSha1` is deliberately finite:
-# it names only the exact laundered blob present when this repair was authored. If
-# live bytes change again, restoration fails closed and requires a new audit.
+# and a later projection incorrectly blessed those rewritten bytes. Compatibility
+# must therefore identify only the audited first-write bytes; it must NOT rewrite,
+# normalize, quarantine, or bless the already-laundered live variants. Those live
+# bytes intentionally remain a separate trusted-history recovery blocker.
 _CANONICAL_IMMUTABLE_EVENTS = {
     "evt-20260811-073500-q9m4r2-authority-rereview-approve": {
         "date": "2026-08-11",
         "filename": "evt-20260811-073500-q9m4r2-authority-rereview-approve.json",
         "canonicalGitBlobSha1": "2f0b0221b7995b3862ac6c009804ebb66f715fac",
-        "restorableFromGitBlobSha1": {"8f332b489b9266211ff6c5d2869647eba9b80838"},
     },
     "evt-20260811-073650-q9m4r2-worldentity-sync-hold": {
         "date": "2026-08-11",
         "filename": "evt-20260811-073650-q9m4r2-worldentity-sync-hold.json",
         "canonicalGitBlobSha1": "f9781fd64518c01aa10b460f01aff13adc6635da",
-        "restorableFromGitBlobSha1": {"c7615c531b671d10a56d6a93577fc9c81cb15836"},
     },
     "evt-20260811-080520-h4v8n2-cart-geometry-review": {
         "date": "2026-08-11",
         "filename": "evt-20260811-080520-h4v8n2-cart-geometry-review.json",
         "canonicalGitBlobSha1": "a39220b473086229e6b1057b296342175b851af1",
-        "restorableFromGitBlobSha1": {"162e42ab9ab08e7976d61e78ad12bbd088ff13a8"},
     },
     "evt-20260811-081620-mat8c3r1-materialdna-key-grammar": {
         "date": "2026-08-11",
         "filename": "evt-20260811-081620-mat8c3r1-materialdna-key-grammar.json",
         "canonicalGitBlobSha1": "9a7f679ea84600d6a28a8bef02436e5f85fd857e",
-        "restorableFromGitBlobSha1": set(),
     },
 }
 
@@ -78,7 +72,7 @@ def _canonical_rule(path: Path, obj: dict) -> dict | None:
                 )
             return rule
         if event_id == expected_id:
-            raise _base.core.ControlError(f"{path}: audited immutable event moved from its canonical path")
+            raise _base.core.ControlError(f"{path}: audited immutable event moved/replayed from its canonical path")
     return None
 
 
@@ -97,85 +91,67 @@ def _validate_event_with_immutable_compat(path):
     return _STRICT_VALIDATE_EVENT(path)
 
 
-# core.read_tree resolves validate_event dynamically from the core module, so this
-# exact-blob compatibility hook reaches every proven base operation. Unlisted
-# events still use the strict V2 validator; backdating can never opt into legacy
-# compatibility.
+# core.read_tree resolves validate_event dynamically, so exact-blob compatibility
+# reaches every proven base operation. Unlisted events still use strict V2; no
+# timestamp or self-authored metadata can opt into compatibility.
 _base.core.validate_event = _validate_event_with_immutable_compat
 
 
-def _is_exact_canonical_restoration(relative: str, before_raw: bytes, after_raw: bytes) -> bool:
-    before_sha = _git_blob_sha1_bytes(before_raw)
-    after_sha = _git_blob_sha1_bytes(after_raw)
-    for rule in _CANONICAL_IMMUTABLE_EVENTS.values():
-        if relative != _relative_event_path(rule):
-            continue
-        return (
-            before_sha in rule["restorableFromGitBlobSha1"]
-            and after_sha == rule["canonicalGitBlobSha1"]
-        )
-    return False
+def read_tree(root: Path):
+    """Retain the proven tree reader and add global eventId uniqueness."""
+    result = _STRICT_READ_TREE(root)
+    events = result[6]
+    seen: set[str] = set()
+    for event in events:
+        event_id = event["eventId"]
+        if event_id in seen:
+            raise _base.core.ControlError(f"duplicate immutable eventId {event_id}")
+        seen.add(event_id)
+    return result
+
+
+# Base validate/render/pr-check functions resolve read_tree from base globals.
+_base.read_tree = read_tree
 
 
 def transition_check(before: Path, after: Path) -> dict:
-    """Preserve V2 lease fencing while allowing only audited byte restoration.
-
-    Base V2 correctly rejects every event rewrite. The live branch already contains
-    three known rewrites that were laundered by a later projection, so recovery needs
-    one narrower exception: exact known-laundered blob -> exact audited first-write
-    blob at the same path. No other changed/deleted historical event is accepted.
-    """
+    """Keep base byte immutability and additionally reject eventId replay on add."""
     before = Path(before)
     after = Path(after)
-    before_claims = _base.raw_map(before, "claims/*/*.json", 32_000)
-    after_claims = _base.raw_map(after, "claims/*/*.json", 32_000)
-    before_resources = _base.raw_map(before, "resource-claims/*.json", 24_000)
-    after_resources = _base.raw_map(after, "resource-claims/*.json", 24_000)
+    result = _STRICT_TRANSITION_CHECK(before, after)
 
-    for key in sorted(before_claims.keys() & after_claims.keys()):
-        _base.lease_transition(before_claims[key], after_claims[key], f"claim {key}", "claimedAt", True)
-    for key in sorted(before_resources.keys() & after_resources.keys()):
-        _base.lease_transition(
-            before_resources[key], after_resources[key], f"resource claim {key}", "acquiredAt", False
-        )
-
-    before_events = {
-        str(path.relative_to(before)): path.read_bytes() for path in before.glob("events/*/*.json")
-    }
-    after_events = {
-        str(path.relative_to(after)): path.read_bytes() for path in after.glob("events/*/*.json")
-    }
-    deleted = sorted(before_events.keys() - after_events.keys())
-    changed = sorted(
-        key for key in before_events.keys() & after_events.keys() if before_events[key] != after_events[key]
-    )
-    added = sorted(after_events.keys() - before_events.keys())
-
+    before_paths = {str(path.relative_to(before)): path for path in before.glob("events/*/*.json")}
+    after_paths = {str(path.relative_to(after)): path for path in after.glob("events/*/*.json")}
+    added = sorted(after_paths.keys() - before_paths.keys())
     canonical_paths = {_relative_event_path(rule) for rule in _CANONICAL_IMMUTABLE_EVENTS.values()}
-    illegal_added = sorted(key for key in added if key in canonical_paths)
-    restored = []
-    illegal_changed = []
-    for key in changed:
-        if _is_exact_canonical_restoration(key, before_events[key], after_events[key]):
-            restored.append(key)
-        else:
-            illegal_changed.append(key)
 
-    if deleted or illegal_added or illegal_changed:
-        raise _base.core.ControlError(
-            "immutable events changed/deleted outside audited canonical restoration: "
-            f"changed={illegal_changed}, deleted={deleted}, historicalAdded={illegal_added}"
-        )
-    return {
-        "status": "PASS",
-        "claimTransitions": len(before_claims.keys() & after_claims.keys()),
-        "resourceClaimTransitions": len(before_resources.keys() & after_resources.keys()),
-        "immutableEventsChecked": len(before_events),
-        "canonicalRestorations": restored,
-    }
+    seen: set[str] = set()
+    for path in before_paths.values():
+        obj = _base.core.load_json(path, max_bytes=48_000)
+        event_id = obj.get("eventId")
+        if not isinstance(event_id, str):
+            raise _base.core.ControlError(f"{path}: eventId required during transition replay check")
+        if event_id in seen:
+            raise _base.core.ControlError(f"duplicate immutable eventId {event_id} in transition baseline")
+        seen.add(event_id)
+
+    for relative in added:
+        if relative in canonical_paths:
+            raise _base.core.ControlError(f"historical immutable event path cannot be re-added: {relative}")
+        path = after_paths[relative]
+        obj = _base.core.load_json(path, max_bytes=48_000)
+        event_id = obj.get("eventId")
+        if not isinstance(event_id, str):
+            raise _base.core.ControlError(f"{path}: eventId required during transition replay check")
+        if event_id in seen:
+            raise _base.core.ControlError(f"immutable eventId replayed by new event: {event_id}")
+        seen.add(event_id)
+
+    return result
 
 
-# _base.main resolves transition_check from the base module's globals.
+# Base CLI resolves transition_check from base globals. The underlying base check
+# still rejects every changed/deleted historical event byte-for-byte.
 _base.transition_check = transition_check
 
 
@@ -196,8 +172,7 @@ def dashboard(board: dict) -> str:
     ]
     out += ["", "## Active claims", ""]
     out += [
-        f"- `{x['laneId']}/{x['slotId']}` → `{x['workerId']}`; lease to `{x['expiresAt']}`"
-        for x in board["activeClaims"]
+        f"- `{x['laneId']}/{x['slotId']}` → `{x['workerId']}`; lease to `{x['expiresAt']}`" for x in board["activeClaims"]
     ] or ["_None._"]
     out += ["", "## Blocked lanes", ""]
     out += [f"- `{x['laneId']}` — **{x['state']}** — {x['reason']}" for x in board["blockedLanes"]] or ["_None._"]
