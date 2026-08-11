@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-w8c3m7q4",
   "claimToken": "a14f7c92e6b8035d",
   "claimedAt": "2026-08-11T11:50:30+00:00",
-  "heartbeatAt": "2026-08-11T11:50:30+00:00",
+  "heartbeatAt": "2026-08-11T11:56:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-w8c3m7q4",
-  "pr": null,
-  "notes": "Adversarial regression pass for the current WorldEntity review lane. Scope is tests/world_entity*.luau; preserve deterministic identity/plain-data contracts and do not claim engine evidence."
+  "pr": 372,
+  "notes": "Published draft PR #372 relocating state-budget boundary/atomicity regressions into already-registered tests/world_entity_registry_shape.luau so primary #293 can absorb them without an out-of-scope tests/run.luau edit. Expected-red against main until primary source is synchronized."
 }
