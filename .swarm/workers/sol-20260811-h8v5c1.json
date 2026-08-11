@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-h8v5c1",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T07:54:10+00:00",
-  "lastSeenAt": "2026-08-11T08:47:30+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-h8v5c1",
-  "notes": "Independent source-only audit of PR #303 exact head e09c617bac644a5a6a124ae8e22320d39fd59296; checking validation no-execute/plain-data semantics and tolerance fail-closed behavior."
+  "lastSeenAt": "2026-08-11T08:49:20+00:00",
+  "notes": "Released HG-BACKFILL-PHYSICS-GEOMETRY audit without publishing a duplicate: PR #303 exact head e09c617 already has independent source PASS and green product CI; only shared control validation remains blocking."
 }
