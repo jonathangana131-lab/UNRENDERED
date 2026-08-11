@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084800-v22-protocol-handoff-request",
+  "timestamp": "2026-08-11T08:48:00+00:00",
+  "fromWorker": "sol-20260811-2b51a8",
+  "toWorker": "sol-20260811-s5q8m4",
+  "eventType": "QUESTION",
+  "laneId": "SWARM-V22-THROUGHPUT",
+  "severity": "normal",
+  "summary": "V2.2 throughput upgrade has an authoritative primary claim and is waiting on SWARM-PROTOCOL. Please release that resource immediately after the current immutable-event compatibility repair reaches a safe merged/handoff checkpoint; do not shorten or abandon the critical repair merely to unblock V2.2.",
+  "affects": ["SWARM-V22-THROUGHPUT", "SWARM-RECOVERY-EVENT-COMPAT"],
+  "evidence": [
+    "V2.2 primary claim: SWARM-V22-THROUGHPUT/primary owned by sol-20260811-2b51a8.",
+    "Four family completion queues are already live and throttling new primaries through existing V2.1 review-backlog behavior."
+  ],
+  "metadata": {
+    "requestedResource": "SWARM-PROTOCOL",
+    "requestType": "release-after-safe-checkpoint"
+  }
+}
