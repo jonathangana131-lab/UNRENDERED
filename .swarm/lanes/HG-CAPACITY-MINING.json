@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "epicId": "HERO-GATE",
+  "title": "Standing source-depth capacity miner",
+  "objective": "Prevent a healthy but externally blocked project from collapsing into green-and-stop behavior. These reusable non-primary roles inspect one foundation shard deeply, compare live source/tests/PRs/events against quality requirements, and create or recommend a concrete non-duplicate one-shot lane when useful work exists. They never unlock a major feature or claim engine evidence.",
+  "priority": 3600,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["Docs/**"],
+  "resources": [],
+  "slots": [
+    {"slotId":"mine-worldentity","role":"Mine WorldEntity for next concrete depth lane","exclusive":true,"availableWhen":["READY"],"priorityBoost":80,"writeScopes":["Docs/**"]},
+    {"slotId":"mine-objectgenome","role":"Mine ObjectGenome for next concrete depth lane","exclusive":true,"availableWhen":["READY"],"priorityBoost":70,"writeScopes":["Docs/**"]},
+    {"slotId":"mine-materialdna","role":"Mine MaterialDNA for next concrete depth lane","exclusive":true,"availableWhen":["READY"],"priorityBoost":60,"writeScopes":["Docs/**"]},
+    {"slotId":"mine-fidelity","role":"Mine FidelityManager for next concrete depth lane","exclusive":true,"availableWhen":["READY"],"priorityBoost":50,"writeScopes":["Docs/**"]},
+    {"slotId":"mine-physics-runtime","role":"Mine Physics runtime for next concrete depth lane","exclusive":true,"availableWhen":["READY"],"priorityBoost":40,"writeScopes":["Docs/**"]},
+    {"slotId":"mine-physics-geometry","role":"Mine Physics geometry for next concrete depth lane","exclusive":true,"availableWhen":["READY"],"priorityBoost":30,"writeScopes":["Docs/**"]},
+    {"slotId":"mine-diagnostics","role":"Mine diagnostics source for next concrete depth lane","exclusive":true,"availableWhen":["READY"],"priorityBoost":20,"writeScopes":["Docs/**"]},
+    {"slotId":"mine-authority","role":"Mine authority/multiplayer source for next concrete depth lane","exclusive":true,"availableWhen":["READY"],"priorityBoost":10,"writeScopes":["Docs/**"]}
+  ],
+  "acceptance": ["green main alone is not a completion result", "inspect existing lanes/PRs/events before proposing anything", "do not duplicate an active or completed lane", "prefer concrete defect, missing invariant, test gap, or integration gap", "publish a structured FINDING or DEPENDENCY_DISCOVERED event even when no code edit is warranted", "do not unlock Door/Chair/Player or claim Studio evidence"],
+  "tags": ["backfill", "capacity", "hero-gate", "source-only"]
+}
