@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T09:01:03+00:00",
-  "lastSeenAt": "2026-08-11T09:32:02+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "audit",
-  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-audit-q6m2v8k5",
-  "notes": "Completed Fidelity audit plus WorldEntity and MaterialDNA capacity findings; now independently auditing ObjectGenome generation-3 PR #336 exact head. Source-only; no Studio evidence claimed."
+  "lastSeenAt": "2026-08-11T09:36:11+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-q6m2v8k5",
+  "notes": "Completed Fidelity and ObjectGenome audits plus WorldEntity/MaterialDNA findings; now mining Physics geometry for one concrete non-duplicate source-depth gap while shared event-history recovery remains independently owned. No Studio evidence claimed."
 }
