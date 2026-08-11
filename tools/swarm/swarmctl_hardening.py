@@ -19,12 +19,13 @@ _STRICT_VALIDATE_EVENT = _base.core.validate_event
 _STRICT_READ_TREE = _base.read_tree
 _STRICT_TRANSITION_CHECK = _base.transition_check
 
-# Four pre-convergence immutable events have audited first-write identities. Three
+# Five pre-convergence immutable events have audited first-write identities. Four
 # were later rewritten after a failed transition and were then incorrectly used as
 # a descendant baseline. Recovery never edits/deletes those published bytes. The
 # exact observed laundered blobs are instead quarantined: accepted only as inert
 # historical artifacts, excluded from event authority, and permanently reserved by
-# eventId/path. Any other byte variant still fails closed.
+# eventId/path. Any other byte variant still fails closed. The MaterialDNA event
+# remains at its audited first-write blob and therefore has no quarantine variant.
 _CANONICAL_IMMUTABLE_EVENTS = {
     "evt-20260811-073500-q9m4r2-authority-rereview-approve": {
         "date": "2026-08-11",
@@ -48,6 +49,12 @@ _CANONICAL_IMMUTABLE_EVENTS = {
         "date": "2026-08-11",
         "filename": "evt-20260811-081620-mat8c3r1-materialdna-key-grammar.json",
         "canonicalGitBlobSha1": "9a7f679ea84600d6a28a8bef02436e5f85fd857e",
+    },
+    "evt-20260811-083640-ogm5x8q2-objectgenome-support-stack": {
+        "date": "2026-08-11",
+        "filename": "evt-20260811-083640-ogm5x8q2-objectgenome-support-stack.json",
+        "canonicalGitBlobSha1": "9ef4e62ffb0aac9d4b18cb19911d8d3a25535158",
+        "quarantinedGitBlobSha1": "c2b99475cdb95940d9a7ca329440880865da02cb",
     },
 }
 
@@ -184,17 +191,23 @@ def validate_trust_record(path: Path) -> dict:
     return obj
 
 
-def verify_trusted_state(root: Path, trust_path: Path) -> dict:
-    """Require the current authoritative JSON state to equal the separately trusted digest."""
+def verify_trusted_snapshot(root: Path, trust_path: Path, *, allow_bootstrap: bool = False) -> dict:
+    """Bind one archived control snapshot to the trust record's digest as one atomic anchor."""
     trust = validate_trust_record(trust_path)
-    if trust.get("bootstrap", False):
+    if trust.get("bootstrap", False) and not allow_bootstrap:
         raise _base.core.ControlError("swarm trust branch is still in bootstrap/reset mode")
     actual = _base.state_digest(root)
     if actual != trust["trustedStateDigest"]:
         raise _base.core.ControlError(
-            f"live control state is not the separately trusted state: {actual} != {trust['trustedStateDigest']}"
+            "trusted control SHA snapshot does not match its separately recorded state digest: "
+            f"{actual} != {trust['trustedStateDigest']}"
         )
     return trust
+
+
+def verify_trusted_state(root: Path, trust_path: Path) -> dict:
+    """Require current authoritative JSON state to equal a non-bootstrap separate trust anchor."""
+    return verify_trusted_snapshot(root, trust_path, allow_bootstrap=False)
 
 
 def transition_check(before: Path, after: Path) -> dict:
