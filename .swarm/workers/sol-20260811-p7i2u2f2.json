@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-p7i2u2f2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:00:22+00:00",
-  "lastSeenAt": "2026-08-11T21:00:22+00:00",
+  "lastSeenAt": "2026-08-11T21:04:27+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-p7i2u2f2",
-  "notes": "Independent exact-head audit of PR #389 Physics Lab scale/validation generation-5 successor; source-only, no Studio/contact evidence claim."
+  "notes": "Completed independent exact-head review of PR #389. SOURCE/TEST PASS published as GitHub review 4910734864 and REVIEW_RESULT evt-20260811-210341-p7i2u2f2-physics-geometry-g5-review; integration remains held on trusted live ownership recovery. Audit claim released."
 }
