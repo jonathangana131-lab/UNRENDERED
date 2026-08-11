@@ -132,6 +132,30 @@ function PhysicsLabValidationContract.inspectSnapshot(snapshot: any): (boolean, 
 	if snapshot.counts.instances < 1 then
 		return false, "snapshot.counts.instances must include the selected lab root"
 	end
+	if snapshot.counts.models < 1 then
+		return false, "snapshot.counts.models must include the selected lab Model root"
+	end
+
+	local classifiedInstances = snapshot.counts.models
+		+ snapshot.counts.parts
+		+ snapshot.counts.attachments
+		+ snapshot.counts.constraints
+		+ snapshot.counts.joints
+	if classifiedInstances > snapshot.counts.instances then
+		return false, "snapshot.counts classified Instance total exceeds instances"
+	end
+	if snapshot.counts.assemblies > snapshot.counts.parts then
+		return false, "snapshot.counts.assemblies cannot exceed parts"
+	end
+	if snapshot.counts.parts > 0 and snapshot.counts.assemblies < 1 then
+		return false, "snapshot.counts.assemblies must include an assembly when BaseParts are present"
+	end
+	if snapshot.counts.parts > 0 and snapshot.envelopeStuds == nil then
+		return false, "snapshot.envelopeStuds is required when BaseParts are present"
+	end
+	if snapshot.counts.parts == 0 and snapshot.envelopeStuds ~= nil then
+		return false, "snapshot.envelopeStuds must be nil when no BaseParts are present"
+	end
 	if snapshot.envelopeStuds ~= nil then
 		local envelopeOk, envelopeError = inspectEnvelope(snapshot.envelopeStuds)
 		if not envelopeOk then
