@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095905-fcea3ee6-diagnostics-canonical-identity",
+  "timestamp": "2026-08-11T09:59:05+00:00",
+  "fromWorker": "sol-20260811-fcea3ee6",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Standalone Physics Lab diagnostics still trust mutable physical-root identity attributes as evidence truth. PhysicsLabStudioDiagnostics.capture() publishes WorldId, RegionId, resolved fingerprint, and repro key directly from lab.model attributes, and enable() renders fingerprint/repro readouts from those same attributes, without proving they still match the canonical PhysicsLabRecipe/ResolvedRegionRecipe. A non-empty attribute substitution can therefore survive the current represented-set/fidelity fences and produce internally plausible diagnostics evidence bound to false canonical identity. The project already has the required fail-closed canonical root check in PhysicsLabValidation.capture/captureFull; diagnostics should reuse or expose that production-owned truth boundary rather than treating Workspace attributes as authority.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "Active diagnostics PR #327 exact head acb728242741716487a5825542061d20f5c4bde4 reads UNRENDERED_WorldId, UNRENDERED_RegionId, UNRENDERED_ResolvedRegionFingerprint, and UNRENDERED_ResolvedRegionReproKey directly from lab.model inside PhysicsLabStudioDiagnostics.capture(); enable() likewise reads the physical root fingerprint/repro attributes before constructing readouts. requireStringAttribute() proves only non-empty string shape, not canonical equality.",
+    "Current main PhysicsLabValidation.captureInternal() rebuilds PhysicsLabRecipe, calls assertCanonicalRootIdentity(model, recipe), and compares root schema/recipe/WorldId/RegionId/resolved schema/world-seed/fingerprint/repro attributes against canonical PhysicsLabRecipe and ResolvedRegionRecipe before it emits a validation Snapshot. Diagnostics standalone capture/enable do not invoke an equivalent canonical identity fence.",
+    "Concrete adversarial shape: mutate the owned lab Model's WorldId and/or resolved fingerprint/repro attributes to different non-empty strings while leaving the runtime-owned representation map, direct children, WorldEntityIds, represented count, and per-entity fidelity untouched. The proposed exact-Instance ownership seam (#349) and readout-cardinality repair do not address this root identity substitution; standalone diagnostics can still capture/present the forged strings.",
+    "Duplicate check: current diagnostics blockers already route post-loop/cycle-input regression coverage (#333), exact representation Instance binding (#349 / evt-20260811-085430-k8v2q6m4-diagnostics-instance-binding), and one-to-one readout completeness (evt-20260811-092430-k4v7m2q9-diagnostics-readout-completeness). This finding is a separate canonical evidence-identity boundary. Earlier #221 deliberately made PhysicsLabValidation fail closed on canonical root identity, which provides an existing project-owned contract to reuse rather than a new framework.",
+    "Bounded closure: before standalone diagnostics capture publishes evidence or enable() uses root identity in visible readouts, validate the root against the canonical production recipe/resolved truth (prefer reuse/exposure of the existing validator or authoritative plain-data source). Add a regression where non-empty forged WorldId/fingerprint/repro attributes are rejected. Do not convert this source hardening into a Studio/viewport PASS claim."
+  ]
+}
