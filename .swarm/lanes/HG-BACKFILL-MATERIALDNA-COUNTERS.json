@@ -5,7 +5,7 @@
   "title": "MaterialDNA canonical counter exactness",
   "objective": "Close the demonstrated MaterialDNA maintenance.repairCount integer-aliasing boundary without broadening material architecture or depending on Studio.",
   "priority": 5150,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau", "Docs/MATERIAL_DNA_CONTRACT.md"],
@@ -21,5 +21,6 @@
     "no new MaterialDNA identity or migration framework",
     "no Studio evidence claim"
   ],
+  "notes": "PR #313 exact head 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210 remains source/test approved and canonical CI run 31471763781 is green, but current-state audit event evt-20260811-092535-k8v3p6r1-materialdna-resync returns SYNC_REQUIRED: compare to current main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 reports merge base aa7e04f05834ae783773c908fccfdbbe510558e5 and behind_by=2. Replay the unchanged narrow patch onto current main, rerun exact-head CI/live ownership, and retain the existing source approval only if the effective diff is unchanged. No Studio evidence claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "materialdna"]
 }
