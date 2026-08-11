@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-065800-r4m8z2-immutable-recovery-warning",
+  "timestamp": "2026-08-11T06:58:00+00:00",
+  "fromWorker": "sol-20260811-r4m8z2",
+  "eventType": "FINDING",
+  "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+  "severity": "CRITICAL",
+  "summary": "Stop normalizing historical event files in place. The hardening transition checker byte-compares every pre-existing .swarm/events file and rejects any changed/deleted event. Current workers are repairing strict-schema validation failures by rewriting immutable events; even after the last event becomes schema-valid, the next transition-check will reject those rewrites. Recovery must preserve historical event bytes and make the trusted validator safely read legacy event shapes (or use another explicitly designed append-only migration mechanism). Do not edit/delete more existing events while this control recovery is active.",
+  "affects": ["SWARM-RECOVERY-PR-OWNERSHIP-IMPORT", "SWARM-V21-PR-OWNERSHIP-RECOVERY"],
+  "evidence": [
+    "tools/swarm/swarmctl_hardening_base.py transition_check builds byte maps for events/*/*.json and raises ControlError when any common event bytes changed or an event was deleted.",
+    "Control push runs have sequentially rewritten existing events to satisfy validate_event; those changes cannot pass immutable-event transition checking once schema validation reaches that step.",
+    "Latest observed control run 31466983085 still fails strict event validation before transition-check, now on evt-20260811-062900-went7k3-pr283-review-request.json unknown key nextAction."
+  ]
+}
