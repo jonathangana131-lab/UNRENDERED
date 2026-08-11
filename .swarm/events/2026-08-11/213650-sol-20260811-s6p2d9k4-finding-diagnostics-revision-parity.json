@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-s6p2d9k4-diagnostics-revision-parity-213650",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T21:36:50+00:00",
+  "workerId": "sol-20260811-s6p2d9k4",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "generation": 1,
+  "claimToken": "7a2d9e4c1f6b8035",
+  "target": {
+    "kind": "pull_request",
+    "value": "401@2d3bfb09d996ccaafb329d07c6edd6af46c7f04d"
+  },
+  "severity": "medium",
+  "summary": "Diagnostics generation 6 binds each readout to the exact owned representation and current WorldEntity fidelity, but capture still does not cross-check the representation's authored recipe/revision attributes against the authoritative record. A stale physical proxy can therefore carry divergent UNRENDERED_RecipeKey, UNRENDERED_RepresentationRevision, or UNRENDERED_StateRevision while the machine snapshot silently reports the record-side values and remains accepted.",
+  "evidence": [
+    "At PR #401 exact head 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d, directRepresentations() proves exact Instance ownership and capture() compares UNRENDERED_Fidelity with record.fidelity, but capture reads no UNRENDERED_RecipeKey, UNRENDERED_RepresentationRevision, or UNRENDERED_StateRevision attributes before publishing recipeKey/representationRevision/stateRevision from the WorldEntity record.",
+    "PhysicsLabRealizer.setEntityAttributes() writes all three representation attributes from the same WorldEntity record, so parity is an existing physical-representation contract rather than new canonical state.",
+    "PhysicsLabValidation's canonical off-snapshot path rejects a wrong entity recipe attribute, but it is intentionally run only after diagnostics are disabled in runToggleEvidence and does not validate the representation/state revision attributes; it cannot make a diagnostics-on capture prove current metadata parity.",
+    "The generation-6 readout-contract and atomicity tests cover exact Instance ownership, fidelity parity, Adornee/text projection, duplicate roots, transactional rollback, and no-drift ordering, but do not lock recipe/revision attribute parity.",
+    "Static source audit only; no Roblox Studio, viewport, engine, or local test execution is claimed."
+  ],
+  "recommendedAction": "Open one bounded source-only diagnostics micro-lane (or fold into the next HG-BACKFILL-DIAGNOSTICS successor after its current independent review) to validate UNRENDERED_RecipeKey, UNRENDERED_RepresentationRevision, and UNRENDERED_StateRevision against the authoritative WorldEntity record during both preflight/capture; add regressions proving stale representation metadata fails closed without weakening #401's exact-Instance, projection-integrity, duplicate-root, and rollback contracts. Do not classify this as Studio diagnostics PASS/FAIL evidence."
+}
