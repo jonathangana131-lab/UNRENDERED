@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "epicId": "HERO-GATE",
+  "title": "WorldEntity adversarial depth pass",
+  "objective": "Use otherwise-idle Sol capacity to find and fix concrete identity, registry-shape, snapshot, aliasing, immutability, or persistence-boundary defects in the already-unlocked WorldEntity foundation without depending on Roblox Studio.",
+  "priority": 5200,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["src/shared/Reality/WorldEntity.luau", "tests/world_entity*.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"WorldEntity source hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Reality/WorldEntity.luau","tests/world_entity*.luau"]},
+    {"slotId":"test-adversary","role":"WorldEntity adversarial regression author","exclusive":true,"availableWhen":["READY","REVIEW","NEEDS_CHANGES"],"priorityBoost":220,"writeScopes":["tests/world_entity*.luau"]},
+    {"slotId":"audit","role":"WorldEntity invariant and aliasing auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/world_entity*.luau","Docs/**"]}
+  ],
+  "acceptance": ["inspect current main before editing", "do not invent new architecture if no concrete gap exists", "any behavior change has a regression test", "preserve plain-data and deterministic identity boundaries", "report actionable findings through structured events"],
+  "tags": ["backfill", "hero-gate", "source-only"]
+}
