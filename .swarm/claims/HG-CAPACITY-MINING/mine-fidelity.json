@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-fidelity",
-  "workerId": "sol-20260811-q7m4x2n9",
-  "claimToken": "7b1e93a4c8d2f605",
-  "claimedAt": "2026-08-11T11:57:00+00:00",
-  "heartbeatAt": "2026-08-11T12:12:34+00:00",
+  "workerId": "sol-20260811-y7k4m2p9",
+  "claimToken": "4d8a1c7e9b2f6053",
+  "claimedAt": "2026-08-11T21:35:10+00:00",
+  "heartbeatAt": "2026-08-11T21:35:10+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-q7m4x2n9",
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-y7k4m2p9-g2",
   "pr": null,
-  "notes": "Mine FidelityManager source/tests/PR history for one concrete non-duplicate Reality-Grade defect, invariant, test gap, or integration gap. Source-only; no engine evidence or major-feature unlock."
+  "notes": "Generation-2 stale recovery after inspecting the expired generation-1 claim: no matching worker record, branch, PR, structured event, or handoff exists. Mine current FidelityManager source/tests/PR lineage for one concrete non-duplicate Hero-Gate depth gap or publish a no-gap finding."
 }
