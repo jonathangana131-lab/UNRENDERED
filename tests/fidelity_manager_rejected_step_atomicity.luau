@@ -51,7 +51,7 @@ local function run(): number
 				return true
 			end,
 		})
-		config.maxRegisteredEntities = hostileCapacity
+		config.maxRegisteredEntities = hostileCapacity :: any
 		return config, function()
 			return operatorCalls
 		end
@@ -86,7 +86,7 @@ local function run(): number
 	expectEqual("pure policy capacity rejection executes no metamethod", hostilePureCapacityCalls(), 0)
 
 	local falseConfigAccepted = pcall(function()
-		FidelityManager.evaluatePolicy(validInputs(), false, "F0")
+		FidelityManager.evaluatePolicy(validInputs(), false :: any, "F0")
 	end)
 	expectEqual("pure policy rejects explicit false config", falseConfigAccepted, false)
 
