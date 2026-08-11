@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-s6d4n8v2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "MINING",
   "startedAt": "2026-08-11T21:31:30+00:00",
-  "lastSeenAt": "2026-08-11T21:35:30+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-s6d4n8v2",
-  "notes": "Rerouted after discovering PR #398 already independently reviewed; fresh exact-head audit of ObjectGenome generation-8 PR #395."
+  "lastSeenAt": "2026-08-11T21:37:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-s6d4n8v2",
+  "notes": "Rerouted after already-reviewed audit candidates; mine current Physics Lab geometry source/tests/PR lineage for one concrete non-duplicate Hero-Gate depth gap."
 }
