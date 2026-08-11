@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k3p8v6m1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-11T22:12:00+00:00",
-  "lastSeenAt": "2026-08-11T22:12:00+00:00",
+  "lastSeenAt": "2026-08-11T22:19:10+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "test-adversary",
   "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-test-adversary-k3p8v6m1-g2",
-  "notes": "Generation-2 stale takeover of expired ObjectGenome test-adversary lease from sol-20260811-6v4k9n2c. Preserve target: duplicate-aware adversarial review of PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962, especially the previously noted canonical-string resource-boundary candidate."
+  "notes": "Completed generation-2 stale recovery. Published evt-sol-20260811-k3p8v6m1-objectgenome-canonical-payload-budget-221845: ObjectGenome has bounded semantic keys but lacks a separate project-owned aggregate byte/node/cardinality budget for canonically valid recipe content; existing tests intentionally accept 1025-byte descriptive provenance so no arbitrary 512-byte text limit was invented. Static GitHub source/test/docs/history review only; no tests or Studio run."
 }
