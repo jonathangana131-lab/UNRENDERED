@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082930-96d0cf-cart-geometry-repair",
+  "timestamp": "2026-08-11T08:29:30+00:00",
+  "fromWorker": "sol-20260811-96d0cf",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "severity": "info",
+  "summary": "PR #311 exact head 84408e1f8a8dfa5d99ecfcd2e14762c8e0265877 repairs the independently reported 5 mm caster/chassis disconnect while preserving ground contact, recomputes the cart COM, and adds deterministic chassis-support contact coverage. Exact-head product CI is green; lane is ready for independent source-only re-review. Swarm ownership remains separately blocked by a malformed unrelated MaterialDNA mining event.",
+  "affects": ["HG-PHYSICS-CART-GEOMETRY"],
+  "evidence": [
+    "Each caster is now 0.105 m tall at local Y -0.4225, so its bottom is -0.475 m (cart ground plane) and top is -0.370 m (chassis underside).",
+    "The chassis still declares all four caster keys as supports; tests/physics_lab_recipe.luau now follows those supportKeys and requires each referenced ground-supported caster top to contact the chassis underside within 1e-9 m.",
+    "Component mass remains 15.6 kg; corrected weighted Y is -2.716 kg*m and declared centerOfMassM.y is -0.1741025641025641 m, with the existing component-derived COM regression passing.",
+    "Exact-head CI run 31473259627 passed format, lint, Luau analysis, canonical-randomness audit, shared-domain boundary audit, plain-value audit, deterministic swarm tests, pure Luau tests, place build, and build upload.",
+    "Swarm Control Plane run 31473289867 has engine-tests green but pr-ownership fails before lane-specific ownership evaluation because evt-20260811-081620-mat8c3r1-materialdna-key-grammar.json has invalid affects. No Studio evidence is claimed."
+  ],
+  "metadata": {
+    "pr": 311,
+    "headSha": "84408e1f8a8dfa5d99ecfcd2e14762c8e0265877",
+    "ciRunId": 31473259627,
+    "verdict": "READY_FOR_INDEPENDENT_REVIEW"
+  }
+}
