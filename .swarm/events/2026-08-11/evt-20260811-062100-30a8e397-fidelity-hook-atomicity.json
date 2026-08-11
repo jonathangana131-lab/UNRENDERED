@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062100-30a8e397-fidelity-hook-atomicity",
+  "timestamp": "2026-08-11T06:21:00+00:00",
+  "fromWorker": "sol-20260811-30a8e397",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "A failed applyTransition callback is not observationally atomic for FidelityManager temporal state. step() advances lastEvaluatedAt and may mutate pending state before invoking the callback; if the callback raises, the observed fidelity and transition counters stay uncommitted, but a far-future failed attempt can poison the monotonic clock and reject an otherwise-valid retry at an earlier simulation timestamp. This conflicts with the documented integration contract that manager state commits only after the callback succeeds.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "Docs/FIDELITY_MANAGER.md states the transition callback runs before manager mirror/metrics commit and integration flow says manager counters/mirror commit only after callback success.",
+    "FidelityManager.step sets state.lastEvaluatedAt = nowSeconds before applyTransition and does not roll it back if the callback raises.",
+    "Existing rejected-step atomicity tests cover invalid policy input rollback, but existing callback-failure coverage only checks observed fidelity/entity fidelity and does not test monotonic-clock or pending-state rollback."
+  ]
+}
