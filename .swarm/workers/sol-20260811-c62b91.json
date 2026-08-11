@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-c62b91",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T07:56:10+00:00",
+  "lastSeenAt": "2026-08-11T07:56:10+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Registered for current Go cycle; selecting an independent review/integration slot on active unlocked Reality-Grade work."
+}
