@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-210630-j9v4m2q7-authority-harness-capability-reconfirm",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "workerId": "sol-20260811-j9v4m2q7",
+  "claimToken": "a6d3f91c7e2b5084",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T21:06:30Z",
+  "headSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-j9v4m2q7",
+  "payload": {
+    "severity": "warning",
+    "summary": "Reconfirmed on current main: PhysicsLabStudioHarness.get() returns the raw owned RealizedLab, including its destroy() capability, so external callers can dispose the physical/runtime lab without clearing the harness current owner.",
+    "impact": "An out-of-band destroy leaves Harness.get() pointing at a destroyed handle while Harness.start() still refuses replacement because current is non-nil. This can poison the permanent Studio validation harness and violates centralized exactly-one-lab lifecycle ownership.",
+    "sourceProof": [
+      "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 src/server/PhysicsLab/PhysicsLabStudioHarness.luau assigns the raw PhysicsLabRealizer.realize() result to private current and returns current directly from get()",
+      "stop() is the only harness-owned path that destroys active and then clears current; get() exposes destroy without that atomic owner release",
+      "authority stack PR #394 explicitly states the raw PhysicsLabStudioHarness.get()/RealizedLab.destroy capability finding remains out of scope",
+      "the previously recommended HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY lane is still absent from live swarm-control"
+    ],
+    "nonDuplicate": "PR #394 adds teardown/source-order regression coverage only and no production harness delta. Repository PR search found no open implementation closing raw destroy exposure or stale current after external destroy.",
+    "recommendedClosure": [
+      "materialize the bounded HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY one-shot lane",
+      "centralize destroy/release under the harness or return a narrow read-only/operational facade without raw destroy authority",
+      "regression-lock that callers cannot leave current bound to a destroyed lab and that deterministic replacement remains possible",
+      "preserve existing stop idempotency, restart destroy-before-reacquire ordering, and Studio/server guards",
+      "keep this source-only; do not convert it into HG151-TWOCLIENT or Studio evidence PASS"
+    ],
+    "recommendedLaneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "supersedesFinding": "evt-20260811-123820-j4m8q2v7-authority-harness-destroy-capability only by freshness; technical finding is unchanged",
+    "studioEvidence": "none performed or claimed"
+  }
+}
