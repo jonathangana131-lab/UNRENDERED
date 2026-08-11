@@ -2,41 +2,56 @@
   "schemaVersion": 1,
   "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
   "epicId": "HERO-GATE",
-  "title": "Restore Swarm PR ownership checker imports",
-  "objective": "Repair the current-main Swarm Control Plane PR workflow regression exposed by PRs #271 and #283: trusted pr-ownership materializes swarmctl_hardening.py but omits its required swarmctl_hardening_base.py import, so ownership validation aborts before evaluating claims.",
-  "priority": 20000,
+  "title": "Restore fail-closed Swarm PR ownership checker",
+  "objective": "Complete the critical PR-ownership recovery after #288 restored trusted hardening imports but exposed a fail-open V2.1 facade: swarmctl_hardening.py discards the base CLI return code, so rejected ownership checks can exit 0. Repair exit propagation, restore valid live control state, and mechanically prove both negative rejection and positive PASS behavior.",
+  "priority": 10000,
   "state": "READY",
   "mode": "exclusive",
   "dependencies": [],
-  "writeScopes": [".github/workflows/swarm-control.yml", "tools/swarm/test_swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening_base.py"],
+  "writeScopes": [
+    ".github/workflows/swarm-control.yml",
+    "tools/swarm/swarmctl_hardening.py",
+    "tools/swarm/test_swarmctl_hardening.py",
+    "tools/swarm/test_swarmctl_hardening_base.py"
+  ],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
     {
       "slotId": "primary",
-      "role": "Critical PR ownership CI recovery",
+      "role": "Critical fail-closed PR ownership recovery",
       "exclusive": true,
       "availableWhen": ["READY", "NEEDS_CHANGES"],
-      "priorityBoost": 2000,
-      "writeScopes": [".github/workflows/swarm-control.yml", "tools/swarm/test_swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening_base.py"]
+      "priorityBoost": 1000,
+      "writeScopes": [
+        ".github/workflows/swarm-control.yml",
+        "tools/swarm/swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening_base.py"
+      ]
     },
     {
       "slotId": "reviewer-1",
       "role": "Independent recovery verifier",
       "exclusive": true,
       "availableWhen": ["REVIEW", "INTEGRATION_READY"],
-      "priorityBoost": 1000,
+      "priorityBoost": 900,
       "requiresIndependentFrom": "primary",
-      "writeScopes": [".github/workflows/swarm-control.yml", "tools/swarm/test_swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening_base.py"]
+      "writeScopes": [
+        ".github/workflows/swarm-control.yml",
+        "tools/swarm/swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening_base.py"
+      ]
     }
   ],
   "acceptance": [
-    "pr-ownership executes the trusted hardened validator without ModuleNotFoundError",
-    "trusted validator still comes exclusively from the base branch rather than request-supplied code",
-    "existing ownership/resource/digest enforcement semantics are preserved",
-    "control-plane deterministic/adversarial tests pass",
-    "a real product PR receives a passing pr-ownership check when its live claim is valid",
-    "canonical CI remains green"
+    "swarmctl_hardening.py propagates the base CLI exit status so every ControlError exits nonzero",
+    "trusted pr-ownership validation still executes only base-branch validator code and dependencies",
+    "live swarm-control validates cleanly instead of relying on swallowed errors",
+    "a mechanically executed negative pr-check is rejected with a nonzero process exit",
+    "a real valid product PR receives explicit JSON status PASS from pr-check and a green ownership job",
+    "control-plane deterministic/adversarial tests and canonical CI remain green"
   ],
-  "notes": "Critical recovery lane created from structured finding evt-20260811-062700-went7q-pr-checker-import after PR #283 independently reproduced the same current-main failure in Swarm Control Plane run 31464905466. While this lane is unresolved, new primary implementation claims should stop per Docs/SWARM_CONTROL_PLANE.md recovery policy.",
+  "notes": "#288 fixed dependency materialization but run 31465489200 exposed the pre-existing fail-open facade: the validator printed a ControlError while GitHub marked pr-ownership successful because `_base.main()` was not passed to SystemExit. The same run surfaced this lane's invalid priority 20000; this control-state repair normalizes it to the schema maximum 10000. Durable finding: evt-20260811-063523-pr-check-fail-open-r4m8z2. New primary implementation should remain paused until this lane is independently verified.",
   "tags": ["control-repair", "red-ci", "pr-ownership", "hero-gate"]
 }
