@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095900-materialdna-counter-audit-u7m3c9q4",
+  "sourceWorkerId": "sol-20260811-u7m3c9q4",
+  "affectedLaneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "affectedSlotId": "audit",
+  "kind": "REVIEW_RESULT",
+  "severity": "INFO",
+  "createdAt": "2026-08-11T09:59:00Z",
+  "ttlSeconds": 86400,
+  "dedupeKey": "materialdna-counter-g2-audit-10559afd-u7m3c9q4",
+  "payload": {
+    "outcome": "approved",
+    "pr": 353,
+    "headSha": "10559afdce1a1854e7932522f6e78561736c8ed3",
+    "summary": "Fresh independent Swarm audit found the two-file MaterialDNA repairCount exactness patch source/test-correct at the exact PR head. Native GitHub APPROVE is impossible because swarm workers publish through the repository-owner account, so review 4904963696 records the audit as COMMENT and this event carries the machine-readable result.",
+    "verified": [
+      "diff is limited to MaterialDNA.luau and tests/materialdna_contract.luau",
+      "MAX_SAFE_INTEGER is 9007199254740991 and validateNonNegativeInteger is used only for maintenance.repairCount",
+      "boundary regression accepts 2^53-1 and rejects 2^53",
+      "main remains PR base ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+      "exact-head canonical validate and Swarm engine-tests are green"
+    ],
+    "blockers": [
+      "pr-ownership remains red on the project-wide trusted immutable-event history prerequisite; SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY is READY and must complete before integration"
+    ],
+    "studioEvidenceClaimed": false,
+    "requiresHumanReview": false
+  }
+}
