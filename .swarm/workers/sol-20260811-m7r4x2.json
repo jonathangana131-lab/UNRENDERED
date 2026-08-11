@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-m7r4x2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T07:47:00+00:00",
-  "lastSeenAt": "2026-08-11T08:02:08+00:00",
+  "lastSeenAt": "2026-08-11T08:11:00+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-m7r4x2",
-  "notes": "Duplicate/conflicting audit PR #305 closed after live reconciliation found generation-2 primary PR #303 owns the production validation boundary. Independent REQUEST_CHANGES posted on #303 for unknown-key rejection; reviewing current exact head. Separate rolling-cart COM mismatch found outside lane write scope."
+  "notes": "Audit complete. PR #303 source review PASS on exact head e09c617bac644a5a6a124ae8e22320d39fd59296 with canonical CI green; integration blocked by global Swarm primary-WIP capacity (10 > 8). Duplicate PR #305 closed. Rolling-cart COM mismatch handed off in evt-20260811-081030-m7r4x2-rolling-cart-com. HANDOFF: evt-20260811-081100-m7r4x2-physics-audit-handoff."
 }
