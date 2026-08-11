@@ -115,6 +115,15 @@ local function makeAlignedComponentMechanismGenome()
 	return genome
 end
 
+local function findMechanismByKind(genome, kind)
+	for _, mechanism in ipairs(genome.mechanisms) do
+		if mechanism.kind == kind then
+			return mechanism
+		end
+	end
+	error(`fixture has no {kind} mechanism`)
+end
+
 local function run(): number
 	local failures = 0
 
@@ -341,6 +350,47 @@ local function run(): number
 		"mechanism decoder rejects metatable-backed records before field reads",
 		not hostileDecoderOk and decoderFieldReads == 0
 	)
+
+	local canonicalCaster = findMechanismByKind(Fixtures.officeChair, "caster")
+	local decodedCaster = ObjectGenome.decodeMechanismPosition(canonicalCaster, 0.25)
+	expect(
+		"canonical caster decode remains unchanged",
+		decodedCaster.kind == "caster" and decodedCaster.swivelTurns == 0.25 and decodedCaster.swivelDegrees == 90
+	)
+	local canonicalLatch = findMechanismByKind(Fixtures.filingCabinet, "latch")
+	local decodedLatch = ObjectGenome.decodeMechanismPosition(canonicalLatch, 1)
+	expect("canonical latch decode remains unchanged", decodedLatch.kind == "latch" and decodedLatch.engaged == true)
+
+	local incompleteCasterOk = pcall(function()
+		ObjectGenome.decodeMechanismPosition({ kind = "caster" }, 0.25)
+	end)
+	expect("mechanism decoder rejects incomplete plain caster records", not incompleteCasterOk)
+
+	local incompleteLatchOk = pcall(function()
+		ObjectGenome.decodeMechanismPosition({ kind = "latch" }, 1)
+	end)
+	expect("mechanism decoder rejects incomplete plain latch records", not incompleteLatchOk)
+
+	local unknownFieldCaster = deepCopy(canonicalCaster)
+	unknownFieldCaster.futureLimit = 1
+	local unknownFieldCasterOk = pcall(function()
+		ObjectGenome.decodeMechanismPosition(unknownFieldCaster, 0.25)
+	end)
+	expect("mechanism decoder rejects undeclared caster fields", not unknownFieldCasterOk)
+
+	local unknownFieldLatch = deepCopy(canonicalLatch)
+	unknownFieldLatch.futureState = true
+	local unknownFieldLatchOk = pcall(function()
+		ObjectGenome.decodeMechanismPosition(unknownFieldLatch, 1)
+	end)
+	expect("mechanism decoder rejects undeclared latch fields", not unknownFieldLatchOk)
+
+	local unknownCasterAxisField = deepCopy(canonicalCaster)
+	unknownCasterAxisField.swivelAxis.w = 0
+	local unknownCasterAxisFieldOk = pcall(function()
+		ObjectGenome.decodeMechanismPosition(unknownCasterAxisField, 0.25)
+	end)
+	expect("mechanism decoder rejects undeclared nested axis fields", not unknownCasterAxisFieldOk)
 
 	local unknownStateField = ObjectGenome.defaultState(Fixtures.officeChair)
 	unknownStateField.futureState = true
