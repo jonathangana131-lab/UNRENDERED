@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092350-eeu3obwl-cart-geometry-audit",
+  "timestamp": "2026-08-11T09:23:50+00:00",
+  "fromWorker": "sol-20260811-eeu3obwl",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "severity": "low",
+  "summary": "Independent exact-head audit passes PR #311 rolling-cart caster ground/chassis contact, mass/COM, versioning and deterministic source tests, but integration requires current-main synchronization plus fresh exact-head CI/ownership and re-review because the branch is two commits behind main.",
+  "affects": ["HG-PHYSICS-CART-GEOMETRY"],
+  "evidence": [
+    "PR #311 head 84408e1f8a8dfa5d99ecfcd2e14762c8e0265877 authors 0.105 m casters at y=-0.4225, yielding bottom -0.475 m and top -0.370 m; chassis underside is also -0.370 m.",
+    "Authored cart component mass remains 15.6 kg; weighted Y is -2.716 kg*m and declared COM is -0.1741025641025641 m.",
+    "familyVersion advances from 1 to 2 and source tests cover four ground supports, four chassis support contacts, component mass closure and component-derived COM.",
+    "Canonical CI run 31473259627 passed on the exact reviewed head.",
+    "Current main is ae83c0ef470eb2e73d99be41fd3561ede30c40e1; compare reports the PR head diverged, ahead_by=4 and behind_by=2 from merge base aa7e04f05834ae783773c908fccfdbbe510558e5."
+  ],
+  "metadata": {
+    "pr": 311,
+    "headSha": "84408e1f8a8dfa5d99ecfcd2e14762c8e0265877",
+    "verdict": "APPROVE_SOURCE_RESYNC_REQUIRED",
+    "reviewId": 4904703921,
+    "canonicalCiRun": 31473259627,
+    "nextAction": "Primary synchronizes the two-file semantic patch onto current main, reruns exact-head canonical CI and trusted pr-ownership, then requests fresh independent exact-head audit.",
+    "studioEvidence": false
+  }
+}
