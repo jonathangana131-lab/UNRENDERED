@@ -103,6 +103,26 @@ local function run(): number
 		beforeMetrics.externalSynchronizations + 1
 	)
 
+	local capacityConfig = table.clone(FidelityManager.defaultConfig())
+	capacityConfig.maxRegisteredEntities = 1
+	local capacityManager = FidelityManager.new(capacityConfig)
+	capacityManager:register("entity:atomic-capacity-existing", "F0")
+	local beforeInvalidCapacityLevel = capacityManager:getMetrics()
+	local invalidCapacityLevelAccepted = pcall(function()
+		capacityManager:register("entity:atomic-capacity-invalid-level", "F9")
+	end)
+	expectEqual("invalid fidelity level is rejected even at capacity", invalidCapacityLevelAccepted, false)
+	local afterInvalidCapacityLevel = capacityManager:getMetrics()
+	expectEqual(
+		"invalid fidelity level does not consume capacity rejection metric",
+		afterInvalidCapacityLevel.registrationCapacityRejections,
+		beforeInvalidCapacityLevel.registrationCapacityRejections
+	)
+	local invalidCapacityRecordExists = pcall(function()
+		capacityManager:getObservedLevel("entity:atomic-capacity-invalid-level")
+	end)
+	expectEqual("invalid fidelity level never creates a registration", invalidCapacityRecordExists, false)
+
 	local hookConfig = table.clone(FidelityManager.defaultConfig())
 	hookConfig.promotionHoldSeconds = 0.1
 	local hookManager = FidelityManager.new(hookConfig)
