@@ -5,7 +5,7 @@
   "title": "Restore immutable event compatibility",
   "objective": "Unblock trusted control validation without rewriting immutable historical events by narrowly accepting only audited already-published malformed event identities/classes at the V2.1 compatibility facade, while keeping all newly emitted event writes strict and preserving immutable-byte transition fencing.",
   "priority": 10000,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -47,6 +47,6 @@
     "transition-check continues to reject any historical event rewrite or deletion byte-for-byte",
     "control deterministic/adversarial tests, canonical CI, and the live swarm-control validation path remain green before integration is declared complete"
   ],
-  "notes": "PR #322 exact head 148c45f45d10f4859c87227b1bf1d698b9d78e83 was merged to main as dd8f1581115c15ce6497db827d17e98d879d0267 before independent review completed. Reviewer result evt-20260811-083400-r9v3k6-event-compat-review found three blocking gaps: timestamp-only compatibility is forgeable by fresh backdated events; known historical SYNC_REQUIRED is omitted; current live control run 31473315586 still fails immutable evt-20260811-081620-mat8c3r1-materialdna-key-grammar because affects contains MaterialDNA and the merged facade delegates that event to the strict validator. Repair main with finite historical identity/class compatibility and exact adversarial regressions; do not rewrite immutable event bytes.",
+  "notes": "Generation-3 correction PR #329 exact head 275ba90dfe699e22b495b6f77086e8c6e845fd11 addresses all independent review blockers from prematurely merged #322: compatibility is finite identity-bound rather than timestamp-only; audited WorldEntity SYNC_REQUIRED is accepted only on its exact historical event; the exact MaterialDNA historical affects typo is isolated; forged backdated/altered/unknown-key cases fail closed. Canonical CI run 31474429537 PASS. Swarm engine-tests jobs 93724757178 and 93725140825 PASS. Trusted-base pr-ownership probes are still being blocked before semantic PR evaluation by unrelated transient worker records using unsupported status ACTIVE; do not treat those data corruptions as code evidence. Independent exact-head review is required before integration.",
   "tags": ["control-repair", "red-ci", "pr-ownership", "hero-gate"]
 }
