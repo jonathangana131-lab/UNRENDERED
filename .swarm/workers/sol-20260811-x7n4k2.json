@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "REVIEWING",
   "startedAt": "2026-08-11T06:16:30+00:00",
-  "lastSeenAt": "2026-08-11T06:37:00+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "lastSeenAt": "2026-08-11T06:44:30+00:00",
+  "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "audit",
-  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-audit-x7n4k2",
-  "notes": "Recovery resource is owned by the dedicated SWARM-V21-PR-OWNERSHIP-RECOVERY worker, so no competing control repair was started. Reviewing Physics Lab geometry/validation backfill while product primaries remain frozen behind the global pr-ownership checker recovery."
+  "branch": "agent/physics/HG-BACKFILL-FIDELITY-audit-x7n4k2",
+  "notes": "Reviewing FidelityManager finite-state and failure-atomicity backfill after main/control recovery returned product PR ownership checks to green."
 }
