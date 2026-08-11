@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062630-r9t4n2-reality-tests-review",
+  "timestamp": "2026-08-11T06:26:30+00:00",
+  "fromWorker": "sol-20260811-r9t4n2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "normal",
+  "summary": "PR #280 is ready for independent Reality replay-boundary review. It adds adversarial v1 replay-only compatibility tests for ownership/immutability, transport detachment, identity/fingerprint tamper rejection, v2 WorldId injection rejection, metatable rejection, and non-finite version rejection. Canonical CI is green; the separate Swarm Control Plane check is globally broken by the trusted-validator import blocker already reported in evt-20260811-062500-r9t4n2-pr-ownership-import-blocker.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "PR #280 head 632e78b3162e34ddd5c17a702ac713fccdaa74ea changes only tests/resolved_region_recipe_v1_compat.luau.",
+    "Canonical CI run 31464861531 completed success, including format, lint, Luau analysis, audits, Pure Luau tests, and place build.",
+    "Concurrent Reality primary branch is non-overlapping at current compare: it changes src/shared/Core/DeterminismContract.luau."
+  ]
+}
