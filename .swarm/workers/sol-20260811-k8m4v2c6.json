@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-k8m4v2c6",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-11T21:17:11+00:00",
+  "lastSeenAt": "2026-08-11T21:17:11+00:00",
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY-audit-k8m4v2c6",
+  "notes": "Independent exact-head source/test audit of PR #399 harness lifecycle capability fence; no source edits or Studio/two-client evidence claims."
+}
