@@ -165,6 +165,71 @@ local function run(): number
 	end)
 	expect("captureState rejects false persistent state", not falseCaptureAccepted)
 
+	local mutableDirectRecord = makeRecord()
+	mutableDirectRecord.persistentState = {
+		open = false,
+		mechanism = { angle = 12 },
+	}
+	mutableDirectRecord.stateRevision = 2
+	mutableDirectRecord.representationRevision = 3
+	local promoted = WorldEntity.transition(mutableDirectRecord :: any, "F2")
+	mutableDirectRecord.kind = "mutated-kind"
+	mutableDirectRecord.origin.recipeKey = "mutated/recipe"
+	mutableDirectRecord.persistentState.open = true
+	mutableDirectRecord.persistentState.mechanism.angle = 99
+	expect("direct promotion owns kind", promoted.kind == "office-chair")
+	expect("direct promotion owns origin", promoted.origin.recipeKey == "chair/registry-shape")
+	expect("direct promotion owns state", promoted.persistentState.open == false)
+	expect("direct promotion owns nested state", (promoted.persistentState.mechanism :: any).angle == 12)
+	expect("direct promotion advances representation revision", promoted.representationRevision == 4)
+	local promotedOriginMutationAccepted = pcall(function()
+		(promoted.origin :: any).recipeKey = "bypass"
+	end)
+	expect("direct promotion freezes owned origin", not promotedOriginMutationAccepted)
+	local promotedStateMutationAccepted = pcall(function()
+		(promoted.persistentState.mechanism :: any).angle = 45
+	end)
+	expect("direct promotion freezes owned nested state", not promotedStateMutationAccepted)
+
+	local captureSource = makeRecord()
+	captureSource.id = "entity:direct-capture"
+	captureSource.kind = "filing-cabinet"
+	captureSource.origin.recipeKey = "cabinet/direct-capture"
+	captureSource.fidelity = "F2"
+	captureSource.persistentState = { open = false }
+	captureSource.stateRevision = 5
+	captureSource.representationRevision = 7
+	local capturedState = {
+		open = true,
+		drawer = { extension = 0.5 },
+	}
+	local captured = WorldEntity.captureState(captureSource :: any, capturedState)
+	captureSource.origin.recipeKey = "mutated/capture-origin"
+	capturedState.open = false
+	capturedState.drawer.extension = 1
+	expect("direct capture owns origin", captured.origin.recipeKey == "cabinet/direct-capture")
+	expect("direct capture owns captured state", captured.persistentState.open == true)
+	expect(
+		"direct capture owns nested captured state",
+		(captured.persistentState.drawer :: any).extension == 0.5
+	)
+	expect("direct capture advances state revision", captured.stateRevision == 6)
+	expect("direct capture preserves representation revision", captured.representationRevision == 7)
+
+	local malformedRevision = makeRecord()
+	malformedRevision.stateRevision = math.huge
+	local malformedTransitionAccepted = pcall(function()
+		WorldEntity.transition(malformedRevision :: any, "F2")
+	end)
+	expect("direct transition validates record revisions", not malformedTransitionAccepted)
+
+	local unknownDirectShape = makeRecord()
+	unknownDirectShape.unexpected = true
+	local unknownShapeAccepted = pcall(function()
+		WorldEntity.captureState(unknownDirectShape :: any, {})
+	end)
+	expect("direct capture rejects unknown record schema keys", not unknownShapeAccepted)
+
 	local wrongKind = makeSpec()
 	wrongKind.kind = 17
 	local wrongKindAccepted, wrongKindError = newResult(wrongKind)
