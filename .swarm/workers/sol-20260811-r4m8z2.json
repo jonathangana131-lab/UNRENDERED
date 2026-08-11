@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T06:17:21+00:00",
-  "lastSeenAt": "2026-08-11T06:33:00+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "audit",
-  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-r4m8z2",
-  "notes": "Auditing ObjectGenome source-contract closure. HIGH identity-part representability gap is fixed in primary PR #286 with green canonical CI and independently reviewed. Published MEDIUM deterministic validation-report traversal finding; also verified the unrelated current-main PR-ownership loader regression blocking integration project-wide."
+  "lastSeenAt": "2026-08-11T06:40:00+00:00",
+  "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+  "slotId": "primary",
+  "branch": "agent/swarm/SWARM-RECOVERY-PR-OWNERSHIP-IMPORT-r4m8z2",
+  "notes": "Preempted ObjectGenome audit for CRITICAL control recovery after #288 exposed fail-open pr-ownership exit semantics. Owns recovery claim plus SWARM-PROTOCOL lease; repairing facade exit propagation and invalid live recovery-lane state with negative/positive mechanical proof."
 }
