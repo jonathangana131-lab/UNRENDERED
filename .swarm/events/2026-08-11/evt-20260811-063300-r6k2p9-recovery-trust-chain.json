@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063300-r6k2p9-recovery-trust-chain",
+  "timestamp": "2026-08-11T06:33:00+00:00",
+  "fromWorker": "sol-20260811-r6k2p9",
+  "eventType": "FINDING",
+  "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+  "severity": "high",
+  "summary": "Recovery review note: the missing hardening-base module must be materialized from the trusted PR base ref into the same trusted-swarm directory as swarmctl.py and swarmctl_hardening.py. Do not resolve the import from the request checkout, or the ownership validator would execute request-supplied code across its trust boundary.",
+  "affects": ["SWARM-RECOVERY-PR-OWNERSHIP-IMPORT", "SWARM-CONTROL"],
+  "evidence": [
+    "Current main workflow materializes swarmctl.py and swarmctl_hardening.py with git show origin/${GITHUB_BASE_REF}:..., then executes the copied hardening facade from RUNNER_TEMP.",
+    "Current hardening facade imports swarmctl_hardening_base; that base module itself imports swarmctl, so all three modules form the trusted validator module graph.",
+    "The recovery acceptance explicitly requires the trusted validator to remain exclusively base-branch code rather than request-supplied code."
+  ]
+}
