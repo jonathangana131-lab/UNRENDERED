@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082100-z4m8p2-runtime-recipe-review",
+  "timestamp": "2026-08-11T08:21:00+00:00",
+  "fromWorker": "sol-20260811-z4m8p2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "summary": "Independent source-contract audit requested for PR #310 at exact head edb4254b9a0df6953ac7eca913d9073144ad473f. Canonical CI is green. Verify that PhysicsLabRuntime fails closed on forged permanent-lab provenance and incomplete/substituted canonical key/id populations without changing normal PhysicsLabRecipe.build() lifecycle behavior. No Roblox Studio or engine evidence is claimed or needed for this source-only lane.",
+  "affects": ["HERO-GATE", "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"],
+  "evidence": [
+    "PR #310 exact head edb4254b9a0df6953ac7eca913d9073144ad473f",
+    "Canonical CI run 31472579611 concluded success",
+    "Changed files: src/shared/Physics/PhysicsLabRuntime.luau and tests/physics_lab_runtime.luau",
+    "Capacity-mining finding evt-20260811-075100-z4m8p2-runtime-recipe-fence"
+  ],
+  "metadata": {
+    "claimToken": "7a2d9c4e6b1f8053",
+    "pr": 310,
+    "headSha": "edb4254b9a0df6953ac7eca913d9073144ad473f"
+  }
+}
