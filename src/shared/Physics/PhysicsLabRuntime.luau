@@ -43,6 +43,11 @@ local function assertActive(self: Runtime): ()
 	assert(not self._disposed, "PhysicsLabRuntime is disposed")
 end
 
+local function assertEntityId(value: unknown): string
+	assert(WorldEntity.isId(value), "entityId must satisfy the WorldEntityId value contract")
+	return value :: string
+end
+
 local function boundedFidelityManager(entityCount: number): Manager
 	local config = table.clone(FidelityManager.defaultConfig())
 	config.maxRegisteredEntities = math.max(1, entityCount)
@@ -80,8 +85,9 @@ end
 
 function PhysicsLabRuntime.getRecord(self: Runtime, entityId: string): WorldEntityRecord
 	assertActive(self)
-	local record = self._registry.get(entityId)
-	assert(record ~= nil, `unknown Physics Lab WorldEntityId: {entityId}`)
+	local checkedEntityId = assertEntityId(entityId)
+	local record = self._registry.get(checkedEntityId)
+	assert(record ~= nil, `unknown Physics Lab WorldEntityId: {checkedEntityId}`)
 	return record
 end
 
