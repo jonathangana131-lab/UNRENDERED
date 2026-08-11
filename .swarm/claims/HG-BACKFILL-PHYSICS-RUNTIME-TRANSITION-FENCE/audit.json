@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-r5k9v2q7",
   "claimToken": "4c8e1a7d9b2f6053",
   "claimedAt": "2026-08-11T09:11:10+00:00",
-  "heartbeatAt": "2026-08-11T09:15:10+00:00",
+  "heartbeatAt": "2026-08-11T09:18:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-r5k9v2q7",
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-r5k9v2q7-g2",
   "pr": null,
-  "notes": "Independent audit of PR #334 found a concrete callback bypass through caller-visible runtime authority fields. Audit branch stacks focused regressions over #334 for leaked registry mutation and direct guard reset/dispose; preparing expected-red evidence PR before REQUEST_CHANGES verdict."
+  "notes": "Primary #334 advanced to closure-private RuntimeState/frozen facade while the first audit stack was publishing. Closed stale PR #340 and replaying only the capability-bypass regressions from fresh primary head 025712a983840b32383ddd2d9a2509b41737fc5e for exact-head validation and verdict."
 }
