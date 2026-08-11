@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-210610-g8r4n2v6-authority-394-review",
+  "timestamp": "2026-08-11T21:06:10+00:00",
+  "fromWorker": "sol-20260811-g8r4n2v6",
+  "eventType": "REVIEW_RESULT",
+  "summary": "HG-COMPLETION-AUTHORITY review-1 exact-head verdict on PR #394 @ b38de16ade487ff8ceb48ed3596ebfe33be5fa1f: SOURCE/TEST PASS. The two-file teardown stack preserves #348's reviewed bootstrap-context regression, adds the independently accepted teardown fixture, and matches current PhysicsLabStudioHarness start/stop/restart ownership ordering. Canonical CI and Swarm engine-tests are green on the exact head. Integration remains HOLD: #348 must be retained first and a fresh live pr-ownership PASS is required after the separately owned trusted-history continuity recovery. No Roblox Studio/two-client evidence claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG-COMPLETION-AUTHORITY"]
+}
