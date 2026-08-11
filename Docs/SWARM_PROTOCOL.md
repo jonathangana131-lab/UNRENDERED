@@ -1,4 +1,4 @@
-# Dynamic Swarm Protocol V2
+# Dynamic Swarm Protocol V2.1
 
 The user may open 1 worker or 30+ GPT-5.6 Sol workers and simply say `Go`.
 
@@ -16,7 +16,7 @@ Read `Docs/QUALITY_STANDARD.md` and `Docs/SWARM_CONTROL_PLANE.md`.
 
 An open issue is planned work, not automatically runnable work.
 
-## Non-negotiable V2 laws
+## Non-negotiable V2.1 laws
 
 - **NO implementation before a successful atomic claim.**
 - **CLAIM first. BRANCH second.**
@@ -30,13 +30,16 @@ An open issue is planned work, not automatically runnable work.
 - Implementers do not Reality-Grade-approve themselves where independent review is required.
 - `PROJECT_STATE.md` has one temporary writer resource.
 - Accidental competition is forbidden; intentional tournament competition is explicit.
-- Idle/review is preferable to duplicate implementation.
 - Generated dashboards are observability, not ownership authority.
 - Never treat chat memory as shared swarm state.
+- **GREEN means canonical CI health only. It never means the project is complete or the worker is done.**
+- **`readySlots == 0` is not, by itself, permission to stop.**
+- When the critical path is externally blocked, useful capacity redirects into source-only depth, testing, audit, recovery, review, decomposition and evidence-contract work that does not require the blocked resource.
+- Idle is valid only after the worker has exhausted the capacity fallback chain below. Duplicate architecture remains forbidden.
 
 ## Every `Go`
 
-1. Inspect latest `main` and CI. Red main has priority.
+1. Inspect latest `main` and CI. Red main has priority. A green result is health information, not task completion.
 2. Read `Docs/PROJECT_STATE.md`.
 3. Read `Docs/SWARM_CONTROL_PLANE.md`.
 4. Read live `swarm-control` board/lane/claim/resource state and recent relevant events.
@@ -54,7 +57,37 @@ An open issue is planned work, not automatically runnable work.
 14. Open/update the PR with mandatory Swarm metadata.
 15. Transition to independent review/integration rather than self-approving.
 16. Before stopping, publish a precise handoff if useful and release/transition ownership.
-17. If session/tool budget remains, re-read the board and claim the next useful slot.
+17. If session/tool budget remains, re-read the board and claim the next useful slot. Do not stop merely because one claimed role completed.
+
+## Capacity fallback — no green-and-stop
+
+The live 25-worker stress test exposed a real failure mode: workers registered successfully, observed green `main`, found zero ordinary ready slots because the Studio GUI path was externally blocked, and then stopped. Duplicate prevention worked, but useful throughput collapsed to zero. V2.1 treats that outcome as a scheduler/protocol failure.
+
+A worker may not convert any of these into a completion decision by themselves:
+
+- `main` is GREEN;
+- no ordinary primary is ready;
+- the highest-priority lane is `BLOCKED_EXTERNAL`;
+- Studio/another scarce resource is unavailable;
+- another worker won the first claim race.
+
+Before stopping for lack of work, re-read current state and exhaust this ordered fallback chain:
+
+1. ready critical-path lane/slot;
+2. red-main/control repair if applicable;
+3. waiting PR review, requested-changes verification, or integration work;
+4. stale claim takeover/recovery after inspecting existing branch/PR/events/handoff;
+5. ready `backfill` lane on the current active Epic;
+6. tests/fuzz/property/chaos roles that deepen an already-unlocked subsystem;
+7. source-only diagnostics, authority, persistence, performance or failure-path work that does not require the blocked external resource;
+8. a `capacity`/mining role that inspects one foundation shard for a concrete missing invariant, defect, test gap, integration gap or decomposition opportunity;
+9. only then, if there is truly no safe non-conflicting contribution, stop cleanly with the exact exhausted categories and blocker evidence.
+
+A capacity/mining worker does **not** invent a feature. It inspects current source, tests, recent PRs, accepted events and quality requirements. If it finds concrete useful work, it publishes the finding and creates/recommends a bounded one-shot lane with a narrow non-overlapping scope. If it finds no gap in that shard, it publishes a concise structured FINDING and moves to another available role while session budget remains.
+
+When a scarce resource is blocked, never work around the block by faking evidence or repeatedly queueing hopeless engine jobs. Redirect capacity to work that can be truthfully completed without that resource.
+
+A healthy 20–30-worker burst is allowed to contain implementation, tests, audits, review, integration, recovery and mining simultaneously. The objective is not to force all workers to produce code; it is to prevent the entire swarm from confusing **healthy CI** with **nothing useful to do**.
 
 ## Role selection
 
@@ -66,9 +99,10 @@ The scheduler should prefer, in order:
 5. performance/diagnostics;
 6. Studio/multiplayer/persistence/security evidence;
 7. visual/audio/UX polish when applicable;
-8. active-Epic decomposition;
-9. shared contract/ADR blocker;
-10. another major Epic only when `PROJECT_STATE.md` explicitly unlocks it.
+8. source-only backfill on the active Epic while scarce resources are blocked;
+9. capacity mining/decomposition that produces concrete bounded follow-up lanes;
+10. shared contract/ADR blocker;
+11. another major Epic only when `PROJECT_STATE.md` explicitly unlocks it.
 
 Do not create new major features merely because worker capacity is available.
 
@@ -78,7 +112,7 @@ Normally only 3–5 major Feature Epics are active project-wide.
 
 The control plane also caps simultaneous primary implementation and throttles new primaries when review/integration backlog is high.
 
-With 20+ workers, healthy capacity is distributed across implementation, tests/fuzz, performance/diagnostics, visuals/audio/UX, multiplayer/persistence/security, review/integration and audit.
+With 20+ workers, healthy capacity is distributed across implementation, tests/fuzz, performance/diagnostics, visuals/audio/UX, multiplayer/persistence/security, review/integration, audit, recovery and bounded source-depth mining.
 
 These are dynamic roles, not quotas.
 
@@ -92,7 +126,7 @@ Never overwrite a live claim.
 
 Claims contain a fencing token, generation, heartbeat, lease duration, branch and optional PR.
 
-A stale claim may be taken over only after inspecting existing branch/PR/events/handoff. Use a SHA-conditional update and increment generation. If another takeover wins first, stop.
+A stale claim may be taken over only after inspecting existing branch/PR/events/handoff. Use a SHA-conditional update and increment generation. If another takeover wins first, stop that takeover attempt and select another role.
 
 An old worker returning after takeover must re-read ownership before any push. Changed token/generation/owner means the old worker is fenced.
 
@@ -158,9 +192,13 @@ Ask:
 
 ## Hard stops
 
-Stop or switch role when genuine user/external input is required, a lane is externally blocked, independent review is pending, ownership was lost, no non-conflicting ready/support work exists, or tool/session constraints prevent safe continuation.
+Stop or switch role when genuine user/external input is required for every remaining safe contribution, ownership was lost and no fallback role is available, or tool/session constraints prevent safe continuation.
 
-Idle is valid. Duplicate architecture is not.
+An externally blocked lane alone is **not** a swarm-wide stop condition. Green main alone is **not** a stop condition. Zero ordinary ready primaries alone is **not** a stop condition.
+
+Before a no-work stop, the worker must have re-read live state and exhausted review/integration, stale recovery, active-Epic backfill, tests/audit, and capacity-mining roles. State exactly which categories were checked.
+
+Idle is valid after that exhaustion. Duplicate architecture is not.
 
 ## Security
 

@@ -1,4 +1,4 @@
-# Swarm Control Plane V2
+# Swarm Control Plane V2.1
 
 UNRENDERED's worker swarm uses GitHub as a distributed control plane. This document explains the mechanics. `Docs/SWARM_PROTOCOL.md` is the worker-facing operating protocol.
 
@@ -80,7 +80,7 @@ Protected/high-contention work uses a second atomic resource lease. Exclusive re
 
 `.swarm/resource-claims/<RESOURCE>.json`
 
-A lane claim declaring a resource is invalid without a matching live resource lease carrying the same worker, lane, and claim token.
+A lane claim declaring a resource is invalid at PR acceptance without a matching live resource lease carrying the same worker, lane, and claim token.
 
 Acquire multiple resources in increasing `order` from the resource definitions. If any acquisition fails, release what was acquired and choose another slot. This prevents deadlock cycles.
 
@@ -108,11 +108,55 @@ Dependencies are machine-readable. If an upstream lane is not in an acceptable s
 
 ## Slots
 
-A lane may contain complementary roles such as `primary`, `tests-1`, `reviewer-1`, `performance`, `evidence`, and `integration`.
+A lane may contain complementary roles such as `primary`, `tests-1`, `reviewer-1`, `performance`, `evidence`, `integration`, `audit`, and `capacity-mining`.
 
 One lane can therefore use several Sol workers without several Sol workers building the same implementation.
 
 Reviewer slots may declare `requiresIndependentFrom: primary`; validation rejects the same worker owning both live slots.
+
+## Capacity and externally blocked critical paths
+
+V2.1 distinguishes **critical-path readiness** from **useful project capacity**.
+
+A blocked Studio/Xcode/other scarce resource can make a critical-path primary unrunnable without making the rest of the active Epic useless. The control plane therefore supports bounded source-only `backfill` lanes and standing `capacity` mining roles.
+
+Backfill lanes are not permission to broaden the roadmap. They must:
+
+- stay inside an already-active/unlocked Epic;
+- have narrow, non-overlapping source/test scopes;
+- deepen existing systems through concrete defects, missing invariants, regressions, failure-path hardening, performance/diagnostic contracts, or integration gaps;
+- avoid claims that require the unavailable external resource;
+- never reinterpret source-only confidence as engine evidence.
+
+Capacity-mining roles exist to prevent exhaustion of the static backfill list. A miner inspects a bounded shard of current source/tests/PR history/events and either:
+
+1. publishes a concrete finding and proposes/creates a bounded one-shot lane; or
+2. publishes that no actionable gap was found in that shard and releases the role.
+
+This is decomposition and quality mining, not speculative feature invention.
+
+### Green-main semantics
+
+`mainHealth.status == GREEN` means only that canonical CI for the recorded head passed. It is **not** a scheduler terminal state and must never be rendered/interpreted as “all work complete.”
+
+Likewise, `readySlots == 0` describes the currently materialized ordinary queue at one instant. It is not sufficient proof that no useful work exists. Worker protocol requires checking review/integration, stale recovery, active-Epic backfill and capacity mining before a no-work stop.
+
+### Stress-test lesson
+
+The first real ~25-worker burst after V2 activation registered roughly two dozen Sol workers successfully but yielded zero active claims because the only critical-path engine work was externally blocked and the board exposed no alternate capacity. That outcome proved duplicate prevention but failed throughput. V2.1 makes useful blocked-path capacity an explicit control-plane concern.
+
+The desired burst behavior is:
+
+```text
+many Go workers
+  → atomic competition for highest-value slots
+  → losers reroute immediately
+  → mix of primary/tests/audit/review/recovery/mining
+  → no duplicate primary implementation
+  → no mass "green and stop" collapse
+```
+
+It is acceptable for some workers to become idle after the useful queue is genuinely exhausted. It is not acceptable for the whole swarm to treat healthy CI as completion while source-only depth work remains.
 
 ## PR metadata
 
@@ -146,7 +190,7 @@ The control-branch workflow regenerates `generated/board.json` and `generated/da
 
 Scoring favors high priority, dependency fan-out, review when review backlog is high, integration when integration-ready, and work that fits WIP/resource availability.
 
-The scheduler deliberately withholds new primaries when the review backlog or primary-WIP limit is saturated.
+The scheduler deliberately withholds new primaries when the review backlog or primary-WIP limit is saturated. Non-primary test/audit/mining capacity may remain available so unused Sol capacity can deepen the active Epic without multiplying implementations.
 
 ## Intentional competition
 
@@ -175,5 +219,12 @@ When control CI is red:
 4. validate deterministic tests;
 5. rebuild generated state;
 6. resume scheduling.
+
+When the product critical path is externally blocked but control/main are healthy:
+1. keep the blocker explicit and forbid speculative retries;
+2. expose source-only backfill roles on the current active Epic;
+3. expose review/recovery/audit roles;
+4. use standing capacity miners to derive additional bounded nonduplicate work as needed;
+5. stop workers only after those categories are genuinely exhausted.
 
 If the generated board is wrong, rebuild it from authoritative state. Never edit generated files as source of truth.
