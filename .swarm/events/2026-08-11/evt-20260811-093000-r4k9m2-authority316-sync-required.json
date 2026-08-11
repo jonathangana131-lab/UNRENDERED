@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-093000-r4k9m2-authority316-sync-required",
+  "timestamp": "2026-08-11T09:30:00+00:00",
+  "fromWorker": "sol-20260811-r4k9m2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "normal",
+  "summary": "SYNC_REQUIRED for authority primary PR #316 exact head 983afcac3f78492b2f171afdbd888d8beee71a56. Independent source audit finds the three-file guard-order patch clean: RunService context assertions precede ReplicatedStorage traversal, shared-tree waiting, and requires; server Physics Lab startup ownership and client exclusion remain intact. Integration evidence is stale because current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is one commit ahead through trusted Swarm event-compatibility repair #329. Replay/reconstruct the same bounded patch on current main, rerun canonical CI plus live fail-closed pr-ownership, and obtain fresh independent review on the new exact head. No Studio/two-client evidence is claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "GitHub compare current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 -> PR head 983afcac3f78492b2f171afdbd888d8beee71a56 reports diverged, ahead_by=3, behind_by=1, merge base dd8f1581115c15ce6497db827d17e98d879d0267.",
+    "PR #316 diff changes only src/server/Bootstrap.server.luau, src/client/Bootstrap.client.luau, and tests/hero_gate_contract_integration.luau; context guards precede ReplicatedStorage/WaitForChild/require and server startup remains PhysicsLabStudioHarness.start(workspace).",
+    "GitHub review 4904766226 records current independent SOURCE PASS / SYNC_REQUIRED verdict on exact head 983afcac3f78492b2f171afdbd888d8beee71a56."
+  ],
+  "metadata": {
+    "pr": 316,
+    "headSha": "983afcac3f78492b2f171afdbd888d8beee71a56",
+    "verdict": "SYNC_REQUIRED"
+  }
+}
