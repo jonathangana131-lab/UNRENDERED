@@ -76,6 +76,7 @@ local function run(): number
 	local evidenceComparison = position("Validation.compare(baseline, offSnapshot, 0.001)")
 	local evidenceDeltaCheck = position("for countName, delta in pairs(comparison.delta) do")
 	local evidenceEnvelopeCheck = position("assert(comparison.envelope.ok")
+	local evidenceCheckpointsFreeze = position("\ttable.freeze(checkpoints)")
 	local evidenceFinalSnapshot = position("\tlocal finalSnapshot = PhysicsLabStudioDiagnostics.capture(lab)")
 	local evidenceFinalState = position("finallyEnabled = finalSnapshot.enabled")
 	local evidenceFreeze = position("\ttable.freeze(evidence)")
@@ -169,12 +170,14 @@ local function run(): number
 			and evidenceDeltaCheck < evidenceEnvelopeCheck
 	)
 	expect(
-		"final evidence publishes diagnostics state only after the cycle cleanup path",
+		"final evidence publishes diagnostics state only after the whole cycle loop",
 		evidenceDisableCycle ~= nil
+			and evidenceCheckpointsFreeze ~= nil
 			and evidenceFinalSnapshot ~= nil
 			and evidenceFinalState ~= nil
 			and evidenceFreeze ~= nil
-			and evidenceDisableCycle < evidenceFinalSnapshot
+			and evidenceDisableCycle < evidenceCheckpointsFreeze
+			and evidenceCheckpointsFreeze < evidenceFinalSnapshot
 			and evidenceFinalSnapshot < evidenceFinalState
 			and evidenceFinalState < evidenceFreeze
 	)
