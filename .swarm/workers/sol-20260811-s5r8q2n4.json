@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-s5r8q2n4",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T11:53:00+00:00",
-  "lastSeenAt": "2026-08-11T11:53:30+00:00",
+  "lastSeenAt": "2026-08-11T11:56:30+00:00",
   "laneId": "HG-BACKFILL-REALITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-REALITY-tests-s5r8q2n4",
-  "notes": "Generation-4 test-adversary recovery of stale PR #312 v1 replay coverage onto current main; preserve exact source-only replay invariants, no production/schema changes, no Studio evidence claim."
+  "notes": "Generation-4 test-adversary recovery published as PR #370 at exact head 7a95eafb295eded0364ed64689a52ebfcc0cda37. Canonical CI and Swarm engine-tests pass; ownership rerun required after live-control worker-state correction."
 }
