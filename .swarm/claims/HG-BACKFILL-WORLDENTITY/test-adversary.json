@@ -6,10 +6,10 @@
   "claimToken": "7c1e9a4d5b2f6083",
   "claimedAt": "2026-08-11T09:39:45+00:00",
   "heartbeatAt": "2026-08-11T09:39:45+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 1,
   "generation": 1,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-k7v2m9q4",
   "pr": null,
-  "notes": "Complementary adversarial regression pass on current WorldEntity review head; source/test-only, no Studio evidence."
+  "notes": "Released immediately after duplicate-work detection: the requested boundary coverage already exists green and independently reviewed in PR #344. No product branch or code was created."
 }
