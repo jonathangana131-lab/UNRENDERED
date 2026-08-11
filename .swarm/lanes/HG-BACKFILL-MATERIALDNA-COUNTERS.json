@@ -5,7 +5,7 @@
   "title": "MaterialDNA canonical counter exactness",
   "objective": "Close the demonstrated MaterialDNA maintenance.repairCount integer-aliasing boundary without broadening material architecture or depending on Studio.",
   "priority": 5150,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau", "Docs/MATERIAL_DNA_CONTRACT.md"],
