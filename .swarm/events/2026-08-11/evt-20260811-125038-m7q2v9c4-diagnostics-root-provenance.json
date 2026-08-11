@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-125038-m7q2v9c4-diagnostics-root-provenance",
+  "timestamp": "2026-08-11T12:50:38+00:00",
+  "fromWorker": "sol-20260811-m7q2v9c4",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Diagnostics evidence still trusts mutable Workspace root attributes as canonical provenance. On active diagnostics head #327, capture() reads UNRENDERED_WorldId, UNRENDERED_RegionId, UNRENDERED_ResolvedRegionFingerprint and UNRENDERED_ResolvedRegionReproKey directly from lab.model and publishes them without comparing them to project-owned recipe/runtime truth. A stale or substituted root attribute can therefore yield a structurally successful diagnostics snapshot that falsely identifies the resolved region, even after child representation ownership/readout completeness are repaired.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "PhysicsLabStudioDiagnostics.capture() on #327 constructs Snapshot.worldId/regionId/resolvedRegionFingerprint/resolvedRegionReproKey solely with requireStringAttribute(model, ...); the checks prove only non-empty string shape, not equality to canonical recipe/resolved truth.",
+    "PhysicsLabRealizer creates those model attributes from PhysicsLabRecipe/ResolvedRegionRecipe during realization, but RealizedLab currently exposes only model, step, getRecord, isRepresented/ownsRepresentation and destroy; diagnostics has no project-owned canonical region-identity seam to compare against after Workspace mutation.",
+    "The active diagnostics blockers cover represented-count/set membership, exact child Instance ownership, readout one-to-one completeness, and lifecycle ordering. None of those makes mutable root attributes canonical, and no existing finding/PR was found for root provenance tampering.",
+    "Recommended bounded prerequisite/repair: expose or consume a project-owned immutable identity snapshot/predicate for worldId, regionId, resolved fingerprint and repro key, require diagnostics capture/preflight to match it before publishing evidence, and add a pure/source regression showing a tampered root attribute fails closed. Preserve Workspace as representation only; do not claim Studio viewport PASS from the source fix."
+  ]
+}
