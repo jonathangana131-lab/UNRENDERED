@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070440-x7n4k2-fidelity-no-execute",
+  "timestamp": "2026-08-11T07:04:40+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "Fidelity PolicyInputs violates the documented plain-data/no-execute boundary on primary PR #274 head f98356603608dd8682dba08f0281753082074070. validateInputs reads input fields before establishing that the top-level record is a plain metatable-free table, so a hostile __index metamethod can execute code and synthesize accepted policy scalars. Test-adversary PR #278 head 0ab224b7c6a69c40db31523794ccd9c74c7bc77e reproduces acceptance, metamethod execution, and temporal-state poisoning. Source must reject a non-nil metatable before the first field read; audit PR #292 now records that contract explicitly.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #274 head f98356603608dd8682dba08f0281753082074070 validateInputs immediately dereferences inputs.distanceStuds, inputs.visible, inputs.directlyObserved, and remaining fields without a prior metatable/plain-table check.",
+    "PR #278 head 0ab224b7c6a69c40db31523794ccd9c74c7bc77e constructs an empty table with __index, expects rejection before any metamethod execution, and reports the current source executes __index 19 times while accepting the synthetic values.",
+    "The accepted metatable-backed future evaluation can advance temporal state and make a later valid earlier-timestamp retry fail, so this is both a no-execute boundary and failure-atomicity issue.",
+    "Audit PR #292 head 9bd79140a83379d3f80ddcb86a75528cf2d5e133 documents the metatable-free input requirement; canonical CI validate is green on that docs-only head."
+  ]
+}
