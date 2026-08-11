@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q6x4m9p2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T11:53:56+00:00",
-  "lastSeenAt": "2026-08-11T12:25:00+00:00",
-  "notes": "Currently owns HG-BACKFILL-OBJECTGENOME/test-adversary for a distinct defect hunt beyond already-owned #375 identityParts metatable/no-execute gap. Published/validated WorldEntity stacked PR #379 earlier this session; prior reviews #307/#300 blockers and #370 source/test PASS."
+  "lastSeenAt": "2026-08-11T12:40:00+00:00",
+  "notes": "No active major claim. Published stacked ObjectGenome adversarial PR #381 at exact head 7ebeb4d2 (+18/-0 one canonical test file) on generation-6 primary #380; canonical CI 31492064541 GREEN and Swarm engine-tests PASS, ownership HOLD only because live control contains another worker with invalid status. Handoff review 4906278009 posted to #380. Earlier this session: WorldEntity stacked PR #379 green; PR #307 and #300 completion blockers; PR #370 source/test PASS."
 }
