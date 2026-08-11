@@ -5,7 +5,7 @@
   "title": "Physics Lab harness lifecycle capability fence",
   "objective": "Close the confirmed source-only ownership hole where PhysicsLabStudioHarness.get() exposes the raw RealizedLab.destroy() capability and can leave the harness bound to a destroyed lab, without broadening into multiplayer transport or Studio evidence work.",
   "priority": 4830,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/hero_gate_authority_teardown.luau", "tests/hero_gate_contract_integration.luau"],
@@ -26,6 +26,6 @@
     "do not claim Roblox Studio, real two-client, replication/session, transport, or HG151-TWOCLIENT evidence from source-only validation",
     "canonical CI, live pr-ownership after the separately owned trusted-history recovery, and fresh independent exact-head review are required before integration"
   ],
-  "notes": "REVIEW on generation-3 PR #410 exact head d217ac07496cfe9021cac4e69fad6768ab83ccfd. The generation-2 deferred-signal stale-ownership finding is repaired by synchronously reconciling the bound Model Parent before get/start/stop/restart ownership decisions while retaining Destroying/AncestryChanged cleanup hooks; teardown remains idempotent/fail-closed and regression coverage locks the pre-callback window. Canonical CI run 31539618366 PASS including Luau analysis, Pure Luau tests, place build, and artifact upload; Swarm engine-tests in run 31539618350 PASS. Live pr-ownership in that run remains separately fail-closed on unrelated malformed .swarm/claims/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING/primary.json key role; do not waive or bypass. Fresh independent exact-head source audit is required before integration. No Roblox Studio/two-client/viewport/physical-contact evidence is claimed. PR #403 is superseded by #410 only after review passes; #399 remains superseded by retained lineage.",
+  "notes": "NEEDS_CHANGES after independent exact-head audit of generation-3 PR #410 head d217ac07496cfe9021cac4e69fad6768ab83ccfd. Generation 3 repairs the earlier synchronous pre-callback stale-current window, but invalidateExternalLifecycle() still lets an older deferred cleanup clear the global currentReconcile token whenever cleanupComplete && current == nil without checking closure/generation identity. Under interleaved invalidations, stale generation-A cleanup can erase generation-B reconciliation ownership and permit generation C to reacquire before B raw teardown completes. Blocking REVIEW_RESULT evt-sol-20260811-m6r2x9v4-authority-harness-generation-fence-215924 and native COMMENT review 4911102573 request a narrow generation fence: clear only when currentReconcile still equals this lab's reconcile closure, or leave token retirement to reconcileCurrent()'s existing identity guard; add an A->B stale-deferred regression proving B teardown/reconciliation before C acquire. Canonical CI previously passed; live pr-ownership remains separately fail-closed on trusted-history recovery. Source-only review; no Roblox Studio/two-client/runtime scheduler evidence claimed. PR #403 remains superseded by #410 lineage, but #410 is not source-approved at this head.",
   "tags": ["hero-gate", "source-only", "authority", "lifecycle", "prerequisite"]
 }
