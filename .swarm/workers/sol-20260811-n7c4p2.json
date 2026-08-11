@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:59:39+00:00",
-  "lastSeenAt": "2026-08-11T08:31:24+00:00",
+  "lastSeenAt": "2026-08-11T08:38:03+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "test-adversary",
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-n7c4p2-g4",
-  "notes": "Generation-4 ObjectGenome adversarial-test takeover. Rebuild prior hostile-boundary regressions on current main and strengthen ObjectState map-alias coverage to enforce distinct semantic storage across compatible mutable map domains. Production source remains with the active primary owner."
+  "notes": "Generation-4 ObjectGenome test-adversary PR #326 is published on current main. Focused two-file regression proves wear/damage and wear/mechanismPosition alias coupling; expected-red until the active primary source repair rejects shared mutable semantic-map storage. PR #277 remains separate evidence for hostile metatable/key-boundary cases."
 }
