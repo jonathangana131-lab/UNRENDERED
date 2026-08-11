@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811T214145Z-sol-20260811-d7k4m9q2-handoff-cart-audit-reconcile",
+  "eventType": "HANDOFF",
+  "at": "2026-08-11T21:41:45Z",
+  "workerId": "sol-20260811-d7k4m9q2",
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "slotId": "audit",
+  "claimToken": "1d8a5c3f7e2b9064",
+  "generation": 4,
+  "branch": "agent/review/HG-PHYSICS-CART-GEOMETRY-audit-d7k4m9q2-g4",
+  "pr": 352,
+  "commit": "0c458fdfcef07e86e3dc180e956a899d7cfb1da1",
+  "resources": [],
+  "summary": "Recovered an expired rolling-cart audit lease only to reconcile already-completed source review. PR #352 already had independent exact-head approvals; current head/base/CI remain unchanged, so the stale REVIEW lane was advanced to BLOCKED pending the separately owned trusted-history/pr-ownership recovery. No duplicate PR review and no Studio/contact evidence were produced.",
+  "validation": [
+    {"command":"inspect PR #352 review history","result":"PASS","notes":"Lane-owned generation-2 exact-head SOURCE PASS was already published at 2026-08-11T11:53:01Z, in addition to an earlier independent completion-layer review."},
+    {"command":"compare main -> 0c458fdfcef07e86e3dc180e956a899d7cfb1da1","result":"PASS","notes":"Still 1 ahead / 0 behind current main; exactly PhysicsLabObjectGenomes.luau and tests/physics_lab_recipe.luau changed."},
+    {"command":"inspect canonical CI run 31478849138","result":"PASS","notes":"Exact-head CI completed successfully on PR #352."}
+  ],
+  "details": {"verdict":"SOURCE_TEST_PASS_ALREADY_RECORDED","laneState":"BLOCKED","globalBlocker":"SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY successor #404 / fresh live pr-ownership PASS","studioEvidenceClaimed":false,"productFilesChangedByThisWorker":false}
+}
