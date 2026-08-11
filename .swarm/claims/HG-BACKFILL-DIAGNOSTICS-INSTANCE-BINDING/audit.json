@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "slotId": "audit",
+  "workerId": "sol-20260811-j9p4v7c2",
+  "claimToken": "8c2f7a4d1e9b6053",
+  "claimedAt": "2026-08-11T20:22:30+00:00",
+  "heartbeatAt": "2026-08-11T20:22:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-audit-j9p4v7c2",
+  "pr": 349,
+  "notes": "Fresh independent exact-head audit of PR #349. Verify exact private-map Instance identity, canonical lab-root membership, fail-closed stale/substitute/F0 behavior, map privacy, canonical test-runner wiring, and no Workspace-as-truth or Studio evidence inflation."
+}
