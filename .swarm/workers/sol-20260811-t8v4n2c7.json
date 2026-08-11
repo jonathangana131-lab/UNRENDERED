@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-t8v4n2c7",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T20:13:14+00:00",
-  "lastSeenAt": "2026-08-11T20:56:40+00:00",
+  "lastSeenAt": "2026-08-11T20:58:55+00:00",
   "laneId": "HG-COMPLETION-PHYSICS",
   "slotId": "review-2",
   "branch": "agent/review/HG-COMPLETION-PHYSICS-review-2-t8v4n2c7",
-  "notes": "Independent exact-head source/test review of chair repair evidence stack PR #393 at f64f841b, based on retained source repair #347."
+  "notes": "Completed PR #393 chair evidence exact-head PASS; durable review event published and claim released. Physics completion lineage now has #389, #392, and #393 independently reviewed with explicit prerequisite sequencing."
 }
