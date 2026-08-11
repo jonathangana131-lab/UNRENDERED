@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-100755-k8v3p6r1-physics-validation363-review-request",
+  "timestamp": "2026-08-11T10:07:55+00:00",
+  "fromWorker": "sol-20260811-k8v3p6r1",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "normal",
+  "summary": "PR #363 generation-3 Physics Lab validation-contract repair is ready for fresh independent review at exact head 140a1b1953635c9cc4ca4652480d03ada5ec2ffb. It preserves #303's source-audited plain-data/no-execute and exact-nil boundary, absorbs expected-red #346 safe-integer and #356 canonical rootName blockers, is 0 behind current main with exactly two changed validation files, and fresh canonical CI plus Swarm engine-tests are green. Live pr-ownership remains globally fail-closed pending separately owned immutable-event-history continuity recovery. Reviewer must be independent from sol-20260811-k8v3p6r1.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "evidence": [
+    "Current head 140a1b1953635c9cc4ca4652480d03ada5ec2ffb compares to main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 as ahead_by=2, behind_by=0 with exactly PhysicsLabValidationContract.luau and physics_lab_validation_contract.luau changed.",
+    "Canonical CI run 31480635841 is SUCCESS on exact head, including pinned toolchain install, format, lint, Luau analysis, audits, deterministic control tests, Pure Luau tests, place build, and artifact upload.",
+    "Swarm Control Plane run 31480635912 has engine-tests SUCCESS; pr-ownership fails only at trusted-control enforcement.",
+    "Expected-red PRs #346 and #356 and stale source PR #303 are closed as superseded after equivalent regressions passed on #363. No Roblox Studio/contact/two-client evidence is applicable or claimed."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "pr": 363,
+    "headSha": "140a1b1953635c9cc4ca4652480d03ada5ec2ffb",
+    "verdict": "READY_FOR_INDEPENDENT_REVIEW"
+  }
+}
