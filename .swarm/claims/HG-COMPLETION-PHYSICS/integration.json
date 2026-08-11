@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "integration",
+  "workerId": "sol-20260811-r7m3x9q5",
+  "claimToken": "7c2e9a4f1b6d8053",
+  "claimedAt": "2026-08-11T09:44:20+00:00",
+  "heartbeatAt": "2026-08-11T09:44:20+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/integration/HG-COMPLETION-PHYSICS-r7m3x9q5",
+  "pr": null,
+  "notes": "Physics merge-train integration: identify already-reviewed exact-head candidates, verify CI/ownership/current-main lineage, and integrate only if all gates are satisfied. No Studio evidence claim."
+}
