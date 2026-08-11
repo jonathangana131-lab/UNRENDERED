@@ -99,7 +99,12 @@ local function run(): number
 	expect(
 		"nested node rejection uses owned structural diagnostic",
 		not overNestedAccepted
-			and string.find(tostring(overNestedError), "persistentState exceeds structural limits", 1, true)
+			and string.find(
+				tostring(overNestedError),
+				"persistentState exceeds structural limits",
+				1,
+				true
+			)
 				~= nil
 	)
 
@@ -137,7 +142,12 @@ local function run(): number
 	expect(
 		"distributed byte rejection uses owned structural diagnostic",
 		not distributedOverAccepted
-			and string.find(tostring(distributedOverError), "persistentState exceeds structural limits", 1, true)
+			and string.find(
+				tostring(distributedOverError),
+				"persistentState exceeds structural limits",
+				1,
+				true
+			)
 				~= nil
 	)
 
