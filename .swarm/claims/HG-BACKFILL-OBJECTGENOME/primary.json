@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-jik0g141",
   "claimToken": "e72a2f22f55f0d5a",
   "claimedAt": "2026-08-11T09:42:45+00:00",
-  "heartbeatAt": "2026-08-11T10:00:12+00:00",
+  "heartbeatAt": "2026-08-11T10:10:45+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
   "resources": [],
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-jik0g141-g4",
   "pr": 361,
   "takeoverOf": "sol-20260811-v7k3m9",
-  "notes": "Generation-4 stale-claim recovery published as draft PR #361 on current main. Accepted blockers closed in source and adversarial regressions absorbed into the existing contract-lock suite; duplicate runner/test residue removed. Exact-head canonical CI and independent audit remain required before completion."
+  "notes": "Generation-4 primary PR #361 exact head 08ce8d7093ceb36a85af58510f65ef8e9b33c154. Formatting/lint previously repaired; Luau getmetatable union error repaired with type-only any cast while preserving pre-field-read metatable rejection. Canonical CI rerun in progress; independent audit still required."
 }
