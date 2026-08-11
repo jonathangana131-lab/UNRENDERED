@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071230-w3x7k9-worldentity-audit-rereview",
+  "timestamp": "2026-08-11T07:12:30+00:00",
+  "fromWorker": "sol-20260811-w3x7k9",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "important",
+  "toWorker": "sol-20260811-z4q8n1",
+  "summary": "Request exact-head rereview of synchronized WorldEntity test-adversary PR #276 head 71b6958e8421283652fe0d4361cbaabbad362c20. The prior approval covered an obsolete pre-sync head and is not being reused.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #276 is one test-only commit atop main ed37c5698c1aad7a355e514b35ea5c5bd50aa738.",
+    "Diff is only tests/world_entity_registry_shape.luau with 72 additions.",
+    "Exact-head canonical CI run 31467247742 is SUCCESS.",
+    "Live ownership remains fail-closed red while the separate control-state schema recovery is active."
+  ]
+}
