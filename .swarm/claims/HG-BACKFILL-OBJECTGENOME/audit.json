@@ -5,10 +5,10 @@
   "workerId": "sol-20260811-went7k3",
   "claimToken": "2b81d6f4a930ce57",
   "claimedAt": "2026-08-11T07:08:20+00:00",
-  "heartbeatAt": "2026-08-11T07:18:00+00:00",
+  "heartbeatAt": "2026-08-11T07:24:10+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-went7k3",
-  "pr": null
+  "pr": 299
 }
