@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064100-z4q8n1-materialdna-primary-review",
+  "timestamp": "2026-08-11T06:41:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "high",
+  "summary": "Reviewed primary PR #283 head 033277795e4195cc79aef974e328b94048836975. The centralized validateKnownFields repair correctly removes hostile-key metamethod execution by never calling tostring on arbitrary keys, and it preserves the recipe/state/reference callback-count regressions from #272. Integration is not ready on this head: canonical CI 31465598502 fails StyLua because MaterialDNA.luau lacks a final newline; the stronger throwing-__tostring fail-closed regression from #272 is not yet preserved; and the existing Codex P2 requiring goldens to cover every catalog fixture remains applicable.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "PR #283 source patch branches non-string keys to a type-only diagnostic and interpolates only already-proven string keys, eliminating the demonstrated formatter execution path.",
+    "PR #283 Swarm Control Plane run 31465598526 is green after merged control recovery #288, confirming live ownership validation is operational again.",
+    "PR #283 canonical CI run 31465598502 fails at Format check only; job log shows missing final newline in src/shared/Materials/MaterialDNA.luau.",
+    "PR #272 head 97577ea87d4c70b8b5a4c0ea0ed63c13b6de92bd additionally proves a throwing unknown-key __tostring can abort validateRecipe on old source; that fail-closed assertion should survive integration.",
+    "Codex review thread discussion_r3755715416 still identifies that the handwritten golden list does not fail when a new MaterialFixtureCatalog fixture lacks a golden."
+  ]
+}
