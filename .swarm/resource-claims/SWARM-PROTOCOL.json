@@ -5,8 +5,8 @@
   "laneId": "SWARM-V2-HARDEN",
   "claimToken": "b4c9e2f7a16d5c30",
   "acquiredAt": "2026-08-11T04:57:30+00:00",
-  "heartbeatAt": "2026-08-11T04:57:30+00:00",
+  "heartbeatAt": "2026-08-11T05:20:00+00:00",
   "leaseSeconds": 2400,
   "generation": 1,
-  "notes": "Exclusive control-plane architecture/implementation lease for V2 hardening."
+  "notes": "Exclusive control-plane architecture/implementation lease for V2 hardening PR #267."
 }
