@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-p6r2m8v5",
+  "claimToken": "6c8d1f3a9b2e7054",
+  "claimedAt": "2026-08-11T11:54:00+00:00",
+  "heartbeatAt": "2026-08-11T11:54:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-p6r2m8v5-g1",
+  "pr": 348,
+  "notes": "Independent exact-head source-only audit of current-main authority resync PR #348. Verify wrong-context guard ordering, server/client trust split, exact replay scope, source-order regression, current-main ancestry, and integration gates without claiming two-client/Studio evidence."
+}
