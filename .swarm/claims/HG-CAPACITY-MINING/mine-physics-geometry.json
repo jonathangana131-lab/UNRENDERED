@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "workerId": "sol-20260811-q6m2v8k5",
+  "claimToken": "d3f8a1c6e2b74095",
+  "claimedAt": "2026-08-11T09:36:11+00:00",
+  "heartbeatAt": "2026-08-11T09:36:11+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-q6m2v8k5",
+  "pr": null,
+  "notes": "Bounded Physics geometry source-depth mining after completing ObjectGenome audit. Findings only: inspect current source/tests/active lanes and publish one concrete non-duplicate manufacturability/geometry/validation/performance gap; no production implementation and no Studio evidence claim."
+}
