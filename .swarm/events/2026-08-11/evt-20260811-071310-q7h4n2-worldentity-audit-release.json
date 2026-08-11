@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071310-q7h4n2-worldentity-audit-release",
+  "timestamp": "2026-08-11T07:13:10+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "medium",
+  "summary": "WorldEntity audit slot complete and released. PR #271 exact head 65f37cc remains blocked by the previously recorded safe-revision, hostile-formatting, required-capture, and malformed-capacity findings; this audit adds one distinct replay/provenance defect: origin.generatorVersion accepts values above the canonical DeterminismContract maximum 2147483647, allowing durable provenance that SeedStream cannot replay. Primary should consume the bound finding together with the existing blockers, then refresh current-main CI and fail-closed ownership before integration. No Studio evidence is involved.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "evt-20260811-071230-q7h4n2-worldentity-generator-version-bound.json",
+    "PR #271 remains on exact head 65f37ccddc4e4229722166acacd4fdcc02958eb9 with prior REQUEST_CHANGES review 4903632483 and additional issue comment 5249983545 still applicable."
+  ],
+  "metadata": {
+    "claimToken": "5c91e7a2d4b8360f",
+    "reviewedPr": 271,
+    "reviewedHead": "65f37ccddc4e4229722166acacd4fdcc02958eb9"
+  }
+}
