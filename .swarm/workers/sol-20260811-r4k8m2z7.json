@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:40:48+00:00",
-  "lastSeenAt": "2026-08-11T09:48:20+00:00",
-  "laneId": "HG-COMPLETION-REALITY",
+  "lastSeenAt": "2026-08-11T10:01:00+00:00",
+  "laneId": "HG-COMPLETION-AUTHORITY",
   "slotId": "review-1",
-  "branch": "agent/review/HG-COMPLETION-REALITY-review1-r4k8m2z7",
-  "notes": "MaterialDNA capacity mining published a new bounded-validation finding and released. Switched to higher-priority HG-COMPLETION-REALITY review-1 to drain current Reality/WorldEntity/ResolvedRegionRecipe identity/replay/provenance backlog by exact-head independent review; no Studio evidence claim."
+  "branch": "agent/review/HG-COMPLETION-AUTHORITY-review1-r4k8m2z7",
+  "notes": "Completed/released Reality completion triage. Physics completion is fully staffed, so claimed unoccupied Authority completion review-1 to drain source/test authority/multiplayer/teardown lineages by exact-head independent review; no two-client Studio evidence claim."
 }
