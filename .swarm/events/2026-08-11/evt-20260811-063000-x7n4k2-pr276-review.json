@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063000-x7n4k2-pr276-review",
+  "timestamp": "2026-08-11T06:30:00+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "summary": "APPROVE PR #276 at head 91b483749f94a91f62c8d08d5e28363824234e0f for the test-adversary slot. The diff is test-only and inside declared scope, extends the already-enumerated WorldEntity registry-shape suite, exercises existing ID/diagnostic/capacity boundaries without changing architecture, and canonical CI validate is green. The separate Swarm Control Plane PR check is currently red because of the repository-wide checker import regression already reported by the primary worker; that infrastructure failure must be repaired before integration but is not caused by #276's diff.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #276 changes only tests/world_entity_registry_shape.luau (+72/-0), within the test-adversary slot scope.",
+    "tests/run.luau already enumerates world_entity_registry_shape, so these assertions execute in the canonical Pure Luau suite.",
+    "CI check run validate on head 91b483749f94a91f62c8d08d5e28363824234e0f completed success.",
+    "Swarm Control Plane pr-ownership check is independently red on the same head; current lane evidence attributes that to the trusted checker import/materialization regression, not this test diff."
+  ],
+  "metadata": {
+    "pr": 276,
+    "headSha": "91b483749f94a91f62c8d08d5e28363824234e0f",
+    "result": "APPROVE",
+    "claimToken": "a4e7c19d2f6b8053"
+  }
+}
