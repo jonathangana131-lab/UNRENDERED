@@ -103,6 +103,7 @@ local function run(): number
 	local malformedOk = ValidationContract.inspectSnapshot(malformed)
 	expect("snapshot validation rejects a count that omits the root", malformedOk == false)
 
+	-- Decoded evidence must not impersonate a different root while retaining canonical recipe/world identity.
 	local noncanonicalRoot = snapshot(counts(46, 0), -10, 10)
 	noncanonicalRoot.rootName = "UNRENDERED_PhysicsLab_Imposter"
 	local noncanonicalRootOk = ValidationContract.inspectSnapshot(noncanonicalRoot)
