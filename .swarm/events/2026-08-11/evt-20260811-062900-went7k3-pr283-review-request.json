@@ -7,7 +7,7 @@
   "laneId": "HG-BACKFILL-MATERIALDNA",
   "severity": "info",
   "summary": "PR #283 is ready for independent MaterialDNA Reality-Grade review on exact head 405ad24a9a6b0145546bf2476584939315685780. Ordinary canonical CI run 31464905460 is green; merge remains blocked by the separate project-wide PR-ownership import regression now represented by recovery lane SWARM-RECOVERY-PR-OWNERSHIP-IMPORT. Independent review should verify deterministic and complete full-content fixture goldens without creating a second production identity contract.",
-  "affects": ["HG-BACKFILL-MATERIALDNA", "PR-283"],
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
   "evidence": [
     "Only tests/materialdna_metatable_boundary.luau changes (+115/-0), within the lane scope.",
     "Pure Luau tests, formatting, lint, Luau analysis, audits and Rojo build all pass in CI run 31464905460.",
