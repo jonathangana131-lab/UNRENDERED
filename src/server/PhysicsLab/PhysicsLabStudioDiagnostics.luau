@@ -9,6 +9,8 @@ local PhysicsLabStudioDiagnostics = {}
 
 local DIAGNOSTICS_ROOT_NAME = "UNRENDERED_PhysicsLabDiagnostics"
 local DIAGNOSTICS_SCHEMA_VERSION = 1
+local DEFAULT_TOGGLE_EVIDENCE_CYCLES = 20
+local MAX_TOGGLE_EVIDENCE_CYCLES = 20
 local CHECKPOINT_CYCLES = table.freeze({ [1] = true, [5] = true, [10] = true, [20] = true })
 
 export type EntityDiagnostic = {
@@ -50,6 +52,17 @@ local function requireStringAttribute(instance: Instance, attributeName: string)
 	return value :: string
 end
 
+local function requireToggleCycleCount(cycles: any): number
+	if cycles == nil then
+		return DEFAULT_TOGGLE_EVIDENCE_CYCLES
+	end
+	assert(
+		type(cycles) == "number" and cycles >= 1 and cycles <= MAX_TOGGLE_EVIDENCE_CYCLES and cycles % 1 == 0,
+		`diagnostics cycle count must be an integer in [1, {MAX_TOGGLE_EVIDENCE_CYCLES}]`
+	)
+	return cycles :: number
+end
+
 local function diagnosticsRoot(model: Model): Folder?
 	local existing = model:FindFirstChild(DIAGNOSTICS_ROOT_NAME)
 	if existing == nil then
@@ -63,13 +76,33 @@ local function diagnosticsRoot(model: Model): Folder?
 	return existing
 end
 
-local function directRepresentations(model: Model): { Instance }
+local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model: Model): { Instance }
+	local expectedRepresentedCount = model:GetAttribute("UNRENDERED_RepresentedCount")
+	assert(
+		type(expectedRepresentedCount) == "number"
+			and expectedRepresentedCount >= 0
+			and expectedRepresentedCount % 1 == 0,
+		"invalid authoritative Physics Lab represented-count metric"
+	)
+
 	local representations = {}
+	local seenEntityIds: { [string]: boolean } = {}
 	for _, child in ipairs(model:GetChildren()) do
 		if child.Name ~= DIAGNOSTICS_ROOT_NAME and child:GetAttribute("UNRENDERED_WorldEntityId") ~= nil then
+			local entityId = requireStringAttribute(child, "UNRENDERED_WorldEntityId")
+			assert(not seenEntityIds[entityId], `duplicate diagnostics representation id: {entityId}`)
+			assert(
+				lab.ownsRepresentation(entityId, child),
+				`diagnostics child is not the authoritative representation Instance: {entityId}`
+			)
+			seenEntityIds[entityId] = true
 			table.insert(representations, child)
 		end
 	end
+	assert(
+		#representations == expectedRepresentedCount,
+		`diagnostics representation count disagrees with authoritative lab metric: expected {expectedRepresentedCount}, got {#representations}`
+	)
 	table.sort(representations, function(a: Instance, b: Instance): boolean
 		return a.Name < b.Name
 	end)
@@ -90,7 +123,7 @@ end
 
 local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model): { ReadoutPlan }
 	local plans: { ReadoutPlan } = {}
-	for _, representation in ipairs(directRepresentations(model)) do
+	for _, representation in ipairs(directRepresentations(lab, model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
 		local representedFidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity")
@@ -111,13 +144,48 @@ local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Mod
 	return plans
 end
 
+local function validateReadoutCompleteness(folder: Folder, entities: { EntityDiagnostic }): number
+	local expectedEntityIds: { [string]: boolean } = {}
+	for _, entity in ipairs(entities) do
+		assert(
+			expectedEntityIds[entity.worldEntityId] == nil,
+			`duplicate authoritative diagnostics entity id: {entity.worldEntityId}`
+		)
+		expectedEntityIds[entity.worldEntityId] = true
+	end
+
+	local seenEntityIds: { [string]: boolean } = {}
+	local readoutCount = 0
+	for _, child in ipairs(folder:GetChildren()) do
+		assert(child:IsA("BillboardGui"), `unexpected diagnostics readout class: {child.ClassName}`)
+		local entityId = requireStringAttribute(child, "UNRENDERED_WorldEntityId")
+		assert(
+			expectedEntityIds[entityId] == true,
+			`diagnostics readout does not map to an authoritative represented entity: {entityId}`
+		)
+		assert(seenEntityIds[entityId] == nil, `duplicate diagnostics readout identity: {entityId}`)
+		seenEntityIds[entityId] = true
+
+		local label = child:FindFirstChild("Readout")
+		assert(label ~= nil and label:IsA("TextLabel"), `diagnostics readout has no TextLabel: {entityId}`)
+		assert(#child:GetDescendants() == 1, `diagnostics readout has unexpected descendants: {entityId}`)
+		readoutCount += 1
+	end
+
+	assert(
+		readoutCount == #entities,
+		`diagnostics readout count disagrees with authoritative entities: expected {#entities}, got {readoutCount}`
+	)
+	return 1 + 2 * readoutCount
+end
+
 function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab): Snapshot
 	assertStudioServer()
 	local model = lab.model
 	local folder = diagnosticsRoot(model)
 	local entities: { EntityDiagnostic } = {}
 
-	for _, representation in ipairs(directRepresentations(model)) do
+	for _, representation in ipairs(directRepresentations(lab, model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
 		local representedFidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity")
@@ -148,7 +216,7 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 	table.freeze(entities)
 	local diagnosticInstanceCount = 0
 	if folder ~= nil then
-		diagnosticInstanceCount = 1 + #folder:GetDescendants()
+		diagnosticInstanceCount = validateReadoutCompleteness(folder, entities)
 	end
 
 	local snapshot: Snapshot = {
@@ -189,6 +257,7 @@ function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab)
 			local billboard = Instance.new("BillboardGui")
 			billboard.Parent = folder
 			billboard.Name = string.format("Entity_%03d_%s", index, plan.key)
+			billboard:SetAttribute("UNRENDERED_WorldEntityId", plan.worldEntityId)
 			billboard.AlwaysOnTop = true
 			billboard.MaxDistance = 120
 			billboard.Size = UDim2.fromOffset(560, 116)
@@ -243,8 +312,7 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 	cycles: number?
 ): { [string]: any }
 	assertStudioServer()
-	local cycleCount = cycles or 20
-	assert(cycleCount >= 1 and cycleCount % 1 == 0, "diagnostics cycle count must be a positive integer")
+	local cycleCount = requireToggleCycleCount(cycles)
 
 	PhysicsLabStudioDiagnostics.disable(lab)
 	local baseline = Validation.captureFull(lab.model)
