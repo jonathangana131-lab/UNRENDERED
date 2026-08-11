@@ -8,27 +8,27 @@
     "DEPENDENCY_DISCOVERED": 4,
     "EVIDENCE_RESULT": 8,
     "EXTERNAL_BLOCKER": 1,
-    "FINDING": 68,
+    "FINDING": 70,
     "HANDOFF": 25,
     "INTEGRATION_RESULT": 7,
     "RECOVERY": 4,
-    "REVIEW_REQUEST": 35,
-    "REVIEW_RESULT": 56,
+    "REVIEW_REQUEST": 36,
+    "REVIEW_RESULT": 58,
     "SUPERSEDED": 1
   },
-  "generatedAt": "2026-08-11T08:16:09.554272+00:00",
+  "generatedAt": "2026-08-11T08:17:56.053388+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED_EXTERNAL": 1,
     "DONE": 11,
     "LOCKED": 1,
     "READY": 15,
-    "REVIEW": 1,
+    "REVIEW": 2,
     "SUPERSEDED": 2
   },
   "note": "Gross lines written are diagnostic, not a success metric.",
   "readySlots": 11,
-  "reviewBacklog": 1,
+  "reviewBacklog": 2,
   "schemaVersion": 1,
-  "staleClaims": 6
+  "staleClaims": 5
 }
