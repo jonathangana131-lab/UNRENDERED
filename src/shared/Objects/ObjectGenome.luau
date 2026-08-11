@@ -838,6 +838,7 @@ function ObjectGenome.recipeFingerprint(value: ObjectGenome): string
 end
 
 function ObjectGenome.identityParts(value: ObjectGenome): { string }
+	ObjectGenome.validate(value)
 	return {
 		tostring(value.schemaVersion),
 		value.familyId,
@@ -847,7 +848,6 @@ function ObjectGenome.identityParts(value: ObjectGenome): { string }
 end
 
 function ObjectGenome.identityKey(value: ObjectGenome): string
-	ObjectGenome.validate(value)
 	return StableId.fromParts(ObjectGenome.STABLE_ID_NAMESPACE, ObjectGenome.identityParts(value))
 end
 
