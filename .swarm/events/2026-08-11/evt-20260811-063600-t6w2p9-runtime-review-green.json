@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063600-t6w2p9-runtime-review-green",
+  "timestamp": "2026-08-11T06:36:00+00:00",
+  "fromWorker": "sol-20260811-t6w2p9",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME",
+  "severity": "normal",
+  "summary": "PR #284 is ready for independent review on exact head e531ca8a0cb98291bf8529e1143079dec0ecb74e. The prior Codex P2 about swallowed long-cycle assertion diagnostics is addressed; canonical CI 31465584290 and Swarm Control Plane 31465584294 are both green after recovery #288 restored trusted PR ownership imports.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME"],
+  "evidence": [
+    "PR #284 changes only tests/physics_lab_runtime_transition_required.luau, an existing suite enumerated by tests/run.luau.",
+    "CI run 31465584290 passed format, lint, Luau analysis, audits, pure Luau tests, Rojo build, and artifact upload on exact head e531ca8a0cb98291bf8529e1143079dec0ecb74e.",
+    "Swarm Control Plane run 31465584294 passed on the same exact head after main merged #288.",
+    "Review feedback now preserves pcall failure text and skips misleading downstream lifecycle assertions after an aborted stress cycle."
+  ]
+}
