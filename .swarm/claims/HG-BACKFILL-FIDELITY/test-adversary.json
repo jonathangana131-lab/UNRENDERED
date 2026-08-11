@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-b6vkvo6l",
+  "claimToken": "bcf06a19e3d74285",
+  "claimedAt": "2026-08-11T09:13:30+00:00",
+  "heartbeatAt": "2026-08-11T09:13:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-FIDELITY-tests-b6vkvo6l",
+  "pr": null,
+  "notes": "Adversarial test pass on active FidelityManager primary #335: inspect exact head/current main for one concrete transition, rejection atomicity, finite-state, entity-id, deterministic-ordering, or accounting regression gap; tests scope only."
+}
