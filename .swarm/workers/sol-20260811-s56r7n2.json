@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:46:14+00:00",
-  "lastSeenAt": "2026-08-11T07:46:14+00:00",
-  "laneId": "HG-BACKFILL-REALITY",
-  "slotId": "primary",
-  "branch": "agent/reality/HG-BACKFILL-REALITY-primary-s56r7n2",
-  "notes": "Claiming source-only Reality/replay hardening; no Studio evidence claims."
+  "lastSeenAt": "2026-08-11T07:50:58+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-s56r7n2",
+  "notes": "Mining authority/multiplayer source for a concrete non-duplicate Hero Gate depth lane; no Studio evidence claim."
 }
