@@ -5,7 +5,7 @@
   "title": "Physics Lab geometry and recipe depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete recipe geometry, scale, support reachability, door-proxy manufacturability, COM, clearance, component, or validation-contract defects without requiring Studio.",
   "priority": 4900,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/PhysicsLabRecipe.luau", "src/shared/Physics/PhysicsLabScale.luau", "src/shared/Physics/PhysicsLabValidationContract.luau", "tests/physics_lab_recipe.luau", "tests/physics_lab_scale.luau", "tests/physics_lab_validation_contract.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"Physics recipe realism and validation auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/physics_lab_recipe.luau","tests/physics_lab_validation_contract.luau","Docs/PHYSICS_LAB_VALIDATION.md"]}
   ],
   "acceptance": ["target measurable geometry/contract gaps", "do not turn the lab proxy into the locked Hero Door feature", "all geometry changes preserve deterministic recipes", "new invariants get tests", "do not claim engine contact proof from source-only work"],
-  "notes": "Fresh independent audit evt-20260811-115940-94hvgfgy-envelope-overflow-review returns generation-3 PR #363 to NEEDS_CHANGES after expected-red PR #368 proved a new finite-data escape: individually finite envelope coordinates can overflow during derived drift subtraction, publishing math.huge in driftStuds/maxAbsStuds. Primary must absorb #368's focused regression and fail closed if any derived envelope drift/maxAbs is non-finite, while preserving ordinary finite comparisons; then rerun exact-head canonical CI/live ownership and request fresh independent review. Prior #363 hardening remains valuable: plain-data/exact-shape/no-execute + exact-nil tolerance, safe-integer schema/count bounds, and canonical rootName identity. Live pr-ownership remains separately fail-closed on immutable-event-history recovery. Do not merge expected-red #368 independently. No Studio evidence claimed.",
+  "notes": "Generation-4 successor PR #376 exact head 6e91faaf87ec2251f0390773061663d0ffa22ccb preserves reviewed #363 hardening and absorbs expected-red #368. The production contract now fails closed if internally derived min/max envelope drift or maxAbsStuds is non-finite while keeping the accepted snapshot coordinate contract unchanged; a focused extreme finite-input regression proves the overflow path rejects. Relative to #363 the repair is 11 production + 12 test lines in the same two lane-owned files. Canonical CI run 31489364362 is SUCCESS through format/lint/Luau/audits/Pure Luau/Rojo build; Swarm run 31489364557 engine-tests is SUCCESS. Live pr-ownership remains separately fail-closed on immutable-event-history recovery. Fresh independent exact-head audit is required before integration; #363/#368 remain open only until this successor is accepted, then should close as superseded. No Studio evidence claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
