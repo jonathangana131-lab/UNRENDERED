@@ -71,7 +71,11 @@ The default values are an initial Foundation-Lock profile, not permanent world-s
 
 ## Bounded state and metrics
 
-The manager has a configurable `maxRegisteredEntities` hard budget (4096 by default). Registration beyond that capacity fails closed and increments an observable rejection counter. Callers must unregister entities when their interest/streaming ownership ends.
+The manager has a configurable `maxRegisteredEntities` hard budget (4096 by default). Configuration may lower or raise that runtime budget, but it may never exceed the project-owned `FidelityManager.MAX_REGISTERED_ENTITIES` safety ceiling of 65,536 records. The ceiling prevents a caller from turning a finite-looking configuration into an effectively unbounded `_states` table.
+
+That 65,536 ceiling is a defensive source-level envelope, **not** a claim that a target device can sustain that many active fidelity records. Measured runtime/device profiles should normally choose a lower budget and remain responsible for frame-time and memory evidence. Changing the safety ceiling itself is an explicit project contract change rather than ordinary profile tuning.
+
+Registration beyond the configured capacity fails closed and increments an observable rejection counter. Callers must unregister entities when their interest/streaming ownership ends.
 
 The manager exposes bounded aggregate metrics:
 
@@ -86,9 +90,9 @@ It intentionally stores no transition-history queue and no world-sized entity da
 
 ## Performance expectations
 
-Policy selection and `step` are O(1) for one registered entity. The manager stores one small temporal/diagnostic state record per registered entity plus aggregate counters, with total records capped by configuration.
+Policy selection and `step` are O(1) for one registered entity. The manager stores one small temporal/diagnostic state record per registered entity plus aggregate counters, with total records capped first by the caller-selected runtime budget and absolutely by the project-owned safety ceiling.
 
-Callers should register/evaluate only entities relevant to current streaming/interest work rather than scan the conceptual universe every frame. Later device profiling can tune both capacity and evaluation cadence under explicit frame/memory budgets without changing this contract.
+Callers should register/evaluate only entities relevant to current streaming/interest work rather than scan the conceptual universe every frame. Later device profiling can tune both capacity and evaluation cadence under explicit frame/memory budgets without changing the F0-F4 contract or bypassing the source-level safety ceiling.
 
 ## Integration flow
 
