@@ -96,6 +96,148 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(metatableValidationGenome), "schema.metatable")
 	)
 
+	local nestedMetatableCases = {
+		{
+			name = "root genome",
+			mutate = function(genome)
+				setmetatable(genome, {})
+			end,
+		},
+		{
+			name = "dimensions vector",
+			mutate = function(genome)
+				setmetatable(genome.dimensionsM, {})
+			end,
+		},
+		{
+			name = "dimension limits",
+			mutate = function(genome)
+				setmetatable(genome.dimensionLimits, {})
+			end,
+		},
+		{
+			name = "dimension minimum vector",
+			mutate = function(genome)
+				setmetatable(genome.dimensionLimits.minM, {})
+			end,
+		},
+		{
+			name = "mass limits",
+			mutate = function(genome)
+				setmetatable(genome.massLimitsKg, {})
+			end,
+		},
+		{
+			name = "center of mass vector",
+			mutate = function(genome)
+				setmetatable(genome.centerOfMassM, {})
+			end,
+		},
+		{
+			name = "components collection",
+			mutate = function(genome)
+				setmetatable(genome.components, {})
+			end,
+		},
+		{
+			name = "component record",
+			mutate = function(genome)
+				setmetatable(genome.components[1], {})
+			end,
+		},
+		{
+			name = "component position vector",
+			mutate = function(genome)
+				setmetatable(genome.components[1].localPositionM, {})
+			end,
+		},
+		{
+			name = "component rotation vector",
+			mutate = function(genome)
+				setmetatable(genome.components[1].localRotationDeg, {})
+			end,
+		},
+		{
+			name = "component dimensions vector",
+			mutate = function(genome)
+				setmetatable(genome.components[1].dimensionsM, {})
+			end,
+		},
+		{
+			name = "component support collection",
+			mutate = function(genome)
+				setmetatable(genome.components[1].supportKeys, {})
+			end,
+		},
+		{
+			name = "mechanisms collection",
+			mutate = function(genome)
+				setmetatable(genome.mechanisms, {})
+			end,
+		},
+		{
+			name = "mechanism record",
+			mutate = function(genome)
+				setmetatable(genome.mechanisms[1], {})
+			end,
+		},
+		{
+			name = "caster swivel axis",
+			mutate = function(genome)
+				setmetatable(genome.mechanisms[1].swivelAxis, {})
+			end,
+		},
+		{
+			name = "caster roll axis",
+			mutate = function(genome)
+				setmetatable(genome.mechanisms[1].rollAxis, {})
+			end,
+		},
+		{
+			name = "affordances collection",
+			mutate = function(genome)
+				setmetatable(genome.affordances, {})
+			end,
+		},
+		{
+			name = "affordance record",
+			mutate = function(genome)
+				setmetatable(genome.affordances[1], {})
+			end,
+		},
+		{
+			name = "affordance point vector",
+			mutate = function(genome)
+				setmetatable(genome.affordances[1].localPointM, {})
+			end,
+		},
+	}
+	for _, metatableCase in ipairs(nestedMetatableCases) do
+		local hostileGenome = deepCopy(Fixtures.officeChair)
+		metatableCase.mutate(hostileGenome)
+		local inspectOk, report = pcall(ObjectGenome.inspect, hostileGenome)
+		expect(
+			"rejects metatable-backed " .. metatableCase.name .. " without evaluator crash",
+			inspectOk and hasCode(report, "schema.metatable")
+		)
+	end
+
+	local hostileTopLevelKey = deepCopy(Fixtures.officeChair)
+	hostileTopLevelKey[{}] = true
+	local hostileTopLevelOk, hostileTopLevelReport = pcall(ObjectGenome.inspect, hostileTopLevelKey)
+	expect(
+		"fails closed on non-string top-level schema keys without formatter crash",
+		hostileTopLevelOk and hasCode(hostileTopLevelReport, "schema.unknown_field")
+	)
+
+	local hostileComponentIndex = deepCopy(Fixtures.officeChair)
+	hostileComponentIndex.components[{}] = hostileComponentIndex.components[1]
+	local hostileComponentIndexOk, hostileComponentIndexReport = pcall(ObjectGenome.inspect, hostileComponentIndex)
+	expect(
+		"fails closed on non-numeric component collection keys without traversal crash",
+		hostileComponentIndexOk and hasCode(hostileComponentIndexReport, "array.shape")
+	)
+
 	local unknownStateField = ObjectGenome.defaultState(Fixtures.officeChair)
 	unknownStateField.futureState = true
 	expect(
@@ -103,15 +245,33 @@ local function run(): number
 		hasCode(ObjectGenome.inspectState(Fixtures.officeChair, unknownStateField), "state.unknown_field")
 	)
 
-	local metatableState = ObjectGenome.defaultState(Fixtures.officeChair)
-	setmetatable(metatableState.componentWear, {
-		__index = function()
-			return 0
-		end,
-	})
+	local stateMetatableCases = {
+		{ name = "component wear", field = "componentWear" },
+		{ name = "component damage", field = "componentDamage" },
+		{ name = "mechanism position", field = "mechanismPosition" },
+		{ name = "detached components", field = "detachedComponents" },
+	}
+	for _, metatableCase in ipairs(stateMetatableCases) do
+		local metatableState = ObjectGenome.defaultState(Fixtures.officeChair)
+		setmetatable(metatableState[metatableCase.field], {
+			__index = function()
+				return 0
+			end,
+		})
+		local inspectOk, report = pcall(ObjectGenome.inspectState, Fixtures.officeChair, metatableState)
+		expect(
+			"rejects metatable-backed mutable state map: " .. metatableCase.name,
+			inspectOk and hasCode(report, "state.metatable")
+		)
+	end
+
+	local hostileStateKey = ObjectGenome.defaultState(Fixtures.officeChair)
+	local functionKey = function() end
+	hostileStateKey.componentWear[functionKey] = 0
+	local hostileStateKeyOk, hostileStateKeyReport = pcall(ObjectGenome.inspectState, Fixtures.officeChair, hostileStateKey)
 	expect(
-		"rejects metatable-backed mutable state maps",
-		hasCode(ObjectGenome.inspectState(Fixtures.officeChair, metatableState), "state.metatable")
+		"fails closed on non-string mutable-state keys without formatter crash",
+		hostileStateKeyOk and hasCode(hostileStateKeyReport, "state.unknown_key")
 	)
 
 	local sparseComponents = deepCopy(Fixtures.officeChair)
