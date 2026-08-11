@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-8d5d357a-review-request-trusted-history-g6-233430",
+  "timestamp": "2026-08-11T23:34:30+00:00",
+  "fromWorker": "sol-20260811-8d5d357a",
+  "eventType": "REVIEW_REQUEST",
+  "summary": "PR #420 exact head 67e89918af03e85863c6eda89fad62a98e314237 is ready for the lane's independent history-integrity review. Deterministic/adversarial recovery CI is green and repeated read-only live bootstrap inventories reached zero invalid events and zero invalid workers. Review must verify finite provenance tables, immutable-byte preservation, inert quarantine/no-execute behavior, failed-transition and descendant-baseline laundering defenses, and ADR-0005 bootstrap/CAS semantics. Do not approve a moving bootstrap pair; any trust pin still requires a fresh exact swarm-control tip CAS.",
+  "affects": ["SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "severity": "P0",
+  "evidence": [
+    "PR #420 head 67e89918af03e85863c6eda89fad62a98e314237",
+    "Swarm Control Plane run 31546792414: deterministic/adversarial suite green; read-only inventory invalidEventCount=0 invalidWorkerCount=0",
+    "ADR-0005 requires independent history-integrity approval and a fresh exact-tip CAS before bootstrap anchoring"
+  ]
+}
