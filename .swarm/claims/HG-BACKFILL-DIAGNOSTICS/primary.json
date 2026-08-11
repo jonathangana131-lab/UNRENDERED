@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-q4m9v2c7",
   "claimToken": "7b2e4c9a6d1f8053",
   "claimedAt": "2026-08-11T23:09:00+00:00",
-  "heartbeatAt": "2026-08-11T23:09:00+00:00",
+  "heartbeatAt": "2026-08-11T23:14:00+00:00",
   "leaseSeconds": 1800,
   "generation": 8,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-q4m9v2c7-g8",
-  "pr": null,
+  "pr": 416,
   "takeoverOf": "sol-20260811-g5p2x8n4:g7:4d8c1a7f2b9e6035",
-  "notes": "Fenced stale takeover after inspecting retained PR #409, expected-red audit PR #411, current lane state, and expired generation-7 claim. Scope is only the final post-disable Heartbeat re-enable race in runToggleEvidence; absorb equivalent #411 regression, keep viewport/Studio evidence explicitly unverified."
+  "notes": "Generation-8 draft PR #416 now targets the exact reviewed instance-binding prerequisite branch (PR #349 head ee771bd50db972ad572f5d3cef8463220d69fa06), so its visible diff is restricted to six diagnostics-lane files. Final-state race repair is one fail-closed assertion after final capture; #411 regression retained. First exact-head CI failed only format because the connector rewrite dropped the source trailing newline; follow-up head 183bea8da6462facb2a2429ebbc85b9b80a01869 restores it. Await canonical CI; no Studio/viewport evidence claimed."
 }
