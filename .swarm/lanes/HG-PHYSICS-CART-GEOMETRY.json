@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "epicId": "HERO-GATE",
+  "title": "Physics Lab rolling-cart authored geometry closure",
+  "objective": "Close the two independently demonstrated source-only rolling-cart fixture defects in one bounded follow-up: make ground-supported casters contact the authored F2 ground plane and make the declared center of mass match the component mass distribution, with deterministic regressions and explicit recipe versioning.",
+  "priority": 5090,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["src/shared/Physics/PhysicsLabObjectGenomes.luau", "tests/physics_lab_recipe.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"Rolling-cart authored geometry repair","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Physics/PhysicsLabObjectGenomes.luau","tests/physics_lab_recipe.luau"]},
+    {"slotId":"audit","role":"Independent rolling-cart geometry audit","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":120,"writeScopes":["tests/physics_lab_recipe.luau"]}
+  ],
+  "acceptance": [
+    "preserve the rolling-cart family and existing ObjectGenome architecture while explicitly versioning the authored geometry revision",
+    "all rolling-cart components declaring externalSupport='ground' contact the authored local ground plane within deterministic test tolerance",
+    "rolling-cart declared mass and centerOfMassM match the component mass distribution",
+    "add deterministic source-only regressions for ground contact and center of mass",
+    "do not claim Roblox Studio contact evidence",
+    "require independent review before DONE"
+  ],
+  "tags": ["backfill", "hero-gate", "source-only", "physics", "geometry"]
+}
