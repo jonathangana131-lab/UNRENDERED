@@ -57,4 +57,4 @@ _base.dashboard = dashboard
 
 
 if __name__ == "__main__":
-    _base.main()
+    raise SystemExit(_base.main())
