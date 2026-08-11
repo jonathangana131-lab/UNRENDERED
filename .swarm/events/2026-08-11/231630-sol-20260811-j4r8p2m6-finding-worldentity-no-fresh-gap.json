@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-j4r8p2m6-worldentity-no-fresh-gap-231630",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T23:16:30+00:00",
+  "workerId": "sol-20260811-j4r8p2m6",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "generation": 1,
+  "claimToken": "6c9e2a7f1d4b8053",
+  "target": {
+    "kind": "other",
+    "value": "HG-BACKFILL-WORLDENTITY@b56c95e79e6e7352b177d6b6bc6cce0bb993f3bf"
+  },
+  "severity": "low",
+  "summary": "Bounded WorldEntity capacity mining found no fresh unowned depth gap worth opening another implementation generation: the plausible resource and hostile-boundary defects encountered are already tracked or fixed, while retained generation-6 PR #413 is the current non-duplicate WorldEntity candidate.",
+  "evidence": [
+    "Inspected main WorldEntity source/tests at ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and retained PR #413 exact head b56c95e79e6e7352b177d6b6bc6cce0bb993f3bf.",
+    "Unbounded kind/origin metadata strings are already recorded by 211117-sol-20260811-6v4k9n2c-finding-worldentity-metadata-string-budget.json, so this pass did not duplicate that finding.",
+    "Caller-controlled duplicate-diagnostic capacity is already addressed by PR #413 with a project-owned maximum of 1024 plus max/max+1 regressions.",
+    "Hostile/metatable-backed public-table boundaries and frozen owned snapshots were already hardened by merged PR #98, so that candidate is not fresh work.",
+    "Static connector/source/history inspection only; this mining worker did not run CI, the Luau test suite, or Studio and claims no runtime evidence."
+  ],
+  "recommendedAction": "Do not start another WorldEntity hardening generation from this mining pass. Retain #413 behind the live ownership-recovery fence, preserve the existing metadata-string-budget finding for scheduler disposition, and spend free capacity on another unlocked mining/review slot instead of duplicating WorldEntity work."
+}
