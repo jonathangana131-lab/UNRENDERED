@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081058-r8v2k6-fidelity-config-noexecute",
+  "timestamp": "2026-08-11T08:10:58+00:00",
+  "fromWorker": "sol-20260811-r8v2k6",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Distinct FidelityManager boundary remains after active PR #274: caller-supplied PolicyConfig is dereferenced and operated on before any plain-table/metatable or primitive-number preflight. A top-level config __index can execute during new(config) copyConfig before validation, and evaluatePolicy(customConfig) reaches validateConfig where maxRegisteredEntities comparison/math.floor and later cross-field arithmetic/comparisons occur before config-wide scalar type validation. PR #274 hardens PolicyInputs/nowSeconds but leaves validateConfig/copyConfig unchanged. Prefer consuming this in the active HG-BACKFILL-FIDELITY lane if its primary/reviewer agree PolicyConfig is part of the plain/no-execute contract; otherwise document PolicyConfig as explicitly trusted code-owned configuration rather than silently leaving the boundary ambiguous.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #274 head 5251998d: validateConfig begins with config.maxRegisteredEntities >= 1 / < math.huge / math.floor before any type(config) or getmetatable(config) guard.",
+    "PR #274 head 5251998d: copyConfig reads every supplied config field; FidelityManager.new(config) calls copyConfig before validateConfig, so hostile top-level __index executes before rejection.",
+    "PR #274 adds metatable-free/primitive guards for PolicyInputs and nowSeconds only; its current patch does not alter PolicyConfig validation/copying.",
+    "Current fidelity_manager, fidelity_manager_determinism, and fidelity_manager_rejected_step_atomicity suites inspected by this miner contain no hostile PolicyConfig/no-execute regression."
+  ]
+}
