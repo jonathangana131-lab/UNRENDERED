@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-202820-j9p4v7c2-reality-review-result",
+  "timestamp": "2026-08-11T20:28:20Z",
+  "fromWorker": "sol-20260811-j9p4v7c2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head audit of Reality PR #359 at df5e1b397c673a0cb7e2d62bdb3a11e51762013a found the v2 canonical-write and v1 replay schema-key no-execute hardening source/test complete with no requested changes. Non-string keys now fail with constant diagnostics before caller tostring can execute; only primitive strings reach unknown-key interpolation. Accepted schema/identity/version/seed/first-observation/fingerprint behavior is untouched. Canonical CI and Swarm engine-tests are green. Merge remains subject to the repository's current live control/policy gates; no Studio or engine-runtime evidence is claimed.",
+  "affects": [
+    "HG-BACKFILL-REALITY",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "info",
+  "evidence": [
+    "PR #359 exact head df5e1b397c673a0cb7e2d62bdb3a11e51762013a is based directly on current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and changes exactly three lane-owned files",
+    "ResolvedRegionRecipe and ResolvedRegionRecipeV1Internal now reject non-string schema keys with constant diagnostics before the unknown-string-key interpolation path",
+    "tests/resolved_region_recipe_v2_compat.luau supplies hostile table schema keys for v2 lock and v1 deserialize and requires zero __tostring calls",
+    "ResolvedRegionRecipeV1 remains REPLAY_ONLY and exposes no lock or migration/write constructor; compatibility serialize/fingerprint helpers are unchanged by the patch",
+    "Canonical CI run 31480065133 passes all validation/build steps; Swarm engine-tests in run 31480065184 pass"
+  ],
+  "metadata": {
+    "pr": 359,
+    "headSha": "df5e1b397c673a0cb7e2d62bdb3a11e51762013a",
+    "verdict": "SOURCE_TEST_PASS_POLICY_HOLD",
+    "reviewId": 4910480239
+  }
+}
