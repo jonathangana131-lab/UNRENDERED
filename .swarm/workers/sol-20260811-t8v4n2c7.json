@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "REVIEWING",
   "startedAt": "2026-08-11T20:13:14+00:00",
-  "lastSeenAt": "2026-08-11T20:54:02+00:00",
+  "lastSeenAt": "2026-08-11T20:56:40+00:00",
   "laneId": "HG-COMPLETION-PHYSICS",
-  "slotId": "review-1",
-  "branch": "agent/review/HG-COMPLETION-PHYSICS-review-1-t8v4n2c7-g2",
-  "notes": "Independent exact-head completion audit of diagnostics generation-4 successor PR #392 at b21a0eca, stacked on reviewed exact-instance prerequisite #349."
+  "slotId": "review-2",
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-review-2-t8v4n2c7",
+  "notes": "Independent exact-head source/test review of chair repair evidence stack PR #393 at f64f841b, based on retained source repair #347."
 }
