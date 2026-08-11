@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063600-r6k2p9-authority-handoff",
+  "timestamp": "2026-08-11T06:36:00+00:00",
+  "fromWorker": "sol-20260811-r6k2p9",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "info",
+  "summary": "Authority primary handoff: PR #287 is implementation-complete and canonical-CI green, with independent audit finding no code-level defect under the explicitly narrow bootstrap-ownership claim. Keep it draft until the global PR-ownership recovery lane lands and validates this live claim; then recheck exact-head CI/ownership and integrate only after independent review semantics are satisfied.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT", "HG151-TWOCLIENT"],
+  "evidence": [
+    "PR #287 exact head 33af3fa4dc9b4544ab9edcfaf355982f2330eb2f; canonical CI run 31465212563 PASS.",
+    "Audit worker sol-20260811-q9x4m2 reviewed the exact head and reported no code-level defect while explicitly rejecting any broader two-client/evidence claim.",
+    "PR #275 latest head 1915b65480fc51165c86b47f51d9342291e34f0a separately codifies caller-bound observations, schema provenance, and evidence-schema versioning; rereviewed APPROVE by this worker.",
+    "Current blocker is project-wide pr-ownership ModuleNotFoundError tracked by SWARM-RECOVERY-PR-OWNERSHIP-IMPORT, already claimed by sol-20260811-x7n4k2; do not duplicate that repair.",
+    "No Roblox Studio request was queued and no HG151-TWOCLIENT PASS is claimed."
+  ]
+}
