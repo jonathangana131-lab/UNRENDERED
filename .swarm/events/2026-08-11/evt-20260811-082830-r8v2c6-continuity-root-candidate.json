@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082830-r8v2c6-continuity-root-candidate",
+  "timestamp": "2026-08-11T08:28:30+00:00",
+  "fromWorker": "sol-20260811-r8v2c6",
+  "eventType": "FINDING",
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "severity": "critical",
+  "summary": "Audited continuity-root candidate for the immutable-history recovery: swarm-control commit 72a622f3d78f9a075c6b72c6a926116ca1e50913 is the live-branch commit that upgraded .github/workflows/swarm-control.yml to the hardened V2 workflow, and its own Swarm Control Plane run 31461614754 explicitly passed state validation, lease/immutable-event transition validation, validation-fence rendering, and CAS publication. GitHub ancestry confirms 72a622f3 is an ancestor of the current swarm-control tip. This is materially stronger than bootstrapping from a later v1 PASS marker that may already have laundered a failed edge.",
+  "affects": [
+    "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+    "SWARM-RECOVERY-EVENT-COMPAT",
+    "HG-BACKFILL-REALITY"
+  ],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "Main hardening commit 2ce32576a47e99a1e09e802dc7e76a0bf7bbd283 introduced the hardened transition/fence workflow; its parent was cb6bbc953e1687cb11a0e6afbb0d454ecd23c9b1.",
+    "swarm-control file history shows 72a622f3d78f9a075c6b72c6a926116ca1e50913, parent 64a5a9b97e757948620ffd056f2bbe05bbc299cc, with commit message 'chore(swarm): upgrade live branch to hardened V2 workflow'.",
+    "Swarm Control Plane run 31461614754 on exact head 72a622f3d78f9a075c6b72c6a926116ca1e50913 concluded success; validate-control-branch steps explicitly include Materialize current and previous control snapshots, Validate state and ownership model, Validate lease and immutable-event transitions, Rebuild board/metrics/validation fence, and Publish generated projection without overwriting newer state, all successful.",
+    "GitHub compare 72a622f3d78f9a075c6b72c6a926116ca1e50913...swarm-control reports status ahead, behind_by 0, with merge base equal to 72a622f3, proving current control history descends from that candidate root.",
+    "Existing finding evt-20260811-082145-c3b2be-history-continuity-design correctly requires every intermediate edge (or equivalent cumulative commitment); this finding supplies a concrete, auditable root candidate for that full-path proof."
+  ],
+  "metadata": {
+    "candidateControlSha": "72a622f3d78f9a075c6b72c6a926116ca1e50913",
+    "candidateValidationRun": 31461614754,
+    "hardeningMainSha": "2ce32576a47e99a1e09e802dc7e76a0bf7bbd283",
+    "candidateParentSha": "64a5a9b97e757948620ffd056f2bbe05bbc299cc",
+    "requiredUse": "If independent recovery review accepts this root, validate every first-parent control transition from 72a622f3 through the candidate tip (or prove an equivalent cumulative append-only commitment); do not treat any later v1 PASS marker as sufficient history trust."
+  }
+}
