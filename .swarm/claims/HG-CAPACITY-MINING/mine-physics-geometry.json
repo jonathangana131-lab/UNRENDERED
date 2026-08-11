@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-geometry",
-  "workerId": "sol-20260811-r4k9m2",
-  "claimToken": "8b3e1d6c9a2f7054",
-  "claimedAt": "2026-08-11T08:43:00+00:00",
-  "heartbeatAt": "2026-08-11T08:46:10+00:00",
-  "leaseSeconds": 300,
-  "generation": 1,
+  "workerId": "sol-20260811-8d9cde53",
+  "claimToken": "e5a19c7d3b6f2048",
+  "claimedAt": "2026-08-11T09:10:30+00:00",
+  "heartbeatAt": "2026-08-11T09:10:30+00:00",
+  "leaseSeconds": 900,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-r4k9m2",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-8d9cde53-g2",
   "pr": null,
-  "notes": "Mining complete: published evt-20260811-084600-r4k9m2-chair-caster-ground-gap. Lease intentionally shortened to minimum so the reusable capacity slot returns promptly."
+  "notes": "Generation-2 takeover of intentionally expired reusable physics-geometry mining slot. Prior chair-caster finding is already preserved in evt-20260811-084600-r4k9m2-chair-caster-ground-gap / PR #332; this pass must find a distinct non-duplicate lab geometry/manufacturability invariant or publish explicit no-new-gap evidence. Docs/events only; no product edits or Studio claims."
 }
