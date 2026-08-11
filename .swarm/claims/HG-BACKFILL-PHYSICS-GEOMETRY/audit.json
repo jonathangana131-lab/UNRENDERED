@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-v7k3m9",
+  "claimToken": "d6f2a90c4b7e3158",
+  "claimedAt": "2026-08-11T08:13:00+00:00",
+  "heartbeatAt": "2026-08-11T08:13:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-v7k3m9",
+  "pr": 303,
+  "notes": "Independent source-only geometry/recipe realism audit of active primary PR #303 and lane-scoped adversarial evidence; no Studio/contact proof claim."
+}
