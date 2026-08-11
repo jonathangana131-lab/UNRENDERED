@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T06:16:30+00:00",
-  "lastSeenAt": "2026-08-11T07:13:00+00:00",
+  "lastSeenAt": "2026-08-11T07:18:00+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-w3x7k9",
-  "notes": "PR #276 was synchronized onto main ed37c5698c1aad7a355e514b35ea5c5bd50aa738 as exact head 71b6958e8421283652fe0d4361cbaabbad362c20 with the same one-file +72-line test-only diff. Exact-head canonical CI 31467247742 is green. Fresh audit was requested from active HG-BACKFILL-WORLDENTITY/audit; ownership remains fail-closed red only while live swarm-control schema recovery is active."
+  "notes": "PR #276 is intentionally draft at exact head 71b6958e8421283652fe0d4361cbaabbad362c20. Exact-head canonical CI 31467247742 is green and fresh independent audit judged the 72-line test-only patch sound, but ordered integration after active primary #293 because both edit tests/world_entity_registry_shape.luau. #293 now has the corrected [1,2147483647] source bound but its current tests still assert max-safe provenance and exact-head CI fails at Pure Luau tests; mismatch and current-main synchronization requirement are reported on #293."
 }
