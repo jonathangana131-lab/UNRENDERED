@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-r8n4m2q6",
   "claimToken": "4f9c2a7d1b6e8053",
   "claimedAt": "2026-08-11T23:11:20+00:00",
-  "heartbeatAt": "2026-08-11T23:17:00+00:00",
+  "heartbeatAt": "2026-08-11T23:20:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/physics/HG-FIDELITY-REGISTRATION-CAPACITY-CEILING-r8n4m2q6",
   "pr": 419,
-  "notes": "Published stacked draft PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 on retained Fidelity PR #385. Canonical CI 31545808224 PASS and Swarm engine-tests job 93957903432 PASS; re-evaluate live ownership after attaching the PR number before classifying any remaining control failure."
+  "notes": "PR #419 is ready for independent review at exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3. Canonical CI 31545808224 PASS and Swarm engine-tests 93957903432 PASS. Live pr-ownership rerun 93958178666 is blocked before lane evaluation by unrelated worker sol-20260811-j4r8p2m6 status DONE; active generation-6 recovery PR #420 owns that finite live-control defect. Keep this claim live for PR ownership; no merge until recovery and independent review are green."
 }
