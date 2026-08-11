@@ -258,6 +258,42 @@ local function run(): number
 	end)
 	expect("runtime rejects noncanonical initial lab fidelity", not forgedFidelityAccepted)
 
+	local forgedStateEntities = copyEntities(recipe)
+	local forgedStateEntry = table.clone(forgedStateEntities[1])
+	local forgedStateRecord = table.clone(forgedStateEntry.entity)
+	forgedStateRecord.persistentState = { forged = true }
+	forgedStateEntry.entity = forgedStateRecord
+	forgedStateEntities[1] = forgedStateEntry
+	local forgedStateAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, forgedStateEntities))
+	end)
+	expect("runtime rejects noncanonical initial persistent state", not forgedStateAccepted)
+
+	local forgedStateRevisionEntities = copyEntities(recipe)
+	local forgedStateRevisionEntry = table.clone(forgedStateRevisionEntities[1])
+	local forgedStateRevisionRecord = table.clone(forgedStateRevisionEntry.entity)
+	forgedStateRevisionRecord.stateRevision += 1
+	forgedStateRevisionEntry.entity = forgedStateRevisionRecord
+	forgedStateRevisionEntities[1] = forgedStateRevisionEntry
+	local forgedStateRevisionAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, forgedStateRevisionEntities))
+	end)
+	expect("runtime rejects noncanonical initial state revision", not forgedStateRevisionAccepted)
+
+	local forgedRepresentationRevisionEntities = copyEntities(recipe)
+	local forgedRepresentationRevisionEntry = table.clone(forgedRepresentationRevisionEntities[1])
+	local forgedRepresentationRevisionRecord = table.clone(forgedRepresentationRevisionEntry.entity)
+	forgedRepresentationRevisionRecord.representationRevision += 1
+	forgedRepresentationRevisionEntry.entity = forgedRepresentationRevisionRecord
+	forgedRepresentationRevisionEntities[1] = forgedRepresentationRevisionEntry
+	local forgedRepresentationRevisionAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, forgedRepresentationRevisionEntities))
+	end)
+	expect(
+		"runtime rejects noncanonical initial representation revision",
+		not forgedRepresentationRevisionAccepted
+	)
+
 	local snapshotRuntime = PhysicsLabRuntime.new(recipe)
 	local snapshotId = floor.entity.id
 	local mutableCapture = {
