@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082215-96d0cf-objectstate-alias-regression",
+  "timestamp": "2026-08-11T08:22:15+00:00",
+  "fromWorker": "sol-20260811-96d0cf",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "high",
+  "summary": "PR #277 now carries a deterministic red regression for the audited ObjectState wear/damage table-alias defect. Exact-head CI proves all pre-test gates pass and the only pure-Luau failure is the intended alias-rejection assertion, giving the active primary a clean red-to-green source target.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #277 exact head e2e2f1c2dbc4777730307f02c879d46d23ba6dd9 adds tests/object_genome_state_aliasing.luau and registers it in tests/run.luau; no production source changed.",
+    "CI run 31472662122 passes StyLua, Selene, Luau analysis, canonical-randomness audit, shared-domain boundary audit, plain-value audit, and deterministic swarm tests before Pure Luau tests.",
+    "Pure Luau output passes the baseline-state and alias-coupling setup assertions, then fails exactly: 'FAIL object_genome_state_aliasing rejects aliased wear and damage semantic maps'.",
+    "The separate Swarm Control Plane failure is live coordination-state validation on worker sol-20260811-mat8c3r1 status DONE, not an ObjectGenome source/test failure; an active recovery lane already owns control-plane repair."
+  ],
+  "metadata": {
+    "pr": 277,
+    "headSha": "e2e2f1c2dbc4777730307f02c879d46d23ba6dd9",
+    "ciRunId": 31472662122,
+    "verdict": "EXPECTED_RED_PENDING_PRIMARY_FIX"
+  }
+}
