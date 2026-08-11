@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-8d5d357a",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T23:08:18+00:00",
-  "lastSeenAt": "2026-08-11T23:50:34+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "primary",
-  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-8d5d357a-g7",
-  "notes": "Generation-7 retained closure starts from support PR #418 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f, preserving PR #414 production repair and absorbing the reviewed behavioral reverse-overflow regression before fresh exact-head CI/review."
+  "lastSeenAt": "2026-08-11T23:53:30+00:00",
+  "notes": "Generation-7 Physics geometry closure published as PR #423 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f. No new production bytes; current #418 behavioral reverse-overflow adversary is retained with #414 production repair. Canonical CI run 31547903110 PASS. Lane moved to REVIEW via evt-sol-20260811-8d5d357a-review-request-physics-scale-g7-235255 and primary claim released for fresh independent audit."
 }
