@@ -5,7 +5,7 @@
   "title": "Reality-Grade harden Swarm Control Plane V2",
   "objective": "Close rollout-discovered distributed-systems gaps: trusted validator execution, generated-state publication, validated-state fencing, transition/takeover validation, red-main scheduling, WIP enforcement, worker/PR integrity and operational metrics.",
   "priority": 10000,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [
     {"laneId": "SWARM-V2-ROLLOUT", "acceptableStates": ["DONE"]}
@@ -36,5 +36,6 @@
     "major-epic and primary WIP limits are enforced",
     "worker identity and claim/PR linkage are validated",
     "canonical CI and real live protected-resource enforcement pass"
-  ]
+  ],
+  "notes": "Implemented and mechanically proven. PR #267 merged as 2ce32576a47e99a1e09e802dc7e76a0bf7bbd283 after 36 deterministic/adversarial tests plus canonical CI and live protected-resource enforcement passed. Live hardened validation/generation passed in run 31461614754; validated-state fencing was enabled and passed run 31461744980. Real GitHub stale-lease recovery passed transition validation in run 31461852101, and a stale competing update was rejected with HTTP 409. No claim of a separate human/peer review is made."
 }
