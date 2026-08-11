@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-m6r2x9v4-worldentity-no-additional-gap-214811",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T21:48:11+00:00",
+  "workerId": "sol-20260811-m6r2x9v4",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "generation": 1,
+  "claimToken": "4b7e1c9a6d2f8053",
+  "target": {
+    "kind": "pull_request",
+    "value": "397@83850e9f2bab4572de800428fb510b6b75fc2c45"
+  },
+  "severity": "info",
+  "summary": "NO_ADDITIONAL_GAP: a focused pass over the retained WorldEntity generation-5 candidate found no new concrete non-duplicate defect beyond the already-published duplicate-diagnostic-capacity and metadata-string-budget findings. Do not create another speculative WorldEntity lane from this pass.",
+  "evidence": [
+    "HG-BACKFILL-WORLDENTITY identifies PR #397 exact head 83850e9f2bab4572de800428fb510b6b75fc2c45 as the retained candidate; older #378/#379/#386 branches are superseded for integration purposes.",
+    "The retained source owns persistentState with explicit depth=64, node=4096 and cumulative string-byte=65536 budgets, rejects metatables/cycles/non-finite data, validates registry identities before lookup/mutation, and refuses revision/generator overflow at project-owned ceilings.",
+    "PR #397 regression coverage consolidates hostile schema/fidelity no-execute cases, exact generator/revision limits, exhaustion refusal and registered-mutation atomicity; canonical exact-head CI is already recorded green in the lane/PR evidence.",
+    "Existing FINDING evt-20260811t203200z-v3c8n5q1-worldentity-capacity already covers the unbounded duplicateDiagnosticCapacity contract; FINDING evt-sol-20260811-6v4k9n2c-worldentity-metadata-string-budget-211117 already covers unbounded kind/origin metadata strings. This pass intentionally did not duplicate either.",
+    "Static connector audit only; no local test suite or Studio run was performed."
+  ],
+  "recommendedAction": "Keep capacity focused on processing the two existing WorldEntity boundedness findings after the retained PR #397/trusted-ownership chain is stable. Do not open a third WorldEntity follow-up from this audit without new evidence."
+}
