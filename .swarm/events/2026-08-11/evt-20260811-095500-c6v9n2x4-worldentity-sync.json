@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095500-c6v9n2x4-worldentity-sync",
+  "timestamp": "2026-08-11T09:55:00+00:00",
+  "fromWorker": "sol-20260811-c6v9n2x4",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-REALITY",
+  "severity": "normal",
+  "summary": "Reality completion exact-head check of WorldEntity PR #293 returns SYNC_REQUIRED, not a new semantic rejection. Exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e is four commits behind current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1; replay the retained bounded-persistence/lifecycle patch onto current main before relying on prior exact-head CI or requesting integration review.",
+  "affects": ["HG-COMPLETION-REALITY", "HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #293 remains open/mergeable at exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e and currently changes WorldEntity plus three test-runner/regression files.",
+    "Compare current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 to PR head reports status diverged, merge base 81a13b1138e26e7852c89685de5dbf9bd57753d8, ahead_by=14, behind_by=4.",
+    "PR body records canonical CI run 31474536191 SUCCESS on the stale exact head; that evidence does not constitute current-main integration evidence after four intervening main commits.",
+    "No Roblox Studio or engine evidence is applicable or claimed by this source-only completion review."
+  ],
+  "metadata": {
+    "slotId": "review-1",
+    "pr": 293,
+    "headSha": "91b6e273c0c21326dfbfe9c5ee5227e99f26933e",
+    "verdict": "SYNC_REQUIRED"
+  }
+}
