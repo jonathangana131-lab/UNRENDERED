@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t221520z-d7k4m9q2-fidelity-stack-reconcile",
+  "timestamp": "2026-08-11T22:15:20+00:00",
+  "fromWorker": "sol-20260811-d7k4m9q2",
+  "eventType": "HANDOFF",
+  "summary": "Reconciled the Fidelity source/test stack after recovering an expired test-adversary lease. Production PR #385 and stacked test-only PR #398 already have independent exact-head source/test approvals and green canonical CI plus engine-tests, so the lane was moved from stale REVIEW to BLOCKED on the separately owned trusted-history/live-pr-ownership recovery. No duplicate review, product edit, Studio evidence, or two-client evidence was produced.",
+  "affects": ["HG-BACKFILL-FIDELITY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "info",
+  "evidence": [
+    "PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 received independent SOURCE/TEST PASS at 2026-08-11T20:25:33Z; canonical CI 31532320675 and Swarm engine-tests 31532320705 are green.",
+    "PR #398 exact head 2c473887dc6c0b5e81c0e502d4ccfe90be0c2d85 is stacked directly on #385, changes only tests/fidelity_manager.luau by +72/-0, and received independent SOURCE/TEST PASS at 2026-08-11T21:12:21Z.",
+    "PR #398 canonical CI 31536288741 and Swarm engine-tests 31536288770 are green; live pr-ownership remains the separate global control blocker.",
+    "Generation-2 PR #367 remains superseded."
+  ],
+  "metadata": {
+    "productionPr": 385,
+    "testPr": 398,
+    "laneState": "BLOCKED",
+    "productFilesChanged": false,
+    "studioEvidenceClaimed": false
+  }
+}
