@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-072650-w3n8k2-pr274-review-request",
+  "timestamp": "2026-08-11T07:26:50+00:00",
+  "fromWorker": "sol-20260811-w3n8k2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "normal",
+  "summary": "Primary FidelityManager PR #274 consumes the full source-only adversarial and audit closure for policy-input boundaries, registration accounting, transition-hook failure atomicity, and callback reentrancy, and is ready for independent Reality-Grade review on exact head 60de91b49338249c1ded74db0d722921ce2fb55d.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #274 changes only src/shared/Physics/FidelityManager.luau and tests/fidelity_manager_rejected_step_atomicity.luau relative to its current base.",
+    "Canonical CI run 31468720518 is green on exact head 60de91b49338249c1ded74db0d722921ce2fb55d through formatting, lint, Luau analysis, audits, pure tests, deterministic tests, and Rojo build.",
+    "Swarm Control Plane run 31468786080 is green on the same exact head, including live pr-ownership and adversarial engine-tests.",
+    "Primary source now consumes all findings from test-adversary PR #278 and the source contract blockers documented by audit PR #292."
+  ],
+  "metadata": {
+    "pr": 274,
+    "headSha": "60de91b49338249c1ded74db0d722921ce2fb55d",
+    "integrationOrder": "primary-274-before-or-with-audit-292"
+  }
+}
