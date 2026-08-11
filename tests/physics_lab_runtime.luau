@@ -165,6 +165,36 @@ local function run(): number
 	end)
 	expect("runtime rejects duplicate placed WorldEntity identities", not duplicateAccepted)
 
+	local snapshotRuntime = PhysicsLabRuntime.new(recipe)
+	local snapshotId = floor.entity.id
+	local mutableCapture = {
+		lifecycleProbe = {
+			marker = "approved-preview-state",
+		},
+	}
+	snapshotRuntime:step(snapshotId, noDemand, 0, function()
+		return mutableCapture
+	end)
+	local snapshotDemotion, snapshotRecord = snapshotRuntime:step(snapshotId, noDemand, 2, function()
+		return mutableCapture
+	end, function(_before, preview)
+		expect(
+			"demotion preview owns the capture adapter state",
+			preview.persistentState.lifecycleProbe.marker == "approved-preview-state"
+		)
+		mutableCapture.lifecycleProbe.marker = "mutated-after-preview"
+	end)
+	expect("capture snapshot fixture commits a demotion", snapshotDemotion.transitioned)
+	expect(
+		"authoritative demotion commit matches the adapter-approved preview snapshot",
+		snapshotRecord.persistentState.lifecycleProbe.marker == "approved-preview-state"
+	)
+	expect(
+		"adapter buffer mutation remains external to authoritative state",
+		mutableCapture.lifecycleProbe.marker == "mutated-after-preview"
+	)
+	snapshotRuntime:dispose()
+
 	local rejectionRuntime = PhysicsLabRuntime.new(recipe)
 	local chair = findEntity(recipe, "chair-a")
 	expect("runtime rejection fixture finds chair entity", chair ~= nil)
