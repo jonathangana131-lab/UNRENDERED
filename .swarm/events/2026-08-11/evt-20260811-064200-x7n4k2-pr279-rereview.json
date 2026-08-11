@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064200-x7n4k2-pr279-rereview",
+  "timestamp": "2026-08-11T06:42:00+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "summary": "APPROVE PR #279 at 039bce3186372ff7499b8b5cad84f95413a4487d. The primary incorporated both audit-requested capture-consistency invariants with deterministic regressions, and both canonical CI and the restored Swarm Control Plane ownership workflow are green on the revised head. This supersedes evt-20260811-064000-x7n4k2-pr279-review.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "Current diff requires counts.models >= 1 and parts > 0 => assemblies >= 1 in addition to assemblies <= parts.",
+    "Regression coverage explicitly rejects missing selected Model root and BaseParts with zero assemblies.",
+    "Canonical CI run 31465737191 completed success on head 039bce3186372ff7499b8b5cad84f95413a4487d.",
+    "Swarm Control Plane run 31465737199 completed success on the same head after fix(swarm): restore trusted PR validator imports (#288).",
+    "PR #279 issue comment 5249869796 records the re-review approval."
+  ],
+  "metadata": {
+    "pr": 279,
+    "headSha": "039bce3186372ff7499b8b5cad84f95413a4487d",
+    "result": "APPROVE",
+    "claimToken": "f6a2c98e15d3407b"
+  }
+}
