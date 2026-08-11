@@ -22,6 +22,10 @@ local function run(): number
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
 	local parentMutation = position("folder.Parent = model")
+	local billboardOwnership = position("billboard.Parent = folder")
+	local billboardConfiguration = position("billboard.AlwaysOnTop = true")
+	local labelOwnership = position("label.Parent = billboard")
+	local labelConfiguration = position("label.BackgroundTransparency = 0.2")
 	local capture = position("return PhysicsLabStudioDiagnostics.capture(lab)")
 	local transactionEnd = position("\tend)\n\n\tif not ok then")
 	local rollback = position("folder:Destroy()")
@@ -34,6 +38,16 @@ local function run(): number
 	expect(
 		"Instance realization begins inside a protected transaction",
 		transaction ~= nil and parentMutation ~= nil and transaction < parentMutation
+	)
+	expect(
+		"BillboardGui is owned before fallible configuration",
+		billboardOwnership ~= nil
+			and billboardConfiguration ~= nil
+			and billboardOwnership < billboardConfiguration
+	)
+	expect(
+		"TextLabel is owned before fallible configuration",
+		labelOwnership ~= nil and labelConfiguration ~= nil and labelOwnership < labelConfiguration
 	)
 	expect(
 		"post-realization capture remains inside the protected transaction",
