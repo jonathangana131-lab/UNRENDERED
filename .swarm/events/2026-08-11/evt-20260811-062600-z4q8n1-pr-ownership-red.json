@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062600-z4q8n1-pr-ownership-red",
+  "timestamp": "2026-08-11T06:26:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "BLOCKER",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "critical",
+  "summary": "The main-branch Swarm Control Plane PR ownership job is globally broken after the V2.1 compatibility-facade split. `.github/workflows/swarm-control.yml` materializes `swarmctl.py` and `swarmctl_hardening.py` into an isolated trusted directory but omits required dependency `swarmctl_hardening_base.py`; every hardened `pr-check` therefore terminates with ModuleNotFoundError before ownership validation. This is independent of PR #272 and blocks authoritative ownership checks for current PRs.",
+  "affects": ["OPS-MAIN-HEALTH", "SWARM-V21-DASHBOARD", "HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "PR #272 Swarm Control Plane run 31464715467 pr-ownership retry job 93695285055 fails at `import swarmctl_hardening_base as _base` with `ModuleNotFoundError: No module named 'swarmctl_hardening_base'`.",
+    "main `.github/workflows/swarm-control.yml` trusted-validator step copies only `tools/swarm/swarmctl.py` and `tools/swarm/swarmctl_hardening.py` into `$RUNNER_TEMP/trusted-swarm`.",
+    "main `tools/swarm/swarmctl_hardening.py` imports `swarmctl_hardening_base` on line 10, and `tools/swarm/swarmctl_hardening_base.py` exists on main but is not materialized by the workflow.",
+    "Re-running failed workflow jobs reproduces the same missing-module failure, ruling out claim timing as the cause."
+  ]
+}
