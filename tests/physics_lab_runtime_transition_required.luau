@@ -179,7 +179,10 @@ local function run(): number
 			end, function()
 				longCycleObservers += 1
 			end)
-			assert(not demotionHold.transitioned and demotionHold.blockedReason == "hold")
+			assert(
+				not demotionHold.transitioned and demotionHold.blockedReason == "hold",
+				`cycle {cycle} demotion hold did not block as expected`
+			)
 
 			local demotionResult, demotedRecord = longCycleRuntime:step(
 				longCycleId,
@@ -193,14 +196,23 @@ local function run(): number
 					longCycleObservers += 1
 				end
 			)
-			assert(demotionResult.transitioned and demotedRecord.fidelity == "F0")
+			assert(
+				demotionResult.transitioned and demotedRecord.fidelity == "F0",
+				`cycle {cycle} demotion did not commit F0`
+			)
 			capturedState.lifecycleProbe.marker = "mutated-after-commit"
-			assert(demotedRecord.persistentState.lifecycleProbe.marker == `cycle-{cycle}`)
+			assert(
+				demotedRecord.persistentState.lifecycleProbe.marker == `cycle-{cycle}`,
+				`cycle {cycle} demotion did not own captured state`
+			)
 
 			local promotionHold = longCycleRuntime:step(longCycleId, observed, baseTime + 3, nil, function()
 				longCycleObservers += 1
 			end)
-			assert(not promotionHold.transitioned and promotionHold.blockedReason == "hold")
+			assert(
+				not promotionHold.transitioned and promotionHold.blockedReason == "hold",
+				`cycle {cycle} promotion hold did not block as expected`
+			)
 
 			local promotionResult, promotedRecord = longCycleRuntime:step(
 				longCycleId,
@@ -211,8 +223,14 @@ local function run(): number
 					longCycleObservers += 1
 				end
 			)
-			assert(promotionResult.transitioned and promotedRecord.fidelity == "F4")
-			assert(promotedRecord.persistentState.lifecycleProbe.marker == `cycle-{cycle}`)
+			assert(
+				promotionResult.transitioned and promotedRecord.fidelity == "F4",
+				`cycle {cycle} promotion did not commit F4`
+			)
+			assert(
+				promotedRecord.persistentState.lifecycleProbe.marker == `cycle-{cycle}`,
+				`cycle {cycle} promotion lost captured state`
+			)
 		end
 	end)
 	expect("64-cycle runtime rebuild stress completes without lifecycle drift", longCycleAccepted)
