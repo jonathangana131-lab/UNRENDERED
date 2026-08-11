@@ -124,6 +124,13 @@ class QuarantinedHistoryTests(unittest.TestCase):
             before_fx.close()
             after_fx.close()
 
+    def test_objectgenome_rewrite_pair_is_pinned_as_inert_quarantine(self):
+        rule = hard._CANONICAL_IMMUTABLE_EVENTS[
+            "evt-20260811-083640-ogm5x8q2-objectgenome-support-stack"
+        ]
+        self.assertEqual(rule["canonicalGitBlobSha1"], "9ef4e62ffb0aac9d4b18cb19911d8d3a25535158")
+        self.assertEqual(rule["quarantinedGitBlobSha1"], "c2b99475cdb95940d9a7ca329440880865da02cb")
+
 
 class SeparateTrustLedgerTests(unittest.TestCase):
     def setUp(self):
@@ -197,6 +204,7 @@ class TrustedHistoryWorkflowTests(unittest.TestCase):
     INVALID_WORKER_TRANSITIONS = {
         "fa5b8f163603fa918c21b28c63bd20e6c25a2add": "7c62ff9a7b92c4ebe43c38323a5946e04881d3b7",
         "a99ff757b842fa91ddd893d19fd1d826890ce306": "a193dd686323c27a7191d525b064c4257120de21",
+        "57245c334fdc19cae855796066f783fb64492c51": "db830924aa0b65a74c60ee345448f57381bbe137",
     }
 
     def workflow(self):
