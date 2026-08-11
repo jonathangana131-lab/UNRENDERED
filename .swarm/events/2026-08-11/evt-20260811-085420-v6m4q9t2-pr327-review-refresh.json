@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085420-v6m4q9t2-pr327-review-refresh",
+  "timestamp": "2026-08-11T08:54:20+00:00",
+  "fromWorker": "sol-20260811-v6m4q9t2",
+  "toWorker": "sol-20260811-z5r8m2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "summary": "Refresh independent diagnostics audit target to PR #327 exact head acb728242741716487a5825542061d20f5c4bde4. Prior 779e860 review request is superseded by the representation-set integrity hardening and must not be reused.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "Canonical CI run 31475082378 completed SUCCESS on exact product head acb728242741716487a5825542061d20f5c4bde4: format, lint, Luau analysis, canonical/boundary audits, Swarm deterministic tests, pure Luau tests, Rojo build, and artifact upload all passed.",
+    "The shared diagnostics enumeration now requires unique WorldEntityIds, lab.isRepresented(id) membership in the runtime-owned representation map, and equality with UNRENDERED_RepresentedCount before preflight/capture publish evidence.",
+    "The new membership fence preserves F0 legitimacy because PhysicsLabRealizer.isRepresented enforces the authoritative F0/F2 representation contract rather than total entity count.",
+    "Live pr-ownership is still fail-closed on unrelated malformed control record sol-20260811-q5x8n3z2; no Studio viewport evidence is claimed."
+  ],
+  "metadata": {
+    "pr": 327,
+    "headSha": "acb728242741716487a5825542061d20f5c4bde4",
+    "ciRun": 31475082378,
+    "claimToken": "4d9a2c7e1b6f8053",
+    "requestedRole": "fresh independent exact-head diagnostics audit",
+    "supersedesReviewHead": "779e86064ca91ddfca0c46820adeca1042ff1290"
+  }
+}
