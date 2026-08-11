@@ -23,7 +23,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:31:51.090016+00:00",
+  "generatedAt": "2026-08-11T05:31:57.364011+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "2ce32576a47e99a1e09e802dc7e76a0bf7bbd283",
@@ -43,7 +43,7 @@
       "INTEGRATION_RESULT": 1,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T05:31:51.090016+00:00",
+    "generatedAt": "2026-08-11T05:31:57.364011+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
