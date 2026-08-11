@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-8d5d357a",
   "claimToken": "a7d41e6c9b2f3058",
   "claimedAt": "2026-08-11T23:54:15+00:00",
-  "heartbeatAt": "2026-08-11T23:54:15+00:00",
+  "heartbeatAt": "2026-08-11T23:57:10+00:00",
   "leaseSeconds": 1800,
   "generation": 9,
   "resources": [],
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-8d5d357a-g9",
-  "pr": null,
-  "notes": "Generation-9 closure after independent audit evt-sol-20260811-8d5d357a-review-result-diagnostics-g8-234430. Preserve PR #416 final post-disable re-enable fence, add a diagnostics-aware enabled-window canonical integrity seam without weakening canonical representation validation, and stop projecting mutable Instance Name/representation-class metadata as authoritative diagnostic identity. Do not absorb PR #422 raw-source token test verbatim; replace it with robust behavioral/contract coverage."
+  "pr": 424,
+  "notes": "Generation-9 retained successor PR #424 exact head 39be63f0778f3743419665f23d7da38be323415d closes enabled-window canonical integrity and mutable diagnostic-projection gaps from evt-sol-20260811-8d5d357a-review-result-diagnostics-g8-234430. Exact-head canonical CI and fresh independent review are required; no Studio evidence is claimed."
 }
