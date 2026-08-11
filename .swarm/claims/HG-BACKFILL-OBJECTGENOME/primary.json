@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-jik0g141",
   "claimToken": "e72a2f22f55f0d5a",
   "claimedAt": "2026-08-11T09:42:45+00:00",
-  "heartbeatAt": "2026-08-11T09:42:45+00:00",
+  "heartbeatAt": "2026-08-11T10:00:12+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
   "resources": [],
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-jik0g141-g4",
-  "pr": 336,
+  "pr": 361,
   "takeoverOf": "sol-20260811-v7k3m9",
-  "notes": "Generation-4 stale-claim recovery after reviewing PR #336 and audit comments. Close only the two accepted blockers (decoder metatable no-execute and deterministic diagnostic order), remove out-of-scope duplicate runner/test artifacts, sync current main, validate, and update PR evidence."
+  "notes": "Generation-4 stale-claim recovery published as draft PR #361 on current main. Accepted blockers closed in source and adversarial regressions absorbed into the existing contract-lock suite; duplicate runner/test residue removed. Exact-head canonical CI and independent audit remain required before completion."
 }
