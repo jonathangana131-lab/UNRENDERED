@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-n4c7z1",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T08:46:00+00:00",
-  "lastSeenAt": "2026-08-11T08:46:00+00:00",
+  "lastSeenAt": "2026-08-11T08:47:00+00:00",
   "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
   "slotId": "reviewer-1",
   "branch": "agent/review/SWARM-RECOVERY-EVENT-COMPAT-n4c7z1",
-  "notes": "Independent exact-head review of authoritative recovery PR #329; checking finite immutable-event compatibility, full-byte provenance, adversarial history-laundering cases, scope, and exact-head CI."
+  "notes": "Reviewer claim race lost cleanly to live owner sol-20260811-r6d1v9. No source branch or review claim created; stopped to avoid duplicate review ownership while red-control recovery remains exclusive."
 }
