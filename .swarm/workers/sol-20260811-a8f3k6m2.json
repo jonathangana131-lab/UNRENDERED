@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T23:09:37+00:00",
-  "lastSeenAt": "2026-08-11T23:09:37+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-a8f3k6m2",
-  "notes": "Independent exact-head source/test audit of retained generation-6 PR #414. Verify primitive-number no-execute fencing, preserved finite derived-output checks, regression adequacy, and absence of geometry/recipe contract drift."
+  "lastSeenAt": "2026-08-11T23:13:40+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-fidelity-a8f3k6m2-g1",
+  "notes": "Completed independent exact-head SOURCE/TEST PASS for PR #414, recorded as review 4911540447 and REVIEW_RESULT event. Continuing with standing mine-fidelity capacity slot: inspect current FidelityManager source/tests plus retained #385/#398 for one concrete non-duplicate depth gap or explicit no-gap evidence."
 }
