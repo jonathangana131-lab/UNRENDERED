@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090720-8d9cde53-reality-audit-release",
+  "timestamp": "2026-08-11T09:07:20+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "normal",
+  "summary": "Generation-2 Reality audit is releasing its lease so this worker can take the higher-priority red-control independent review slot without dual major claims. Completed durable work: exact-head patch-local reviews for PR #306 and #312; isolated DeterminismContract array/scalar no-execute findings with CI-backed evidence handed to primary/test-adversary; and control-plane history-integrity findings that became the active #329/#315 recovery prerequisites. No mergeable audit-slot code remains pending.",
+  "affects": ["HG-BACKFILL-REALITY", "SWARM-RECOVERY-EVENT-COMPAT"],
+  "evidence": [
+    "PR #306 corrected head f813129849d48131da185ecf2158ff2c769d61fa: patch-local PASS, canonical CI 31471106348 green; integration still fenced by control recovery.",
+    "PR #312 head 41e7be8bdab7d96fe916c4c88eef33e94c0879a6: patch-local PASS, canonical CI 31471409531 green; integration still fenced by control recovery.",
+    "DeterminismContract findings evt-20260811-082030-8d9cde53-determinism-array-noexecute and evt-20260811-082210-8d9cde53-determinism-scalar-noexecute were isolated by CI and handed to valid source/test owners after closing scope-invalid evidence PR #323.",
+    "Critical control findings include live immutable-history laundering, the exact three-review-event blob drift matrix, and first-write-history invariant proposals now driving #329/#315.",
+    "The SWARM-RECOVERY-EVENT-COMPAT lane has moved to REVIEW with an independent reviewer slot, which is higher priority than retaining this completed source audit lease while control remains red."
+  ],
+  "metadata": {
+    "releasedLane": "HG-BACKFILL-REALITY",
+    "releasedSlot": "audit",
+    "releasedClaimToken": "a363dc5b9a4a1217",
+    "nextLane": "SWARM-RECOVERY-EVENT-COMPAT",
+    "nextSlot": "reviewer-1"
+  }
+}
