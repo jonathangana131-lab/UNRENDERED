@@ -5,8 +5,8 @@
   "laneId": "HG-BACKFILL-AUTHORITY",
   "claimToken": "d8a3f1c6b9e25074",
   "acquiredAt": "2026-08-11T12:43:30+00:00",
-  "heartbeatAt": "2026-08-11T12:43:30+00:00",
+  "heartbeatAt": "2026-08-11T12:45:10+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
-  "notes": "Protected lease for generation-2 salvage of stale authority teardown test-adversary PR #307 onto exact current main; source/test-only, no Studio or two-client claims."
+  "notes": "Protected lease for generation-2 stale teardown fixture recovery, now draft PR #382 exact head d9d67f76d9b7e9981e4406d52ec75f342168c1db; awaiting fresh CI/ownership/review."
 }
