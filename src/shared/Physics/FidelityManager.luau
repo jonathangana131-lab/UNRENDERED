@@ -83,6 +83,7 @@ type EntityState = {
 	pendingSince: number?,
 	lastTransitionAt: number,
 	lastEvaluatedAt: number,
+	transitioning: boolean,
 }
 
 type MutableMetrics = {
@@ -470,6 +471,7 @@ function FidelityManager.register(self: Manager, entityId: string, currentLevel:
 		pendingSince = nil,
 		lastTransitionAt = -math.huge,
 		lastEvaluatedAt = -math.huge,
+		transitioning = false,
 	}
 	self._metrics.registered += 1
 	adjustCount(self._metrics.counts, level, 1)
@@ -479,6 +481,7 @@ function FidelityManager.unregister(self: Manager, entityId: string): ()
 	entityId = assertEntityId(entityId)
 	local state = self._states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
+	assert(not state.transitioning, `cannot unregister entity during fidelity transition: {entityId}`)
 	self._metrics.registered -= 1
 	adjustCount(self._metrics.counts, state.observedLevel, -1)
 	self._states[entityId] = nil
@@ -510,6 +513,20 @@ local function synchronizeObservedLevel(
 	state.lastTransitionAt = nowSeconds
 end
 
+local function commitAcceptedEvaluation(
+	self: Manager,
+	state: EntityState,
+	currentLevel: FidelityLevel,
+	nowSeconds: number,
+	pendingLevel: FidelityLevel?,
+	pendingSince: number?
+): ()
+	state.lastEvaluatedAt = nowSeconds
+	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
+	state.pendingLevel = pendingLevel
+	state.pendingSince = pendingSince
+end
+
 function FidelityManager.step(
 	self: Manager,
 	entityId: string,
@@ -521,6 +538,7 @@ function FidelityManager.step(
 	entityId = assertEntityId(entityId)
 	local state = self._states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
+	assert(not state.transitioning, `fidelity transition callback must not reenter step: {entityId}`)
 	assert(isLevel(currentLevel), "currentLevel must be F0-F4")
 	assert(
 		isFinite(nowSeconds) and nowSeconds >= state.lastEvaluatedAt,
@@ -531,28 +549,13 @@ function FidelityManager.step(
 	-- mutating manager time, fidelity mirrors, pending targets, or metrics so a
 	-- rejected step is observationally atomic.
 	local desired: FidelityLevel, reason: PolicyReason = evaluatePolicy(inputs, self.config, currentLevel)
-	local previousState = {
-		observedLevel = state.observedLevel,
-		pendingLevel = state.pendingLevel,
-		pendingSince = state.pendingSince,
-		lastTransitionAt = state.lastTransitionAt,
-		lastEvaluatedAt = state.lastEvaluatedAt,
-	}
-	local previousCounts = {
-		F0 = self._metrics.counts.F0,
-		F1 = self._metrics.counts.F1,
-		F2 = self._metrics.counts.F2,
-		F3 = self._metrics.counts.F3,
-		F4 = self._metrics.counts.F4,
-	}
-	local previousExternalSynchronizations = self._metrics.externalSynchronizations
-
-	state.lastEvaluatedAt = nowSeconds
-	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
+	local externallySynchronized = currentLevel ~= state.observedLevel
+	local stagedPendingLevel = if externallySynchronized then nil else state.pendingLevel
+	local stagedPendingSince = if externallySynchronized then nil else state.pendingSince
+	local stagedLastTransitionAt = if externallySynchronized then nowSeconds else state.lastTransitionAt
 
 	if desired == currentLevel then
-		state.pendingLevel = nil
-		state.pendingSince = nil
+		commitAcceptedEvaluation(self, state, currentLevel, nowSeconds, nil, nil)
 		return {
 			transitioned = false,
 			currentLevel = currentLevel,
@@ -562,17 +565,25 @@ function FidelityManager.step(
 		}
 	end
 
-	if state.pendingLevel ~= desired then
-		state.pendingLevel = desired
-		state.pendingSince = nowSeconds
+	if stagedPendingLevel ~= desired then
+		stagedPendingLevel = desired
+		stagedPendingSince = nowSeconds
 	end
 
-	local pendingSince = state.pendingSince :: number
+	local pendingSince = stagedPendingSince :: number
 	local isPromotion = levelIndex(desired) > levelIndex(currentLevel)
 	local holdSeconds = if isPromotion
 		then self.config.promotionHoldSeconds
 		else self.config.demotionHoldSeconds
 	if nowSeconds - pendingSince < holdSeconds then
+		commitAcceptedEvaluation(
+			self,
+			state,
+			currentLevel,
+			nowSeconds,
+			stagedPendingLevel,
+			stagedPendingSince
+		)
 		self._metrics.blockedByHold += 1
 		return {
 			transitioned = false,
@@ -583,7 +594,15 @@ function FidelityManager.step(
 		}
 	end
 
-	if nowSeconds - state.lastTransitionAt < self.config.transitionCooldownSeconds then
+	if nowSeconds - stagedLastTransitionAt < self.config.transitionCooldownSeconds then
+		commitAcceptedEvaluation(
+			self,
+			state,
+			currentLevel,
+			nowSeconds,
+			stagedPendingLevel,
+			stagedPendingSince
+		)
 		self._metrics.blockedByCooldown += 1
 		return {
 			transitioned = false,
@@ -595,6 +614,14 @@ function FidelityManager.step(
 	end
 
 	if applyTransition == nil then
+		commitAcceptedEvaluation(
+			self,
+			state,
+			currentLevel,
+			nowSeconds,
+			stagedPendingLevel,
+			stagedPendingSince
+		)
 		self._metrics.blockedByMissingTransition += 1
 		return {
 			transitioned = false,
@@ -605,25 +632,22 @@ function FidelityManager.step(
 		}
 	end
 
+	-- A ready transition is transactional with respect to FidelityManager state:
+	-- no accepted clock/pending/count mutation is committed until the external
+	-- representation hook succeeds. Same-entity lifecycle mutation is rejected
+	-- while the hook is in flight; mutation of other entities remains independent.
+	state.transitioning = true
 	local transitionSucceeded, transitionError = pcall(function(): boolean
 		applyTransition(entityId, currentLevel, desired, reason)
 		return true
 	end)
+	state.transitioning = false
 	if not transitionSucceeded then
-		state.observedLevel = previousState.observedLevel
-		state.pendingLevel = previousState.pendingLevel
-		state.pendingSince = previousState.pendingSince
-		state.lastTransitionAt = previousState.lastTransitionAt
-		state.lastEvaluatedAt = previousState.lastEvaluatedAt
-		self._metrics.counts.F0 = previousCounts.F0
-		self._metrics.counts.F1 = previousCounts.F1
-		self._metrics.counts.F2 = previousCounts.F2
-		self._metrics.counts.F3 = previousCounts.F3
-		self._metrics.counts.F4 = previousCounts.F4
-		self._metrics.externalSynchronizations = previousExternalSynchronizations
 		error(transitionError, 0)
 	end
 
+	state.lastEvaluatedAt = nowSeconds
+	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
 	self._metrics.transitionHookCalls += 1
 	adjustCount(self._metrics.counts, currentLevel, -1)
 	adjustCount(self._metrics.counts, desired, 1)
