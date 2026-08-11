@@ -130,7 +130,10 @@ local function run(): number
 		local frontLeftInner = wallFrontLeft.positionM.z + wallFrontLeft.sizeM.z / 2
 		local frontRightInner = wallFrontRight.positionM.z + wallFrontRight.sizeM.z / 2
 
-		expect("Physics Lab floor walking plane stays at authored zero meters", nearlyEqual(floorTop, 0, EPSILON))
+		expect(
+			"Physics Lab floor walking plane stays at authored zero meters",
+			nearlyEqual(floorTop, 0, EPSILON)
+		)
 		expect(
 			"Physics Lab perimeter inner faces remain flush with the floor footprint",
 			nearlyEqual(leftInner, floorLeft, EPSILON)
@@ -186,7 +189,10 @@ local function run(): number
 				end
 			end
 		end
-		expect("Physics Lab ObjectGenome outer envelopes remain grounded on the floor plane", everyObjectGrounded)
+		expect(
+			"Physics Lab ObjectGenome outer envelopes remain grounded on the floor plane",
+			everyObjectGrounded
+		)
 
 		local stairKeys = { "stair-1", "stair-2", "stair-3", "stair-4" }
 		local stairsContiguous = true
