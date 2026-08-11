@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084437-k8v3p6r1-fidelity-audit",
+  "timestamp": "2026-08-11T08:44:37+00:00",
+  "fromWorker": "sol-20260811-k8v3p6r1",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "Independent audit takeover confirms REQUEST_CHANGES remains correct for PR #274 exact head 5251998df21e8f7f78cae5c046d346496cc65a28. The callback atomicity/reentrancy/accounting repairs are coherent, but caller-supplied PolicyConfig still violates the lane's fail-closed/no-execute boundary: constructor copies fields before any plain-table/metatable fence; pure evaluatePolicy validates/dereferences custom config before a top-level plain-data fence; maxRegisteredEntities performs numeric operators before primitive-number validation; and explicit false config is silently treated as omitted by `config or DEFAULT_CONFIG`. The production primary should consume the already-produced adversarial proof from closed test PR #325 and then synchronize onto current main before fresh exact-head CI, ownership, and rereview.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #274 remains at head 5251998df21e8f7f78cae5c046d346496cc65a28; static inspection confirms new(config) calls copyConfig(sourceConfig) before validateConfig, so a metatable-backed config can execute __index before rejection.",
+    "evaluatePolicy still resolves `config or DEFAULT_CONFIG` and validateConfig begins by reading/comparing config.maxRegisteredEntities before any top-level metatable/plain-table or primitive-number fence.",
+    "Closed adversarial PR #325 head 90f6a924106a23c9e1cecfd240560852e774198d reached Pure Luau and reproduced the PolicyConfig no-execute failures while prior tooling/static gates passed; that branch remains evidence, not a merge candidate.",
+    "Current public main is dd8f1581115c15ce6497db827d17e98d879d0267; compare shows PR #274 diverged 24 commits ahead and 3 behind, so synchronization is independently required before integration even after the source blocker is fixed.",
+    "No Roblox Studio, two-client, or engine evidence is required or claimed for this source-only review."
+  ]
+}
