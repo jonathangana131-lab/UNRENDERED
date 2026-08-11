@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-q7m4c9v2",
   "claimToken": "9f24c8b1e6a37d50",
   "claimedAt": "2026-08-11T08:52:00+00:00",
-  "heartbeatAt": "2026-08-11T08:52:00+00:00",
+  "heartbeatAt": "2026-08-11T08:56:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/tests/153-diagnostics-adversary-q7m4c9v2",
-  "pr": null,
-  "notes": "Independent diagnostics lifecycle/no-drift adversary pass under Hero Gate source-only rules. No Studio evidence claims; target active primary PR #327 and current main exact heads before implementation."
+  "pr": 333,
+  "notes": "Dependent test-adversary PR #333 targets diagnostics primary #327 exact base acb728242741716487a5825542061d20f5c4bde4. Closes audit-requested post-loop final-snapshot anchoring and exact-nil/non-truthiness cycle-default regression gaps. No Studio evidence claimed."
 }
