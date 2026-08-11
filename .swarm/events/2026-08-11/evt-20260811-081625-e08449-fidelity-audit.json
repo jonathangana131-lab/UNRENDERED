@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081625-e08449-fidelity-audit",
+  "timestamp": "2026-08-11T08:16:25+00:00",
+  "fromWorker": "sol-20260811-e08449",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "normal",
+  "summary": "PR #274 exact head 5251998df21e8f7f78cae5c046d346496cc65a28 passes independent Fidelity source audit and canonical CI; integration remains blocked only on the live Swarm ownership/control-state fence.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "Independent exact-head review found no new Fidelity state-machine blocker across rejected-step atomicity, callback retry/reentrancy, cross-entity mutation preservation, registration ordering, and fidelity-count invariants.",
+    "The delta from previously source-reviewed head 6bd6ef9c75f5415c34ea4d93500b86a0028a3f5d is mechanical StyLua formatting only.",
+    "Exact-head canonical CI run 31471785808 completed successfully.",
+    "Newest Swarm Control Plane run 31472335912 has engine-tests job 93718198562 successful; pr-ownership job 93718198384 failed because live control state changed after its validation marker, not because Fidelity product tests failed.",
+    "No Roblox Studio or real two-client evidence is claimed by this source-only Hero Gate review."
+  ],
+  "metadata": {
+    "pr": 274,
+    "headSha": "5251998df21e8f7f78cae5c046d346496cc65a28",
+    "verdict": "SOURCE_PASS_INTEGRATION_BLOCKED_ON_OWNERSHIP",
+    "canonicalCiRun": 31471785808,
+    "controlRun": 31472335912,
+    "reviewId": 4904214143,
+    "currentMainSha": "aa7e04f05834ae783773c908fccfdbbe510558e5"
+  }
+}
