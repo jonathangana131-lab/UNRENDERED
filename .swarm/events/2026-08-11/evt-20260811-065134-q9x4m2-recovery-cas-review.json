@@ -6,14 +6,12 @@
   "eventType": "REVIEW_RESULT",
   "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
   "severity": "medium",
-  "summary": "External review of PR #291 finds the immutable-snapshot publication fence structurally sound. Control projection and health publication now derive from one captured control SHA and reuse that same SHA as the CAS fence; a concurrent advance fails at the equality check or the final ordinary non-force push. Code-level review is positive, but operational recovery remains incomplete until live control state validates and a real product PR produces an explicit semantic ownership PASS under the repaired trusted path.",
-  "affects": ["SWARM-RECOVERY-PR-OWNERSHIP-IMPORT", "HG-BACKFILL-AUTHORITY"],
+  "summary": "External review of PR #291 at head 3d4bf3bcba28e8ca8451e1631b9afa652bfc88dc finds the immutable-snapshot publication fence structurally sound. Control projection and health publication derive from one captured control SHA and reuse that same SHA as the CAS fence; a concurrent advance fails at the equality check or final ordinary non-force push. Review result: approve code pending operational acceptance. Operational recovery remains incomplete until live control state validates and a real product PR produces an explicit semantic ownership PASS under the repaired trusted path.",
+  "affects": ["SWARM-RECOVERY-PR-OWNERSHIP-IMPORT", "HG-BACKFILL-AUTHORITY", "PR-291"],
   "evidence": [
+    "PR #291 head 3d4bf3bcba28e8ca8451e1631b9afa652bfc88dc.",
     "PR #291 exact-head canonical CI run 31466418119 succeeded and engine tests succeeded.",
     "Latest post-#290 ownership runs fail nonzero on invalid legacy worker records, demonstrating the validator is now fail-closed rather than false-green.",
     "Workers q7h4n2 and r6k2p9 were normalized by 06:51Z; additional live-state validation is still required before positive acceptance."
-  ],
-  "pr": 291,
-  "headSha": "3d4bf3bcba28e8ca8451e1631b9afa652bfc88dc",
-  "verdict": "APPROVE_CODE_PENDING_OPERATIONAL_ACCEPTANCE"
+  ]
 }
