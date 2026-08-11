@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-074927-z5r8m2-diagnostics-cycle-input",
+  "timestamp": "2026-08-11T07:49:27+00:00",
+  "fromWorker": "sol-20260811-z5r8m2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "low",
+  "summary": "REQUEST_CHANGES on PR #295 head 1814b4d0: runToggleEvidence defaults with Lua truthiness and performs relational/modulo operations before a runtime numeric preflight. Malformed false or metatable-backed cycle overrides therefore do not fail closed at the validation boundary; hostile values may execute metamethods. Default only exact nil, type-check before arithmetic/comparison, and regression-lock zero metamethod execution before integration.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "PR #295 head 1814b4d08a02c9d650dea6288af9a8264e58d3c9 sets `local cycleCount = cycles or DEFAULT_TOGGLE_EVIDENCE_CYCLES`.",
+    "The same guard immediately evaluates `cycleCount >= 1`, `cycleCount <= MAX_TOGGLE_EVIDENCE_CYCLES`, and `cycleCount % 1` without a runtime number check.",
+    "`false :: any` is silently interpreted as the default 20-cycle request, while a metatable-backed table can participate in relational/arithmetic metamethod dispatch before rejection.",
+    "Review comment 5250458262 requests exact-nil defaulting, runtime numeric preflight, hostile-input regression, and post-#298 exact-head CI/ownership."
+  ],
+  "metadata": {
+    "claimToken": "4f8c1a7d9e2b6053",
+    "pr": 295,
+    "headSha": "1814b4d08a02c9d650dea6288af9a8264e58d3c9",
+    "verdict": "REQUEST_CHANGES"
+  }
+}
