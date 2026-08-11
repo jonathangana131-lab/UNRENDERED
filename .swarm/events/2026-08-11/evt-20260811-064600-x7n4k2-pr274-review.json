@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064600-x7n4k2-pr274-review",
+  "timestamp": "2026-08-11T06:46:00+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "REQUEST_CHANGES on PR #274 at d4cc3f56be8f514534634c4f7e70d8b16078b43b. The primary correctly restores failed-hook temporal state and validates boolean policy inputs, but the active Fidelity lane still has two reproduced source defects: transition hooks may re-enter manager mutation and corrupt aggregate fidelity accounting, and malformed registration fidelity is validated after capacity accounting so invalid input can consume the capacity-rejection metric. Consume both adversarial findings and make PR #278's contract-neutral regressions green before integration.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #278 head 86e785b5fa19e9a576b94091969609ace881b0e7 reproduces callback reentrancy/accounting corruption and registration validation-order mutation in canonical Pure Luau.",
+    "FidelityManager.step at PR #274 head still calls arbitrary applyTransition without a same-manager mutation guard, then commits counts/state using the pre-hook state reference.",
+    "FidelityManager.register at PR #274 head checks/increments registration capacity before resolving and validating currentLevel.",
+    "PR #274 comment 5249918720 records the blocking audit result."
+  ],
+  "metadata": {
+    "pr": 274,
+    "headSha": "d4cc3f56be8f514534634c4f7e70d8b16078b43b",
+    "result": "REQUEST_CHANGES",
+    "claimToken": "b7e31c94f0a2685d"
+  }
+}
