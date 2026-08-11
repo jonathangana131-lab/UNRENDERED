@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-r4k9m2",
   "claimToken": "8b3e1d6c9a2f7054",
   "claimedAt": "2026-08-11T08:43:00+00:00",
-  "heartbeatAt": "2026-08-11T08:43:00+00:00",
-  "leaseSeconds": 1800,
+  "heartbeatAt": "2026-08-11T08:46:10+00:00",
+  "leaseSeconds": 300,
   "generation": 1,
   "resources": [],
   "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-r4k9m2",
   "pr": null,
-  "notes": "Bounded source-depth inspection of Physics Lab authored geometry and validation tests for a concrete non-duplicate Hero Gate gap."
+  "notes": "Mining complete: published evt-20260811-084600-r4k9m2-chair-caster-ground-gap. Lease intentionally shortened to minimum so the reusable capacity slot returns promptly."
 }
