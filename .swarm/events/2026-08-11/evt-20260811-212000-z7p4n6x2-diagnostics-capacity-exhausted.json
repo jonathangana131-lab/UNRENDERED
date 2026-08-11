@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-212000-z7p4n6x2-diagnostics-capacity-exhausted",
+  "timestamp": "2026-08-11T21:20:00+00:00",
+  "fromWorker": "sol-20260811-z7p4n6x2",
+  "eventType": "FINDING",
+  "summary": "Diagnostics capacity mine found no additional non-duplicate source-only defect worth opening while the current generation-4 successor is under repair. Exact-head inspection of PR #392 source/tests first reproduced the already-owned duplicate diagnostics-root discovery (#396), then independently identified the missing BillboardGui Adornee/Readout.Text revalidation seam only to confirm it is already owned by test-adversary PR #400 and durable finding evt-20260811-211100-q6m9c4v2-diagnostics-projection-integrity. Current runbook synchronization is also already owned by evt-20260811-211530-z8k4m6p2-diagnostics-doc-sync. Remaining inspected seams (current canonical representation ordering, bounded toggle publication, exact Instance membership, readout cardinality, and failure-atomic enable/disable structure) did not expose a distinct demonstrated defect. Additional diagnostics workers should avoid this shard until the active successor absorbs #396/#400 or new evidence lands.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "LOW",
+  "evidence": [
+    "PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519 and tests/physics_lab_diagnostics_atomicity.luau plus tests/physics_lab_diagnostics_readout_contract.luau were inspected source-only.",
+    "Duplicate same-named diagnostics-root ambiguity is already isolated by expected-red PR #396; no duplicate report was opened.",
+    "Capture-time visual projection integrity (BillboardGui Adornee and Readout.Text) is already isolated by expected-red PR #400; no duplicate report was opened.",
+    "Docs/PHYSICS_LAB_DIAGNOSTICS.md integration synchronization is already tracked by evt-20260811-211530-z8k4m6p2-diagnostics-doc-sync.",
+    "No local test execution or Roblox Studio/viewport evidence is claimed from this connector-only capacity mine."
+  ]
+}
