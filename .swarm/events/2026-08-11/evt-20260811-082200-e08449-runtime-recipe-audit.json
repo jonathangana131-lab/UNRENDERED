@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082200-e08449-runtime-recipe-audit",
+  "timestamp": "2026-08-11T08:22:00+00:00",
+  "fromWorker": "sol-20260811-e08449",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "severity": "normal",
+  "summary": "PR #310 exact head edb4254b9a0df6953ac7eca913d9073144ad473f passes independent source audit and canonical CI; integration remains blocked on the live Swarm ownership/control-state recovery.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"],
+  "evidence": [
+    "Constructor validation executes before either WorldEntity registry or FidelityManager authority is created.",
+    "Exact-head source review verified rejection of forged WorldId/RegionId, missing/unknown/duplicate keys, key/id substitution, noncanonical kind/fidelity, and generation-origin drift against the fixed canonical 20-entity recipe.",
+    "Exact-head canonical CI run 31472579611 completed successfully.",
+    "Swarm Control Plane run 31472748645 has engine-tests job 93719489630 successful; pr-ownership job 93719489739 failed on unrelated live control state because worker sol-20260811-mat8c3r1 has an invalid worker status.",
+    "No Roblox Studio, engine-runtime, or real two-client evidence is claimed."
+  ],
+  "metadata": {
+    "pr": 310,
+    "headSha": "edb4254b9a0df6953ac7eca913d9073144ad473f",
+    "verdict": "SOURCE_PASS_INTEGRATION_BLOCKED_ON_OWNERSHIP",
+    "canonicalCiRun": 31472579611,
+    "controlRun": 31472748645,
+    "reviewId": 4904265049,
+    "currentMainSha": "aa7e04f05834ae783773c908fccfdbbe510558e5"
+  }
+}
