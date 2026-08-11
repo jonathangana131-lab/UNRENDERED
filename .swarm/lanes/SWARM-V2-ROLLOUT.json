@@ -3,12 +3,12 @@
   "laneId": "SWARM-V2-ROLLOUT",
   "epicId": "SWARM-V2",
   "title": "Prove and activate Swarm Control Plane V2",
-  "objective": "Complete a real post-bootstrap atomic lane/resource claim, open a claim-enforced strategic-state PR, pass canonical CI plus ownership/scope checks, merge it, and close/release the rollout lane without changing gameplay unlocks.",
+  "objective": "Complete a real post-bootstrap atomic lane/resource claim, open a claim-enforced activation-state PR, pass canonical CI plus ownership/scope checks, merge it, and close/release the rollout lane without changing gameplay unlocks.",
   "priority": 9900,
   "state": "READY",
   "mode": "exclusive",
   "dependencies": [],
-  "writeScopes": ["Docs/PROJECT_STATE.md"],
+  "writeScopes": ["Docs/PROJECT_STATE.md", "Docs/SWARM_V2_ACTIVATION.md"],
   "resources": ["PROJECT-STATE"],
   "slots": [
     {"slotId": "primary", "role": "Swarm V2 activation implementer", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 900},
@@ -20,7 +20,7 @@
     "30-worker deterministic ownership simulation passes",
     "real primary claim is atomically created",
     "matching PROJECT-STATE resource lease is atomically created",
-    "real PR passes live claim/branch/scope/resource enforcement",
+    "real protected-scope PR passes live claim/branch/scope/resource enforcement",
     "canonical product CI remains green",
     "rollout claim/resource lease is released after merge"
   ]
