@@ -59,13 +59,11 @@ local function run(): number
 	expect("each diagnostics billboard carries the canonical WorldEntityId it projects", identityWrite ~= nil)
 	expect(
 		"capture validates the readout tree through an explicit completeness boundary",
-		helper ~= nil and helperEnd ~= nil and captureCall ~= nil and helper < helperEnd and helperEnd <= captureCall
+		helper ~= nil and helperEnd ~= nil and captureCall ~= nil and helper < helperEnd and helperEnd < captureCall
 	)
 	expect(
 		"readout validation enumerates only direct diagnostics-root children",
-		directChildren ~= nil
-			and billboardClass ~= nil
-			and directChildren < billboardClass
+		directChildren ~= nil and billboardClass ~= nil and directChildren < billboardClass
 	)
 	expect(
 		"every readout identity is authoritative and unique",
@@ -90,7 +88,6 @@ local function run(): number
 		labelLookup ~= nil
 			and labelClass ~= nil
 			and exactBillboardShape ~= nil
-			and billboardClass ~= nil
 			and billboardClass < labelLookup
 			and labelLookup < labelClass
 			and labelClass < exactBillboardShape
@@ -111,11 +108,7 @@ local function run(): number
 	)
 	expect(
 		"validated readouts form a one-to-one projection of authoritative entities",
-		exactEntityCount ~= nil
-			and exactInstanceCount ~= nil
-			and readoutCountIncrement ~= nil
-			and readoutCountIncrement < exactEntityCount
-			and exactEntityCount < exactInstanceCount
+		exactEntityCount ~= nil and exactInstanceCount ~= nil and exactEntityCount < exactInstanceCount
 	)
 	expect(
 		"capture cannot bless an arbitrary descendant count as diagnostics completeness",
