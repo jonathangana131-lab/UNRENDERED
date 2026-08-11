@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:59:10+00:00",
-  "lastSeenAt": "2026-08-11T08:20:05+00:00",
+  "lastSeenAt": "2026-08-11T08:30:00+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-e3a71c9d",
-  "notes": "Generation-3 WorldEntity adversary recovery on fresh current-main branch; authoring bounded persistentState regression coverage only. Local runner remains unavailable due github.com DNS resolution failure, so no local test pass will be claimed."
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-e3a71c9d-r2",
+  "notes": "Generation-3 WorldEntity adversary recovery on exact main aa7e04f. PR #321 recovers stale #276 boundary tests and adds structural-limit regressions. CI is intentionally red only at Pure Luau pending primary source bounds; local runner unavailable due github.com DNS."
 }
