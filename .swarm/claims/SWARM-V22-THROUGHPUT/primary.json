@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V22-THROUGHPUT",
+  "slotId": "primary",
+  "workerId": "sol-20260811-2b51a8",
+  "claimToken": "d26af0a2fc3c6f06",
+  "claimedAt": "2026-08-11T08:41:00+00:00",
+  "heartbeatAt": "2026-08-11T08:41:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["SWARM-PROTOCOL"],
+  "notes": "Claim established before authoritative product branch creation. Protected code work waits until SWARM-PROTOCOL lease is legitimately acquired."
+}
