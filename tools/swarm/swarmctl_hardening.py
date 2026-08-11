@@ -11,6 +11,7 @@ import hashlib
 import re
 from pathlib import Path
 
+import swarm_history_recovery_extension as _extension
 import swarm_history_recovery_manifest as _recovery
 import swarmctl_hardening_base as _base
 from swarmctl_hardening_base import *  # re-export the proven engine API
@@ -24,7 +25,7 @@ _STRICT_TRANSITION_CHECK = _base.transition_check
 # an invalid commit followed by the exact schema-valid repair that must also be in
 # the reviewed bootstrap candidate ancestry. This is data, not compatibility: the
 # invalid statuses remain rejected everywhere.
-FINITE_WORKER_TRANSITIONS = _recovery.FINITE_WORKER_TRANSITIONS
+FINITE_WORKER_TRANSITIONS = _recovery.FINITE_WORKER_TRANSITIONS + _extension.FINITE_WORKER_TRANSITIONS
 
 # Pre-convergence immutable history has two distinct recovery classes:
 # 1) valid first-write bytes that were later rewritten; the rewritten bytes are
@@ -63,6 +64,7 @@ _CANONICAL_IMMUTABLE_EVENTS = {
         "quarantinedGitBlobSha1": "c2b99475cdb95940d9a7ca329440880865da02cb",
     },
     **_recovery.quarantine_rules(),
+    **_extension.quarantine_rules(),
 }
 
 TRUST_BRANCH = "swarm-trust"
