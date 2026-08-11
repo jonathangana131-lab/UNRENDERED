@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-h7k3v9m2",
   "claimToken": "c1e8a4d7f2b96035",
   "claimedAt": "2026-08-11T21:33:20+00:00",
-  "heartbeatAt": "2026-08-11T21:33:20+00:00",
+  "heartbeatAt": "2026-08-11T21:43:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-h7k3v9m2",
   "pr": null,
-  "notes": "Mine current WorldEntity source/tests/PR lineage for a concrete non-duplicate Hero-Gate depth gap; publish a structured finding or no-gap result."
+  "notes": "Mine current source/tests/PR lineage for a concrete non-duplicate Hero-Gate depth gap; publish a finding/no-gap result. Duplicate diagnostic-capacity finding excluded; checking retained state-budget and metadata-budget lineage."
 }
