@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-124210-j4m8q2v7-authority-teardown-g2-handoff",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-j4m8q2v7",
+  "claimToken": "d8a3f1c6b9e25074",
+  "claimGeneration": 2,
+  "timestamp": "2026-08-11T12:42:10Z",
+  "headSha": "d9d67f76d9b7e9981e4406d52ec75f342168c1db",
+  "branch": "agent/authority/HG-BACKFILL-AUTHORITY-tests-j4m8q2v7-g2",
+  "payload": {
+    "summary": "Generation-2 stale recovery replayed the authority teardown ownership fixture from superseded PR #307 onto exact current main and published draft replacement PR #382.",
+    "replacementPr": 382,
+    "supersededPr": 307,
+    "canonicalCiRun": 31492068667,
+    "controlPlaneRun": 31492068677,
+    "validation": [
+      "canonical CI PASS: toolchain, sourcemap, format, lint, Luau analysis, randomness/domain/plain-value audits, swarm deterministic tests, Pure Luau tests, place build, shell upload",
+      "Swarm Control Plane engine-tests PASS after worker status correction",
+      "pr-ownership remains blocked by project-wide immutable trusted-event history mismatch at evt-20260811-073500-q9m4r2-authority-rereview-approve.json, not by PR #382 product/test content",
+      "no Roblox Studio or two-client execution performed or claimed"
+    ],
+    "scope": "one recovered test fixture plus current pure-runner registration; no production source changes",
+    "nextActions": [
+      "keep PR #382 draft until SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY restores trusted event history",
+      "obtain fresh independent exact-head review for d9d67f76d9b7e9981e4406d52ec75f342168c1db",
+      "do not reuse stale PR #307 review as current-head approval",
+      "do not fold the separate harness destroy-capability finding into this recovered fixture without explicit lane ownership"
+    ]
+  }
+}
