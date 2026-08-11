@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811T213800Z-sol-20260811-g7m4q9v2-harness-lifecycle-audit-request-changes",
+  "eventType": "REVIEW_RESULT",
+  "at": "2026-08-11T21:38:00Z",
+  "workerId": "sol-20260811-g7m4q9v2",
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "slotId": "audit",
+  "claimToken": "5a9c3e7d1b4f8062",
+  "generation": 1,
+  "branch": "agent/review/HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY-audit-g7m4q9v2",
+  "pr": 403,
+  "commit": "5f844842b980f7c68cebe0a437cb9b1c8d94947b",
+  "resources": ["SERVER-AUTHORITY"],
+  "summary": "REQUEST_CHANGES: generation-2 harness lifecycle invalidation still depends on Destroying/AncestryChanged callback scheduling. Under deferred signal delivery, external destroy/reparent can mutate the Model while private current remains observable until the queued callback runs, so get/start/restart can still observe stale ownership in the same task.",
+  "validation": [
+    {
+      "command": "inspect exact-head PhysicsLabStudioHarness.luau at 5f844842b980f7c68cebe0a437cb9b1c8d94947b",
+      "result": "FAIL",
+      "notes": "start() asserts current == nil and get() returns current without synchronous ownership/liveness reconciliation; lifecycle cleanup is entered only from engine signal callbacks."
+    },
+    {
+      "command": "inspect exact-head tests/hero_gate_authority_teardown.luau at 5f844842b980f7c68cebe0a437cb9b1c8d94947b",
+      "result": "FAIL",
+      "notes": "Regression proves source tokens/order for lifecycle hooks but does not model the post-destroy/reparent pre-callback window, so it can false-pass the stale-current race."
+    },
+    {
+      "command": "canonical CI run 31537665202",
+      "result": "PASS",
+      "notes": "Canonical validate job is green for this head lineage."
+    },
+    {
+      "command": "Swarm exact-head run 31537922707 engine-tests",
+      "result": "PASS",
+      "notes": "Engine/source tests are green; pr-ownership remains separately fail-closed behind the active trusted-history recovery and is not waived by this review."
+    }
+  ],
+  "details": {
+    "verdict": "REQUEST_CHANGES",
+    "exactHead": "5f844842b980f7c68cebe0a437cb9b1c8d94947b",
+    "blockingInvariant": "External destruction or reparenting must not leave a stale private owner observable, regardless of engine signal scheduling.",
+    "requiredRepair": "Reconcile model ownership/liveness synchronously before get() returns and before start()/restart() exclusivity decisions, while retaining lifecycle signals as cleanup hooks; add a deterministic regression for the state before deferred callbacks run.",
+    "studioEvidenceClaimed": false,
+    "twoClientEvidenceClaimed": false,
+    "prReviewId": 4235781487
+  }
+}
