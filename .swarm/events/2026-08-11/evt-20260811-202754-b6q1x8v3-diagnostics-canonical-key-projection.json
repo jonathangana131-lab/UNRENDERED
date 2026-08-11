@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-202754-b6q1x8v3-diagnostics-canonical-key-projection",
+  "timestamp": "2026-08-11T20:27:54Z",
+  "fromWorker": "sol-20260811-b6q1x8v3",
+  "eventType": "FINDING",
+  "summary": "Diagnostics still publishes mutable Workspace Instance names as entity/readout keys instead of deriving that identity from the authoritative WorldEntity recipe record. An exact runtime-owned representation can be renamed without changing its WorldEntityId or fidelity; current and planned ownership/completeness fences can still accept it while capture() reports the spoofed Name as EntityDiagnostic.key, enable() renders that spoofed key in the Billboard text, and directRepresentations() orders evidence by the mutable Name. Derive diagnostic key/order/readout identity from record.origin.recipeKey (or another project-owned canonical key) and treat mirrored Instance Name/UNRENDERED_RecipeKey only as observability that may be checked, never as authority.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "warning",
+  "evidence": [
+    "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 PhysicsLabStudioDiagnostics.directRepresentations sorts physical children with a.Name < b.Name; preflightReadouts assigns plan.key = representation.Name; capture assigns EntityDiagnostic.key = representation.Name while separately reading recipeKey from record.origin.recipeKey.",
+    "PhysicsLabRealizer.setEntityAttributes mirrors the authoritative record.origin.recipeKey into UNRENDERED_RecipeKey and initial realization names the physical Instance from the recipe key, but Roblox Instance.Name remains mutable physical representation state.",
+    "PR #349 exact head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a adds ownsRepresentation(entityId, candidate), which proves exact private-map Instance identity and direct parenting but deliberately does not constrain candidate.Name or derive diagnostic key identity.",
+    "PR #374 exact head a02ee5b9f93c5e3f8d200afe32bf91621fc5e553 requires readout WorldEntityId membership/uniqueness, direct BillboardGui shape, one Readout label, one-to-one cardinality, and exact instance count; its contract contains no canonical recipe-key/name/text agreement check.",
+    "Source-level repro: realize the lab, rename one exact-owned F2 representation while preserving its WorldEntityId/fidelity attributes, then call diagnostics capture/enable. Existing source accepts it; after #349 ownership consumption the same candidate remains exact-owned, yet capture key and visual readout key can come from the spoofed Workspace Name rather than record.origin.recipeKey.",
+    "UNRENDERED architecture keeps Workspace as disposable physical representation rather than canonical truth; diagnostic identity intended to support Reality-Grade evidence should therefore be derived from project-owned domain/runtime state."
+  ],
+  "metadata": {
+    "diagnosticsPr": 327,
+    "diagnosticsHead": "acb728242741716487a5825542061d20f5c4bde4",
+    "instanceBindingPr": 349,
+    "instanceBindingHead": "901c063ff3c1e2584f84a07e1da3a9b1b82d413a",
+    "readoutContractPr": 374,
+    "readoutContractHead": "a02ee5b9f93c5e3f8d200afe32bf91621fc5e553",
+    "recommendedLaneId": "HG-DIAGNOSTICS-CANONICAL-KEY-PROJECTION",
+    "recommendedClosure": "Use record.origin.recipeKey (or an equivalently project-owned canonical key) for diagnostic key fields, deterministic ordering, and readout text; optionally fail closed when mirrored UNRENDERED_RecipeKey/Instance.Name disagrees with the canonical record rather than trusting either mirror. Add a pure regression that renaming an exact-owned representation cannot change accepted diagnostic identity or evidence ordering.",
+    "studioEvidence": "none performed or claimed"
+  }
+}
