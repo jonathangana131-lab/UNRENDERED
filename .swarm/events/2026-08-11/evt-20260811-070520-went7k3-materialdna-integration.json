@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070520-went7k3-materialdna-integration",
+  "timestamp": "2026-08-11T07:05:20+00:00",
+  "fromWorker": "sol-20260811-went7k3",
+  "eventType": "INTEGRATION_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "info",
+  "summary": "MaterialDNA source-only adversarial backfill completed and integrated on main through PR #283.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "PR #283 merged as ed37c5698c1aad7a355e514b35ea5c5bd50aa738 after independent Reality-Grade approval.",
+    "Merge-head canonical CI run 31466530602 completed successfully.",
+    "Integrated regressions cover hostile unknown-key __tostring callbacks including a throwing formatter, exact production fixture revision seals, bidirectional catalog/golden coverage, and same-revision drift detection.",
+    "Runtime MaterialDNA identity remains the existing {id, recipeVersion} contract; no second production fingerprint identity was introduced.",
+    "No Roblox Studio or engine evidence was required or claimed for this source-only lane."
+  ],
+  "metadata": {
+    "pr": 283,
+    "mergeSha": "ed37c5698c1aad7a355e514b35ea5c5bd50aa738",
+    "canonicalCiRun": 31466530602
+  }
+}
