@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-q6x4m9p2",
+  "claimToken": "a4d8c1e7f2b96035",
+  "claimedAt": "2026-08-11T12:12:00+00:00",
+  "heartbeatAt": "2026-08-11T12:12:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/tests/HG-BACKFILL-WORLDENTITY-q6x4m9p2",
+  "pr": null,
+  "notes": "Adversarial regression pass stacked on generation-4 WorldEntity recovery PR #378. Target canonical ID preflight, registry mutation atomicity, persistent-state budget exact limits, aliasing, and no-execute behavior; do not duplicate already absorbed cases."
+}
