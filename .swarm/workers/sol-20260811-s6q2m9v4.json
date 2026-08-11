@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T23:08:20+00:00",
-  "lastSeenAt": "2026-08-11T23:08:20+00:00",
-  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "slotId": "primary",
-  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-s6q2m9v4-g6",
-  "notes": "Generation-6 fenced stale takeover of PR #415 after the generation-5 primary and SWARM-PROTOCOL leases expired. Preserve immutable event bytes and continue only the trusted-history continuity recovery lineage."
+  "lastSeenAt": "2026-08-11T23:11:05+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "test-adversary",
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-s6q2m9v4",
+  "notes": "Claimed independent adversarial test depth on retained generation-6 Physics Lab geometry/scale PR #414. Scope is tests only; find a concrete non-duplicate source-contract gap or publish no-gap evidence."
 }
