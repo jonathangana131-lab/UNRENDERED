@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-073400-x7n4k2-pr274-scalar-rereview",
+  "timestamp": "2026-08-11T07:34:00+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "REQUEST_CHANGES remains on PR #274 at 60de91b49338249c1ded74db0d722921ce2fb55d. Registration ordering, top-level PolicyInputs metatable rejection, callback temporal atomicity, and same-entity reentrancy/accounting are closed, but the newly isolated hostile-scalar no-execute boundary is not. Numeric validators still compare/order runtime values before establishing primitive number type, and nowSeconds reaches isFinite directly. Test-adversary PR #278 head 505283cfd5e7aa00cd3d09d3d9cf347fd9e36a72 passes static/audit phases then fails exactly the two zero-metamethod-execution assertions while confirming both malformed values eventually reject and the nowSeconds retry remains atomic. Do not integrate #274 until primitive runtime type checks precede equality/order/arithmetic, adversarial coverage is green against the fix, and exact-head canonical CI plus live ownership are green.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #274 head 60de91b49338249c1ded74db0d722921ce2fb55d still defines isFinite/validateUnit/validateNonNegative/validateFiniteNonNegative with number-typed parameters and performs value == value / relational operations before any runtime type guard.",
+    "PR #278 head 505283cfd5e7aa00cd3d09d3d9cf347fd9e36a72 CI run 31468630117 passes format, lint, Luau analysis, deterministic audits, and swarm tests, then fails Pure Luau because hostile numeric scalar and hostile nowSeconds each execute one metamethod before rejection.",
+    "The same adversarial run confirms malformed scalar/time values are rejected and a later valid nowSeconds retry remains accepted, narrowing this to the no-execute validation boundary rather than temporal poisoning.",
+    "PR #274 comments 5250166367 and 5250243188 record the source shape and exact CI proof; audit PR #292 documents the required primitive-type-before-arithmetic contract."
+  ],
+  "metadata": {
+    "pr": 274,
+    "headSha": "60de91b49338249c1ded74db0d722921ce2fb55d",
+    "result": "REQUEST_CHANGES",
+    "claimToken": "b7e31c94f0a2685d"
+  }
+}
