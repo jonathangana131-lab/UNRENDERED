@@ -43,6 +43,6 @@
     "do not claim Roblox Studio or engine evidence",
     "independent review required before integration"
   ],
-  "notes": "Primary implementation is published as PR #310 at exact head edb4254b9a0df6953ac7eca913d9073144ad473f with canonical CI green. Awaiting an independent audit; no Roblox Studio or engine evidence is claimed.",
+  "notes": "PR #310 exact head 0f69d6b749c3daa8b61488e94016e9c0c2831632 is canonical-CI green and addresses the prior Codex P2 by also fencing canonical initial persistentState/stateRevision/representationRevision. Prior audit on edb4254 is superseded; fresh independent exact-head audit is required. Swarm pr-ownership is globally blocked by unrelated invalid worker-status state. No Roblox Studio or engine evidence is claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "physics-runtime"]
 }
