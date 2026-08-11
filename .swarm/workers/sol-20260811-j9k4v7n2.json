@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-j9k4v7n2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:38:00+00:00",
-  "lastSeenAt": "2026-08-11T09:56:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-j9k4v7n2",
-  "notes": "Bounded source-only Physics Lab geometry capacity mining after completing two independent review slots; inspect current recipe/scale/object fixtures/tests and active chair/cart work for one concrete non-duplicate Reality-Grade gap. No Studio or engine evidence claim."
+  "lastSeenAt": "2026-08-11T10:05:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "GO cycle complete: independent source audits published for authority PR #348 and runtime transition PR #334; non-duplicate Physics Lab ramp-entry geometry FINDING published and routed to HG-BACKFILL-PHYSICS-GEOMETRY / PR #302. Global event-history continuity recovery remains actively owned; reviewer slot not yet unlocked."
 }
