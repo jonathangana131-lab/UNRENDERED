@@ -217,6 +217,48 @@ local function run(): number
 		doorCenterOfMassMatchesComponents
 	)
 
+	local cartGenome = PhysicsLabRecipe.objectGenome("rollingCart")
+	local cartGroundPlane = -cartGenome.dimensionsM.y / 2
+	local groundSupportedCartComponents = 0
+	local allGroundSupportedCartComponentsMeetGroundPlane = true
+	local authoredCartMass = 0
+	local weightedCartX = 0
+	local weightedCartY = 0
+	local weightedCartZ = 0
+	for _, component in ipairs(cartGenome.components) do
+		authoredCartMass += component.massKg
+		weightedCartX += component.massKg * component.localPositionM.x
+		weightedCartY += component.massKg * component.localPositionM.y
+		weightedCartZ += component.massKg * component.localPositionM.z
+		if component.externalSupport == "ground" then
+			groundSupportedCartComponents += 1
+			local componentBottom = component.localPositionM.y - component.dimensionsM.y / 2
+			if math.abs(componentBottom - cartGroundPlane) >= 1e-9 then
+				allGroundSupportedCartComponentsMeetGroundPlane = false
+			end
+		end
+	end
+	local cartMassMatchesComponents = math.abs(authoredCartMass - cartGenome.massKg) < 1e-9
+	local cartCenterOfMassMatchesComponents = false
+	if authoredCartMass > 0 then
+		cartCenterOfMassMatchesComponents = math.abs(
+			cartGenome.centerOfMassM.x - weightedCartX / authoredCartMass
+		) < 1e-9 and math.abs(cartGenome.centerOfMassM.y - weightedCartY / authoredCartMass) < 1e-9 and math.abs(
+			cartGenome.centerOfMassM.z - weightedCartZ / authoredCartMass
+		) < 1e-9
+	end
+
+	expect("lab rolling cart geometry revision is explicit", cartGenome.familyVersion == 2)
+	expect(
+		"lab rolling cart ground-supported casters meet the authored ground plane",
+		groundSupportedCartComponents == 4 and allGroundSupportedCartComponentsMeetGroundPlane
+	)
+	expect("lab rolling cart component masses match authored total", cartMassMatchesComponents)
+	expect(
+		"lab rolling cart center of mass matches component mass distribution",
+		cartCenterOfMassMatchesComponents
+	)
+
 	local duplicateAccepted = WorldEntity.register(registry, first.entities[1].entity)
 	expect("lab duplicate identity is detectable", duplicateAccepted == false)
 
