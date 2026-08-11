@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085900-s5q8m4-event-compat-rereview",
+  "timestamp": "2026-08-11T08:59:00+00:00",
+  "fromWorker": "sol-20260811-s5q8m4",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
+  "severity": "info",
+  "summary": "Request independent rereview of PR #329 exact head 772416839f4e9a3330c89dc9880e1670b7191824 after all prior P0 immutable-history findings were addressed. Compatibility is now exact-path/exact-first-write-blob detect-only; it adds duplicate eventId/replay fences and does not permit restoration or any historical rewrite. The already-laundered live history is split into locked lane SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY rather than hidden inside this patch.",
+  "affects": ["SWARM-RECOVERY-EVENT-COMPAT", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "evidence": [
+    "PR #329 exact head 772416839f4e9a3330c89dc9880e1670b7191824 changes only tools/swarm/swarmctl_hardening.py and tools/swarm/test_swarmctl_hardening.py.",
+    "Canonical CI run 31475546478 passed on the exact head.",
+    "Swarm engine-tests job 93728287438 passed on the exact head.",
+    "Known historical exceptions are checked before strict validation and require exact audited path plus first-write Git blob identity.",
+    "Base transition-check remains the first transition gate, so every historical rewrite/deletion remains byte-for-byte rejected; the wrapper only adds duplicate eventId/replay checks."
+  ],
+  "metadata": {
+    "pr": 329,
+    "headSha": "772416839f4e9a3330c89dc9880e1670b7191824",
+    "requestedSlot": "reviewer-1",
+    "priorReviewHead": "275ba90dfe699e22b495b6f77086e8c6e845fd11",
+    "historyContinuityLane": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  }
+}
