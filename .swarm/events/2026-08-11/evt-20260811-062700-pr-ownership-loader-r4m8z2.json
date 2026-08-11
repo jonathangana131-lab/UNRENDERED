@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062700-pr-ownership-loader-r4m8z2",
+  "timestamp": "2026-08-11T06:27:00+00:00",
+  "fromWorker": "sol-20260811-r4m8z2",
+  "eventType": "FINDING",
+  "summary": "CRITICAL global PR ownership CI regression on current main: the trusted-validator workflow materializes swarmctl_hardening.py but not its required swarmctl_hardening_base.py dependency. Every PR selecting the hardening engine can fail before ownership is evaluated with ModuleNotFoundError. Observed on PR #277 run 31464989596 / job 93695940475; the failure is infrastructure-side and independent of that PR's ObjectGenome changes.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "CRITICAL",
+  "evidence": [
+    "tools/swarm/swarmctl_hardening.py line 10 imports swarmctl_hardening_base as _base.",
+    ".github/workflows/swarm-control.yml Materialize trusted base validator copies only swarmctl.py and swarmctl_hardening.py into $RUNNER_TEMP/trusted-swarm before executing the facade.",
+    "Swarm Control Plane run 31464989596, pr-ownership job 93695940475: ModuleNotFoundError: No module named 'swarmctl_hardening_base'."
+  ]
+}
