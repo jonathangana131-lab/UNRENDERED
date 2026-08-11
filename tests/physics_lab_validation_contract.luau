@@ -185,7 +185,10 @@ local function run(): number
 	local extremeComparisonAccepted = pcall(function()
 		ValidationContract.compareFullLabEnvelope(extremeBaseline, extremeCheckpoint, 0.001)
 	end)
-	expect("finite envelope inputs cannot overflow into non-finite drift evidence", not extremeComparisonAccepted)
+	expect(
+		"finite envelope inputs cannot overflow into non-finite drift evidence",
+		not extremeComparisonAccepted
+	)
 
 	return failures
 end
