@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "workerId": "sol-20260811-z4m8p2",
+  "claimToken": "4d8a2c7f1e9b6035",
+  "claimedAt": "2026-08-11T07:49:00+00:00",
+  "heartbeatAt": "2026-08-11T07:49:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/audit/HG-CAPACITY-MINING-mine-physics-runtime-z4m8p2",
+  "pr": null,
+  "notes": "Mine the current Physics runtime source/tests/PR history for one concrete non-duplicate Hero-Gate depth gap; no Studio evidence claim."
+}
