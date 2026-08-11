@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T09:41:00+00:00",
-  "lastSeenAt": "2026-08-11T09:45:00+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "lastSeenAt": "2026-08-11T10:10:00+00:00",
+  "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "test-adversary",
-  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-z6m2q8r4",
-  "notes": "Claimed complementary ObjectGenome test-adversary slot after two review-claim races. Building source-only deterministic diagnostic-order regression; no production or Studio changes."
+  "branch": "agent/physics/HG-BACKFILL-FIDELITY-tests-z6m2q8r4",
+  "notes": "ObjectGenome expected-red PR #357 published and claim released; continuing in open FidelityManager transition/atomicity adversarial-test slot. Source-only, no Studio evidence claim."
 }
