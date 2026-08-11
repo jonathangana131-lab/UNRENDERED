@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k3m9v2q7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T20:13:00+00:00",
-  "lastSeenAt": "2026-08-11T20:13:00+00:00",
-  "notes": "Inspecting stale critical control-recovery ownership for safe generation-3 takeover after PR #371 branch, comments, finite-history handoffs, and expired leases were reviewed. No product or Studio claims."
+  "lastSeenAt": "2026-08-11T20:20:00+00:00",
+  "notes": "Completed independent generation-2 audit of ObjectGenome PR #380. Source behavior looked coherent, but published REVIEW_RESULT evt-20260811-201630-k3m9v2q7-objectgenome-g6-review and returned lane to NEEDS_CHANGES until stacked PR #381's distinct hostile nested identity-scalar no-execute regression is absorbed. Audit claim released. Earlier critical history-recovery takeover was correctly abandoned after an atomic race showed generation-3 already owned by sol-20260811-h4k9v2c7. Re-read live review/test/mining queue; higher-value adjacent slots are actively claimed/crowded, so stopped without duplicating work. No local/Studio evidence claimed."
 }
