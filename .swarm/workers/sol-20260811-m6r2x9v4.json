@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-m6r2x9v4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T21:35:00+00:00",
-  "lastSeenAt": "2026-08-11T21:50:22+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-runtime",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-m6r2x9v4-g1",
-  "notes": "MaterialDNA finding and WorldEntity no-additional-gap passes completed/released; crowded ObjectGenome pass released without duplicate audit. Now mining Physics Lab runtime current retained candidates for a concrete non-duplicate source/integration gap or NO_GAP."
+  "lastSeenAt": "2026-08-11T21:53:31+00:00",
+  "notes": "Completed/released three useful capacity passes. MaterialDNA: FINDING evt-sol-20260811-m6r2x9v4-materialdna-validation-diagnostic-bounds-214416 for unbounded unknown-field scan/diagnostic retention. WorldEntity retained PR #397: NO_ADDITIONAL_GAP evt-sol-20260811-m6r2x9v4-worldentity-no-additional-gap-214811. Physics runtime retained synthesis PR #408: NO_ADDITIONAL_GAP evt-sol-20260811-m6r2x9v4-physics-runtime-no-additional-gap-215331; dedicated exact-head audit already active. ObjectGenome capacity claim was also released immediately when specialized audit/test slots proved crowded. No local tests or Studio evidence claimed."
 }
