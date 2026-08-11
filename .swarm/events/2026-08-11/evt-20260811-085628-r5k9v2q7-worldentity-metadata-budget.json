@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085628-r5k9v2q7-worldentity-metadata-budget",
+  "timestamp": "2026-08-11T08:56:28+00:00",
+  "fromWorker": "sol-20260811-r5k9v2q7",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "WorldEntity's non-StableId identity/provenance strings remain unbounded at PR #293 exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e: checkedNonEmpty only enforces string/non-empty/no-control-character semantics, then kind plus origin.worldId/regionId/generator/recipeKey are retained in registered records. The new 65,536-byte string budget only applies inside persistentState. A caller can therefore register records carrying arbitrarily large top-level provenance strings, creating unbounded per-record memory and duplicate-diagnostic amplification outside the bounded-state closure. Add an explicit per-field or aggregate metadata byte budget before storage, with limit-1/limit/limit+1 regression coverage for kind and at least one origin field; do not widen this into a StableId redesign.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #293 current head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e is mergeable and explicitly bounds persistentState depth/nodes/string bytes, but src/shared/Reality/WorldEntity.luau checkedNonEmpty has no length or byte check.",
+    "At the same exact head, cloneOrigin passes origin.worldId, optional regionId, generator, and recipeKey through checkedNonEmpty and freezes them into the stored origin; ownRecord/new likewise accept kind through checkedNonEmpty.",
+    "WorldEntity.isId separately caps entity IDs at 256 bytes, so this finding is intentionally limited to the other retained metadata/provenance strings rather than claiming StableId/WorldEntity IDs are unbounded.",
+    "The concurrently published event evt-20260811-085405-k3m9v6-worldentity-boundary-gap covers missing exact depth/node acceptance and registered-lifecycle atomic-rejection regressions; it does not cover top-level metadata byte bounds.",
+    "Repository PR/issue searches for WorldEntity metadata/string-limit/oversized origin-kind-recipeKey wording found no existing lane or PR addressing this top-level metadata budget gap. No production code was changed and no tests were run because HG-CAPACITY-MINING is FINDING-ONLY."
+  ]
+}
