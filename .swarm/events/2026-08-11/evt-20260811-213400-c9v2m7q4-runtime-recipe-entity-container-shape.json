@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-213400-c9v2m7q4-runtime-recipe-entity-container-shape",
+  "timestamp": "2026-08-11T21:34:00+00:00",
+  "fromWorker": "sol-20260811-c9v2m7q4",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "PhysicsLabRuntime canonical-recipe fence PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d does not prove that recipe.entities is an exact dense array. It checks #entities equals the canonical 20 and iterates ipairs(), but never rejects non-array/hash keys, so all 20 canonical entries plus an extra field are accepted as a canonical runtime recipe and the extra field is silently ignored during authority construction.",
+  "affects": [
+    "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE"
+  ],
+  "evidence": [
+    "At PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d, assertCanonicalRecipe() applies assertPlainTable() to recipe.entities and checks #entities == #CANONICAL_RECIPE.entities",
+    "The function then validates only values reached by ipairs(entities); unlike WorldEntity record/origin wrappers, no pairs()-based container-key preflight requires numeric integer keys in [1, canonicalCount]",
+    "A plain candidate with canonical indices 1..20 unchanged plus entities.injected = true keeps #entities at 20 and the same ipairs() traversal, so assertCanonicalRecipe() completes and PhysicsLabRuntime.new() registers the canonical population while accepting a noncanonical supplied recipe shape",
+    "Repository code search and the current PR #310 review timeline contain no dense/exact entity-list container regression; existing no-execute coverage targets entity-list metatables, nested wrappers/schema keys, canonical population fields, and bounded persistent-state comparison",
+    "PR #388 generation-3 transition-fence work intentionally does not carry #310's constructor fence; its own body already requires the eventual integration lineage to preserve both runtime invariants"
+  ],
+  "recommendation": "Return the recipe-fence lineage to NEEDS_CHANGES or absorb this in the eventual combined runtime successor: before reading entity entries, enumerate recipe.entities keys and require exactly the dense numeric range 1..#CANONICAL_RECIPE.entities, rejecting string/hash, non-integer, out-of-range, and sparse keys. Add a pure regression with all 20 canonical entries plus an extra hash field (and preferably an out-of-range numeric key) proving rejection before authority registration. Preserve #310's no-execute/bounded-work fence and #388's whole-step mutation fence. No Studio evidence is required or claimed."
+}
