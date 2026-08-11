@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-s56m7q4",
+  "claimToken": "7d4a9c2e6b1f8053",
+  "claimedAt": "2026-08-11T12:10:00+00:00",
+  "heartbeatAt": "2026-08-11T12:10:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["SERVER-AUTHORITY"],
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-s56m7q4",
+  "pr": 348,
+  "notes": "Independent exact-head audit of generation-5 current-main authority bootstrap/trust-boundary PR #348. Verify wrong-context guard ordering, Rojo/server ownership invariants, scope, exact-head CI, and no overclaim of Studio/two-client evidence."
+}
