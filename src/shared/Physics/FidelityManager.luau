@@ -531,6 +531,21 @@ function FidelityManager.step(
 	-- mutating manager time, fidelity mirrors, pending targets, or metrics so a
 	-- rejected step is observationally atomic.
 	local desired: FidelityLevel, reason: PolicyReason = evaluatePolicy(inputs, self.config, currentLevel)
+	local previousState = {
+		observedLevel = state.observedLevel,
+		pendingLevel = state.pendingLevel,
+		pendingSince = state.pendingSince,
+		lastTransitionAt = state.lastTransitionAt,
+		lastEvaluatedAt = state.lastEvaluatedAt,
+	}
+	local previousCounts = {
+		F0 = self._metrics.counts.F0,
+		F1 = self._metrics.counts.F1,
+		F2 = self._metrics.counts.F2,
+		F3 = self._metrics.counts.F3,
+		F4 = self._metrics.counts.F4,
+	}
+	local previousExternalSynchronizations = self._metrics.externalSynchronizations
 
 	state.lastEvaluatedAt = nowSeconds
 	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
@@ -590,7 +605,28 @@ function FidelityManager.step(
 		}
 	end
 
-	applyTransition(entityId, currentLevel, desired, reason)
+	local transitionSucceeded, transitionError = pcall(
+		applyTransition,
+		entityId,
+		currentLevel,
+		desired,
+		reason
+	)
+	if not transitionSucceeded then
+		state.observedLevel = previousState.observedLevel
+		state.pendingLevel = previousState.pendingLevel
+		state.pendingSince = previousState.pendingSince
+		state.lastTransitionAt = previousState.lastTransitionAt
+		state.lastEvaluatedAt = previousState.lastEvaluatedAt
+		self._metrics.counts.F0 = previousCounts.F0
+		self._metrics.counts.F1 = previousCounts.F1
+		self._metrics.counts.F2 = previousCounts.F2
+		self._metrics.counts.F3 = previousCounts.F3
+		self._metrics.counts.F4 = previousCounts.F4
+		self._metrics.externalSynchronizations = previousExternalSynchronizations
+		error(transitionError, 0)
+	end
+
 	self._metrics.transitionHookCalls += 1
 	adjustCount(self._metrics.counts, currentLevel, -1)
 	adjustCount(self._metrics.counts, desired, 1)
