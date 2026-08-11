@@ -14,12 +14,16 @@ end
 
 function PhysicsLabScale.metersToStuds(meters: number): number
 	assertFinite("meters", meters)
-	return meters * PhysicsLabScale.STUDS_PER_METER
+	local studs = meters * PhysicsLabScale.STUDS_PER_METER
+	assertFinite("converted studs", studs)
+	return studs
 end
 
 function PhysicsLabScale.studsToMeters(studs: number): number
 	assertFinite("studs", studs)
-	return studs * PhysicsLabScale.METERS_PER_STUD
+	local meters = studs * PhysicsLabScale.METERS_PER_STUD
+	assertFinite("converted meters", meters)
+	return meters
 end
 
 return table.freeze(PhysicsLabScale)
