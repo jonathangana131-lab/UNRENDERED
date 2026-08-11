@@ -5,7 +5,7 @@
   "title": "MaterialDNA canonical counter exactness",
   "objective": "Close the demonstrated MaterialDNA maintenance.repairCount integer-aliasing boundary without broadening material architecture or depending on Studio.",
   "priority": 5150,
-  "state": "REVIEW",
+  "state": "BLOCKED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau", "Docs/MATERIAL_DNA_CONTRACT.md"],
@@ -21,6 +21,6 @@
     "no new MaterialDNA identity or migration framework",
     "no Studio evidence claim"
   ],
-  "notes": "Generation-2 current-main salvage PR #353 exact head 10559afdce1a1854e7932522f6e78561736c8ed3 reuses the exact source-approved #313 MaterialDNA/test blobs on current main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1; compare is 1 ahead / 0 behind with exactly two changed files. Fresh exact-head canonical CI run 31478938778 is SUCCESS and Swarm engine-tests are green. Live pr-ownership remains fail-closed on the separately owned immutable-event-history continuity recovery. Fresh independent audit must be by a worker other than sol-20260811-k8v3p6r1 because that worker performed both the stale-head sync audit and generation-2 replay. No Studio evidence claimed.",
+  "notes": "Generation-2 current-main salvage PR #353 exact head 10559afdce1a1854e7932522f6e78561736c8ed3 is source/test approved. Independent exact-head audit by sol-20260811-z8r4n6c2 was published on PR #353 at 2026-08-11T20:23:18Z; generation-2 stale-lease recovery by sol-20260811-d7k4m9q2 re-read the same two-file diff and found no additional MaterialDNA defect. The validator keeps primitive type-first/fail-closed ordering, accepts repairCount through 9007199254740991, rejects 9007199254740992, and does not change schema/recipe/fixture identity. Compare remains 1 ahead / 0 behind current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 with exactly MaterialDNA.luau and materialdna_contract.luau changed. Latest exact-head canonical CI run 31488902630 is SUCCESS; Swarm engine-tests are green. Integration remains BLOCKED only until the separately owned SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY repair restores a fresh live pr-ownership PASS; do not bypass that gate. No Studio evidence claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "materialdna"]
 }
