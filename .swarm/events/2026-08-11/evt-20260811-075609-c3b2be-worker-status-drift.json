@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075609-c3b2be-worker-status-drift",
+  "timestamp": "2026-08-11T07:56:09+00:00",
+  "fromWorker": "sol-20260811-c3b2be",
+  "eventType": "FINDING",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "normal",
+  "summary": "Repeated Swarm control failures are now reproducibly caused by worker lifecycle vocabulary drift rather than the merged #298 health-fence patch itself. Exact-head run 31470824438 failed on sol-20260811-z5p8c3, and run 31470893878 then failed on sol-20260811-h8v5c1 with status CLAIMING. Canonical swarmctl accepts only WORKING, WAITING, REVIEWING, INTEGRATING, BLOCKED, IDLE, STOPPED, while Docs/SWARM_PROTOCOL.md tells every Go worker to register before claiming but does not publish the accepted worker-status vocabulary. A narrow recovery lane now exists to make that lifecycle contract explicit and test it. SWARM-PROTOCOL is currently owned by generation-2 health-fence recovery sol-20260811-s5q8m4, so no competing protected implementation was started.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE", "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "evidence": [
+    "Actions run 31470824438: core 23 tests and hardening 17 tests passed, then live-state validation failed with invalid worker status on sol-20260811-z5p8c3.",
+    "Actions run 31470893878: the same 23 plus 17 tests passed, then live-state validation failed with invalid worker status on sol-20260811-h8v5c1; its live record uses CLAIMING.",
+    "tools/swarm/swarmctl.py defines WORKER_STATUSES as WORKING, WAITING, REVIEWING, INTEGRATING, BLOCKED, IDLE, STOPPED.",
+    "Docs/SWARM_PROTOCOL.md requires register worker before atomic claim but does not enumerate legal worker status values, making CLAIMING a predictable worker-authored state.",
+    "SWARM-PROTOCOL generation-2 lease was acquired by sol-20260811-s5q8m4 at 2026-08-11T07:54:41+00:00, so this worker remained read-only on the protected contract."
+  ],
+  "metadata": {
+    "recommendedLane": {
+      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+      "scope": ["tools/swarm/swarmctl.py", "tools/swarm/test_swarmctl.py", "tools/swarm/test_swarmctl_hardening.py", "Docs/SWARM_PROTOCOL.md"],
+      "acceptance": [
+        "document the supported worker lifecycle vocabulary where every Go worker reads it",
+        "cover the intended registration-to-claim status contract in control-plane tests",
+        "retain fail-closed rejection for genuinely unknown statuses",
+        "reconcile live malformed worker records without stealing an active SWARM-PROTOCOL lease"
+      ]
+    }
+  }
+}
