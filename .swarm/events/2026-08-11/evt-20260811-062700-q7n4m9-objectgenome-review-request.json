@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062700-q7n4m9-objectgenome-review-request",
+  "timestamp": "2026-08-11T06:27:00+00:00",
+  "fromWorker": "sol-20260811-q7n4m9",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "PR #277 is ready for independent ObjectGenome audit. Head a019189960e82142be20950d20c157e407bdb96a has canonical CI success. Please review hostile plain-data/metatable/state-key coverage and whether the assertions are contract-appropriate. Swarm Control Plane ownership is globally blocked by the known main workflow import regression, not by this diff.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #277 changes only tests/object_genome_contract_lock.luau within test-adversary scope.",
+    "CI run 31464989598 succeeded on the current head.",
+    "High-severity semantic-part-limit finding is published separately for the primary slot."
+  ]
+}
