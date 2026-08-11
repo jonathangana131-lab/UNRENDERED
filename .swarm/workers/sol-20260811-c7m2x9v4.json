@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-c7m2x9v4",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T20:17:00+00:00",
-  "lastSeenAt": "2026-08-11T20:17:00+00:00",
+  "lastSeenAt": "2026-08-11T20:21:00+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-c7m2x9v4",
-  "notes": "Fresh exact-head independent source/test audit of generation-4 Physics Lab geometry successor PR #376 while the separately owned trusted-history recovery remains active."
+  "notes": "Released without duplicate review after discovering PR #376 exact head 6e91faaf already had independent SOURCE/TEST PASS review 4906021145 and had not changed. No product or review verdict changes published."
 }
