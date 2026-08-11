@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-96d0cf",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T07:45:43+00:00",
+  "lastSeenAt": "2026-08-11T07:45:43+00:00",
+  "laneId": "HG-BACKFILL-REALITY",
+  "slotId": "primary",
+  "branch": "agent/reality/HG-BACKFILL-REALITY-primary-96d0cf",
+  "notes": "Claiming the highest-value currently unowned source-only Reality/replay primary slot while the Studio GUI evidence path remains externally blocked."
+}
