@@ -5,10 +5,11 @@
   "workerId": "sol-20260811-2b51a8",
   "claimToken": "d26af0a2fc3c6f06",
   "claimedAt": "2026-08-11T08:41:00+00:00",
-  "heartbeatAt": "2026-08-11T09:12:00+00:00",
+  "heartbeatAt": "2026-08-11T09:19:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/swarm/SWARM-V22-THROUGHPUT-2b51a8-g1",
-  "notes": "Authoritative V2.2 branch created after claim and resource acquisition; candidate carries the reviewed strict immutable-event prerequisite plus completion-pressure and adaptive-review implementation."
+  "pr": 341,
+  "notes": "V2.2 candidate PR #341 open. Current main advanced during construction, so exact-head CI runs first; any base conflict will be reconciled before final review/integration."
 }
