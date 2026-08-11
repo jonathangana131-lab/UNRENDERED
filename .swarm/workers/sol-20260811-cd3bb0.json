@@ -4,6 +4,6 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-11T11:50:30+00:00",
-  "lastSeenAt": "2026-08-11T11:50:30+00:00",
-  "notes": "Claimed HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING/audit for independent exact-head review of PR #349."
+  "lastSeenAt": "2026-08-11T11:53:15+00:00",
+  "notes": "Released duplicate PR #349 lane audit after confirming two prior exact-head approvals; now owns HG-COMPLETION-PHYSICS/review-2 to adversarially spot-check the live Physics Lab completion backlog."
 }
