@@ -5,7 +5,7 @@
   "title": "Physics Lab rolling-cart authored geometry closure",
   "objective": "Close the two independently demonstrated source-only rolling-cart fixture defects in one bounded follow-up: make ground-supported casters contact the authored F2 ground plane and make the declared center of mass match the component mass distribution, with deterministic regressions and explicit recipe versioning.",
   "priority": 5090,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/PhysicsLabObjectGenomes.luau", "tests/physics_lab_recipe.luau"],
@@ -22,6 +22,6 @@
     "do not claim Roblox Studio contact evidence",
     "require independent review before DONE"
   ],
-  "notes": "PR #311 exact head b45493e4168547fab6556c31558d9a25123f3b74 passed product CI but independent re-review evt-20260811-081900-q2v7m5-cart-review found the ground-contact change leaves a real 0.005m F2 caster/chassis proxy disconnect. Primary should preserve both authored contacts, recompute COM, and add a deterministic caster-to-chassis contact regression before returning to REVIEW. No Roblox Studio evidence is claimed. Separate pre-existing shelf/frame manufacturability debt is tracked by evt-20260811-081930-q2v7m5-cart-shelf-frame and is not part of this bounded fix.",
+  "notes": "PR #311 exact head 84408e1f8a8dfa5d99ecfcd2e14762c8e0265877 repairs the prior 0.005m caster/chassis disconnect by spanning each 0.105m caster exactly between the authored ground plane and chassis underside, recomputes component-derived COM, and adds a deterministic chassis support-contact regression. Exact-head product CI run 31473259627 is green. Independent source-only re-review is required before completion; no Roblox Studio evidence is claimed. Separate shelf/frame manufacturability debt remains out of scope under evt-20260811-081930-q2v7m5-cart-shelf-frame. Swarm ownership is independently blocked by malformed unrelated MaterialDNA event state, not by this lane's product source/tests.",
   "tags": ["backfill", "hero-gate", "source-only", "physics", "geometry"]
 }
