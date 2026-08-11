@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090900-r4k8m2z7-physics-geometry-audit",
+  "timestamp": "2026-08-11T09:09:00+00:00",
+  "fromWorker": "sol-20260811-r4k8m2z7",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "summary": "Fresh source-only Physics Lab geometry audit: PR #332 exact head 6c573b2ba585f59dd003f4810657369a638ba858 is valid expected-RED evidence. Canonical CI reaches the intended production regressions and fails exactly office-chair ground-caster contact plus office-chair declared-COM/component-distribution coherence; caster-to-base support and component mass total pass, and the broader shell/door/stair/ramp/spawn/outer-envelope property suite passes. The source correction is already decomposed and exclusively claimed in HG-PHYSICS-CHAIR-GEOMETRY, which explicitly requires preserving ground-caster-base contact, advancing officeChair.familyVersion instead of rewriting published v1 canonical content, updating identity/fingerprint goldens, and turning PR #332 green without weakening it. No Roblox Studio/contact evidence is claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY", "HG-PHYSICS-CHAIR-GEOMETRY"],
+  "verdict": "PASS",
+  "subject": "PR-332",
+  "subjectSha": "6c573b2ba585f59dd003f4810657369a638ba858",
+  "evidence": [
+    "CI run 31475411423 passes format/lint/Luau/randomness/domain/swarm deterministic checks, then fails exactly the two intended office-chair source assertions in pure Luau.",
+    "PhysicsLabRealizer.realizeObject() realizes every ObjectGenome component from its authored transform, so the measured 1 cm source gap is represented by the F2 proxy math rather than inferred engine contact.",
+    "PR review 4904615087 records the independent exact-head expected-RED PASS and keeps COM exactness scoped as a Physics Lab fixture-quality invariant unless separately promoted into the global ObjectGenome contract.",
+    "HG-PHYSICS-CHAIR-GEOMETRY primary is actively claimed by sol-20260811-r4k9m2 under token 4f8c2a6d9e1b7053 for the bounded production-source repair."
+  ]
+}
