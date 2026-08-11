@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084625-96d0cf-worldentity-budget-repair",
+  "timestamp": "2026-08-11T08:46:25+00:00",
+  "fromWorker": "sol-20260811-96d0cf",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "info",
+  "summary": "PR #293 exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e preserves prior WorldEntity lifecycle hardening and closes the active unbounded persistentState work/payload defects with explicit depth, node, and total string-byte budgets plus deterministic regressions. Exact-head product CI is fully green; ready for independent source-only exact-head review.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "WorldEntity now exports MAX_PERSISTENT_STATE_DEPTH=64, MAX_PERSISTENT_STATE_NODES=4096, and MAX_PERSISTENT_STATE_STRING_BYTES=65536; cloneState/clonePlainValue enforce all three with the project-owned 'persistentState exceeds structural limits' diagnostic.",
+    "String-byte accounting includes both keys and values, so shallow giant strings/keys cannot bypass structural budgets; long-key diagnostic paths use a bounded placeholder instead of duplicating attacker-controlled key bytes.",
+    "The root preflight stops after the node budget before detailed top-level schema validation, closing the active PR #321 wide-table owned-diagnostic case while preserving top-level string-key shape for bounded inputs.",
+    "tests/world_entity_state_budget.luau locks depth, node, exact byte-boundary acceptance, shallow oversized-value rejection, and shallow oversized-key rejection without editing the active test-adversary's registry-shape file.",
+    "Exact-head CI run 31474536191 passes formatting, lint, Luau analysis, canonical-randomness audit, shared-domain boundary audit, plain-value audit, deterministic swarm tests, pure Luau tests, place build, and artifact upload.",
+    "Swarm Control Plane engine-tests are green; pr-ownership is independently blocked before lane-specific evaluation by worker sol-20260811-k3m9v6 having an invalid live status. No Studio evidence is required or claimed."
+  ],
+  "metadata": {
+    "pr": 293,
+    "headSha": "91b6e273c0c21326dfbfe9c5ee5227e99f26933e",
+    "mainSha": "dd8f1581115c15ce6497db827d17e98d879d0267",
+    "ciRunId": 31474536191,
+    "verdict": "READY_FOR_INDEPENDENT_REVIEW"
+  }
+}
