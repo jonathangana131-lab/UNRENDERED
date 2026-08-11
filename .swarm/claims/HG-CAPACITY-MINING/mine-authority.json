@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-q5x8n3z2",
   "claimToken": "3d7a9c1e5b2f8064",
   "claimedAt": "2026-08-11T08:43:30+00:00",
-  "heartbeatAt": "2026-08-11T08:43:30+00:00",
-  "leaseSeconds": 1800,
+  "heartbeatAt": "2026-08-11T08:49:00+00:00",
+  "leaseSeconds": 300,
   "generation": 2,
   "resources": [],
   "branch": "agent/mining/HG-CAPACITY-MINING-authority-q5x8n3z2-g2",
   "pr": null,
-  "notes": "Generation-2 reuse after inspecting prior preflight-order finding; PR #316 already consumes that gap. Mining current authority/multiplayer source/tests for a distinct non-duplicate Hero Gate gap."
+  "notes": "Finding published as evt-20260811-084830-q5x8n3z2-authority-workspace-parent. Slot intentionally shortened to minimum lease for reuse; no product source was changed and no Studio evidence was claimed."
 }
