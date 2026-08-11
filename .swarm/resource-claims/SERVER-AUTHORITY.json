@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "SERVER-AUTHORITY",
+  "workerId": "sol-20260811-fcea3ee6",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "claimToken": "d349cad552bf8be1",
+  "acquiredAt": "2026-08-11T09:45:44+00:00",
+  "heartbeatAt": "2026-08-11T09:46:55+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "notes": "Independent exact-head authority/trust-boundary audit of PR #348; no product writes planned unless review-scoped regression evidence is necessary."
+}
