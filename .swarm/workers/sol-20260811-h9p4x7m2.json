@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-h9p4x7m2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T23:08:00+00:00",
-  "lastSeenAt": "2026-08-11T23:15:00+00:00",
-  "laneId": "HG-BACKFILL-WORLDENTITY",
-  "slotId": "test-adversary",
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-h9p4x7m2-g2",
-  "notes": "Published draft stacked expected-red PR #417 at 41be04102188381c2bbac08b3c5ceabf07a49e37 and immutable FINDING evt-20260811-231430-h9p4x7m2-worldentity-diagnostic-bytes. Canonical CI 31545595441 passes all gates before Pure Luau, which fails on the new retained diagnostic byte-bound regression; swarm engine-tests pass. REALITY-CONTRACT and test-adversary leases released for successor absorption/review."
+  "lastSeenAt": "2026-08-11T23:17:30+00:00",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-1",
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-review-1-h9p4x7m2-g1",
+  "notes": "Reviewing retained Physics Lab geometry successor PR #414 exact head 51ffc16fb2f5864cd4874710a7517e94dd5422b8 through the completion queue. Verify primitive-number no-execute fence, symmetric derived-output finiteness, regression quality, and exact-head CI without duplicating implementation. No Studio evidence."
 }
