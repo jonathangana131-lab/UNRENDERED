@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-211100-q6m9c4v2-diagnostics-projection-integrity",
+  "timestamp": "2026-08-11T21:11:00+00:00",
+  "fromWorker": "sol-20260811-q6m9c4v2",
+  "eventType": "FINDING",
+  "summary": "Diagnostics generation-4 PR #392 proves readout identity/tree completeness but capture-time completeness can still bless visually incorrect evidence: validateReadoutCompleteness never revalidates each BillboardGui Adornee against the authoritative represented entity and never revalidates Readout.Text against current identity/fidelity/fingerprint/repro semantics. A swapped Adornee or stale label can therefore satisfy exact WorldEntityId membership/count/shape while presenting the wrong viewport evidence. Test-only adversarial PR #400 is stacked on #392 and is intentionally expected to make the two new readout-contract assertions red until the production diagnostics successor absorbs a fail-closed projection-integrity fix.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "MEDIUM",
+  "evidence": [
+    "PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519: validateReadoutCompleteness checks direct BillboardGui children, canonical WorldEntityId membership/uniqueness, one TextLabel descendant, exact readout count, and instance count, but contains no Adornee read and no label.Text read.",
+    "The same source writes billboard.Adornee = plan.adornee and label.Text from plan key/WorldEntityId/fidelity plus resolved fingerprint/repro only during enable(), so later swaps/staleness are not detected by capture().",
+    "Docs/PHYSICS_LAB_DIAGNOSTICS.md requires visible labels to agree with representation attributes and the authoritative WorldEntity record and requires diagnostics-on to visibly expose stable identity/fidelity/fingerprint/repro on real realized representations.",
+    "PR #400 exact head 4911b967f76337b5a128164c0fdd513a6ca45a56 changes only tests/physics_lab_diagnostics_readout_contract.luau (+14/-0) and adds helper-scoped assertions for capture-time Adornee and label.Text revalidation.",
+    "No Roblox Studio/viewport evidence is claimed; this is source-only adversarial evidence and must not be treated as HG151-DIAGNOSTICS PASS/FAIL engine evidence."
+  ]
+}
