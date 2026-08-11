@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-t8v4n2c7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T20:13:14+00:00",
+  "lastSeenAt": "2026-08-11T20:13:14+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "slotId": "primary",
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-t8v4n2c7-g3",
+  "notes": "Generation-3 stale recovery after inspecting PR #371, exact lane/claim/resource state, review handoffs, and finite invalid-history blockers."
+}
