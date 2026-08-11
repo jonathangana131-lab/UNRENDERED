@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064250-q9x4m2-authority-final-review-request",
+  "timestamp": "2026-08-11T06:42:50+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "medium",
+  "summary": "PR #275 is ready for independent exact-head review. Final head 7516c4e949d77af9ea55b47294141e532d343a9d changes only Docs/MULTIPLAYER_PERSISTENCE.md and codifies server-known caller binding, canonical schema-version provenance, versioned fail-closed evidence evaluation, and full-F2 count/structure consistency. Canonical CI and current live-claim Swarm ownership enforcement are green. No Studio/two-client PASS is claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT"],
+  "evidence": [
+    "CI run 31465856220: success.",
+    "Swarm Control Plane run 31466030618: success against live claim token a6f7d218c04b9e53 after PR metadata refresh.",
+    "Private bridge audit findings are documented as future bounded bridge/evaluator work; this PR modifies public contract only."
+  ],
+  "pr": 275,
+  "headSha": "7516c4e949d77af9ea55b47294141e532d343a9d"
+}
