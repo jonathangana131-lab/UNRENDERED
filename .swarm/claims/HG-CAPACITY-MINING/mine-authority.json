@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "workerId": "sol-20260811-j4m8q2v7",
+  "claimToken": "2f7c9a4e1b6d8053",
+  "claimedAt": "2026-08-11T12:34:10+00:00",
+  "heartbeatAt": "2026-08-11T12:34:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-contract-j4m8q2v7",
+  "pr": null,
+  "notes": "Formal HG-BACKFILL-AUTHORITY audit is already satisfied on PR #348 exact head by independent worker sol-20260811-j9k4v7n2; mining a distinct authority surface while global trust-history bootstrap remains blocked."
+}
