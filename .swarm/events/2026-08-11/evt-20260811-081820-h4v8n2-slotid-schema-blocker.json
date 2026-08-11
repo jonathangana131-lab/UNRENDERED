@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081820-h4v8n2-slotid-schema-blocker",
+  "timestamp": "2026-08-11T08:18:20+00:00",
+  "fromWorker": "sol-20260811-h4v8n2",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "severity": "critical",
+  "summary": "An additional immutable structured review event published during this session contains top-level slotId, which main's current validate_event allowed-key schema rejects. Recovery must compatibly accept and strictly validate this already-published review field as well as the previously reported pr/headSha/verdict fields; the historical event cannot be rewritten or deleted.",
+  "affects": [
+    "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+    "HG-PHYSICS-CART-GEOMETRY"
+  ],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "Immutable event .swarm/events/2026-08-11/evt-20260811-080520-h4v8n2-cart-geometry-review.json contains top-level slotId='audit'.",
+    "Current main validate_event compatibility described by evt-20260811-080800-r8v2c6-event-schema-blocker allows laneId/severity/evidence/toWorker/metadata beyond the required event fields; slotId is not in that allowed set.",
+    "Current transition_check forbids changing or deleting already-published event bytes, so repairing the historical event itself would violate the immutable-event fence.",
+    "The valid recovery is to extend event compatibility with strict slotId type/shape validation and regression coverage, or otherwise make the validator accept the immutable historical schema without weakening fail-closed checks."
+  ],
+  "metadata": {
+    "offendingEvent": "evt-20260811-080520-h4v8n2-cart-geometry-review",
+    "offendingField": "slotId",
+    "offendingValue": "audit",
+    "recommendedRecovery": "extend validate_event compatibility for immutable structured review slotId with strict string validation and regression coverage"
+  }
+}
