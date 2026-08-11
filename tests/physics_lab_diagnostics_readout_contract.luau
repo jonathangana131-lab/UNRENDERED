@@ -40,20 +40,19 @@ local function run(): number
 	local expectedMembership = helperPosition("expectedEntity ~= nil")
 	local duplicateGuard = helperPosition("seenEntityIds[entityId] == nil")
 	local exactAdorneeProjection = helperSource ~= nil
-		and string.find(helperSource, "child.Adornee == expectedEntity.adornee", 1, true)
+			and string.find(helperSource, "child.Adornee == expectedEntity.adornee", 1, true)
 		or nil
 	local seenWrite = helperPosition("seenEntityIds[entityId] = true")
 	local labelLookup = helperPosition('child:FindFirstChild("Readout")')
 	local labelClass = helperPosition('label:IsA("TextLabel")')
 	local exactBillboardShape = helperPosition("#child:GetDescendants() == 1")
 	local exactTextProjection = helperSource ~= nil
-		and string.find(helperSource, "label.Text == expectedEntity.text", 1, true)
+			and string.find(helperSource, "label.Text == expectedEntity.text", 1, true)
 		or nil
 	local exactEntityCount = helperPosition("readoutCount == #entities")
 	local exactInstanceCount = helperPosition("return 1 + 2 * readoutCount")
-	local captureProjection = position(
-		"text = readoutText(representation.Name, record.id, record.fidelity, fingerprint, reproKey)"
-	)
+	local captureProjection =
+		position("text = readoutText(representation.Name, record.id, record.fidelity, fingerprint, reproKey)")
 	local realizationProjection = position(
 		"label.Text = readoutText(plan.key, plan.worldEntityId, plan.fidelity, fingerprint, reproKey)"
 	)
