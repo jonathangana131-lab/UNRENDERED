@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "audit",
+  "workerId": "sol-20260811-m4k8z2",
+  "claimToken": "3b8f1d6a90c4e257",
+  "claimedAt": "2026-08-11T07:51:56+00:00",
+  "heartbeatAt": "2026-08-11T07:51:56+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-pr296-m4k8z2",
+  "pr": 296
+}
