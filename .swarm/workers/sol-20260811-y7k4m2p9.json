@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:31:30+00:00",
-  "lastSeenAt": "2026-08-11T21:49:05+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "audit",
-  "branch": "agent/audit/HG-BACKFILL-OBJECTGENOME-audit-y7k4m2p9",
-  "notes": "Fidelity mining finding published/released. Now fresh independent source-only audit of ObjectGenome generation-8 PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; no Studio evidence claim."
+  "lastSeenAt": "2026-08-11T21:52:05+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-y7k4m2p9",
+  "notes": "Published/released FidelityManager finding; released ObjectGenome audit after discovering an existing exact-head independent approval. Now mining MaterialDNA for one concrete non-duplicate source-depth gap; source-only, no Studio evidence claim."
 }
