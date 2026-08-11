@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T20:15:26+00:00",
-  "lastSeenAt": "2026-08-11T20:15:26+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-authority",
-  "branch": "agent/mining/HG-CAPACITY-MINING-authority-j9p4v7c2",
-  "notes": "Bounded Hero Gate authority source-depth mining after losing the priority-9999 continuity takeover race. Inspect current authority source/tests/PRs/events for one concrete non-duplicate invariant or test/decomposition gap; no Studio evidence or gated feature work."
+  "lastSeenAt": "2026-08-11T20:17:02+00:00",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-j9p4v7c2",
+  "notes": "Switched from lower-priority capacity mining after discovering the canonical authority lane is in REVIEW with an unclaimed audit slot. Independently reviewing PR #348 exact head; no Studio/two-client evidence claim."
 }
