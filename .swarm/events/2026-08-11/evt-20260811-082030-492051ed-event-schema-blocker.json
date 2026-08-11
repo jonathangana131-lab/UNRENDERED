@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082030-492051ed-event-schema-blocker",
+  "timestamp": "2026-08-11T08:20:30+00:00",
+  "fromWorker": "sol-20260811-492051ed",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "severity": "high",
+  "summary": "Fresh live pr-ownership replay on product PR #313 at 08:19Z still fails before semantic ownership because authoritative control now contains another immutable structured event shape that trusted validate_event rejects: evt-20260811-081620-mat8c3r1-materialdna-key-grammar.json has top-level proposedLane. This is the same compatibility class already blocking recovery, but it proves the required backwards-compatible path must cover the actually published benign structured finding shapes rather than only the earlier pr/headSha/verdict example. Do not rewrite/delete the immutable event bytes; keep new events on the declared metadata/evidence surface.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE", "HG-BACKFILL-MATERIALDNA-COUNTERS"],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "PR #313 rerun job 93719199864 failed at trusted pr-check with: evt-20260811-081620-mat8c3r1-materialdna-key-grammar.json: unknown keys ['proposedLane'].",
+    "The offending event is a FINDING whose proposedLane object describes a source-hardening recommendation; no executable-looking control fields are present.",
+    "Canonical CI for product PR #313 remains green and independent exact-head audit has approved the source/test patch, isolating this failure to shared control validation."
+  ]
+}
