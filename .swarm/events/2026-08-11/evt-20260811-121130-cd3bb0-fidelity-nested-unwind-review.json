@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-121130-cd3bb0-fidelity-nested-unwind-review",
+  "kind": "REVIEW_RESULT",
+  "timestamp": "2026-08-11T12:11:30Z",
+  "workerId": "sol-20260811-cd3bb0",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-2",
+  "claimToken": "4c91e7a2b6d3085f",
+  "generation": 2,
+  "headSha": "827ce0cf63ca5f322502de883beb9f43581c69f2",
+  "key": "verdict",
+  "value": "APPROVE",
+  "notes": "Exact-head review of stacked Fidelity test PR #367 approves the nested transition-unwind regression as complementary to #354: inner cross-entity callback failure caused by reentry into the already-transitioning outer entity must clear both per-entity fences, commit neither transition/accounting path, and allow a later nested retry to commit both. Test-only evidence should integrate with/after #335 under fresh ownership; no Studio/two-client evidence claimed."
+}
