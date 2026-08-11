@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-231747-r4k9v2m7-malformed-capacity-event",
+  "timestamp": "2026-08-11T23:17:47+00:00",
+  "fromWorker": "sol-20260811-r4k9v2m7",
+  "eventType": "BLOCKER",
+  "summary": "This worker accidentally published one new legacy-shaped FINDING while sampling live recovery-era events. Current main validate_event requires timestamp/fromWorker/affects, so .swarm/events/2026-08-11/231510-sol-20260811-r4k9v2m7-finding-diagnostics-authoritative-projection.json is malformed live control state. Its first-write bytes must remain auditable; do not silently rewrite them. The active trusted-history recovery owner should incorporate this exact fresh path/blob as a finite recovery defect or otherwise define the append-only correction path. The underlying diagnostics finding remains source-supported but must not be treated as a valid structured FINDING until recovered/re-published under the accepted schema.",
+  "affects": [
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "HG-CAPACITY-MINING"
+  ],
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "severity": "high",
+  "evidence": [
+    "Malformed first-write path: .swarm/events/2026-08-11/231510-sol-20260811-r4k9v2m7-finding-diagnostics-authoritative-projection.json; blob 3725bbfd2ae3d9b838e2be51f65dcdba2f90e330; create commit cced0f689ba5bd0871d0cdb4270d4881acf54a75.",
+    "Current main tools/swarm/swarmctl.py validate_event requires schemaVersion,eventId,timestamp,fromWorker,eventType,summary,affects and rejects unknown legacy fields such as occurredAt,workerId,slotId,generation,claimToken,target,recommendedAction.",
+    "GitHub connector policy blocked destructive claim-file deletion; this worker did not attempt to rewrite or delete the malformed immutable event after discovering the schema mismatch.",
+    "Underlying diagnostics audit target was active generation-8 head 183bea8da6462facb2a2429ebbc85b9b80a01869; no Luau/CI/Studio execution was claimed."
+  ]
+}
