@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081352-n7c4p2-authority-primary-worker-mismatch",
+  "timestamp": "2026-08-11T08:13:52+00:00",
+  "fromWorker": "sol-20260811-n7c4p2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "medium",
+  "summary": "Patch-local PASS on PR #316 head 0fa7132a, but integration is blocked by deterministic worker metadata mismatch: the live primary claim is HG-BACKFILL-AUTHORITY/primary on the g3 branch while worker sol-20260811-s56r7n2 still advertises HG-CAPACITY-MINING/mine-authority and its old mining branch. Refresh the worker record, regenerate the validation fence, then rerun pr-ownership.",
+  "affects": ["HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "PR #316 exact head 0fa7132aa8a2abf3d5a60f89ea9ccdccd6ab5981 moves server/client context assertions before ReplicatedStorage traversal, WaitForChild, and all module requires; canonical CI run 31472081760 is success.",
+    "Live claim HG-BACKFILL-AUTHORITY/primary names sol-20260811-s56r7n2 on agent/authority/HG-BACKFILL-AUTHORITY-primary-s56r7n2-g3 and PR #316.",
+    "Worker record .swarm/workers/sol-20260811-s56r7n2.json still names HG-CAPACITY-MINING/mine-authority and agent/mining/HG-CAPACITY-MINING-authority-s56r7n2.",
+    "Trusted pr_check rejects worker lane mismatch, worker slot mismatch, and worker branch/head mismatch before returning PASS. Review 4904204770 records the handoff."
+  ],
+  "metadata": {
+    "claimToken": "9b4d1f6a2c8e7053",
+    "pr": 316,
+    "headSha": "0fa7132aa8a2abf3d5a60f89ea9ccdccd6ab5981",
+    "verdict": "PASS_PATCH_BLOCK_CONTROL"
+  }
+}
