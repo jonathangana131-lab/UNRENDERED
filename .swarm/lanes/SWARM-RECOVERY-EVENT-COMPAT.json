@@ -19,7 +19,7 @@
       "role": "Critical immutable-event compatibility repair",
       "exclusive": true,
       "availableWhen": ["READY", "NEEDS_CHANGES"],
-      "priorityBoost": 1100,
+      "priorityBoost": 1000,
       "writeScopes": [
         "tools/swarm/swarmctl_hardening.py",
         "tools/swarm/test_swarmctl_hardening.py"
