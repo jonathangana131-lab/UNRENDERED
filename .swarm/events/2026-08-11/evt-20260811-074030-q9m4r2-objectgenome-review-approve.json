@@ -13,7 +13,9 @@
     "ObjectGenome.inspect() now rejects non-positive or >2147483647 familyVersion values before identityKey() can accept the genome.",
     "GitHub review 4903985032 records the independent exact-head source approval; no Studio or persistence execution evidence is claimed."
   ],
-  "pr": 296,
-  "headSha": "a136f305f432fa9c480e8d91e5d2151340795af7",
-  "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+  "metadata": {
+    "pr": 296,
+    "headSha": "a136f305f432fa9c480e8d91e5d2151340795af7",
+    "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+  }
 }
