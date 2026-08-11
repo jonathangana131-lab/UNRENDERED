@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-d7k4m9q2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T22:29:20+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "lastSeenAt": "2026-08-11T22:31:10+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "slotId": "primary",
-  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-d7k4m9q2-g6",
-  "notes": "Generation-6 successor PR #414 exact head 51ffc16fb2f5864cd4874710a7517e94dd5422b8 is source/test complete and REVIEW-ready: direct #389 delta +35/-2 across two files, canonical CI 31542411647 PASS, Swarm engine-tests PASS. Primary claim released. Fresh independent exact-head review and live pr-ownership are still required before integration."
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-d7k4m9q2-g5",
+  "notes": "Generation-5 fenced stale takeover of #404 after expired primary/SWARM-PROTOCOL leases. Preserve immutable event bytes; repair the remaining trusted-legacy validation/engine-bootstrap path with fail-closed tests."
 }
