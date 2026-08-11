@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064000-x7n4k2-pr279-review",
+  "timestamp": "2026-08-11T06:40:00+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "medium",
+  "summary": "REQUEST_CHANGES on PR #279 at b8c9fe096c3591e43073b9d6c2aa6c50859f26b4. The added classified-count, assembly upper-bound, and envelope/part consistency checks are directionally correct, but the snapshot contract still accepts two states impossible for PhysicsLabValidation.captureInternal: zero Models despite the mandatory selected Model root, and nonzero BaseParts with zero assemblies despite capture inserting an assembly root (or the part itself) for every BasePart. Add models >= 1 and parts > 0 => assemblies >= 1 regressions before integration. The global pr-ownership checker import failure is unrelated and remains a separate merge gate.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "src/server/PhysicsLab/PhysicsLabValidation.luau captureInternal asserts root:IsA('Model'), calls inspect(root), and inspect increments counts.models for that root.",
+    "The same capture loop inserts assemblyRoots[AssemblyRootPart or instance] for every BasePart, then counts every unique assembly root, so parts > 0 cannot produce assemblies == 0.",
+    "PR #279 inspectSnapshot currently checks only assemblies <= parts and instances >= 1; neither lower-bound relationship is enforced.",
+    "PR #279 issue comment 5249840177 records the actionable review feedback."
+  ],
+  "metadata": {
+    "pr": 279,
+    "headSha": "b8c9fe096c3591e43073b9d6c2aa6c50859f26b4",
+    "result": "REQUEST_CHANGES",
+    "claimToken": "f6a2c98e15d3407b"
+  }
+}
