@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T21:41:05+00:00",
-  "laneId": "HG-PHYSICS-CART-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-PHYSICS-CART-GEOMETRY-audit-d7k4m9q2-g4",
-  "notes": "Generation-4 stale audit recovery for PR #352; reconcile already-published exact-head source approval to lane BLOCKED pending trusted live pr-ownership recovery. No Studio/contact evidence."
+  "lastSeenAt": "2026-08-11T21:43:25+00:00",
+  "laneId": "HG-COMPLETION-CONTENT",
+  "slotId": "reconcile",
+  "branch": "agent/reconcile/HG-COMPLETION-CONTENT-d7k4m9q2",
+  "notes": "Reconcile content-foundation completion queue against reviewed authoritative heads and the active global trusted-history/pr-ownership blocker; no product-source or Studio work."
 }
