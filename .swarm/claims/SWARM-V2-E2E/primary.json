@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V2-E2E",
+  "slotId": "primary",
+  "workerId": "sol-20260811-e2e1",
+  "claimToken": "d8a1c0f4e7b25963",
+  "claimedAt": "2026-08-11T05:35:30+00:00",
+  "heartbeatAt": "2026-08-11T05:35:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/swarm/v2-e2e-e2e1",
+  "pr": null,
+  "notes": "Fresh post-hardening E2E primary claim. Claim first; branch second."
+}
