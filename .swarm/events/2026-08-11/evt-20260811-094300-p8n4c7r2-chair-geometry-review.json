@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094300-p8n4c7r2-chair-geometry-review",
+  "timestamp": "2026-08-11T09:43:00+00:00",
+  "fromWorker": "sol-20260811-p8n4c7r2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-PHYSICS-CHAIR-GEOMETRY",
+  "severity": "normal",
+  "summary": "APPROVE source/test patch for PR #347 exact head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1. The five authored casters span exactly from the chair ground plane to the base underside, declared mass/COM match the component distribution, familyVersion is advanced, identity/fingerprint goldens are refreshed, and exact-head canonical CI 31477985164 is green. Integration remains conditional on restoring live pr-ownership and synchronizing PR #332's lab-level caster/COM regressions to a green exact head. No Roblox Studio or engine-contact evidence is claimed.",
+  "affects": ["HG-PHYSICS-CHAIR-GEOMETRY"],
+  "evidence": [
+    "PR #347 changes exactly src/shared/Objects/ObjectGenomeFixtures.luau and tests/object_genome.luau on current-main base ae83c0ef470eb2e73d99be41fd3561ede30c40e1.",
+    "Caster authored extent is -0.54 m to -0.45 m for all five ground-declared supports; the base underside is -0.45 m.",
+    "Declared office-chair mass remains 11.85 kg and centerOfMassM matches the weighted authored component positions.",
+    "Canonical CI run 31477985164 passes format, lint, Luau analysis, deterministic/domain audits, Pure Luau tests, and Rojo build on exact head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1.",
+    "PR #332 chair regressions were inspected and are structurally satisfied, but no combined #332 + #347 execution was performed or claimed."
+  ],
+  "metadata": {
+    "pr": 347,
+    "headSha": "9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1",
+    "verdict": "APPROVE"
+  }
+}
