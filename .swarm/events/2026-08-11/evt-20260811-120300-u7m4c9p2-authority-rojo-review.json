@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120300-u7m4c9p2-authority-rojo-review",
+  "timestamp": "2026-08-11T12:03:00+00:00",
+  "fromWorker": "sol-20260811-u7m4c9p2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #300 retains unique Rojo deployment-boundary value but must not be replayed as-is: exact $path counting does not reject a replicated src/server descendant. Successor work after authority primary integration must use subtree-aware ReplicatedStorage exclusion and a leaked-subpath adversarial fixture.",
+  "affects": ["HG-COMPLETION-AUTHORITY", "HG-BACKFILL-AUTHORITY"],
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "severity": "high",
+  "evidence": [
+    "PR #300 exact head b5fcd1d1ae6aa3c1dd762c20e15f4fc000f2f23c",
+    "GitHub review 4905901236 records the unresolved trust-boundary hole",
+    "Current test countPath(tree, src/server) only matches the exact directory string and can miss src/server/... mappings under ReplicatedStorage"
+  ],
+  "metadata": {
+    "pr": 300,
+    "headSha": "b5fcd1d1ae6aa3c1dd762c20e15f4fc000f2f23c",
+    "outcome": "NEEDS_CHANGES",
+    "followupAfter": 348
+  }
+}
