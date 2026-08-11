@@ -116,8 +116,30 @@ def _validate_event_with_immutable_compat(path):
 _base.core.validate_event = _validate_event_with_immutable_compat
 
 
+def _invalid_worker_statuses(root: Path) -> list[str]:
+    """Enumerate every parseable worker status violation without accepting aliases."""
+    errors: list[str] = []
+    workers_dir = root / "workers"
+    if not workers_dir.is_dir():
+        return errors
+    for path in sorted(workers_dir.glob("*.json")):
+        try:
+            obj = _base.core.load_json(path, max_bytes=24_000)
+        except _base.core.ControlError:
+            # Strict tree validation remains authoritative for malformed JSON,
+            # schema, keys, and all non-status defects.
+            continue
+        status = obj.get("status")
+        if status not in _base.core.WORKER_STATUSES:
+            errors.append(f"{path}: invalid worker status: {status!r}")
+    return errors
+
+
 def read_tree(root: Path):
     """Read authoritative state, reserve all event IDs, and drop inert quarantine artifacts."""
+    status_errors = _invalid_worker_statuses(root)
+    if status_errors:
+        raise _base.core.ControlError("\n".join(status_errors))
     result = _STRICT_READ_TREE(root)
     raw_events = result[6]
     seen: set[str] = set()
