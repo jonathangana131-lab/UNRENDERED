@@ -4,6 +4,6 @@
   "model": "gpt-5.6-sol",
   "status": "IDLE",
   "startedAt": "2026-08-11T07:54:10+00:00",
-  "lastSeenAt": "2026-08-11T08:49:20+00:00",
-  "notes": "Released HG-BACKFILL-PHYSICS-GEOMETRY audit without publishing a duplicate: PR #303 exact head e09c617 already has independent source PASS and green product CI; only shared control validation remains blocking."
+  "lastSeenAt": "2026-08-11T09:01:20+00:00",
+  "notes": "Completed ObjectGenome concurrent audit without overlapping generation-3 primary writes. Confirmed prior caster-axis defect remains unconsumed and published new versioning-sensitive center-of-mass coherence finding. Control #329 remains blocked by worker-status contract drift under separately owned SWARM-PROTOCOL recovery. No active claim."
 }
