@@ -5,7 +5,7 @@
   "title": "Restore immutable event compatibility",
   "objective": "Fence the trusted validator to exact audited first-write provenance for known malformed immutable events without rewriting historical bytes, while keeping all newly emitted events strict and preserving byte-for-byte transition immutability.",
   "priority": 10000,
-  "state": "REVIEW",
+  "state": "INTEGRATION_READY",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["tools/swarm/swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening.py"],
@@ -23,6 +23,6 @@
     "deterministic/adversarial control tests and canonical CI pass on the exact reviewed head",
     "integration sequencing accounts explicitly for already-laundered live Authority, WorldEntity, and cart bytes rather than treating compatibility as a trust reset"
   ],
-  "notes": "Exact head 772416839f4e9a3330c89dc9880e1670b7191824 addresses every prior P0: historical exceptions are checked before strict validation; exact path plus first-write Git blob identity is required; strict-valid laundering and duplicate/replayed IDs are rejected; and the temporary restoration loophole was removed so byte immutability is unchanged. Canonical CI 31475546478 PASS; Swarm engine-tests 93728287438 PASS. Current live Authority/WorldEntity/cart bytes are already laundered, so this patch intentionally detects them as non-canonical. That pre-existing trust-continuity problem is a separate recovery dependency and must not be hidden inside compatibility. Independent exact-head rereview required.",
+  "notes": "Independent exact-head rereview of PR #329 head 772416839f4e9a3330c89dc9880e1670b7191824 records PATCH-LOCAL PASS with no semantic code defect and supersedes earlier holds. Canonical CI 31475546478 PASS; Swarm engine-tests 93728287438 PASS. PR body now matches detect-only semantics. Already-laundered live history remains explicitly split into locked successor SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY; merging this prerequisite must be followed immediately by that recovery rather than declaring the broader red-control incident complete.",
   "tags": ["control-repair", "red-ci", "pr-ownership", "hero-gate"]
 }
