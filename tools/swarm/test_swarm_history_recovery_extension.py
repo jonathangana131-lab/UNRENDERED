@@ -8,18 +8,32 @@ import swarm_history_recovery_extension as extension
 
 
 class RecoveryExtensionTests(unittest.TestCase):
-    def test_worker_transition_is_exact_and_finite(self):
+    def test_worker_transitions_are_exact_and_finite(self):
         self.assertEqual(
             extension.FINITE_WORKER_TRANSITIONS,
-            ((
-                "b5bd3a372a4d4f044873c9bedf86d82e7cc92c23",
-                "ef789a2e2e1b56d7a816b8c2be39412f5b6f0ccc",
-            ),),
+            (
+                (
+                    "b5bd3a372a4d4f044873c9bedf86d82e7cc92c23",
+                    "ef789a2e2e1b56d7a816b8c2be39412f5b6f0ccc",
+                ),
+                (
+                    "0231453262d5ab6e12664e4c89fab3f90bdd28cd",
+                    "7bf593ab9fc7100905e90fda0d810bca6644b427",
+                ),
+                (
+                    "2e770074c4a06d9e242fded0f137bba6f053ae0e",
+                    "1b5e69abcfd888d5378772eb1c0761800cb8f169",
+                ),
+                (
+                    "274179bd30b8ad8c1c43130bf3fde99addc6cc12",
+                    "6d906215dd94f48eda00a5030fb6dc8694e3bf99",
+                ),
+            ),
         )
 
     def test_measured_quarantine_rows_are_exact_and_unique(self):
         rows = extension.MALFORMED_EVENT_QUARANTINE_ROWS
-        self.assertEqual(len(rows), 12)
+        self.assertEqual(len(rows), 39)
         self.assertEqual(len({row[0] for row in rows}), len(rows))
         self.assertEqual(len({row[1] for row in rows}), len(rows))
         self.assertIn(
@@ -42,10 +56,37 @@ class RecoveryExtensionTests(unittest.TestCase):
         )
         self.assertIn(
             (
-                "evt-20260811T213200Z-sol-20260811-k5m8v2c6-handoff-harness-lifecycle-g2",
-                "213200-sol-20260811-k5m8v2c6-handoff-harness-lifecycle-g2.json",
-                "d9e4ee7f7755d5b19498f3b37cc1df73bdb793de",
-                "074eea30dfd8ebcbf86ffaa9e21cd3f2cb7d0df5",
+                "evt-20260811T211000Z-sol-20260811-m5q8v2c4-handoff-physics-reconciliation",
+                "211000-sol-20260811-m5q8v2c4-handoff-physics-reconciliation.json",
+                "da63fb468a9af4ff4b1767df7c985335b5e45b08",
+                "f3ed0bc34d02a0db011ca612853c7b797201194d",
+            ),
+            rows,
+        )
+        self.assertIn(
+            (
+                "evt-20260811-213900-81idx1th-physics-runtime-synthesis",
+                "213900-sol-20260811-81idx1th-dependency-physics-runtime-synthesis.json",
+                "02b28a1ba0ce2525a7dada93a26398198402d2ec",
+                "4b2ad689d0ad9c0eba985f89eb6c3aae58b70929",
+            ),
+            rows,
+        )
+        self.assertIn(
+            (
+                "20260811T214731Z-sol-20260811-y7k4m2p9-fidelitymanager-capability-seal",
+                "214731-sol-20260811-y7k4m2p9-finding-fidelitymanager-capability-seal.json",
+                "dc5b008bd2e5daa7d48661b0c4b8fbd745e4c553",
+                "9f7698984027af3a9811f5852083d5f25d98b5ba",
+            ),
+            rows,
+        )
+        self.assertIn(
+            (
+                "evt-20260811-215400-p6r4n8x2-physics-geometry-review-request-changes",
+                "evt-20260811-215400-p6r4n8x2-physics-geometry-review-request-changes.json",
+                "3964c9e9781df8f9d98c34a27c03a64d567d080b",
+                "80be391a2a962980f4dca5c7e9915f6532bba764",
             ),
             rows,
         )
