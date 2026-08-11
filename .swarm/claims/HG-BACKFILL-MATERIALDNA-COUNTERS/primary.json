@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "slotId": "primary",
+  "workerId": "sol-20260811-k8v3p6r1",
+  "claimToken": "6d2a9c4e1f7b8053",
+  "claimedAt": "2026-08-11T09:42:00+00:00",
+  "heartbeatAt": "2026-08-11T09:42:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "resources": [],
+  "branch": "agent/materialdna/HG-BACKFILL-MATERIALDNA-COUNTERS-k8v3p6r1-g2",
+  "pr": null,
+  "takeoverOf": "sol-20260811-492051ed",
+  "notes": "Generation-2 current-main salvage after source-approved PR #313 became stale. Reconstruct the unchanged narrow repairCount safe-integer boundary and deterministic tests on current main, exact-head CI, then request fresh independent audit from a different worker. No Studio evidence claim."
+}
