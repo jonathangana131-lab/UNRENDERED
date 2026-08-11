@@ -71,9 +71,13 @@ local function isPositiveInteger(value: any): boolean
 	return isNonNegativeInteger(value) and value >= 1
 end
 
+local function isPlainTable(value: any): boolean
+	return type(value) == "table" and getmetatable(value) == nil
+end
+
 local function inspectVec3(value: any, label: string): (boolean, string?)
-	if type(value) ~= "table" then
-		return false, `{label} must be a table`
+	if not isPlainTable(value) then
+		return false, `{label} must be a plain table`
 	end
 	for _, axis in ipairs({ "x", "y", "z" }) do
 		if not isFinite(value[axis]) then
@@ -84,8 +88,8 @@ local function inspectVec3(value: any, label: string): (boolean, string?)
 end
 
 local function inspectEnvelope(envelope: any): (boolean, string?)
-	if type(envelope) ~= "table" then
-		return false, "envelopeStuds must be a table when present"
+	if not isPlainTable(envelope) then
+		return false, "envelopeStuds must be a plain table when present"
 	end
 	local minOk, minError = inspectVec3(envelope.min, "envelopeStuds.min")
 	if not minOk then
@@ -104,8 +108,8 @@ local function inspectEnvelope(envelope: any): (boolean, string?)
 end
 
 function PhysicsLabValidationContract.inspectSnapshot(snapshot: any): (boolean, string?)
-	if type(snapshot) ~= "table" then
-		return false, "snapshot must be a table"
+	if not isPlainTable(snapshot) then
+		return false, "snapshot must be a plain table"
 	end
 	if type(snapshot.rootName) ~= "string" or snapshot.rootName == "" then
 		return false, "snapshot.rootName must be a non-empty string"
@@ -121,8 +125,8 @@ function PhysicsLabValidationContract.inspectSnapshot(snapshot: any): (boolean, 
 			return false, `snapshot.{field} must be a non-empty string`
 		end
 	end
-	if type(snapshot.counts) ~= "table" then
-		return false, "snapshot.counts must be a table"
+	if not isPlainTable(snapshot.counts) then
+		return false, "snapshot.counts must be a plain table"
 	end
 	for _, key in ipairs(COUNT_KEYS) do
 		if not isNonNegativeInteger(snapshot.counts[key]) then
@@ -219,7 +223,7 @@ function PhysicsLabValidationContract.compareFullLabEnvelope(
 	assertSnapshot(checkpoint, "checkpoint")
 	assertSameIdentity(baseline, checkpoint)
 
-	local tolerance = toleranceStuds or 0.001
+	local tolerance = if toleranceStuds == nil then 0.001 else toleranceStuds
 	assert(
 		isFinite(tolerance) and tolerance >= 0,
 		"Physics Lab envelope tolerance must be finite and non-negative"

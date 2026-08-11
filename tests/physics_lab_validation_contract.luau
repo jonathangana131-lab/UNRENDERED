@@ -151,6 +151,74 @@ local function run(): number
 	local missingReproOk = ValidationContract.inspectSnapshot(missingRepro)
 	expect("snapshot validation rejects missing deterministic repro identity", missingReproOk == false)
 
+	local hostileRootReads = 0
+	local hostileRoot = setmetatable({}, {
+		__index = function()
+			hostileRootReads += 1
+			error("snapshot metatable executed")
+		end,
+	})
+	local hostileRootCallOk, hostileRootAccepted = pcall(function()
+		return ValidationContract.inspectSnapshot(hostileRoot)
+	end)
+	expect(
+		"snapshot validation rejects top-level metatables before field access",
+		hostileRootCallOk and hostileRootAccepted == false and hostileRootReads == 0
+	)
+
+	local hostileCountReads = 0
+	local hostileCounts = snapshot(counts(46, 0), -10, 10)
+	hostileCounts.counts = setmetatable({}, {
+		__index = function()
+			hostileCountReads += 1
+			error("count metatable executed")
+		end,
+	})
+	local hostileCountsCallOk, hostileCountsAccepted = pcall(function()
+		return ValidationContract.inspectSnapshot(hostileCounts)
+	end)
+	expect(
+		"snapshot validation rejects count metatables before count access",
+		hostileCountsCallOk and hostileCountsAccepted == false and hostileCountReads == 0
+	)
+
+	local hostileEnvelopeReads = 0
+	local hostileEnvelope = snapshot(counts(46, 0), -10, 10)
+	hostileEnvelope.envelopeStuds = setmetatable({}, {
+		__index = function()
+			hostileEnvelopeReads += 1
+			error("envelope metatable executed")
+		end,
+	})
+	local hostileEnvelopeCallOk, hostileEnvelopeAccepted = pcall(function()
+		return ValidationContract.inspectSnapshot(hostileEnvelope)
+	end)
+	expect(
+		"snapshot validation rejects envelope metatables before vector access",
+		hostileEnvelopeCallOk and hostileEnvelopeAccepted == false and hostileEnvelopeReads == 0
+	)
+
+	local hostileVectorReads = 0
+	local hostileVector = snapshot(counts(46, 0), -10, 10)
+	hostileVector.envelopeStuds.min = setmetatable({}, {
+		__index = function()
+			hostileVectorReads += 1
+			error("vector metatable executed")
+		end,
+	})
+	local hostileVectorCallOk, hostileVectorAccepted = pcall(function()
+		return ValidationContract.inspectSnapshot(hostileVector)
+	end)
+	expect(
+		"snapshot validation rejects vector metatables before axis access",
+		hostileVectorCallOk and hostileVectorAccepted == false and hostileVectorReads == 0
+	)
+
+	local protectedSnapshot = snapshot(counts(46, 0), -10, 10)
+	setmetatable(protectedSnapshot, { __metatable = "locked" })
+	local protectedSnapshotOk = ValidationContract.inspectSnapshot(protectedSnapshot)
+	expect("snapshot validation rejects protected inert metatables", protectedSnapshotOk == false)
+
 	local differentTruth = snapshot(counts(46, 0), -10, 10)
 	differentTruth.resolvedRegionFingerprint = "fingerprint:v2:different-truth"
 	local crossIdentityAccepted = pcall(function()
@@ -176,6 +244,11 @@ local function run(): number
 		ValidationContract.compareFullLabEnvelope(baseline, rebuilt, -1)
 	end)
 	expect("negative envelope tolerance is rejected", not badToleranceAccepted)
+
+	local falseToleranceAccepted = pcall(function()
+		ValidationContract.compareFullLabEnvelope(baseline, rebuilt, false)
+	end)
+	expect("false envelope tolerance does not silently select the default", not falseToleranceAccepted)
 
 	return failures
 end
