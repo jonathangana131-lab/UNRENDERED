@@ -1,6 +1,7 @@
 local ProductionLoader = require("./support/ProductionLoader")
 local runPhysicsLabDiagnosticsAtomicity = require("./physics_lab_diagnostics_atomicity")
 local runPhysicsLabDiagnosticsBounds = require("./physics_lab_diagnostics_bounds")
+local runPhysicsLabDiagnosticsEnabledIntegrity = require("./physics_lab_diagnostics_enabled_integrity")
 local runPhysicsLabDiagnosticsFinalState = require("./physics_lab_diagnostics_final_state")
 local runPhysicsLabDiagnosticsReadoutContract = require("./physics_lab_diagnostics_readout_contract")
 
@@ -168,6 +169,7 @@ local function run(): number
 
 	failures += runPhysicsLabDiagnosticsAtomicity()
 	failures += runPhysicsLabDiagnosticsBounds()
+	failures += runPhysicsLabDiagnosticsEnabledIntegrity()
 	failures += runPhysicsLabDiagnosticsFinalState()
 	failures += runPhysicsLabDiagnosticsReadoutContract()
 	return failures
