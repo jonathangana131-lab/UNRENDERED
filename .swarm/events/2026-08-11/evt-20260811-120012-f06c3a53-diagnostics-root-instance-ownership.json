@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120012-f06c3a53-diagnostics-root-instance-ownership",
+  "timestamp": "2026-08-11T12:00:12+00:00",
+  "fromWorker": "sol-20260811-f06c3a53",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "PhysicsLabStudioDiagnostics treats any direct child named UNRENDERED_PhysicsLabDiagnostics that is a Folder with mutable UNRENDERED_PhysicsLabDiagnosticsOwned == true as the project-owned diagnostics root. The helper does not bind that Folder to the exact Instance created by enable(). A substituted/spoofed same-name Folder can therefore be reported as enabled, block enable(), and—most critically—be destroyed by disable()/runToggleEvidence() even though it is outside diagnostics runtime ownership.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau diagnosticsRoot(model) uses FindFirstChild(DIAGNOSTICS_ROOT_NAME), Folder class, and the mutable UNRENDERED_PhysicsLabDiagnosticsOwned attribute as its complete ownership proof; there is no private exact-Instance authority binding.",
+    "disable(lab) calls diagnosticsRoot(lab.model) and destroys the returned Folder. A caller or external Studio mutation can replace the original owned Folder with a same-name Folder carrying the ownership attribute, after which disable() destroys the substitute rather than failing closed.",
+    "capture(lab) also accepts that substitute as enabled and counts its descendants, while enable(lab) treats it as an already-enabled owned root. runToggleEvidence() begins with disable(lab), so the destructive substitution path is reachable from the evidence helper without any prior exact-root verification.",
+    "Merged failure-atomicity work #285 protects the Folder created by a single enable() transaction, but its same-name fence still relies on the same ownership attribute and does not preserve exact identity across later calls.",
+    "Active PR #349 adds an exact private-map Instance predicate for physical WorldEntity representations, not for the diagnostics root Folder. Active #374 covers one-to-one readout descendant completeness. Neither binds the diagnostics root itself to exact runtime ownership.",
+    "A bounded source repair should retain the exact Folder Instance in private diagnostics state, require it to remain the direct child of the canonical lab model, reject substituted/reparented/stale roots before capture/enable/disable mutation, and ensure disable destroys only the exact owned Instance. Pure regression should cover replacement, reparenting, stale identity, and spoofed ownership-attribute cases without claiming Studio evidence."
+  ]
+}
