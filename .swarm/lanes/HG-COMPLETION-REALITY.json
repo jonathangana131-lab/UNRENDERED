@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-REALITY",
+  "epicId": "HERO-GATE",
+  "title": "Reality completion queue",
+  "objective": "Drain current Reality, ResolvedRegionRecipe, WorldEntity, identity, replay, and provenance PR backlog into retained main changes before spawning additional Reality primaries.",
+  "priority": 10000,
+  "state": "REVIEW",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["Docs/**"],
+  "resources": [],
+  "slots": [
+    {"slotId":"review-1","role":"Reality exact-head reviewer","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":1000,"writeScopes":["Docs/**"]},
+    {"slotId":"review-2","role":"Reality identity adversarial reviewer","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":950,"writeScopes":["Docs/**"]},
+    {"slotId":"integration","role":"Reality merge-train integrator","exclusive":true,"availableWhen":["REVIEW","INTEGRATION_READY"],"priorityBoost":900,"writeScopes":["Docs/**"]},
+    {"slotId":"reconcile","role":"Reality PR lineage reconciler","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":850,"writeScopes":["Docs/**"]}
+  ],
+  "acceptance": ["self-review by implementer is mandatory before handoff", "identity/replay/schema/provenance changes require independent full review", "test-only bounded work may use self-review plus exact-head CI/ownership", "preserve accepted historical truth and explicit compatibility", "close superseded branches after useful findings are retained"],
+  "tags": ["completion", "review", "integration", "reality", "identity", "hero-gate"]
+}
