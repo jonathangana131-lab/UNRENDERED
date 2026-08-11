@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-j4p9x2n6",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T11:49:58+00:00",
+  "lastSeenAt": "2026-08-11T11:49:58+00:00",
+  "laneId": "HG-BACKFILL-REALITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-REALITY-j4p9x2n6",
+  "notes": "Independent exact-head audit of generation-2 current-main Reality/replay salvage PR #359; verify no-execute schema-key boundary, exact v1/v2 compatibility, identity preservation, and deterministic regressions without claiming Studio evidence."
+}
