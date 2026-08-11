@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811T213950Z-sol-20260811-s56x7q2m-physics-runtime-synthesis",
+  "eventType": "HANDOFF",
+  "at": "2026-08-11T21:39:50Z",
+  "workerId": "sol-20260811-s56x7q2m",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-1",
+  "claimToken": "c5a2e8f4b7d19063",
+  "generation": 1,
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-review1-s56x7q2m",
+  "pr": null,
+  "commit": null,
+  "resources": [],
+  "summary": "Exact-head Physics completion review advances the retained runtime lineage: PR #402 at 4b75bd054eb6a1b3b03d0a868aea46df41d3db42 source-passes the hostile entityId diagnostic boundary and closes the specific malformed-ID HOLD previously recorded against #388. Do not merge #310, #388, or #402 independently: they diverge across the same PhysicsLabRuntime/test files. Final integration must synthesize #388's closure-private frozen runtime plus whole-step mutation transaction, #310's canonical recipe/population/plain-data/no-execute/bounded-comparison fence, and #402's WorldEntityId preflight, with the union of regressions on fresh current main. Live pr-ownership remains separately fail-closed on trusted event-history recovery; no Studio/viewport/contact/two-client evidence is claimed.",
+  "validation": [
+    {
+      "command": "inspect PR #402 exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42 and WorldEntity.isId",
+      "result": "PASS",
+      "notes": "Runtime getRecord now validates through WorldEntity.isId before registry lookup or interpolation; WorldEntity.isId type-checks string before length/control-character operations, so hostile non-string __tostring cannot execute. getFidelity and step reach the guarded lookup before later diagnostics or mutation."
+    },
+    {
+      "command": "compare PR #388 head 89eb1c890d63de9b4e407caee215b6065b6ddac1 with PR #402 head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42",
+      "result": "HOLD",
+      "notes": "Heads diverge from current-main merge base ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and both edit src/shared/Physics/PhysicsLabRuntime.luau plus tests/physics_lab_runtime.luau; standalone merge would discard the sibling invariant unless semantically reconciled."
+    },
+    {
+      "command": "compare current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 with PR #310 head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d",
+      "result": "HOLD",
+      "notes": "PR #310 is 2 commits behind current main and overlaps the same runtime/test files. Preserve its reviewed canonical-recipe invariant semantically rather than mechanically merging the stale history."
+    },
+    {
+      "command": "inspect PR #402 exact-head checks",
+      "result": "PASS",
+      "notes": "Canonical CI and Swarm engine-tests pass on the exact #402 head. pr-ownership remains an unrelated global control-plane failure and is not waived by this review."
+    },
+    {
+      "command": "reconcile prior HG-COMPLETION-PHYSICS handoff at 2026-08-11T21:10:00Z",
+      "result": "PASS",
+      "notes": "The prior completion handoff preserved #310/#388 because #388 had a hostile entityId diagnostic HOLD. #402 is the subsequent narrow repair for that exact gap, so this review advances rather than duplicates that handoff."
+    }
+  ],
+  "details": {
+    "sourceApproved": {"pr": 402, "head": "4b75bd054eb6a1b3b03d0a868aea46df41d3db42"},
+    "retainedForSynthesis": [310, 388, 402],
+    "synthesisBaseInvariant": {"pr": 388, "head": "89eb1c890d63de9b4e407caee215b6065b6ddac1"},
+    "globalBlocker": "trusted event-history / pr-ownership recovery (#387)",
+    "studioEvidenceClaimed": false
+  }
+}
