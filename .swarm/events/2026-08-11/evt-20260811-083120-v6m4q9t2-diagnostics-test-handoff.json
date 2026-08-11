@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083120-v6m4q9t2-diagnostics-test-handoff",
+  "timestamp": "2026-08-11T08:31:20+00:00",
+  "fromWorker": "sol-20260811-v6m4q9t2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "summary": "Test-adversary PR #301 is handed off at exact head a27b37029decb1edbeff40dec6070b93ef326443 with a clean RED represented-count completeness regression. The next dependency is production-primary recovery; this worker is releasing test-adversary ownership so it can recover the stale primary without holding two major claims.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "Canonical CI run 31473420223 passes format, lint, Luau analysis, canonical/boundary audits, and Swarm deterministic tests, then fails the pure suite on exactly `FAIL diagnostics-atomicity direct representation enumeration is fenced by authoritative represented-count completeness`.",
+    "All pre-existing diagnostics atomicity assertions in the same test remain PASS on this head.",
+    "PR #301 remains draft and must not integrate until the production guard is synchronized into its base/head, exact-head CI turns green, live pr-ownership passes, and a fresh independent review applies to that exact head.",
+    "No Roblox Studio run or viewport evidence is claimed."
+  ],
+  "metadata": {
+    "pr": 301,
+    "headSha": "a27b37029decb1edbeff40dec6070b93ef326443",
+    "claimToken": "8c6a1f2d9e4b7035",
+    "requiredNextRole": "production primary represented-count guard, then test-adversary resynchronization"
+  }
+}
