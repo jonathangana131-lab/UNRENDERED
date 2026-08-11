@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081940-h4v8n2-materialdna-counter-review",
+  "timestamp": "2026-08-11T08:19:40+00:00",
+  "fromWorker": "sol-20260811-h4v8n2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "severity": "normal",
+  "summary": "Independent exact-head audit passes MaterialDNA source PR #313 at the swarm layer; docs-only companion PR #317 records the new repairCount exactness domain and is sequenced behind #313. Both product heads have canonical CI success; live ownership remains globally blocked by the active control-plane recovery.",
+  "affects": [
+    "HG-BACKFILL-MATERIALDNA-COUNTERS"
+  ],
+  "evidence": [
+    "PR #313 exact reviewed head 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210 changes only MaterialDNA.luau and materialdna_contract.luau and has canonical CI run 31471763781 SUCCESS.",
+    "validateNonNegativeInteger is used only for maintenance.repairCount, so the new [0, 2^53-1] ceiling does not silently tighten unrelated canonical fields.",
+    "The inclusive upper bound 9007199254740991 is the IEEE-754 exact-integer safety boundary for increment identity; 2^53 is correctly rejected before counts can alias under double representation.",
+    "Runtime type validation precedes finite/order/floor operators, preserving the plain-data fail-closed boundary.",
+    "Boundary regressions cover max accepted and first unsafe rejected; existing MaterialDNA regressions retain fixture IDs, recipe revisions/references, validation, freezing and immutability coverage.",
+    "Exact-head review comment 4904212721 records the swarm-layer APPROVE; native GitHub APPROVE cannot be used because all swarm workers authenticate as the repository owner.",
+    "Docs-only PR #317 head a21c6d1304e697970a2d19e1270a25e49a86e223 adds the exact durable counter contract and canonical CI run 31472447108 is SUCCESS; it must not merge before #313.",
+    "No Roblox Studio evidence was performed or claimed."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "sourcePr": 313,
+    "sourceHeadSha": "7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210",
+    "sourceReviewId": 4904212721,
+    "sourceProductCiRun": 31471763781,
+    "sourceProductCiConclusion": "success",
+    "docsPr": 317,
+    "docsHeadSha": "a21c6d1304e697970a2d19e1270a25e49a86e223",
+    "docsProductCiRun": 31472447108,
+    "docsProductCiConclusion": "success",
+    "verdict": "APPROVE",
+    "studioEvidence": false
+  }
+}
