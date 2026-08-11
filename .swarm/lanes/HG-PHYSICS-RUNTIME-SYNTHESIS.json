@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-PHYSICS-RUNTIME-SYNTHESIS",
+  "epicId": "HERO-GATE",
+  "title": "Physics Lab runtime invariant synthesis",
+  "objective": "Finish the active Physics Lab runtime lineages by synthesizing the independently reviewed canonical-recipe fence, transition/frozen-facade mutation fence, and entity-ID lookup fence into one current-main source/test head without weakening any accepted invariant.",
+  "priority": 9975,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    "src/shared/Physics/PhysicsLabRuntime.luau",
+    "tests/physics_lab_runtime*.luau",
+    "Docs/PHYSICS_LAB.md"
+  ],
+  "resources": [],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Physics runtime lineage synthesizer",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 500,
+      "writeScopes": [
+        "src/shared/Physics/PhysicsLabRuntime.luau",
+        "tests/physics_lab_runtime*.luau"
+      ]
+    },
+    {
+      "slotId": "audit",
+      "role": "Independent synthesized-runtime auditor",
+      "exclusive": true,
+      "requiresIndependentFrom": "primary",
+      "availableWhen": ["REVIEW"],
+      "priorityBoost": 180,
+      "writeScopes": [
+        "tests/physics_lab_runtime*.luau",
+        "Docs/PHYSICS_LAB.md"
+      ]
+    }
+  ],
+  "acceptance": [
+    "use PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1 as the semantic runtime architecture baseline: closure-private weak-key RuntimeState, frozen public facade, guarded dispose, whole-manager-step transaction fence, callback fence, error unwind, and retry behavior remain intact",
+    "preserve PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d canonical-recipe validation before any registry/Fidelity authority construction, including complete canonical population/provenance/state/revision checks and no-execute/bounded malformed-input rejection",
+    "preserve PR #402 exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42 WorldEntity.isId lookup-boundary validation so malformed IDs reject before registry access or diagnostic interpolation while valid unknown IDs remain safely diagnosable",
+    "getRecord, getFidelity, and step regressions cover hostile non-string/metatable-backed IDs without __tostring execution, authority mutation, count drift, or loss of immediate valid retry",
+    "constructor regressions from #310 and transition/reentrancy/frozen-facade regressions from #388 remain present alongside #402 ID regressions; do not weaken assertions to make the lineages compose",
+    "canonical CI and Swarm engine-tests pass on the exact synthesized head; live pr-ownership remains mandatory after SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY restores trusted control",
+    "fresh independent exact-head review is required before integration",
+    "source-only lane: no Roblox Studio, viewport, physical-contact, or two-client evidence claim"
+  ],
+  "notes": "Decomposed by HG-COMPLETION-PHYSICS reconciliation after exact-source comparison. None of #310/#388/#402 subsumes the others: #310 is old mutable-runtime architecture plus constructor fence, #388 is the retained current-main private/frozen transaction architecture but has a pre-lookup hostile-ID review blocker, and #402 closes that lookup boundary on the old runtime architecture. Synthesize semantically; do not mechanically merge predecessor histories or integrate them independently."
+}
