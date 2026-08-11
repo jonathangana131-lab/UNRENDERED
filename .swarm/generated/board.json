@@ -11,7 +11,7 @@
     },
     {
       "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-q9x4m2-g2",
-      "expiresAt": "2026-08-11T07:49:57+00:00",
+      "expiresAt": "2026-08-11T07:55:32+00:00",
       "generation": 2,
       "laneId": "HG-BACKFILL-AUTHORITY",
       "pr": 297,
@@ -47,7 +47,7 @@
     },
     {
       "branch": "agent/physics/HG-BACKFILL-FIDELITY-tests-30a8e397",
-      "expiresAt": "2026-08-11T07:43:36+00:00",
+      "expiresAt": "2026-08-11T07:56:00+00:00",
       "generation": 1,
       "laneId": "HG-BACKFILL-FIDELITY",
       "pr": 278,
@@ -140,7 +140,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:25:55.188081+00:00",
+  "generatedAt": "2026-08-11T07:26:38.756500+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "064e28f2306095dadd6a514b96f397cd810ac556",
@@ -166,7 +166,7 @@
       "REVIEW_REQUEST": 30,
       "REVIEW_RESULT": 30
     },
-    "generatedAt": "2026-08-11T07:25:55.188081+00:00",
+    "generatedAt": "2026-08-11T07:26:38.756500+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -869,7 +869,7 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "777761e7bf31066d5ebf177d2d5f77778ff618c328e4ab5a3bed12559c16a7ac",
+  "stateDigest": "b51b63d9c6cee9f0e1c8b8c2b0b03ba02cf0c59507dc7d723416f05ca9dfe93c",
   "summary": {
     "activeClaims": 14,
     "activeResourceClaims": 1,
