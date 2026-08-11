@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-d7k4m9q2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T22:12:25+00:00",
+  "lastSeenAt": "2026-08-11T22:13:45+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-d7k4m9q2-g2",
-  "notes": "Reconcile existing exact-head independent SOURCE/TEST PASS for PR #395; no duplicate review, product edit, or Studio evidence."
+  "notes": "Reconciled PR #395's already-published exact-head source/test approval; lane moved to BLOCKED on global live ownership and audit claim released without duplicate review."
 }
