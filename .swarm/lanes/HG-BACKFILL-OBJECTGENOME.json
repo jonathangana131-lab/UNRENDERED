@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "epicId": "HERO-GATE",
+  "title": "ObjectGenome adversarial depth pass",
+  "objective": "Use otherwise-idle Sol capacity to find and fix concrete ObjectGenome shape, component, ownership, fingerprint, transform, material-reference, state-binding, immutability, or malformed-input defects without depending on Studio.",
+  "priority": 5150,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["src/shared/Objects/ObjectGenome*.luau", "tests/object_genome*.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"ObjectGenome source hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Objects/ObjectGenome*.luau","tests/object_genome*.luau"]},
+    {"slotId":"test-adversary","role":"ObjectGenome malformed-input and identity tests","exclusive":true,"availableWhen":["READY","REVIEW","NEEDS_CHANGES"],"priorityBoost":220,"writeScopes":["tests/object_genome*.luau"]},
+    {"slotId":"audit","role":"ObjectGenome contract and ownership auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/object_genome*.luau","Docs/OBJECT_GENOME.md"]}
+  ],
+  "acceptance": ["inspect current main and existing contract-lock tests", "prefer a concrete defect or missing invariant over speculative redesign", "new behavior is covered by deterministic regression tests", "preserve canonical identity and plain-data boundaries", "publish cross-lane findings as structured events"],
+  "tags": ["backfill", "hero-gate", "source-only"]
+}
