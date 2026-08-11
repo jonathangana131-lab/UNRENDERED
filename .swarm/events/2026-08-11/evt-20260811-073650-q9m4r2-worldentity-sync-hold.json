@@ -13,7 +13,9 @@
     "The current-main delta after the reviewed base includes merged #282, which tightens the shared DeterminismContract StableId validation boundary used by Reality-domain consumers.",
     "GitHub review 4903949941 records the synchronization requirement; no Studio evidence is involved."
   ],
-  "pr": 293,
-  "headSha": "c301d8403d3c1b93ee3b2988f80e9d1e689eb33d",
-  "verdict": "SYNC_REQUIRED"
+  "metadata": {
+    "pr": 293,
+    "headSha": "c301d8403d3c1b93ee3b2988f80e9d1e689eb33d",
+    "verdict": "SYNC_REQUIRED"
+  }
 }
