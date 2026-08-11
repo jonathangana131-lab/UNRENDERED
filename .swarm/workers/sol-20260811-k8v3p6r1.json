@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:40:25+00:00",
-  "lastSeenAt": "2026-08-11T09:05:20+00:00",
-  "laneId": "HG-BACKFILL-FIDELITY",
-  "slotId": "primary",
-  "branch": "agent/physics/HG-BACKFILL-FIDELITY-k8v3p6r1-g3",
-  "notes": "Generation-3 stale takeover published as PR #335. Current-main salvage preserves reviewed rejected-step/callback atomicity and closes PolicyConfig no-execute gaps. Exact-head CI is being repaired/validated; no Studio evidence is claimed."
+  "lastSeenAt": "2026-08-11T09:18:10+00:00",
+  "laneId": "HG-PHYSICS-CHAIR-GEOMETRY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-PHYSICS-CHAIR-GEOMETRY-audit-k8v3p6r1",
+  "notes": "Independent exact-head audit of office-chair authored geometry repair PR #339 after completing and releasing Fidelity generation-3 primary. Verify versioned canonical recipe, caster ground/base contact, component-derived COM/mass, deterministic goldens, scope, and CI; no Studio claim."
 }
