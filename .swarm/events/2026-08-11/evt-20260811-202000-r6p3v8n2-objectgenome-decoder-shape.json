@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-202000-r6p3v8n2-objectgenome-decoder-shape",
+  "timestamp": "2026-08-11T20:20:00+00:00",
+  "fromWorker": "sol-20260811-r6p3v8n2",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome decodeMechanismPosition remains only partially fail-closed after PR #380's metatable gate: a plain but incomplete caster record such as {kind='caster'} with position 0.25 passes both assertions and returns a decoded caster value even though it is not a canonical MechanismSpec and would be rejected inside any ObjectGenome. Latch has the same shape hole. Because this API is documented as the shared decoder boundary, malformed plain records should not be able to produce canonical-looking physical semantics. Add an exact-record/kind validation boundary (or an equivalent canonical-mechanism proof) before decode and deterministic regressions proving incomplete/unknown-field caster and latch records reject while valid mechanisms remain byte-for-byte behavior-compatible.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "MEDIUM",
+  "evidence": [
+    "src/shared/Objects/ObjectGenome.luau: decodeMechanismPosition asserts only table + nil metatable, then mechanismPositionIsValid; caster validation consults only kind and numeric position, and the caster decode branch returns without reading key/movingComponentKey/frameComponentKey/wheelRadiusM/swivelAxis/rollAxis.",
+    "src/shared/Objects/ObjectGenome.luau: latch likewise validates only kind plus position==0/1 before returning engaged state, so {kind='latch'} is accepted by the decoder despite being an invalid ObjectGenome mechanism record.",
+    "Docs/OBJECT_GENOME.md: mechanisms are canonical records referencing components/axes/limits, and decodeMechanismPosition is the shared decoder boundary used to keep Physics/fidelity adapters on one project-owned interpretation.",
+    "Static exact-head proof on PR #380 head f528b2187b06f73d97ef14fddba6caf9ca0055a4; no Studio or engine-contact evidence claimed."
+  ]
+}
