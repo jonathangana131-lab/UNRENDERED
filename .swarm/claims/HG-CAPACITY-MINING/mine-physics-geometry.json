@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "workerId": "sol-20260811-u6r3k8p1",
+  "claimToken": "8d3f1a7c5e2b9064",
+  "claimedAt": "2026-08-11T21:56:00+00:00",
+  "heartbeatAt": "2026-08-11T21:56:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-u6r3k8p1",
+  "pr": null,
+  "notes": "Mine current Hero Gate physics geometry realization/source tests for one concrete non-duplicate boundedness/identity/integration gap. Do not duplicate active physics runtime work and do not claim Studio evidence."
+}
