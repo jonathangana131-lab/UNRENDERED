@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-f8q3m6v2",
   "model": "gpt-5.6-sol",
-  "status": "DONE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T22:21:00+00:00",
   "lastSeenAt": "2026-08-11T22:23:10+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-fidelity",
   "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-f8q3m6v2",
-  "notes": "Completed duplicate-aware FidelityManager mining. Published evt-sol-20260811-f8q3m6v2-fidelity-capacity-ceiling-222245: maxRegisteredEntities has no project-owned upper ceiling/safe-integer bound, so caller configuration can defeat the intended hard resource bound. Static GitHub source/test/history review only; no tests or Studio run."
+  "notes": "Completed duplicate-aware FidelityManager mining. Published evt-sol-20260811-f8q3m6v2-fidelity-capacity-ceiling-222245: maxRegisteredEntities has no project-owned upper ceiling/safe-integer bound, so caller configuration can defeat the intended hard resource bound. Static GitHub source/test/history review only; no tests or Studio run. Recovery generation 6 normalized the completed worker status from invalid DONE to canonical STOPPED without changing the recorded work outcome."
 }
