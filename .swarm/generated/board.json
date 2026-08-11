@@ -23,7 +23,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T06:01:35.937174+00:00",
+  "generatedAt": "2026-08-11T06:02:08.571747+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "5ee9091eb9d7af665a990381b0133d8ccedea503",
@@ -39,10 +39,11 @@
     ],
     "eventCounts": {
       "EXTERNAL_BLOCKER": 1,
+      "FINDING": 1,
       "INTEGRATION_RESULT": 3,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T06:01:35.937174+00:00",
+    "generatedAt": "2026-08-11T06:02:08.571747+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -618,6 +619,27 @@
       "severity": "info",
       "summary": "Post-hardening end-to-end worker path passed. A fresh worker registered, claimed the exclusive lane before branch creation, waited for exact live-state validation, then PR #268 passed hardened trusted-base claim/worker/branch/scope/digest enforcement plus canonical CI and merged successfully.",
       "timestamp": "2026-08-11T05:39:00+00:00"
+    },
+    {
+      "affects": [
+        "SWARM-V21-CAPACITY",
+        "OPS-STUDIO-DISPLAY",
+        "HG151-DIAGNOSTICS",
+        "HG151-TWOCLIENT"
+      ],
+      "eventId": "evt-20260811-060200-v21-capacity-collapse",
+      "eventType": "FINDING",
+      "evidence": [
+        "Pre-repair live board showed workers registered with activeClaims=0 and readySlots=0 while OPS-STUDIO-DISPLAY was BLOCKED_EXTERNAL.",
+        "After live backfill/capacity seeding, the validated board exposed more than 25 claimable roles without unlocking HERO-DOOR.",
+        "PR #269 passed hardened ownership/resource/digest enforcement and canonical CI, then merged as 5ee9091eb9d7af665a990381b0133d8ccedea503."
+      ],
+      "fromWorker": "sol-20260811-v21fix",
+      "laneId": "SWARM-V21-CAPACITY",
+      "schemaVersion": 1,
+      "severity": "blocking",
+      "summary": "The first live ~25-worker V2 stress burst exposed a throughput collapse: roughly two dozen workers registered, but the board had zero ready slots and zero active claims because the Studio critical path was externally blocked; workers then reported green main and stopped. V2.1 fixes this by making GREEN non-terminal and exposing active-Epic backfill, audit, test, recovery and capacity-mining fallbacks.",
+      "timestamp": "2026-08-11T06:02:00+00:00"
     }
   ],
   "resources": [
@@ -659,7 +681,7 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "9505f2363cd5749e9b2d1df4dac63a91caaaaa1371010b4727c6102e981b7c25",
+  "stateDigest": "0a3aafc340634f62f9b45ad2169ab1628a0d30d8579ad955950be609839f990c",
   "summary": {
     "activeClaims": 1,
     "activeResourceClaims": 1,
