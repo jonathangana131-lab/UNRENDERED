@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-s6q2m9v4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T23:08:20+00:00",
-  "lastSeenAt": "2026-08-11T23:29:54+00:00",
+  "lastSeenAt": "2026-08-11T23:32:34+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "test-adversary",
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-s6q2m9v4",
-  "notes": "Draft PR #418 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f is canonical-CI green after replacing the rejected raw-source check with a behavioral reverse-overflow adversary. Awaiting independent re-review/primary absorption; no production or Studio evidence changed."
+  "notes": "Draft PR #418 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f is canonical-CI green and handed to retained primary #414. Waiting only for independent re-review/primary absorption; no further self-review or production work is appropriate from this slot."
 }
