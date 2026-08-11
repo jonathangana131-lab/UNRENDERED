@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-p7d4m2x9",
+  "claimToken": "6c2f9a1d4e7b8053",
+  "claimedAt": "2026-08-11T11:51:49+00:00",
+  "heartbeatAt": "2026-08-11T11:51:49+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-p7d4m2x9",
+  "pr": null,
+  "notes": "Independent adversarial verification of the active generation-4 ObjectGenome closure; preserve current architecture and only add bounded deterministic regression evidence for concrete remaining gaps."
+}
