@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-211530-z8k4m6p2-diagnostics-doc-sync",
+  "timestamp": "2026-08-11T21:15:30+00:00",
+  "fromWorker": "sol-20260811-z8k4m6p2",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "summary": "Diagnostics integration has a documentation-sync dependency: if generation-4 PR #392's failure-atomic enable implementation is retained, Docs/PHYSICS_LAB_DIAGNOSTICS.md must be updated on the integration head because current main documentation still states that enable() does not preflight/rollback every assertion path and instructs operators to treat failed enables as contaminated. Do not update the document before the source lands, because the warning remains accurate for current main. This is documentation/operational truth only and does not convert the blocked Studio viewport row into PASS.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519 retains generation-3 source where enable() completes all identity/representation/adornee preflight before allocating the owned Folder, then wraps parenting/configuration/capture in pcall and destroys the entire owned tree on failure.",
+    "PR #392 changed-file set is PhysicsLabStudioDiagnostics.luau plus four diagnostics test files; Docs/PHYSICS_LAB_DIAGNOSTICS.md is not part of the candidate.",
+    "Current main Docs/PHYSICS_LAB_DIAGNOSTICS.md Failure atomicity audit explicitly says current source does not yet prove the invariant, says the folder may remain after later assertion failure, and instructs manual cleanup before another candidate observation.",
+    "The source/docs contradiction would begin only after the retained #392 source is integrated; updating docs now would incorrectly describe current main. No Studio/viewport/contact evidence is claimed."
+  ],
+  "metadata": {
+    "pr": 392,
+    "headSha": "b21a0ecac4dc67900f004527291ebcb4daeea519",
+    "kind": "INTEGRATION_DOC_SYNC"
+  }
+}
