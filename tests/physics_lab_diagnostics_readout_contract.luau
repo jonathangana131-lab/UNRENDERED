@@ -46,8 +46,9 @@ local function run(): number
 	local exactEntityCount = helperPosition("readoutCount == #entities")
 	local exactInstanceCount = helperPosition("return 1 + 2 * readoutCount")
 	local preflightProjection = position("key = record.origin.recipeKey")
-	local captureProjection =
-		position("text = readoutText(record.origin.recipeKey, record.id, record.fidelity, fingerprint, reproKey)")
+	local captureProjection = position(
+		"text = readoutText(record.origin.recipeKey, record.id, record.fidelity, fingerprint, reproKey)"
+	)
 	local realizationProjection = position(
 		"label.Text = readoutText(plan.key, plan.worldEntityId, plan.fidelity, fingerprint, reproKey)"
 	)
