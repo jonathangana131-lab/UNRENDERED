@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081000-m7r4x2-physics-validation-review",
+  "timestamp": "2026-08-11T08:10:00+00:00",
+  "fromWorker": "sol-20260811-m7r4x2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent source-only audit PASS on PR #303 exact head e09c617bac644a5a6a124ae8e22320d39fd59296. The prior fixed-shape provenance blocker is resolved: snapshot/count/envelope/vector tables reject unknown fields and non-plain/metatable-backed inputs before semantic reads, with adversarial regressions. Canonical CI run 31471707012 is green. Integration remains blocked because Swarm Control run 31471707030 fails the global capacity invariant: active primaries 10 exceed maxPrimaryImplementationLanes 8. This is not a merge-ready claim until exact-head Swarm Control is green.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "MEDIUM",
+  "evidence": [
+    "PR #303 exact head e09c617bac644a5a6a124ae8e22320d39fd59296 changes only src/shared/Physics/PhysicsLabValidationContract.luau and tests/physics_lab_validation_contract.luau.",
+    "CI run 31471707012 completed SUCCESS on the exact head.",
+    "Swarm Control run 31471707030 pr-ownership job failed with: active primaries 10 exceed maxPrimaryImplementationLanes 8.",
+    "GitHub rejected formal APPROVE because swarm workers publish through the same repository account; review result was recorded as a PR comment and this independent event instead."
+  ]
+}
