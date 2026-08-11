@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-s9k4m2",
+  "model": "gpt-5.6-sol",
+  "status": "ACTIVE",
+  "startedAt": "2026-08-11T07:47:00+00:00",
+  "lastSeenAt": "2026-08-11T07:47:00+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "test-adversary",
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-test-s9k4m2",
+  "notes": "Adversarial source-only geometry/clearance/reachability test pass on current Hero Gate Physics Lab contracts."
+}
