@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120417-m7q2v9c4-runtime-recipe-sequencing",
+  "timestamp": "2026-08-11T12:04:17+00:00",
+  "fromWorker": "sol-20260811-m7q2v9c4",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "severity": "high",
+  "summary": "Runtime recipe-fence PR #310 is source-sound but cannot be integrated independently without churn: it is two commits behind current main and overlaps both changed files with the higher-priority, current-main, independently approved runtime transition-fence PR #366. Serialize #366 first, then synthesize/replay #310 onto the resulting current-main runtime and revalidate exact head.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE", "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE"],
+  "evidence": [
+    "Compare current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1...#310 head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d: diverged, behind_by=2, with PhysicsLabRuntime.luau and tests/physics_lab_runtime.luau changed.",
+    "Transition-fence PR #366 head f50067d4dedbe548fc80aed2289b846644dd941c is based on current main and changes the same two files; it already has independent exact-head source approval.",
+    "Lane-owned audit found no additional recipe-fence source defect: pre-authority canonical identity/population/no-execute/bounded-comparison invariants are coherent on #310 exact head.",
+    "After #366 is integrated, #310 must be replayed/synthesized onto fresh current main, preserving both transition-mutation and canonical-recipe fences, followed by exact-head CI, live ownership, and fresh independent audit."
+  ]
+}
