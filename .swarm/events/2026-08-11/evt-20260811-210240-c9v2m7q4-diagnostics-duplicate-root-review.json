@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-210240-c9v2m7q4-diagnostics-duplicate-root-review",
+  "timestamp": "2026-08-11T21:02:40+00:00",
+  "fromWorker": "sol-20260811-c9v2m7q4",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "summary": "REQUEST_CHANGES on diagnostics generation-4 PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519: diagnosticsRoot() uses one FindFirstChild(DIAGNOSTICS_ROOT_NAME) and does not reject duplicate same-named diagnostics roots, so standalone capture() can validate/count one owned readout tree while silently ignoring a second stale/owned diagnostics root.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "PhysicsLabStudioDiagnostics.diagnosticsRoot() resolves only model:FindFirstChild(DIAGNOSTICS_ROOT_NAME), validates that single Instance, and returns it without enumerating/rejecting another direct child with the same diagnostics root name",
+    "Roblox Instance children may share names, so a second UNRENDERED_PhysicsLabDiagnostics Folder can coexist under the lab model",
+    "capture() derives enabled/readout completeness/diagnosticInstanceCount only from the one Folder returned by diagnosticsRoot(), allowing an extra same-named owned/stale root to be omitted from the published snapshot",
+    "disable() can eventually detect a leftover duplicate through its post-destroy capture, but that does not make standalone capture() fail closed on the malformed physical state",
+    "Existing readout-completeness and atomicity tests validate the tree beneath one resolved root and do not pin duplicate-root rejection",
+    "Bounded fix: enumerate direct children named DIAGNOSTICS_ROOT_NAME, reject more than one before returning, preserve unrelated-root ownership/class guards, and add a pure source regression. No Studio/viewport evidence is needed or claimed"
+  ]
+}
