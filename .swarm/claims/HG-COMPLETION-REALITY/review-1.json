@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-REALITY",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-k3q8v6z2",
+  "claimToken": "2f6a9c1d8b4e7053",
+  "claimedAt": "2026-08-11T10:03:00+00:00",
+  "heartbeatAt": "2026-08-11T10:03:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-REALITY-review1-k3q8v6z2-r1",
+  "pr": null
+}
