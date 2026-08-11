@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T21:46:30+00:00",
-  "laneId": "HG-COMPLETION-PHYSICS",
+  "lastSeenAt": "2026-08-11T21:48:15+00:00",
+  "laneId": "HG-COMPLETION-REALITY",
   "slotId": "reconcile",
-  "branch": "agent/reconcile/HG-COMPLETION-PHYSICS-d7k4m9q2",
-  "notes": "Refresh physics completion sequencing against current runtime, diagnostics, authority-harness, and geometry successors; no source merge or Studio evidence work."
+  "branch": "agent/reconcile/HG-COMPLETION-REALITY-d7k4m9q2",
+  "notes": "Refresh Reality completion sequencing across resolved-reality replay and active WorldEntity lineages; no source merge or Studio evidence work."
 }
