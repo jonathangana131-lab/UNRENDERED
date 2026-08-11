@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q6m9c4v2",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "WORKING",
   "startedAt": "2026-08-11T20:58:00+00:00",
-  "lastSeenAt": "2026-08-11T21:08:00+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Completed HG-BACKFILL-OBJECTGENOME test-adversary pass on PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962. No additional decoder bypass found; durable finding evt-20260811-210700-q6m9c4v2-objectgenome-g8-adversary and PR comment 5258855120 published. Claim released; selecting next safe slot."
+  "lastSeenAt": "2026-08-11T21:10:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/tests/HG-BACKFILL-DIAGNOSTICS-tests-q6m9c4v2",
+  "notes": "Completed ObjectGenome adversary pass, then claimed free diagnostics test-adversary slot. Target PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519 for lifecycle/no-drift source-only adversarial analysis; no Studio/viewport claims."
 }
