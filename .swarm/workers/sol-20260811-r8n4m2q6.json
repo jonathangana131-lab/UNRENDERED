@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T23:08:20+00:00",
-  "lastSeenAt": "2026-08-11T23:09:10+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-fidelity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-r8n4m2q6",
-  "notes": "Claimed source-only FidelityManager capacity mining after losing the generation-6 trusted-history recovery takeover race. Inspect retained fidelity PRs and current source for a concrete non-duplicate depth gap."
+  "lastSeenAt": "2026-08-11T23:11:30+00:00",
+  "laneId": "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+  "slotId": "primary",
+  "branch": "agent/physics/HG-FIDELITY-REGISTRATION-CAPACITY-CEILING-r8n4m2q6",
+  "notes": "Promoted concrete capacity-mining finding into a narrow source-only Hero-Gate repair. Base is retained Fidelity PR #385 exact head; preserve its transition/config atomicity and no-execute invariants."
 }
