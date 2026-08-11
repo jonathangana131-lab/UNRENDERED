@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-8d9cde53",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T07:46:04+00:00",
-  "lastSeenAt": "2026-08-11T08:32:15+00:00",
-  "laneId": "HG-BACKFILL-REALITY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-REALITY-audit-8d9cde53-g2-clean",
-  "notes": "Reality/replay audit remains active. Independent exact-head reviews completed for PR #306/#312; critical control-integrity laundering finding handed to #315 owner. DeterminismContract no-execute findings are verified; closed #323 after detecting its test path was outside this audit slot's write scope, preserved exact evidence branch, and handed implementation/tests to valid owners."
+  "lastSeenAt": "2026-08-11T09:17:10+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Go cycle completed without retaining a major claim. Reality audit released after exact-head #306/#312 reviews and DeterminismContract no-execute handoff; critical immutable-event laundering/history findings drove detect-only #329; reusable physics-geometry mining found and published distinct Physics Lab ramp entry-lip defect evt-20260811-091330-8d9cde53-ramp-entry-lip, then released. Current highest-priority protected history-continuity work is fenced by live SWARM-PROTOCOL ownership collision with SWARM-V22-THROUGHPUT; durable blocker evt-20260811-091620-8d9cde53-history-v22-resource-collision."
 }
