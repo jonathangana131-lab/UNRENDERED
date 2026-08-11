@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090427-q4n7w2c9-worldentity-audit",
+  "timestamp": "2026-08-11T09:04:27+00:00",
+  "fromWorker": "sol-20260811-q4n7w2c9",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "summary": "Independent source-only audit finds no new patch-local blocker in WorldEntity PR #293; stacked test PR #331 closes the outstanding exact depth/node boundary and registry atomic-rejection coverage. Integration must replay both effective diffs onto current main and regenerate exact-head CI/ownership/review evidence.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #293 exact source head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e bounds persistentState depth=64, nodes=4096, aggregate string key/value bytes=65536; canonical CI run 31474536191 is SUCCESS.",
+    "PR #331 exact head 592d82ebfe30819e4210953fa71324224cc4564d adds exact-limit depth/node coverage, cumulative byte accounting, and fail-atomic rejected captureRegistered/transitionRegistered regressions without production source changes; canonical CI run 31475003166 is SUCCESS.",
+    "GitHub compare current main dd8f1581115c15ce6497db827d17e98d879d0267...PR #293 reports diverged, ahead_by=14, behind_by=3; prior exact-head review/CI cannot substitute for post-replay integration evidence.",
+    "Previously published duplicate-diagnostic and live-registry cardinality findings remain bounded follow-ups and should not widen the current persistentState closure unless scheduler state explicitly promotes them.",
+    "No Roblox Studio/physics evidence was required or claimed; local executable validation was unavailable because the session container cannot resolve github.com, so executable evidence is limited to GitHub Actions results."
+  ],
+  "metadata": {
+    "verdict": "PASS_AFTER_STACK_AND_SYNC",
+    "primaryPr": 293,
+    "primaryHeadSha": "91b6e273c0c21326dfbfe9c5ee5227e99f26933e",
+    "testPr": 331,
+    "testHeadSha": "592d82ebfe30819e4210953fa71324224cc4564d",
+    "currentMainSha": "dd8f1581115c15ce6497db827d17e98d879d0267",
+    "nextAction": "Replay effective PR #293 plus PR #331 test diff onto current main, rerun canonical CI and pr-ownership, then obtain exact-head independent completion review."
+  }
+}
