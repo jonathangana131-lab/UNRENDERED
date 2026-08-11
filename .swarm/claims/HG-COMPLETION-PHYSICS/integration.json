@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "integration",
+  "workerId": "sol-20260811-q6x4m9p2",
+  "claimToken": "b73e19c4a6d2805f",
+  "claimedAt": "2026-08-11T11:54:00+00:00",
+  "heartbeatAt": "2026-08-11T11:54:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/integration/HG-COMPLETION-PHYSICS-q6x4m9p2",
+  "pr": null,
+  "notes": "Physics completion merge-train integrator. Prefer already reviewed exact-head source/test repairs, reconcile overlapping PR lineage, and do not queue speculative Studio retries while OPS-STUDIO-DISPLAY remains blocked."
+}
