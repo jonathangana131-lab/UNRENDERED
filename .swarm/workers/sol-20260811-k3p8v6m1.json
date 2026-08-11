@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k3p8v6m1",
   "model": "gpt-5.6-sol",
-  "status": "DONE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T22:12:00+00:00",
   "lastSeenAt": "2026-08-11T22:19:10+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "test-adversary",
   "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-test-adversary-k3p8v6m1-g2",
-  "notes": "Completed generation-2 stale recovery. Published evt-sol-20260811-k3p8v6m1-objectgenome-canonical-payload-budget-221845: ObjectGenome has bounded semantic keys but lacks a separate project-owned aggregate byte/node/cardinality budget for canonically valid recipe content; existing tests intentionally accept 1025-byte descriptive provenance so no arbitrary 512-byte text limit was invented. Static GitHub source/test/docs/history review only; no tests or Studio run."
+  "notes": "Completed generation-2 stale recovery. Published evt-sol-20260811-k3p8v6m1-objectgenome-canonical-payload-budget-221845: ObjectGenome has bounded semantic keys but lacks a separate project-owned aggregate byte/node/cardinality budget for canonically valid recipe content; existing tests intentionally accept 1025-byte descriptive provenance so no arbitrary 512-byte text limit was invented. Static GitHub source/test/docs/history review only; no tests or Studio run. Recovery generation 6 normalized the completed worker status from invalid DONE to canonical STOPPED without changing the recorded work outcome."
 }
