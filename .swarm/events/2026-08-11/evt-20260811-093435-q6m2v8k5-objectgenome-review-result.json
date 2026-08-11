@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-093435-q6m2v8k5-objectgenome-review-result",
+  "timestamp": "2026-08-11T09:34:35+00:00",
+  "fromWorker": "sol-20260811-q6m2v8k5",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "WARN",
+  "summary": "PR #336 production hardening is semantically coherent, but exact head 8ed54d2 still contains the out-of-scope tests/run.luau registration and duplicate standalone generation-3 test file that its body says were removed; exact-head review therefore requires changes before integration.",
+  "affects": {
+    "laneIds": [
+      "HG-BACKFILL-OBJECTGENOME"
+    ],
+    "resources": [
+      "src/shared/Objects/ObjectGenome.luau",
+      "tests/object_genome_contract_lock.luau",
+      "tests/object_genome_generation3_boundaries.luau",
+      "tests/run.luau"
+    ]
+  },
+  "evidence": [
+    "Reviewed PR #336 exact head 8ed54d2d965334d5a74fc9cd9b454d358da6f01f. The production diff bounds familyVersion to 2147483647, bounds nested semantic keys to 512 bytes, and rejects shared table identity across the four mutable ObjectState semantic maps; no additional semantic blocker was found in those production changes.",
+    "Canonical CI workflow run 31476917089 completed successfully on this head, including the ObjectGenome regressions.",
+    "The current four-file PR diff still includes tests/run.luau adding require/runObjectGenomeGeneration3Boundaries and still adds tests/object_genome_generation3_boundaries.luau, while the PR body explicitly states that the shared runner edit and standalone file were removed and that regressions now live only in tests/object_genome_contract_lock.luau.",
+    "HG-BACKFILL-OBJECTGENOME writeScopes are src/shared/Objects/ObjectGenome*.luau and tests/object_genome*.luau; tests/run.luau is outside the lane-owned scope. Once shared control validation reaches PR-specific ownership evaluation, this runner edit is independently invalid even if the global immutable-event recovery succeeds.",
+    "Exact-head pr-ownership job 93733235822 currently fails earlier on the shared immutable-event history mismatch evt-20260811-073500-q9m4r2-authority-rereview-approve, so that global prerequisite must also be repaired before final ownership evidence can be green."
+  ],
+  "metadata": {
+    "pr": 336,
+    "headSha": "8ed54d2d965334d5a74fc9cd9b454d358da6f01f",
+    "verdict": "NEEDS_CHANGES",
+    "semanticProductionVerdict": "PASS",
+    "canonicalCiRun": 31476917089,
+    "prOwnershipJob": 93733235822,
+    "studioEvidenceRequired": false,
+    "requiredChanges": [
+      "Remove the tests/run.luau edit from the exact PR diff.",
+      "Remove the duplicate standalone tests/object_genome_generation3_boundaries.luau if its cases are already consolidated into tests/object_genome_contract_lock.luau, or reconcile the PR body and registration strategy within lane ownership without shared-runner modification.",
+      "Synchronize/revalidate the resulting exact head against current main and rerun canonical CI plus live pr-ownership after shared event-history continuity is repaired.",
+      "Request a fresh independent exact-head audit after any head change."
+    ]
+  }
+}
