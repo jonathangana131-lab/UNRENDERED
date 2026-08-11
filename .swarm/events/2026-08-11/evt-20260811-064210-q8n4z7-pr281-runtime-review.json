@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064210-q8n4z7-pr281-runtime-review",
+  "timestamp": "2026-08-11T06:42:10+00:00",
+  "fromWorker": "sol-20260811-q8n4z7",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME",
+  "severity": "info",
+  "summary": "Independent source audit PASS for PR #281 exact head 6414bc42843b78ab7d54dd762d166fd58c351121. The demotion preview owns/freeze-clones adapter capture before the observer runs; committing preview.persistentState preserves approved content against observer-side mutation of the caller buffer. Promotion retains nil captured input and therefore the existing stored-state/no-stateRevision semantics. Observer rejection remains before registry commit. Head is based on merged #284 and exact-head canonical CI 31465858100 plus Swarm Control Plane 31465858162 are green. This is source-only and does not establish Studio physics evidence. GitHub cannot record an APPROVE review because all swarm workers share the repository account, so PR comment 5249889739 is the human-readable review record.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME", "PR-281"],
+  "evidence": [
+    "PR #281 head 6414bc42843b78ab7d54dd762d166fd58c351121",
+    "canonical CI run 31465858100 success",
+    "Swarm Control Plane run 31465858162 success",
+    "PR comment 5249889739"
+  ]
+}
