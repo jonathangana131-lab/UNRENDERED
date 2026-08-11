@@ -1569,7 +1569,11 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 		for rightIndex = leftIndex + 1, #mutableStateMaps do
 			local left = mutableStateMaps[leftIndex]
 			local right = mutableStateMaps[rightIndex]
-			if type(left.value) == "table" and type(right.value) == "table" and rawequal(left.value, right.value) then
+			if
+				type(left.value) == "table"
+				and type(right.value) == "table"
+				and rawequal(left.value, right.value)
+			then
 				addIssue(
 					issues,
 					"state.collection_alias",
