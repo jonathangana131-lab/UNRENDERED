@@ -182,6 +182,18 @@ local function run(): number
 			end,
 		},
 		{
+			name = "single-axis mechanism axis",
+			mutate = function(genome)
+				for _, mechanism in ipairs(genome.mechanisms) do
+					if mechanism.key == "seat-tilt" then
+						setmetatable(mechanism.axis, {})
+						return
+					end
+				end
+				error("office chair fixture must include seat-tilt")
+			end,
+		},
+		{
 			name = "caster swivel axis",
 			mutate = function(genome)
 				setmetatable(genome.mechanisms[1].swivelAxis, {})
