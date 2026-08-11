@@ -27,6 +27,15 @@ local function run(): number
 	for index, expected in expectedDieRolls do
 		local value
 		dieState, value = Contract.nextIntegerState(dieState, 1, 6)
+		expectEqual(`bounded integer golden #{index}`, value, expected)
+	end
+
+	local firstState = 0x12345678
+	local secondState = 0x12345678
+	for index = 1, 16 do
+		local firstValue
+		local secondValue
+		firstState, firstValue = Contract.nextIntegerState(firstState, -17, 29)
 		secondState, secondValue = Contract.nextIntegerState(secondState, -17, 29)
 		expectEqual(`same seed bounded sequence #{index}`, firstValue, secondValue)
 	end
