@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-j4c8n2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T07:59:00+00:00",
-  "lastSeenAt": "2026-08-11T07:59:00+00:00",
+  "lastSeenAt": "2026-08-11T08:10:30+00:00",
   "laneId": "HG-PHYSICS-CART-GEOMETRY",
   "slotId": "primary",
   "branch": "agent/physics/HG-PHYSICS-CART-GEOMETRY-primary-j4c8n2",
-  "notes": "Combined narrow source-only repair for the independently reported rolling-cart ground-contact and center-of-mass defects; no Roblox Studio evidence claim."
+  "notes": "Primary PR #311 is published and HG-PHYSICS-CART-GEOMETRY is in REVIEW with an independent audit claim. Scheduler recovery released the no-longer-eligible primary lease to restore the WIP fence; preserve the product branch/PR while audit completes."
 }
