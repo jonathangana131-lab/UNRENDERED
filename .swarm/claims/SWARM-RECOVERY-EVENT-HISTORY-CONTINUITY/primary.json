@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-c9v2m7q4",
   "claimToken": "3a8f6c1d9e4b2075",
   "claimedAt": "2026-08-11T21:33:20+00:00",
-  "heartbeatAt": "2026-08-11T21:41:00+00:00",
+  "heartbeatAt": "2026-08-11T21:54:30+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
   "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-c9v2m7q4-g4",
   "pr": 404,
-  "notes": "Generation-4 successor PR #404 exact recovery extension now pins the 11 newly measured immutable artifacts and stale worker transition b5bd3a37->ef789a2e while preserving strict schemas. Awaiting fresh exact-head bootstrap/CI; immutable events are quarantine-only and no published bytes are rewritten."
+  "notes": "Generation-4 successor PR #404 exact recovery extension now pins the 11 newly measured immutable artifacts and stale worker transition b5bd3a37->ef789a2e while preserving strict schemas. Fresh PR-edited bootstrap run 31539949440 is executing against the current live control tip; only defects reproduced there will be absorbed."
 }
