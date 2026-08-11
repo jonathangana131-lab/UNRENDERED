@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-8d5d357a",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T23:08:18+00:00",
-  "lastSeenAt": "2026-08-11T23:40:24+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-8d5d357a-g1",
-  "notes": "Independent exact-head audit of diagnostics PR #416 at 183bea8da6462facb2a2429ebbc85b9b80a01869, including newer expected-red enabled-window integrity evidence and generation-8 projection finding."
+  "lastSeenAt": "2026-08-11T23:45:20+00:00",
+  "notes": "Diagnostics audit completed. PR #416 final-state repair passed, but lane returned to NEEDS_CHANGES for diagnostics-aware enabled-window canonical validation and authoritative projection metadata. PR #422 underlying finding is valid but its raw-source test is false-passable and prescribes captureFull across a diagnostics overlay that current canonical validation rejects. Durable verdict evt-sol-20260811-8d5d357a-review-result-diagnostics-g8-234430; GitHub review comments 4911713927 and 4911714899."
 }
