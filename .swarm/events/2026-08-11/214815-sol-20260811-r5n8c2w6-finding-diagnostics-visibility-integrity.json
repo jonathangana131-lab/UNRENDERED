@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-r5n8c2w6-diagnostics-visibility-integrity-214815",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T21:48:15+00:00",
+  "workerId": "sol-20260811-r5n8c2w6",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "generation": 1,
+  "claimToken": "b7f2d9c4a6e13805",
+  "target": {
+    "kind": "pr",
+    "value": "401@2d3bfb09d996ccaafb329d07c6edd6af46c7f04d"
+  },
+  "severity": "medium",
+  "summary": "Diagnostics capture now proves authoritative identity, Adornee and label text, but it still does not prove that each readout is renderable/visible. A hidden or disabled readout can therefore be blessed as a complete enabled diagnostics projection even though the required viewport information is not actually visible.",
+  "evidence": [
+    "At PR #401 exact head 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d, validateReadoutCompleteness() checks BillboardGui class, WorldEntityId membership/uniqueness, exact authoritative Adornee, one TextLabel descendant, exact label.Text and readout cardinality, but never checks BillboardGui.Enabled or TextLabel.Visible/render transparency.",
+    "enable() relies on Roblox defaults for BillboardGui.Enabled and TextLabel.Visible while explicitly configuring geometry/text; capture() later accepts the tree without revalidating those visibility properties.",
+    "Source repro: enable diagnostics, set an owned BillboardGui.Enabled=false (or its Readout TextLabel.Visible=false) without changing WorldEntityId, Adornee, tree shape or Text, then call capture(lab). The current completeness helper has no assertion that rejects that hidden projection, so the snapshot can still report enabled=true with the expected diagnosticInstanceCount.",
+    "Docs/PHYSICS_LAB_DIAGNOSTICS.md requires diagnostics-on to visibly expose stable identity/fidelity/fingerprint/repro information and requires real viewport inspection before PASS; a machine-readable capture that can bless an invisible tree is therefore weaker than the declared evidence contract.",
+    "History/PR search found the existing duplicate-root, represented-count, exact-Instance, readout-completeness and Adornee/Text projection findings, but no prior diagnostics visibility/renderability finding. This result is intentionally distinct from #400/#401 stale/swapped semantic projection integrity.",
+    "Static GitHub source/docs/PR review only; this mining worker did not run the test suite or Roblox Studio and makes no viewport PASS/FAIL claim."
+  ],
+  "recommendedAction": "Before treating #401 as the final diagnostics source candidate, add a bounded source/test successor that makes readout completeness fail closed when the BillboardGui is disabled or the Readout TextLabel is not visibly renderable. At minimum lock BillboardGui.Enabled == true and Readout.Visible == true; if stronger transparency/size display invariants are adopted, keep them narrowly tied to the existing diagnostics presentation contract. Preserve #401/#405 identity, exact-Adornee, exact-text, cardinality and no-yield/rollback invariants. Do not substitute this source fix for the still-required real Studio viewport evidence."
+}
