@@ -682,6 +682,9 @@ local function validateLocalRotation(issues: { ValidationIssue }, path: string, 
 end
 
 local function rotatedHalfExtents(dimensions: Vec3, rotationDeg: Vec3): Vec3
+	-- V1 uses right-handed fixed-axis rotations around the object-local +X, then +Y, then +Z basis axes.
+	-- For column vectors this is Rz * Ry * Rx. Absolute matrix coefficients produce
+	-- the axis-aligned half extents required for envelope validation without Roblox CFrame.
 	local x = math.rad(rotationDeg.x)
 	local y = math.rad(rotationDeg.y)
 	local z = math.rad(rotationDeg.z)
@@ -748,6 +751,9 @@ end
 local RECIPE_FINGERPRINT_CHUNK_BYTES = 384
 
 local function canonicalFingerprintNumber(value: number): string
+	-- ObjectGenome validation rejects non-finite numbers before fingerprinting. Encode
+	-- finite values as endian-stable double bytes rather than host-CRT formatted text.
+	-- Normalize both signed zeros to the same canonical payload.
 	local canonicalValue = if value == 0 then 0 else value
 	return string.pack(">d", canonicalValue)
 end
@@ -849,23 +855,48 @@ function ObjectGenome.inspect(value: any): ValidationResult
 	validateGenomeShape(issues, value)
 
 	if value.schemaVersion ~= ObjectGenome.SCHEMA_VERSION then
-		addIssue(issues, "genome.schema_version", "schemaVersion", "unsupported ObjectGenome schema version")
+		addIssue(
+			issues,
+			"genome.schema_version",
+			"schemaVersion",
+			`unsupported ObjectGenome schema version; expected {ObjectGenome.SCHEMA_VERSION}`
+		)
 	end
 	if not isStableIdSemanticKey(value.familyId) then
-		addIssue(issues, "genome.family_id", "familyId", "familyId must be a stable lowercase semantic key")
+		addIssue(
+			issues,
+			"genome.family_id",
+			"familyId",
+			`familyId must be a stable lowercase semantic key of at most {STABLE_ID_SEMANTIC_PART_MAX_BYTES} bytes`
+		)
 	end
 	if not isPositiveInteger(value.familyVersion) or value.familyVersion > MAX_FAMILY_VERSION then
-		addIssue(issues, "genome.family_version", "familyVersion", `familyVersion must be a positive integer <= {MAX_FAMILY_VERSION}`)
+		addIssue(
+			issues,
+			"genome.family_version",
+			"familyVersion",
+			`familyVersion must be a positive integer <= {MAX_FAMILY_VERSION}`
+		)
 	end
 	if not isStableIdSemanticKey(value.variantKey) then
-		addIssue(issues, "genome.variant_key", "variantKey", "variantKey must be a stable lowercase semantic key")
+		addIssue(
+			issues,
+			"genome.variant_key",
+			"variantKey",
+			`variantKey must be a stable lowercase semantic key of at most {STABLE_ID_SEMANTIC_PART_MAX_BYTES} bytes`
+		)
 	end
 
 	if type(value.provenance) ~= "table" then
 		addIssue(issues, "provenance.required", "provenance", "provenance is required")
 	else
 		if not isNonEmptyString(value.provenance.manufacturerFamily) then
-			addIssue(issues, "provenance.manufacturer", "provenance.manufacturerFamily", "manufacturerFamily required")
+			addIssue(
+				issues,
+				"provenance.manufacturer",
+				"provenance.manufacturerFamily",
+				"manufacturerFamily required"
+			)
 		end
 		if not isNonEmptyString(value.provenance.productLine) then
 			addIssue(issues, "provenance.product_line", "provenance.productLine", "productLine required")
@@ -888,8 +919,20 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		local dimensions = value.dimensionsM
 		local minimum = value.dimensionLimits.minM
 		local maximum = value.dimensionLimits.maxM
-		if dimensions.x < minimum.x or dimensions.x > maximum.x or dimensions.y < minimum.y or dimensions.y > maximum.y or dimensions.z < minimum.z or dimensions.z > maximum.z then
-			addIssue(issues, "dimensions.out_of_family_range", "dimensionsM", "chosen dimensions fall outside family limits")
+		if
+			dimensions.x < minimum.x
+			or dimensions.x > maximum.x
+			or dimensions.y < minimum.y
+			or dimensions.y > maximum.y
+			or dimensions.z < minimum.z
+			or dimensions.z > maximum.z
+		then
+			addIssue(
+				issues,
+				"dimensions.out_of_family_range",
+				"dimensionsM",
+				"chosen dimensions fall outside family limits"
+			)
 		end
 	end
 
@@ -897,15 +940,35 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		addIssue(issues, "mass.invalid", "massKg", "massKg must be positive finite kilograms")
 	end
 	validateRange(issues, "massLimitsKg", value.massLimitsKg, true)
-	if isPositiveFinite(value.massKg) and type(value.massLimitsKg) == "table" and isFinite(value.massLimitsKg.min) and isFinite(value.massLimitsKg.max) and (value.massKg < value.massLimitsKg.min or value.massKg > value.massLimitsKg.max) then
+	if
+		isPositiveFinite(value.massKg)
+		and type(value.massLimitsKg) == "table"
+		and isFinite(value.massLimitsKg.min)
+		and isFinite(value.massLimitsKg.max)
+		and (value.massKg < value.massLimitsKg.min or value.massKg > value.massLimitsKg.max)
+	then
 		addIssue(issues, "mass.out_of_family_range", "massKg", "massKg falls outside family limits")
 	end
 
 	if not isVec3(value.centerOfMassM) then
-		addIssue(issues, "mass.center_of_mass", "centerOfMassM", "centerOfMassM must be a finite plain-data Vec3")
+		addIssue(
+			issues,
+			"mass.center_of_mass",
+			"centerOfMassM",
+			"centerOfMassM must be a finite plain-data Vec3"
+		)
 	elseif isPositiveVec3(value.dimensionsM) then
-		if math.abs(value.centerOfMassM.x) > value.dimensionsM.x * 0.5 or math.abs(value.centerOfMassM.y) > value.dimensionsM.y * 0.5 or math.abs(value.centerOfMassM.z) > value.dimensionsM.z * 0.5 then
-			addIssue(issues, "mass.center_of_mass", "centerOfMassM", "center of mass must lie inside the object envelope")
+		if
+			math.abs(value.centerOfMassM.x) > value.dimensionsM.x * 0.5
+			or math.abs(value.centerOfMassM.y) > value.dimensionsM.y * 0.5
+			or math.abs(value.centerOfMassM.z) > value.dimensionsM.z * 0.5
+		then
+			addIssue(
+				issues,
+				"mass.center_of_mass",
+				"centerOfMassM",
+				"center of mass must lie inside the object envelope"
+			)
 		end
 	end
 
@@ -926,55 +989,124 @@ function ObjectGenome.inspect(value: any): ValidationResult
 			addIssue(issues, "component.type", path, "component must be a table")
 			continue
 		end
+
 		if not isSemanticKey(component.key) then
-			addIssue(issues, "component.key", path .. ".key", "component key must be a stable lowercase semantic key")
+			addIssue(
+				issues,
+				"component.key",
+				path .. ".key",
+				"component key must be a stable lowercase semantic key"
+			)
 		elseif componentsByKey[component.key] ~= nil then
-			addIssue(issues, "component.duplicate_key", path .. ".key", `duplicate component key {component.key}`)
+			addIssue(
+				issues,
+				"component.duplicate_key",
+				path .. ".key",
+				`duplicate component key {component.key}`
+			)
 		else
 			componentsByKey[component.key] = component
 		end
+
 		if not isNonEmptyString(component.role) then
 			addIssue(issues, "component.role", path .. ".role", "component role required")
 		end
-		local materialReferenceValidation = MaterialDNA.validateReference({ id = component.materialKey, recipeVersion = component.materialRecipeVersion })
+		local materialReferenceValidation = MaterialDNA.validateReference({
+			id = component.materialKey,
+			recipeVersion = component.materialRecipeVersion,
+		})
 		if not materialReferenceValidation.ok then
-			local materialKeyValidation = MaterialDNA.validateReference({ id = component.materialKey, recipeVersion = 1 })
-			local materialRecipeVersionValidation = MaterialDNA.validateReference({ id = "material.v1.object-genome-validation-probe", recipeVersion = component.materialRecipeVersion })
+			-- The actual pair is the source of truth. Independent probes only preserve
+			-- ObjectGenome's landed field-specific diagnostics when one field is invalid.
+			local materialKeyValidation = MaterialDNA.validateReference({
+				id = component.materialKey,
+				recipeVersion = 1,
+			})
+			local materialRecipeVersionValidation = MaterialDNA.validateReference({
+				id = "material.v1.object-genome-validation-probe",
+				recipeVersion = component.materialRecipeVersion,
+			})
 			if not materialKeyValidation.ok then
-				addIssue(issues, "component.material_key", path .. ".materialKey", "materialKey must satisfy MaterialDNA v2 project id rules")
+				addIssue(
+					issues,
+					"component.material_key",
+					path .. ".materialKey",
+					"materialKey must satisfy MaterialDNA v2 project id rules"
+				)
 			end
 			if not materialRecipeVersionValidation.ok then
-				addIssue(issues, "component.material_recipe_version", path .. ".materialRecipeVersion", "materialRecipeVersion must satisfy MaterialDNA v2 recipe revision rules")
+				addIssue(
+					issues,
+					"component.material_recipe_version",
+					path .. ".materialRecipeVersion",
+					"materialRecipeVersion must satisfy MaterialDNA v2 recipe revision rules"
+				)
 			end
 			if materialKeyValidation.ok and materialRecipeVersionValidation.ok then
-				addIssue(issues, "component.material_reference", path, "materialKey and materialRecipeVersion must satisfy the exact MaterialDNA v2 reference contract")
+				addIssue(
+					issues,
+					"component.material_reference",
+					path,
+					"materialKey and materialRecipeVersion must satisfy the exact MaterialDNA v2 reference contract"
+				)
 			end
 		end
 		if not isPositiveFinite(component.massKg) then
-			addIssue(issues, "component.mass", path .. ".massKg", "component mass must be positive finite kilograms")
+			addIssue(
+				issues,
+				"component.mass",
+				path .. ".massKg",
+				"component mass must be positive finite kilograms"
+			)
 		else
 			componentMassKg += component.massKg
 		end
 		if not isVec3(component.localPositionM) then
-			addIssue(issues, "component.position", path .. ".localPositionM", "localPositionM must be a finite Vec3")
+			addIssue(
+				issues,
+				"component.position",
+				path .. ".localPositionM",
+				"localPositionM must be a finite Vec3"
+			)
 		end
 		validateLocalRotation(issues, path .. ".localRotationDeg", component.localRotationDeg)
 		if not isPositiveVec3(component.dimensionsM) then
-			addIssue(issues, "component.dimensions", path .. ".dimensionsM", "component dimensions must be positive meters")
+			addIssue(
+				issues,
+				"component.dimensions",
+				path .. ".dimensionsM",
+				"component dimensions must be positive meters"
+			)
 		elseif not componentFitsEnvelope(component, value.dimensionsM) then
-			addIssue(issues, "component.outside_bounds", path, "component rotated bounds exceed the object envelope")
+			addIssue(
+				issues,
+				"component.outside_bounds",
+				path,
+				"component rotated bounds exceed the object envelope"
+			)
 		end
+
 		local supportKeysDense = validateDenseArray(issues, path .. ".supportKeys", component.supportKeys)
 		supportArraysValid[index] = supportKeysDense
 		if not EXTERNAL_SUPPORTS[component.externalSupport] then
-			addIssue(issues, "component.external_support", path .. ".externalSupport", "unknown external support mode")
+			addIssue(
+				issues,
+				"component.external_support",
+				path .. ".externalSupport",
+				"unknown external support mode"
+			)
 		end
 	end
 
 	if isPositiveFinite(value.massKg) and componentMassKg > 0 then
 		local tolerance = math.max(0.01, value.massKg * MASS_TOLERANCE_FRACTION)
 		if math.abs(componentMassKg - value.massKg) > tolerance then
-			addIssue(issues, "mass.component_sum", "components", `component masses total {componentMassKg}kg but genome mass is {value.massKg}kg`)
+			addIssue(
+				issues,
+				"mass.component_sum",
+				"components",
+				`component masses total {componentMassKg}kg but genome mass is {value.massKg}kg`
+			)
 		end
 	end
 
@@ -984,13 +1116,23 @@ function ObjectGenome.inspect(value: any): ValidationResult
 			for supportIndex, supportKey in ipairs(component.supportKeys) do
 				local path = `components[{index}].supportKeys[{supportIndex}]`
 				if not isSemanticKey(supportKey) then
-					addIssue(issues, "component.support_key", path, "support key must be a stable semantic key")
+					addIssue(
+						issues,
+						"component.support_key",
+						path,
+						"support key must be a stable semantic key"
+					)
 				elseif supportKey == component.key then
 					addIssue(issues, "component.self_support", path, "component cannot support itself")
 				elseif seenSupport[supportKey] then
 					addIssue(issues, "component.duplicate_support", path, "support key duplicated")
 				elseif componentsByKey[supportKey] == nil then
-					addIssue(issues, "component.support_missing", path, `unknown support component {supportKey}`)
+					addIssue(
+						issues,
+						"component.support_missing",
+						path,
+						`unknown support component {supportKey}`
+					)
 				end
 				seenSupport[supportKey] = true
 			end
@@ -1001,9 +1143,13 @@ function ObjectGenome.inspect(value: any): ValidationResult
 	local cycleEdgesReported: { [string]: boolean } = {}
 	local function detectSupportCycles(componentKey: string): ()
 		local visitState = supportVisitState[componentKey]
-		if visitState == 2 or visitState == 1 then
+		if visitState == 2 then
 			return
 		end
+		if visitState == 1 then
+			return
+		end
+
 		supportVisitState[componentKey] = 1
 		local component = componentsByKey[componentKey]
 		if component ~= nil and type(component.supportKeys) == "table" then
@@ -1013,7 +1159,12 @@ function ObjectGenome.inspect(value: any): ValidationResult
 					if supportState == 1 then
 						local edgeKey = componentKey .. "->" .. supportKey
 						if not cycleEdgesReported[edgeKey] then
-							addIssue(issues, "component.support_cycle", `components.{componentKey}`, "support graph contains a cycle")
+							addIssue(
+								issues,
+								"component.support_cycle",
+								`components.{componentKey}`,
+								"support graph contains a cycle"
+							)
 							cycleEdgesReported[edgeKey] = true
 						end
 					elseif supportState ~= 2 then
@@ -1024,6 +1175,7 @@ function ObjectGenome.inspect(value: any): ValidationResult
 		end
 		supportVisitState[componentKey] = 2
 	end
+
 	for componentKey in pairs(componentsByKey) do
 		detectSupportCycles(componentKey)
 	end
@@ -1032,8 +1184,14 @@ function ObjectGenome.inspect(value: any): ValidationResult
 	for _ = 1, componentCount do
 		local changed = false
 		for _, component in ipairs(value.components) do
-			if type(component) == "table" and isSemanticKey(component.key) and componentsByKey[component.key] == component and not externallySupported[component.key] then
-				local reachesSupport = component.externalSupport ~= "none" and EXTERNAL_SUPPORTS[component.externalSupport] == true
+			if
+				type(component) == "table"
+				and isSemanticKey(component.key)
+				and componentsByKey[component.key] == component
+				and not externallySupported[component.key]
+			then
+				local reachesSupport = component.externalSupport ~= "none"
+					and EXTERNAL_SUPPORTS[component.externalSupport] == true
 				if not reachesSupport and type(component.supportKeys) == "table" then
 					for _, supportKey in ipairs(component.supportKeys) do
 						if componentsByKey[supportKey] ~= nil and externallySupported[supportKey] then
@@ -1052,9 +1210,20 @@ function ObjectGenome.inspect(value: any): ValidationResult
 			break
 		end
 	end
+
 	for _, component in ipairs(value.components) do
-		if type(component) == "table" and isSemanticKey(component.key) and componentsByKey[component.key] == component and not externallySupported[component.key] then
-			addIssue(issues, "component.unsupported", `components.{component.key}`, "component has no path to an external support")
+		if
+			type(component) == "table"
+			and isSemanticKey(component.key)
+			and componentsByKey[component.key] == component
+			and not externallySupported[component.key]
+		then
+			addIssue(
+				issues,
+				"component.unsupported",
+				`components.{component.key}`,
+				"component has no path to an external support"
+			)
 		end
 	end
 
@@ -1069,7 +1238,12 @@ function ObjectGenome.inspect(value: any): ValidationResult
 				continue
 			end
 			if not isSemanticKey(mechanism.key) then
-				addIssue(issues, "mechanism.key", path .. ".key", "mechanism key must be a stable lowercase semantic key")
+				addIssue(
+					issues,
+					"mechanism.key",
+					path .. ".key",
+					"mechanism key must be a stable lowercase semantic key"
+				)
 			elseif mechanismsByKey[mechanism.key] then
 				addIssue(issues, "mechanism.duplicate_key", path .. ".key", "duplicate mechanism key")
 			else
@@ -1080,45 +1254,102 @@ function ObjectGenome.inspect(value: any): ValidationResult
 				continue
 			end
 			if componentsByKey[mechanism.movingComponentKey] == nil then
-				addIssue(issues, "mechanism.moving_component", path .. ".movingComponentKey", "unknown moving component")
+				addIssue(
+					issues,
+					"mechanism.moving_component",
+					path .. ".movingComponentKey",
+					"unknown moving component"
+				)
 			end
+
 			if mechanism.kind == "latch" then
 				if componentsByKey[mechanism.catchComponentKey] == nil then
-					addIssue(issues, "mechanism.catch_component", path .. ".catchComponentKey", "unknown catch component")
+					addIssue(
+						issues,
+						"mechanism.catch_component",
+						path .. ".catchComponentKey",
+						"unknown catch component"
+					)
 				end
 				if mechanism.catchComponentKey == mechanism.movingComponentKey then
-					addIssue(issues, "mechanism.self_reference", path, "latch cannot catch on its moving component")
+					addIssue(
+						issues,
+						"mechanism.self_reference",
+						path,
+						"latch cannot catch on its moving component"
+					)
 				end
 				if not isPositiveFinite(mechanism.engagementDistanceM) then
-					addIssue(issues, "mechanism.engagement", path .. ".engagementDistanceM", "engagement distance must be positive meters")
+					addIssue(
+						issues,
+						"mechanism.engagement",
+						path .. ".engagementDistanceM",
+						"engagement distance must be positive meters"
+					)
 				end
 			else
 				if componentsByKey[mechanism.frameComponentKey] == nil then
-					addIssue(issues, "mechanism.frame_component", path .. ".frameComponentKey", "unknown frame component")
+					addIssue(
+						issues,
+						"mechanism.frame_component",
+						path .. ".frameComponentKey",
+						"unknown frame component"
+					)
 				end
 				if mechanism.frameComponentKey == mechanism.movingComponentKey then
-					addIssue(issues, "mechanism.self_reference", path, "mechanism frame and moving component must differ")
+					addIssue(
+						issues,
+						"mechanism.self_reference",
+						path,
+						"mechanism frame and moving component must differ"
+					)
 				end
 			end
+
 			if mechanism.kind == "hinge" or mechanism.kind == "tilt" then
 				validateAxis(issues, path .. ".axis", mechanism.axis)
 				local angularSpan = finiteInterpolationSpan(mechanism.minDegrees, mechanism.maxDegrees)
 				if angularSpan == nil then
-					addIssue(issues, "mechanism.angular_limits", path, "angular limits require finite minDegrees < maxDegrees with a finite interpolation span")
+					addIssue(
+						issues,
+						"mechanism.angular_limits",
+						path,
+						"angular limits require finite minDegrees < maxDegrees with a finite interpolation span"
+					)
 				elseif mechanism.minDegrees > 0 or mechanism.maxDegrees < 0 then
-					addIssue(issues, "mechanism.reference_pose", path, "angular limits must include the authored zero/reference pose")
+					addIssue(
+						issues,
+						"mechanism.reference_pose",
+						path,
+						"angular limits must include the authored zero/reference pose"
+					)
 				end
 			elseif mechanism.kind == "slide" then
 				validateAxis(issues, path .. ".axis", mechanism.axis)
 				local linearSpan = finiteInterpolationSpan(mechanism.minTravelM, mechanism.maxTravelM)
 				if linearSpan == nil then
-					addIssue(issues, "mechanism.linear_limits", path, "slide limits require finite minTravelM < maxTravelM with a finite interpolation span")
+					addIssue(
+						issues,
+						"mechanism.linear_limits",
+						path,
+						"slide limits require finite minTravelM < maxTravelM with a finite interpolation span"
+					)
 				elseif mechanism.minTravelM > 0 or mechanism.maxTravelM < 0 then
-					addIssue(issues, "mechanism.reference_pose", path, "slide limits must include the authored zero/reference pose")
+					addIssue(
+						issues,
+						"mechanism.reference_pose",
+						path,
+						"slide limits must include the authored zero/reference pose"
+					)
 				end
 			elseif mechanism.kind == "caster" then
 				if not isPositiveFinite(mechanism.wheelRadiusM) then
-					addIssue(issues, "mechanism.caster_radius", path .. ".wheelRadiusM", "caster wheel radius must be positive meters")
+					addIssue(
+						issues,
+						"mechanism.caster_radius",
+						path .. ".wheelRadiusM",
+						"caster wheel radius must be positive meters"
+					)
 				end
 				validateAxis(issues, path .. ".swivelAxis", mechanism.swivelAxis)
 				validateAxis(issues, path .. ".rollAxis", mechanism.rollAxis)
@@ -1136,7 +1367,12 @@ function ObjectGenome.inspect(value: any): ValidationResult
 				continue
 			end
 			if not isSemanticKey(affordance.key) then
-				addIssue(issues, "affordance.key", path .. ".key", "affordance key must be a stable lowercase semantic key")
+				addIssue(
+					issues,
+					"affordance.key",
+					path .. ".key",
+					"affordance key must be a stable lowercase semantic key"
+				)
 			elseif affordancesByKey[affordance.key] then
 				addIssue(issues, "affordance.duplicate_key", path .. ".key", "duplicate affordance key")
 			else
@@ -1147,17 +1383,43 @@ function ObjectGenome.inspect(value: any): ValidationResult
 			end
 			local component = componentsByKey[affordance.componentKey]
 			if component == nil then
-				addIssue(issues, "affordance.component", path .. ".componentKey", "unknown affordance component")
+				addIssue(
+					issues,
+					"affordance.component",
+					path .. ".componentKey",
+					"unknown affordance component"
+				)
 			end
 			if not isVec3(affordance.localPointM) then
-				addIssue(issues, "affordance.point", path .. ".localPointM", "localPointM must be a finite Vec3")
+				addIssue(
+					issues,
+					"affordance.point",
+					path .. ".localPointM",
+					"localPointM must be a finite Vec3"
+				)
 			elseif component ~= nil and isPositiveVec3(component.dimensionsM) then
-				if math.abs(affordance.localPointM.x) > component.dimensionsM.x * 0.5 + BOUNDS_TOLERANCE_M or math.abs(affordance.localPointM.y) > component.dimensionsM.y * 0.5 + BOUNDS_TOLERANCE_M or math.abs(affordance.localPointM.z) > component.dimensionsM.z * 0.5 + BOUNDS_TOLERANCE_M then
-					addIssue(issues, "affordance.outside_component", path .. ".localPointM", "affordance point lies outside component bounds")
+				if
+					math.abs(affordance.localPointM.x)
+						> component.dimensionsM.x * 0.5 + BOUNDS_TOLERANCE_M
+					or math.abs(affordance.localPointM.y) > component.dimensionsM.y * 0.5 + BOUNDS_TOLERANCE_M
+					or math.abs(affordance.localPointM.z)
+						> component.dimensionsM.z * 0.5 + BOUNDS_TOLERANCE_M
+				then
+					addIssue(
+						issues,
+						"affordance.outside_component",
+						path .. ".localPointM",
+						"affordance point lies outside component bounds"
+					)
 				end
 			end
 			if not isPositiveFinite(affordance.radiusM) then
-				addIssue(issues, "affordance.radius", path .. ".radiusM", "affordance radius must be positive meters")
+				addIssue(
+					issues,
+					"affordance.radius",
+					path .. ".radiusM",
+					"affordance radius must be positive meters"
+				)
 			end
 		end
 	end
@@ -1170,22 +1432,55 @@ function ObjectGenome.validate(value: ObjectGenome): ()
 	assert(result.ok, formatIssues(result.issues))
 end
 
-function ObjectGenome.decodeMechanismPosition(mechanism: MechanismSpec, position: number): DecodedMechanismPosition
-	assert(mechanismPositionIsValid(mechanism, position), "mechanism position must use canonical ObjectState v1 encoding")
+function ObjectGenome.decodeMechanismPosition(
+	mechanism: MechanismSpec,
+	position: number
+): DecodedMechanismPosition
+	assert(
+		mechanismPositionIsValid(mechanism, position),
+		"mechanism position must use canonical ObjectState v1 encoding"
+	)
+
 	if mechanism.kind == "hinge" then
-		assert(mechanism.minDegrees <= 0 and mechanism.maxDegrees >= 0, "angular mechanism limits must include the authored zero/reference pose")
-		return { kind = "hinge", degrees = decodeLinearPosition(mechanism.minDegrees, mechanism.maxDegrees, position) }
+		assert(
+			mechanism.minDegrees <= 0 and mechanism.maxDegrees >= 0,
+			"angular mechanism limits must include the authored zero/reference pose"
+		)
+		return {
+			kind = "hinge",
+			degrees = decodeLinearPosition(mechanism.minDegrees, mechanism.maxDegrees, position),
+		}
 	elseif mechanism.kind == "tilt" then
-		assert(mechanism.minDegrees <= 0 and mechanism.maxDegrees >= 0, "angular mechanism limits must include the authored zero/reference pose")
-		return { kind = "tilt", degrees = decodeLinearPosition(mechanism.minDegrees, mechanism.maxDegrees, position) }
+		assert(
+			mechanism.minDegrees <= 0 and mechanism.maxDegrees >= 0,
+			"angular mechanism limits must include the authored zero/reference pose"
+		)
+		return {
+			kind = "tilt",
+			degrees = decodeLinearPosition(mechanism.minDegrees, mechanism.maxDegrees, position),
+		}
 	elseif mechanism.kind == "slide" then
-		assert(mechanism.minTravelM <= 0 and mechanism.maxTravelM >= 0, "slide mechanism limits must include the authored zero/reference pose")
-		return { kind = "slide", travelM = decodeLinearPosition(mechanism.minTravelM, mechanism.maxTravelM, position) }
+		assert(
+			mechanism.minTravelM <= 0 and mechanism.maxTravelM >= 0,
+			"slide mechanism limits must include the authored zero/reference pose"
+		)
+		return {
+			kind = "slide",
+			travelM = decodeLinearPosition(mechanism.minTravelM, mechanism.maxTravelM, position),
+		}
 	elseif mechanism.kind == "caster" then
-		return { kind = "caster", swivelTurns = position, swivelDegrees = position * 360 }
+		return {
+			kind = "caster",
+			swivelTurns = position,
+			swivelDegrees = position * 360,
+		}
 	elseif mechanism.kind == "latch" then
-		return { kind = "latch", engaged = position == 1 }
+		return {
+			kind = "latch",
+			engaged = position == 1,
+		}
 	end
+
 	error("unsupported ObjectGenome mechanism kind", 2)
 end
 
@@ -1199,10 +1494,12 @@ function ObjectGenome.defaultState(value: ObjectGenome): ObjectState
 		componentDamage[component.key] = 0
 		detachedComponents[component.key] = false
 	end
+
 	local mechanismPosition: { [string]: number } = {}
 	for _, mechanism in ipairs(value.mechanisms) do
 		mechanismPosition[mechanism.key] = defaultMechanismPosition(mechanism)
 	end
+
 	return {
 		stateSchemaVersion = ObjectGenome.STATE_SCHEMA_VERSION,
 		genomeId = ObjectGenome.identityKey(value),
@@ -1217,7 +1514,12 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 	local issues: { ValidationIssue } = {}
 	local genomeResult = ObjectGenome.inspect(genome)
 	if not genomeResult.ok then
-		addIssue(issues, "state.genome_invalid", "$", "cannot validate mutable state against an invalid genome")
+		addIssue(
+			issues,
+			"state.genome_invalid",
+			"$",
+			"cannot validate mutable state against an invalid genome"
+		)
 		return reportResult(issues)
 	end
 	if type(state) ~= "table" then
@@ -1230,15 +1532,31 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 	end
 	for key in next, state do
 		if type(key) ~= "string" or not STATE_FIELDS[key] then
-			addIssue(issues, "state.unknown_field", `$.{safeKeyLabel(key)}`, "field is not declared by ObjectState schema v1")
+			addIssue(
+				issues,
+				"state.unknown_field",
+				`$.{safeKeyLabel(key)}`,
+				"field is not declared by ObjectState schema v1"
+			)
 		end
 	end
 	if state.stateSchemaVersion ~= ObjectGenome.STATE_SCHEMA_VERSION then
-		addIssue(issues, "state.schema_version", "stateSchemaVersion", "unsupported ObjectState schema version")
+		addIssue(
+			issues,
+			"state.schema_version",
+			"stateSchemaVersion",
+			"unsupported ObjectState schema version"
+		)
 	end
+
 	local expectedGenomeId = ObjectGenome.identityKey(genome)
 	if state.genomeId ~= expectedGenomeId then
-		addIssue(issues, "state.genome_id", "genomeId", "ObjectState genomeId must match the exact canonical genome identity")
+		addIssue(
+			issues,
+			"state.genome_id",
+			"genomeId",
+			"ObjectState genomeId must match the exact canonical genome identity"
+		)
 	end
 
 	local mutableStateMaps = {
@@ -1252,7 +1570,12 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 			local left = mutableStateMaps[leftIndex]
 			local right = mutableStateMaps[rightIndex]
 			if type(left.value) == "table" and type(right.value) == "table" and rawequal(left.value, right.value) then
-				addIssue(issues, "state.collection_alias", right.name, `{left.name} and {right.name} must not share mutable table identity`)
+				addIssue(
+					issues,
+					"state.collection_alias",
+					right.name,
+					`{left.name} and {right.name} must not share mutable table identity`
+				)
 			end
 		end
 	end
@@ -1279,12 +1602,22 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 		end
 		for key in pairs(knownKeys) do
 			if mapValue[key] == nil then
-				addIssue(issues, "state.missing_key", `{fieldName}.{key}`, "state is missing a required genome key")
+				addIssue(
+					issues,
+					"state.missing_key",
+					`{fieldName}.{key}`,
+					"state is missing a required genome key"
+				)
 			end
 		end
 		for key, amount in pairs(mapValue) do
 			if type(key) ~= "string" or not knownKeys[key] then
-				addIssue(issues, "state.unknown_key", `{fieldName}.{safeKeyLabel(key)}`, "state references an unknown genome key")
+				addIssue(
+					issues,
+					"state.unknown_key",
+					`{fieldName}.{safeKeyLabel(key)}`,
+					"state references an unknown genome key"
+				)
 			elseif not isUnitInterval(amount) then
 				addIssue(issues, "state.unit_interval", `{fieldName}.{key}`, "state value must be in [0, 1]")
 			end
@@ -1303,15 +1636,30 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 		end
 		for key in pairs(mechanismKeys) do
 			if mapValue[key] == nil then
-				addIssue(issues, "state.missing_key", `mechanismPosition.{key}`, "state is missing a required genome key")
+				addIssue(
+					issues,
+					"state.missing_key",
+					`mechanismPosition.{key}`,
+					"state is missing a required genome key"
+				)
 			end
 		end
 		for key, position in pairs(mapValue) do
 			local mechanism = if type(key) == "string" then mechanismsByKey[key] else nil
 			if mechanism == nil then
-				addIssue(issues, "state.unknown_key", `mechanismPosition.{safeKeyLabel(key)}`, "state references an unknown genome key")
+				addIssue(
+					issues,
+					"state.unknown_key",
+					`mechanismPosition.{safeKeyLabel(key)}`,
+					"state references an unknown genome key"
+				)
 			elseif not mechanismPositionIsValid(mechanism, position) then
-				addIssue(issues, "state.mechanism_position", `mechanismPosition.{key}`, "mechanism position is not canonical for the referenced mechanism kind")
+				addIssue(
+					issues,
+					"state.mechanism_position",
+					`mechanismPosition.{key}`,
+					"mechanism position is not canonical for the referenced mechanism kind"
+				)
 			end
 		end
 	end
@@ -1319,24 +1667,46 @@ function ObjectGenome.inspectState(genome: ObjectGenome, state: any): Validation
 	validateUnitMap("componentWear", state.componentWear, componentKeys)
 	validateUnitMap("componentDamage", state.componentDamage, componentKeys)
 	validateMechanismPositionMap(state.mechanismPosition)
+
 	if type(state.detachedComponents) ~= "table" then
 		addIssue(issues, "state.collection", "detachedComponents", "detachedComponents must be a table")
 	elseif getmetatable(state.detachedComponents) ~= nil then
-		addIssue(issues, "state.metatable", "detachedComponents", "detachedComponents must not have a metatable")
+		addIssue(
+			issues,
+			"state.metatable",
+			"detachedComponents",
+			"detachedComponents must not have a metatable"
+		)
 	else
 		for key in pairs(componentKeys) do
 			if state.detachedComponents[key] == nil then
-				addIssue(issues, "state.missing_key", `detachedComponents.{key}`, "state is missing a required component key")
+				addIssue(
+					issues,
+					"state.missing_key",
+					`detachedComponents.{key}`,
+					"state is missing a required component key"
+				)
 			end
 		end
 		for key, detached in pairs(state.detachedComponents) do
 			if type(key) ~= "string" or not componentKeys[key] then
-				addIssue(issues, "state.unknown_key", `detachedComponents.{safeKeyLabel(key)}`, "state references an unknown component")
+				addIssue(
+					issues,
+					"state.unknown_key",
+					`detachedComponents.{safeKeyLabel(key)}`,
+					"state references an unknown component"
+				)
 			elseif type(detached) ~= "boolean" then
-				addIssue(issues, "state.detached_value", `detachedComponents.{key}`, "detached state must be boolean")
+				addIssue(
+					issues,
+					"state.detached_value",
+					`detachedComponents.{key}`,
+					"detached state must be boolean"
+				)
 			end
 		end
 	end
+
 	return reportResult(issues)
 end
 
