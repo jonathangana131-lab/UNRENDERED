@@ -140,7 +140,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:25:30.318314+00:00",
+  "generatedAt": "2026-08-11T07:25:55.188081+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "064e28f2306095dadd6a514b96f397cd810ac556",
@@ -163,10 +163,10 @@
       "HANDOFF": 19,
       "INTEGRATION_RESULT": 7,
       "RECOVERY": 3,
-      "REVIEW_REQUEST": 29,
+      "REVIEW_REQUEST": 30,
       "REVIEW_RESULT": 30
     },
-    "generatedAt": "2026-08-11T07:25:30.318314+00:00",
+    "generatedAt": "2026-08-11T07:25:55.188081+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -390,26 +390,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-WORLDENTITY"
-      ],
-      "eventId": "evt-20260811-071230-w3x7k9-worldentity-audit-rereview",
-      "eventType": "REVIEW_REQUEST",
-      "evidence": [
-        "PR #276 is one test-only commit atop main ed37c5698c1aad7a355e514b35ea5c5bd50aa738.",
-        "Diff is only tests/world_entity_registry_shape.luau with 72 additions.",
-        "Exact-head canonical CI run 31467247742 is SUCCESS.",
-        "Live ownership remains fail-closed red while the separate control-state schema recovery is active."
-      ],
-      "fromWorker": "sol-20260811-w3x7k9",
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "schemaVersion": 1,
-      "severity": "important",
-      "summary": "Request exact-head rereview of synchronized WorldEntity test-adversary PR #276 head 71b6958e8421283652fe0d4361cbaabbad362c20. The prior approval covered an obsolete pre-sync head and is not being reused.",
-      "timestamp": "2026-08-11T07:12:30+00:00",
-      "toWorker": "sol-20260811-z4q8n1"
-    },
     {
       "affects": [
         "HG-BACKFILL-WORLDENTITY"
@@ -805,6 +785,30 @@
       "severity": "medium",
       "summary": "APPROVE PR #282 source/test patch on exact synchronized head a2785f04f0fff74c9e78bfe3d79702376dad271b; integration remains BLOCKED only until a fresh fail-closed PR-ownership PASS is obtained. The StableId validator now requires the parsed numeric version token to exactly equal the canonical decimal spelling emitted by stableId(), preserving existing v1 output while rejecting aliases such as v01. The v2 resolved-region regression proves the noncanonical world ID fails closed. Canonical CI 31466997896 is green. Latest Swarm Control Plane run 31467814969 reached hardened pr-check and failed with 'live control state changed after its validation marker' rather than any lane/scope/claim denial; engine-tests passed. Retrigger after a stable validated control snapshot and require explicit PASS before merge.",
       "timestamp": "2026-08-11T07:23:30+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-OBJECTGENOME"
+      ],
+      "eventId": "evt-20260811-072540-went7k3-pr299-review-request",
+      "eventType": "REVIEW_REQUEST",
+      "evidence": [
+        "PR #299 changes only Docs/OBJECT_GENOME.md by one contract bullet, within the audit slot write scope.",
+        "The bullet records familyVersion as a canonical positive signed-32-bit revision counter in [1, 2147483647] and states that out-of-domain values fail before StableId construction.",
+        "Canonical CI run 31468785234 is green on exact head d6f19e760e3073ed0bc90ebec5c346f11c046cba.",
+        "Swarm Control Plane run 31468785244 is green on the same exact head, including live ownership."
+      ],
+      "fromWorker": "sol-20260811-went7k3",
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "metadata": {
+        "headSha": "d6f19e760e3073ed0bc90ebec5c346f11c046cba",
+        "integrationOrder": "with-or-after-primary-296",
+        "pr": 299
+      },
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "Audit companion PR #299 documents the exact canonical ObjectGenome familyVersion domain introduced by primary PR #296 and is ready for independent docs/contract review on exact head d6f19e760e3073ed0bc90ebec5c346f11c046cba.",
+      "timestamp": "2026-08-11T07:25:40+00:00"
     }
   ],
   "resources": [
@@ -865,7 +869,7 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "c9f4187d2c44b67cf6700aeee9fb3011ee33e85ced0aacfdad525181918d3915",
+  "stateDigest": "777761e7bf31066d5ebf177d2d5f77778ff618c328e4ab5a3bed12559c16a7ac",
   "summary": {
     "activeClaims": 14,
     "activeResourceClaims": 1,
