@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k4p8v2q6",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:00:38+00:00",
-  "lastSeenAt": "2026-08-11T09:24:10+00:00",
-  "laneId": "HG-BACKFILL-FIDELITY",
-  "slotId": "audit",
+  "lastSeenAt": "2026-08-11T09:30:20+00:00",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-k4p8v2q6",
-  "notes": "Independent exact-head source-only audit of FidelityManager PR #335 at 4a3c55d9d2046df1af6ee93710d395aedd4ea102. No protected resource or Roblox Studio evidence claim."
+  "notes": "Completed independent exact-head audit of PR #335 at 4a3c55d9d2046df1af6ee93710d395aedd4ea102. Source PASS; integration held only on separately owned immutable-event control recovery and completion/absorption of active stacked cross-entity test PR #343 after exact-head CI. Durable REVIEW_RESULT evt-20260811-092930-k4p8v2q6-fidelity-audit published. No Studio evidence claimed."
 }
