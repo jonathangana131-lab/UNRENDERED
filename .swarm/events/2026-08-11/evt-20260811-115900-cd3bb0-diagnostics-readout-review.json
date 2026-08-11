@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115900-cd3bb0-diagnostics-readout-review",
+  "kind": "REVIEW_RESULT",
+  "timestamp": "2026-08-11T11:59:00Z",
+  "workerId": "sol-20260811-cd3bb0",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-2",
+  "claimToken": "13d4db4937243fcf",
+  "generation": 1,
+  "headSha": "a02ee5b9f93c5e3f8d200afe32bf91621fc5e553",
+  "key": "verdict",
+  "value": "APPROVE",
+  "notes": "Exact-head review of diagnostics test-adversary PR #374 confirms a concrete readout-completeness gap: current capture treats the diagnostics root Folder plus arbitrary descendant count as enabled evidence, and toggle evidence only requires count > 0. The test payload is approved as expected-red evidence only and must not merge independently; production #327/successor should consume equivalent one-to-one readout identity/cardinality/shape validation together with prerequisite #349 exact-Instance binding. No Studio/display evidence is claimed."
+}
