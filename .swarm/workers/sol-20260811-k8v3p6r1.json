@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:40:25+00:00",
-  "lastSeenAt": "2026-08-11T08:49:35+00:00",
+  "lastSeenAt": "2026-08-11T09:05:20+00:00",
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-FIDELITY-k8v3p6r1-g3",
-  "notes": "Generation-3 stale takeover of Fidelity primary. Rebuilding the reviewed #274 semantic hardening on current main and closing the remaining PolicyConfig no-execute/fail-closed gap using preserved adversarial evidence from #325."
+  "notes": "Generation-3 stale takeover published as PR #335. Current-main salvage preserves reviewed rejected-step/callback atomicity and closes PolicyConfig no-execute gaps. Exact-head CI is being repaired/validated; no Studio evidence is claimed."
 }
