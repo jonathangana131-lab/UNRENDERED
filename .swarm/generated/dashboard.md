@@ -1,20 +1,22 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:14:15.924476+00:00`
+Generated: `2026-08-11T07:15:34.507499+00:00`
 
-Canonical main: **GREEN** `b0bf5ba664483cdcc2af061b0fb652b0aea00706`
+Canonical main: **GREEN** `81a13b1138e26e7852c89685de5dbf9bd57753d8`
 
-State digest: `dff769a3e14e90a4a3ee14229747abfca9b12d193fdc214327721346a0cdeaf1`
+State digest: `96a602954b843af5fd54753554e0160808acdf987748ee4ee7f1c79d06bd6d6b`
 
 ## Summary
 
-- ready slots: **14**
-- active claims: **16**
-- stale claims: **1**
+- ready slots: **16**
+- active claims: **14**
+- stale claims: **2**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
+- `SWARM-RECOVERY-PR-OWNERSHIP-IMPORT/primary` — **Critical fail-closed PR ownership recovery** — score 11000 — dependencies satisfied; resources available
+- `HG-BACKFILL-PHYSICS-GEOMETRY/primary` — **Physics recipe and geometry hardening** — score 5200 — dependencies satisfied; resources available
 - `HG-BACKFILL-PHYSICS-GEOMETRY/test-adversary` — **Geometry, clearance, and reachability property tests** — score 5120 — dependencies satisfied
 - `HG-BACKFILL-REALITY/audit` — **WorldId, seed, and replay invariant auditor** — score 5120 — dependencies satisfied
 - `HG-BACKFILL-AUTHORITY/primary` — **Server/client authority source hardening** — score 5100 — dependencies satisfied; resources available
@@ -41,13 +43,11 @@ State digest: `dff769a3e14e90a4a3ee14229747abfca9b12d193fdc214327721346a0cdeaf1`
 - `HG-BACKFILL-OBJECTGENOME/audit` → `sol-20260811-went7k3`; lease to `2026-08-11T07:38:20+00:00`
 - `HG-BACKFILL-OBJECTGENOME/primary` → `sol-20260811-k2m9x7`; lease to `2026-08-11T07:35:30+00:00`
 - `HG-BACKFILL-OBJECTGENOME/test-adversary` → `sol-20260811-q7n4m9`; lease to `2026-08-11T07:20:00+00:00`
-- `HG-BACKFILL-PHYSICS-GEOMETRY/primary` → `sol-20260811-j6r2v8`; lease to `2026-08-11T07:15:00+00:00`
-- `HG-BACKFILL-REALITY/primary` → `sol-20260811-q9m4r2`; lease to `2026-08-11T07:29:00+00:00`
+- `HG-BACKFILL-REALITY/primary` → `sol-20260811-q9m4r2`; lease to `2026-08-11T07:45:06+00:00`
 - `HG-BACKFILL-REALITY/test-adversary` → `sol-20260811-q8n4z7`; lease to `2026-08-11T07:42:30+00:00`
-- `HG-BACKFILL-WORLDENTITY/audit` → `sol-20260811-z4q8n1`; lease to `2026-08-11T07:46:00+00:00`
+- `HG-BACKFILL-WORLDENTITY/audit` → `sol-20260811-z4q8n1`; lease to `2026-08-11T07:50:00+00:00`
 - `HG-BACKFILL-WORLDENTITY/primary` → `sol-20260811-ogx9k2`; lease to `2026-08-11T07:47:00+00:00`
 - `HG-BACKFILL-WORLDENTITY/test-adversary` → `sol-20260811-w3x7k9`; lease to `2026-08-11T07:43:00+00:00`
-- `SWARM-RECOVERY-PR-OWNERSHIP-IMPORT/primary` → `sol-20260811-r4m8z2`; lease to `2026-08-11T07:30:29+00:00`
 
 ## Blocked lanes
 

@@ -82,17 +82,8 @@
       "workerId": "sol-20260811-q7n4m9"
     },
     {
-      "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-j6r2v8",
-      "expiresAt": "2026-08-11T07:15:00+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-      "pr": 279,
-      "slotId": "primary",
-      "workerId": "sol-20260811-j6r2v8"
-    },
-    {
       "branch": "agent/reality/HG-BACKFILL-REALITY-q9m4r2",
-      "expiresAt": "2026-08-11T07:29:00+00:00",
+      "expiresAt": "2026-08-11T07:45:06+00:00",
       "generation": 1,
       "laneId": "HG-BACKFILL-REALITY",
       "pr": 282,
@@ -110,7 +101,7 @@
     },
     {
       "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-z4q8n1",
-      "expiresAt": "2026-08-11T07:46:00+00:00",
+      "expiresAt": "2026-08-11T07:50:00+00:00",
       "generation": 1,
       "laneId": "HG-BACKFILL-WORLDENTITY",
       "pr": null,
@@ -134,15 +125,6 @@
       "pr": 276,
       "slotId": "test-adversary",
       "workerId": "sol-20260811-w3x7k9"
-    },
-    {
-      "branch": "agent/swarm/SWARM-RECOVERY-PR-OWNERSHIP-IMPORT-r4m8z2-cas",
-      "expiresAt": "2026-08-11T07:30:29+00:00",
-      "generation": 1,
-      "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
-      "pr": 291,
-      "slotId": "primary",
-      "workerId": "sol-20260811-r4m8z2"
     }
   ],
   "blockedLanes": [
@@ -158,17 +140,17 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:14:15.924476+00:00",
+  "generatedAt": "2026-08-11T07:15:34.507499+00:00",
   "mainHealth": {
     "conclusion": "success",
-    "headSha": "b0bf5ba664483cdcc2af061b0fb652b0aea00706",
+    "headSha": "81a13b1138e26e7852c89685de5dbf9bd57753d8",
     "schemaVersion": 1,
     "status": "GREEN",
-    "updatedAt": "2026-08-11T07:09:45+00:00",
-    "workflowRunId": 31467811354
+    "updatedAt": "2026-08-11T07:14:27+00:00",
+    "workflowRunId": 31468113697
   },
   "metrics": {
-    "activeClaims": 16,
+    "activeClaims": 14,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -177,14 +159,14 @@
       "DEPENDENCY_DISCOVERED": 3,
       "EVIDENCE_RESULT": 5,
       "EXTERNAL_BLOCKER": 1,
-      "FINDING": 38,
-      "HANDOFF": 17,
+      "FINDING": 39,
+      "HANDOFF": 18,
       "INTEGRATION_RESULT": 6,
       "RECOVERY": 2,
       "REVIEW_REQUEST": 26,
-      "REVIEW_RESULT": 29
+      "REVIEW_RESULT": 30
     },
-    "generatedAt": "2026-08-11T07:14:15.924476+00:00",
+    "generatedAt": "2026-08-11T07:15:34.507499+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -193,12 +175,44 @@
       "READY": 12
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 14,
+    "readySlots": 16,
     "reviewBacklog": 0,
     "schemaVersion": 1,
-    "staleClaims": 1
+    "staleClaims": 2
   },
   "readySlots": [
+    {
+      "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [
+        "SWARM-PROTOCOL"
+      ],
+      "role": "Critical fail-closed PR ownership recovery",
+      "score": 11000,
+      "slotId": "primary",
+      "writeScopes": [
+        ".github/workflows/swarm-control.yml",
+        "tools/swarm/swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening_base.py"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [],
+      "role": "Physics recipe and geometry hardening",
+      "score": 5200,
+      "slotId": "primary",
+      "writeScopes": [
+        "src/shared/Physics/PhysicsLabRecipe.luau",
+        "src/shared/Physics/PhysicsLabScale.luau",
+        "src/shared/Physics/PhysicsLabValidationContract.luau",
+        "tests/physics_lab_recipe.luau",
+        "tests/physics_lab_scale.luau",
+        "tests/physics_lab_validation_contract.luau"
+      ]
+    },
     {
       "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
       "reason": "dependencies satisfied",
@@ -381,70 +395,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-FIDELITY"
-      ],
-      "eventId": "evt-20260811-070440-x7n4k2-fidelity-no-execute",
-      "eventType": "FINDING",
-      "evidence": [
-        "PR #274 head f98356603608dd8682dba08f0281753082074070 validateInputs immediately dereferences inputs.distanceStuds, inputs.visible, inputs.directlyObserved, and remaining fields without a prior metatable/plain-table check.",
-        "PR #278 head 0ab224b7c6a69c40db31523794ccd9c74c7bc77e constructs an empty table with __index, expects rejection before any metamethod execution, and reports the current source executes __index 19 times while accepting the synthetic values.",
-        "The accepted metatable-backed future evaluation can advance temporal state and make a later valid earlier-timestamp retry fail, so this is both a no-execute boundary and failure-atomicity issue.",
-        "Audit PR #292 head 9bd79140a83379d3f80ddcb86a75528cf2d5e133 documents the metatable-free input requirement; canonical CI validate is green on that docs-only head."
-      ],
-      "fromWorker": "sol-20260811-x7n4k2",
-      "laneId": "HG-BACKFILL-FIDELITY",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Fidelity PolicyInputs violates the documented plain-data/no-execute boundary on primary PR #274 head f98356603608dd8682dba08f0281753082074070. validateInputs reads input fields before establishing that the top-level record is a plain metatable-free table, so a hostile __index metamethod can execute code and synthesize accepted policy scalars. Test-adversary PR #278 head 0ab224b7c6a69c40db31523794ccd9c74c7bc77e reproduces acceptance, metamethod execution, and temporal-state poisoning. Source must reject a non-nil metatable before the first field read; audit PR #292 now records that contract explicitly.",
-      "timestamp": "2026-08-11T07:04:40+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-MATERIALDNA"
-      ],
-      "eventId": "evt-20260811-070520-went7k3-materialdna-integration",
-      "eventType": "INTEGRATION_RESULT",
-      "evidence": [
-        "PR #283 merged as ed37c5698c1aad7a355e514b35ea5c5bd50aa738 after independent Reality-Grade approval.",
-        "Merge-head canonical CI run 31466530602 completed successfully.",
-        "Integrated regressions cover hostile unknown-key __tostring callbacks including a throwing formatter, exact production fixture revision seals, bidirectional catalog/golden coverage, and same-revision drift detection.",
-        "Runtime MaterialDNA identity remains the existing {id, recipeVersion} contract; no second production fingerprint identity was introduced.",
-        "No Roblox Studio or engine evidence was required or claimed for this source-only lane."
-      ],
-      "fromWorker": "sol-20260811-went7k3",
-      "laneId": "HG-BACKFILL-MATERIALDNA",
-      "metadata": {
-        "canonicalCiRun": 31466530602,
-        "mergeSha": "ed37c5698c1aad7a355e514b35ea5c5bd50aa738",
-        "pr": 283
-      },
-      "schemaVersion": 1,
-      "severity": "info",
-      "summary": "MaterialDNA source-only adversarial backfill completed and integrated on main through PR #283.",
-      "timestamp": "2026-08-11T07:05:20+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-WORLDENTITY"
-      ],
-      "eventId": "evt-20260811-070600-w3x7k9-worldentity-sync-rereview",
-      "eventType": "REVIEW_REQUEST",
-      "evidence": [
-        "PR #276 now reports base_sha ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and head_sha 71b6958e8421283652fe0d4361cbaabbad362c20.",
-        "Current diff remains exactly one file, tests/world_entity_registry_shape.luau, with 72 added adversarial assertions and no production-source changes.",
-        "Exact-head canonical CI run 31467247742 is SUCCESS.",
-        "Swarm ownership is still fail-closed red due the active live-control immutable-event/schema recovery, so no ownership PASS is claimed."
-      ],
-      "fromWorker": "sol-20260811-w3x7k9",
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "schemaVersion": 1,
-      "severity": "important",
-      "summary": "Request exact-head rereview of WorldEntity test-adversary PR #276 after synchronization onto current main. Current head 71b6958e8421283652fe0d4361cbaabbad362c20 is one test-only commit atop main ed37c5698c1aad7a355e514b35ea5c5bd50aa738; prior approval on the old head is intentionally not reused.",
-      "timestamp": "2026-08-11T07:06:00+00:00",
-      "toWorker": "sol-20260811-ogx9k2"
-    },
     {
       "affects": [
         "HG-BACKFILL-REALITY"
@@ -681,6 +631,45 @@
     },
     {
       "affects": [
+        "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT"
+      ],
+      "eventId": "evt-20260811-071500-r4m8z2-pr-ownership-recovery-complete",
+      "eventType": "HANDOFF",
+      "evidence": [
+        "PR #290 merged as aec680524f69ca59693da594e16dca6c8e4095ab; hardened facade now exits with the base validator return status.",
+        "PR #291 merged as b0bf5ba664483cdcc2af061b0fb652b0aea00706; exact-head pr-ownership run 31466523712 job 93703950653 emitted JSON status PASS for this lane/slot/worker/token.",
+        "Post-merge main CI run 31467811354 completed SUCCESS across format, lint, Luau analysis, audits, deterministic/pure tests, and Rojo build.",
+        "swarm-control workflow copy synchronized to the merged main workflow at ddb802457cfb40a24573cf92875a5dfd9880136a.",
+        "Control run 31468034547 job 93704980943 used AFTER_SHA ddb802457cfb40a24573cf92875a5dfd9880136a as CONTROL_SHA, passed validation/transition checks, then failed closed with 'Control advanced; refusing stale projection.' after concurrent control activity."
+      ],
+      "fromWorker": "sol-20260811-r4m8z2",
+      "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+      "schemaVersion": 1,
+      "severity": "HIGH",
+      "summary": "Critical PR-ownership recovery is complete. PR #290 restored fail-closed CLI exit propagation; PR #291 bound generated-projection and main-health publishers to the exact control snapshot they materialized. Exact-head pr-ownership emitted explicit PASS before #291 integration, post-merge main CI is green at b0bf5ba664483cdcc2af061b0fb652b0aea00706, and the control-branch workflow copy was synchronized to main at ddb802457cfb40a24573cf92875a5dfd9880136a. Control run 31468034547 then mechanically proved the new fence in production: it validated the exact event AFTER_SHA ddb802457cfb40a24573cf92875a5dfd9880136a, passed state/transition checks, detected that swarm-control had advanced to a4ca64a94dfa6b19e3e9976983041fef9440a5d4, and refused the stale generated projection instead of overwriting newer control state.",
+      "timestamp": "2026-08-11T07:15:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-FIDELITY"
+      ],
+      "eventId": "evt-20260811-071500-x7n4k2-fidelity-hostile-scalar",
+      "eventType": "FINDING",
+      "evidence": [
+        "PR #274 head e22c71b7b4f829f1be4c7e9911bdbb2e479a86ab defines isFinite(value: number) as value == value and relational comparisons; validateFiniteNonNegative calls isFinite without a runtime type check.",
+        "validateInputs passes distanceStuds/significance/networkRelevance/entityRelevance directly into numeric validators, so a plain top-level record can still carry a metatable-backed non-number scalar.",
+        "step passes nowSeconds directly to isFinite before any runtime type assertion, giving the same hostile-scalar path outside PolicyInputs.",
+        "MaterialDNA's production validation pattern accepts unknown and checks type(value) == 'number' before calling its isFinite helper, demonstrating the established no-execute boundary shape in this repository."
+      ],
+      "fromWorker": "sol-20260811-x7n4k2",
+      "laneId": "HG-BACKFILL-FIDELITY",
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "Fidelity numeric validation remains executable even after a top-level PolicyInputs metatable guard: validateUnit/validateNonNegative/validateFiniteNonNegative call comparison helpers before establishing type(value) == 'number'. In Luau, equality may invoke __eq even for the same table reference, so a metatable-free PolicyInputs record whose numeric field is a hostile table can execute its __eq inside isFinite/value==value before rejection. nowSeconds reaches isFinite directly and has the same runtime boundary shape. Harden scalar validators to type-check unknown runtime values before equality/comparison/arithmetic; keep the top-level metatable preflight as a separate guard.",
+      "timestamp": "2026-08-11T07:15:00+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-WORLDENTITY"
       ],
       "eventId": "evt-20260811-071700-z4q8n1-worldentity-generator-version-correction",
@@ -791,6 +780,25 @@
     },
     {
       "affects": [
+        "HG-BACKFILL-WORLDENTITY"
+      ],
+      "eventId": "evt-20260811-072100-z4q8n1-worldentity-primary-blocked",
+      "eventType": "REVIEW_RESULT",
+      "evidence": [
+        "PR #293 head 83a1130c0424404a85dbb3d61623b2fb3e34f06d cloneOrigin routes generatorVersion through assertNonNegativeInteger, whose upper bound is MAX_SAFE_INTEGER = 9007199254740991.",
+        "The same head's world_entity_registry_shape suite explicitly expects MAX_SAFE_INTEGER generatorVersion to be accepted by new() and registry registration.",
+        "Docs/DETERMINISM_CONTRACT.md and DeterminismContract.seedFor require generationVersion in [1, 2147483647]. ResolvedRegionRecipe already mirrors this exact bound in Reality-layer source.",
+        "Canonical CI run 31468082655 and Swarm Control Plane run 31468082610 are green on this head, demonstrating the remaining issue is a missing semantic regression rather than tooling/ownership failure."
+      ],
+      "fromWorker": "sol-20260811-z4q8n1",
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "WorldEntity primary PR #293 exact head 83a1130c0424404a85dbb3d61623b2fb3e34f06d is not integration-ready despite green canonical CI and live Swarm ownership. The source now generically safe-bounds origin.generatorVersion at 2^53-1 and tests assert MAX_SAFE_INTEGER acceptance, but canonical deterministic generationVersion is normatively limited to [1, 2147483647]. The head therefore still admits provenance that SeedStream replay rejects. Replace the bound/tests with the deterministic contract range, then re-run exact-head checks before audit clearance.",
+      "timestamp": "2026-08-11T07:21:00+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-REALITY"
       ],
       "eventId": "evt-20260811-072330-q7h4n2-pr282-exacthead-review",
@@ -826,7 +834,7 @@
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 1,
+      "activeOwners": 0,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "SWARM-PROTOCOL",
@@ -864,16 +872,25 @@
       "pr": 287,
       "slotId": "primary",
       "workerId": "sol-20260811-r6k2p9"
+    },
+    {
+      "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-j6r2v8",
+      "expiredAt": "2026-08-11T07:15:00+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+      "pr": 279,
+      "slotId": "primary",
+      "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "dff769a3e14e90a4a3ee14229747abfca9b12d193fdc214327721346a0cdeaf1",
+  "stateDigest": "96a602954b843af5fd54753554e0160808acdf987748ee4ee7f1c79d06bd6d6b",
   "summary": {
-    "activeClaims": 16,
-    "activeResourceClaims": 2,
+    "activeClaims": 14,
+    "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 24,
-    "readySlots": 14,
-    "staleClaims": 1,
+    "readySlots": 16,
+    "staleClaims": 2,
     "workers": 46
   }
 }
