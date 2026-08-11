@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062900-q9x4m2-two-client-identity-source",
+  "timestamp": "2026-08-11T06:29:00+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "high",
+  "summary": "The current canonical source has no client/server RemoteEvent or RemoteFunction authority path. Any source-only two-client backfill must therefore avoid deriving distinct-client identity or PASS from client-supplied fields: server-side Player identity must bind each observation to the caller, request correlation must be server-established, and duplicate/stale/cross-request observations must fail closed before comparison.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT"],
+  "evidence": [
+    "Canonical client bootstrap currently only reads protocol version and prints foundation status; it does not author canonical Physics Lab state.",
+    "Repository search on canonical main finds no RemoteEvent/RemoteFunction Physics Lab authority path to preserve or extend.",
+    "HG151-TWOCLIENT requires a real server plus two distinct client identities and explicitly forbids trusting a self-reported PASS boolean."
+  ]
+}
