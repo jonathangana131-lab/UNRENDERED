@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "reconcile",
+  "workerId": "sol-20260811-t8v4n2c7",
+  "claimToken": "a5d8c2f7e1b69034",
+  "claimedAt": "2026-08-11T20:51:35+00:00",
+  "heartbeatAt": "2026-08-11T20:51:35+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/reconcile/HG-COMPLETION-PHYSICS-t8v4n2c7",
+  "pr": null,
+  "notes": "Reconcile current Physics Lab validation/geometry successor lineage, beginning with independently passed PR #389 superseding #376/#383 and checking adjacent current runtime/diagnostics successors for explicit non-overlap/order."
+}
