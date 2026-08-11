@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-210810-s56t3v9-worldentity-g5-evidence",
+  "eventType": "EVIDENCE_RESULT",
+  "timestamp": "2026-08-11T21:08:10Z",
+  "workerId": "sol-20260811-s56t3v9",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "claimToken": "c7e2a91d5f8b3064",
+  "generation": 5,
+  "summary": "Generation-5 consolidated successor PR #397 exact head 83850e9f2bab4572de800428fb510b6b75fc2c45 is source/test green: canonical CI run 31536277590 PASS end-to-end and Swarm engine-tests in run 31536277554 PASS. pr-ownership remains fail-closed at the separately owned trusted-history recovery, so the PR stays draft and lane stays NEEDS_CHANGES until that gate is meaningfully green.",
+  "evidence": [
+    "main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 push CI run 31476168947 PASS",
+    "compare main...83850e9f2bab4572de800428fb510b6b75fc2c45 is 3 ahead/0 behind with exactly src/shared/Reality/WorldEntity.luau and tests/world_entity_registry_shape.luau changed",
+    "canonical CI 31536277590 PASS including format, lint, strict Luau analysis, architecture audits, deterministic swarm tests, Pure Luau tests, Rojo build, artifact upload",
+    "Swarm run 31536277554 engine-tests PASS and pr-ownership FAIL-CLOSED",
+    "no Roblox Studio, engine-runtime, or two-client evidence claimed"
+  ],
+  "links": [
+    "https://github.com/jonathangana131-lab/UNRENDERED/pull/397"
+  ]
+}
