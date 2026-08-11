@@ -5,7 +5,7 @@
   "title": "Prove and activate Swarm Control Plane V2",
   "objective": "Complete a real post-bootstrap atomic lane/resource claim, open a claim-enforced activation-state PR, pass canonical CI plus ownership/scope checks, merge it, and close/release the rollout lane without changing gameplay unlocks.",
   "priority": 9900,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["Docs/PROJECT_STATE.md", "Docs/SWARM_V2_ACTIVATION.md"],
@@ -23,5 +23,6 @@
     "real protected-scope PR passes live claim/branch/scope/resource enforcement",
     "canonical product CI remains green",
     "rollout claim/resource lease is released after merge"
-  ]
+  ],
+  "notes": "Activation PR #266 passed engine-tests plus live pr-ownership enforcement and canonical CI, then merged as cb6bbc953e1687cb11a0e6afbb0d454ecd23c9b1."
 }
