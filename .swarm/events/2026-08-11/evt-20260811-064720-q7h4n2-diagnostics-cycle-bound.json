@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064720-q7h4n2-diagnostics-cycle-bound",
+  "timestamp": "2026-08-11T06:47:20+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "low",
+  "summary": "The diagnostics toggle helper is documented and described in-source as bounded, but runToggleEvidence(lab, cycles) accepts any positive integer with no upper bound. A caller can therefore request an arbitrarily long Studio evidence sweep even though the quality contract and docs define a 20-cycle bounded proof. Primary/test work should either cap the optional cycle override to an explicitly documented diagnostic maximum (with boundary regression) or document why an unbounded manual override is intentionally safe; do not infer a new cap silently.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau sets cycleCount = cycles or 20 and only asserts positive integral input before for cycle = 1, cycleCount do.",
+    "The same source comments that the evidence sweep is intentionally bounded.",
+    "Docs/PHYSICS_LAB_DIAGNOSTICS.md names the path Source-owned bounded toggle sweep and defines the accepted proof as twenty cycles with checkpoints 1/5/10/20."
+  ],
+  "metadata": {
+    "claimToken": "4e91b7c2a56d803f"
+  }
+}
