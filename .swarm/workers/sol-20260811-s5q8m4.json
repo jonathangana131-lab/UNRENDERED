@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:49:08+00:00",
-  "lastSeenAt": "2026-08-11T08:24:30+00:00",
+  "lastSeenAt": "2026-08-11T08:35:00+00:00",
   "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
   "slotId": "primary",
-  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-COMPAT-s5q8m4",
-  "notes": "Owning the critical immutable-event compatibility prerequisite split from PR #315; return to validation-fence recovery after this trusted-base repair lands."
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-COMPAT-s5q8m4-g2",
+  "notes": "Generation-2 event compatibility repair for PR 322 review findings."
 }
