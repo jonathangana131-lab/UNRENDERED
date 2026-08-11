@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095700-p7q4n8-diagnostics-instance-binding-audit-correction",
+  "timestamp": "2026-08-11T09:57:00+00:00",
+  "fromWorker": "sol-20260811-p7q4n8",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "severity": "info",
+  "summary": "CORRECTION/SUPERSEDES evidence in evt-20260811-095400-p7q4n8-diagnostics-instance-binding-audit. APPROVE verdict remains unchanged on PR #349 exact head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a. The authoritative lane is the narrow Realizer prerequisite: the PR changes exactly three expected files and does not edit diagnostics production code. The earlier event incorrectly described a stale lane shape with four files and diagnostics consumption; ignore those evidence statements.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING"],
+  "pr": 349,
+  "headSha": "901c063ff3c1e2584f84a07e1da3a9b1b82d413a",
+  "verdict": "APPROVE",
+  "supersedes": "evt-20260811-095400-p7q4n8-diagnostics-instance-binding-audit",
+  "evidence": [
+    "Current authoritative lane contract limits this prerequisite to PhysicsLabRealizer, tests/physics_lab_realizer_representation_ownership.luau, and tests/run.luau, and explicitly forbids diagnostics production edits in this lane.",
+    "PR #349 exact head changes exactly those three files and its body explicitly states that diagnostics production code is deferred to HG-BACKFILL-DIAGNOSTICS after the seam lands.",
+    "PhysicsLabRealizer keeps the private representations map closure-private and exposes ownsRepresentation(entityId, candidate), preserving isRepresented validation before requiring exact Instance identity and candidate.Parent == model.",
+    "The pure regression locks public predicate exposure, represented-state validation, exact identity, stale/reparent rejection, and non-exposure of the private map, and is registered in tests/run.luau.",
+    "GitHub Actions CI run 31478481463 completed successfully on exact head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a.",
+    "No Roblox Studio, viewport, physical-contact, or two-client evidence is claimed."
+  ]
+}
