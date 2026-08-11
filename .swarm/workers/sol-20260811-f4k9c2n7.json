@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-f4k9c2n7",
+  "model": "gpt-5.6-sol",
+  "status": "ACTIVE",
+  "startedAt": "2026-08-11T08:42:00+00:00",
+  "lastSeenAt": "2026-08-11T08:42:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-f4k9c2n7",
+  "notes": "Capacity-mining the existing Hero Gate Physics Lab runtime shard only; no new major feature and no Studio evidence claim."
+}
