@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-m6r2x9v4-materialdna-validation-diagnostic-bounds-214416",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T21:44:16+00:00",
+  "workerId": "sol-20260811-m6r2x9v4",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "generation": 2,
+  "claimToken": "7d2a9c4e1f6b8053",
+  "target": {
+    "kind": "other",
+    "value": "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1"
+  },
+  "severity": "medium",
+  "summary": "MaterialDNA unknown-field validation has no project-owned scan or diagnostic-retention bound: validateKnownFields walks every supplied key and appends one error string per unknown key, so an oversized hostile plain-data table can force O(N) validation work and O(N) diagnostic memory before rejection.",
+  "evidence": [
+    "At exact main ae83c0ef470eb2e73d99be41fd3561ede30c40e1, src/shared/Materials/MaterialDNA.luau validateKnownFields iterates pairs(value) without a key budget and table.insert(errors, ...) for every unknown field.",
+    "The helper is used across MaterialRecipe, MaterialState, history-event and nested material-data shapes, so this is a shared validation-boundary issue rather than one caller-specific edge case.",
+    "Adjacent MaterialDNA resource fences already cap historyEvents at 32 and anomalyModifiers at 8; HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS separately addresses scan order for those dense arrays and does not bound unknown-field scanning or error accumulation.",
+    "tests/materialdna_contract.luau verifies unknown-field rejection but does not exercise oversized unknown-key tables or assert a bounded diagnostic count/work classification.",
+    "Duplicate checks found no matching open/closed MaterialDNA PR, issue, or existing MaterialDNA lane for bounded unknown-field diagnostics. Static source audit only; this mining worker did not run the test suite or Studio."
+  ],
+  "recommendedAction": "After HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS is complete, open one source-only Hero-Gate micro-lane to impose a deterministic project-owned budget on unknown-field/schema-shape scanning and diagnostic retention. Oversized inputs must still fail closed; valid canonical encodings, hashes, IDs and schema versions must remain unchanged; regressions should cover exact budget, budget+1, huge unknown-key tables, bounded diagnostics, non-mutation, and deterministic overflow classification without relying on pairs() order for which unknown key names are retained."
+}
