@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-cas1",
+  "model": "gpt-5.6-sol",
+  "status": "STOPPED",
+  "startedAt": "2026-08-11T03:40:00+00:00",
+  "lastSeenAt": "2026-08-11T03:50:00+00:00",
+  "laneId": "SWARM-V2-CAS-PROOF",
+  "slotId": "primary",
+  "branch": "agent/swarm/cas-proof-old",
+  "notes": "Synthetic stopped owner for real stale-claim takeover fencing proof."
+}
