@@ -24,6 +24,18 @@ local function run(): number
 		}
 	end
 
+	local function hostileComparable(onRead)
+		local function read(): boolean
+			onRead()
+			return true
+		end
+		return setmetatable({}, {
+			__eq = read,
+			__lt = read,
+			__le = read,
+		})
+	end
+
 	local clockManager = FidelityManager.new()
 	clockManager:register("entity:atomic-clock", "F0")
 	clockManager:step("entity:atomic-clock", "F0", validInputs(), 1)
@@ -43,6 +55,52 @@ local function run(): number
 		validAfterRejectedFutureAccepted,
 		true
 	)
+
+	local configSource = FidelityManager.defaultConfig()
+	local constructorConfigReads = 0
+	local constructorMetatableConfig = setmetatable({}, {
+		__index = function(_, key)
+			constructorConfigReads += 1
+			return configSource[key]
+		end,
+	})
+	local constructorMetatableAccepted = pcall(function()
+		FidelityManager.new(constructorMetatableConfig :: any)
+	end)
+	expectEqual("constructor rejects metatable-backed PolicyConfig", constructorMetatableAccepted, false)
+	expectEqual("constructor rejects PolicyConfig before __index executes", constructorConfigReads, 0)
+
+	local policyConfigReads = 0
+	local policyMetatableConfig = setmetatable({}, {
+		__index = function(_, key)
+			policyConfigReads += 1
+			return configSource[key]
+		end,
+	})
+	local policyMetatableAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(validInputs(), policyMetatableConfig :: any, "F0")
+	end)
+	expectEqual("pure policy rejects metatable-backed PolicyConfig", policyMetatableAccepted, false)
+	expectEqual("pure policy rejects PolicyConfig before __index executes", policyConfigReads, 0)
+
+	local inertMetatableConfig = setmetatable(table.clone(configSource), {
+		__metatable = "locked-policy-config",
+	})
+	local inertMetatableAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(validInputs(), inertMetatableConfig, "F0")
+	end)
+	expectEqual("pure policy rejects inert PolicyConfig metatable", inertMetatableAccepted, false)
+
+	local hostileConfigReads = 0
+	local hostileScalarConfig: any = table.clone(configSource)
+	hostileScalarConfig.heroDistanceStuds = hostileComparable(function()
+		hostileConfigReads += 1
+	end)
+	local hostileScalarConfigAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(validInputs(), hostileScalarConfig, "F0")
+	end)
+	expectEqual("pure policy rejects hostile PolicyConfig numeric scalar", hostileScalarConfigAccepted, false)
+	expectEqual("PolicyConfig scalar validation never executes metamethod", hostileConfigReads, 0)
 
 	local syncManager = FidelityManager.new()
 	syncManager:register("entity:atomic-sync", "F3")
