@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120426-7e3a2c91-fidelity-audit-pass",
+  "timestamp": "2026-08-11T12:04:26+00:00",
+  "fromWorker": "sol-20260811-7e3a2c91",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "normal",
+  "summary": "SOURCE PASS for FidelityManager PR #335 exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102. The previously outstanding cross-entity nested-transition unwind depth item is now independently closed by stacked test PR #367 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 with green canonical CI. Integration remains HOLD until #367 coverage is absorbed into the retained #335 lineage, the combined exact head reruns green, and trusted-history recovery restores a fresh live pr-ownership PASS. No Roblox Studio/two-client evidence is claimed.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "GitHub review 4905987262 records the fresh exact-head #335 source audit.",
+    "GitHub review 4905985206 records independent PASS of stacked nested-transition regression PR #367.",
+    "#335 canonical CI run 31476561095 is green and Swarm engine-tests are green.",
+    "#367 canonical CI run 31488686655 is green and directly exercises #335 because its base SHA is 4a3c55d9d2046df1af6ee93710d395aedd4ea102."
+  ],
+  "metadata": {
+    "pr": 335,
+    "headSha": "4a3c55d9d2046df1af6ee93710d395aedd4ea102",
+    "companionPr": 367,
+    "companionHeadSha": "827ce0cf63ca5f322502de883beb9f43581c69f2",
+    "reviewId": 4905987262,
+    "verdict": "APPROVE_CONDITIONAL_ABSORPTION_AND_OWNERSHIP"
+  }
+}
