@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-f3q8v1z6",
+  "claimToken": "c8f31a6d4e2b9075",
+  "claimedAt": "2026-08-11T21:01:26+00:00",
+  "heartbeatAt": "2026-08-11T21:01:26+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/tests/HG-BACKFILL-FIDELITY-tests-f3q8v1z6",
+  "pr": 385,
+  "notes": "Independent adversarial completion pass on PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2. Test/source changes only for a concrete lane-scoped defect; no Studio evidence claimed."
+}
