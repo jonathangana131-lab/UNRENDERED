@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-d7k4m9q2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T22:20:05+00:00",
+  "lastSeenAt": "2026-08-11T22:29:20+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-d7k4m9q2-g6",
-  "notes": "Generation-6 geometry successor from #389: primitive-number no-execute preflight plus expected-red #406 regression, preserving finite-output checks."
+  "notes": "Generation-6 successor PR #414 exact head 51ffc16fb2f5864cd4874710a7517e94dd5422b8 is source/test complete and REVIEW-ready: direct #389 delta +35/-2 across two files, canonical CI 31542411647 PASS, Swarm engine-tests PASS. Primary claim released. Fresh independent exact-head review and live pr-ownership are still required before integration."
 }
