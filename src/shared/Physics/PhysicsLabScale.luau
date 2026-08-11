@@ -8,8 +8,13 @@ local PhysicsLabScale = {
 
 PhysicsLabScale.STUDS_PER_METER = 1 / PhysicsLabScale.METERS_PER_STUD
 
-local function assertFinite(name: string, value: number): ()
-	assert(value == value and value > -math.huge and value < math.huge, `{name} must be finite`)
+local function assertFinite(name: string, value: unknown): ()
+	assert(type(value) == "number", `{name} must be a number`)
+	local numericValue = value :: number
+	assert(
+		numericValue == numericValue and numericValue > -math.huge and numericValue < math.huge,
+		`{name} must be finite`
+	)
 end
 
 function PhysicsLabScale.metersToStuds(meters: number): number
