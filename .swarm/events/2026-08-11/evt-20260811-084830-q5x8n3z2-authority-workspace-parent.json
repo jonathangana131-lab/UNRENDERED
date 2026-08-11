@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084830-q5x8n3z2-authority-workspace-parent",
+  "timestamp": "2026-08-11T08:48:30+00:00",
+  "fromWorker": "sol-20260811-q5x8n3z2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Distinct Hero Gate authority invariant gap: PhysicsLabStudioHarness can own a canonical RealizedLab under an arbitrary server-side parent even though the permanent Physics Lab contract and two-client evidence boundary require Workspace/UNRENDERED_PhysicsLab as the replicated physical truth. start(parent) forwards any non-nil Instance to PhysicsLabRealizer.realize and restart(parent) preserves that caller-selected parent. The private two-client driver fails closed if the existing harness handle is not represented as exactly one Workspace root, so this is not a false-PASS vulnerability; it is a source-contract/evidence-readiness gap that can leave server authority valid while clients cannot observe it. Do not open a competing authority implementation while #316/#307/#300 are active. After that completion train lands, fold a narrow replicated-parent invariant into HG-BACKFILL-AUTHORITY or schedule a bounded follow-up: Studio harness start/restart should either require Workspace or explicitly separate test-only arbitrary-parent realization from the canonical harness, with a pure regression proving the canonical handle cannot be acquired outside Workspace. No Studio evidence is claimed.",
+  "affects": [
+    "HERO-GATE",
+    "HG-BACKFILL-AUTHORITY",
+    "HG151-TWOCLIENT"
+  ],
+  "evidence": [
+    "Docs/PHYSICS_LAB.md defines src/server/PhysicsLab/PhysicsLabRealizer.luau as realizing the recipe into Workspace/UNRENDERED_PhysicsLab.",
+    "Current main PhysicsLabStudioHarness.start(parent) calls PhysicsLabRealizer.realize(parent or workspace); restart(parent) calls stop() and then start(parent), so ServerStorage or another non-Workspace parent is accepted by the canonical harness API.",
+    "default.project.json enables Workspace streaming and maps server code under ServerScriptService; the multiplayer proof therefore depends on a replicated Workspace representation rather than an arbitrary server-only parent.",
+    "The private physics-lab-two-client driver uses Harness.get() if a handle already exists, then separately asserts exactly one Workspace/UNRENDERED_PhysicsLab root and waits for two client observations. An off-Workspace canonical handle therefore causes fail-closed evidence failure rather than automatic normalization.",
+    "Active PR #307 regression-locks the current parent-or-workspace/start(parent) lifecycle shape; PR #316 only repairs bootstrap pre-dependency context ordering and PR #300 only locks Rojo deployment separation. None establishes the missing canonical Workspace-parent invariant."
+  ],
+  "metadata": {
+    "claimToken": "3d7a9c1e5b2f8064",
+    "recommendedNextRole": "authority source follow-up after active completion train"
+  }
+}
