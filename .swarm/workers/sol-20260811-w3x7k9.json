@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T06:16:30+00:00",
-  "lastSeenAt": "2026-08-11T06:57:00+00:00",
+  "lastSeenAt": "2026-08-11T07:13:00+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-w3x7k9",
-  "notes": "WorldEntity adversarial source backfill published as PR #276 at head 91b483749f94a91f62c8d08d5e28363824234e0f. Canonical CI is green and independent review approved the exact head. Trusted PR ownership now fails closed after #290; live control-state cleanup and snapshot-CAS recovery #291 remain active before integration."
+  "notes": "PR #276 was synchronized onto main ed37c5698c1aad7a355e514b35ea5c5bd50aa738 as exact head 71b6958e8421283652fe0d4361cbaabbad362c20 with the same one-file +72-line test-only diff. Exact-head canonical CI 31467247742 is green. Fresh audit was requested from active HG-BACKFILL-WORLDENTITY/audit; ownership remains fail-closed red only while live swarm-control schema recovery is active."
 }
