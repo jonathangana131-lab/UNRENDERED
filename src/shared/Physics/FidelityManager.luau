@@ -605,13 +605,8 @@ function FidelityManager.step(
 		}
 	end
 
-	local transitionSucceeded, transitionError = pcall(
-		applyTransition,
-		entityId,
-		currentLevel,
-		desired,
-		reason
-	)
+	local transitionSucceeded, transitionError =
+		pcall(applyTransition, entityId, currentLevel, desired, reason)
 	if not transitionSucceeded then
 		state.observedLevel = previousState.observedLevel
 		state.pendingLevel = previousState.pendingLevel
