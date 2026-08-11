@@ -91,6 +91,15 @@
       "workerId": "sol-20260811-96d0cf"
     },
     {
+      "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-v7k3m9",
+      "expiresAt": "2026-08-11T08:43:00+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+      "pr": 303,
+      "slotId": "audit",
+      "workerId": "sol-20260811-v7k3m9"
+    },
+    {
       "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-v8k3p6-g2",
       "expiresAt": "2026-08-11T08:38:30+00:00",
       "generation": 2,
@@ -213,7 +222,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T08:14:05.585216+00:00",
+  "generatedAt": "2026-08-11T08:14:20.120437+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "064e28f2306095dadd6a514b96f397cd810ac556",
@@ -223,7 +232,7 @@
     "workflowRunId": 31468678800
   },
   "metrics": {
-    "activeClaims": 21,
+    "activeClaims": 22,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -240,7 +249,7 @@
       "REVIEW_RESULT": 54,
       "SUPERSEDED": 1
     },
-    "generatedAt": "2026-08-11T08:14:05.585216+00:00",
+    "generatedAt": "2026-08-11T08:14:20.120437+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -251,7 +260,7 @@
       "SUPERSEDED": 2
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 12,
+    "readySlots": 11,
     "reviewBacklog": 1,
     "schemaVersion": 1,
     "staleClaims": 7
@@ -331,22 +340,6 @@
         "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
         "tests/**diagnostic*.luau",
         "tests/hero_gate_contract_integration.luau"
-      ]
-    },
-    {
-      "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Physics recipe realism and validation auditor",
-      "score": 5020,
-      "slotId": "audit",
-      "writeScopes": [
-        "src/shared/Physics/PhysicsLabRecipe.luau",
-        "src/shared/Physics/PhysicsLabScale.luau",
-        "src/shared/Physics/PhysicsLabValidationContract.luau",
-        "tests/physics_lab_recipe.luau",
-        "tests/physics_lab_scale.luau",
-        "tests/physics_lab_validation_contract.luau"
       ]
     },
     {
@@ -965,13 +958,13 @@
       "workerId": "sol-20260811-s56r7n2"
     }
   ],
-  "stateDigest": "be2171f7e12c97c0daf017aba6de8ac0856caa5d37c0ccedd78195670ab1b979",
+  "stateDigest": "4e035d99993d7b2bea9a1edc6c6e277b60fb27ee8680bf667b15be423655201a",
   "summary": {
-    "activeClaims": 21,
+    "activeClaims": 22,
     "activeResourceClaims": 2,
     "blockedExternalLanes": 1,
     "lanes": 31,
-    "readySlots": 12,
+    "readySlots": 11,
     "staleClaims": 7,
     "workers": 83
   }

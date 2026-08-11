@@ -1,15 +1,15 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T08:14:05.585216+00:00`
+Generated: `2026-08-11T08:14:20.120437+00:00`
 
 Canonical main: **GREEN** `064e28f2306095dadd6a514b96f397cd810ac556`
 
-State digest: `be2171f7e12c97c0daf017aba6de8ac0856caa5d37c0ccedd78195670ab1b979`
+State digest: `4e035d99993d7b2bea9a1edc6c6e277b60fb27ee8680bf667b15be423655201a`
 
 ## Summary
 
-- ready slots: **12**
-- active claims: **21**
+- ready slots: **11**
+- active claims: **22**
 - stale claims: **7**
 - blocked-external lanes: **1**
 
@@ -21,7 +21,6 @@ State digest: `be2171f7e12c97c0daf017aba6de8ac0856caa5d37c0ccedd78195670ab1b979`
 - `HG-BACKFILL-FIDELITY/test-adversary` — **Fidelity transition and atomicity tests** — score 5270 — dependencies satisfied
 - `HG-PHYSICS-CART-GEOMETRY/audit` — **Independent rolling-cart geometry audit** — score 5210 — dependencies satisfied
 - `HG-BACKFILL-DIAGNOSTICS/primary` — **Diagnostics source hardening** — score 5150 — dependencies satisfied; resources available
-- `HG-BACKFILL-PHYSICS-GEOMETRY/audit` — **Physics recipe realism and validation auditor** — score 5020 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-worldentity` — **Mine WorldEntity for next concrete depth lane** — score 3680 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-fidelity` — **Mine FidelityManager for next concrete depth lane** — score 3650 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-physics-geometry` — **Mine Physics geometry for next concrete depth lane** — score 3630 — dependencies satisfied
@@ -40,6 +39,7 @@ State digest: `be2171f7e12c97c0daf017aba6de8ac0856caa5d37c0ccedd78195670ab1b979`
 - `HG-BACKFILL-MATERIALDNA-COUNTERS/audit` → `sol-20260811-h4v8n2`; lease to `2026-08-11T08:40:20+00:00`
 - `HG-BACKFILL-MATERIALDNA-COUNTERS/primary` → `sol-20260811-492051ed`; lease to `2026-08-11T08:32:40+00:00`
 - `HG-BACKFILL-OBJECTGENOME/audit` → `sol-20260811-96d0cf`; lease to `2026-08-11T08:36:15+00:00`
+- `HG-BACKFILL-PHYSICS-GEOMETRY/audit` → `sol-20260811-v7k3m9`; lease to `2026-08-11T08:43:00+00:00`
 - `HG-BACKFILL-PHYSICS-GEOMETRY/primary` → `sol-20260811-v8k3p6`; lease to `2026-08-11T08:38:30+00:00`
 - `HG-BACKFILL-PHYSICS-GEOMETRY/test-adversary` → `sol-20260811-p4x7d9`; lease to `2026-08-11T08:40:54+00:00`
 - `HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE/primary` → `sol-20260811-z4m8p2`; lease to `2026-08-11T08:30:00+00:00`
