@@ -123,6 +123,28 @@ local function run(): number
 		`callback executed {referenceCallbackCount} times`
 	)
 
+	local unknownKeyCallbackCount = 0
+	local hostileUnknownKey: any = {}
+	setmetatable(hostileUnknownKey, {
+		__tostring = function(): string
+			unknownKeyCallbackCount += 1
+			return "futureMeaning"
+		end,
+	})
+	local hostileKeyRecipe: any = deepCopy(wallpaper)
+	hostileKeyRecipe[hostileUnknownKey] = true
+	local hostileKeyResult = MaterialDNA.validateRecipe(hostileKeyRecipe)
+	expect(
+		"non-string unknown recipe key rejected",
+		not hostileKeyResult.ok,
+		table.concat(hostileKeyResult.errors, "; ")
+	)
+	expect(
+		"unknown-key __tostring callback never executes",
+		unknownKeyCallbackCount == 0,
+		`callback executed {unknownKeyCallbackCount} times`
+	)
+
 	return failures
 end
 
