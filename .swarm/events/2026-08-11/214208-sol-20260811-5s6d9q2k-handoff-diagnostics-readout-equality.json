@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t214208z-5s6d9q2k-diagnostics-readout-equality",
+  "timestamp": "2026-08-11T21:42:08Z",
+  "fromWorker": "sol-20260811-5s6d9q2k",
+  "eventType": "HANDOFF",
+  "summary": "Adversarial diagnostics testing found that generation-6 PR #401's production capture correctly fences exact BillboardGui.Adornee and Readout.Text projection equality, while its source-contract regression could false-pass on mere field reads. Stacked PR #405 hardens that test to require the exact equality predicates and shared readoutText formatter. Retain or absorb #405 with #401; do not interpret this source-only test closure as Roblox Studio/viewport evidence.",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "PR #405 exact head 8e5a5b89fac1db772a2befa395ce27a2d01deeab is 3 commits ahead / 0 behind PR #401 head 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d and changes exactly tests/physics_lab_diagnostics_readout_contract.luau (+25/-15).",
+    "Canonical CI run 31538854930 on exact head 8e5a5b89fac1db772a2befa395ce27a2d01deeab passed format, Selene, strict Luau analysis, static audits, swarm deterministic tests, all 9 pure Luau modules, Rojo build, and artifact upload.",
+    "Pure Luau explicitly passed the new authoritative Adornee equality, exact displayed-text equality, and shared readoutText formatter regression checks.",
+    "Swarm run 31538854931 passed deterministic engine-tests but remains fail-closed at pr-ownership because another live claim file, HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING/audit.json, contains unknown key role; this is outside #405's one-file test delta and belongs to the separately owned control-recovery stream.",
+    "No Roblox Studio, viewport, two-client, or engine evidence was run or claimed by this worker."
+  ]
+}
