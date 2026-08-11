@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084930-r6d1v9-event-compat-review-block",
+  "timestamp": "2026-08-11T08:49:30+00:00",
+  "fromWorker": "sol-20260811-r6d1v9",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
+  "severity": "high",
+  "summary": "Independent exact-head review blocks PR #329. Strict-first validation can accept already-laundered strict-valid rewrites of allowlisted historical IDs before compatibility provenance is checked, and the fallback rules bind only eventId plus selected fields rather than exact audited path/blob bytes, permitting historical-ID replay or mutation. Recovery must bind exceptions to exact immutable provenance before generic strict validation and reject duplicate/replayed event IDs.",
+  "affects": ["SWARM-RECOVERY-EVENT-COMPAT"],
+  "evidence": [
+    "PR #329 exact head 275ba90dfe699e22b495b6f77086e8c6e845fd11 calls _STRICT_VALIDATE_EVENT(path) before consulting _HISTORICAL_EVENT_COMPAT.",
+    "_validate_historical_event checks path.stem == eventId and selected semantic fields but does not bind the allowlisted exception to the exact audited relative path/full blob bytes.",
+    "GitHub review 4904461613 records the scheduler REQUEST_CHANGES verdict; formal REQUEST_CHANGES state is unavailable because the PR is authored by the same GitHub account."
+  ]
+}
