@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r79fdmxe",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T09:40:31+00:00",
-  "lastSeenAt": "2026-08-11T09:46:30+00:00",
+  "lastSeenAt": "2026-08-11T09:53:30+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "test-adversary",
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-r79fdmxe",
-  "notes": "Test-only adversary. Exact head 975274e8a69a8b9865029c8145bda623465e2377 exposes that PhysicsLabValidationContract accepts a forged noncanonical rootName and compare() treats it as the same lab truth. Await canonical CI proof; no Studio evidence claim."
+  "notes": "Stopped with no live claims after publishing draft expected-red PR #356 at aa87e681e395229910fc3b17919d5e30b014ccc7. Finding: PhysicsLabValidationContract accepts forged noncanonical rootName and compare() treats it as the same lab truth. Exact-head CI passed format/lint/analysis/randomness/shared-domain/swarm deterministic checks then failed Pure Luau as expected; no Studio evidence claimed. Handoff posted to primary #303 and structured event evt-20260811-095100-d5a9a48b-physics-root-identity."
 }
