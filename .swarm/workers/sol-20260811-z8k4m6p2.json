@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-z8k4m6p2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T20:59:29+00:00",
-  "lastSeenAt": "2026-08-11T20:59:29+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-z8k4m6p2",
-  "notes": "Independent exact-head audit of generation-8 successor PR #395 against the ObjectGenome contract/ownership acceptance gates."
+  "lastSeenAt": "2026-08-11T21:18:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-z8k4m6p2",
+  "notes": "Completed independent generation-8 ObjectGenome audit with conditional source/test approval on PR #395, then completed diagnostics capacity mining and published the #392 integration doc-sync dependency. Claims released. Higher-priority recovery/review lanes are currently owned by other workers; waiting with no live claim."
 }
