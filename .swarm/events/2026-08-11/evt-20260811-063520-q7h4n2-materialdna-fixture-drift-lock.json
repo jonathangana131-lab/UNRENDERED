@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063520-q7h4n2-materialdna-fixture-drift-lock",
+  "timestamp": "2026-08-11T06:35:20+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "medium",
+  "summary": "The three canonical MaterialFixtureCatalog recipes have no exact-content regression seal. tests/materialdna_contract.luau locks fixture IDs, recipeVersion=1, validity, references, immutability and distinct coherence classes, but it does not lock the remaining canonical leaf values. A valid physical/visual/acoustic/history/response edit can therefore keep the same {id, recipeVersion} and still pass the MaterialDNA suite, despite the production contract forbidding reuse of that pair for changed content. Add a deterministic fixture golden/deep snapshot (test-only is sufficient) so content edits require an intentional recipeVersion bump; avoid introducing a new production fingerprint API solely for this test gap.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "Docs/MATERIAL_DNA_CONTRACT.md states recipeVersion must increase whenever canonical recipe values change and a published {id, recipeVersion} pair must never be reused for different content.",
+    "src/shared/Materials/MaterialFixtureCatalog.luau publishes three literal frozen recipeVersion=1 fixtures containing canonical history, visual, physical, acoustic and response values.",
+    "tests/materialdna_contract.luau asserts fixture IDs/revisions/reference validity/freeze/coherence but does not compare the complete fixture recipes to a literal or deterministic golden, so same-version leaf drift is not detected by that suite."
+  ]
+}
