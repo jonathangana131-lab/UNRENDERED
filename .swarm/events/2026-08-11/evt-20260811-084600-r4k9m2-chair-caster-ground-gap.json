@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084600-r4k9m2-chair-caster-ground-gap",
+  "timestamp": "2026-08-11T08:46:00+00:00",
+  "fromWorker": "sol-20260811-r4k9m2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "The permanent Physics Lab office chair has a source-level ground-contact defect that current geometry coverage misses. PhysicsLabRealizer realizes every ObjectGenome component as an anchored F2 Part, not only the outer genome envelope. PhysicsLabRecipe places chair-a at y=0.54 m; office-chair.task declares a 1.08 m outer height, so the envelope bottom is correctly y=0. The five components marked externalSupport='ground' are centered at local y=-0.49 m with 0.08 m height, so their realized bottoms are y=0.54-0.49-0.04=0.01 m: all five casters float 1 cm above the floor. Active PR #302 checks only the grounded outer ObjectGenome envelope, so it would pass this defect. Active PR #311 fixes the analogous authored support/contact defect only for rollingCart. Recommend a bounded one-shot chair-support geometry lane after checking concurrent ObjectGenome work, with source scope limited to the existing officeChair fixture plus deterministic component-ground/support/COM regressions; preserve the outer envelope and advance familyVersion for any canonical fixture geometry change. This is source-only evidence and does not replace Roblox Studio contact validation.",
+  "affects": ["HERO-GATE", "HG-BACKFILL-PHYSICS-GEOMETRY", "HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "src/server/PhysicsLab/PhysicsLabRealizer.luau realizeObject() iterates genome.components and realizes each component Part at objectTransform * component.localPositionM/component rotation.",
+    "src/shared/Physics/PhysicsLabRecipe.luau places chair-a at y=0.54 m and binds ObjectGenomeFixtures.officeChair.",
+    "src/shared/Objects/ObjectGenomeFixtures.luau officeChair dimensionsM.y=1.08; each of five externalSupport='ground' casters has localPositionM.y=-0.49 and dimensionsM.y=0.08, yielding realized caster bottom y=0.01 m while outer-envelope bottom is y=0.",
+    "PR #302 adds an all-object outer-envelope grounding assertion but no ground-declared component-contact assertion.",
+    "PR #311 adds exact rolling-cart ground-support/chassis-contact regressions and does not change the office chair fixture; open issue/PR searches found no separate current chair-caster geometry repair."
+  ],
+  "metadata": {
+    "claimToken": "8b3e1d6c9a2f7054"
+  }
+}
