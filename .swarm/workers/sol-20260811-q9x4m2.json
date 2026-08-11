@@ -4,6 +4,6 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-11T06:20:00+00:00",
-  "lastSeenAt": "2026-08-11T06:20:00+00:00",
-  "notes": "Claiming source-only Hero Gate authority audit capacity under Swarm V2.1; no Studio evidence claims."
+  "lastSeenAt": "2026-08-11T06:31:00+00:00",
+  "notes": "Authority audit published as PR #275; canonical CI green. Waiting on independent integration while global pr-ownership validator import regression is repaired; authority and control findings published durably."
 }
