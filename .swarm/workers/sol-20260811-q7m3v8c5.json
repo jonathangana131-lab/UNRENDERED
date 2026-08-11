@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q7m3v8c5",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T23:10:00+00:00",
-  "lastSeenAt": "2026-08-11T23:12:00+00:00",
+  "lastSeenAt": "2026-08-11T23:13:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
   "branch": "agent/mining/HG-CAPACITY-MINING-authority-q7m3v8c5",
-  "notes": "Retargeted before acquiring any claim after mine-diagnostics was won by an earlier worker. Mine authority/multiplayer source only for a concrete non-duplicate invariant/test/integration gap; do not claim Studio evidence or implementation ownership."
+  "notes": "No claim acquired. mine-diagnostics and mine-authority were both already atomically claimed by earlier workers during registration/retarget races; fenced without source changes."
 }
