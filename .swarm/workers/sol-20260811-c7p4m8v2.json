@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-c7p4m8v2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T21:01:30+00:00",
+  "lastSeenAt": "2026-08-11T21:01:30+00:00",
+  "laneId": "HG-COMPLETION-CONTENT",
+  "slotId": "reconcile",
+  "branch": "agent/reconcile/HG-COMPLETION-CONTENT-c7p4m8v2",
+  "notes": "Reconcile active content-foundation PR lineage while trusted-history recovery blocks integration; identify retained exact heads and stale/superseded variants without starting new feature work."
+}
