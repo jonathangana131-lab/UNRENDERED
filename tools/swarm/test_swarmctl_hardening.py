@@ -2,6 +2,7 @@
 """V2.1 regression suite layered on the proven hardening tests."""
 from pathlib import Path
 import runpy
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -38,6 +39,8 @@ class CliExitPropagationRegressionTests(unittest.TestCase):
 
 
 class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
+    EVENT_ID = "evt-20260811-080520-test-legacy-review"
+
     def setUp(self):
         self.fx = Fx()
         self.now = core.parse_time("2026-08-11T08:24:30+00:00")
@@ -45,135 +48,165 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
     def tearDown(self):
         self.fx.close()
 
-    def write_event(self, value):
-        path = self.fx.root / "events" / "2026-08-11" / f"{value['eventId']}.json"
-        write(path, value)
-        return path
-
-    def authority_review(self, **overrides):
-        value = {
+    def canonical_event(self):
+        return {
             "schemaVersion": 1,
-            "eventId": "evt-20260811-073500-q9m4r2-authority-rereview-approve",
-            "timestamp": "2026-08-11T07:35:00+00:00",
-            "fromWorker": "sol-20260811-q9m4r2",
+            "eventId": self.EVENT_ID,
+            "timestamp": "2026-08-11T08:05:20+00:00",
+            "fromWorker": "sol-20260811-a81f",
             "eventType": "REVIEW_RESULT",
-            "laneId": "HG-BACKFILL-AUTHORITY",
+            "laneId": "LANE-A",
+            "slotId": "reviewer-1",
             "severity": "normal",
-            "summary": "Audited historical authority review.",
-            "affects": ["HG-BACKFILL-AUTHORITY"],
-            "evidence": ["Immutable first-write fixture."],
-            "pr": 297,
-            "headSha": "2a14f54ccecae5ea0e88f288f2c9185dbf885a9e",
-            "verdict": "APPROVE_CONDITIONAL_OWNERSHIP",
+            "summary": "Immutable first-write review fixture.",
+            "affects": ["LANE-A"],
+            "evidence": ["Historical bytes are canonical."],
+            "metadata": {"pr": 315, "headSha": "a" * 40, "verdict": "APPROVE"},
         }
-        value.update(overrides)
+
+    def strict_laundered_event(self):
+        value = self.canonical_event()
+        value.pop("slotId")
+        value["metadata"] = dict(value["metadata"])
+        value["metadata"]["slotId"] = "reviewer-1"
         return value
 
-    def test_audited_authority_first_write_validates_without_rewriting_bytes(self):
-        path = self.write_event(self.authority_review())
+    def event_path(self, root=None):
+        root = self.fx.root if root is None else root
+        return root / "events" / "2026-08-11" / f"{self.EVENT_ID}.json"
+
+    def rule_for(self, canonical_path, restorable_from=()):
+        return {
+            "date": "2026-08-11",
+            "filename": canonical_path.name,
+            "canonicalGitBlobSha1": hard._git_blob_sha1(canonical_path),
+            "restorableFromGitBlobSha1": set(restorable_from),
+        }
+
+    def test_audited_production_hashes_match_first_write_evidence(self):
+        rules = hard._CANONICAL_IMMUTABLE_EVENTS
+        self.assertEqual(
+            rules["evt-20260811-073500-q9m4r2-authority-rereview-approve"]["canonicalGitBlobSha1"],
+            "2f0b0221b7995b3862ac6c009804ebb66f715fac",
+        )
+        self.assertEqual(
+            rules["evt-20260811-073650-q9m4r2-worldentity-sync-hold"]["canonicalGitBlobSha1"],
+            "f9781fd64518c01aa10b460f01aff13adc6635da",
+        )
+        self.assertEqual(
+            rules["evt-20260811-080520-h4v8n2-cart-geometry-review"]["canonicalGitBlobSha1"],
+            "a39220b473086229e6b1057b296342175b851af1",
+        )
+        self.assertEqual(
+            rules["evt-20260811-081620-mat8c3r1-materialdna-key-grammar"]["canonicalGitBlobSha1"],
+            "9a7f679ea84600d6a28a8bef02436e5f85fd857e",
+        )
+
+    def test_exact_canonical_blob_accepts_malformed_historical_event_without_mutation(self):
+        path = self.event_path()
+        write(path, self.canonical_event())
         before = path.read_bytes()
-        result = hard.validate_all(self.fx.root, self.now)
+        rule = self.rule_for(path)
+        with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
+            result = hard.validate_all(self.fx.root, self.now)
         self.assertEqual(result["events"], 1)
         self.assertEqual(path.read_bytes(), before)
 
-    def test_audited_worldentity_sync_required_first_write_validates(self):
-        path = self.write_event({
-            "schemaVersion": 1,
-            "eventId": "evt-20260811-073650-q9m4r2-worldentity-sync-hold",
-            "timestamp": "2026-08-11T07:36:50+00:00",
-            "fromWorker": "sol-20260811-q9m4r2",
-            "eventType": "REVIEW_RESULT",
-            "laneId": "HG-BACKFILL-WORLDENTITY",
-            "severity": "normal",
-            "summary": "Audited historical synchronization hold.",
-            "affects": ["HG-BACKFILL-WORLDENTITY"],
-            "evidence": ["Immutable first-write fixture."],
-            "pr": 293,
-            "headSha": "c301d8403d3c1b93ee3b2988f80e9d1e689eb33d",
-            "verdict": "SYNC_REQUIRED",
-        })
-        before = path.read_bytes()
-        hard.validate_all(self.fx.root, self.now)
-        self.assertEqual(path.read_bytes(), before)
+    def test_known_event_strict_normalization_is_still_rejected_as_laundered_history(self):
+        path = self.event_path()
+        write(path, self.canonical_event())
+        rule = self.rule_for(path)
+        write(path, self.strict_laundered_event())
+        with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
+            with self.assertRaises(core.ControlError):
+                hard.validate_all(self.fx.root, self.now)
 
-    def test_audited_cart_slot_first_write_validates(self):
-        path = self.write_event({
-            "schemaVersion": 1,
-            "eventId": "evt-20260811-080520-h4v8n2-cart-geometry-review",
-            "timestamp": "2026-08-11T08:05:20+00:00",
-            "fromWorker": "sol-20260811-h4v8n2",
-            "eventType": "REVIEW_RESULT",
-            "laneId": "HG-PHYSICS-CART-GEOMETRY",
-            "slotId": "audit",
-            "severity": "normal",
-            "summary": "Audited historical cart review.",
-            "affects": ["HG-PHYSICS-CART-GEOMETRY"],
-            "evidence": ["Immutable first-write fixture."],
-            "metadata": {"pr": 311, "headSha": "b45493e4168547fab6556c31558d9a25123f3b74", "verdict": "APPROVE"},
-        })
-        before = path.read_bytes()
-        hard.validate_all(self.fx.root, self.now)
-        self.assertEqual(path.read_bytes(), before)
+    def test_known_event_byte_change_fails_closed(self):
+        path = self.event_path()
+        write(path, self.canonical_event())
+        rule = self.rule_for(path)
+        changed = self.canonical_event()
+        changed["summary"] = "A changed historical summary must not be blessed."
+        write(path, changed)
+        with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
+            with self.assertRaises(core.ControlError):
+                hard.validate_all(self.fx.root, self.now)
 
-    def test_audited_materialdna_affects_typo_is_exact_identity_only(self):
-        path = self.write_event({
-            "schemaVersion": 1,
-            "eventId": "evt-20260811-081620-mat8c3r1-materialdna-key-grammar",
-            "timestamp": "2026-08-11T08:16:20+00:00",
-            "fromWorker": "sol-20260811-mat8c3r1",
-            "eventType": "FINDING",
-            "laneId": "HG-CAPACITY-MINING",
-            "severity": "medium",
-            "summary": "Audited historical MaterialDNA finding.",
-            "affects": ["HERO-GATE", "MaterialDNA"],
-            "evidence": ["Immutable first-write fixture."],
-            "metadata": {"proposedLane": {"laneId": "HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR"}},
-        })
-        before = path.read_bytes()
-        hard.validate_all(self.fx.root, self.now)
-        self.assertEqual(path.read_bytes(), before)
+    def test_canonical_path_cannot_swap_to_a_different_strict_event_id(self):
+        path = self.event_path()
+        write(path, self.canonical_event())
+        rule = self.rule_for(path)
+        swapped = self.strict_laundered_event()
+        swapped["eventId"] = "evt-20260811-080520-forged-strict-review"
+        write(path, swapped)
+        with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
+            with self.assertRaises(core.ControlError):
+                hard.validate_all(self.fx.root, self.now)
 
-    def test_fresh_backdated_event_cannot_enter_compatibility(self):
-        event = self.authority_review(eventId="evt-20260811-073500-forged-backdated-review")
-        self.write_event(event)
+    def test_fresh_backdated_legacy_event_cannot_enter_compatibility(self):
+        value = self.canonical_event()
+        value["eventId"] = "evt-20260811-080520-forged-backdated-review"
+        path = self.fx.root / "events" / "2026-08-11" / f"{value['eventId']}.json"
+        write(path, value)
         with self.assertRaises(core.ControlError):
             hard.validate_all(self.fx.root, self.now)
 
-    def test_known_identity_with_changed_legacy_value_fails_closed(self):
-        self.write_event(self.authority_review(pr=999))
-        with self.assertRaises(core.ControlError):
-            hard.validate_all(self.fx.root, self.now)
-
-    def test_known_identity_with_extra_legacy_field_fails_closed(self):
-        self.write_event(self.authority_review(nextAction="Forged broader dialect"))
-        with self.assertRaises(core.ControlError):
-            hard.validate_all(self.fx.root, self.now)
-
-    def test_known_identity_with_conflicting_metadata_fails_closed(self):
-        self.write_event(self.authority_review(metadata={"pr": 298}))
-        with self.assertRaises(core.ControlError):
-            hard.validate_all(self.fx.root, self.now)
-
-    def test_known_identity_with_unknown_key_fails_closed(self):
-        self.write_event(self.authority_review(unknownCompatibilityEscape=True))
-        with self.assertRaises(core.ControlError):
-            hard.validate_all(self.fx.root, self.now)
-
-    def test_materialdna_exception_cannot_generalize_invalid_affects(self):
+    def test_invalid_affects_does_not_generalize_beyond_exact_materialdna_blob(self):
         value = {
             "schemaVersion": 1,
             "eventId": "evt-20260811-081620-forged-materialdna-finding",
             "timestamp": "2026-08-11T08:16:20+00:00",
-            "fromWorker": "sol-20260811-mat8c3r1",
+            "fromWorker": "sol-20260811-a81f",
             "eventType": "FINDING",
-            "laneId": "HG-CAPACITY-MINING",
+            "laneId": "LANE-A",
             "severity": "medium",
-            "summary": "Forged historical-looking finding.",
-            "affects": ["HERO-GATE", "MaterialDNA"],
+            "summary": "Fresh finding cannot inherit historical affects compatibility.",
+            "affects": ["LANE-A", "MaterialDNA"],
         }
-        self.write_event(value)
+        path = self.fx.root / "events" / "2026-08-11" / f"{value['eventId']}.json"
+        write(path, value)
         with self.assertRaises(core.ControlError):
             hard.validate_all(self.fx.root, self.now)
+
+    def test_transition_allows_only_exact_laundered_to_canonical_restoration(self):
+        with tempfile.TemporaryDirectory() as before_dir, tempfile.TemporaryDirectory() as after_dir:
+            before = Path(before_dir)
+            after = Path(after_dir)
+            before_path = self.event_path(before)
+            after_path = self.event_path(after)
+            write(before_path, self.strict_laundered_event())
+            before_sha = hard._git_blob_sha1(before_path)
+            write(after_path, self.canonical_event())
+            rule = self.rule_for(after_path, {before_sha})
+            with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
+                result = hard.transition_check(before, after)
+            self.assertEqual(result["canonicalRestorations"], [f"events/2026-08-11/{after_path.name}"])
+
+    def test_transition_rejects_unapproved_historical_rewrite(self):
+        with tempfile.TemporaryDirectory() as before_dir, tempfile.TemporaryDirectory() as after_dir:
+            before = Path(before_dir)
+            after = Path(after_dir)
+            before_path = self.event_path(before)
+            after_path = self.event_path(after)
+            unexpected = self.strict_laundered_event()
+            unexpected["summary"] = "Different laundered bytes are not restorable."
+            write(before_path, unexpected)
+            write(after_path, self.canonical_event())
+            rule = self.rule_for(after_path, {"0" * 40})
+            with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
+                with self.assertRaises(core.ControlError):
+                    hard.transition_check(before, after)
+
+    def test_transition_rejects_readding_known_historical_path(self):
+        with tempfile.TemporaryDirectory() as before_dir, tempfile.TemporaryDirectory() as after_dir:
+            before = Path(before_dir)
+            after = Path(after_dir)
+            after_path = self.event_path(after)
+            write(after_path, self.canonical_event())
+            rule = self.rule_for(after_path)
+            with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
+                with self.assertRaises(core.ControlError):
+                    hard.transition_check(before, after)
 
 
 class WorkflowSnapshotFenceRegressionTests(unittest.TestCase):
