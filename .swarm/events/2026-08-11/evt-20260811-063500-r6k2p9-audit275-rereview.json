@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063500-r6k2p9-audit275-rereview",
+  "timestamp": "2026-08-11T06:35:00+00:00",
+  "fromWorker": "sol-20260811-r6k2p9",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "info",
+  "summary": "APPROVE PR #275 again at updated head 1915b65480fc51165c86b47f51d9342291e34f0a. The added caller/session binding, explicit evidence-schema versioning, and lab/resolved-region schema provenance requirements are justified and close real trust/evidence-contract gaps without claiming engine PASS.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT"],
+  "evidence": [
+    "PR #275 exact-head canonical CI run 31465486641 is green and the diff remains documentation-only.",
+    "Current private bridge driver_two_client.luau derives reports from the actual OnServerEvent player, supporting the contract rule that caller identity must be server-bound rather than self-reported.",
+    "Current bridge driver and TwoClientProbe payloads compare recipe/world/region/fingerprint/repro/count/entity facts but omit UNRENDERED_LabSchemaVersion and UNRENDERED_ResolvedRegionSchemaVersion, confirming the documented provenance gap.",
+    "The updated text explicitly requires transport/evaluator schema versioning and keeps true two-client authority UNVERIFIED until accepted real Studio evidence exists.",
+    "This supersedes the earlier review event for PR #275 because the audit branch advanced after that review."
+  ]
+}
