@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090130-32pf6uw1-runtime-dispose-reentry",
+  "timestamp": "2026-08-11T09:01:30+00:00",
+  "fromWorker": "sol-20260811-32pf6uw1",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "PhysicsLabRuntime has a distinct lifecycle/reentrancy gap outside active recipe-boundary PR #310: an observeTransition callback can call runtime:dispose() while step() is in flight. On current main, dispose unregisters the runtime before the outer transition can commit, so a failed step can still destroy lifecycle state. With pending FidelityManager hardening from #274, the same pattern can become partial teardown for a multi-entity runtime: dispose unregisters earlier entities, then FidelityManager rejects unregister of the currently-transitioning entity, leaving the runtime half-unregistered with _disposed still false. Runtime disposal should fail before mutating either store whenever a transition callback is in flight (or otherwise make teardown transactional), with a deterministic two-entity regression. Do not patch concurrently with the active PhysicsLabRuntime source owner; queue this as the next bounded source-depth closure after #310 is resolved/rebased.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE", "HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "Current main dd8f158 PhysicsLabRuntime.step calls the external observeTransition callback before registry.transitionRegistered commits the authoritative transition; there is no runtime-level transition/lifecycle guard.",
+    "Current main dd8f158 PhysicsLabRuntime.dispose iterates _entityIds, unregistering FidelityManager then WorldEntity for each entity, and sets _disposed only after the full loop. Therefore callback-triggered dispose mutates lifecycle state before the outer step completes.",
+    "Exact current-main source proof: observer -> runtime:dispose() removes the transition entity from both stores; control returns to transitionHook, whose registry.transitionRegistered(entityId, ...) must reject the now-missing registration. The step fails after disposal side effects have already committed.",
+    "Pending Fidelity PR #274 head 5251998d adds state.transitioning=true around the callback and FidelityManager.unregister asserts not state.transitioning. For recipe entities [A, B], stepping B while observer calls dispose unregisters A successfully, then rejects unregister(B); _disposed is never set, leaving A removed and B present.",
+    "Repository issue/PR search plus today's swarm event log showed no existing runtime dispose/reentrant/partial-teardown owner. PR #310 review history contains recipe container/entity plain-data defects but no dispose/lifecycle finding.",
+    "Recommended deterministic regression: construct a two-entity runtime, trigger a ready transition on the second entity, call runtime:dispose() from observeTransition under pcall, assert disposal is rejected before mutation, then assert both records/fidelity registrations remain intact and snapshot registered count is unchanged."
+  ]
+}
