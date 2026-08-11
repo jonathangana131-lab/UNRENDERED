@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064758-q9x4m2-failclosed-caught-ogx9k2",
+  "timestamp": "2026-08-11T06:47:58+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "FINDING",
+  "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+  "severity": "high",
+  "summary": "Post-#290 product-PR validation confirms the trusted facade now fails closed, but live control state is still invalid. PR #275 run 31466373956 pr-ownership job 93700005602 terminated with exit code 2 on worker sol-20260811-ogx9k2 status ACTIVE, which is unsupported by the hardened worker schema. Normalize that live worker record (and audit for additional legacy ACTIVE records) before using #275 as the required positive explicit-JSON-PASS proof.",
+  "affects": ["SWARM-RECOVERY-PR-OWNERSHIP-IMPORT", "HG-BACKFILL-AUTHORITY", "HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #275 fail-closed run 31466373956, pr-ownership job 93700005602: `SWARM CONTROL ERROR: .../sol-20260811-ogx9k2.json: invalid worker status` followed by `Process completed with exit code 2`.",
+    "Current swarm-control worker record sol-20260811-ogx9k2.json still reports status ACTIVE at lastSeenAt 2026-08-11T06:44:00Z.",
+    "This is mechanically stronger than the pre-#290 green-with-error behavior: the same class of invalid live state now blocks ownership as intended."
+  ],
+  "pr": 275,
+  "headSha": "7516c4e949d77af9ea55b47294141e532d343a9d"
+}
