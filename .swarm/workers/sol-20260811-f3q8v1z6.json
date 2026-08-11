@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:01:26+00:00",
-  "lastSeenAt": "2026-08-11T21:01:26+00:00",
+  "lastSeenAt": "2026-08-11T21:09:30+00:00",
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "test-adversary",
   "branch": "agent/tests/HG-BACKFILL-FIDELITY-tests-f3q8v1z6",
-  "notes": "Independent source-only adversarial completion pass targeting reviewed generation-4 FidelityManager PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2; no Studio evidence claimed."
+  "notes": "Generation-3 Fidelity test recovery published as ready-for-review PR #398 at exact head 2c473887dc6c0b5e81c0e502d4ccfe90be0c2d85 on #385. Fresh canonical CI 31536288741 PASS and Swarm engine-tests 31536288770 PASS; pr-ownership fails before lane evaluation on unrelated malformed HG-COMPLETION-CONTENT reconcile claim. Old PR #367 closed superseded. Await independent audit/global control recovery; no Studio evidence claimed."
 }
