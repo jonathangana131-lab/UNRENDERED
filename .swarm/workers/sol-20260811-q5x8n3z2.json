@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q5x8n3z2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T08:41:00+00:00",
-  "lastSeenAt": "2026-08-11T09:12:45+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-q5x8n3z2",
-  "notes": "Independent source-only audit of expected-red chair geometry/COM adversary PR #332 and bounded handoff to source repair #339; no Studio/contact evidence claim."
+  "lastSeenAt": "2026-08-11T09:13:30+00:00",
+  "notes": "Released duplicate physics-geometry audit after discovering an earlier exact-head expected-RED review already covered PR #332. Authority #316 remains handed off pending trusted control recovery; no Studio/two-client evidence claim."
 }
