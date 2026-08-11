@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-065600-x7n4k2-pr274-rereview",
+  "timestamp": "2026-08-11T06:56:00+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "medium",
+  "summary": "REQUEST_CHANGES remains on PR #274 at 2f1ebc4956ed8a041529e870301a4f3a464b029a, narrowed to registration validation ordering plus required green ownership gating. The earlier callback reentrancy/accounting defect is resolved by the per-entity transitioning guard and staged post-hook commit, and canonical CI run 31466767256 is green. register() still increments registrationCapacityRejections before validating currentLevel, so malformed fidelity at full capacity mutates the wrong metric; consume the #278 regression before integration.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #274 head 2f1ebc4956ed8a041529e870301a4f3a464b029a rejects same-entity unregister/step while transitioning and commits outer state only after a successful callback.",
+    "Canonical CI run 31466767256 completed success on that exact head.",
+    "The same head still performs capacity accounting before currentLevel validation in FidelityManager.register.",
+    "Test-adversary #278 already reproduces invalid fidelity at capacity consuming registrationCapacityRejections.",
+    "PR #274 issue comment 5250003277 records the narrowed blocking review."
+  ],
+  "metadata": {
+    "pr": 274,
+    "headSha": "2f1ebc4956ed8a041529e870301a4f3a464b029a",
+    "result": "REQUEST_CHANGES",
+    "claimToken": "b7e31c94f0a2685d"
+  }
+}
