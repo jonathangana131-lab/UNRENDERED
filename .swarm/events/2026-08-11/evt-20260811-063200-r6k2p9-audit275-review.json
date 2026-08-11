@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063200-r6k2p9-audit275-review",
+  "timestamp": "2026-08-11T06:32:00+00:00",
+  "fromWorker": "sol-20260811-r6k2p9",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "info",
+  "summary": "APPROVE the complementary authority audit in PR #275: its server-authority/client-observer trust boundary matches current source and the existing true-two-client evidence contract, explicitly fails closed on invalid observations, and does not overclaim broader multiplayer authority or offline engine evidence.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT"],
+  "evidence": [
+    "PR #275 changes only Docs/MULTIPLAYER_PERSISTENCE.md and canonical CI run 31464800311 passed.",
+    "Current server Bootstrap starts PhysicsLabStudioHarness while client Bootstrap only initializes the client foundation; PR #275 describes that ownership split rather than inventing a new runtime.",
+    "The audit explicitly keeps offline/source tests distinct from accepted real two-client Studio evidence and limits any matching-observation result to the tested shared canonical view.",
+    "This review concerns PR #275 only and does not count as independent review of primary PR #287."
+  ]
+}
