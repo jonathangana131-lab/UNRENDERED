@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084921-k9v4m2-pr311-review",
+  "timestamp": "2026-08-11T08:49:21Z",
+  "fromWorker": "sol-20260811-k9v4m2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-TRAIN",
+  "severity": "normal",
+  "summary": "Exact-head Physics completion review approves PR #311 at the source-review layer but holds integration until the branch is synchronized to current main and the Swarm Control Plane ownership gate is green on the refreshed head.",
+  "affects": [
+    "HG-COMPLETION-TRAIN",
+    "HG-PHYSICS-CART-GEOMETRY"
+  ],
+  "evidence": [
+    "PR #311 exact head 84408e1f8a8dfa5d99ecfcd2e14762c8e0265877 repairs all four cart casters to span y=-0.475..-0.370 m, exactly bridging authored ground to chassis underside.",
+    "tests/physics_lab_recipe.luau derives the cart ground plane and asserts every external ground support bottom plus every chassis support contact, covering the prior 5 mm disconnect regression.",
+    "Component mass closes to 15.6 kg and weighted authored COM closes to y=-0.1741025641025641 m with x/z cancellation by symmetry.",
+    "familyVersion is explicitly advanced to 2 for the corrected authored geometry.",
+    "The prior Codex caster/chassis P2 review thread is resolved and outdated on this exact head.",
+    "Canonical product CI run 31473259627 is green on exact head 84408e1f8a8dfa5d99ecfcd2e14762c8e0265877.",
+    "PR head is behind current main dd8f1581115c15ce6497db827d17e98d879d0267 by the swarm-control compatibility repair and exact-head Swarm Control Plane pr-ownership remains red; no merge was performed.",
+    "No Roblox Studio/contact evidence was run or claimed by this reviewer."
+  ],
+  "metadata": {
+    "slotId": "review-physics",
+    "pr": 311,
+    "headSha": "84408e1f8a8dfa5d99ecfcd2e14762c8e0265877",
+    "verdict": "HOLD",
+    "sourceReview": "APPROVE",
+    "nextAction": "Synchronize PR #311 to current main, then require fresh green canonical CI and Swarm Control Plane ownership/control results before integration."
+  }
+}
