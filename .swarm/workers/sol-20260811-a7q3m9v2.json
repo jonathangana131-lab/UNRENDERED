@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-a7q3m9v2",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-11T21:31:40+00:00",
+  "lastSeenAt": "2026-08-11T21:31:40+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-a7q3m9v2",
+  "notes": "Independent exact-head source/test audit of diagnostics generation-6 PR #401 at 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d; no Studio/viewport evidence claims."
+}
