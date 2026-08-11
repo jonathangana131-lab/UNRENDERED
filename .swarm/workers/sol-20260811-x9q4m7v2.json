@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-x9q4m7v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T11:47:46+00:00",
-  "lastSeenAt": "2026-08-11T11:49:55+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-authority",
-  "branch": "agent/mining/HG-CAPACITY-MINING-authority-x9q4m7v2-g4",
-  "notes": "Generation-4 authority capacity-mining pass after higher-priority claim races were lost fail-closed. Scope is bounded source-only Hero Gate authority inspection for a concrete non-duplicate gap."
+  "lastSeenAt": "2026-08-11T12:02:30+00:00",
+  "notes": "Completed generation-4 authority capacity mining. Published evt-20260811-115603-x9q4m7v2-authority-two-client-schema-provenance: the private two-client evidence path omits lab/resolved schema-version provenance required by the public multiplayer contract and has no explicit observation/evidence schema version. Released the mining claim. Higher-priority history-recovery and physics-geometry takeover attempts lost atomic claim races and were correctly left to their newer owners; no competing source branch or Roblox evidence was published."
 }
