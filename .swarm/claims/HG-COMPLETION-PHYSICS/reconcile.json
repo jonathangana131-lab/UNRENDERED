@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "reconcile",
+  "workerId": "sol-20260811-u7m4c9p2",
+  "claimToken": "9c4e71a2d6b3085f",
+  "claimedAt": "2026-08-11T12:07:00+00:00",
+  "heartbeatAt": "2026-08-11T12:07:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/reconcile/HG-COMPLETION-PHYSICS-u7m4c9p2",
+  "pr": null,
+  "notes": "Physics completion lineage reconciliation: identify already-superseded/open duplicates and preserve only current reviewed value while integration/review workers own active heads. No product or Studio work."
+}
