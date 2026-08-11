@@ -83,6 +83,39 @@ class WorkflowSnapshotFenceRegressionTests(unittest.TestCase):
             health_job.index('cp -R "$RUNNER_TEMP/control-health/.swarm/generated/." .swarm/generated/'),
         )
 
+    def test_projection_publisher_revalidates_authoritative_tip_before_retry(self):
+        workflow = self.workflow_text()
+        control_job = workflow.split("  validate-control-branch:\n", 1)[1].split("  sync-main-health:\n", 1)[0]
+
+        self.assertIn("MAX_PUBLISH_ATTEMPTS=12", control_job)
+        self.assertIn("prepare_latest_projection()", control_job)
+        self.assertIn('EXPECTED="$LATEST"', control_job)
+        self.assertIn(
+            'python3 tools/swarm/swarmctl_hardening.py validate --root "$next_root/.swarm"',
+            control_job,
+        )
+        self.assertIn(
+            '--before-root "$parent_root/.swarm" --after-root "$next_root/.swarm"',
+            control_job,
+        )
+        self.assertIn('render --root "$next_root/.swarm"', control_job)
+        self.assertIn("retrying from authoritative tip", control_job)
+        self.assertNotIn("git push --force", control_job)
+
+    def test_health_publisher_rebases_and_fences_superseded_runs(self):
+        workflow = self.workflow_text()
+        health_job = workflow.split("  sync-main-health:\n", 1)[1]
+
+        self.assertIn("MAX_PUBLISH_ATTEMPTS=12", health_job)
+        self.assertIn('for attempt in $(seq 1 "$MAX_PUBLISH_ATTEMPTS")', health_job)
+        self.assertIn('CONTROL_SHA="$(git rev-parse origin/swarm-control)"', health_job)
+        self.assertIn('git archive "$CONTROL_SHA" .swarm', health_job)
+        self.assertIn("CURRENT_RUN_ID", health_job)
+        self.assertIn("CURRENT_RUN_ID >= MAIN_RUN_ID", health_job)
+        self.assertIn("retrying health against authoritative tip", health_job)
+        self.assertIn("retrying from a newer tip", health_job)
+        self.assertNotIn("git push --force", health_job)
+
 
 if __name__ == "__main__":
     unittest.main()
