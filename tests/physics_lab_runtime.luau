@@ -242,7 +242,10 @@ local function run(): number
 	local forgedOriginAccepted = pcall(function()
 		PhysicsLabRuntime.new(recipeCopy(recipe, forgedOriginEntities))
 	end)
-	expect("runtime rejects entity provenance that diverges from the canonical region", not forgedOriginAccepted)
+	expect(
+		"runtime rejects entity provenance that diverges from the canonical region",
+		not forgedOriginAccepted
+	)
 
 	local forgedFidelityEntities = copyEntities(recipe)
 	local forgedFidelityEntry = table.clone(forgedFidelityEntities[1])
