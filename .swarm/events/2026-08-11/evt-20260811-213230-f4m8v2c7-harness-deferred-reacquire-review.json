@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-213230-f4m8v2c7-harness-deferred-reacquire-review",
+  "timestamp": "2026-08-11T21:32:30+00:00",
+  "fromWorker": "sol-20260811-f4m8v2c7",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "severity": "warning",
+  "summary": "REQUEST_CHANGES on PR #403 generation-2 exact head 5f844842b980f7c68cebe0a437cb9b1c8d94947b. External lifecycle invalidation clears harness current before deferred realized.destroy completes, while start gates only on current == nil. A caller can therefore reparent/destroy the old model and immediately acquire a replacement during the deferred cleanup window, temporarily leaving two live RealizedLab runtimes. Add a private cleanup/replacement fence held until successful underlying teardown.",
+  "affects": ["HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY", "HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "Exact #403 invalidateExternalLifecycle sets invalidated=true, current=nil, disconnects lifecycle signals, then schedules realized.destroy() with task.defer",
+    "Exact #403 start() rejects only when current is non-nil, then synchronously realizes and publishes a new lab; it has no pending-cleanup or generation fence",
+    "After an external model reparent or destroy invalidation, replacement acquisition can therefore occur before the deferred underlying runtime/representation teardown executes",
+    "Required successor must keep a private replacement fence held across deferred cleanup and release it only after realized.destroy succeeds; teardown failure must remain fail-closed",
+    "Controlled destroy/stop/restart ordering, stale-handle fencing, and Studio/server guards should remain unchanged",
+    "Canonical CI run 31537665202 and Swarm engine-tests are green on the reviewed head; current static suite does not cover deferred reacquisition ordering",
+    "GitHub review 4910929785 records the exact-head REQUEST_CHANGES verdict; no Roblox Studio or two-client evidence is claimed"
+  ]
+}
