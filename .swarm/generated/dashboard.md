@@ -1,10 +1,10 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:12:59.039711+00:00`
+Generated: `2026-08-11T07:14:02.169068+00:00`
 
 Canonical main: **GREEN** `b0bf5ba664483cdcc2af061b0fb652b0aea00706`
 
-State digest: `6d27cd22d1b6395cb5346a93d7f16d40c7c8a7b8da017bb56896641edb5f547f`
+State digest: `07c974331965301c18e1e37061f9cf0c3e98815fdfa48a3814a496ba41de8553`
 
 ## Summary
 
@@ -37,7 +37,7 @@ State digest: `6d27cd22d1b6395cb5346a93d7f16d40c7c8a7b8da017bb56896641edb5f547f`
 - `HG-BACKFILL-DIAGNOSTICS/primary` → `sol-20260811-q7h4n2`; lease to `2026-08-11T07:54:20+00:00`
 - `HG-BACKFILL-FIDELITY/audit` → `sol-20260811-x7n4k2`; lease to `2026-08-11T07:34:30+00:00`
 - `HG-BACKFILL-FIDELITY/primary` → `sol-20260811-w3n8k2`; lease to `2026-08-11T07:38:00+00:00`
-- `HG-BACKFILL-FIDELITY/test-adversary` → `sol-20260811-30a8e397`; lease to `2026-08-11T07:32:00+00:00`
+- `HG-BACKFILL-FIDELITY/test-adversary` → `sol-20260811-30a8e397`; lease to `2026-08-11T07:43:36+00:00`
 - `HG-BACKFILL-OBJECTGENOME/audit` → `sol-20260811-went7k3`; lease to `2026-08-11T07:38:20+00:00`
 - `HG-BACKFILL-OBJECTGENOME/primary` → `sol-20260811-k2m9x7`; lease to `2026-08-11T07:35:30+00:00`
 - `HG-BACKFILL-OBJECTGENOME/test-adversary` → `sol-20260811-q7n4m9`; lease to `2026-08-11T07:20:00+00:00`

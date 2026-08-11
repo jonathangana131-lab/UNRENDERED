@@ -47,7 +47,7 @@
     },
     {
       "branch": "agent/physics/HG-BACKFILL-FIDELITY-tests-30a8e397",
-      "expiresAt": "2026-08-11T07:32:00+00:00",
+      "expiresAt": "2026-08-11T07:43:36+00:00",
       "generation": 1,
       "laneId": "HG-BACKFILL-FIDELITY",
       "pr": 278,
@@ -158,7 +158,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:12:59.039711+00:00",
+  "generatedAt": "2026-08-11T07:14:02.169068+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "b0bf5ba664483cdcc2af061b0fb652b0aea00706",
@@ -177,14 +177,14 @@
       "DEPENDENCY_DISCOVERED": 3,
       "EVIDENCE_RESULT": 5,
       "EXTERNAL_BLOCKER": 1,
-      "FINDING": 37,
+      "FINDING": 38,
       "HANDOFF": 17,
       "INTEGRATION_RESULT": 6,
       "RECOVERY": 2,
-      "REVIEW_REQUEST": 25,
+      "REVIEW_REQUEST": 26,
       "REVIEW_RESULT": 29
     },
-    "generatedAt": "2026-08-11T07:12:59.039711+00:00",
+    "generatedAt": "2026-08-11T07:14:02.169068+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -381,47 +381,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-PHYSICS-GEOMETRY"
-      ],
-      "eventId": "evt-20260811-070410-q7h4n2-geometry-audit-release",
-      "eventType": "HANDOFF",
-      "evidence": [
-        "evt-20260811-070340-q7h4n2-pr279-rereview.json"
-      ],
-      "fromWorker": "sol-20260811-q7h4n2",
-      "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-      "metadata": {
-        "claimToken": "2f8c61d4a9e7350b",
-        "reviewedHead": "83a0f370de680c6db59787578f6931c25dd854b6",
-        "reviewedPr": 279
-      },
-      "schemaVersion": 1,
-      "severity": "info",
-      "summary": "Physics Lab geometry audit slot complete and released. PR #279 exact head 83a0f370de680c6db59787578f6931c25dd854b6 is independently approved after the two requested lower-bound invariants were added. Current-main drift is non-overlapping by file; integration owner should perform the normal refresh/check before merge. No Studio evidence was requested or claimed.",
-      "timestamp": "2026-08-11T07:04:10+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-WORLDENTITY"
-      ],
-      "eventId": "evt-20260811-070430-ogx9k2-worldentity-boundary-audit",
-      "eventType": "REVIEW_RESULT",
-      "evidence": [
-        "PR #271 issue comment 5249983545 records both findings and requested regression coverage.",
-        "WorldEntity.captureState(record, nil :: any) reaches cloneState(nil), becomes {}, and advances stateRevision; captureRegistered inherits the same behavior despite a non-optional PlainData contract.",
-        "WorldEntity.createRegistry(false :: any) evaluates false through `duplicateDiagnosticCapacity or DEFAULT`, silently selecting the default capacity instead of rejecting malformed input.",
-        "createRegistry passes runtime input directly to assertFiniteNumber, whose comparisons occur without an initial type check; a table can therefore reach comparison metamethods such as __lt before fail-closed rejection.",
-        "The hostile diagnostic-formatting fix should also audit fidelityRank and unknown registered-ID formatting, which interpolate runtime values at public typed boundaries."
-      ],
-      "fromWorker": "sol-20260811-ogx9k2",
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "schemaVersion": 1,
-      "severity": "important",
-      "summary": "WorldEntity audit found two additional runtime-boundary gaps on current main/PR #271: required capture APIs silently accept nil as empty durable state because cloneState also implements constructor defaulting, and createRegistry silently treats false capacity as omitted while non-number hostile tables can reach numeric comparison metamethods before rejection.",
-      "timestamp": "2026-08-11T07:04:30+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-FIDELITY"
@@ -683,6 +642,26 @@
     },
     {
       "affects": [
+        "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+        "HG-BACKFILL-REALITY"
+      ],
+      "eventId": "evt-20260811-071336-q9m4r2-pr-check-live-snapshot-race",
+      "eventType": "FINDING",
+      "evidence": [
+        "PR #282 exact head a2785f04f0fff74c9e78bfe3d79702376dad271b has green canonical CI and independent exact-head source/replay approval, with a live generation-1 claim still leased.",
+        "Ownership run 31467814969 reached trusted pr-check with engine-tests green; independent review records its failure specifically as live control state changed after its validation marker.",
+        "After validated projection commit c4074a2cc807c6917b9bd8c9ab056010a261a18c, PR #282 was retriggered immediately at 07:12:48Z; run 31468044380 again reached Enforce live ownership with trusted code and exited 2 while swarm-control continued receiving unrelated worker writes.",
+        "Current trusted validate_marker compares generated validation stateDigest to a digest of the entire fetched mutable control tree, so any post-projection control mutation makes that snapshot unverifiable until another projection is published."
+      ],
+      "fromWorker": "sol-20260811-q9m4r2",
+      "laneId": "HG-BACKFILL-REALITY",
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "Fail-closed PR ownership remains effectively race-prone under high control churn even after live validation recovery. PR #282 was retriggered immediately after fresh validated projections, but ownership runs 31467814969 and 31468044380 both reached the trusted checker and failed while control advanced between projection and asynchronous pr-check materialization. The first independent review pinned the explicit error as live control state changed after its validation marker. Because pr-check fetches the latest live control branch and validate_marker hashes the entire mutable control tree, any heartbeat/claim/event after projection invalidates the marker before the PR job can consume it. Recovery should fence PR ownership to one immutable validated control snapshot rather than require a moving live head to remain unchanged for the whole trigger window.",
+      "timestamp": "2026-08-11T07:13:36+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-WORLDENTITY"
       ],
       "eventId": "evt-20260811-071400-z4q8n1-worldentity-generator-version",
@@ -718,6 +697,24 @@
       "severity": "high",
       "summary": "Correction to evt-20260811-071400-z4q8n1-worldentity-generator-version: the normative upper bound for WorldEntity origin.generatorVersion is stricter than generic IEEE-754 max-safe. The deterministic generation contract defines generationVersion in [1, 2147483647], so provenance must reject 2147483648 even though it remains exactly representable as a double. Use the canonical deterministic version range rather than a standalone max-safe bound.",
       "timestamp": "2026-08-11T07:17:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-WORLDENTITY"
+      ],
+      "eventId": "evt-20260811-071800-ogx9k2-worldentity-rereview-ready",
+      "eventType": "REVIEW_REQUEST",
+      "evidence": [
+        "src/shared/Reality/WorldEntity.luau now validates origin.generatorVersion via assertNonNegativeInteger and then enforces >=1.",
+        "tests/world_entity_registry_shape.luau covers MAX_SAFE_INTEGER acceptance/preservation in new(), MAX_SAFE_INTEGER+1 rejection in new(), and matching registry-owned origin acceptance/rejection.",
+        "Only WorldEntity source and its contract test differ from current main."
+      ],
+      "fromWorker": "sol-20260811-ogx9k2",
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "PR #293 head 83a1130c0424404a85dbb3d61623b2fb3e34f06d addresses the independent audit generatorVersion exactness blocker by routing canonical origin.generatorVersion through the same <=2^53-1 safe-integer contract, with max-safe acceptance and max-safe+1 rejection through both WorldEntity.new and registry ownership paths. Exact-head CI and Swarm Control are running; independent audit re-review may proceed on this head.",
+      "timestamp": "2026-08-11T07:18:00+00:00"
     },
     {
       "affects": [
@@ -869,7 +866,7 @@
       "workerId": "sol-20260811-r6k2p9"
     }
   ],
-  "stateDigest": "6d27cd22d1b6395cb5346a93d7f16d40c7c8a7b8da017bb56896641edb5f547f",
+  "stateDigest": "07c974331965301c18e1e37061f9cf0c3e98815fdfa48a3814a496ba41de8553",
   "summary": {
     "activeClaims": 16,
     "activeResourceClaims": 2,
