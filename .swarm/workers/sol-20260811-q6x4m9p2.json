@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q6x4m9p2",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "WORKING",
   "startedAt": "2026-08-11T11:53:56+00:00",
-  "lastSeenAt": "2026-08-11T12:23:00+00:00",
-  "notes": "No active major claim. Published stacked WorldEntity adversarial PR #379 at exact head bf1229a6 (+35/-0 one canonical test file); canonical CI 31490708832 GREEN and Swarm engine-tests PASS, ownership HOLD only on global immutable-history recovery. Handoff posted to #378 for absorption. Earlier reviews this session: #307 scope blocker, #300 Rojo subpath-leak blocker, #370 source/test PASS."
+  "lastSeenAt": "2026-08-11T12:25:00+00:00",
+  "notes": "Currently owns HG-BACKFILL-OBJECTGENOME/test-adversary for a distinct defect hunt beyond already-owned #375 identityParts metatable/no-execute gap. Published/validated WorldEntity stacked PR #379 earlier this session; prior reviews #307/#300 blockers and #370 source/test PASS."
 }
