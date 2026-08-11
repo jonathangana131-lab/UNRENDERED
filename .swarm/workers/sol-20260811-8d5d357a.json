@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-8d5d357a",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T23:08:18+00:00",
-  "lastSeenAt": "2026-08-11T23:53:30+00:00",
-  "notes": "Generation-7 Physics geometry closure published as PR #423 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f. No new production bytes; current #418 behavioral reverse-overflow adversary is retained with #414 production repair. Canonical CI run 31547903110 PASS. Lane moved to REVIEW via evt-sol-20260811-8d5d357a-review-request-physics-scale-g7-235255 and primary claim released for fresh independent audit."
+  "lastSeenAt": "2026-08-11T23:58:30+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-8d5d357a-g9",
+  "notes": "Generation-9 diagnostics closure now implements a diagnostics-aware enabled canonical-validation seam on a disposable lab clone with only the exact owned overlay stripped, projects diagnostic keys from authoritative WorldEntity recipeKey rather than mutable Instance Name, stops publishing mutable representation-class attributes as truth, and adds comment-resistant retained source-contract coverage through hero_gate_contract_integration."
 }
