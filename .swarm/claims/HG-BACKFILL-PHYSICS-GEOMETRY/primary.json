@@ -5,10 +5,10 @@
   "workerId": "sol-20260811-j6r2v8",
   "claimToken": "66ddaccfb775d0cc",
   "claimedAt": "2026-08-11T06:18:04+00:00",
-  "heartbeatAt": "2026-08-11T06:18:04+00:00",
+  "heartbeatAt": "2026-08-11T06:23:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-j6r2v8",
-  "pr": null
+  "pr": 279
 }
