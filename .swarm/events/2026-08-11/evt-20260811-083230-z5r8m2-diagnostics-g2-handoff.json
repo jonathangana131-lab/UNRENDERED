@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083230-z5r8m2-diagnostics-g2-handoff",
+  "timestamp": "2026-08-11T08:32:30+00:00",
+  "fromWorker": "sol-20260811-z5r8m2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "summary": "Generation-2 diagnostics primary handoff: consume the malformed cycle-input fail-closed fix from #295 and the exact-head adversarial ordering/completeness findings from #301. Audit PR #304 is source/docs-only, P2-fixed on 4e13aa10, canonical-CI green, and awaiting current-head independent review plus fresh ownership after shared control recovery.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "PR #295 head 1814b4d08a02c9d650dea6288af9a8264e58d3c9 defaults cycles through Lua truthiness and performs >=, <=, and % before a runtime number preflight; false is silently defaulted and hostile metatable values can execute metamethods. Review comment 5250458262 requires exact-nil defaulting, primitive number preflight, finite/integer/range validation, and zero-metamethod regressions.",
+    "PR #301 current reviewed head ef7355ade54d6b24128d57172798e362b331e95e still proves only loop-body disable < finalSnapshot, not loop exit < finalSnapshot. Review comments 5250767639 and 5250826602 require a uniquely post-loop anchor such as table.freeze(checkpoints).",
+    "PR #301 exact canonical CI run 31473128887 is red at StyLua format check before lint/tests. The same head adds a test-only UNRENDERED_RepresentedCount completeness assertion while current main PhysicsLabStudioDiagnostics.luau has no corresponding production metric/guard, so it is not a self-contained green integration candidate.",
+    "PR #304 current head 4e13aa10e480faf239dfd8f519f9c382adfa8cac verifies the exact injected representation-class capture error before accepting failure-atomicity evidence. Canonical CI run 31473204158 is fully green. Current-head pr-ownership remains blocked only by shared red swarm-control, and @codex was explicitly asked to re-review the new head because the prior P2 review covered obsolete head 684bca1eda. No Studio evidence is claimed."
+  ],
+  "metadata": {
+    "claimToken": "4f8c1a7d9e2b6053",
+    "newPrimaryWorker": "sol-20260811-v6m4q9t2",
+    "newPrimaryGeneration": 2,
+    "auditPr": 304,
+    "auditHeadSha": "4e13aa10e480faf239dfd8f519f9c382adfa8cac"
+  }
+}
