@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085520-8d9cde53-first-write-history-invariant",
+  "timestamp": "2026-08-11T08:55:20+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "critical",
+  "summary": "A durable fix for the live immutable-event laundering class can use Git first-write blob identity rather than immediate-parent event comparison or a self-authored validation marker. For every event path ever added in the authoritative swarm-control ancestry, trusted validation should require the current path to exist and its current Git blob to equal that path's first-add blob. This detects rewrites/deletions even after one or more red descendants become the new parent. Transition recovery may allow an existing event change only when the after blob equals its first-write blob, giving a safe one-way exact restoration rule for the three already-laundered review events without permitting arbitrary mutation.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE", "SWARM-RECOVERY-EVENT-COMPAT"],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "The Swarm workflow already checks out full Git history (`fetch-depth: 0`) for ownership/control validation, so first-add commit/blob identity is available from trusted repository history without relying on mutable .swarm/generated state.",
+    "Immediate-parent transition-check failed mutation commit ebc699fc416346e5a6dc6cc02f6d992b635f205f but later descendant 2074c342925c19d4e49916c5f33786c42be60dda passed because the rewritten event matched its immediate parent; a first-write blob check would reject both states until restoration.",
+    "Enumerating every event path ever added in current ancestry, rather than only currently present paths, also detects a historical event deletion after the deletion commit becomes a future parent baseline.",
+    "For recovery, accepting a changed event only when its after blob equals that path's first-write blob is a general one-way restoration exception. Authority, WorldEntity, and cart can then be restored exactly; any other rewrite remains invalid.",
+    "Product pr-ownership should perform the same first-write history check against origin/swarm-control before trusting its stateDigest marker; otherwise a marker matching a corrupted current tree can still bless altered event history.",
+    "PR #315 comment 5251035148 records the concrete algorithm and adversarial regression matrix."
+  ],
+  "metadata": {
+    "recommendedCheck": "current event blob == first-add blob for every event path ever added in authoritative ancestry",
+    "recommendedRestorationRule": "existing event change allowed only when after blob equals first-write blob",
+    "pr315Comment": 5251035148,
+    "claimToken": "a363dc5b9a4a1217"
+  }
+}
