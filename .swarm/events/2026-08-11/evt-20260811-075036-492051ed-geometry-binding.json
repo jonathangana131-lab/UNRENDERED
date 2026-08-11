@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075036-492051ed-geometry-binding",
+  "timestamp": "2026-08-11T07:50:36+00:00",
+  "fromWorker": "sol-20260811-492051ed",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Physics Lab source currently has no pure invariant proving that PhysicsLabRecipe.RESOLVED_REGION.canonicalContentKeys exactly matches the realized PhysicsLabRecipe.build().entities key set. The resolved fingerprint/repro identity can therefore drift out of semantic alignment with the physical lab recipe if an entity key is added/removed/renamed without synchronizing canonicalContentKeys (or vice versa). Existing physics_lab_recipe coverage checks a hard-coded required entity set, and physics_lab_resolved_identity replays the already-locked canonicalContentKeys, but neither cross-checks the two sets. This fits the active HG-BACKFILL-PHYSICS-GEOMETRY test-adversary scope; do not open a duplicate lane.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY", "HG151-FINAL-AUDIT"],
+  "evidence": [
+    "src/shared/Physics/PhysicsLabRecipe.luau defines RESOLVED_REGION.canonicalContentKeys independently from the entities returned by build().",
+    "tests/physics_lab_recipe.luau verifies a hard-coded requiredKeys table against realized entities but never reads RESOLVED_REGION.canonicalContentKeys.",
+    "tests/physics_lab_resolved_identity.luau replays resolved.canonicalContentKeys into ResolvedRegionRecipe.lock(), which proves serialization/replay stability but not correspondence to realized lab content.",
+    "A deterministic set-equality regression can be added inside existing HG-BACKFILL-PHYSICS-GEOMETRY write scope, preferably in tests/physics_lab_recipe.luau, with no Studio evidence claim."
+  ],
+  "metadata": {
+    "recommendedLane": "HG-BACKFILL-PHYSICS-GEOMETRY",
+    "recommendedSlot": "test-adversary",
+    "activeTestWorker": "sol-20260811-p4x7d9",
+    "claimToken": "551311f66f09ef30"
+  }
+}
