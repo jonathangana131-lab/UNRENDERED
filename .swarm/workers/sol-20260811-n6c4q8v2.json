@@ -7,6 +7,6 @@
   "lastSeenAt": "2026-08-11T21:46:01Z",
   "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
   "slotId": "primary",
-  "branch": "agent/physics/diagnostics-instance-binding-r7k4m2p9",
-  "notes": "Salvaging PR #349 generation 2 after independent audit; regression hardening only."
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-q5x8n3z2",
+  "notes": "Continuing PR #349 generation 2 after independent audit; regression hardening only."
 }
