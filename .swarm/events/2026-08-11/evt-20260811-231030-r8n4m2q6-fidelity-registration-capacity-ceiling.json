@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-231030-r8n4m2q6-fidelity-registration-capacity-ceiling",
+  "timestamp": "2026-08-11T23:10:30+00:00",
+  "fromWorker": "sol-20260811-r8n4m2q6",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Retained FidelityManager PR #385 documents maxRegisteredEntities as a hard bounded-state budget but validates only positive finite integer shape. Caller configuration can therefore set an impractically enormous finite integer and effectively remove the project-owned registration envelope, leaving _states bounded only by process memory rather than a project maximum.",
+  "affects": [
+    "HG-BACKFILL-FIDELITY"
+  ],
+  "evidence": [
+    "PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 validateConfig() accepts maxRegisteredEntities when it is a number >= 1, finite, and math.floor(value) == value; it has no project-owned upper ceiling",
+    "FidelityManager.register() grows the private _states table until _metrics.registered reaches that caller-provided value, so a huge accepted configuration can bypass the intended bounded-record envelope",
+    "Docs/FIDELITY_MANAGER.md calls maxRegisteredEntities a configurable hard budget, says the registered set is bounded, and states total records are capped by configuration; QUALITY_STANDARD requires bounded caches/state and explicit performance/memory budgets",
+    "Repository PR/issue search found existing Fidelity capacity work only for malformed-scalar rejection and validation ordering (#274/#335/#385); no retained PR or open issue defines an upper registration ceiling",
+    "The current WorldEntity backfill independently treats caller-only enormous capacities as violating the same bounded-resource rule (#413), so this is consistent project hardening rather than a new feature"
+  ],
+  "recommendation": "Create a narrow source-only one-shot Hero-Gate lane that adds an explicit project-owned maximum registration capacity above the existing 4096 default, rejects max+1 before manager construction/policy use, and adds exact maximum/maximum+1 deterministic regressions. Preserve current F0-F4 policy, transition atomicity, identity, and Studio evidence boundaries. The ceiling should remain a defensive envelope, not a device performance claim."
+}
