@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-PHYSICS-CHAIR-GEOMETRY",
+  "epicId": "HERO-GATE",
+  "title": "Physics Lab office-chair authored geometry closure",
+  "objective": "Close the independently demonstrated source-only office-chair fixture defects without widening the Physics Lab test lane: make all ground-declared casters span exactly from the authored ObjectGenome ground plane to the chair-base underside, make centerOfMassM match the component mass distribution, and explicitly version the canonical recipe change.",
+  "priority": 5095,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["src/shared/Objects/ObjectGenomeFixtures.luau", "tests/object_genome.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"Office-chair authored geometry repair","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":320,"writeScopes":["src/shared/Objects/ObjectGenomeFixtures.luau","tests/object_genome.luau"]},
+    {"slotId":"audit","role":"Independent office-chair geometry audit","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":140,"requiresIndependentFrom":"primary","writeScopes":["tests/object_genome.luau"]}
+  ],
+  "acceptance": [
+    "preserve the office-chair family and existing ObjectGenome architecture while advancing familyVersion for the canonical authored geometry revision",
+    "all five office-chair components declaring externalSupport='ground' contact the authored local ground plane within deterministic tolerance",
+    "all five caster tops remain exactly connected to the authored chair-base underside",
+    "office-chair declared mass and centerOfMassM match the component mass distribution",
+    "update the office-chair stable identity/full-recipe fingerprint goldens and add deterministic object-level regressions for support contact and center of mass",
+    "after this source repair lands, PR #332's lab-level expected-red caster/COM regressions should turn green without weakening them",
+    "do not claim Roblox Studio or engine-contact evidence",
+    "require independent source review before DONE"
+  ],
+  "notes": "Decomposed from capacity finding evt-20260811-084600-r4k9m2-chair-caster-ground-gap and exact CI evidence on draft PR #332. Current production F2 realizes every ObjectGenome component. chair-a places the 1.08m officeChair envelope on y=0, but each 0.08m caster centered at local y=-0.49 bottoms 0.01m above the envelope ground plane while its top contacts the base underside. PR #332 also proves the declared chair COM is inconsistent with component mass weighting. Keep the correction bounded to the canonical officeChair fixture plus object-level goldens/regressions; the lab-level test slot remains separately owned.",
+  "tags": ["backfill", "hero-gate", "source-only", "physics", "geometry", "objectgenome"]
+}
