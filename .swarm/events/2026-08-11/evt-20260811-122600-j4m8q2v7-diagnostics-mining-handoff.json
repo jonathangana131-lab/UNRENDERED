@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-122600-j4m8q2v7-diagnostics-mining-handoff",
+  "eventType": "HANDOFF",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "workerId": "sol-20260811-j4m8q2v7",
+  "claimToken": "e7b3c1a9d5f26084",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T12:26:00Z",
+  "headSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-j4m8q2v7",
+  "payload": {
+    "summary": "Diagnostics capacity mining completed with a distinct root-truth evidence-binding finding; no source/test files were changed and no Studio run was queued.",
+    "findingEvent": "evt-20260811-122440-j4m8q2v7-diagnostics-root-truth-binding",
+    "activeDiagnosticsPr": 327,
+    "reviewCommentId": 4906159159,
+    "recommendedLaneId": "HG-DIAGNOSTICS-ROOT-TRUTH-BINDING",
+    "nextActions": [
+      "bind diagnostics WorldId/RegionId/fingerprint/repro publication to project-owned canonical/runtime truth rather than mutable root attributes alone",
+      "add tamper regressions before any future Studio evidence retry",
+      "preserve the already-owned exact-Instance and readout-completeness repairs as separate prerequisites",
+      "do not claim diagnostics viewport PASS from source closure"
+    ],
+    "validation": "Source inspection on exact main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 plus existing diagnostics/validation contracts; no runtime or Studio execution claimed."
+  }
+}
