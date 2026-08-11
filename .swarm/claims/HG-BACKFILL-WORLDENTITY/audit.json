@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-k4p8v2q6",
+  "claimToken": "5c8e2a7d1f9b4063",
+  "claimedAt": "2026-08-11T09:10:21+00:00",
+  "heartbeatAt": "2026-08-11T09:10:21+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-k4p8v2q6-g2",
+  "pr": 293,
+  "notes": "Fresh exact-head source-only audit of PR #293 after persistence byte-budget repair."
+}
