@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "slotId": "primary",
+  "role": "Exact Instance ownership seam implementation and pure regression",
+  "workerId": "sol-20260811-n6c4q8v2",
+  "claimToken": "b5d8731ca2409ef6",
+  "claimedAt": "2026-08-11T21:46:01Z",
+  "heartbeatAt": "2026-08-11T21:46:01Z",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "resources": [],
+  "branch": "agent/physics/diagnostics-instance-binding-r7k4m2p9",
+  "pr": 349,
+  "notes": "Salvage/takeover of released NEEDS_CHANGES primary after independent audit; regression hardening only, then fresh independent exact-head review required."
+}
