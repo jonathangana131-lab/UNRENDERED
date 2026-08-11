@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063800-r9t4n2-reality-tests-handoff",
+  "timestamp": "2026-08-11T06:38:00+00:00",
+  "fromWorker": "sol-20260811-r9t4n2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "normal",
+  "summary": "HG-BACKFILL-REALITY/test-adversary implementation is complete and waiting on independent review plus restoration of the globally broken PR ownership wrapper. PR #280 remains mergeable and ready for review. Its exact head 632e78b3162e34ddd5c17a702ac713fccdaa74ea changes only tests/resolved_region_recipe_v1_compat.luau; canonical CI run 31464861531 is green. Current main advanced one unrelated docs commit to 3e28e91e2bf77bb5456d91bc8d5519be13164ccd, leaving the PR one commit ahead/one behind and mergeable. Keep the live test-adversary claim attached until integration so ownership validation can succeed once the control-plane loader is repaired.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "PR #280 canonical CI run 31464861531 succeeded across format, lint, Luau analysis, audits, Pure Luau tests, and place build.",
+    "PR #280 Swarm Control Plane runs fail before lane validation with ModuleNotFoundError for swarmctl_hardening_base; blocker event evt-20260811-062500-r9t4n2-pr-ownership-import-blocker records the global fault.",
+    "Independent review request is published as evt-20260811-062630-r9t4n2-reality-tests-review; no review submission exists yet.",
+    "Current compare main...agent/reality/HG-BACKFILL-REALITY-tests-r9t4n2 reports ahead_by=1, behind_by=1, mergeable PR metadata true, and only the claimed v1 compatibility test file in the branch diff."
+  ]
+}
