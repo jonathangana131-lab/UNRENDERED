@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084250-e08449-completion-authority",
+  "timestamp": "2026-08-11T08:42:50+00:00",
+  "fromWorker": "sol-20260811-e08449",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-TRAIN",
+  "severity": "normal",
+  "summary": "V2.2 authority queue review retained PRs #316, #307, and #300 with explicit sequencing; no current head is integration-ready because all predate main #322 or overlap the retained primary lineage.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT"],
+  "evidence": [
+    "PR #316 head 0fa7132aa8a2abf3d5a60f89ea9ccdccd6ab5981 is source-review acceptable and canonical CI 31472081760 is green, but current main dd8f1581115c15ce6497db827d17e98d879d0267 is one commit ahead; resync plus exact-head CI/ownership is required.",
+    "PR #307 head c9760f2ca1048cf5ea3049e1690642821f216214 is a clean isolated teardown-ownership regression with recorded green CI, but is also one current-main commit behind and requires resync/revalidation.",
+    "PR #300 contains unique Rojo deployment-trust coverage not present in #316/#307, but its runner wiring overlaps #316's hero_gate_contract_integration file; retain the standalone fixture and reconcile/replay it after the primary rather than merging the stale overlapping head.",
+    "Older primary PR #297 is already closed and its retained bootstrap-ownership value is present in generation-3 #316; no duplicate reopen is needed.",
+    "No source-only review in this train satisfies or claims the externally blocked real two-client/Studio evidence gate."
+  ],
+  "metadata": {
+    "currentMainSha": "dd8f1581115c15ce6497db827d17e98d879d0267",
+    "primaryPr": 316,
+    "teardownTestPr": 307,
+    "rojoBoundaryPr": 300,
+    "verdict": "RETAIN_AND_RESYNC_BEFORE_INTEGRATION"
+  }
+}
