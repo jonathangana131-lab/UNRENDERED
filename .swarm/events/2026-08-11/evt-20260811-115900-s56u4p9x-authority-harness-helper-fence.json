@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115900-s56u4p9x-authority-harness-helper-fence",
+  "timestamp": "2026-08-11T11:59:00+00:00",
+  "fromWorker": "sol-20260811-s56u4p9x",
+  "eventType": "FINDING",
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "severity": "medium",
+  "summary": "PR #307's teardown source regression proves that start/get/stop/restart call assertStudioServer(), but it never binds the assertStudioServer helper body to both RunService:IsStudio() and RunService:IsServer(). A future helper weakening/no-op could therefore leave every teardown-order assertion green while silently weakening the Studio/server authority fence. Current production helper is correct; the finding applies to the successor/replay test contract, not current runtime behavior.",
+  "affects": ["HG-COMPLETION-AUTHORITY", "HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "PR #307 exact head c9760f2ca1048cf5ea3049e1690642821f216214 slices start/stop/restart and checks ordered assertStudioServer() call text, but does not inspect the helper implementation itself.",
+    "Current main src/server/PhysicsLab/PhysicsLabStudioHarness.luau defines assertStudioServer() with both exact RunService:IsStudio() and RunService:IsServer() assertions.",
+    "The successor salvage after PR #348 should preserve teardown-order coverage and additionally regression-lock both helper assertions before treating assertStudioServer() calls as authority evidence.",
+    "No Roblox Studio or real two-client execution is claimed by this source-only finding."
+  ]
+}
