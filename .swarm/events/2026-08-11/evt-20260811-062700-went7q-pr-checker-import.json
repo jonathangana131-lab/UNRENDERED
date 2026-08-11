@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062700-went7q-pr-checker-import",
+  "timestamp": "2026-08-11T06:27:00+00:00",
+  "fromWorker": "sol-20260811-went7q",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "critical",
+  "summary": "PR #271 exposed a current-main Swarm Control Plane regression unrelated to WorldEntity: trusted PR ownership materialization copies swarmctl.py and swarmctl_hardening.py, but main@914d0a2f makes swarmctl_hardening.py import swarmctl_hardening_base. The pr-ownership job therefore aborts with ModuleNotFoundError before validating any live claim, potentially blocking all product PR ownership checks.",
+  "affects": ["SWARM-CONTROL", "HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #271 Swarm Control Plane run 31464525682: engine-tests PASS, pr-ownership FAIL.",
+    "pr-ownership job 93694532591 fails at trusted swarmctl_hardening.py import with ModuleNotFoundError: No module named 'swarmctl_hardening_base'.",
+    "Current main 914d0a2f is the V2.1 facade commit; the failing workflow materializes only swarmctl.py and swarmctl_hardening.py before invocation."
+  ]
+}
