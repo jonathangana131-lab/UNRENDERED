@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k3q8v6z2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:39:29+00:00",
   "lastSeenAt": "2026-08-11T10:03:00+00:00",
-  "laneId": "HG-COMPLETION-CONTENT",
-  "slotId": "review-1",
-  "branch": "agent/review/HG-COMPLETION-CONTENT-review1-k3q8v6z2-c1",
-  "notes": "Independent content-foundation completion review after releasing Physics review; red-control implementation remains separately resource-fenced."
+  "notes": "Released HG-COMPLETION-CONTENT/review-1 after accepting PR #357 exact-head diagnostic-order adversary as clean expected-RED and handing off the content completion queue; red-control repair remains separately resource-fenced."
 }
