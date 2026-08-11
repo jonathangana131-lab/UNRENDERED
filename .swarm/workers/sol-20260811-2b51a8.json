@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:37:00+00:00",
-  "lastSeenAt": "2026-08-11T09:23:00+00:00",
-  "laneId": "SWARM-V22-THROUGHPUT",
+  "lastSeenAt": "2026-08-11T09:30:30+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "slotId": "primary",
-  "branch": "agent/swarm/SWARM-V22-THROUGHPUT-2b51a8-g1r3",
-  "notes": "V2.2 retained lineage reconstructed exactly on main after #329 merged; PR #341 is superseded and closed. Continuing exact-head validation under the exclusive SWARM-PROTOCOL lease."
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-2b51a8-g1",
+  "notes": "V2.2 is paused with its claim preserved. This worker temporarily owns the explicit trusted-history continuity prerequisite under SWARM-PROTOCOL so PR #345 can later pass the normal trusted-base ownership gate without any bypass."
 }
