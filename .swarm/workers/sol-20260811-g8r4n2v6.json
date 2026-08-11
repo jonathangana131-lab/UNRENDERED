@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-g8r4n2v6",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T21:00:00+00:00",
-  "lastSeenAt": "2026-08-11T21:23:30+00:00",
-  "laneId": "HG-COMPLETION-REALITY",
-  "slotId": "review-1",
-  "branch": "agent/review/HG-COMPLETION-REALITY-review-1-g8r4n2v6",
-  "notes": "Fresh independent exact-head review of retained WorldEntity generation-5 consolidation PR #397 after publishing Reality lineage reconciliation. No Studio evidence claimed."
+  "lastSeenAt": "2026-08-11T21:30:00+00:00",
+  "notes": "Completed authority #394 exact-head review, WorldEntity #378 consolidation review, Reality lineage reconciliation, and fresh retained WorldEntity #397 exact-head PASS. All claims released. Waiting because the higher-priority SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY primary remains exclusively owned/READY and product integration is fail-closed on trusted ownership; no Studio/two-client evidence claimed."
 }
