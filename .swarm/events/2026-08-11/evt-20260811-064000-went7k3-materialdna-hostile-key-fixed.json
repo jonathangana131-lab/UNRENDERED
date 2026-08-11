@@ -6,13 +6,12 @@
   "eventType": "EVIDENCE_RESULT",
   "laneId": "HG-BACKFILL-MATERIALDNA",
   "severity": "high",
-  "summary": "Primary PR #283 now fixes the hostile unknown-key execution proven by test-adversary PR #272 and preserves its recipe/state/reference regressions. validateKnownFields no longer calls tostring on non-string keys; it reports only the raw key type, while unknown string fields retain their field name.",
-  "affects": ["HG-BACKFILL-MATERIALDNA", "PR-283", "PR-272", "MaterialDNA"],
+  "summary": "Primary PR #283 now fixes the hostile unknown-key execution proven by test-adversary PR #272 and preserves its recipe/state/reference regressions. validateKnownFields no longer calls tostring on non-string keys; it reports only the raw key type, while unknown string fields retain their field name. Follow-up is independent review of exact head 104261d6529cc1f5b8787639a2f9ce679521866a; if accepted, supersede draft adversarial PR #272 rather than merging duplicate test edits, then integrate #283.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
   "evidence": [
     "Exact head 104261d6529cc1f5b8787639a2f9ce679521866a changes MaterialDNA.validateKnownFields by +4/-2 and carries all three hostile __tostring callback regressions from #272.",
     "Canonical CI run 31465808262 passes formatting, Selene, Luau analysis, audits, swarm deterministic tests, the complete Pure Luau suite and Rojo build on exact head 104261d6529cc1f5b8787639a2f9ce679521866a.",
     "The Pure Luau pass proves hostile recipe/state/reference table keys are rejected with callback counts remaining zero and preserves the fixture revision seal tests.",
     "Swarm Control Plane run 31465808252 passes, including trusted pr-ownership, after main recovery #288 restored the validator dependency."
-  ],
-  "nextAction": "Independently review exact head 104261d6529cc1f5b8787639a2f9ce679521866a. If accepted, supersede draft adversarial PR #272 rather than merging duplicate test edits, then integrate #283."
+  ]
 }
