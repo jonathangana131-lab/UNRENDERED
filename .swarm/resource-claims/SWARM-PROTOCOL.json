@@ -1,12 +1,13 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260811-d7k4m9q2",
+  "workerId": "sol-20260811-8d5d357a",
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "claimToken": "5e1a9c3d7b4f2068",
-  "acquiredAt": "2026-08-11T22:31:05+00:00",
-  "heartbeatAt": "2026-08-11T22:31:05+00:00",
+  "claimToken": "afc07ec87d7b640a",
+  "acquiredAt": "2026-08-11T23:08:18+00:00",
+  "heartbeatAt": "2026-08-11T23:08:18+00:00",
   "leaseSeconds": 1800,
-  "generation": 5,
-  "notes": "Generation-5 protected lease for the same #404 trusted-history recovery lineage. Immutable event history remains append-only; scope is the remaining trusted compatibility validation path and tests only."
+  "generation": 6,
+  "takeoverOf": "sol-20260811-d7k4m9q2:g5:5e1a9c3d7b4f2068",
+  "notes": "Generation-6 protected lease for the exact trusted-history recovery lineage after generation-5 CI surfaced additional finite live-control defects."
 }
