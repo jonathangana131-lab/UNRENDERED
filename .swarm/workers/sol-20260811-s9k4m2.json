@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-s9k4m2",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "WAITING",
   "startedAt": "2026-08-11T07:47:00+00:00",
-  "lastSeenAt": "2026-08-11T07:47:00+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "test-adversary",
-  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-test-s9k4m2",
-  "notes": "Adversarial source-only geometry/clearance/reachability test pass on current Hero Gate Physics Lab contracts."
+  "lastSeenAt": "2026-08-11T07:51:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-s9k4m2",
+  "notes": "Completed Fidelity capacity mining. Published high-severity FINDING evt-20260811-074900-s9k4m2-fidelity-config-noexecute: PolicyConfig remains metatable/scalar no-execute unsafe and is not covered by active PR #274 PolicyInputs hardening. Released claim after publication. Subsequent physics-runtime, physics-geometry, diagnostics, and authority mining claims were already won by other workers, so no duplicate work was started."
 }
