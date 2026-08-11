@@ -103,6 +103,11 @@ local function run(): number
 	local malformedOk = ValidationContract.inspectSnapshot(malformed)
 	expect("snapshot validation rejects a count that omits the root", malformedOk == false)
 
+	local missingRootModel = snapshot(counts(46, 0), -10, 10)
+	missingRootModel.counts.models = 0
+	local missingRootModelOk = ValidationContract.inspectSnapshot(missingRootModel)
+	expect("snapshot validation rejects a missing selected Model root", missingRootModelOk == false)
+
 	local impossibleClassifiedTotal = snapshot(counts(45, 0), -10, 10)
 	local impossibleClassifiedTotalOk = ValidationContract.inspectSnapshot(impossibleClassifiedTotal)
 	expect(
@@ -114,6 +119,11 @@ local function run(): number
 	impossibleAssemblyCount.counts.assemblies = 41
 	local impossibleAssemblyCountOk = ValidationContract.inspectSnapshot(impossibleAssemblyCount)
 	expect("snapshot validation rejects more assemblies than BaseParts", impossibleAssemblyCountOk == false)
+
+	local missingPartAssembly = snapshot(counts(46, 0), -10, 10)
+	missingPartAssembly.counts.assemblies = 0
+	local missingPartAssemblyOk = ValidationContract.inspectSnapshot(missingPartAssembly)
+	expect("snapshot validation rejects BaseParts without an assembly", missingPartAssemblyOk == false)
 
 	local partsWithoutEnvelope = snapshot(counts(46, 0), nil, nil)
 	local partsWithoutEnvelopeOk = ValidationContract.inspectSnapshot(partsWithoutEnvelope)
