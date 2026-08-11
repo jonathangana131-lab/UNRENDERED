@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-072540-went7k3-pr299-review-request",
+  "timestamp": "2026-08-11T07:25:40+00:00",
+  "fromWorker": "sol-20260811-went7k3",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "Audit companion PR #299 documents the exact canonical ObjectGenome familyVersion domain introduced by primary PR #296 and is ready for independent docs/contract review on exact head d6f19e760e3073ed0bc90ebec5c346f11c046cba.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #299 changes only Docs/OBJECT_GENOME.md by one contract bullet, within the audit slot write scope.",
+    "The bullet records familyVersion as a canonical positive signed-32-bit revision counter in [1, 2147483647] and states that out-of-domain values fail before StableId construction.",
+    "Canonical CI run 31468785234 is green on exact head d6f19e760e3073ed0bc90ebec5c346f11c046cba.",
+    "Swarm Control Plane run 31468785244 is green on the same exact head, including live ownership."
+  ],
+  "metadata": {
+    "pr": 299,
+    "headSha": "d6f19e760e3073ed0bc90ebec5c346f11c046cba",
+    "integrationOrder": "with-or-after-primary-296"
+  }
+}
