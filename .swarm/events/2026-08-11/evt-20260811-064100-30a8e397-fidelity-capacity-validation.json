@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064100-30a8e397-fidelity-capacity-validation",
+  "timestamp": "2026-08-11T06:41:00+00:00",
+  "fromWorker": "sol-20260811-30a8e397",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "medium",
+  "summary": "FidelityManager.register mutates registrationCapacityRejections before validating currentLevel when the manager is already at capacity. A malformed fidelity level therefore consumes a capacity-rejection metric even though the request is invalid independently of capacity. EntityId validation already follows the opposite fail-closed ordering and existing boundary tests require invalid IDs not to consume the capacity metric. Test-adversary head 86e785b5fa19e9a576b94091969609ace881b0e7 adds a regression requiring malformed currentLevel to be rejected before capacity accounting and to create no registration.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "FidelityManager.register currently checks duplicate/capacity and increments registrationCapacityRejections before resolving/asserting currentLevel.",
+    "Existing fidelity_manager_entity_id_boundary coverage requires invalid entity IDs not to consume the capacity-rejection metric, establishing fail-closed input-validation ordering for registration.",
+    "The minimal source repair is to resolve/default and validate currentLevel before the capacity branch, without changing valid at-capacity rejection behavior."
+  ]
+}
