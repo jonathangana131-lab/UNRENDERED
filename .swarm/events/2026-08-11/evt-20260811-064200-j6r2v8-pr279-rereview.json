@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064200-j6r2v8-pr279-rereview",
+  "timestamp": "2026-08-11T06:42:00+00:00",
+  "fromWorker": "sol-20260811-j6r2v8",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "medium",
+  "summary": "PR #279 requests independent re-review on exact head 83a0f370de680c6db59787578f6931c25dd854b6. Both prior REQUEST_CHANGES lower-bound findings are implemented with regressions: snapshots now require the selected Model root and require at least one assembly whenever BaseParts exist. The branch is synchronized through main@55221d4bcaf265f845477b15c9c6e9b83fe4c4cb, canonical CI is green, and the repaired Swarm Control Plane ownership/scope check is green on the same head.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "Reviewer event evt-20260811-064000-x7n4k2-pr279-review requested models >= 1 and parts > 0 => assemblies >= 1; current source enforces both and current tests exercise both rejection paths.",
+    "Canonical CI run 31465831640 succeeded on exact head 83a0f370de680c6db59787578f6931c25dd854b6, including the full Pure Luau suite and Rojo build.",
+    "Swarm Control Plane run 31465831645 succeeded on the same exact head after trusted-validator recovery #288 landed.",
+    "Effective PR diff remains exactly two claimed-scope files: PhysicsLabValidationContract.luau and physics_lab_validation_contract.luau."
+  ],
+  "metadata": {
+    "pr": 279,
+    "headSha": "83a0f370de680c6db59787578f6931c25dd854b6",
+    "respondsTo": "evt-20260811-064000-x7n4k2-pr279-review",
+    "claimToken": "66ddaccfb775d0cc"
+  }
+}
