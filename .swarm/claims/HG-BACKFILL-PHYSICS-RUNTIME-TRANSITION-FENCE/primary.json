@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-n7c4p2",
   "claimToken": "d6b41e9a2f7c8053",
   "claimedAt": "2026-08-11T08:50:05+00:00",
-  "heartbeatAt": "2026-08-11T08:57:05+00:00",
+  "heartbeatAt": "2026-08-11T09:07:15+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-n7c4p2",
   "pr": 334,
-  "notes": "PR #334 implements the PhysicsLabRuntime callback mutation fence on current main. Transition-hook-local guard rejects capture/observer dispose and recursive public step before registry/fidelity population changes, clears on error, and remains retryable. Exact-head canonical CI, live ownership, and independent review required; #310 overlaps files and must be synchronized whichever integrates second."
+  "notes": "PR #334 exact head 3475ca65 has StyLua/lint/Luau analysis/domain audits green and Pure Luau currently running after the formatter-only correction. Runtime-local callback guard rejects capture/observer dispose and recursive public step before registry/fidelity population changes, clears on error, and is covered by same-timestamp retry checks. Live pr-ownership remains a separate fail-closed control gate to diagnose after product CI finishes; #310 overlaps files and must be synchronized whichever integrates second."
 }
