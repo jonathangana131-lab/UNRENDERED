@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-214100-z3k7m9q2-physics-scale-handoff",
+  "timestamp": "2026-08-11T21:41:00+00:00",
+  "fromWorker": "sol-20260811-z3k7m9q2",
+  "eventType": "HANDOFF",
+  "summary": "Physics geometry test-adversary pass is complete. Draft PR #406 on exact primary #389 head proves the malformed-scalar no-execute gap expected-red; primary #389 has been notified and should absorb the regression plus a primitive-number fence before independent review. This worker releases test-adversary ownership; no Studio or multiplayer evidence is claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "evidence": [
+    "PR #406 exact head b6fff28f586944c9e3c35dbfa0f243e6852e0980; one changed test file, +17/-0",
+    "Canonical CI 31538617979 isolates the expected-red failure after format/lint/analysis/architecture/swarm gates pass",
+    "Primary PR #389 conversation comment 5259144213 contains the finding and recommended successor repair",
+    "Structured FINDING evt-20260811-213700-z3k7m9q2-physics-scale-noexecute is already durable"
+  ]
+}
