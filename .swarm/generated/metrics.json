@@ -1,5 +1,5 @@
 {
-  "activeClaims": 22,
+  "activeClaims": 21,
   "activeEpics": [
     "HERO-GATE"
   ],
@@ -8,15 +8,15 @@
     "DEPENDENCY_DISCOVERED": 4,
     "EVIDENCE_RESULT": 8,
     "EXTERNAL_BLOCKER": 1,
-    "FINDING": 66,
+    "FINDING": 68,
     "HANDOFF": 25,
     "INTEGRATION_RESULT": 7,
     "RECOVERY": 4,
     "REVIEW_REQUEST": 35,
-    "REVIEW_RESULT": 54,
+    "REVIEW_RESULT": 56,
     "SUPERSEDED": 1
   },
-  "generatedAt": "2026-08-11T08:14:20.120437+00:00",
+  "generatedAt": "2026-08-11T08:15:42.632854+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED_EXTERNAL": 1,
@@ -30,5 +30,5 @@
   "readySlots": 11,
   "reviewBacklog": 1,
   "schemaVersion": 1,
-  "staleClaims": 7
+  "staleClaims": 6
 }
