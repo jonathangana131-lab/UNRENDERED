@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-v7k3m9",
+  "claimToken": "c7e41a9d5b203f68",
+  "claimedAt": "2026-08-11T08:31:00+00:00",
+  "heartbeatAt": "2026-08-11T08:31:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-v7k3m9",
+  "pr": null,
+  "notes": "Independent Fidelity state-machine audit around active primary/test-adversary work; inspect exact current heads, transition atomicity, aliasing, fail-closed input handling, and existing regressions without introducing a competing framework."
+}
