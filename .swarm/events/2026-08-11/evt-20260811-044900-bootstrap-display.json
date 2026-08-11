@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-044900-bootstrap-display",
+  "timestamp": "2026-08-11T04:49:00+00:00",
+  "fromWorker": "sol-20260811-bootstrap",
+  "eventType": "EXTERNAL_BLOCKER",
+  "laneId": "OPS-STUDIO-DISPLAY",
+  "severity": "blocking",
+  "summary": "The authenticated Studio runner currently lacks a proven usable macOS GUI/WindowServer display session. Do not queue speculative diagnostics or two-client Studio evidence retries until display recovery.",
+  "affects": ["OPS-STUDIO-DISPLAY", "HG151-DIAGNOSTICS", "HG151-TWOCLIENT", "HG151-FINAL-AUDIT", "HERO-DOOR"],
+  "evidence": [
+    "Docs/PROJECT_STATE.md records bridge display preflight red and forbids speculative retries.",
+    "The blocker is external infrastructure state, not accepted gameplay PASS/FAIL evidence."
+  ]
+}

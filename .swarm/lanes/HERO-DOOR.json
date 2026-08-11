@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HERO-DOOR",
+  "epicId": "HERO-DOOR",
+  "title": "Reality-Grade Door Hero Feature",
+  "objective": "Build the first deeply finished player-visible Hero Feature only after the Physics Lab Hero Gate is explicitly accepted and the strategic scheduler unlocks it.",
+  "priority": 8000,
+  "state": "LOCKED",
+  "mode": "exclusive",
+  "dependencies": [
+    {"laneId": "HG151-FINAL-AUDIT", "acceptableStates": ["DONE"]}
+  ],
+  "writeScopes": ["src/**", "tests/**", "Docs/**"],
+  "resources": [],
+  "slots": [
+    {"slotId": "primary", "role": "Door primary implementation", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 300},
+    {"slotId": "tests-1", "role": "Door physics/regression tests", "exclusive": true, "availableWhen": ["READY", "IMPLEMENTING", "REVIEW"], "priorityBoost": 200},
+    {"slotId": "reviewer-1", "role": "Independent Door Reality-Grade review", "exclusive": true, "availableWhen": ["REVIEW"], "requiresIndependentFrom": "primary", "priorityBoost": 400}
+  ],
+  "acceptance": ["Must not start until Docs/PROJECT_STATE.md explicitly unlocks the Door Epic."],
+  "notes": "Dependency completion alone does not auto-unlock this lane; strategic PROJECT_STATE reconciliation is required."
+}

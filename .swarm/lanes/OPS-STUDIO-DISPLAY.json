@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "laneId": "OPS-STUDIO-DISPLAY",
+  "epicId": "HERO-GATE",
+  "title": "Restore authenticated Mac Studio GUI/display path",
+  "objective": "Recover a real active macOS GUI/WindowServer display session for UNRENDERED-STUDIO-MAC without weakening bridge safety or fabricating engine evidence.",
+  "priority": 10000,
+  "state": "BLOCKED_EXTERNAL",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["Docs/STUDIO_EXECUTOR.md", "Docs/PROJECT_STATE.md"],
+  "resources": ["STUDIO-RUNNER"],
+  "slots": [
+    {"slotId": "primary", "role": "External recovery coordinator", "exclusive": true, "availableWhen": ["READY"], "priorityBoost": 500},
+    {"slotId": "reviewer-1", "role": "Recovery evidence reviewer", "exclusive": true, "availableWhen": ["REVIEW"], "requiresIndependentFrom": "primary", "priorityBoost": 250}
+  ],
+  "acceptance": [
+    "runner has a real logged-in GUI/WindowServer session",
+    "display preflight proves at least one usable active display",
+    "no security boundary is weakened",
+    "a post-recovery fixed-preset Studio request reaches request-bound execution"
+  ],
+  "blockers": ["External Mac GUI/display recovery is required before fresh diagnostics or two-client evidence retries."],
+  "issue": 151
+}

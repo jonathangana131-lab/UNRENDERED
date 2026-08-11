@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "STUDIO-RUNNER",
+  "state": "BLOCKED_EXTERNAL",
+  "mode": "exclusive",
+  "order": 100,
+  "capacity": 1,
+  "description": "Authenticated UNRENDERED Studio evidence runner. Currently unavailable because no usable macOS GUI/WindowServer display session is proven.",
+  "blockedReason": "Bridge display preflight is red; do not queue speculative Studio evidence retries until GUI/display recovery."
+}

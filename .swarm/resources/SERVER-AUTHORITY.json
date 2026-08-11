@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "SERVER-AUTHORITY",
+  "state": "AVAILABLE",
+  "mode": "exclusive",
+  "order": 40,
+  "capacity": 1,
+  "description": "Exclusive writer lease for project-wide server authority/bootstrap contract changes."
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG151-DIAGNOSTICS",
+  "epicId": "HERO-GATE",
+  "title": "Accept source-owned diagnostics behavior plus live viewport evidence",
+  "objective": "Gather fail-closed exact-SHA Studio evidence that the bounded source-owned diagnostics are visibly ON, survive all 20 toggle cycles without world/resource drift, and produce truthful capture provenance.",
+  "priority": 9500,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [
+    {"laneId": "OPS-STUDIO-DISPLAY", "acceptableStates": ["DONE"]}
+  ],
+  "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "Docs/PHYSICS_LAB_DIAGNOSTICS.md", "Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md"],
+  "resources": ["STUDIO-RUNNER"],
+  "slots": [
+    {"slotId": "primary", "role": "Diagnostics evidence implementation/repair", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 400},
+    {"slotId": "tests-1", "role": "Diagnostics regression/adversarial tests", "exclusive": true, "availableWhen": ["READY", "IMPLEMENTING", "REVIEW"], "priorityBoost": 250, "writeScopes": ["tests/**", "Docs/PHYSICS_LAB_DIAGNOSTICS.md"]},
+    {"slotId": "reviewer-1", "role": "Independent diagnostics evidence review", "exclusive": true, "availableWhen": ["REVIEW"], "requiresIndependentFrom": "primary", "priorityBoost": 350},
+    {"slotId": "integration", "role": "Diagnostics integration", "exclusive": true, "availableWhen": ["INTEGRATION_READY"], "requiresIndependentFrom": "primary", "priorityBoost": 450}
+  ],
+  "acceptance": [
+    "real server RunMode request reaches source-owned diagnostics",
+    "diagnostics visible ON evidence is captured truthfully",
+    "20 bounded toggle cycles pass with checkpoints 1/5/10/20",
+    "zero tracked resource drift and envelope drift within accepted tolerance",
+    "result passes current job-specific bridge evaluator",
+    "independent reviewer accepts the evidence"
+  ],
+  "issue": 151
+}

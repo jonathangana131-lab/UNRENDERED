@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "PROJECT-STATE",
+  "state": "AVAILABLE",
+  "mode": "exclusive",
+  "order": 10,
+  "capacity": 1,
+  "description": "Single-writer lease for Docs/PROJECT_STATE.md strategic scheduler truth."
+}

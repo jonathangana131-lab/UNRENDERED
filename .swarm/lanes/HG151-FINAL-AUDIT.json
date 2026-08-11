@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG151-FINAL-AUDIT",
+  "epicId": "HERO-GATE",
+  "title": "Independent Hero Gate evidence audit",
+  "objective": "Independently reconcile every required source and engine evidence row before changing strategic unlock state. Do not infer a composite PASS from partial rows.",
+  "priority": 9800,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [
+    {"laneId": "HG151-DIAGNOSTICS", "acceptableStates": ["DONE"]},
+    {"laneId": "HG151-TWOCLIENT", "acceptableStates": ["DONE"]}
+  ],
+  "writeScopes": ["Docs/PROJECT_STATE.md", "Docs/STUDIO_EXECUTOR.md"],
+  "resources": ["PROJECT-STATE"],
+  "slots": [
+    {"slotId": "reviewer-1", "role": "Independent Reality-Grade Hero Gate auditor", "exclusive": true, "availableWhen": ["READY", "REVIEW"], "priorityBoost": 700},
+    {"slotId": "integration", "role": "Strategic scheduler reconciler", "exclusive": true, "availableWhen": ["INTEGRATION_READY"], "requiresIndependentFrom": "reviewer-1", "priorityBoost": 800}
+  ],
+  "acceptance": [
+    "all required source rows remain green",
+    "accepted lifecycle, server, physical-sanity and performance evidence remains valid",
+    "diagnostics row is accepted",
+    "true two-client authority row is accepted",
+    "no evidence claim exceeds what the engine proved",
+    "scheduler unlock change is made only after audit"
+  ],
+  "issue": 151
+}

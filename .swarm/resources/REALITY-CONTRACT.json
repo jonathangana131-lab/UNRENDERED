@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "REALITY-CONTRACT",
+  "state": "AVAILABLE",
+  "mode": "exclusive",
+  "order": 30,
+  "capacity": 1,
+  "description": "Exclusive writer lease for high-contention canonical Reality identity/version contracts."
+}

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "controlBranch": "swarm-control",
+  "description": "UNRENDERED live GPT-5.6 Sol swarm coordination state",
+  "leaseDefaults": {
+    "primary": 1800,
+    "review": 1200,
+    "evidence": 2400,
+    "integration": 1200
+  },
+  "wip": {
+    "maxMajorEpics": 5,
+    "maxPrimaryImplementationLanes": 8,
+    "reviewBacklogThrottle": 4
+  },
+  "scheduler": {
+    "redMainOverride": true,
+    "idleAllowed": true
+  },
+  "protectedScopes": [
+    {"pattern": "Docs/PROJECT_STATE.md", "resource": "PROJECT-STATE"},
+    {"pattern": "Docs/SWARM_PROTOCOL.md", "resource": "SWARM-PROTOCOL"},
+    {"pattern": "Docs/SWARM_CONTROL_PLANE.md", "resource": "SWARM-PROTOCOL"},
+    {"pattern": "ProjectSource/UNRENDERED_PROJECT_INSTRUCTIONS.txt", "resource": "SWARM-PROTOCOL"},
+    {"pattern": "src/shared/Reality/**", "resource": "REALITY-CONTRACT"},
+    {"pattern": "src/server/Bootstrap.server.luau", "resource": "SERVER-AUTHORITY"}
+  ]
+}

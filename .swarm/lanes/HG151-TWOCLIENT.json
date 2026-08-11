@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG151-TWOCLIENT",
+  "epicId": "HERO-GATE",
+  "title": "Prove true two-client canonical authority",
+  "objective": "Prove a real Studio server plus two distinct clients independently agree with server-owned canonical WorldId/RegionId/entity structure without trusting a self-reported PASS boolean.",
+  "priority": 9600,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [
+    {"laneId": "OPS-STUDIO-DISPLAY", "acceptableStates": ["DONE"]}
+  ],
+  "writeScopes": ["src/server/PhysicsLab/**", "src/shared/Physics/**", "Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md"],
+  "resources": ["STUDIO-RUNNER"],
+  "slots": [
+    {"slotId": "primary", "role": "Two-client authority implementation/repair", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 450},
+    {"slotId": "tests-1", "role": "Multiplayer adversarial/regression tests", "exclusive": true, "availableWhen": ["READY", "IMPLEMENTING", "REVIEW"], "priorityBoost": 300, "writeScopes": ["tests/**", "Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md"]},
+    {"slotId": "reviewer-1", "role": "Independent canonical-authority reviewer", "exclusive": true, "availableWhen": ["REVIEW"], "requiresIndependentFrom": "primary", "priorityBoost": 400},
+    {"slotId": "integration", "role": "Two-client integration", "exclusive": true, "availableWhen": ["INTEGRATION_READY"], "requiresIndependentFrom": "primary", "priorityBoost": 500}
+  ],
+  "acceptance": [
+    "real server and two distinct client identities are evidenced",
+    "both clients independently observe canonical identity/entity structure",
+    "server-owned canonical state agrees with both clients",
+    "result survives multiplayer-test teardown",
+    "job-specific evaluator derives PASS fail-closed",
+    "independent reviewer accepts the evidence"
+  ],
+  "issue": 151
+}

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "SWARM-PROTOCOL",
+  "state": "AVAILABLE",
+  "mode": "exclusive",
+  "order": 20,
+  "capacity": 1,
+  "description": "Single-writer lease for swarm architecture/protocol contracts and worker instructions."
+}
