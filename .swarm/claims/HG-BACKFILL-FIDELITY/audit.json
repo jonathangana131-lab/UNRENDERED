@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-q6x4m9p2",
+  "claimToken": "c6e2a94f7b1d8053",
+  "claimedAt": "2026-08-11T12:10:00+00:00",
+  "heartbeatAt": "2026-08-11T12:10:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-FIDELITY-q6x4m9p2",
+  "pr": null,
+  "notes": "Independent exact-head FidelityManager state-machine audit of current generation-3 salvage PR #335; target finite-state, rejected-step atomicity, ordering, identity-boundary, and resource-accounting defects without Studio claims."
+}
