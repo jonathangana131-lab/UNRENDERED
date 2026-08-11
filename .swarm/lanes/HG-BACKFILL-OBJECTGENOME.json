@@ -5,7 +5,7 @@
   "title": "ObjectGenome adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete ObjectGenome shape, component, ownership, fingerprint, transform, material-reference, state-binding, immutability, or malformed-input defects without depending on Studio.",
   "priority": 5150,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Objects/ObjectGenome*.luau", "tests/object_genome*.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"ObjectGenome contract and ownership auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/object_genome*.luau","Docs/OBJECT_GENOME.md"]}
   ],
   "acceptance": ["inspect current main and existing contract-lock tests", "prefer a concrete defect or missing invariant over speculative redesign", "new behavior is covered by deterministic regression tests", "preserve canonical identity and plain-data boundaries", "publish cross-lane findings as structured events"],
-  "notes": "Generation-7 retained primary PR #380 exact head 0250b26afa018959f1aec450830680361d1a3dc2 absorbs stacked PR #381's distinct hostile nested identity-scalar no-execute regression exactly as a tests/object_genome_contract_lock.luau +18/-0 delta over generation 6, with no production-source change. Canonical CI run 31532538759 is PASS end-to-end. Fresh same-head Swarm run 31532617493 has engine-tests PASS; pr-ownership reaches trusted ownership enforcement and remains fail-closed behind separately owned SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY generation-3 recovery PR #387. PR #381 is closed unmerged as absorbed. Request a fresh independent exact-head ObjectGenome audit before integration; no Roblox Studio/engine evidence is applicable or claimed.",
+  "notes": "Generation-7 retained primary PR #380 exact head 0250b26afa018959f1aec450830680361d1a3dc2 correctly absorbs #381's hostile nested familyVersion regression and has canonical CI 31532538759 PASS plus Swarm engine-tests PASS, but fresh exact-head audit review 4910534785 records REQUEST_CHANGES for the still-open decoder-shape finding evt-20260811-202000-r6p3v8n2-objectgenome-decoder-shape. At this head ObjectGenome.decodeMechanismPosition() rejects metatable-backed mechanism tables but does not validate exact kind-specific v1 shape before returning semantics: plain {kind='caster'} with 0.25 and {kind='latch'} with 1 can decode despite missing required canonical fields, and undeclared extra fields are not fenced. Generation-8 primary must close the standalone decoder boundary with exact kind-specific required/unknown-field validation, preserve outputs for valid canonical mechanisms, and add deterministic incomplete-caster/latch plus unknown-field regressions. Do not widen into schema/identity redesign. Prior same-head PASS comment 4910480010 missed the already-published decoder finding and is superseded as the lane verdict. Live pr-ownership remains independently fail-closed behind SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY PR #387; no Studio/engine evidence is applicable or claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
