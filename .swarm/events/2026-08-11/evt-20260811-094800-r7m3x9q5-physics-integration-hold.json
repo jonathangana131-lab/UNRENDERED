@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094800-r7m3x9q5-physics-integration-hold",
+  "timestamp": "2026-08-11T09:48:00+00:00",
+  "fromWorker": "sol-20260811-r7m3x9q5",
+  "eventType": "INTEGRATION_RESULT",
+  "summary": "Physics completion integration HOLD: no current candidate satisfies every merge gate. PR #347 is exact-current-main, canonical-CI green, and independently source-accepted, but integration remains explicitly gated on trusted pr-ownership recovery plus synchronized PR #332 lab-level chair ground-contact/COM regressions. Other active Physics candidates are still under independent audit, NEEDS_CHANGES, stacked/draft, or behind current main. Do not merge around the fail-closed control plane and do not retry Studio while the display blocker remains external.",
+  "affects": [
+    "HG-COMPLETION-PHYSICS",
+    "HG-PHYSICS-CHAIR-GEOMETRY",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
+  ],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "high",
+  "evidence": [
+    "main remains ae83c0ef470eb2e73d99be41fd3561ede30c40e1; canonical CI run 31476168947 is green.",
+    "PR #347 head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1 is one commit ahead/zero behind current main; exact-head canonical CI run 31477985164 is green and two independent source-review records accept the geometry/COM repair while explicitly HOLDING integration.",
+    "PR #347 review acceptance requires PR #332's lab-level expected-red chair ground-contact and COM assertions to be synchronized with the repair and turn exact-head green before that evidence path is consumed/closed.",
+    "Live pr-ownership remains fail-closed on immutable-event history continuity and has additionally exposed unsupported worker-status producer drift; SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY and SWARM-RECOVERY-WORKER-STATUS-CONTRACT are the dedicated recovery lanes.",
+    "PR #351 owns SWARM-PROTOCOL and is under architecture recovery review; pre-review identified missing ADR/bootstrap proof for the proposed separate trust ledger, so the protected resource must not be stolen or bypassed.",
+    "PR #335/#349/#334 have active independent review work; PR #310 is NEEDS_CHANGES for pre-dereference metatable/no-execute fencing; PR #311 is based behind current main; PR #354 is a stacked draft live-claim adoption path."
+  ],
+  "metadata": {
+    "verdict": "HOLD",
+    "mainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "candidatePr": 347,
+    "candidateHeadSha": "9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1"
+  }
+}
