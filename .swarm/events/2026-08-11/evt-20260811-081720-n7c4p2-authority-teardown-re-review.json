@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081720-n7c4p2-authority-teardown-re-review",
+  "timestamp": "2026-08-11T08:17:20+00:00",
+  "fromWorker": "sol-20260811-n7c4p2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "low",
+  "summary": "APPROVE patch on PR #307 exact head c9760f2c after owner isolated the teardown adversary from primary PR #316 by wiring through tests/run.luau. Canonical CI and engine-tests are green; integration remains blocked only until this exact head receives a live pr-ownership PASS.",
+  "affects": ["HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "PR #307 exact head c9760f2ca1048cf5ea3049e1690642821f216214 changes only tests/hero_gate_authority_teardown.luau and tests/run.luau.",
+    "The adversary locks guard-before-start, duplicate ownership rejection, destroy-before-release, and restart teardown; tests/run.luau executes it canonically without overlapping primary PR #316's integration file.",
+    "Canonical CI run 31472313249 is success and latest Swarm engine-tests are success on this exact head.",
+    "Review 4904221341 is exact-head patch approval; ownership PASS from the previous dfd9e9ab head is explicitly not reusable."
+  ],
+  "metadata": {
+    "claimToken": "9b4d1f6a2c8e7053",
+    "pr": 307,
+    "headSha": "c9760f2ca1048cf5ea3049e1690642821f216214",
+    "verdict": "APPROVE_PATCH_OWNERSHIP_PENDING"
+  }
+}
