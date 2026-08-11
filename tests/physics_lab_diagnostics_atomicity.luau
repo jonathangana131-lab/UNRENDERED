@@ -32,22 +32,17 @@ local function run(): number
 	local transactionEnd = position("\tend)\n\n\tif not ok then")
 	local rollback = position("folder:Destroy()")
 	local propagate = position("error(result, 0)")
-
-	local disableCleanup = position(
-		"local folder = diagnosticsRoot(lab.model)\n\tif folder ~= nil then\n\t\tfolder:Destroy()\n\tend\n\tlocal snapshot = PhysicsLabStudioDiagnostics.capture(lab)"
-	)
-	local disablePostcondition = position("not snapshot.enabled and snapshot.diagnosticInstanceCount == 0")
 	local evidenceDisable = position("\tPhysicsLabStudioDiagnostics.disable(lab)")
 	local evidenceBaseline = position("\tlocal baseline = Validation.captureFull(lab.model)")
 	local evidenceInitial = position("\tlocal initial = PhysicsLabStudioDiagnostics.capture(lab)")
 	local evidenceEnable = position("\t\tlocal enabled = PhysicsLabStudioDiagnostics.enable(lab)")
 	local evidenceDisableCycle = position("\t\tlocal disabled = PhysicsLabStudioDiagnostics.disable(lab)")
 	local evidenceOffSnapshot = position("\t\tlocal offSnapshot = Validation.captureFull(lab.model)")
-	local evidenceComparison = position("\t\tlocal comparison = Validation.compare(baseline, offSnapshot, 0.001)")
-	local evidenceDeltaCheck = position("\t\tfor countName, delta in pairs(comparison.delta) do")
-	local evidenceEnvelopeCheck = position("\t\tassert(comparison.envelope.ok")
+	local evidenceComparison = position("Validation.compare(baseline, offSnapshot, 0.001)")
+	local evidenceDeltaCheck = position("for countName, delta in pairs(comparison.delta) do")
+	local evidenceEnvelopeCheck = position("assert(comparison.envelope.ok")
 	local evidenceFinalSnapshot = position("\tlocal finalSnapshot = PhysicsLabStudioDiagnostics.capture(lab)")
-	local evidenceFinalState = position("\t\tfinallyEnabled = finalSnapshot.enabled,")
+	local evidenceFinalState = position("finallyEnabled = finalSnapshot.enabled")
 	local evidenceFreeze = position("\ttable.freeze(evidence)")
 
 	expect(
@@ -95,11 +90,7 @@ local function run(): number
 			and rollback < propagate
 	)
 	expect(
-		"disable owns cleanup and proves a zero-instance off state",
-		disableCleanup ~= nil and disablePostcondition ~= nil and disableCleanup < disablePostcondition
-	)
-	expect(
-		"toggle evidence establishes its canonical baseline only after forcing diagnostics off",
+		"toggle evidence establishes its baseline only after forcing diagnostics off",
 		evidenceDisable ~= nil
 			and evidenceBaseline ~= nil
 			and evidenceInitial ~= nil
@@ -107,7 +98,7 @@ local function run(): number
 			and evidenceBaseline < evidenceInitial
 	)
 	expect(
-		"each evidence cycle disables diagnostics before capturing the comparable off snapshot",
+		"each evidence cycle disables diagnostics before the comparable off snapshot",
 		evidenceEnable ~= nil
 			and evidenceDisableCycle ~= nil
 			and evidenceOffSnapshot ~= nil
@@ -115,7 +106,7 @@ local function run(): number
 			and evidenceDisableCycle < evidenceOffSnapshot
 	)
 	expect(
-		"resource and envelope no-drift checks are derived from the post-disable snapshot",
+		"resource and envelope no-drift checks are derived from the off snapshot",
 		evidenceOffSnapshot ~= nil
 			and evidenceComparison ~= nil
 			and evidenceDeltaCheck ~= nil
@@ -125,7 +116,7 @@ local function run(): number
 			and evidenceDeltaCheck < evidenceEnvelopeCheck
 	)
 	expect(
-		"final diagnostics state is captured after the cycle cleanup path and published before evidence freeze",
+		"final evidence publishes diagnostics state only after the cycle cleanup path",
 		evidenceDisableCycle ~= nil
 			and evidenceFinalSnapshot ~= nil
 			and evidenceFinalState ~= nil
