@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-t8n3c6v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T20:15:10+00:00",
-  "lastSeenAt": "2026-08-11T20:51:00+00:00",
-  "laneId": "HG-BACKFILL-REALITY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-REALITY-audit-t8n3c6v2",
-  "notes": "Fresh independent exact-head audit of generation-2 Reality salvage PR #359, including active #370 replay-depth completion relationship."
+  "lastSeenAt": "2026-08-11T20:56:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed independent Reality review: #359 SOURCE/TEST PASS and complementary #370 TEST CONTRACT PASS; durable review result published, lane blocked on trusted ownership plus fresh integration consolidation, audit claim released."
 }
