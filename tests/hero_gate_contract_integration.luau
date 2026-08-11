@@ -1,4 +1,5 @@
 local ProductionLoader = require("./support/ProductionLoader")
+local runAuthorityRojoBoundary = require("./authority_rojo_boundary")
 local runPhysicsLabDiagnosticsAtomicity = require("./physics_lab_diagnostics_atomicity")
 
 local StableId = ProductionLoader.requireShared("Core/StableId")
@@ -163,6 +164,7 @@ local function run(): number
 		manager:getMetrics().registered == 0 and WorldEntity.count(registry) == 0
 	)
 
+	failures += runAuthorityRojoBoundary()
 	failures += runPhysicsLabDiagnosticsAtomicity()
 	return failures
 end
