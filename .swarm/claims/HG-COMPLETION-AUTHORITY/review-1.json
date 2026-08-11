@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-eb152d9a",
+  "claimToken": "a4d729c0538e61bf",
+  "claimedAt": "2026-08-11T23:13:10+00:00",
+  "heartbeatAt": "2026-08-11T23:13:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-AUTHORITY-review-1-eb152d9a",
+  "pr": 412,
+  "notes": "Independent authority completion review focused on latest retained harness-lifecycle successor PR #412 and its compatibility with retained bootstrap authority PR #348 plus teardown stack #394. Source-only; no two-client or Studio evidence claim."
+}
