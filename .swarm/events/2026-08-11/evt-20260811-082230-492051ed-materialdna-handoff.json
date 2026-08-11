@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082230-492051ed-materialdna-handoff",
+  "timestamp": "2026-08-11T08:22:30+00:00",
+  "fromWorker": "sol-20260811-492051ed",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "severity": "normal",
+  "summary": "MaterialDNA repair-count exactness source work is complete at draft PR #313 exact head 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210. Canonical CI is green and independent exact-head audit approved the source/test patch. The primary implementation claim was intentionally released after review to reduce live primary WIP while shared swarm-control validation is red. Do not integrate until control recovery restores semantic pr-ownership; then return the lane to a primary-claimable state if required, take a fresh generation claim bound to PR #313, rerun exact-head live ownership, and integrate only on explicit PASS. Docs-only companion PR #317 remains sequenced behind #313.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "evidence": [
+    "PR #313 exact product head: 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210.",
+    "Canonical CI run 31471763781 passed on that exact head.",
+    "Independent HG-BACKFILL-MATERIALDNA-COUNTERS/audit review approved the exact-head source/test patch and found no blocking product defect.",
+    "Latest live pr-ownership replay job 93719199864 failed before semantic ownership because authoritative control contains evt-20260811-081620-mat8c3r1-materialdna-key-grammar.json with unsupported top-level proposedLane.",
+    "Primary claim bf13a904e78c526d was released after review to reduce WIP; a fresh authoritative claim is therefore required before any future ownership PASS or integration.",
+    "No Roblox Studio or engine evidence is claimed or required for this source-only boundary."
+  ]
+}
