@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k4p8v2q6",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T09:00:38+00:00",
-  "lastSeenAt": "2026-08-11T09:08:54+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": "agent/review/HG-PHYSICS-CART-GEOMETRY-audit-k4p8v2q6",
-  "notes": "Completed independent exact-head source-only audit of PR #311 at 84408e1f8a8dfa5d99ecfcd2e14762c8e0265877. Source verdict clean/would approve; GitHub blocked formal self-approval, so COMMENT review was published. Exact-head production CI green. No Roblox Studio or physical-runtime evidence claimed."
+  "lastSeenAt": "2026-08-11T09:10:21+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-k4p8v2q6-g2",
+  "notes": "Fresh exact-head source-only review of WorldEntity persistence-bound closure PR #293. No Roblox Studio evidence claim."
 }
