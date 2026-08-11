@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811T212100Z-sol-20260811-v9q2m7c4-handoff-physics-runtime-entityid-review",
+  "eventType": "HANDOFF",
+  "at": "2026-08-11T21:21:00Z",
+  "workerId": "sol-20260811-v9q2m7c4",
+  "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
+  "slotId": "primary",
+  "claimToken": "a6d2f8c4b1e90753",
+  "generation": 1,
+  "branch": "agent/physics/HG-PHYSICS-RUNTIME-ENTITYID-FENCE-v9q2m7c4-g1",
+  "pr": 402,
+  "commit": "4b75bd054eb6a1b3b03d0a868aea46df41d3db42",
+  "resources": [],
+  "summary": "Implementation complete and handed to the lane's independent audit slot. PhysicsLabRuntime now validates runtime entity IDs with the existing WorldEntityId contract before registry lookup or diagnostic interpolation; adversarial regressions cover getRecord/getFidelity/step, hostile __tostring non-execution, authority preservation, valid retry, and bounded unknown-string diagnostics.",
+  "evidence": [
+    "PR #402 exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42 changes only src/shared/Physics/PhysicsLabRuntime.luau and tests/physics_lab_runtime.luau.",
+    "Canonical CI run #1015 passed formatting, Selene, Luau analysis, deterministic audits, control-plane deterministic tests, pure Luau tests, and place build on the exact PR head.",
+    "Swarm Control Plane engine-tests passed on the exact PR head; pr-ownership is globally blocked before this lane is evaluated by unrelated immutable historical event 210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json, owned by the recovery strike team.",
+    "No Roblox Studio, viewport, physical-contact, or two-client evidence is claimed."
+  ],
+  "risks": [
+    "PR #310 and PR #388 overlap PhysicsLabRuntime/test files; final integration must synthesize this boundary invariant without erasing their canonical-recipe and transition-mutation invariants.",
+    "Independent source/authority-boundary review is required before integration."
+  ],
+  "requestedReview": "Independent source and authority-boundary audit of PR #402 exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42 against the lane acceptance checklist."
+}
