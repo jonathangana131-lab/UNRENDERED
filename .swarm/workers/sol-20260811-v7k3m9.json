@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-v7k3m9",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T07:43:00+00:00",
-  "lastSeenAt": "2026-08-11T08:31:00+00:00",
-  "laneId": "HG-BACKFILL-FIDELITY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-v7k3m9",
-  "notes": "Independent Fidelity state-machine audit around active primary/test-adversary heads; checking transition atomicity, aliasing, fail-closed input boundaries, and regression sufficiency."
+  "lastSeenAt": "2026-08-11T08:39:11+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed independent Fidelity audit. REVIEW_RESULT requests one cohesive PolicyConfig closure on PR #274; PR #325 is accepted red adversarial evidence. Existing callback transactional/reentry/accounting hardening is patch-locally sound. Released audit lease for successor review."
 }
