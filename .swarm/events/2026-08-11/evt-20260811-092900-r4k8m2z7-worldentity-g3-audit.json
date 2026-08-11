@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092900-r4k8m2z7-worldentity-g3-audit",
+  "timestamp": "2026-08-11T09:29:00+00:00",
+  "fromWorker": "sol-20260811-r4k8m2z7",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "summary": "Fresh independent WorldEntity audit on PR #293 exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e: production source PASS, but integration REQUEST_CHANGES. The bounded persistentState implementation correctly enforces depth 64, owned-node 4096, cumulative string key/value bytes 65536, bounded root preflight, metatable/cycle fail-closed behavior, deterministic generator-version provenance, safe revision increment, and fail-atomic registry replacement. Stacked test-adversary PR #344 exact head 592d82ebfe30819e4210953fa71324224cc4564d is test-scope PASS with CI 31477358961 green and closes exact-limit plus atomic-rejection coverage. However #293 still changes shared tests/run.luau even though HG-BACKFILL-WORLDENTITY write scopes are only src/shared/Reality/WorldEntity.luau and tests/world_entity*.luau; current main does not contain that registration. Scheduler should transition/reopen the lane for a fresh primary generation that absorbs #344 while moving coverage into an already-registered lane-owned world_entity test surface (or explicitly routes shared runner registration through an authorized lane), drops the unauthorized tests/run diff, syncs onto current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1, and reruns exact-head CI plus live ownership after the separately-owned history-continuity control recovery. No Studio evidence is claimed.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "verdict": "REQUEST_CHANGES",
+  "subject": "PR-293",
+  "subjectSha": "91b6e273c0c21326dfbfe9c5ee5227e99f26933e",
+  "evidence": [
+    "GitHub review 4904736085 records fresh exact-head production-source PASS and the tests/run.luau ownership blocker.",
+    "HG-BACKFILL-WORLDENTITY lane writeScopes are src/shared/Reality/WorldEntity.luau and tests/world_entity*.luau; tests/run.luau is outside the lane/slot boundary and PR CI is specified to enforce write scopes.",
+    "Current main tests/run.luau does not register world_entity_state_budget, while PR #293 adds that shared-runner registration.",
+    "PR #344 exact head 592d82ebfe30819e4210953fa71324224cc4564d changes only tests/world_entity_state_budget.luau; canonical CI run 31477358961 is green and review 4904737294 records test-scope PASS.",
+    "compare main...91b6e273 reports #293 diverged and four commits behind current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1."
+  ]
+}
