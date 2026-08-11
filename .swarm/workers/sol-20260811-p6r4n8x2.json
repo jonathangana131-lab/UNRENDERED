@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:34:00+00:00",
-  "lastSeenAt": "2026-08-11T21:40:00+00:00",
+  "lastSeenAt": "2026-08-11T21:41:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-runtime",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-p6r4n8x2",
-  "notes": "Source-only Hero Gate capacity mining after releasing a redundant stale review slot; inspect PhysicsLabRuntime current source/tests and active overlapping repair lineages for one concrete nonduplicate defect or integration gap."
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-p6r4n8x2",
+  "notes": "Source-only Hero Gate capacity mining after releasing a redundant stale review slot; inspect Physics Lab geometry/scale/validation source and active repair lineage for one concrete nonduplicate defect or integration gap."
 }
