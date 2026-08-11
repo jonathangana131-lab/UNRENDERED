@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-u8n5c2r7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:03:05+00:00",
-  "lastSeenAt": "2026-08-11T21:03:05+00:00",
+  "lastSeenAt": "2026-08-11T21:14:46+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-objectgenome",
   "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-u8n5c2r7",
-  "notes": "Preparing an atomic claim for ObjectGenome source-depth mining; no production implementation before claim ownership is confirmed."
+  "notes": "Completed ObjectGenome source-depth mining and recorded a HIGH structural-cardinality/support-graph bounded-work finding with deterministic reverse-chain repro and bounded successor-lane acceptance. Claim released; no production changes, measured timing, or Studio evidence claimed."
 }
