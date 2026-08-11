@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime transition mutation fence",
   "objective": "Close the source-only runtime lifecycle reentrancy defect found by capacity mining: transition adapters must not be able to partially dismantle or recursively mutate PhysicsLabRuntime authority while an F2/F0 fidelity transaction is in flight.",
   "priority": 4990,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -45,5 +45,5 @@
     "independent review required before integration"
   ],
   "pr": 366,
-  "notes": "Generation-2 stale-work successor PR #366 at exact head f50067d4dedbe548fc80aed2289b846644dd941c preserves the reviewed #334 runtime transition/facade hardening, absorbs #365's verified EOF-newline correction, and fixes the private weak-key runtimeStates Luau typing blocker. Canonical CI run 31482367736 passes format, lint, Luau analysis, all audits, deterministic tests, Pure Luau, and place build; Swarm run 31482367808 engine-tests passes. pr-ownership remains fail-closed only on the separately owned immutable event-history mismatch evt-20260811-073500-q9m4r2-authority-rereview-approve (live 8f332b... vs audited 2f0b022...). A reviewer different from generation-2 primary sol-20260811-k3q8v6z2 must audit this exact head. Runtime recipe-fence PR #310 overlaps the same source/test files and must be synchronized before whichever repair integrates second."
+  "notes": "Independent exact-head audit of PR #366 at f50067d4dedbe548fc80aed2289b846644dd941c returned REQUEST_CHANGES despite green canonical CI 31482367736 and green Swarm engine-tests. The callback-local transition fence, hidden runtime facade, retry semantics, and generation-2 weak-key typing repair are sound, but current-main FidelityManager still dereferences caller-owned PolicyInputs before PhysicsLabRuntime raises transitionInFlight. A metatable-backed PolicyInputs __index can therefore call runtime.dispose while the guard is false and tear down both authority populations before the outer step fails. Repair by putting PR #335/equivalent no-execute PolicyInputs + hostile-time preflight in ancestry, or by extending the runtime mutation transaction/preflight over the full FidelityManager.step call window; add a regression proving policy-input evaluation cannot mutate runtime authority. The eventual integration head must also synthesize overlapping canonical recipe-fence PR #310 and rerun exact-head canonical CI plus live pr-ownership. REVIEW_RESULT evt-20260811-121404-p6m2x8v4-runtime-transition-review-result records the dependency blocker."
 }
