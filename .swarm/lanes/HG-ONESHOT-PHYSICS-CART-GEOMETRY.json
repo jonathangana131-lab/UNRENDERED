@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-ONESHOT-PHYSICS-CART-GEOMETRY",
+  "epicId": "HERO-GATE",
+  "title": "Physics Lab rolling-cart support geometry closure (superseded)",
+  "objective": "Historical duplicate decomposition of the rolling-cart ground-contact and center-of-mass defects. This lane is superseded by HG-PHYSICS-CART-GEOMETRY and must not be implemented independently.",
+  "priority": 0,
+  "state": "SUPERSEDED",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["src/shared/Physics/PhysicsLabObjectGenomes.luau", "tests/physics_lab_recipe.luau"],
+  "resources": [],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Superseded rolling-cart repair",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 0,
+      "writeScopes": ["src/shared/Physics/PhysicsLabObjectGenomes.luau", "tests/physics_lab_recipe.luau"]
+    }
+  ],
+  "acceptance": [
+    "do not implement this duplicate lane",
+    "use HG-PHYSICS-CART-GEOMETRY as the canonical rolling-cart repair lane"
+  ],
+  "notes": "Superseded after concurrent decomposition race. HG-PHYSICS-CART-GEOMETRY was independently materialized with the same two defects and has a live primary owner. Keeping this terminal definition preserves referential integrity for the already-created claim while fencing duplicate implementation.",
+  "tags": ["superseded", "hero-gate", "source-only", "physics-geometry"]
+}
