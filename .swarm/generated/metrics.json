@@ -12,10 +12,10 @@
     "HANDOFF": 18,
     "INTEGRATION_RESULT": 7,
     "RECOVERY": 2,
-    "REVIEW_REQUEST": 26,
+    "REVIEW_REQUEST": 27,
     "REVIEW_RESULT": 30
   },
-  "generatedAt": "2026-08-11T07:16:59.997417+00:00",
+  "generatedAt": "2026-08-11T07:17:46.806545+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED_EXTERNAL": 1,
