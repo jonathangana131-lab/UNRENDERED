@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082635-e08449-objectgenome-key-bounds",
+  "timestamp": "2026-08-11T08:26:35+00:00",
+  "fromWorker": "sol-20260811-e08449",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "ObjectGenome bounds familyId/variantKey to 512 bytes but leaves component, support, mechanism, and affordance semantic keys unbounded; those keys flow into persistent ObjectState maps and the full recipe fingerprint. Add one project-owned semantic-key byte bound with deterministic 512/513-byte regressions rather than allowing arbitrarily large canonical keys.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "At active generation-2 PR #318 head a136f305f432fa9c480e8d91e5d2151340795af7, isStableIdSemanticKey enforces <=512 bytes for familyId and variantKey while isSemanticKey has no byte-length bound.",
+    "component.key, supportKeys entries, mechanism.key, and affordance.key are validated only with unbounded isSemanticKey; canonical ObjectState then uses component/mechanism keys as persisted map keys.",
+    "tests/object_genome_contract_lock.luau covers 512/513-byte family/variant identity boundaries and familyVersion bounds, while tests/object_genome.luau contains no equivalent overlong component/mechanism/affordance semantic-key regression.",
+    "The finding is distinct from PR #318's familyVersion <= 2147483647 repair and does not require Studio/engine evidence."
+  ],
+  "metadata": {
+    "activePr": 318,
+    "activeHeadSha": "a136f305f432fa9c480e8d91e5d2151340795af7",
+    "verdict": "ACTIONABLE_TEST_ADVERSARY_FINDING",
+    "suggestedBoundBytes": 512,
+    "sourcePath": "src/shared/Objects/ObjectGenome.luau",
+    "testPaths": ["tests/object_genome.luau", "tests/object_genome_contract_lock.luau"]
+  }
+}
