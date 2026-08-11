@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k4p8v2q6",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:00:38+00:00",
-  "lastSeenAt": "2026-08-11T09:17:10+00:00",
-  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "slotId": "primary",
+  "lastSeenAt": "2026-08-11T09:22:15+00:00",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-k4p8v2q6",
-  "notes": "Implement explicit trusted immutable-event history continuity/reset recovery after #329 detect-only guard. Preserve published event bytes; add adversarial laundering/replay/boundary tests; validate canonical CI and live control."
+  "notes": "Released SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY primary immediately after discovering SWARM-PROTOCOL remains under a live exclusive lease owned by SWARM-V22-THROUGHPUT. No production files changed; no protected-resource work performed. Prior cart and WorldEntity audits remain published."
 }
