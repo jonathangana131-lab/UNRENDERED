@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime invariant synthesis",
   "objective": "Finish the active Physics Lab runtime lineages by synthesizing the independently reviewed canonical-recipe fence, transition/frozen-facade mutation fence, and entity-ID lookup fence into one current-main source/test head without weakening any accepted invariant.",
   "priority": 9975,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -49,5 +49,6 @@
     "fresh independent exact-head review is required before integration",
     "source-only lane: no Roblox Studio, viewport, physical-contact, or two-client evidence claim"
   ],
-  "notes": "Decomposed by HG-COMPLETION-PHYSICS reconciliation after exact-source comparison. None of #310/#388/#402 subsumes the others: #310 is old mutable-runtime architecture plus constructor fence, #388 is the retained current-main private/frozen transaction architecture but has a pre-lookup hostile-ID review blocker, and #402 closes that lookup boundary on the old runtime architecture. Synthesize semantically; do not mechanically merge predecessor histories or integrate them independently."
+  "pr": 408,
+  "notes": "PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754 is ready for independent source audit. Canonical CI run 31539261229 / #1030 is SUCCESS across format, lint, Luau analysis, deterministic/domain audits, Pure Luau tests, Rojo build, and artifact upload. Swarm Control Plane run 31539261221 engine-tests is SUCCESS; pr-ownership remains fail-closed in the separately owned global trusted-history recovery and is not waived. Exact compare from retained #388 head changes only PhysicsLabRuntime, adds the synthesis regression file, and adds two test-runner wiring lines; #388's primary runtime regression file remains unchanged. No Studio, viewport, physical-contact, or two-client evidence claimed."
 }
