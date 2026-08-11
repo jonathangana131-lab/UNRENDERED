@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-100800-z6m2q8r4-worldentity-mutation-identity-red",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-z6m2q8r4",
+  "claimToken": "9e3b7c1d5a8f2046",
+  "occurredAt": "2026-08-11T10:08:00Z",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-z6m2q8r4-g2",
+  "pr": 364,
+  "headSha": "c154221860c4135b4bd0c7c84b39f433937c80c8",
+  "reasonCode": "REGISTRY_MUTATION_IDENTITY_EXPECTED_RED",
+  "summary": "Isolated green-base expected-red evidence covers hostile WorldEntityId no-execute behavior for captureRegistered and transitionRegistered without duplicating PR #350's get/unregister cases.",
+  "evidence": [
+    "Exact base main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 has green canonical push CI.",
+    "Exact PR #364 head c154221860c4135b4bd0c7c84b39f433937c80c8 changes only tests/world_entity_registry_shape.luau (+34/-0).",
+    "CI run 31480705053 passes toolchain, format, lint, Luau analysis, canonical randomness, shared-domain, plain-value, and deterministic Swarm gates before Pure Luau tests fail expected-red.",
+    "Swarm run 31480705057 engine-tests passes; pr-ownership remains fail-closed at live ownership enforcement while separate global control recovery is active.",
+    "The regression requires hostile non-string identities to reject with zero __tostring callbacks and preserve the valid registered fixture for both registry mutation APIs.",
+    "Raw per-assertion CI logs were unavailable through the connected log endpoint; no per-line runtime failure claim is made.",
+    "No Roblox Studio or engine-runtime evidence is claimed."
+  ]
+}
