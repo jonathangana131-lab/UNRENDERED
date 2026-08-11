@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-p7q4n8",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:41:06+00:00",
-  "lastSeenAt": "2026-08-11T09:44:42+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-fidelity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-p7q4n8",
-  "notes": "Claimed mine-fidelity after losing two earlier claim races. Auditing current FidelityManager source/tests/PRs for one concrete non-duplicate source-only gap; no production edits or Studio claims."
+  "lastSeenAt": "2026-08-11T09:48:15+00:00",
+  "notes": "Completed HG-CAPACITY-MINING/mine-fidelity. Published high-severity evt-20260811-094700-p7q4n8-fidelity-public-state-bypass and routed it to PR #335 comment 5251579379; mining claim released. No product source or Studio evidence changed."
 }
