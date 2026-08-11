@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-r5k8m3q7-runtime-synthesis-required-213700",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T21:37:00+00:00",
+  "workerId": "sol-20260811-r5k8m3q7",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "reconcile",
+  "generation": 1,
+  "claimToken": "e7c3a1d9b4f20568",
+  "target": {
+    "kind": "other",
+    "value": "PhysicsLabRuntime:#310@647dca7a,#388@89eb1c890,#402@4b75bd054"
+  },
+  "severity": "high",
+  "summary": "The retained PhysicsLabRuntime backlog requires one semantic synthesis head: #388 owns the current private/frozen transition-transaction architecture, #310 owns canonical-recipe constructor fencing, and #402 owns malformed WorldEntityId lookup fencing. No predecessor contains all three accepted invariant sets.",
+  "evidence": [
+    "#388 exact source keeps RuntimeState in a closure-private weak-key table, freezes the public runtime facade, guards dispose/reentrancy, and fences FidelityManager.step, but getRecord(entityId) still occurs before the transaction guard and has no WorldEntity.isId preflight.",
+    "#310 exact source calls assertCanonicalRecipe before registry/Fidelity construction and validates the canonical world/region/entity population/provenance/state/revision with plain-table and bounded comparison fences, but retains the older mutable runtime architecture.",
+    "#402 exact source validates runtime lookup IDs with WorldEntity.isId before registry access/diagnostic interpolation and has independent green adversarial regressions, but likewise retains the older mutable runtime architecture.",
+    "PR #388 completion review explicitly requires semantic preservation of #310; its later hostile-entityId blocker is exactly addressed by #402's accepted boundary."
+  ],
+  "recommendedAction": "Use newly unlocked HG-PHYSICS-RUNTIME-SYNTHESIS. Start from #388's semantic architecture on current main, replay #310 constructor fencing and #402 lookup validation, union all three regression corpora, run exact-head canonical CI/Swarm engine-tests, keep live pr-ownership fail-closed until the separately owned trusted-history recovery completes, then require a fresh independent exact-head audit."
+}
