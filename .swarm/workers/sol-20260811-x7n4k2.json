@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-x7n4k2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T06:16:30+00:00",
-  "lastSeenAt": "2026-08-11T06:27:00+00:00",
-  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "lastSeenAt": "2026-08-11T06:37:00+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "audit",
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-audit-x7n4k2",
-  "notes": "Auditing WorldEntity invariants/aliasing. Published finite safe-revision precision finding affecting PR #271; formal GitHub REQUEST_CHANGES is unavailable because swarm workers share the repository account, so durable event + PR conversation comment carry the review finding."
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-audit-x7n4k2",
+  "notes": "Recovery resource is owned by the dedicated SWARM-V21-PR-OWNERSHIP-RECOVERY worker, so no competing control repair was started. Reviewing Physics Lab geometry/validation backfill while product primaries remain frozen behind the global pr-ownership checker recovery."
 }
