@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-121000-cd3bb0-envelope-overflow-review",
+  "kind": "REVIEW_RESULT",
+  "timestamp": "2026-08-11T12:10:00Z",
+  "workerId": "sol-20260811-cd3bb0",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-2",
+  "claimToken": "4c91e7a2b6d3085f",
+  "generation": 2,
+  "headSha": "a329e37f75871e29174c6e322c611bad2a7942f0",
+  "key": "verdict",
+  "value": "APPROVE",
+  "notes": "Exact-head review of expected-red Physics Lab validation test PR #368 confirms derived envelope subtraction can overflow finite input coordinates into non-finite drift evidence. Test payload is approved as adversarial evidence only and must not merge independently. Active #363/successor should reject non-finite derived drift before publishing EnvelopeDrift, preserve normal finite/tolerance behavior, absorb equivalent regression, and rerun exact-head gates. No Studio/contact evidence claimed."
+}
