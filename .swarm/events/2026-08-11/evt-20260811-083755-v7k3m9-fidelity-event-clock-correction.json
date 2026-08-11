@@ -3,14 +3,20 @@
   "eventId": "evt-20260811-083755-v7k3m9-fidelity-event-clock-correction",
   "timestamp": "2026-08-11T08:37:55+00:00",
   "fromWorker": "sol-20260811-v7k3m9",
-  "eventType": "CORRECTION",
+  "eventType": "RECOVERY",
   "summary": "Metadata clock correction: evt-20260811-084200-v7k3m9-fidelity-config-edgecases was written with a future-skewed 08:42Z timestamp due to this worker incorrectly extrapolating time from prior tool activity. The finding content remains valid, but its actual publication precedes this correction at approximately 08:37Z. Use this correction for chronology; the original event remains immutable for auditability. The live HG-BACKFILL-FIDELITY audit heartbeat was also corrected from future-skewed 08:46Z to actual 08:37:15Z.",
   "affects": ["HG-BACKFILL-FIDELITY"],
   "laneId": "HG-BACKFILL-FIDELITY",
-  "severity": "INFO",
+  "severity": "normal",
   "evidence": [
     "user-local clock source at correction time: 2026-08-11 01:37:55 America/Los_Angeles = 2026-08-11T08:37:55Z.",
     ".swarm/claims/HG-BACKFILL-FIDELITY/audit.json heartbeat corrected to 2026-08-11T08:37:15Z in commit aa21d5ba00abe46fffd0d316b175523b3f26b8fb.",
     "No production source, tests, PR heads, or audit verdicts changed as part of this metadata-only correction."
-  ]
+  ],
+  "metadata": {
+    "preTrustSanitation": {
+      "originalBlobSha": "bcfe5718ad8c70645fd94641d42aa8697b49665b",
+      "reason": "Untrusted chronology-only correction used unsupported CORRECTION eventType; normalized to strict RECOVERY before first swarm-trust bootstrap."
+    }
+  }
 }
