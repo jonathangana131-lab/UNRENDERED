@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-210840-c9v2m7q4-diagnostics-duplicate-root-expected-red",
+  "timestamp": "2026-08-11T21:08:40+00:00",
+  "fromWorker": "sol-20260811-c9v2m7q4",
+  "eventType": "EVIDENCE",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "summary": "Expected-red PR #396 isolates the duplicate same-named diagnostics-root capture gap from PR #392. Exact head ecd54b574ff0c390434a6ea14e509fb0680b7775 passes format/lint/Luau/audits/swarm deterministic gates and fails Pure Luau exactly on the new diagnostics root uniqueness assertion.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "PR #396 is based directly on PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519 and changes only tests/physics_lab_diagnostics_atomicity.luau",
+    "Canonical CI run 31536376917 exact head ecd54b574ff0c390434a6ea14e509fb0680b7775 passes format, lint, Luau analysis, canonical randomness, shared-domain boundary, plain-value audit, and Swarm deterministic tests",
+    "Pure Luau fails exactly at: FAIL diagnostics-atomicity diagnostics root discovery rejects duplicate same-named roots",
+    "All neighboring diagnostics atomicity, bounds, and readout assertions shown in the same job log pass",
+    "Swarm Control Plane run 31536376859 engine-tests passes; pr-ownership remains separately fail-closed on global trusted-history/live-control recovery",
+    "No Roblox Studio or viewport evidence was run or claimed"
+  ]
+}
