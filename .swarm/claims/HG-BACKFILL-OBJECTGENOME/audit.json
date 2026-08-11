@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-r4k8m2z7",
   "claimToken": "6c2f9a4d1e7b8053",
   "claimedAt": "2026-08-11T08:41:35+00:00",
-  "heartbeatAt": "2026-08-11T08:41:35+00:00",
+  "heartbeatAt": "2026-08-11T08:48:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-r4k8m2z7",
   "pr": 318,
-  "notes": "Independent ObjectGenome contract/ownership audit on current main and active primary/test work, focused on concrete aliasing, identity, plain-data, and persistence-state invariants."
+  "notes": "Independent ObjectGenome audit: published deterministic diagnostic-order finding and reviewed PR #326, adding the uncovered damage↔mechanismPosition alias closure requirement. Awaiting generation-3 primary patch for exact-head review."
 }
