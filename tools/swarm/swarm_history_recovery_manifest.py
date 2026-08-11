@@ -22,7 +22,7 @@ FINITE_WORKER_TRANSITIONS = (
     ("fecdd4109e7c0b93dae75ea69c8070c7ce0b7b70", "430362399ed3e2fa8eedbad63ac0842b75fac4db"),
     ("d1aa5e7b12b4d8e9917bb77dab3225e4dee4deb8", "a888f8d1c25050e26427fb40945002585741d618"),
     ("8bca8ca61902faf25efe9ef3a004ec032f132c5d", "5f0cb1f3d5618c3816e008adb6951b83de5c861e"),
-    ("66e482d3b424c63c4bed277aafa897f0fa051bbc", "96f1bce1e17b085d4f29b444036c498bcfefe45a"),
+    ("66e482d3b424c63c4bed277aafa897f0fa051bbc", "96f1bce06bb69738dc737ec01f51170ffdaa3667"),
 )
 
 # (eventId, exact first-write commit, exact quarantine-only Git blob SHA-1)
