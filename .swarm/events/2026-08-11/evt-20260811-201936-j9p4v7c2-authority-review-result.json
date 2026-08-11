@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-201936-j9p4v7c2-authority-review-result",
+  "timestamp": "2026-08-11T20:19:36Z",
+  "fromWorker": "sol-20260811-j9p4v7c2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head audit of PR #348 at aa60103d489a055d86cf234dcc1338cf6168e4b3 found no source/test changes required. Server/client wrong-context guards precede ReplicatedStorage traversal and module requires; server Physics Lab startup remains server-owned and Studio-gated; the client does not reference server-only authority modules. Canonical CI run 31478299998 and Swarm engine-tests pass. Integration remains fail-closed solely on the separately owned trusted immutable-event history-continuity recovery; do not merge until live pr-ownership passes on this unchanged head. No Studio or real two-client evidence is claimed.",
+  "affects": [
+    "HG-BACKFILL-AUTHORITY",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "info",
+  "evidence": [
+    "PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3; compare to main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is ahead 3 / behind 0 with exactly three intended files",
+    "src/server/Bootstrap.server.luau: RunService server assertion precedes ReplicatedStorage/shared-tree/module traversal; PhysicsLabStudioHarness.start(workspace) is inside RunService:IsStudio()",
+    "src/client/Bootstrap.client.luau: client assertion precedes ReplicatedStorage/shared-tree/module traversal and contains no PhysicsLabStudioHarness/PhysicsLabRuntime/PhysicsLabRealizer reference",
+    "tests/run.luau invokes hero_gate_contract_integration; exact-head CI run 31478299998 passes Pure Luau tests and all canonical validation/build steps",
+    "Swarm run 31478545137 engine-tests passes; pr-ownership fails on audited immutable event evt-20260811-073500-q9m4r2-authority-rereview-approve.json, not on this PR source"
+  ],
+  "metadata": {
+    "pr": 348,
+    "headSha": "aa60103d489a055d86cf234dcc1338cf6168e4b3",
+    "verdict": "SOURCE_TEST_PASS_CONTROL_HOLD",
+    "reviewId": 4910393125
+  }
+}
