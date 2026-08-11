@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-h7k3v9m2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-11T21:32:10+00:00",
-  "lastSeenAt": "2026-08-11T21:33:25+00:00",
+  "lastSeenAt": "2026-08-11T21:44:40+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-worldentity",
   "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-h7k3v9m2",
-  "notes": "Rerouted after losing ObjectGenome audit race. Mining current WorldEntity source/tests/PR lineage for a concrete non-duplicate Hero-Gate depth gap."
+  "notes": "Completed duplicate-aware WorldEntity exact-head mining against PR #397. Published FINDING evt-sol-20260811-h7k3v9m2-worldentity-no-new-gap-214430: no additional concrete non-duplicate gap; known diagnostic-capacity and metadata-string-budget findings remain actionable. Static GitHub review only; no tests or Studio run."
 }
