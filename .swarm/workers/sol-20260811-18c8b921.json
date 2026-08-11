@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-18c8b921",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T11:44:00+00:00",
-  "lastSeenAt": "2026-08-11T11:44:00+00:00",
-  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "slotId": "primary",
-  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-18c8b921-g2",
-  "notes": "Generation-2 stale-lease recovery of the priority-9999 immutable-history continuity prerequisite after inspecting PR #351, live blockers, and protected resource state."
+  "lastSeenAt": "2026-08-11T11:48:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Lost atomic generation-2 recovery race for SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY; fenced from that primary and rerouting without implementation."
 }
