@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T09:40:00+00:00",
-  "lastSeenAt": "2026-08-11T09:59:00+00:00",
-  "laneId": "HG-COMPLETION-CONTENT",
-  "slotId": "review-2",
-  "branch": "agent/review/HG-COMPLETION-CONTENT-review2-c6v9n2x4",
-  "notes": "Published Physics #310 and WorldEntity #293 SYNC_REQUIRED findings and released those completion claims. Now using content review-2 after another worker won review-1."
+  "lastSeenAt": "2026-08-11T10:02:30+00:00",
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "slotId": "reconcile",
+  "branch": "agent/reconcile/HG-COMPLETION-AUTHORITY-c6v9n2x4",
+  "notes": "Published Physics #310 and WorldEntity #293 SYNC_REQUIRED findings. Content review had no non-overlapping target and was released. Now reconciling clearly superseded authority PR lineages while #348 undergoes its separate exact-head audit."
 }
