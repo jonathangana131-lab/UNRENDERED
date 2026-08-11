@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r6v2k9m4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:15:30+00:00",
-  "lastSeenAt": "2026-08-11T21:15:30+00:00",
+  "lastSeenAt": "2026-08-11T21:19:00+00:00",
   "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
   "slotId": "audit",
   "branch": "agent/review/HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY-audit-r6v2k9m4",
-  "notes": "Independent exact-head source/test audit of PR #399 at 2c33c31f3ab96528308f01d18a72d2446adb1553. Review-only unless a concrete blocker is found; no Studio/two-client evidence claimed."
+  "notes": "Completed exact-head review of PR #399 at 2c33c31f3ab96528308f01d18a72d2446adb1553. REQUEST_CHANGES recorded in GitHub review 4910825181 and REVIEW_RESULT evt-20260811-211800-r6v2k9m4-harness-lifecycle-review: wrapper replaces raw destroy function but still republishes mutable model: Model, allowing direct model destruction to bypass harness/runtime teardown and leave current stale. No Studio/two-client evidence claimed."
 }
