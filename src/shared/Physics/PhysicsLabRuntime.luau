@@ -135,7 +135,16 @@ function PhysicsLabRuntime.step(
 			local preview = WorldEntity.transition(current, toLevel, capturedState)
 			observer(current, preview, reason)
 
-			local committed = self._registry.transitionRegistered(entityId, toLevel, capturedState)
+			-- WorldEntity.transition owns a frozen plain-data snapshot. Commit that exact
+			-- snapshot rather than the adapter-owned capture table: an observer may share
+			-- the adapter buffer and mutate it after inspecting the preview, which must not
+			-- make the authoritative commit differ from the representation-approved state.
+			local committedState: PlainData? = nil
+			if capturedState ~= nil then
+				committedState = preview.persistentState
+			end
+
+			local committed = self._registry.transitionRegistered(entityId, toLevel, committedState)
 			assert(committed.fidelity == preview.fidelity, "Physics Lab transition commit fidelity mismatch")
 			assert(
 				committed.stateRevision == preview.stateRevision,
