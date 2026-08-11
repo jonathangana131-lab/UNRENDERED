@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "slotId": "reconcile",
+  "workerId": "sol-20260811-t8v4n2c7",
+  "claimToken": "d4f8a2c7e1b69035",
+  "claimedAt": "2026-08-11T20:36:20+00:00",
+  "heartbeatAt": "2026-08-11T20:36:20+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/reconcile/HG-COMPLETION-AUTHORITY-t8v4n2c7",
+  "pr": null,
+  "notes": "Reconcile retained authority primary PR #348 with independently passed teardown successor PR #390; identify exact overlap and safe integration order without bypassing global ownership gate."
+}
