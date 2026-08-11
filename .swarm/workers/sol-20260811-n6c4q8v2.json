@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-n6c4q8v2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T21:38:26Z",
-  "lastSeenAt": "2026-08-11T21:55:09Z",
-  "notes": "PR #349 handed off at exact head ee771bd50db972ad572f5d3cef8463220d69fa06 for fresh independent audit. Product CI and engine tests pass; PR ownership is globally blocked only by the already-owned trusted-history recovery fence."
+  "lastSeenAt": "2026-08-11T21:57:11Z",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-n6c4q8v2-g1",
+  "notes": "Independent exact-head source audit of diagnostics generation-7 PR #409 at 064670616b35b08dc5a84b52b16c976c3b72e9f7; no Studio/viewport evidence claim."
 }
