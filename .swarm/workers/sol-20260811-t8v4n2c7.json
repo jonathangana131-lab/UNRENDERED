@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-t8v4n2c7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T20:13:14+00:00",
-  "lastSeenAt": "2026-08-11T20:40:35+00:00",
+  "lastSeenAt": "2026-08-11T20:46:02+00:00",
   "laneId": "HG-BACKFILL-AUTHORITY",
   "slotId": "test-adversary",
   "branch": "agent/authority/HG-BACKFILL-AUTHORITY-tests-t8v4n2c7-g4",
-  "notes": "Generation-4 test-only authority stack on retained primary #348, replaying accepted #390 teardown fixture/invocation while preserving bootstrap source-order assertions."
+  "notes": "Published ready-for-review stacked PR #394 exact head b38de16a on retained primary #348. Canonical CI 31534300526 and Swarm engine-tests green; implementation/resource claims released. Integration remains held on fresh independent review and separately owned trusted pr-ownership recovery."
 }
