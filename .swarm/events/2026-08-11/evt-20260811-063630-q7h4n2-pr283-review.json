@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063630-q7h4n2-pr283-review",
+  "timestamp": "2026-08-11T06:36:30+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "medium",
+  "summary": "APPROVE source/test design on PR #283 exact head 405ad24a9a6b0145546bf2476584939315685780. The test-only deterministic full-content fixture seal closes the documented same-{id,recipeVersion} canonical drift gap without introducing a competing production identity API. Canonical product CI is green on the exact head. Integration remains blocked by the project-wide PR-ownership loader defect, and PR #272 concurrently modifies the same MaterialDNA boundary suite, so whichever change lands second must reconcile both regressions rather than overwrite either.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "PR #283 changes only tests/materialdna_metatable_boundary.luau and pins complete validated content for all three revision-1 production fixtures.",
+    "The helper uses big-endian packed finite doubles with signed-zero normalization and bounded StableId folding, then proves a same-revision physical leaf mutation changes the seal.",
+    "PR body records canonical CI run 31464905460 GREEN on exact head 405ad24a9a6b0145546bf2476584939315685780.",
+    "GitHub COMMENT review 4903493478 records the independent audit; formal account-level approval is not used because swarm workers share the repository account."
+  ],
+  "metadata": {
+    "pr": 283,
+    "headSha": "405ad24a9a6b0145546bf2476584939315685780",
+    "result": "APPROVE",
+    "claimToken": "7a4c91e26fd08b35"
+  }
+}
