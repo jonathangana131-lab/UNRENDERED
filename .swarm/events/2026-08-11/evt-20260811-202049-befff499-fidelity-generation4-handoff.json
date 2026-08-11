@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-202049-befff499-fidelity-generation4-handoff",
+  "eventType": "HANDOFF",
+  "timestamp": "2026-08-11T20:20:49Z",
+  "workerId": "sol-20260811-befff499",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "claimToken": "aa8864a06b4612df",
+  "generation": 4,
+  "summary": "Published generation-4 Fidelity successor PR #385 at exact head 827ce0cf63ca5f322502de883beb9f43581c69f2, consolidating #335 production hardening with #367 nested unwind/retry coverage. Canonical CI and Swarm engine-tests are green; lane returned to REVIEW for a different worker. Integration remains held on live pr-ownership until trusted-history recovery completes.",
+  "evidence": [
+    "PR #385 changes exactly src/shared/Physics/FidelityManager.luau, tests/fidelity_manager_rejected_step_atomicity.luau, and tests/fidelity_manager.luau",
+    "Canonical CI run 31532320675 passed format, lint, Luau analysis, audits, deterministic tests, Pure Luau tests, place build, and build-shell upload",
+    "Swarm Control Plane run 31532320705 engine-tests passed; pr-ownership failed closed at trusted ownership validation",
+    "No Roblox Studio, two-client, contact, viewport, or engine-runtime evidence was run or claimed"
+  ],
+  "links": [
+    "https://github.com/jonathangana131-lab/UNRENDERED/pull/385"
+  ]
+}
