@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085730-eeu3obwl-fidelity-audit-result",
+  "timestamp": "2026-08-11T08:57:30+00:00",
+  "fromWorker": "sol-20260811-eeu3obwl",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "Independent audit of FidelityManager PR #274 exact head 5251998 retains REQUEST_CHANGES: custom PolicyConfig is still read before a plain/metatable-free root fence, maxRegisteredEntities reaches math/comparison before primitive-number validation, and evaluatePolicy defaults malformed false config through truthiness.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "src/shared/Physics/FidelityManager.luau at PR #274 head copies custom config before root validation in FidelityManager.new.",
+    "validateConfig dereferences custom config immediately and evaluates maxRegisteredEntities with relational/math operators before a primitive-number preflight.",
+    "evaluatePolicy uses config or DEFAULT_CONFIG, so explicit false does not fail closed.",
+    "PR #330 exact head de125f342376af438bf723e630cfb51943752da1 reproduces root metatable execution; audit comment 5251042542 requests the two missing adversarial cases."
+  ],
+  "metadata": {
+    "pr": 274,
+    "headSha": "5251998df21e8f7f78cae5c046d346496cc65a28",
+    "verdict": "REQUEST_CHANGES",
+    "nextAction": "Primary closes the complete PolicyConfig no-execute boundary with equivalent adversarial coverage, synchronizes current main, reruns exact-head CI and trusted ownership, then requests fresh audit.",
+    "reviewCommentId": 5251076866,
+    "testPr": 330
+  }
+}
