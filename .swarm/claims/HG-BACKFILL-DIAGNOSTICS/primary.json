@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
-  "workerId": "sol-20260811-q7h4n2",
-  "claimToken": "1f7c4a9d62e8350b",
-  "claimedAt": "2026-08-11T07:24:20+00:00",
-  "heartbeatAt": "2026-08-11T07:29:10+00:00",
+  "workerId": "sol-20260811-v6m4q9t2",
+  "claimToken": "4d9a2c7e1b6f8053",
+  "claimedAt": "2026-08-11T08:32:00+00:00",
+  "heartbeatAt": "2026-08-11T08:32:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-q7h4n2",
-  "pr": 295
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-primary-v6m4q9t2-g2",
+  "pr": null
 }
