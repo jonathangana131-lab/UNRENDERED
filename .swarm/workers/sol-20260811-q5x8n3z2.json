@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q5x8n3z2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T08:41:00+00:00",
-  "lastSeenAt": "2026-08-11T09:13:30+00:00",
-  "notes": "Released duplicate physics-geometry audit after discovering an earlier exact-head expected-RED review already covered PR #332. Authority #316 remains handed off pending trusted control recovery; no Studio/two-client evidence claim."
+  "lastSeenAt": "2026-08-11T09:22:45+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-q5x8n3z2-g2",
+  "notes": "Generation-2 stale takeover of diagnostics audit. Reviewing #327 + dependent #333 against prior coverage requests and the later instance-binding authority finding; source-only, no Studio evidence claim."
 }
