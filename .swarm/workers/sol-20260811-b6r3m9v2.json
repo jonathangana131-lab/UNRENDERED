@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-b6r3m9v2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T12:05:45+00:00",
-  "lastSeenAt": "2026-08-11T12:05:45+00:00",
+  "lastSeenAt": "2026-08-11T12:08:15+00:00",
   "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-MATERIALDNA-COUNTERS-b6r3m9v2",
-  "notes": "Independent exact-head audit of MaterialDNA repair-count exactness PR #353. Verify exact safe-integer boundary, primitive/no-execute ordering, unchanged recipe identity/fixtures, narrow scope, deterministic regression evidence, and current integration gates."
+  "notes": "Completed fresh exact-head audit of MaterialDNA PR #353 at 10559afdce1a1854e7932522f6e78561736c8ed3: SOURCE/TEST PASS. Published REVIEW_RESULT evt-20260811-120740-b6r3m9v2-materialdna-counter-audit-pass and PR review 4906009698. Exact-head CI and Swarm engine-tests green; integration remains gated only by separately owned trusted-control/live pr-ownership recovery. No Studio evidence claimed. Claim released."
 }
