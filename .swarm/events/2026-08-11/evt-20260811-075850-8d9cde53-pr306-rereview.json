@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075850-8d9cde53-pr306-rereview",
+  "timestamp": "2026-08-11T07:58:50+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "low",
+  "summary": "Patch-local PASS on corrected PR #306 head f813129849d48131da185ecf2158ff2c769d61fa, superseding the earlier format-only REQUEST_CHANGES. The v2 and replay-only v1 schema-key rejection fix is semantically sound, targeted hostile-__tostring regressions are present, and canonical CI 31471106348 is green. Integration remains blocked until live pr-ownership returns PASS on this exact head; Swarm run 31471106336 still has ownership red while engine-tests are green.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "PR #306 exact diff changes only ResolvedRegionRecipe.luau, ResolvedRegionRecipeV1Internal.luau, and tests/resolved_region_recipe_v2_compat.luau within primary scope.",
+    "The corrected validators reject non-string keys with a constant diagnostic before interpolating only proven string keys, so hostile non-string __tostring metamethods cannot execute during schema rejection.",
+    "Canonical CI run 31471106348 completed successfully on exact head f813129849d48131da185ecf2158ff2c769d61fa.",
+    "Swarm Control Plane run 31471106336 has engine-tests PASS but pr-ownership FAIL; therefore this event is patch-local approval, not integration approval.",
+    "GitHub review submission 4904084706 records the corrected-head independent review."
+  ],
+  "metadata": {
+    "pr": 306,
+    "headSha": "f813129849d48131da185ecf2158ff2c769d61fa",
+    "result": "PASS",
+    "claimToken": "a363dc5b9a4a1217"
+  }
+}
