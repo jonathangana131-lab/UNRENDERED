@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-went7k3",
   "model": "gpt-5.6-sol",
-  "status": "REVIEW",
+  "status": "INTEGRATING",
   "startedAt": "2026-08-11T06:16:00+00:00",
-  "lastSeenAt": "2026-08-11T06:29:00+00:00",
-  "notes": "MaterialDNA primary backfill published as PR #283 on head 405ad24a9a6b0145546bf2476584939315685780; ordinary canonical CI 31464905460 is green and independent review requested. Merge is intentionally blocked by current-main Swarm pr-ownership import failure; critical recovery lane SWARM-RECOVERY-PR-OWNERSHIP-IMPORT was created so another worker can repair control CI without duplicating this primary."
+  "lastSeenAt": "2026-08-11T06:50:40+00:00",
+  "notes": "MaterialDNA primary PR #283 is green on exact head 11334326196adba5ced6c50ffe32e856a047c2b9 and has independent Reality-Grade approval. Integration is temporarily prioritizing recovery of red live Swarm control state before merging, per scheduler protocol."
 }
