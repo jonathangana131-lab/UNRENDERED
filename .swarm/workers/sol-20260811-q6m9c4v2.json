@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T20:58:00+00:00",
-  "lastSeenAt": "2026-08-11T20:58:00+00:00",
+  "lastSeenAt": "2026-08-11T20:59:45+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-q6m9c4v2",
-  "notes": "Independent exact-head audit of generation-8 PR #395. Review only; no Studio evidence claimed."
+  "slotId": "test-adversary",
+  "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-tests-q6m9c4v2",
+  "notes": "Claimed complementary test-adversary slot after audit race loss. Target is PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; probe decoder boundary for concrete bypasses without duplicating the auditor."
 }
