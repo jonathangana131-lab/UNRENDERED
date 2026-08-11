@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-093850-q6m2v8k5-physics-fixture-com-drift",
+  "timestamp": "2026-08-11T09:38:50+00:00",
+  "fromWorker": "sol-20260811-q6m2v8k5",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "WARN",
+  "summary": "Physics Lab office-table and filing-cabinet fixtures close their declared total mass exactly from component masses, but their declared centerOfMassM values disagree with the component mass-weighted centroids, leaving source-authored physical mass metadata internally inconsistent before F2/F3 promotion.",
+  "affects": {
+    "laneIds": ["HG-BACKFILL-PHYSICS-GEOMETRY", "HG-BACKFILL-OBJECTGENOME"],
+    "resources": ["src/shared/Objects/ObjectGenomeFixtures.luau", "tests/physics_lab_recipe.luau"]
+  },
+  "evidence": [
+    "officeTable component masses sum exactly to declared massKg 27.0 kg: four 2.4 kg legs + 2.0 kg crossbar + 15.4 kg top. Their authored Y centroids yield (4*2.4*-0.03 + 2.0*0.15 + 15.4*0.33) / 27.0 = 0.1886666666666667 m, while centerOfMassM.y is declared as 0.08 m.",
+    "filingCabinet component masses sum exactly to declared massKg 36.6 kg: 24.0 kg shell + three 4.2 kg drawers. Their authored centroids yield COM y = 0.017213114754098358 m and z = -0.0034426229508196728 m, while centerOfMassM is declared as {x=0,y=-0.06,z=0.01}.",
+    "Existing rolling-cart repair PR #311 explicitly treats component-mass/centroid-derived COM coherence as a physical-authoring requirement, and chair adversarial PR #332 independently locks the same invariant for the chair; neither covers officeTable or filingCabinet.",
+    "Because these fixtures are used by the permanent Physics Lab and every ObjectGenome component is realized at F2, inconsistent declared COM metadata can become a different physical truth once later fidelity promotion consumes centerOfMassM for actuation/balance/handling."
+  ],
+  "metadata": {
+    "reproClass": "source-contract",
+    "studioEvidenceRequired": false,
+    "recommendedAction": "Recompute and version the officeTable and filingCabinet declared COMs from the authored component mass distribution, then add a fixture-wide deterministic regression that requires exact component-mass closure and component-derived COM coherence for all permanent Physics Lab ObjectGenomes whose component masses fully account for massKg.",
+    "recommendedLane": "HG-ONESHOT-PHYSICS-FIXTURE-MASS-COM"
+  }
+}
