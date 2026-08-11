@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:37:00+00:00",
-  "lastSeenAt": "2026-08-11T09:12:00+00:00",
+  "lastSeenAt": "2026-08-11T09:23:00+00:00",
   "laneId": "SWARM-V22-THROUGHPUT",
   "slotId": "primary",
-  "branch": "agent/swarm/SWARM-V22-THROUGHPUT-2b51a8-g1",
-  "notes": "Implementing and proving V2.2 completion-throughput policy under the exclusive SWARM-PROTOCOL lease. Earlier placeholder branches are non-authoritative and unused."
+  "branch": "agent/swarm/SWARM-V22-THROUGHPUT-2b51a8-g1r3",
+  "notes": "V2.2 retained lineage reconstructed exactly on main after #329 merged; PR #341 is superseded and closed. Continuing exact-head validation under the exclusive SWARM-PROTOCOL lease."
 }
