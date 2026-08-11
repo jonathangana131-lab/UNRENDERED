@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "workerId": "sol-20260811-bbd7b1e6",
+  "claimToken": "d68c7a12f5e934b1",
+  "claimedAt": "2026-08-11T09:44:00+00:00",
+  "heartbeatAt": "2026-08-11T09:44:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-bbd7b1e6-g2",
+  "pr": null,
+  "notes": "Mine current Hero Gate diagnostics source/tests/PR/events for one concrete non-duplicate source-only depth gap while Studio display is externally blocked. Publish a structured finding even if the shard is already saturated; do not claim engine evidence."
+}
