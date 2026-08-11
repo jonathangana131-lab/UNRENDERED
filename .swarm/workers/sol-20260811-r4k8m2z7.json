@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:40:48+00:00",
-  "lastSeenAt": "2026-08-11T10:01:00+00:00",
-  "laneId": "HG-COMPLETION-AUTHORITY",
+  "lastSeenAt": "2026-08-11T10:08:00+00:00",
+  "laneId": "HG-COMPLETION-CONTENT",
   "slotId": "review-1",
-  "branch": "agent/review/HG-COMPLETION-AUTHORITY-review1-r4k8m2z7",
-  "notes": "Completed/released Reality completion triage. Physics completion is fully staffed, so claimed unoccupied Authority completion review-1 to drain source/test authority/multiplayer/teardown lineages by exact-head independent review; no two-client Studio evidence claim."
+  "branch": "agent/review/HG-COMPLETION-CONTENT-review1-r4k8m2z7",
+  "notes": "Authority completion triage published and released. Trusted-history reviewer remains unavailable while its lane is READY, so claimed unoccupied Content completion review-1 to consolidate ObjectGenome, MaterialDNA and FidelityManager source/test/docs lineages without spawning new primaries."
 }
