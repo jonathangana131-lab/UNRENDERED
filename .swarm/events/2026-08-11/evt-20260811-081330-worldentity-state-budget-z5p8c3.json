@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081330-worldentity-state-budget-z5p8c3",
+  "timestamp": "2026-08-11T08:13:30+00:00",
+  "fromWorker": "sol-20260811-z5p8c3",
+  "eventType": "FINDING",
+  "summary": "WorldEntity persistentState has no declared canonical payload/workload budget. clonePlainValue() recursively owns every accepted nested table/value and enforces plain-data shape, cycles, and dense arrays, but it has no maximum nesting depth, node/entry count, aggregate string/key bytes, or total payload-work ceiling. WorldEntity.new(), register()/ownRecord(), captureState(), and demotion capture can therefore perform recursion and allocations proportional to caller-supplied accepted state size. PR #293 hardens lifecycle ownership/revision/no-execute boundaries but leaves this recursive payload-budget behavior unchanged. Follow-up should define a versioned persistent-state complexity budget, reject over-budget state before deep ownership work where practical, add depth/node/aggregate-byte boundary tests, and preserve existing in-budget state semantics.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "MEDIUM",
+  "evidence": [
+    "src/shared/Reality/WorldEntity.luau: clonePlainValue() recursively walks and freezes arbitrary accepted nested plain tables; cloneState() delegates the whole persistentState graph to it without depth, node-count, aggregate-byte, or equivalent complexity limits.",
+    "WorldEntity.new(), ownRecord()/registry.register(), captureState(), and demotion transition all own or clone persistent state through that recursive path, so CPU/allocations scale with accepted caller payload size.",
+    "PR #293 changes record ownership, revision ranges, generatorVersion, and fail-closed diagnostics but does not add a persistent-state complexity/work budget.",
+    "Repository issue/PR/code search plus same-day event-name audit found no existing WorldEntity persistentState depth/size/workload-budget closure. Source-only finding: no benchmark, exploit claim, or Roblox Studio evidence is asserted."
+  ]
+}
