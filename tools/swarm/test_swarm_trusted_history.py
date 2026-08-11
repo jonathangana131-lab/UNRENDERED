@@ -158,11 +158,31 @@ class SeparateTrustLedgerTests(unittest.TestCase):
         with self.assertRaises(core.ControlError):
             hard.verify_trusted_state(self.fx.root, trust_path)
 
+    def test_cross_paired_valid_sha_and_digest_fail_atomic_snapshot_binding(self):
+        other = Fx()
+        try:
+            config_path = other.root / "config.json"
+            config = core.load_json(config_path)
+            config["description"] = "different authoritative snapshot"
+            write(config_path, config)
+            trust_path = self.fx.root.parent / "trust-cross-paired.json"
+            write(trust_path, self.trust(digest=hard.state_digest(other.root)))
+            with self.assertRaises(core.ControlError):
+                hard.verify_trusted_snapshot(self.fx.root, trust_path)
+        finally:
+            other.close()
+
     def test_bootstrap_trust_record_never_authorizes_pr_state(self):
         trust_path = self.fx.root.parent / "trust-bootstrap.json"
         write(trust_path, self.trust(bootstrap=True))
         with self.assertRaises(core.ControlError):
             hard.verify_trusted_state(self.fx.root, trust_path)
+
+    def test_bootstrap_snapshot_may_be_checked_only_when_explicitly_requested(self):
+        trust_path = self.fx.root.parent / "trust-bootstrap-snapshot.json"
+        write(trust_path, self.trust(bootstrap=True))
+        result = hard.verify_trusted_snapshot(self.fx.root, trust_path, allow_bootstrap=True)
+        self.assertTrue(result["bootstrap"])
 
     def test_invalid_trust_sha_or_digest_fails_closed(self):
         trust_path = self.fx.root.parent / "trust-bad.json"
@@ -174,6 +194,11 @@ class SeparateTrustLedgerTests(unittest.TestCase):
 
 
 class TrustedHistoryWorkflowTests(unittest.TestCase):
+    INVALID_WORKER_TRANSITIONS = {
+        "fa5b8f163603fa918c21b28c63bd20e6c25a2add": "7c62ff9a7b92c4ebe43c38323a5946e04881d3b7",
+        "a99ff757b842fa91ddd893d19fd1d826890ce306": "a193dd686323c27a7191d525b064c4257120de21",
+    }
+
     def workflow(self):
         path = Path(__file__).resolve().parents[2] / ".github" / "workflows" / "swarm-control.yml"
         return path.read_text(encoding="utf-8")
@@ -184,12 +209,22 @@ class TrustedHistoryWorkflowTests(unittest.TestCase):
         self.assertIn("verify_trusted_state", workflow)
         self.assertIn("trustedStateDigest", workflow)
 
-    def test_control_transition_uses_last_trusted_sha_not_push_parent(self):
+    def test_control_transition_binds_digest_to_archived_trusted_sha_before_transition(self):
         workflow = self.workflow()
         self.assertIn("TRUSTED_CONTROL_SHA", workflow)
         self.assertIn('git archive "$TRUSTED_CONTROL_SHA" .swarm', workflow)
+        self.assertIn("verify_trusted_snapshot", workflow)
+        self.assertIn("allow_bootstrap=True", workflow)
+        self.assertLess(workflow.index("verify_trusted_snapshot"), workflow.index("transition-check"))
         self.assertNotIn("BEFORE_SHA: ${{ github.event.before }}", workflow)
         self.assertIn("refusing stale trust advance", workflow)
+
+    def test_bootstrap_candidate_proves_known_invalid_worker_transitions_are_explicitly_crossed(self):
+        workflow = self.workflow()
+        self.assertIn("git merge-base --is-ancestor", workflow)
+        for invalid_sha, repair_sha in self.INVALID_WORKER_TRANSITIONS.items():
+            self.assertIn(invalid_sha, workflow)
+            self.assertIn(repair_sha, workflow)
 
     def test_health_mutation_is_not_hidden_as_generated_only_commit(self):
         workflow = self.workflow()
