@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063820-q7h4n2-pr272-rereview",
+  "timestamp": "2026-08-11T06:38:20+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "high",
+  "summary": "BLOCK integration / approve regression design on updated PR #272 exact head ad664ccc65c7fa46354fca40dfe0a60e7b2892bf. The extension from recipe to state and MaterialRef correctly covers all public exact-shape validators sharing validateKnownFields; exact-head CI reproduces one hostile __tostring execution in each path. This supersedes the prior review on 1dd682c. Repair production unknown-key labeling, then preserve all three callback-zero regressions when reconciling the shared test file with PR #283.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "Updated PR #272 patch adds independent hostile table-key callbacks for validateRecipe, validateState and validateReference and requires each counter to remain zero.",
+    "PR body records exact-head CI reaching Pure Luau and reproducing callback count 1 for recipe, state and reference on ad664ccc65c7fa46354fca40dfe0a60e7b2892bf.",
+    "GitHub COMMENT review 4903512374 records the exact-head independent re-review."
+  ],
+  "metadata": {
+    "pr": 272,
+    "headSha": "ad664ccc65c7fa46354fca40dfe0a60e7b2892bf",
+    "result": "BLOCK",
+    "claimToken": "7a4c91e26fd08b35"
+  }
+}
