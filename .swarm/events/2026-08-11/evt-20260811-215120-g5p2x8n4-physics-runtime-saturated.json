@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-215120-g5p2x8n4-physics-runtime-saturated",
+  "timestamp": "2026-08-11T21:51:20+00:00",
+  "fromWorker": "sol-20260811-g5p2x8n4",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "summary": "Physics runtime source-depth capacity is currently saturated by explicit retained work; do not open a fourth runtime repair. Main PhysicsLabRuntime still lacks the predecessor hardening because integration is pending, but the exact non-overlapping invariants are already owned by READY/claimed HG-PHYSICS-RUNTIME-SYNTHESIS: PR #388 private/frozen RuntimeState + whole-step mutation fence, PR #310 canonical recipe/no-execute/bounded constructor fence, and PR #402 WorldEntityId lookup fence. The synthesis primary is actively claimed by sol-20260811-r5k8m3q7, so additional runtime implementation would duplicate live work. Runtime completion therefore depends on that synthesis producing an exact-head union and on the separately owned trusted Swarm history recovery restoring pr-ownership; no new product lane is warranted from this mining pass.",
+  "affects": ["HG-PHYSICS-RUNTIME-SYNTHESIS", "HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "INFO",
+  "evidence": [
+    "main src/shared/Physics/PhysicsLabRuntime.luau remains the pre-synthesis runtime surface; tests/physics_lab_runtime.luau covers existing lifecycle but not the pending union until integration.",
+    "PR #310 exact product head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d owns canonical-recipe validation, malformed constructor no-execute fences, and bounded persistent-state comparison.",
+    "PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1 owns closure-private weak-key RuntimeState, frozen facade, guarded dispose, full FidelityManager.step transaction fencing, callback reentrancy rejection, unwind, and retry behavior.",
+    "PR #402 exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42 owns WorldEntity.isId lookup-boundary validation for getRecord/getFidelity/step.",
+    "HG-PHYSICS-RUNTIME-SYNTHESIS is READY with acceptance explicitly requiring the semantic union of #388/#310/#402; primary claim is live under sol-20260811-r5k8m3q7 as of 2026-08-11T21:37:20Z.",
+    "Source/control-plane inspection only; no local Luau, Roblox Studio, viewport, physics-contact, or two-client execution is claimed."
+  ]
+}
