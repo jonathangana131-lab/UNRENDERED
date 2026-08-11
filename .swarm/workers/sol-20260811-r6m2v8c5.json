@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r6m2v8c5",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:13:00+00:00",
-  "lastSeenAt": "2026-08-11T21:13:00+00:00",
+  "lastSeenAt": "2026-08-11T21:15:30+00:00",
   "laneId": "HG-COMPLETION-AUTHORITY",
   "slotId": "review-1",
   "branch": "agent/review/HG-COMPLETION-AUTHORITY-r6m2v8c5",
-  "notes": "Independent exact-head authority review of PR #399 harness lifecycle capability fence; source/test review only, no Studio/two-client evidence."
+  "notes": "Independent exact-head review complete: REQUEST_CHANGES verdict on PR #399 head 2c33c31f3ab96528308f01d18a72d2446adb1553 because the cloned handle still exposes raw mutable realized.model and can reproduce stale harness ownership outside coordinated destroy. Review record 4910834949; valid REVIEW_RESULT event evt-20260811t211500z-r6m2v8c5-authority-harness-review. No Studio/two-client evidence claimed."
 }
