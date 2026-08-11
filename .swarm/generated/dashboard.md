@@ -1,10 +1,10 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T08:15:42.632854+00:00`
+Generated: `2026-08-11T08:16:09.554272+00:00`
 
 Canonical main: **GREEN** `064e28f2306095dadd6a514b96f397cd810ac556`
 
-State digest: `05fa0f8bf382479f9a9d1ff4f7b639e892ac1c6fc68d8818e357b37449cb131e`
+State digest: `1bb85d2c1937046f7012ffef973c5ea4f33c9fc2b322f10f466fe0d0eb868690`
 
 ## Summary
 
@@ -19,12 +19,12 @@ State digest: `05fa0f8bf382479f9a9d1ff4f7b639e892ac1c6fc68d8818e357b37449cb131e`
 - `HG-BACKFILL-OBJECTGENOME/test-adversary` — **ObjectGenome malformed-input and identity tests** — score 5370 — dependencies satisfied
 - `HG-BACKFILL-WORLDENTITY/audit` — **WorldEntity invariant and aliasing auditor** — score 5320 — dependencies satisfied
 - `HG-BACKFILL-FIDELITY/test-adversary` — **Fidelity transition and atomicity tests** — score 5270 — dependencies satisfied
+- `HG-BACKFILL-OBJECTGENOME/audit` — **ObjectGenome contract and ownership auditor** — score 5270 — dependencies satisfied
 - `HG-PHYSICS-CART-GEOMETRY/audit` — **Independent rolling-cart geometry audit** — score 5210 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-worldentity` — **Mine WorldEntity for next concrete depth lane** — score 3680 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-objectgenome` — **Mine ObjectGenome for next concrete depth lane** — score 3670 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-fidelity` — **Mine FidelityManager for next concrete depth lane** — score 3650 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-physics-geometry` — **Mine Physics geometry for next concrete depth lane** — score 3630 — dependencies satisfied
-- `HG-CAPACITY-MINING/mine-diagnostics` — **Mine diagnostics source for next concrete depth lane** — score 3620 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-authority` — **Mine authority/multiplayer source for next concrete depth lane** — score 3610 — dependencies satisfied
 
 ## Active claims
@@ -38,7 +38,6 @@ State digest: `05fa0f8bf382479f9a9d1ff4f7b639e892ac1c6fc68d8818e357b37449cb131e`
 - `HG-BACKFILL-FIDELITY/primary` → `sol-20260811-v6r2k9`; lease to `2026-08-11T08:40:00+00:00`
 - `HG-BACKFILL-MATERIALDNA-COUNTERS/audit` → `sol-20260811-h4v8n2`; lease to `2026-08-11T08:40:20+00:00`
 - `HG-BACKFILL-MATERIALDNA-COUNTERS/primary` → `sol-20260811-492051ed`; lease to `2026-08-11T08:32:40+00:00`
-- `HG-BACKFILL-OBJECTGENOME/audit` → `sol-20260811-96d0cf`; lease to `2026-08-11T08:36:15+00:00`
 - `HG-BACKFILL-OBJECTGENOME/primary` → `sol-20260811-j6m2q8`; lease to `2026-08-11T08:45:02+00:00`
 - `HG-BACKFILL-PHYSICS-GEOMETRY/audit` → `sol-20260811-v7k3m9`; lease to `2026-08-11T08:43:00+00:00`
 - `HG-BACKFILL-PHYSICS-GEOMETRY/primary` → `sol-20260811-v8k3p6`; lease to `2026-08-11T08:38:30+00:00`
@@ -47,6 +46,7 @@ State digest: `05fa0f8bf382479f9a9d1ff4f7b639e892ac1c6fc68d8818e357b37449cb131e`
 - `HG-BACKFILL-REALITY/audit` → `sol-20260811-8d9cde53`; lease to `2026-08-11T08:38:15+00:00`
 - `HG-BACKFILL-REALITY/primary` → `sol-20260811-r8v2c6`; lease to `2026-08-11T08:38:20+00:00`
 - `HG-BACKFILL-REALITY/test-adversary` → `sol-20260811-m8q2v7`; lease to `2026-08-11T08:45:00+00:00`
+- `HG-CAPACITY-MINING/mine-diagnostics` → `sol-20260811-h8v5c1`; lease to `2026-08-11T08:46:10+00:00`
 - `HG-CAPACITY-MINING/mine-materialdna` → `sol-20260811-mat8c3r1`; lease to `2026-08-11T08:41:53+00:00`
 - `HG-CAPACITY-MINING/mine-physics-runtime` → `sol-20260811-r8v2k6`; lease to `2026-08-11T08:42:44+00:00`
 - `SWARM-RECOVERY-HEALTH-VALIDATION-FENCE/primary` → `sol-20260811-s5q8m4`; lease to `2026-08-11T08:39:00+00:00`
