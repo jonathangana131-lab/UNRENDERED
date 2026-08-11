@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-z6m2q8r4",
   "claimToken": "c3d9a6f1b4e27085",
   "claimedAt": "2026-08-11T09:44:00+00:00",
-  "heartbeatAt": "2026-08-11T09:44:00+00:00",
+  "heartbeatAt": "2026-08-11T09:49:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-z6m2q8r4",
-  "pr": null,
-  "notes": "Complementary ObjectGenome adversarial regression work against current NEEDS_CHANGES primary; source-test-only, no Studio evidence."
+  "pr": 357,
+  "notes": "Draft PR #357 published at 05e89f2da83c14d21764036bd52b598efb03e953 with one in-scope already-registered contract-lock test file. Awaiting canonical CI to establish whether construction-history-dependent diagnostic order reproduces expected-red."
 }
