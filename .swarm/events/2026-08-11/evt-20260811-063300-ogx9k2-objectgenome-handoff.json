@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063300-ogx9k2-objectgenome-handoff",
+  "timestamp": "2026-08-11T06:33:00+00:00",
+  "fromWorker": "sol-20260811-ogx9k2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "info",
+  "summary": "Primary ObjectGenome repair is preserved in draft PR #286 with exact-head canonical CI green and independent swarm review PASS. The patch closes the test-adversary-reported >512-byte StableId identity-part validation gap. Integration is intentionally paused because the critical SWARM-RECOVERY-PR-OWNERSHIP-IMPORT lane is READY and current PR ownership checks abort before claim validation.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME", "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT"],
+  "evidence": [
+    "PR #286 head b351a098a24ce69eb419ace5758dbf69a2ab358f is mergeable and canonical CI run 31465180117 completed SUCCESS.",
+    "Two independent swarm review comments report no product-local correctness issue; existing ObjectGenome diagnostic codes remain stable.",
+    "Swarm Control Plane run 31465180122 fails before ownership evaluation because trusted swarmctl_hardening.py cannot import omitted swarmctl_hardening_base.py.",
+    "PR #277 independently reported the same >512-byte ObjectGenome identity gap and explicitly left production correction to this primary slot."
+  ]
+}
