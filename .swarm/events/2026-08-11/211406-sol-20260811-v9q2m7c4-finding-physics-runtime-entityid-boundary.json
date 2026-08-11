@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t211406z-v9q2m7c4-physics-runtime-entityid-boundary",
+  "timestamp": "2026-08-11T21:14:06Z",
+  "fromWorker": "sol-20260811-v9q2m7c4",
+  "eventType": "FINDING",
+  "summary": "PhysicsLabRuntime validates neither primitive type nor the WorldEntityId value contract before getRecord() performs registry lookup and formats an unknown-ID diagnostic. A metatable-backed non-string entityId can therefore execute caller-controlled __tostring during a rejected lookup; in step(), this occurs before PR #388's transitionInFlight fence is raised, so the diagnostic path can call dispose()/recursive mutation outside the existing transition guard. This is distinct from PR #310's constructor-recipe trust fence and PR #388's PolicyInputs/callback mutation fence.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-PHYSICS-RUNTIME",
+    "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE"
+  ],
+  "evidence": [
+    "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1: PhysicsLabRuntime.getRecord() calls registry.get(entityId) and then interpolates entityId in the unknown-ID assertion without a primitive/stable-ID preflight.",
+    "PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1 moves mutable runtime state behind a frozen facade and guards the full FidelityManager.step call, but step() still calls PhysicsLabRuntime.getRecord(self, entityId) before transitionInFlight is set true.",
+    "FidelityManager.assertEntityId() already rejects non-string IDs before formatting them, demonstrating the safe boundary contract that PhysicsLabRuntime currently bypasses on its own lookup path.",
+    "PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d hardens constructor recipe wrappers/schema keys and canonical population, not runtime entityId query parameters.",
+    "Current live lane inventory has no dedicated PhysicsLabRuntime entity-ID boundary lane. Static source audit only; no Studio/two-client evidence or test execution is claimed."
+  ]
+}
