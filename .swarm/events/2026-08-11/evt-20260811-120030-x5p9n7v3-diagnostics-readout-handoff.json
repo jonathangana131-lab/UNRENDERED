@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120030-x5p9n7v3-diagnostics-readout-handoff",
+  "timestamp": "2026-08-11T12:00:30+00:00",
+  "fromWorker": "sol-20260811-x5p9n7v3",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "summary": "Diagnostics readout-completeness adversary work is ready for absorption by the synchronized production diagnostics repair. Draft PR #374 must remain test-only/expected-red rather than merge independently.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "Absorb tests/physics_lab_diagnostics_readout_contract.luau or equivalent assertions from PR #374 into the production diagnostics repair.",
+    "Exact expected-red head is a02ee5b9f93c5e3f8d200afe32bf91621fc5e553; CI run 31488998200 has every gate before Pure Luau green and all seven diagnostics-readout assertions red.",
+    "The repair must bind each readout to canonical WorldEntityId and validate direct-child class, authoritative membership, uniqueness, exact Readout TextLabel shape, entity/readout cardinality, and schema-v1 instance cardinality instead of trusting descendant count.",
+    "No Roblox Studio evidence was run or requested; engine validation remains externally gated by the red Mac display preflight."
+  ]
+}
