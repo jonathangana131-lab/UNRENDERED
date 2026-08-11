@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r7m3x9q5",
   "model": "gpt-5.6-sol",
-  "status": "INTEGRATING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:43:50+00:00",
-  "lastSeenAt": "2026-08-11T09:52:10+00:00",
-  "laneId": "HG-COMPLETION-CONTENT",
-  "slotId": "reconcile",
-  "branch": "agent/reconcile/HG-COMPLETION-CONTENT-r7m3x9q5",
-  "notes": "Reconciling explicitly superseded content-foundation PR lineages only; preserving active evidence and no source/Studio changes."
+  "lastSeenAt": "2026-08-11T09:55:00+00:00",
+  "notes": "Completed two completion-queue passes: Physics integration HOLD recorded without bypassing gates, then content lineage reconciliation closed stale ObjectGenome PRs #296/#318 and redirected retained docs to live source successors. Claims released; no Studio evidence claimed."
 }
