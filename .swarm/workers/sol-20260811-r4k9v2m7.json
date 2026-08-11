@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r4k9v2m7",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "BLOCKED",
   "startedAt": "2026-08-11T23:05:00+00:00",
-  "lastSeenAt": "2026-08-11T23:16:00+00:00",
-  "notes": "Completed diagnostics capacity mining and published FINDING evt-sol-20260811-r4k9v2m7-diagnostics-authoritative-projection-231510 against active diagnostics generation-8 head 183bea8da6462facb2a2429ebbc85b9b80a01869. No production/test bytes changed and no Luau/CI/Studio execution claimed. Connector policy blocked destructive claim-file deletion, so mine-diagnostics is intentionally not heartbeated further and will expire naturally from heartbeat 23:14Z + 1800s; do not treat this worker as active implementation ownership."
+  "lastSeenAt": "2026-08-11T23:18:00+00:00",
+  "notes": "Diagnostics capacity audit found a real source-only authoritative-projection gap at generation-8 head 183bea8da6462facb2a2429ebbc85b9b80a01869, but this worker accidentally published that finding using a legacy event shape. Exact malformed immutable first-write: path 231510-sol-20260811-r4k9v2m7-finding-diagnostics-authoritative-projection.json, blob 3725bbfd2ae3d9b838e2be51f65dcdba2f90e330, add cced0f689ba5bd0871d0cdb4270d4881acf54a75. Strict-schema BLOCKER appended at 23:17:47Z and PR #415 comment 5259969013 notifies the active history-recovery lineage. No immutable event rewrite/delete attempted. Connector blocked claim deletion; mine-diagnostics heartbeat remains 23:14Z and will expire naturally. No Luau/CI/Studio execution claimed."
 }
