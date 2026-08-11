@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "REALITY-CONTRACT",
+  "workerId": "sol-20260811-w8c3m7q4",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "claimToken": "a14f7c92e6b8035d",
+  "acquiredAt": "2026-08-11T11:51:00+00:00",
+  "heartbeatAt": "2026-08-11T11:51:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "notes": "Exclusive Reality contract lease for WorldEntity adversarial regression authoring within tests/world_entity*.luau."
+}
