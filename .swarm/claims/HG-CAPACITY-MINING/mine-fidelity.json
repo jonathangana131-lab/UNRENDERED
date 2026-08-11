@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "workerId": "sol-20260811-h4v8n2",
+  "claimToken": "5e61c82af47390bd",
+  "claimedAt": "2026-08-11T07:59:20+00:00",
+  "heartbeatAt": "2026-08-11T07:59:20+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/capacity/HG-CAPACITY-MINING-fidelity-h4v8n2",
+  "pr": null,
+  "notes": "Mine current FidelityManager contracts/source/tests and active Fidelity PRs for exactly one concrete non-duplicate source-depth gap. No Studio evidence and no new major feature scope."
+}
