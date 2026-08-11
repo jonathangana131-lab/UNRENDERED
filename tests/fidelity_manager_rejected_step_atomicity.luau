@@ -43,6 +43,18 @@ local function run(): number
 		return total == metrics.registered
 	end
 
+	local function hostileComparable(onRead)
+		local function read(): boolean
+			onRead()
+			return true
+		end
+		return setmetatable({}, {
+			__eq = read,
+			__lt = read,
+			__le = read,
+		})
+	end
+
 	local clockManager = FidelityManager.new()
 	clockManager:register("entity:atomic-clock", "F0")
 	clockManager:step("entity:atomic-clock", "F0", validInputs(), 1)
@@ -103,6 +115,33 @@ local function run(): number
 		FidelityManager.evaluatePolicy(inertMetatableInputs)
 	end)
 	expectEqual("pure policy rejects inert policy-input metatable", inertMetatableAccepted, false)
+
+	local hostileScalarReads = 0
+	local hostileScalarInputs = validInputs()
+	(hostileScalarInputs :: any).distanceStuds = hostileComparable(function()
+		hostileScalarReads += 1
+	end)
+	local hostileScalarAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(hostileScalarInputs)
+	end)
+	expectEqual("pure policy rejects hostile numeric scalar", hostileScalarAccepted, false)
+	expectEqual("numeric scalar validation never executes metamethod", hostileScalarReads, 0)
+
+	local hostileNowReads = 0
+	local hostileNowSeconds = hostileComparable(function()
+		hostileNowReads += 1
+	end)
+	local hostileNowManager = FidelityManager.new()
+	hostileNowManager:register("entity:atomic-hostile-now", "F0")
+	local hostileNowAccepted = pcall(function()
+		hostileNowManager:step("entity:atomic-hostile-now", "F0", validInputs(), hostileNowSeconds :: any)
+	end)
+	expectEqual("hostile nowSeconds rejected", hostileNowAccepted, false)
+	expectEqual("nowSeconds validation never executes metamethod", hostileNowReads, 0)
+	local validAfterHostileNowRejected = pcall(function()
+		hostileNowManager:step("entity:atomic-hostile-now", "F0", validInputs(), 1)
+	end)
+	expectEqual("hostile nowSeconds cannot poison monotonic clock", validAfterHostileNowRejected, true)
 
 	local syncManager = FidelityManager.new()
 	syncManager:register("entity:atomic-sync", "F3")
