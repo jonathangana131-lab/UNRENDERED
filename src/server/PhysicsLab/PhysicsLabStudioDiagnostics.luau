@@ -116,7 +116,8 @@ local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model:
 		`diagnostics representation count disagrees with authoritative lab metric: expected {expectedRepresentedCount}, got {#representations}`
 	)
 	table.sort(representations, function(a: Instance, b: Instance): boolean
-		return a.Name < b.Name
+		return requireStringAttribute(a, "UNRENDERED_WorldEntityId")
+			< requireStringAttribute(b, "UNRENDERED_WorldEntityId")
 	end)
 	return representations
 end
@@ -161,7 +162,7 @@ local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Mod
 			`diagnostics fidelity disagrees with authoritative WorldEntity: {entityId}`
 		)
 		local plan: ReadoutPlan = {
-			key = representation.Name,
+			key = record.origin.recipeKey,
 			worldEntityId = record.id,
 			fidelity = record.fidelity,
 			adornee = adorneeFor(representation),
@@ -217,6 +218,30 @@ local function validateReadoutCompleteness(folder: Folder, entities: { ReadoutEx
 	return 1 + 2 * readoutCount
 end
 
+local function captureCanonicalWhileDiagnosticsEnabled(lab: PhysicsLabRealizer.RealizedLab): Validation.Snapshot
+	local liveRoot = diagnosticsRoot(lab.model)
+	assert(liveRoot ~= nil, "enabled canonical validation requires the owned diagnostics root")
+
+	-- Keep the canonical validator strict. Validate a disposable copy of the live
+	-- lab after removing only the exact project-owned diagnostics overlay from that
+	-- copy; arbitrary live children, geometry drift, attributes, and recipe truth
+	-- remain visible to Validation.captureFull.
+	local cloneInstance = lab.model:Clone()
+	assert(cloneInstance:IsA("Model"), "Physics Lab clone must remain a Model")
+	local clone = cloneInstance :: Model
+	local ok, result = pcall(function(): Validation.Snapshot
+		local clonedRoot = diagnosticsRoot(clone)
+		assert(clonedRoot ~= nil, "diagnostics overlay was not preserved by lab clone")
+		clonedRoot:Destroy()
+		return Validation.captureFull(clone)
+	end)
+	clone:Destroy()
+	if not ok then
+		error(result, 0)
+	end
+	return result :: Validation.Snapshot
+end
+
 function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab): Snapshot
 	assertStudioServer()
 	local model = lab.model
@@ -235,20 +260,14 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 			`diagnostics fidelity disagrees with authoritative WorldEntity: {entityId}`
 		)
 
-		local representationClass = representation:GetAttribute("UNRENDERED_RepresentationClass")
-		assert(
-			representationClass == nil or type(representationClass) == "string",
-			`invalid representation class diagnostics attribute: {representation.Name}`
-		)
-
 		local entity: EntityDiagnostic = {
-			key = representation.Name,
+			key = record.origin.recipeKey,
 			worldEntityId = record.id,
 			fidelity = record.fidelity,
 			recipeKey = record.origin.recipeKey,
 			representationRevision = record.representationRevision,
 			stateRevision = record.stateRevision,
-			representationClass = representationClass :: string?,
+			representationClass = nil,
 		}
 		table.freeze(entity)
 		table.insert(snapshotEntities, entity)
@@ -256,7 +275,7 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 		local expectation: ReadoutExpectation = {
 			worldEntityId = record.id,
 			adornee = adorneeFor(representation),
-			text = readoutText(representation.Name, record.id, record.fidelity, fingerprint, reproKey),
+			text = readoutText(record.origin.recipeKey, record.id, record.fidelity, fingerprint, reproKey),
 		}
 		table.freeze(expectation)
 		table.insert(entities, expectation)
@@ -379,6 +398,12 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 			enabled.diagnosticInstanceCount > 0,
 			`diagnostics created no inspectable readouts at cycle {cycle}`
 		)
+		local onSnapshot = captureCanonicalWhileDiagnosticsEnabled(lab)
+		local onComparison = Validation.compare(baseline, onSnapshot, 0.001)
+		for countName, delta in pairs(onComparison.delta) do
+			assert(delta == 0, `diagnostics-on canonical resource drift at cycle {cycle}: {countName}={delta}`)
+		end
+		assert(onComparison.envelope.ok, onComparison.envelope.reason or "diagnostics-on canonical envelope drifted")
 		maxDiagnosticInstances = math.max(maxDiagnosticInstances, enabled.diagnosticInstanceCount)
 		if sample == nil then
 			sample = enabled.entities[1]
