@@ -2,10 +2,10 @@
   "activeClaims": [
     {
       "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-q9x4m2-g2",
-      "expiresAt": "2026-08-11T07:48:01+00:00",
+      "expiresAt": "2026-08-11T07:49:57+00:00",
       "generation": 2,
       "laneId": "HG-BACKFILL-AUTHORITY",
-      "pr": null,
+      "pr": 297,
       "slotId": "primary",
       "workerId": "sol-20260811-q9x4m2"
     },
@@ -62,15 +62,6 @@
       "pr": 296,
       "slotId": "primary",
       "workerId": "sol-20260811-k2m9x7"
-    },
-    {
-      "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-q7n4m9",
-      "expiresAt": "2026-08-11T07:20:00+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-OBJECTGENOME",
-      "pr": 277,
-      "slotId": "test-adversary",
-      "workerId": "sol-20260811-q7n4m9"
     },
     {
       "branch": "agent/review/HG-BACKFILL-REALITY-audit-r4m8z2",
@@ -149,7 +140,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:19:28.705492+00:00",
+  "generatedAt": "2026-08-11T07:20:17.755516+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "81a13b1138e26e7852c89685de5dbf9bd57753d8",
@@ -159,7 +150,7 @@
     "workflowRunId": 31468113697
   },
   "metrics": {
-    "activeClaims": 15,
+    "activeClaims": 14,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -175,7 +166,7 @@
       "REVIEW_REQUEST": 27,
       "REVIEW_RESULT": 30
     },
-    "generatedAt": "2026-08-11T07:19:28.705492+00:00",
+    "generatedAt": "2026-08-11T07:20:17.755516+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -184,12 +175,24 @@
       "READY": 12
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 15,
+    "readySlots": 16,
     "reviewBacklog": 0,
     "schemaVersion": 1,
-    "staleClaims": 1
+    "staleClaims": 2
   },
   "readySlots": [
+    {
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "ObjectGenome malformed-input and identity tests",
+      "score": 5370,
+      "slotId": "test-adversary",
+      "writeScopes": [
+        "src/shared/Objects/ObjectGenome*.luau",
+        "tests/object_genome*.luau"
+      ]
+    },
     {
       "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
       "reason": "dependencies satisfied; resources available",
@@ -850,6 +853,15 @@
   "schemaVersion": 1,
   "staleClaims": [
     {
+      "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-q7n4m9",
+      "expiredAt": "2026-08-11T07:20:00+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "pr": 277,
+      "slotId": "test-adversary",
+      "workerId": "sol-20260811-q7n4m9"
+    },
+    {
       "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-j6r2v8",
       "expiredAt": "2026-08-11T07:15:00+00:00",
       "generation": 1,
@@ -859,14 +871,14 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "a7ac1434538591fc2a164469bb84dc3169f1f5c63b40da40ac779f19c3a9a730",
+  "stateDigest": "96be925537c9610fb3810a5f605fa61c8afc5fc5720c547ee2adb511f4103b19",
   "summary": {
-    "activeClaims": 15,
+    "activeClaims": 14,
     "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 25,
-    "readySlots": 15,
-    "staleClaims": 1,
+    "readySlots": 16,
+    "staleClaims": 2,
     "workers": 46
   }
 }
