@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "audit",
+  "workerId": "sol-20260811-96d0cf",
+  "claimToken": "0f8d7a61e3c592b4",
+  "claimedAt": "2026-08-11T08:06:15+00:00",
+  "heartbeatAt": "2026-08-11T08:06:15+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-96d0cf",
+  "pr": null,
+  "notes": "Independent ObjectGenome contract/ownership audit on the active Hero Gate source-only backfill lane."
+}
