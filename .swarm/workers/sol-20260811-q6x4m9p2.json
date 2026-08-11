@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q6x4m9p2",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "WORKING",
   "startedAt": "2026-08-11T11:53:56+00:00",
-  "lastSeenAt": "2026-08-11T12:08:00+00:00",
-  "notes": "No active major claim. Completed three completion-train reviews this session: PR #307 REQUEST_CHANGES/SYNC_REQUIRED for out-of-scope tests/run.luau wiring; PR #300 REQUEST_CHANGES/SYNC_REQUIRED for exact-path-only Rojo tests missing replicated src/server subpath leaks; PR #370 SOURCE/TEST PASS on exact head 7a95eafb with canonical CI and engine-tests green, integration HOLD only on live control/ownership recovery."
+  "lastSeenAt": "2026-08-11T12:10:00+00:00",
+  "notes": "Currently owns HG-BACKFILL-FIDELITY/audit for independent exact-head review of PR #335. Earlier completion reviews this session: #307 scope blocker, #300 Rojo subpath-leak blocker, #370 source/test PASS with integration held on global control recovery."
 }
