@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "workerId": "sol-20260811-q7h4n2",
+  "claimToken": "4e91b7c2a56d803f",
+  "claimedAt": "2026-08-11T06:42:00+00:00",
+  "heartbeatAt": "2026-08-11T06:42:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/151-diagnostics-audit-q7h4n2",
+  "pr": null
+}
