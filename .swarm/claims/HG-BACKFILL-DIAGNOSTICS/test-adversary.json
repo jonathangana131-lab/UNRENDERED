@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-v3c8n5q1",
   "claimToken": "9b4e2c7d5a81f306",
   "claimedAt": "2026-08-11T20:16:00+00:00",
-  "heartbeatAt": "2026-08-11T20:20:00+00:00",
+  "heartbeatAt": "2026-08-11T20:24:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/tests/HG-BACKFILL-DIAGNOSTICS-v3c8n5q1",
   "pr": 384,
-  "notes": "Published draft PR #384 on exact main for non-duplicative lifecycle regressions: no-yield authority transaction after preflight and idempotent force-off cleanup. Awaiting exact-head CI/engine evidence; no Studio claims."
+  "notes": "Draft PR #384 exact head 72732b1b68fdea09502328de89ac953847dee974: canonical CI 31532417404 PASS, Swarm engine-tests 93915419473 PASS. Live pr-ownership remains globally fail-closed on invalid worker/control history under SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY. Durable handoff posted to #327; no Studio claims."
 }
