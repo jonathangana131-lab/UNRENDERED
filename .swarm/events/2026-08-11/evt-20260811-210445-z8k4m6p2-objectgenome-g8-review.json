@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-210445-z8k4m6p2-objectgenome-g8-review",
+  "timestamp": "2026-08-11T21:04:45+00:00",
+  "fromWorker": "sol-20260811-z8k4m6p2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "APPROVE source/test closure for generation-8 PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962. The standalone decodeMechanismPosition boundary now fails closed on incomplete, undeclared-field, metatable-backed, and locally non-canonical v1 mechanism records while preserving canonical decode semantics. No new ObjectGenome blocker found. Integration remains conditional on a genuine pr-ownership PASS after the separately owned trusted-history recovery completes.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "Generation-7 0250b26afa018959f1aec450830680361d1a3dc2 to generation-8 ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 is four commits ahead, zero behind, with only src/shared/Objects/ObjectGenome.luau (+92/-2) and tests/object_genome_contract_lock.luau (+55/-0) changed.",
+    "standaloneMechanismIsCanonical uses exact kind-specific required-field sets, raw field access, plain-table/metatable rejection, semantic-key checks, self-reference checks, positive caster/latch dimensions, unit axes, finite interpolation spans, and authored zero/reference inclusion consistent with full ObjectGenome.inspect local mechanism semantics.",
+    "Contract-lock tests preserve canonical caster/latch decode outputs and reject incomplete caster/latch records, undeclared mechanism fields, undeclared nested axis fields, and hostile metatable-backed records before field reads.",
+    "Canonical CI run 31535562114 is SUCCESS on exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; exact-head Swarm engine-tests are SUCCESS.",
+    "GitHub review 4910742049 records this independent exact-head source/test approval. Exact-head pr-ownership still fails at trusted live-ownership enforcement; no waiver or Studio/engine-runtime evidence is claimed."
+  ],
+  "metadata": {
+    "pr": 395,
+    "headSha": "ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962",
+    "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+  }
+}
