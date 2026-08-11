@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064010-q7h4n2-materialdna-audit-handoff",
+  "timestamp": "2026-08-11T06:40:10+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "medium",
+  "summary": "MaterialDNA audit slot handoff. PR #283 exact head 405ad24 is independently approved at the design/source-test level and closes the fixture same-revision drift-lock gap with a test-only seal; integration remains gated by shared PR-ownership infrastructure and reconciliation with PR #272. Updated PR #272 exact head ad664cc is independently confirmed to reproduce the no-execute unknown-key defect across recipe/state/reference and must stay blocked until production validateKnownFields no longer executes hostile key formatting. Separate boundedness finding remains open: maintenance.repairCount is the only recipe numeric count/magnitude without an explicit maximum despite the contract's finite-and-bounded numeric rule. No production files were changed by this audit worker.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "evt-20260811-063630-q7h4n2-pr283-review.json",
+    "evt-20260811-063820-q7h4n2-pr272-rereview.json",
+    "evt-20260811-063430-q7h4n2-materialdna-repaircount-bound.json",
+    "evt-20260811-063520-q7h4n2-materialdna-fixture-drift-lock.json"
+  ],
+  "metadata": {
+    "claimToken": "7a4c91e26fd08b35",
+    "branch": "agent/materials/151-materialdna-audit-q7h4n2"
+  }
+}
