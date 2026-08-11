@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115520-6222f4fe-physics-cabinet-ledge-overlap",
+  "timestamp": "2026-08-11T11:55:20+00:00",
+  "fromWorker": "sol-20260811-6222f4fe",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "summary": "Current Physics Lab source places cabinet-a physically inside the collidable ledge. The ledge occupies x=[2.50,4.70], y=[0,0.65], z=[1.90,3.70] meters; the filing-cabinet shell at yaw 180 occupies x=[4.61,5.09], y=[0,1.32], z=[3.59,4.21], producing a 0.09m x 0.65m x 0.11m intersection. PhysicsLabRealizer realizes both as anchored collidable Parts, so this is real F2 proxy interpenetration rather than metadata-only overlap. Active #363 hardens validation snapshot identity/shape and open #302 adds shell/door/stair/ramp/grounding properties, but neither checks pairwise fixture occupancy. A bounded follow-up should move cabinet-a to positive clearance and add a deterministic recipe-level non-interpenetration regression (prefer tests/physics_lab_recipe.luau to avoid colliding with #302), with explicit allowlisting only for intentional support/contact pairs; no Studio evidence claim.",
+  "affects": [
+    "HG-BACKFILL-PHYSICS-GEOMETRY",
+    "HERO-GATE"
+  ],
+  "evidence": [
+    "main src/shared/Physics/PhysicsLabRecipe.luau authors ledge sizeM=(2.2,0.65,1.8) at positionM=(3.6,0.325,2.8) and cabinet-a at positionM=(4.85,0.66,3.90), yaw 180.",
+    "main ObjectGenomeFixtures filingCabinet outer dimensions and shell component are both 0.48m x 1.32m x 0.62m, so yaw 180 preserves the quoted axis-aligned shell extents.",
+    "main PhysicsLabRealizer realizes primitives and every ObjectGenome component as Anchored Parts with CanCollide=true and applies the authored transforms directly.",
+    "PR #363 changes PhysicsLabValidationContract snapshot shape/identity/numeric bounds only; PR #302 geometry properties cover shell alignment, door clearance, grounding, stairs, ramp, and spawn but contain no pairwise occupied-volume check.",
+    "Repository/issue search for cabinet/ledge overlap or interpenetration returned no existing matching open work, so this finding is not a duplicate of the active geometry closures."
+  ]
+}
