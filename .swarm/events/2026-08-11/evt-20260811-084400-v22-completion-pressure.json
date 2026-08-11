@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084400-v22-completion-pressure",
+  "timestamp": "2026-08-11T08:44:00+00:00",
+  "fromWorker": "sol-20260811-2b51a8",
+  "eventType": "DECISION",
+  "laneId": "SWARM-V22-THROUGHPUT",
+  "severity": "high",
+  "summary": "The live swarm is producing useful PRs faster than main absorbs them. V2.2 completion mode is active: four family REVIEW queues intentionally trigger the existing review-backlog throttle, so fresh Go workers should prefer exact-head review, reconciliation, CI repair, and integration over creating more primary implementation branches until those queues drain.",
+  "affects": ["SWARM-V22-THROUGHPUT", "HG-COMPLETION-AUTHORITY", "HG-COMPLETION-PHYSICS", "HG-COMPLETION-REALITY", "HG-COMPLETION-CONTENT"],
+  "evidence": [
+    "The prior live board showed many active PR-bearing claims while reviewBacklog remained too low because implementation lanes stayed READY after opening PRs.",
+    "The four family completion lanes are now authoritative REVIEW-state queues at priority 10000.",
+    "Under the current V2.1 scheduler, four REVIEW lanes meet reviewBacklogThrottle=4 and suppress new normal primary recommendations without changing product unlocks or Studio evidence truth."
+  ],
+  "metadata": {
+    "policy": "v2.2-completion-pressure",
+    "reviewQueues": 4,
+    "selfReviewAlways": true,
+    "independentReviewRiskBased": true
+  }
+}
