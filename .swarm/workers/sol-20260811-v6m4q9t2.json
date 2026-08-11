@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:46:10+00:00",
-  "lastSeenAt": "2026-08-11T07:46:10+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-v6m4q9t2",
-  "notes": "Registered for ObjectGenome contract/ownership audit. Claim pending; no product edits before atomic claim succeeds."
+  "lastSeenAt": "2026-08-11T07:52:10+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-tests-v6m4q9t2",
+  "notes": "Claimed diagnostics test-adversary and opened draft PR #301 at head 950ba9acb7f2c4700790ec0b63b4cfd05dd596b7. First CI reached format check and failed; first ownership run also failed while this worker record still described a lost ObjectGenome claim race. Repairing both before rerun."
 }
