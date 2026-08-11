@@ -290,6 +290,106 @@ local function run(): number
 		string.find(tostring(wrongWorldIdError), "origin.worldId must be a string", 1, true) ~= nil
 	)
 
+	local maxSafeInteger = 9007199254740991
+	local maxGeneratorVersion = 2147483647
+
+	local maxVersionSpec = makeSpec()
+	maxVersionSpec.origin.generatorVersion = maxGeneratorVersion
+	local maxVersionAccepted = newResult(maxVersionSpec)
+	expect("accepts generator version at canonical maximum", maxVersionAccepted)
+
+	local overVersionSpec = makeSpec()
+	overVersionSpec.origin.generatorVersion = maxGeneratorVersion + 1
+	local overVersionAccepted = newResult(overVersionSpec)
+	expect("rejects generator version beyond canonical maximum", not overVersionAccepted)
+
+	local maxStateRevisionRecord = makeRecord()
+	maxStateRevisionRecord.stateRevision = maxSafeInteger
+	expect("registry accepts exact maximum safe state revision", registerAccepts(maxStateRevisionRecord))
+
+	local oneBelowStateRevision = makeRecord()
+	oneBelowStateRevision.stateRevision = maxSafeInteger - 1
+	local oneBelowCaptureAccepted, oneBelowCaptured = pcall(function()
+		return WorldEntity.captureState(oneBelowStateRevision :: any, {})
+	end)
+	expect(
+		"captureState can advance state revision to exact safe-integer maximum",
+		oneBelowCaptureAccepted and oneBelowCaptured.stateRevision == maxSafeInteger
+	)
+
+	local exhaustedCaptureRecord = makeRecord()
+	exhaustedCaptureRecord.stateRevision = maxSafeInteger
+	local exhaustedCaptureAccepted = pcall(function()
+		WorldEntity.captureState(exhaustedCaptureRecord :: any, {})
+	end)
+	expect("captureState rejects exhausted safe-integer state revision", not exhaustedCaptureAccepted)
+
+	local oneBelowRepresentationRevision = makeRecord()
+	oneBelowRepresentationRevision.representationRevision = maxSafeInteger - 1
+	local oneBelowTransitionAccepted, oneBelowTransitioned = pcall(function()
+		return WorldEntity.transition(oneBelowRepresentationRevision :: any, "F2", nil)
+	end)
+	expect(
+		"transition can advance representation revision to exact safe-integer maximum",
+		oneBelowTransitionAccepted and oneBelowTransitioned.representationRevision == maxSafeInteger
+	)
+
+	local exhaustedRepresentationRecord = makeRecord()
+	exhaustedRepresentationRecord.representationRevision = maxSafeInteger
+	local exhaustedTransitionAccepted = pcall(function()
+		WorldEntity.transition(exhaustedRepresentationRecord :: any, "F2", nil)
+	end)
+	expect(
+		"transition rejects exhausted safe-integer representation revision",
+		not exhaustedTransitionAccepted
+	)
+
+	local exhaustedStateRegistry = WorldEntity.createRegistry()
+	local exhaustedStateRecord = makeRecord()
+	exhaustedStateRecord.id = "entity:state-revision-exhaustion"
+	exhaustedStateRecord.stateRevision = maxSafeInteger
+	local exhaustedStateRegistered = WorldEntity.register(exhaustedStateRegistry, exhaustedStateRecord :: any)
+	expect("registers exhausted-state atomicity fixture", exhaustedStateRegistered)
+	local beforeRejectedCapture = WorldEntity.get(exhaustedStateRegistry, exhaustedStateRecord.id)
+	local registeredExhaustedCaptureAccepted = pcall(function()
+		WorldEntity.captureRegistered(exhaustedStateRegistry, exhaustedStateRecord.id, { open = true })
+	end)
+	expect(
+		"registered capture rejects exhausted safe-integer state revision",
+		not registeredExhaustedCaptureAccepted
+	)
+	expect(
+		"rejected exhausted registered capture preserves canonical record atomically",
+		WorldEntity.get(exhaustedStateRegistry, exhaustedStateRecord.id) == beforeRejectedCapture
+	)
+
+	local exhaustedRepresentationRegistry = WorldEntity.createRegistry()
+	local exhaustedRepresentationRegisteredRecord = makeRecord()
+	exhaustedRepresentationRegisteredRecord.id = "entity:representation-revision-exhaustion"
+	exhaustedRepresentationRegisteredRecord.representationRevision = maxSafeInteger
+	local exhaustedRepresentationRegistered =
+		WorldEntity.register(exhaustedRepresentationRegistry, exhaustedRepresentationRegisteredRecord :: any)
+	expect("registers exhausted-representation atomicity fixture", exhaustedRepresentationRegistered)
+	local beforeRejectedTransition =
+		WorldEntity.get(exhaustedRepresentationRegistry, exhaustedRepresentationRegisteredRecord.id)
+	local registeredExhaustedTransitionAccepted = pcall(function()
+		WorldEntity.transitionRegistered(
+			exhaustedRepresentationRegistry,
+			exhaustedRepresentationRegisteredRecord.id,
+			"F2",
+			nil
+		)
+	end)
+	expect(
+		"registered transition rejects exhausted safe-integer representation revision",
+		not registeredExhaustedTransitionAccepted
+	)
+	expect(
+		"rejected exhausted registered transition preserves canonical record atomically",
+		WorldEntity.get(exhaustedRepresentationRegistry, exhaustedRepresentationRegisteredRecord.id)
+			== beforeRejectedTransition
+	)
+
 	local maxDepth = 64
 	local maxNodes = 4096
 	local maxStringBytes = 65536
@@ -376,14 +476,14 @@ local function run(): number
 	local oversizedState = {
 		payload = string.rep("x", maxStringBytes),
 	}
-	local beforeRejectedCapture = WorldEntity.get(atomicRegistry, atomicEntity.id)
+	local beforeRejectedBudgetCapture = WorldEntity.get(atomicRegistry, atomicEntity.id)
 	local rejectedCaptureAccepted = pcall(function()
 		WorldEntity.captureRegistered(atomicRegistry, atomicEntity.id, oversizedState)
 	end)
 	expect("registered capture rejects over-budget state", not rejectedCaptureAccepted)
 	expect(
 		"rejected over-budget capture preserves registry record atomically",
-		WorldEntity.get(atomicRegistry, atomicEntity.id) == beforeRejectedCapture
+		WorldEntity.get(atomicRegistry, atomicEntity.id) == beforeRejectedBudgetCapture
 	)
 
 	local beforeRejectedDemotion = WorldEntity.get(atomicRegistry, atomicEntity.id)
