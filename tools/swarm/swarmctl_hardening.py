@@ -24,9 +24,8 @@ _STRICT_VALIDATE_EVENT = _base.core.validate_event
 #
 # The canonical hashes below are Git blob SHA-1 values returned by GitHub for each
 # audited first-published event. `restorableFromGitBlobSha1` is deliberately finite:
-# it names only the exact laundered blob currently present when this repair was
-# authored. If live bytes change again, restoration fails closed and requires a new
-# audit rather than silently widening compatibility.
+# it names only the exact laundered blob present when this repair was authored. If
+# live bytes change again, restoration fails closed and requires a new audit.
 _CANONICAL_IMMUTABLE_EVENTS = {
     "evt-20260811-073500-q9m4r2-authority-rereview-approve": {
         "date": "2026-08-11",
@@ -69,12 +68,18 @@ def _relative_event_path(rule: dict) -> str:
 
 
 def _canonical_rule(path: Path, obj: dict) -> dict | None:
-    rule = _CANONICAL_IMMUTABLE_EVENTS.get(obj.get("eventId"))
-    if rule is None:
-        return None
-    if path.name != rule["filename"] or path.parent.name != rule["date"]:
-        raise _base.core.ControlError(f"{path}: audited immutable event moved from its canonical path")
-    return rule
+    event_id = obj.get("eventId")
+    for expected_id, rule in _CANONICAL_IMMUTABLE_EVENTS.items():
+        at_canonical_path = path.name == rule["filename"] and path.parent.name == rule["date"]
+        if at_canonical_path:
+            if event_id != expected_id:
+                raise _base.core.ControlError(
+                    f"{path}: audited immutable event path contains unexpected eventId {event_id!r}"
+                )
+            return rule
+        if event_id == expected_id:
+            raise _base.core.ControlError(f"{path}: audited immutable event moved from its canonical path")
+    return None
 
 
 def _validate_event_with_immutable_compat(path):
@@ -128,26 +133,21 @@ def transition_check(before: Path, after: Path) -> dict:
     after_resources = _base.raw_map(after, "resource-claims/*.json", 24_000)
 
     for key in sorted(before_claims.keys() & after_claims.keys()):
-        _base.lease_transition(
-            before_claims[key], after_claims[key], f"claim {key}", "claimedAt", True
-        )
+        _base.lease_transition(before_claims[key], after_claims[key], f"claim {key}", "claimedAt", True)
     for key in sorted(before_resources.keys() & after_resources.keys()):
         _base.lease_transition(
             before_resources[key], after_resources[key], f"resource claim {key}", "acquiredAt", False
         )
 
     before_events = {
-        str(path.relative_to(before)): path.read_bytes()
-        for path in before.glob("events/*/*.json")
+        str(path.relative_to(before)): path.read_bytes() for path in before.glob("events/*/*.json")
     }
     after_events = {
-        str(path.relative_to(after)): path.read_bytes()
-        for path in after.glob("events/*/*.json")
+        str(path.relative_to(after)): path.read_bytes() for path in after.glob("events/*/*.json")
     }
     deleted = sorted(before_events.keys() - after_events.keys())
     changed = sorted(
-        key for key in before_events.keys() & after_events.keys()
-        if before_events[key] != after_events[key]
+        key for key in before_events.keys() & after_events.keys() if before_events[key] != after_events[key]
     )
     added = sorted(after_events.keys() - before_events.keys())
 
@@ -200,9 +200,7 @@ def dashboard(board: dict) -> str:
         for x in board["activeClaims"]
     ] or ["_None._"]
     out += ["", "## Blocked lanes", ""]
-    out += [
-        f"- `{x['laneId']}` — **{x['state']}** — {x['reason']}" for x in board["blockedLanes"]
-    ] or ["_None._"]
+    out += [f"- `{x['laneId']}` — **{x['state']}** — {x['reason']}" for x in board["blockedLanes"]] or ["_None._"]
     out += ["", "> Generated state is disposable. Atomic claims/resource leases are ownership authority.", ""]
     return "\n".join(out)
 
