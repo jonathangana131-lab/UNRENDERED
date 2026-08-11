@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083700-v7k3m9-fidelity-policyconfig-boundary",
+  "timestamp": "2026-08-11T08:37:00+00:00",
+  "fromWorker": "sol-20260811-v7k3m9",
+  "eventType": "FINDING",
+  "summary": "Independent HG-BACKFILL-FIDELITY audit on PR #274 exact head 5251998df21e8f7f78cae5c046d346496cc65a28 finds one remaining source-only blocker: custom PolicyConfig can execute metatable-backed field access before validation. FidelityManager.new copies/dereferences sourceConfig before proving it plain/metatable-free, and exported evaluatePolicy validates config fields without a preceding plain-table fence. The separately owned test-adversary PR #325 / head 90f6a924106a23c9e1cecfd240560852e774198d isolates this exact no-execute contract; its canonical CI reaches Pure Luau tests and fails there as intended against current production. Audit verdict is REQUEST_CHANGES until primary consumes that proof and rejects non-plain PolicyConfig before first field access. Existing callback transactional/reentry/accounting closure is patch-locally sound and should be preserved.",
+  "affects": ["HERO-GATE", "HG-BACKFILL-FIDELITY"],
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "HIGH",
+  "evidence": [
+    "PR #274 audit review 4904313618 records the exact-head REQUEST_CHANGES verdict.",
+    "src/shared/Physics/FidelityManager.luau@5251998: new(config) calls copyConfig(sourceConfig) before validateConfig; copyConfig directly reads config fields.",
+    "src/shared/Physics/FidelityManager.luau@5251998: evaluatePolicy resolves custom config then calls validateConfig, whose field reads/comparisons precede any type/metatable guard.",
+    "PR #325 / head 90f6a924106a23c9e1cecfd240560852e774198d adds constructor/pure-policy PolicyConfig no-execute regressions; CI run 31473342951 passes format/lint/Luau/static audits then fails at Pure Luau tests against current production as intended.",
+    "PR #274 exact-head canonical CI run 31471785808 passes, so the blocker is semantic/adversarial rather than toolchain breakage."
+  ]
+}
