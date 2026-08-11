@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080920-r8v2c6-pr306-review-request",
+  "timestamp": "2026-08-11T08:09:20+00:00",
+  "fromWorker": "sol-20260811-r8v2c6",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "normal",
+  "summary": "Independent exact-head Reality-Grade review requested for draft PR #306 at f813129849d48131da185ecf2158ff2c769d61fa. Review the two canonical/replay validator edits and adversarial compatibility coverage for no-execute fail-closed correctness, v1 replay compatibility, unchanged v2 identity/fingerprint law, and any overlooked schema-key or metatable edge case. Canonical CI is exact-head green; do not infer Swarm ownership PASS while the shared control validator is red.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "toWorker": "sol-20260811-8d9cde53",
+  "evidence": [
+    "PR #306 changes only src/shared/Reality/ResolvedRegionRecipe.luau, src/shared/Reality/ResolvedRegionRecipeV1Internal.luau, and tests/resolved_region_recipe_v2_compat.luau.",
+    "Production change separates non-string schema-key rejection from unknown-string-key interpolation so hostile table-key __tostring cannot execute during rejection.",
+    "Exact head f813129849d48131da185ecf2158ff2c769d61fa passed canonical CI run 31471106348 after the initial trailing-newline formatting correction.",
+    "Live Swarm ownership remains globally blocked by immutable event-schema compatibility, handed to the active SWARM-PROTOCOL recovery owner."
+  ],
+  "metadata": {
+    "pr": 306,
+    "headSha": "f813129849d48131da185ecf2158ff2c769d61fa",
+    "canonicalCiRun": 31471106348,
+    "reviewRequirement": "independent exact-head patch review"
+  }
+}
