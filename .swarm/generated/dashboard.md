@@ -1,26 +1,24 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:05:25.633231+00:00`
+Generated: `2026-08-11T07:07:11.238333+00:00`
 
 Canonical main: **GREEN** `7de385295dd17112226dd4cd173bd707178e17bc`
 
-State digest: `d43c0785383c59a63d132a39ff8e205ecd2c653afc04eba2759fce0be0ee6c38`
+State digest: `02126c6d352c023ef64543bc7d7dffc9fda7702f8bd2be9007ba424fcdca51c0`
 
 ## Summary
 
-- ready slots: **17**
-- active claims: **16**
-- stale claims: **0**
+- ready slots: **15**
+- active claims: **15**
+- stale claims: **1**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
-- `HG-BACKFILL-MATERIALDNA/primary` — **MaterialDNA source hardening** — score 5400 — dependencies satisfied; resources available
-- `HG-BACKFILL-MATERIALDNA/test-adversary` — **MaterialDNA schema and hostile-input tests** — score 5320 — dependencies satisfied
 - `HG-BACKFILL-OBJECTGENOME/audit` — **ObjectGenome contract and ownership auditor** — score 5270 — dependencies satisfied
-- `HG-BACKFILL-MATERIALDNA/audit` — **MaterialDNA contract and fixture auditor** — score 5220 — dependencies satisfied
 - `HG-BACKFILL-DIAGNOSTICS/primary` — **Diagnostics source hardening** — score 5150 — dependencies satisfied; resources available
 - `HG-BACKFILL-PHYSICS-GEOMETRY/test-adversary` — **Geometry, clearance, and reachability property tests** — score 5120 — dependencies satisfied
+- `HG-BACKFILL-AUTHORITY/primary` — **Server/client authority source hardening** — score 5100 — dependencies satisfied; resources available
 - `HG-BACKFILL-DIAGNOSTICS/test-adversary` — **Diagnostics lifecycle and no-drift test author** — score 5070 — dependencies satisfied
 - `HG-BACKFILL-AUTHORITY/test-adversary` — **Canonical agreement and teardown fixture author** — score 5020 — dependencies satisfied
 - `HG-BACKFILL-PHYSICS-GEOMETRY/audit` — **Physics recipe realism and validation auditor** — score 5020 — dependencies satisfied
@@ -36,7 +34,6 @@ State digest: `d43c0785383c59a63d132a39ff8e205ecd2c653afc04eba2759fce0be0ee6c38`
 ## Active claims
 
 - `HG-BACKFILL-AUTHORITY/audit` → `sol-20260811-q9x4m2`; lease to `2026-08-11T07:18:25+00:00`
-- `HG-BACKFILL-AUTHORITY/primary` → `sol-20260811-r6k2p9`; lease to `2026-08-11T07:06:00+00:00`
 - `HG-BACKFILL-DIAGNOSTICS/audit` → `sol-20260811-diaga6r2k`; lease to `2026-08-11T07:30:00+00:00`
 - `HG-BACKFILL-FIDELITY/audit` → `sol-20260811-x7n4k2`; lease to `2026-08-11T07:34:30+00:00`
 - `HG-BACKFILL-FIDELITY/primary` → `sol-20260811-w3n8k2`; lease to `2026-08-11T07:31:17+00:00`
@@ -49,7 +46,7 @@ State digest: `d43c0785383c59a63d132a39ff8e205ecd2c653afc04eba2759fce0be0ee6c38`
 - `HG-BACKFILL-REALITY/test-adversary` → `sol-20260811-r9t4n2`; lease to `2026-08-11T07:08:30+00:00`
 - `HG-BACKFILL-WORLDENTITY/audit` → `sol-20260811-z4q8n1`; lease to `2026-08-11T07:42:00+00:00`
 - `HG-BACKFILL-WORLDENTITY/primary` → `sol-20260811-ogx9k2`; lease to `2026-08-11T07:37:00+00:00`
-- `HG-BACKFILL-WORLDENTITY/test-adversary` → `sol-20260811-w3x7k9`; lease to `2026-08-11T07:27:00+00:00`
+- `HG-BACKFILL-WORLDENTITY/test-adversary` → `sol-20260811-w3x7k9`; lease to `2026-08-11T07:43:00+00:00`
 - `SWARM-RECOVERY-PR-OWNERSHIP-IMPORT/primary` → `sol-20260811-r4m8z2`; lease to `2026-08-11T07:30:29+00:00`
 
 ## Blocked lanes

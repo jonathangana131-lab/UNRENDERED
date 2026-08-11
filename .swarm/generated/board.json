@@ -10,15 +10,6 @@
       "workerId": "sol-20260811-q9x4m2"
     },
     {
-      "branch": "agent/network/HG-BACKFILL-AUTHORITY-r6k2p9",
-      "expiresAt": "2026-08-11T07:06:00+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-AUTHORITY",
-      "pr": 287,
-      "slotId": "primary",
-      "workerId": "sol-20260811-r6k2p9"
-    },
-    {
       "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-audit-docs-diaga6r2k",
       "expiresAt": "2026-08-11T07:30:00+00:00",
       "generation": 1,
@@ -128,7 +119,7 @@
     },
     {
       "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-w3x7k9",
-      "expiresAt": "2026-08-11T07:27:00+00:00",
+      "expiresAt": "2026-08-11T07:43:00+00:00",
       "generation": 2,
       "laneId": "HG-BACKFILL-WORLDENTITY",
       "pr": 276,
@@ -158,7 +149,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:05:25.633231+00:00",
+  "generatedAt": "2026-08-11T07:07:11.238333+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "7de385295dd17112226dd4cd173bd707178e17bc",
@@ -168,7 +159,7 @@
     "workflowRunId": 31466029227
   },
   "metrics": {
-    "activeClaims": 16,
+    "activeClaims": 15,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -177,52 +168,28 @@
       "DEPENDENCY_DISCOVERED": 3,
       "EVIDENCE_RESULT": 5,
       "EXTERNAL_BLOCKER": 1,
-      "FINDING": 34,
+      "FINDING": 36,
       "HANDOFF": 16,
-      "INTEGRATION_RESULT": 5,
+      "INTEGRATION_RESULT": 6,
       "RECOVERY": 2,
-      "REVIEW_REQUEST": 22,
-      "REVIEW_RESULT": 27
+      "REVIEW_REQUEST": 23,
+      "REVIEW_RESULT": 28
     },
-    "generatedAt": "2026-08-11T07:05:25.633231+00:00",
+    "generatedAt": "2026-08-11T07:07:11.238333+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
-      "DONE": 9,
+      "DONE": 10,
       "LOCKED": 1,
-      "READY": 13
+      "READY": 12
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 17,
+    "readySlots": 15,
     "reviewBacklog": 0,
     "schemaVersion": 1,
-    "staleClaims": 0
+    "staleClaims": 1
   },
   "readySlots": [
-    {
-      "laneId": "HG-BACKFILL-MATERIALDNA",
-      "reason": "dependencies satisfied; resources available",
-      "resources": [],
-      "role": "MaterialDNA source hardening",
-      "score": 5400,
-      "slotId": "primary",
-      "writeScopes": [
-        "src/shared/Materials/*.luau",
-        "tests/materialdna*.luau"
-      ]
-    },
-    {
-      "laneId": "HG-BACKFILL-MATERIALDNA",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "MaterialDNA schema and hostile-input tests",
-      "score": 5320,
-      "slotId": "test-adversary",
-      "writeScopes": [
-        "src/shared/Materials/*.luau",
-        "tests/materialdna*.luau"
-      ]
-    },
     {
       "laneId": "HG-BACKFILL-OBJECTGENOME",
       "reason": "dependencies satisfied",
@@ -233,18 +200,6 @@
       "writeScopes": [
         "src/shared/Objects/ObjectGenome*.luau",
         "tests/object_genome*.luau"
-      ]
-    },
-    {
-      "laneId": "HG-BACKFILL-MATERIALDNA",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "MaterialDNA contract and fixture auditor",
-      "score": 5220,
-      "slotId": "audit",
-      "writeScopes": [
-        "src/shared/Materials/*.luau",
-        "tests/materialdna*.luau"
       ]
     },
     {
@@ -275,6 +230,21 @@
         "tests/physics_lab_recipe.luau",
         "tests/physics_lab_scale.luau",
         "tests/physics_lab_validation_contract.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-AUTHORITY",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [],
+      "role": "Server/client authority source hardening",
+      "score": 5100,
+      "slotId": "primary",
+      "writeScopes": [
+        "src/server/Bootstrap.server.luau",
+        "src/client/Bootstrap.client.luau",
+        "tests/hero_gate_contract_integration.luau",
+        "tests/**authority*.luau",
+        "tests/**multiplayer*.luau"
       ]
     },
     {
@@ -412,119 +382,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-FIDELITY"
-      ],
-      "eventId": "evt-20260811-065600-x7n4k2-pr274-rereview",
-      "eventType": "REVIEW_RESULT",
-      "evidence": [
-        "PR #274 head 2f1ebc4956ed8a041529e870301a4f3a464b029a rejects same-entity unregister/step while transitioning and commits outer state only after a successful callback.",
-        "Canonical CI run 31466767256 completed success on that exact head.",
-        "The same head still performs capacity accounting before currentLevel validation in FidelityManager.register.",
-        "Test-adversary #278 already reproduces invalid fidelity at capacity consuming registrationCapacityRejections.",
-        "PR #274 issue comment 5250003277 records the narrowed blocking review."
-      ],
-      "fromWorker": "sol-20260811-x7n4k2",
-      "laneId": "HG-BACKFILL-FIDELITY",
-      "metadata": {
-        "claimToken": "b7e31c94f0a2685d",
-        "headSha": "2f1ebc4956ed8a041529e870301a4f3a464b029a",
-        "pr": 274,
-        "result": "REQUEST_CHANGES"
-      },
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "REQUEST_CHANGES remains on PR #274 at 2f1ebc4956ed8a041529e870301a4f3a464b029a, narrowed to registration validation ordering plus required green ownership gating. The earlier callback reentrancy/accounting defect is resolved by the per-entity transitioning guard and staged post-hook commit, and canonical CI run 31466767256 is green. register() still increments registrationCapacityRejections before validating currentLevel, so malformed fidelity at full capacity mutates the wrong metric; consume the #278 regression before integration.",
-      "timestamp": "2026-08-11T06:56:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-FIDELITY"
-      ],
-      "eventId": "evt-20260811-065800-30a8e397-fidelity-policy-metatable",
-      "eventType": "FINDING",
-      "evidence": [
-        "Docs/FIDELITY_MANAGER.md defines PolicyInputs as plain data.",
-        "CI run 31467005511 passes format, lint, Luau analysis, randomness/domain/plain-value audits, and swarm tests before Pure Luau reaches the adversarial Fidelity cases.",
-        "Exact Pure Luau failures: metatable-backed policy input rejected expected false got true; policy input metatable callback never executes expected 0 got 19; metatable-backed input cannot poison monotonic clock expected true got false.",
-        "Canonical WorldEntity, MaterialDNA, and ObjectGenome boundary tests already reject metatable-bearing plain-domain records before metamethod callbacks execute, establishing the project-wide fail-closed no-execute pattern."
-      ],
-      "fromWorker": "sol-20260811-30a8e397",
-      "laneId": "HG-BACKFILL-FIDELITY",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "FidelityManager PolicyInputs are documented as plain data, but the runtime boundary dereferences input fields before rejecting metatable-backed records. A hostile `__index` can therefore execute arbitrary code during policy validation, synthesize accepted values, and let a far-future evaluation commit temporal state. Canonical CI run 31467005511 reproduces the boundary failure: a metatable-backed PolicyInputs record is accepted, its `__index` callback executes 19 times, and the accepted t=100 evaluation poisons a later valid t=1 retry. The production boundary should reject a non-plain/metatable-backed PolicyInputs table before any field read or metamethod execution.",
-      "timestamp": "2026-08-11T06:58:00+00:00"
-    },
-    {
-      "affects": [
-        "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
-        "SWARM-V21-PR-OWNERSHIP-RECOVERY"
-      ],
-      "eventId": "evt-20260811-065800-r4m8z2-immutable-recovery-warning",
-      "eventType": "FINDING",
-      "evidence": [
-        "tools/swarm/swarmctl_hardening_base.py transition_check builds byte maps for events/*/*.json and raises ControlError when any common event bytes changed or an event was deleted.",
-        "Control push runs have sequentially rewritten existing events to satisfy validate_event; those changes cannot pass immutable-event transition checking once schema validation reaches that step.",
-        "Latest observed control run 31466983085 still fails strict event validation before transition-check, now on evt-20260811-062900-went7k3-pr283-review-request.json unknown key nextAction."
-      ],
-      "fromWorker": "sol-20260811-r4m8z2",
-      "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
-      "schemaVersion": 1,
-      "severity": "CRITICAL",
-      "summary": "Stop normalizing historical event files in place. The hardening transition checker byte-compares every pre-existing .swarm/events file and rejects any changed/deleted event. Current workers are repairing strict-schema validation failures by rewriting immutable events; even after the last event becomes schema-valid, the next transition-check will reject those rewrites. Recovery must preserve historical event bytes and make the trusted validator safely read legacy event shapes (or use another explicitly designed append-only migration mechanism). Do not edit/delete more existing events while this control recovery is active.",
-      "timestamp": "2026-08-11T06:58:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-MATERIALDNA"
-      ],
-      "eventId": "evt-20260811-065830-q7h4n2-pr283-rereview",
-      "eventType": "REVIEW_RESULT",
-      "evidence": [
-        "GitHub COMMENT review 4903603276 records the independent exact-head Reality-Grade re-review.",
-        "CI run 31466015977 succeeded for PR #283 head 11334326196adba5ced6c50ffe32e856a047c2b9.",
-        "Swarm Control Plane runs 31466015981 and 31466114536 succeeded with the live primary claim.",
-        "Synthetic merge commit 3a4e6b96889e584299c463b4517664a5620d8288 has parents current main f4c4e4a2f89caba4d258669417f85206f96d4e98 and PR head 11334326196adba5ced6c50ffe32e856a047c2b9.",
-        "Separate repairCount boundedness finding evt-20260811-063430-q7h4n2-materialdna-repaircount-bound remains non-blocking follow-up."
-      ],
-      "fromWorker": "sol-20260811-q7h4n2",
-      "laneId": "HG-BACKFILL-MATERIALDNA",
-      "metadata": {
-        "claimToken": "9b3e7c1a54d2608f",
-        "headSha": "11334326196adba5ced6c50ffe32e856a047c2b9",
-        "pr": 283,
-        "result": "APPROVE",
-        "syntheticMergeSha": "3a4e6b96889e584299c463b4517664a5620d8288"
-      },
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "APPROVE PR #283 exact head 11334326196adba5ced6c50ffe32e856a047c2b9 for integration. The production validator now classifies hostile non-string unknown keys without metamethod-capable formatting while preserving useful unknown-string names; the combined regression suite preserves recipe/state/reference callback-zero coverage and the throwing-key no-abort case. The test-only deterministic fixture seal locks all current catalog recipes bidirectionally and proves same-revision physical drift changes content identity without introducing a production fingerprint API. GitHub synthetic merge 3a4e6b96889e584299c463b4517664a5620d8288 combines current main f4c4e4a2f89caba4d258669417f85206f96d4e98 with this head and only the intended MaterialDNA source/test files differ. CI and Swarm Control Plane are green. PR #272 is superseded and should not merge separately.",
-      "timestamp": "2026-08-11T06:58:30+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-MATERIALDNA"
-      ],
-      "eventId": "evt-20260811-065900-q7h4n2-materialdna-audit-release",
-      "eventType": "HANDOFF",
-      "evidence": [
-        "evt-20260811-065830-q7h4n2-pr283-rereview.json",
-        "evt-20260811-063430-q7h4n2-materialdna-repaircount-bound.json"
-      ],
-      "fromWorker": "sol-20260811-q7h4n2",
-      "laneId": "HG-BACKFILL-MATERIALDNA",
-      "metadata": {
-        "claimToken": "9b3e7c1a54d2608f",
-        "reviewedHead": "11334326196adba5ced6c50ffe32e856a047c2b9",
-        "reviewedPr": 283
-      },
-      "schemaVersion": 1,
-      "severity": "info",
-      "summary": "MaterialDNA audit slot complete and released after exact-head approval of PR #283. Integration owner may merge #283 after normal final merge checks; PR #272 is superseded by the preserved regressions in #283 and should not be merged separately. The unrelated maintenance.repairCount upper-bound finding remains available for a later source/test slice and was not treated as a blocker for #283.",
-      "timestamp": "2026-08-11T06:59:00+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-MATERIALDNA"
@@ -716,6 +573,31 @@
     },
     {
       "affects": [
+        "HG-BACKFILL-MATERIALDNA"
+      ],
+      "eventId": "evt-20260811-070520-went7k3-materialdna-integration",
+      "eventType": "INTEGRATION_RESULT",
+      "evidence": [
+        "PR #283 merged as ed37c5698c1aad7a355e514b35ea5c5bd50aa738 after independent Reality-Grade approval.",
+        "Merge-head canonical CI run 31466530602 completed successfully.",
+        "Integrated regressions cover hostile unknown-key __tostring callbacks including a throwing formatter, exact production fixture revision seals, bidirectional catalog/golden coverage, and same-revision drift detection.",
+        "Runtime MaterialDNA identity remains the existing {id, recipeVersion} contract; no second production fingerprint identity was introduced.",
+        "No Roblox Studio or engine evidence was required or claimed for this source-only lane."
+      ],
+      "fromWorker": "sol-20260811-went7k3",
+      "laneId": "HG-BACKFILL-MATERIALDNA",
+      "metadata": {
+        "canonicalCiRun": 31466530602,
+        "mergeSha": "ed37c5698c1aad7a355e514b35ea5c5bd50aa738",
+        "pr": 283
+      },
+      "schemaVersion": 1,
+      "severity": "info",
+      "summary": "MaterialDNA source-only adversarial backfill completed and integrated on main through PR #283.",
+      "timestamp": "2026-08-11T07:05:20+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-WORLDENTITY"
       ],
       "eventId": "evt-20260811-070600-w3x7k9-worldentity-sync-rereview",
@@ -832,6 +714,26 @@
       "affects": [
         "HG-BACKFILL-WORLDENTITY"
       ],
+      "eventId": "evt-20260811-071230-w3x7k9-worldentity-audit-rereview",
+      "eventType": "REVIEW_REQUEST",
+      "evidence": [
+        "PR #276 is one test-only commit atop main ed37c5698c1aad7a355e514b35ea5c5bd50aa738.",
+        "Diff is only tests/world_entity_registry_shape.luau with 72 additions.",
+        "Exact-head canonical CI run 31467247742 is SUCCESS.",
+        "Live ownership remains fail-closed red while the separate control-state schema recovery is active."
+      ],
+      "fromWorker": "sol-20260811-w3x7k9",
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "schemaVersion": 1,
+      "severity": "important",
+      "summary": "Request exact-head rereview of synchronized WorldEntity test-adversary PR #276 head 71b6958e8421283652fe0d4361cbaabbad362c20. The prior approval covered an obsolete pre-sync head and is not being reused.",
+      "timestamp": "2026-08-11T07:12:30+00:00",
+      "toWorker": "sol-20260811-z4q8n1"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-WORLDENTITY"
+      ],
       "eventId": "evt-20260811-071310-q7h4n2-worldentity-audit-release",
       "eventType": "HANDOFF",
       "evidence": [
@@ -849,6 +751,75 @@
       "severity": "medium",
       "summary": "WorldEntity audit slot complete and released. PR #271 exact head 65f37cc remains blocked by the previously recorded safe-revision, hostile-formatting, required-capture, and malformed-capacity findings; this audit adds one distinct replay/provenance defect: origin.generatorVersion accepts values above the canonical DeterminismContract maximum 2147483647, allowing durable provenance that SeedStream cannot replay. Primary should consume the bound finding together with the existing blockers, then refresh current-main CI and fail-closed ownership before integration. No Studio evidence is involved.",
       "timestamp": "2026-08-11T07:13:10+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-WORLDENTITY"
+      ],
+      "eventId": "evt-20260811-071400-z4q8n1-worldentity-generator-version",
+      "eventType": "FINDING",
+      "evidence": [
+        "PR #293 exact head 093f2f6016427753647a00d2ea85c55ed7ce9ffa defines MAX_SAFE_INTEGER and applies it to stateRevision, representationRevision, and duplicate diagnostic capacity.",
+        "The same head's cloneOrigin obtains origin.generatorVersion through checkedFiniteNumber and checks only >= 1 plus math.floor equality; it has no MAX_SAFE_INTEGER bound.",
+        "Docs/ARCHITECTURE.md defines generation origin as generator name/version and first-observation version information as canonical truth that must prevent later generator upgrades from silently rewriting established reality.",
+        "Because Luau numbers are doubles, integer provenance above 9007199254740991 cannot preserve one-to-one adjacent integer identity; max-safe acceptance plus max-safe+1 rejection should be regression-locked."
+      ],
+      "fromWorker": "sol-20260811-z4q8n1",
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "WorldEntity primary PR #293 correctly safe-bounds lifecycle revisions but still accepts origin.generatorVersion above IEEE-754's exact integer range. cloneOrigin validates generatorVersion only as finite, >=1, and integral, so 9007199254740992 can enter frozen canonical generation provenance even though adjacent integers above 2^53-1 are not uniquely representable. Generator version is part of the version lock/provenance boundary and should remain exact plain data.",
+      "timestamp": "2026-08-11T07:14:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-REALITY"
+      ],
+      "eventId": "evt-20260811-071830-q7h4n2-pr280-review",
+      "eventType": "REVIEW_RESULT",
+      "evidence": [
+        "GitHub COMMENT review 4903746640 records the independent exact-head audit.",
+        "PR #280 changes only tests/resolved_region_recipe_v1_compat.luau by +107/-1.",
+        "Comparison from PR head 632e78b3 to current main ed37c569 shows 13 main commits and no change to the claimed v1 compatibility test file.",
+        "The current refs/pull/280/merge commit 54292497 is stale and still merges PR head into old base 914d0a2."
+      ],
+      "fromWorker": "sol-20260811-q7h4n2",
+      "laneId": "HG-BACKFILL-REALITY",
+      "metadata": {
+        "claimToken": "8a5d1c73e4b9206f",
+        "headSha": "632e78b3162e34ddd5c17a702ac713fccdaa74ea",
+        "pr": 280,
+        "result": "APPROVE_TEST_DELTA_REFRESH_REQUIRED",
+        "reviewBaseMain": "ed37c5698c1aad7a355e514b35ea5c5bd50aa738"
+      },
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "APPROVE the test delta on PR #280 exact head 632e78b3162e34ddd5c17a702ac713fccdaa74ea. The added source-only regressions correctly lock v1 replay input ownership, immutable accepted truth, detached serialization transport, v1/v2 identity separation, region/fingerprint tamper rejection, exact-shape rejection, nested metatable rejection, and finite historical generator versions. Current main ed37c5698c1aad7a355e514b35ea5c5bd50aa738 is 13 commits ahead of the branch base and none of those commits touch the claimed test file, but the PR's synthetic merge/control runs are stale against old base 914d0a2; synchronize/retrigger and require current-main CI plus fail-closed ownership PASS before integration.",
+      "timestamp": "2026-08-11T07:18:30+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-REALITY"
+      ],
+      "eventId": "evt-20260811-071900-q7h4n2-v1-hostile-key-format",
+      "eventType": "FINDING",
+      "evidence": [
+        "src/shared/Reality/ResolvedRegionRecipeV1Internal.luau assertExactRecordShape checks the record metatable, then for each key formats `{path} contains unknown schema key {tostring(key)}` when the key is non-string or unknown.",
+        "A table used as a key may itself carry a __tostring metamethod even when the enclosing serialized record has no metatable, so rejection can invoke user-provided code.",
+        "PR #280 already expands adversarial v1 replay validation but currently covers unknown string fields and nested record metatables, not hostile non-string key formatting.",
+        "GitHub review 4903746640 records this source finding alongside approval of PR #280's existing test delta."
+      ],
+      "fromWorker": "sol-20260811-q7h4n2",
+      "laneId": "HG-BACKFILL-REALITY",
+      "metadata": {
+        "claimToken": "8a5d1c73e4b9206f",
+        "headSha": "632e78b3162e34ddd5c17a702ac713fccdaa74ea",
+        "pr": 280
+      },
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "Historical ResolvedRegionRecipe v1 replay exact-shape validation can execute attacker-controlled formatting before rejection. ResolvedRegionRecipeV1Internal.assertExactRecordShape iterates arbitrary keys and interpolates tostring(key) in the assertion message; a plain outer record containing a table key with a __tostring metamethod therefore runs that callback. This is the same no-execute boundary class already hardened in MaterialDNA. Add a callback-zero adversarial replay regression and classify non-string keys with type(key) (while retaining literal names for unknown string keys) without changing any accepted historical v1 identity/fingerprint semantics.",
+      "timestamp": "2026-08-11T07:19:00+00:00"
     }
   ],
   "resources": [
@@ -889,15 +860,25 @@
     }
   ],
   "schemaVersion": 1,
-  "staleClaims": [],
-  "stateDigest": "d43c0785383c59a63d132a39ff8e205ecd2c653afc04eba2759fce0be0ee6c38",
+  "staleClaims": [
+    {
+      "branch": "agent/network/HG-BACKFILL-AUTHORITY-r6k2p9",
+      "expiredAt": "2026-08-11T07:06:00+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-AUTHORITY",
+      "pr": 287,
+      "slotId": "primary",
+      "workerId": "sol-20260811-r6k2p9"
+    }
+  ],
+  "stateDigest": "02126c6d352c023ef64543bc7d7dffc9fda7702f8bd2be9007ba424fcdca51c0",
   "summary": {
-    "activeClaims": 16,
+    "activeClaims": 15,
     "activeResourceClaims": 2,
     "blockedExternalLanes": 1,
     "lanes": 24,
-    "readySlots": 17,
-    "staleClaims": 0,
-    "workers": 45
+    "readySlots": 15,
+    "staleClaims": 1,
+    "workers": 46
   }
 }
