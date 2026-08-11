@@ -2,6 +2,7 @@
 
 local SCHEMA_VERSION = 2
 local MAX_RECIPE_VERSION = 2147483647
+local MAX_SAFE_INTEGER = 9007199254740991
 local MAX_HISTORY_EVENTS = 32
 local MAX_ANOMALY_MODIFIERS = 8
 local MAX_KEY_LENGTH = 160
@@ -281,8 +282,14 @@ local function validatePositive(errors: { string }, path: string, value: unknown
 end
 
 local function validateNonNegativeInteger(errors: { string }, path: string, value: unknown): number?
-	if type(value) ~= "number" or not isFinite(value) or value < 0 or math.floor(value) ~= value then
-		appendError(errors, `{path} must be a finite non-negative integer`)
+	if
+		type(value) ~= "number"
+		or not isFinite(value)
+		or value < 0
+		or value > MAX_SAFE_INTEGER
+		or math.floor(value) ~= value
+	then
+		appendError(errors, `{path} must be an integer in [0, {MAX_SAFE_INTEGER}]`)
 		return nil
 	end
 	return value
