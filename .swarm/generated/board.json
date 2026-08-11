@@ -13,7 +13,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:45:45.784260+00:00",
+  "generatedAt": "2026-08-11T05:46:03.369445+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "10d3f6992ff243a9268ed8629893faf4fc40791c",
@@ -32,7 +32,7 @@
       "INTEGRATION_RESULT": 3,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T05:45:45.784260+00:00",
+    "generatedAt": "2026-08-11T05:46:03.369445+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -191,7 +191,7 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "3d7aabe812a6153e9743495e59c663318a0922abef52dc8d7a4c290d1a7a0bc1",
+  "stateDigest": "a0200542352c906634b897f0f9834b05cccfbd3f7e34ce6fa36e354b0bc4e782",
   "summary": {
     "activeClaims": 0,
     "activeResourceClaims": 0,
@@ -199,6 +199,6 @@
     "lanes": 10,
     "readySlots": 0,
     "staleClaims": 0,
-    "workers": 10
+    "workers": 12
   }
 }
