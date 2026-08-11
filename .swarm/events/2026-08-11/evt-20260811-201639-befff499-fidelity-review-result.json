@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-201639-befff499-fidelity-review-result",
+  "eventType": "REVIEW_RESULT",
+  "timestamp": "2026-08-11T20:16:39Z",
+  "workerId": "sol-20260811-befff499",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "claimToken": "4daf284a07cd4f74",
+  "generation": 1,
+  "summary": "SOURCE PASS / INTEGRATION HOLD on PR #335 exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102: no new patch-local Fidelity defect found; absorb stacked nested-unwind regression PR #367 and rerun combined exact-head CI, then require live pr-ownership PASS after the separate trusted-history recovery succeeds.",
+  "evidence": [
+    "PR #335 exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102 re-audited against the documented non-authoritative Fidelity mirror and transactional callback contract",
+    "Stacked PR #367 remains open at 827ce0cf63ca5f322502de883beb9f43581c69f2 with canonical exact-head CI run 31488686655 green; its nested transition unwind/retry regression is not yet absorbed into #335",
+    "Recovery PR #371 exact head 5e216a78b42679a8437b95d99041ad66a6679ca5 remains draft and its read-only bootstrap candidate fails on noncanonical immutable historical event records, so trusted pr-ownership cannot yet resume",
+    "No Roblox Studio, two-client, contact, viewport, or engine-runtime evidence was run or claimed for this source-only audit"
+  ],
+  "links": [
+    "https://github.com/jonathangana131-lab/UNRENDERED/pull/335",
+    "https://github.com/jonathangana131-lab/UNRENDERED/pull/367",
+    "https://github.com/jonathangana131-lab/UNRENDERED/pull/371"
+  ]
+}
