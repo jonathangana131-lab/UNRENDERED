@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084129-k9v4m2x7-fidelity-config-no-execute",
+  "timestamp": "2026-08-11T08:41:29+00:00",
+  "fromWorker": "sol-20260811-k9v4m2x7",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "FidelityManager configuration validation still dereferences caller-provided PolicyConfig before proving it is primitive plain data. FidelityManager.new() calls copyConfig(config) before validation, and evaluatePolicy() validates an optional config after field access begins inside validateConfig. A metatable-backed config can therefore execute __index during rejection or synthesize accepted policy values. Active primary PR #274 hardens PolicyInputs and numeric scalars but does not cover PolicyConfig's no-execute boundary.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "Current main src/shared/Physics/FidelityManager.luau copies caller config by direct field access before validateConfig in FidelityManager.new().",
+    "Current evaluatePolicy accepts an optional config and validateConfig dereferences its fields without first rejecting metatable-backed tables.",
+    "PR #274 patch adds metatable/no-execute checks for PolicyInputs and primitive numeric policy/timestamp values, but contains no PolicyConfig metatable/plain-data preflight."
+  ]
+}
