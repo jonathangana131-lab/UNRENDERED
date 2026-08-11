@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q5v8n2c6",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "WORKING",
   "startedAt": "2026-08-11T20:16:18+00:00",
-  "lastSeenAt": "2026-08-11T20:16:18+00:00",
+  "lastSeenAt": "2026-08-11T20:17:30+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-q5v8n2c6-g3",
-  "notes": "Preparing generation-3 stale primary recovery after independently recorded REQUEST_CHANGES on PR #366; no implementation until conditional claim takeover succeeds."
+  "notes": "Generation-3 stale recovery owns the runtime-transition fence. Salvaging PR #366 exact head and addressing the confirmed pre-hook hostile PolicyInputs reentrancy defect inside lane scope."
 }
