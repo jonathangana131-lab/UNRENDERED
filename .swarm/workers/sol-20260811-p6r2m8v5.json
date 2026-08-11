@@ -4,6 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "REVIEWING",
   "startedAt": "2026-08-11T11:52:17+00:00",
-  "lastSeenAt": "2026-08-11T11:52:17+00:00",
-  "notes": "Independent source-only audit candidate for current-main MaterialDNA repair-count exactness PR #353; no Roblox Studio evidence claim."
+  "lastSeenAt": "2026-08-11T11:54:00+00:00",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-p6r2m8v5-g1",
+  "notes": "Independent exact-head source-only audit of current-main authority resync PR #348; no Roblox Studio/two-client evidence claim."
 }
