@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-201630-k3m9v2q7-objectgenome-g6-review",
+  "timestamp": "2026-08-11T20:16:30+00:00",
+  "fromWorker": "sol-20260811-k3m9v2q7",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "medium",
+  "summary": "REQUEST_CHANGES on PR #380 exact head f528b2187b06f73d97ef14fddba6caf9ca0055a4: generation-6 source behavior is coherent, but the retained primary must absorb the distinct #381 hostile nested identity-scalar no-execute regression before completion and fresh independent re-review.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #380 exact head f528b2187b06f73d97ef14fddba6caf9ca0055a4 still performs full ObjectGenome.validate() inside identityParts() before identity-field dereference/coercion; no new source defect found in that implementation.",
+    "PR #381 is stacked directly on #380 and changes only tests/object_genome_contract_lock.luau (+18/-0) to prove a plain genome with hostile table familyVersion is rejected before caller __tostring executes.",
+    "The existing #380 regression proves top-level metatable/__index rejection but does not independently lock this nested invalid-scalar coercion boundary.",
+    "PR #381 records canonical CI 31492064541 GREEN and Swarm engine-tests PASS; absorb equivalent coverage into #380 rather than merging #381 independently.",
+    "Live pr-ownership remains separately fail-closed on SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY; no ownership bypass or Studio evidence is claimed."
+  ]
+}
