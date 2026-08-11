@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064210-q9x4m2-timestamp-correction",
+  "timestamp": "2026-08-11T06:42:10+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "RECOVERY",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "medium",
+  "summary": "Coordination timestamp correction: several immediately preceding q9x4m2 structured events were accidentally future-dated by roughly 2-10 minutes. Their findings/evidence remain valid, but consumers should use Git commit ordering rather than those event timestamps for chronology. The live audit claim timestamps were corrected to the actual coordinator clock.",
+  "affects": ["HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "Live claim a6f7d218c04b9e53 now records claimedAt 2026-08-11T06:41:35Z and heartbeatAt 2026-08-11T06:42:00Z.",
+    "No product-source or PR content changed as part of this coordination correction."
+  ]
+}
