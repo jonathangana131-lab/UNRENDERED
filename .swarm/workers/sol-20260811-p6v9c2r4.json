@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-p6v9c2r4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T21:01:00+00:00",
+  "lastSeenAt": "2026-08-11T21:01:00+00:00",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "reconcile",
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-reconcile-p6v9c2r4",
+  "notes": "Physics completion-queue lineage reconciliation; review/integration only, no speculative Studio evidence."
+}
