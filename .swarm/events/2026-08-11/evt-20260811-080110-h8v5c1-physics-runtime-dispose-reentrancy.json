@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080110-h8v5c1-physics-runtime-dispose-reentrancy",
+  "timestamp": "2026-08-11T08:01:10+00:00",
+  "fromWorker": "sol-20260811-h8v5c1",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "PhysicsLabRuntime.dispose() has no runtime-wide transition/reentrancy guard and unregisters entities incrementally before setting _disposed. Active Fidelity hardening PR #274 intentionally rejects unregister of the currently transitioning entity while preserving independent mutation of other entities. Combined, a transition observer that calls runtime:dispose() while transitioning any entity after index 1 can unregister earlier entities, then fail on the transitioning entity, leaving _disposed false with a partially torn-down registry/Fidelity population. The completed broad runtime backfill did not cover callback-reentrant disposal. Create a narrow source-only one-shot PhysicsLabRuntime lifecycle-atomicity leaf that fails closed before any teardown when a transition is in flight (or otherwise makes disposal transactional), with an adversarial multi-entity regression; do not reopen broad runtime work or claim Studio evidence.",
+  "affects": ["HG-BACKFILL-FIDELITY", "HG-BACKFILL-PHYSICS-RUNTIME"],
+  "evidence": [
+    "main@aa7e04f src/shared/Physics/PhysicsLabRuntime.luau invokes the optional transition observer inside the FidelityManager transition hook and dispose() loops _entityIds, calling FidelityManager.unregister then WorldEntity registry.unregister for each entity; _disposed becomes true only after the full loop succeeds.",
+    "PR #274 current head 4f797b06c4063dc997a6009887ca76b3b7598153 adds state.transitioning and makes FidelityManager.unregister reject only the currently transitioning entity; its contract explicitly preserves independent mutations to other entities when a callback fails.",
+    "Deterministic source repro after #274 semantics: establish a ready transition on recipe.entities[2], call runtime:dispose() from its observer, and the dispose loop removes recipe.entities[1] from both authorities before unregister of recipe.entities[2] rejects. The outer transition fails, but runtime _disposed remains false and snapshot/getRecord observe a reduced live population.",
+    "tests/physics_lab_runtime.luau covers normal idempotent disposal and rejected transition authority preservation; tests/physics_lab_runtime_transition_required.luau covers malformed capture and 64-cycle drift, but neither exercises lifecycle mutation from inside a transition callback.",
+    "The prior HG-BACKFILL-PHYSICS-RUNTIME lane is DONE after PRs #281/#284, and repository PR search found no existing PhysicsLabRuntime dispose-atomicity work, so this is a new concrete integration gap rather than duplicate active work."
+  ],
+  "metadata": {
+    "claimToken": "d4d87b0c73804667",
+    "pr": 274,
+    "headSha": "4f797b06c4063dc997a6009887ca76b3b7598153"
+  }
+}
