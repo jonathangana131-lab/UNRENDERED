@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-214700-z3k7m9q2-physics-runtime-no-duplicate-gap",
+  "timestamp": "2026-08-11T21:47:00+00:00",
+  "fromWorker": "sol-20260811-z3k7m9q2",
+  "eventType": "FINDING",
+  "summary": "Physics-runtime capacity mining found no new non-overlapping source lane worth opening. Current main PhysicsLabRuntime and tests expose the already-known constructor canonical-recipe boundary and callback/reentrancy mutation boundary; those are explicitly owned by HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE (#310 lineage) and HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE (#388 lineage). Both reviewed candidates edit the same runtime/test files and are intentionally blocked on control ownership/integration sequencing. Next runtime work should synthesize those retained invariant sets on fresh main after the trusted-history gate clears, not create a third competing runtime framework.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE", "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE"],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "main src/shared/Physics/PhysicsLabRuntime.luau plus tests/physics_lab_runtime.luau already cover ordinary F2/F0 lifecycle, capture snapshot ownership, observer rejection atomicity, duplicate identity rejection, and idempotent dispose",
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE PR #388 independently approved generation-3 closes dispose/recursive/pre-hook callback mutation and hides mutable runtime authority behind a frozen facade; canonical CI 31532785322 PASS",
+    "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE PR #310 independently source-approved closes top-level/entity/record/origin recipe shape and canonical WorldId/RegionId/key/id/state/revision population fences with no-execute regressions",
+    "both runtime lanes are BLOCKED for sequencing/global pr-ownership rather than missing source implementation; no Studio or engine evidence is claimed by this mining result"
+  ]
+}
