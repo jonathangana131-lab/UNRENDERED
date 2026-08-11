@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094700-p7q4n8-fidelity-public-state-bypass",
+  "timestamp": "2026-08-11T09:47:00+00:00",
+  "fromWorker": "sol-20260811-p7q4n8",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "FidelityManager PR #335 hardens same-entity transition reentry by setting EntityState.transitioning during the external transition hook, but the returned manager object still directly owns mutable `_states` and `_metrics` tables. A hook that already has the manager in scope can clear `(manager :: any)._states[entityId].transitioning` and then reenter `step`/`unregister`, or mutate observed levels/accounting directly, bypassing the new method-level guard and making manager invariants/metrics untrustworthy. Route this to HG-BACKFILL-FIDELITY before integration; the durable fix should make mutable manager state capability-private rather than convention-private while preserving the public method surface.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #335 exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102 defines ManagerImpl with public table fields `config`, `_states`, and `_metrics`, constructs those tables in FidelityManager.new(), and returns `setmetatable(self, FidelityManager)` without an opaque facade or closure-private backing store.",
+    "The same exact head rejects method-level reentry by reading `state.transitioning`, then sets that mutable field true immediately before `pcall(applyTransition)` and false afterward. Because `state` is reachable through `manager._states[entityId]`, callback code can clear the flag before recursively calling the public API.",
+    "The exposure is broader than reentry: callback/user code can directly replace `_states`, edit `observedLevel`/pending clocks, or change `_metrics.counts`/transition counters without passing any validation or atomicity boundary.",
+    "PR #335 regression file tests hostile PolicyConfig/PolicyInputs, rejected-step atomicity, callback failure, same-entity method reentry, capacity accounting, and cross-entity method effects, but contains no direct `_states`/`_metrics` tamper case.",
+    "PR #343's nested cross-entity determinism coverage likewise exercises only public methods; it does not lock capability privacy of the manager's mutable backing state."
+  ]
+}
