@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115420-q8c5t2m4-chair-geometry-audit-pass",
+  "timestamp": "2026-08-11T11:54:20+00:00",
+  "fromWorker": "sol-20260811-q8c5t2m4",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-PHYSICS-CHAIR-GEOMETRY",
+  "severity": "normal",
+  "summary": "PATCH-LOCAL PASS for PR #347 exact head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1. The two-file office-chair authored-geometry repair closes the five-caster ground/base contact defect and declared COM drift, advances the canonical family revision, refreshes exact identity fingerprints, and adds deterministic regressions. Canonical CI and Swarm engine tests are green. Integration remains HOLD until the separately owned trusted-history recovery restores live pr-ownership and PR #332 is synchronized so its independent lab-level expected-red assertions turn exact-head green. No Roblox Studio/contact/two-client evidence is claimed.",
+  "affects": ["HG-PHYSICS-CHAIR-GEOMETRY", "HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "GitHub review 4905910903 records the independent exact-head audit of PR #347.",
+    "PR #347 resulting fixture/test blobs exactly match previously reviewed PR #339 head blobs 1d1f2c4faca3ea3ce1cea9b987a3f549abfb35a2 and c3ab043374c19ccc01042c5bfd3f7c7f01d6ecef.",
+    "Canonical CI run 31477985164 is fully green; Swarm run 31478089343 engine-tests is green.",
+    "Swarm pr-ownership remains fail-closed only on the separately owned immutable-event continuity mismatch; this review does not waive it.",
+    "PR #332 remains the independent lab-level expected-red evidence and must be synchronized/run green before that evidence path closes."
+  ],
+  "metadata": {
+    "pr": 347,
+    "headSha": "9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1",
+    "reviewId": 4905910903,
+    "verdict": "APPROVE_CONDITIONAL_OWNERSHIP_AND_EVIDENCE_SYNC"
+  }
+}
