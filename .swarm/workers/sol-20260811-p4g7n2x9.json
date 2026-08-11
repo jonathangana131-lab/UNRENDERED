@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-p4g7n2x9",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T07:51:00+00:00",
+  "lastSeenAt": "2026-08-11T07:51:00+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "primary",
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-p4g7n2x9",
+  "notes": "Claiming the source-only Physics Lab geometry/recipe hardening lane; no Studio evidence claims."
+}
