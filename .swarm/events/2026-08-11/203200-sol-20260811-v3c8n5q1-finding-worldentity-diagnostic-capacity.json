@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t203200z-v3c8n5q1-worldentity-capacity",
+  "timestamp": "2026-08-11T20:32:00Z",
+  "fromWorker": "sol-20260811-v3c8n5q1",
+  "eventType": "FINDING",
+  "summary": "WorldEntity duplicate-diagnostic retention remains caller-configurable up to MAX_SAFE_INTEGER, so retained duplicate records and duplicateDiagnostics() clone work have no practical project-owned operational ceiling. PR #386 covers revision/generator exhaustion, not this capacity invariant. Add an explicit bounded maximum, reject max+1 before retention/allocation work, preserve default=64 and capacity=0 disable semantics, and regression-test exact max, max+1, bounded rollover, and huge-safe-integer rejection.",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-WORLDENTITY"
+  ],
+  "evidence": [
+    "PR #378 head 4680b8176c144b99ffeb1754eb94c03e7bfe42c6: createRegistry validates duplicateDiagnosticCapacity only with assertNonNegativeInteger, whose ceiling is MAX_SAFE_INTEGER.",
+    "PR #378 WorldEntity duplicate retention removes one entry only after #duplicates >= capacity and duplicateDiagnostics() returns table.clone(duplicates), making configured capacity a direct retained-memory and snapshot-clone-work bound.",
+    "tests/world_entity.luau on PR #378 covers capacity=2 rollover, capacity=0 disable semantics, and Infinity rejection, but no project maximum or max+1 rejection.",
+    "PR #386 patch adds generator/revision maximum boundary and exhaustion coverage only; it does not constrain duplicateDiagnosticCapacity.",
+    "UNRENDERED canon requires caches, queues, and budgets to be bounded and observable; this is a distinct bounded-retention gap, not a new subsystem or architecture rewrite."
+  ]
+}
