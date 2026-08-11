@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r8v2c6",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T07:44:00+00:00",
-  "lastSeenAt": "2026-08-11T07:54:00+00:00",
+  "lastSeenAt": "2026-08-11T08:08:20+00:00",
   "laneId": "HG-BACKFILL-REALITY",
   "slotId": "primary",
   "branch": "agent/reality/HG-BACKFILL-REALITY-primary-r8v2c6",
-  "notes": "PR #306 opened for fail-closed/no-execute non-string schema-key rejection in v2 canonical reality and replay-only v1. Exact-head CI/ownership pending; no Studio evidence claimed."
+  "notes": "PR #306 exact head f813129849d48131da185ecf2158ff2c769d61fa has canonical CI PASS. Live ownership is globally blocked by immutable event-schema compatibility failure; blocker handed to active SWARM-PROTOCOL recovery worker sol-20260811-s5q8m4. Awaiting restored control validation and independent exact-head Reality-Grade review; no Studio evidence claimed."
 }
