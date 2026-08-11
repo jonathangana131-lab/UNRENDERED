@@ -1,5 +1,6 @@
 local fs = require("@lune/fs")
 local ProductionLoader = require("./support/ProductionLoader")
+local runHeroGateAuthorityTeardown = require("./hero_gate_authority_teardown")
 local runPhysicsLabDiagnosticsAtomicity = require("./physics_lab_diagnostics_atomicity")
 
 local StableId = ProductionLoader.requireShared("Core/StableId")
@@ -225,6 +226,7 @@ local function run(): number
 		manager:getMetrics().registered == 0 and WorldEntity.count(registry) == 0
 	)
 
+	failures += runHeroGateAuthorityTeardown()
 	failures += runPhysicsLabDiagnosticsAtomicity()
 	return failures
 end
