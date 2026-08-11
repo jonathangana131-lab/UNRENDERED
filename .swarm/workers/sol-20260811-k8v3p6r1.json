@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:40:25+00:00",
-  "lastSeenAt": "2026-08-11T09:34:10+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "lastSeenAt": "2026-08-11T09:38:40+00:00",
+  "laneId": "HG-BACKFILL-REALITY",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-k8v3p6r1-g2",
-  "notes": "Independent validation-contract audit of stale primary PR #303 plus expected-red safe-integer adversary #346. Reconcile plain-data/no-execute and exact-nil tolerance repair with schema/count exact-integer identity bounds, current-main ancestry, CI, and integration state. No Studio/contact evidence claim."
+  "branch": "agent/review/HG-BACKFILL-REALITY-audit-k8v3p6r1-g3",
+  "notes": "Current-state independent reconciliation of ResolvedRegionRecipe schema-key no-execute PR #306. Verify prior source approval, exact current-main ancestry/scope, canonical CI, replay companion sequencing, and integration state; no Studio evidence claim."
 }
