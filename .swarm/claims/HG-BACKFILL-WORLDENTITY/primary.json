@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-d7k4m9q2",
   "claimToken": "2c7a5e1d9b4f8063",
   "claimedAt": "2026-08-11T21:58:00+00:00",
-  "heartbeatAt": "2026-08-11T21:58:00+00:00",
+  "heartbeatAt": "2026-08-11T22:07:20+00:00",
   "leaseSeconds": 1800,
   "generation": 6,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-d7k4m9q2-g6",
-  "pr": 397,
+  "pr": 413,
   "takeoverOf": "sol-20260811-s56t3v9:g5:c7e2a91d5f8b3064",
-  "notes": "Generation-6 stale takeover preserving PR #397 exact head 83850e9f2bab4572de800428fb510b6b75fc2c45. Absorb capacity-mining finding evt-20260811t215700z-d7k4m9q2-worldentity-diagnostic-capacity: add a practical project maximum for duplicateDiagnosticCapacity with exact boundary tests, without weakening generation-5 identity/snapshot/fail-atomicity hardening. Live pr-ownership remains separately fail-closed; source-only, no Studio evidence."
+  "notes": "Generation-6 successor PR #413 preserves #397 exact head 83850e9f2bab4572de800428fb510b6b75fc2c45 and adds only the bounded duplicateDiagnosticCapacity invariant plus exact max/max+1 regressions. Live pr-ownership remains separately fail-closed behind SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY; source-only, no Studio evidence."
 }
