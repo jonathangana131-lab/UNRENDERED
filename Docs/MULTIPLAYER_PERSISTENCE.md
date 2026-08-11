@@ -17,6 +17,7 @@ The permanent Physics Lab uses a deliberately narrow multiplayer proof before br
 Source-level invariants:
 - the server owns creation of the canonical lab runtime and its WorldEntity truth;
 - clients are independent observers of replicated canonical state, not alternate generators of canonical truth;
+- the server binds each observation to the actual calling player/session and server-established request context rather than trusting client-supplied observer identity or request ownership;
 - a client observation must be comparable using stable domain identity, not Roblox Instance identity alone;
 - client-supplied identity, counts, fingerprints, repro keys, or state are untrusted evidence until checked against server-owned truth;
 - teardown or evidence handoff must fail closed: missing, duplicate, stale, malformed, or cross-request observations cannot be merged into a passing result.
