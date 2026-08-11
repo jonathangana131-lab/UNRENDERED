@@ -213,6 +213,14 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 	local sample: EntityDiagnostic? = nil
 
 	for cycle = 1, cycleCount do
+		-- Full canonical validation includes deterministic ObjectGenome fingerprinting.
+		-- Real Studio evidence showed that 20 uninterrupted enable/disable/full-snapshot
+		-- iterations can exhaust Roblox's script watchdog even though each individual
+		-- cycle is valid. This evidence helper is Studio-only, so yield one real
+		-- Heartbeat per cycle to keep the work incremental without changing any truth,
+		-- identity, resource-delta, or envelope assertion.
+		RunService.Heartbeat:Wait()
+
 		local enabled = PhysicsLabStudioDiagnostics.enable(lab)
 		assert(enabled.enabled, `diagnostics failed to enable at cycle {cycle}`)
 		assert(
