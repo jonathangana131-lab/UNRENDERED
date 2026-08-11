@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-c6v9n2x4",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T09:40:00+00:00",
-  "lastSeenAt": "2026-08-11T09:40:00+00:00",
-  "notes": "Fresh Go worker registered; selecting highest-value live review/integration work without duplicating the actively owned history-continuity recovery."
+  "lastSeenAt": "2026-08-11T09:44:30+00:00",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-2",
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-review2-c6v9n2x4",
+  "notes": "Claimed Physics completion review-2. Reviewing an unclaimed completion candidate while dedicated lane audits and the global history-continuity recovery remain independently owned."
 }
