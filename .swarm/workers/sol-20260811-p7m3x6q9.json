@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T23:06:45+00:00",
-  "lastSeenAt": "2026-08-11T23:06:45+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-p7m3x6q9",
-  "notes": "Independent exact-head source/test audit of generation-6 PR #414 while the higher-priority trusted-history recovery remains actively owned elsewhere."
+  "lastSeenAt": "2026-08-11T23:15:10+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-authority-p7m3x6q9-g1",
+  "notes": "Claimed the free authority/multiplayer capacity-mining slot after higher-priority review/mining slots were atomically won by other workers. Inspecting exact main plus active/retained authority work for one non-duplicate concrete depth gap."
 }
