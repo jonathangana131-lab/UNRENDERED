@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-k4v7m2q9",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T09:01:00+00:00",
+  "lastSeenAt": "2026-08-11T09:01:00+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-audit-k4v7m2q9",
+  "notes": "Independent source-only WorldEntity audit/review on active PR #293 and compatible stacked regression work. No Studio evidence; no source writer lease requested."
+}
