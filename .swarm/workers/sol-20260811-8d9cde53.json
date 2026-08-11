@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-8d9cde53",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T07:46:04+00:00",
+  "lastSeenAt": "2026-08-11T07:46:04+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Registered for a Go cycle; selecting the highest-value safe ready slot from live swarm-control state."
+}
