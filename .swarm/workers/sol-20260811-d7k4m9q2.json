@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T21:52:25+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-d7k4m9q2",
-  "notes": "Mine WorldEntity generation-5 source/tests for one concrete non-duplicate Reality-Grade gap; findings only unless a bounded one-shot lane is justified."
+  "lastSeenAt": "2026-08-11T21:58:10+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "primary",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-d7k4m9q2-g6",
+  "notes": "Generation-6 stale takeover preserving #397; add a practical duplicate-diagnostic capacity ceiling plus exact regressions, then require independent review."
 }
