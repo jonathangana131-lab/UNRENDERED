@@ -5,8 +5,8 @@
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "claimToken": "4f1c8a7d2e9b6053",
   "acquiredAt": "2026-08-11T11:47:17+00:00",
-  "heartbeatAt": "2026-08-11T12:18:20+00:00",
+  "heartbeatAt": "2026-08-11T12:28:31+00:00",
   "leaseSeconds": 1800,
   "generation": 2,
-  "notes": "Generation-2 protected lease for PR #371 trusted-history continuity recovery. Current checkpoint is bounded live worker-state cleanup and finite immutable-event quarantine expansion; no product or Studio work."
+  "notes": "Generation-2 protected lease for PR #371 trusted-history continuity recovery. Current checkpoint is finite exact-byte malformed-event inventory plus Git first-write provenance proof; no product or Studio work."
 }
