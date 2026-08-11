@@ -355,11 +355,16 @@ local function run(): number
 	local decodedCaster = ObjectGenome.decodeMechanismPosition(canonicalCaster, 0.25)
 	expect(
 		"canonical caster decode remains unchanged",
-		decodedCaster.kind == "caster" and decodedCaster.swivelTurns == 0.25 and decodedCaster.swivelDegrees == 90
+		decodedCaster.kind == "caster"
+			and decodedCaster.swivelTurns == 0.25
+			and decodedCaster.swivelDegrees == 90
 	)
 	local canonicalLatch = findMechanismByKind(Fixtures.filingCabinet, "latch")
 	local decodedLatch = ObjectGenome.decodeMechanismPosition(canonicalLatch, 1)
-	expect("canonical latch decode remains unchanged", decodedLatch.kind == "latch" and decodedLatch.engaged == true)
+	expect(
+		"canonical latch decode remains unchanged",
+		decodedLatch.kind == "latch" and decodedLatch.engaged == true
+	)
 
 	local incompleteCasterOk = pcall(function()
 		ObjectGenome.decodeMechanismPosition({ kind = "caster" }, 0.25)
