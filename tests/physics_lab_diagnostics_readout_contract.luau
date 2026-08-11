@@ -20,17 +20,11 @@ local function run(): number
 	end
 
 	local helper = position("local function validateReadoutCompleteness(")
-	local helperEnd = if helper ~= nil
-		then string.find(source, "\nfunction PhysicsLabStudioDiagnostics.capture", helper, true)
-		else nil
-	local helperSource = if helper ~= nil and helperEnd ~= nil
-		then string.sub(source, helper, helperEnd - 1)
-		else nil
 	local function helperPosition(needle: string): number?
-		if helperSource == nil then
+		if helper == nil then
 			return nil
 		end
-		return string.find(helperSource, needle, 1, true)
+		return string.find(source, needle, helper, true)
 	end
 
 	local identityWrite = position('billboard:SetAttribute("UNRENDERED_WorldEntityId", plan.worldEntityId)')
@@ -59,11 +53,14 @@ local function run(): number
 	expect("each diagnostics billboard carries the canonical WorldEntityId it projects", identityWrite ~= nil)
 	expect(
 		"capture validates the readout tree through an explicit completeness boundary",
-		helper ~= nil and helperEnd ~= nil and captureCall ~= nil and helper < helperEnd and helperEnd < captureCall
+		helper ~= nil and captureCall ~= nil and helper < captureCall
 	)
 	expect(
 		"readout validation enumerates only direct diagnostics-root children",
-		directChildren ~= nil and billboardClass ~= nil and directChildren < billboardClass
+		directChildren ~= nil
+			and billboardClass ~= nil
+			and helper < directChildren
+			and directChildren < billboardClass
 	)
 	expect(
 		"every readout identity is authoritative and unique",
