@@ -21,7 +21,7 @@ local function run(): number
 
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
-	local rootName = position('folder.Name = DIAGNOSTICS_ROOT_NAME')
+	local rootName = position("folder.Name = DIAGNOSTICS_ROOT_NAME")
 	local rootOwnership = position('folder:SetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned", true)')
 	local parentMutation = position("folder.Parent = model")
 	local billboardOwnership = position("billboard.Parent = folder")
