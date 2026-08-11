@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-PHYSICS-CART-GEOMETRY",
   "slotId": "audit",
-  "workerId": "sol-20260811-h6n3p8v2",
-  "claimToken": "6f2a9c4d8e1b7053",
-  "claimedAt": "2026-08-11T20:15:00+00:00",
-  "heartbeatAt": "2026-08-11T20:15:00+00:00",
+  "workerId": "sol-20260811-d7k4m9q2",
+  "claimToken": "1d8a5c3f7e2b9064",
+  "claimedAt": "2026-08-11T21:41:00+00:00",
+  "heartbeatAt": "2026-08-11T21:41:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 3,
+  "generation": 4,
   "resources": [],
-  "branch": "agent/review/HG-PHYSICS-CART-GEOMETRY-audit-h6n3p8v2-g3",
+  "branch": "agent/review/HG-PHYSICS-CART-GEOMETRY-audit-d7k4m9q2-g4",
   "pr": 352,
-  "notes": "Generation-3 stale audit takeover after inspecting expired generation-2 claim/worker and PR #352 exact head. Perform independent source-only geometry/version/COM regression audit without widening into separately recorded shelf/frame manufacturability debt or claiming Studio evidence."
+  "notes": "Generation-4 stale takeover solely to reconcile an already-completed exact-head audit. PR #352 already has independent lane-owned SOURCE PASS at 2026-08-11T11:53:01Z; verify head/base/CI remain unchanged, transition lane out of REVIEW, and release stale lease. No Studio/contact evidence."
 }
