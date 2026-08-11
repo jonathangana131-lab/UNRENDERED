@@ -327,12 +327,13 @@ function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord
 end
 
 function WorldEntity.captureState(record: WorldEntityRecord, capturedState: PlainData): WorldEntityRecord
+	local ownedRecord = ownRecord(record)
 	return cloneRecord(
-		record,
-		record.fidelity,
+		ownedRecord,
+		ownedRecord.fidelity,
 		cloneState(capturedState),
-		record.stateRevision + 1,
-		record.representationRevision
+		ownedRecord.stateRevision + 1,
+		ownedRecord.representationRevision
 	)
 end
 
@@ -341,18 +342,19 @@ function WorldEntity.transition(
 	target: Fidelity,
 	capturedState: PlainData?
 ): WorldEntityRecord
+	local ownedRecord = ownRecord(record)
 	assert(WorldEntity.isFidelity(target), `invalid fidelity {tostring(target)}`)
-	if target == record.fidelity then
+	if target == ownedRecord.fidelity then
 		if capturedState == nil then
-			return record
+			return ownedRecord
 		end
-		return WorldEntity.captureState(record, capturedState)
+		return WorldEntity.captureState(ownedRecord, capturedState)
 	end
 
-	local currentRank = WorldEntity.fidelityRank(record.fidelity)
+	local currentRank = WorldEntity.fidelityRank(ownedRecord.fidelity)
 	local targetRank = WorldEntity.fidelityRank(target)
-	local nextState = record.persistentState
-	local nextStateRevision = record.stateRevision
+	local nextState = ownedRecord.persistentState
+	local nextStateRevision = ownedRecord.stateRevision
 
 	if targetRank < currentRank then
 		assert(
@@ -368,7 +370,13 @@ function WorldEntity.transition(
 		)
 	end
 
-	return cloneRecord(record, target, nextState, nextStateRevision, record.representationRevision + 1)
+	return cloneRecord(
+		ownedRecord,
+		target,
+		nextState,
+		nextStateRevision,
+		ownedRecord.representationRevision + 1
+	)
 end
 
 function WorldEntity.createRegistry(duplicateDiagnosticCapacity: number?): Registry
