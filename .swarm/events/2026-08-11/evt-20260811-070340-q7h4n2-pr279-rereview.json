@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070340-q7h4n2-pr279-rereview",
+  "timestamp": "2026-08-11T07:03:40+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "medium",
+  "summary": "APPROVE PR #279 exact head 83a0f370de680c6db59787578f6931c25dd854b6 after the requested snapshot lower-bound repairs. The new constraints now match PhysicsLabValidation.captureInternal: selected root implies models >= 1; every encountered BasePart contributes an assembly root so parts > 0 implies assemblies >= 1; unique assembly roots cannot exceed encountered parts; the disjoint classified Instance subtotal cannot exceed total Instances; and a physical envelope exists iff BaseParts exist. Deterministic malformed-shape regressions cover each relationship. Current main aec680524f69ca59693da594e16dca6c8e4095ab is nine commits ahead, but reverse comparison shows none touch the two PR files; final integration should still refresh normal checks against current main before merge.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "GitHub COMMENT review 4903634596 records the independent exact-head re-review.",
+    "src/server/PhysicsLab/PhysicsLabValidation.luau captureInternal inspects the selected Model root, uses an elseif class-count chain, assigns one assembly-root key per BasePart, and only builds envelopeStuds when hasPart is true.",
+    "CI run 31465831640 and Swarm Control Plane run 31465831645 succeeded on PR head 83a0f370de680c6db59787578f6931c25dd854b6.",
+    "Comparison from PR head to current main aec680524f69ca59693da594e16dca6c8e4095ab lists no changes to src/shared/Physics/PhysicsLabValidationContract.luau or tests/physics_lab_validation_contract.luau."
+  ],
+  "metadata": {
+    "pr": 279,
+    "headSha": "83a0f370de680c6db59787578f6931c25dd854b6",
+    "reviewBaseMain": "aec680524f69ca59693da594e16dca6c8e4095ab",
+    "result": "APPROVE",
+    "claimToken": "2f8c61d4a9e7350b"
+  }
+}
