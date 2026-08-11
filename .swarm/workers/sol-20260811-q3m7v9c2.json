@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q3m7v9c2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T20:30:30+00:00",
-  "lastSeenAt": "2026-08-11T20:31:30+00:00",
+  "lastSeenAt": "2026-08-11T20:36:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-objectgenome",
   "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-q3m7v9c2-g2",
-  "notes": "Generation-2 stale takeover active. Mining current ObjectGenome source/tests/live PR lineage for one concrete non-duplicate source-depth finding; docs/events only."
+  "notes": "Generation-2 stale takeover completed. Published DEPENDENCY_DISCOVERED evt-20260811-203400-q3m7v9c2-objectgenome-bounds-finding: ObjectGenome v1 has no explicit collection/diagnostic work budget, but tightening accepted v1 canonical data requires a contract decision before implementation. No product edits, PR, or Studio evidence. Claim released at swarm-control 45c579306fd95431553cf9a30db62e7fb6871d93."
 }
