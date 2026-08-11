@@ -101,20 +101,20 @@ class HardeningTests(unittest.TestCase):
         with self.assertRaises(core.ControlError): hard.pr_check(self.fx.root,ep,cp,self.now)
 
     def test_validation_digest_fences_unvalidated_mutation(self):
-        self.fx.lane(lane()); board=hard.render(self.fx.root,self.now); hard.validate_state_marker(self.fx.root)
+        self.fx.lane(lane()); board=hard.render(self.fx.root,self.now); hard.validate_marker(self.fx.root)
         obj=lane(); obj["priority"]=9999; self.fx.lane(obj)
-        with self.assertRaises(core.ControlError): hard.validate_state_marker(self.fx.root)
+        with self.assertRaises(core.ControlError): hard.validate_marker(self.fx.root)
         self.assertEqual(board["stateDigest"], json.loads((self.fx.root/"generated/validation.json").read_text())["stateDigest"])
 
     def test_generated_projection_is_excluded_from_digest(self):
-        self.fx.lane(lane()); a=hard.authoritative_state_digest(self.fx.root); write(self.fx.root/"generated/x.json",{"x":1}); b=hard.authoritative_state_digest(self.fx.root); self.assertEqual(a,b)
+        self.fx.lane(lane()); a=hard.state_digest(self.fx.root); write(self.fx.root/"generated/x.json",{"x":1}); b=hard.state_digest(self.fx.root); self.assertEqual(a,b)
 
     def test_takeover_before_expiry_rejected(self):
         b=Fx(); a=Fx()
         try:
             b.lane(lane()); a.lane(lane()); b.claim(claim())
             n=claim(worker="sol-20260811-bb22",token="b"*16,generation=2,heartbeat="2026-08-11T04:55:00+00:00",claimed="2026-08-11T04:55:00+00:00"); n["takeoverOf"]="sol-20260811-a81f"; a.claim(n)
-            with self.assertRaises(core.ControlError): hard.validate_transitions(b.root,a.root)
+            with self.assertRaises(core.ControlError): hard.transition_check(b.root,a.root)
         finally: b.close(); a.close()
 
     def test_stale_takeover_requires_generation_and_previous_worker(self):
@@ -122,14 +122,14 @@ class HardeningTests(unittest.TestCase):
         try:
             b.lane(lane()); a.lane(lane()); b.claim(claim(heartbeat="2026-08-11T03:00:00+00:00",claimed="2026-08-11T02:50:00+00:00"))
             n=claim(worker="sol-20260811-bb22",token="b"*16,generation=2,heartbeat="2026-08-11T04:50:00+00:00",claimed="2026-08-11T04:50:00+00:00"); n["takeoverOf"]="sol-20260811-a81f"; a.claim(n)
-            self.assertEqual(hard.validate_transitions(b.root,a.root)["status"],"PASS")
+            self.assertEqual(hard.transition_check(b.root,a.root)["status"],"PASS")
         finally: b.close(); a.close()
 
     def test_immutable_event_rewrite_rejected(self):
         b=Fx(); a=Fx()
         try:
             e={"schemaVersion":1,"eventId":"evt-20260811-050000-immut","timestamp":NOW,"fromWorker":"sol-20260811-a81f","eventType":"FINDING","summary":"one","affects":[]}; write(b.root/"events/2026-08-11/e.json",e); e["summary"]="two"; write(a.root/"events/2026-08-11/e.json",e)
-            with self.assertRaises(core.ControlError): hard.validate_transitions(b.root,a.root)
+            with self.assertRaises(core.ControlError): hard.transition_check(b.root,a.root)
         finally: b.close(); a.close()
 
     def test_red_main_only_schedules_repair_tag(self):
