@@ -332,6 +332,18 @@ local function run(): number
 	end)
 	expect("false envelope tolerance does not silently select the default", not falseToleranceAccepted)
 
+	-- Individually finite coordinates can still overflow when the comparison derives their difference.
+	-- Fail closed before a non-finite value can escape into JSON-serialized evidence.
+	local extremeBaseline = snapshot(counts(46, 0), -1e308, 0)
+	local extremeCheckpoint = snapshot(counts(46, 0), 1e308, 1e308)
+	local extremeComparisonAccepted = pcall(function()
+		ValidationContract.compareFullLabEnvelope(extremeBaseline, extremeCheckpoint, 0.001)
+	end)
+	expect(
+		"finite envelope inputs cannot overflow into non-finite drift evidence",
+		not extremeComparisonAccepted
+	)
+
 	return failures
 end
 
