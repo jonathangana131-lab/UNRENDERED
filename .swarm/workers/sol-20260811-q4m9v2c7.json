@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-11T23:07:00+00:00",
-  "lastSeenAt": "2026-08-11T23:07:00+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-q4m9v2c7",
-  "notes": "Independent exact-head source/test audit for review-stage PR #414; no Studio evidence claimed."
+  "lastSeenAt": "2026-08-11T23:14:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-q4m9v2c7-g8",
+  "notes": "Generation-8 primary on draft PR #416. Retargeted to reviewed instance-binding prerequisite PR #349 so diff is lane-owned only; repaired final diagnostics re-enable race and restored trailing newline after format-only red. Awaiting canonical CI; no Studio or viewport evidence claimed."
 }
