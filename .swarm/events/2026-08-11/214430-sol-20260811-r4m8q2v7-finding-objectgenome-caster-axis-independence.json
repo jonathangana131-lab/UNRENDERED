@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t214430z-r4m8q2v7-objectgenome-caster-axis-independence",
+  "timestamp": "2026-08-11T21:44:30Z",
+  "fromWorker": "sol-20260811-r4m8q2v7",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome caster validation independently normalizes swivelAxis and rollAxis but does not reject linearly dependent axis pairs. A caster with rollAxis equal or antiparallel to swivelAxis therefore appears canonical to both full-genome inspect() and standalone mechanism decoding, collapsing the two intended caster degrees of freedom onto one geometric line. Recommend a bounded source-only one-shot lane that rejects collinear/near-collinear caster axis pairs without overconstraining all valid casters to exact 90-degree orthogonality, with full-inspect and standalone-decoder regressions for parallel, antiparallel, and clearly nonparallel cases.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #395 generation-8 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 validates caster wheelRadiusM > 0 and independently requires unit swivelAxis and unit rollAxis, but no dot/cross/linear-independence relationship check was found in the full-genome caster validation path.",
+    "The standalone canonical mechanism decoder at the same exact head likewise checks each caster axis with isCanonicalUnitAxis but does not reject equal or antiparallel axis pairs.",
+    "The office-chair-v1 fixture uses the conventional independent pair swivelAxis=(0,1,0) and rollAxis=(1,0,0); existing ObjectGenome regressions cover axis unit/shape constraints but no parallel or antiparallel caster pair rejection was found.",
+    "Deterministic repro: mutate the known office-chair-v1 caster so rollAxis=swivelAxis (and separately rollAxis=-swivelAxis); the current source paths appear to accept both because each axis remains unit length.",
+    "Repository issue/PR searches for degenerate caster, axis independence, collinear, parallel axes, swivelAxis, and rollAxis found no dedicated existing repair matching this exact invariant gap.",
+    "Source-only finding: no Roblox Studio, viewport, physics-runtime, or engine evidence is claimed."
+  ]
+}
