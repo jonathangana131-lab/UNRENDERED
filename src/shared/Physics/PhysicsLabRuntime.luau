@@ -43,8 +43,8 @@ type RuntimeState = {
 	transitionInFlight: boolean,
 }
 
-local runtimeStates: { [Runtime]: RuntimeState } =
-	setmetatable({} :: { [Runtime]: RuntimeState }, { __mode = "k" })
+local runtimeStates: { [Runtime]: RuntimeState } = {}
+setmetatable(runtimeStates, { __mode = "k" })
 
 local function stateFor(self: Runtime): RuntimeState
 	local state = runtimeStates[self]
