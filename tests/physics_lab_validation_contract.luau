@@ -103,6 +103,16 @@ local function run(): number
 	local malformedOk = ValidationContract.inspectSnapshot(malformed)
 	expect("snapshot validation rejects a count that omits the root", malformedOk == false)
 
+	local noncanonicalRoot = snapshot(counts(46, 0), -10, 10)
+	noncanonicalRoot.rootName = "UNRENDERED_PhysicsLab_Imposter"
+	local noncanonicalRootOk = ValidationContract.inspectSnapshot(noncanonicalRoot)
+	expect("snapshot validation rejects a noncanonical lab root name", noncanonicalRootOk == false)
+
+	local crossRootAccepted = pcall(function()
+		ValidationContract.compare(baseline, noncanonicalRoot, 0.001)
+	end)
+	expect("before/after comparison rejects a different lab root identity", not crossRootAccepted)
+
 	local missingRootModel = snapshot(counts(46, 0), -10, 10)
 	missingRootModel.counts.models = 0
 	local missingRootModelOk = ValidationContract.inspectSnapshot(missingRootModel)
