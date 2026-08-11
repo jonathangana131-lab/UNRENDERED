@@ -41,9 +41,9 @@ for _, caster in ipairs(casterPositions) do
 		materialKey = "material.v1.chair-caster.polymer-rubber",
 		materialRecipeVersion = 1,
 		massKg = 0.35,
-		localPositionM = { x = caster.x, y = -0.49, z = caster.z },
+		localPositionM = { x = caster.x, y = -0.495, z = caster.z },
 		localRotationDeg = zero,
-		dimensionsM = { x = 0.09, y = 0.08, z = 0.04 },
+		dimensionsM = { x = 0.09, y = 0.09, z = 0.04 },
 		supportKeys = {},
 		externalSupport = "ground",
 	})
@@ -140,7 +140,7 @@ table.insert(chairMechanisms, {
 local officeChair: Genome = {
 	schemaVersion = 1,
 	familyId = "office-chair.task",
-	familyVersion = 1,
+	familyVersion = 2,
 	variantKey = "standard",
 	provenance = {
 		manufacturerFamily = "Northfield Contract Furnishings",
@@ -154,7 +154,7 @@ local officeChair: Genome = {
 	},
 	massKg = 11.85,
 	massLimitsKg = { min = 9.0, max = 18.0 },
-	centerOfMassM = { x = 0, y = -0.02, z = 0.01 },
+	centerOfMassM = { x = 0, y = -0.10162447257383965, z = 0.04168776371308017 },
 	components = chairComponents,
 	mechanisms = chairMechanisms,
 	affordances = {
