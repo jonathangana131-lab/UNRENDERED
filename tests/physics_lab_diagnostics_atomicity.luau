@@ -32,11 +32,15 @@ local function run(): number
 	local transactionEnd = position("\tend)\n\n\tif not ok then")
 	local rollback = position("folder:Destroy()")
 	local propagate = position("error(result, 0)")
+	local disableZeroState = position("not snapshot.enabled and snapshot.diagnosticInstanceCount == 0")
 	local evidenceDisable = position("\tPhysicsLabStudioDiagnostics.disable(lab)")
 	local evidenceBaseline = position("\tlocal baseline = Validation.captureFull(lab.model)")
 	local evidenceInitial = position("\tlocal initial = PhysicsLabStudioDiagnostics.capture(lab)")
 	local evidenceEnable = position("\t\tlocal enabled = PhysicsLabStudioDiagnostics.enable(lab)")
+	local evidenceEnabledState = position("assert(enabled.enabled, `diagnostics failed to enable")
+	local evidenceReadoutState = position("enabled.diagnosticInstanceCount > 0")
 	local evidenceDisableCycle = position("\t\tlocal disabled = PhysicsLabStudioDiagnostics.disable(lab)")
+	local evidenceDisabledState = position("assert(not disabled.enabled, `diagnostics remained enabled")
 	local evidenceOffSnapshot = position("\t\tlocal offSnapshot = Validation.captureFull(lab.model)")
 	local evidenceComparison = position("Validation.compare(baseline, offSnapshot, 0.001)")
 	local evidenceDeltaCheck = position("for countName, delta in pairs(comparison.delta) do")
@@ -90,6 +94,10 @@ local function run(): number
 			and rollback < propagate
 	)
 	expect(
+		"disable proves the diagnostics tree is fully absent before returning",
+		disableZeroState ~= nil
+	)
+	expect(
 		"toggle evidence establishes its baseline only after forcing diagnostics off",
 		evidenceDisable ~= nil
 			and evidenceBaseline ~= nil
@@ -98,12 +106,22 @@ local function run(): number
 			and evidenceBaseline < evidenceInitial
 	)
 	expect(
-		"each evidence cycle disables diagnostics before the comparable off snapshot",
+		"each evidence cycle proves a visible readout state before cleanup",
 		evidenceEnable ~= nil
+			and evidenceEnabledState ~= nil
+			and evidenceReadoutState ~= nil
 			and evidenceDisableCycle ~= nil
+			and evidenceEnable < evidenceEnabledState
+			and evidenceEnabledState < evidenceReadoutState
+			and evidenceReadoutState < evidenceDisableCycle
+	)
+	expect(
+		"each evidence cycle proves diagnostics disabled before the comparable off snapshot",
+		evidenceDisableCycle ~= nil
+			and evidenceDisabledState ~= nil
 			and evidenceOffSnapshot ~= nil
-			and evidenceEnable < evidenceDisableCycle
-			and evidenceDisableCycle < evidenceOffSnapshot
+			and evidenceDisableCycle < evidenceDisabledState
+			and evidenceDisabledState < evidenceOffSnapshot
 	)
 	expect(
 		"resource and envelope no-drift checks are derived from the off snapshot",
