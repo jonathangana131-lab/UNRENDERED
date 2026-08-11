@@ -35,7 +35,7 @@ Visual, physical, and acoustic profiles share a `coherenceClass`. They are diffe
 
 ## Validation
 
-`validateRecipe` accepts `unknown` plain data and returns a `ValidationResult`; structurally malformed persisted/generated input must report errors instead of crashing through missing nested fields. Canonical history/anomaly lists must be dense 1-based arrays with no keyed entries. Numeric plausibility ranges are finite and bounded.
+`validateRecipe` accepts `unknown` plain data and returns a `ValidationResult`; structurally malformed persisted/generated input must report errors instead of crashing through missing nested fields. Canonical history/anomaly lists must be dense 1-based arrays with no keyed entries. Numeric plausibility ranges are finite and bounded. Integer counters in canonical recipe data, including `maintenance.repairCount`, are restricted to the non-negative 31-bit range `[0, 2147483647]`; values outside that domain fail validation instead of being accepted as unbounded canonical truth.
 
 The validator also rejects direct URLs/Roblox asset IDs in project-owned semantic keys and checks known semantic compatibility families. Schema-v2 examples include vinyl wallcovering on wall-compatible substrates with pasted-wallpaper installation, low-pile carpet on carpet backing with a supported carpet install method, and baked enamel on sheet metal with factory-coated-panel installation.
 
