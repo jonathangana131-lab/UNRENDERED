@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "audit",
+  "workerId": "sol-20260811-z8k4m6p2",
+  "claimToken": "8a3f1d6c9b2e7045",
+  "claimedAt": "2026-08-11T20:59:29+00:00",
+  "heartbeatAt": "2026-08-11T20:59:29+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-z8k4m6p2",
+  "pr": 395,
+  "notes": "Fresh independent audit of generation-8 successor exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; no implementation unless a concrete review blocker requires a separately authorized handoff."
+}
