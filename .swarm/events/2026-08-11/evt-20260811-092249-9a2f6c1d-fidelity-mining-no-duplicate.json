@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092249-9a2f6c1d-fidelity-mining-no-duplicate",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "workerId": "sol-20260811-p9w2c7n4",
+  "claimToken": "9a2f6c1d8e4b7053",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T09:22:49Z",
+  "headSha": "dd8f1581115c15ce6497db827d17e98d879d0267",
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-p9w2c7n4",
+  "payload": {
+    "severity": "info",
+    "summary": "Bounded Fidelity capacity mining found no second non-duplicate production defect strong enough to promote. The concrete manager atomicity, hostile-config, and same-entity reentrancy gaps are already durably captured and actively owned by PRs #335 and #330.",
+    "evidence": [
+      "Prior FINDING evt-20260811-062100-30a8e397-fidelity-hook-atomicity reproduces failed-hook partial mutation of time, authority, and counts.",
+      "PR #335 stages manager-owned state until hook success, hardens config/input validation, and adds a same-entity reentrancy fence.",
+      "PR #330 owns hostile PolicyConfig adversarial regression coverage.",
+      "PhysicsLabRuntime commits authoritative registry state inside the transition hook and rereads authority after manager step; current source inspection did not establish a separate reproducible defect."
+    ],
+    "notPromoted": [
+      "PhysicsLab transition-observer reentrancy, yield, or dispose behavior lacks a documented invariant or reproducible failure distinct from #335; no speculative leaf was created."
+    ],
+    "files": [
+      "src/shared/Physics/FidelityManager.luau",
+      "tests/fidelity_manager.luau",
+      "src/shared/Physics/PhysicsLabRuntime.luau",
+      "tests/physics_lab_runtime_transition_required.luau",
+      "Docs/FIDELITY_MANAGER.md",
+      "Docs/PHYSICS_LAB.md"
+    ],
+    "validation": "Source, PR, and durable-event inspection only. No tests were run and no Studio evidence was attempted because OPS-STUDIO-DISPLAY remains active."
+  }
+}
