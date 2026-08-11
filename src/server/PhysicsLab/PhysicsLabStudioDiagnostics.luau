@@ -74,7 +74,10 @@ local function adorneeFor(representation: Instance): BasePart
 		return representation
 	end
 	local part = representation:FindFirstChildWhichIsA("BasePart", true)
-	assert(part ~= nil and part:IsA("BasePart"), `diagnostics representation has no BasePart: {representation.Name}`)
+	assert(
+		part ~= nil and part:IsA("BasePart"),
+		`diagnostics representation has no BasePart: {representation.Name}`
+	)
 	return part
 end
 
@@ -187,7 +190,10 @@ function PhysicsLabStudioDiagnostics.disable(lab: PhysicsLabRealizer.RealizedLab
 		folder:Destroy()
 	end
 	local snapshot = PhysicsLabStudioDiagnostics.capture(lab)
-	assert(not snapshot.enabled and snapshot.diagnosticInstanceCount == 0, "Physics Lab diagnostics did not cleanly disable")
+	assert(
+		not snapshot.enabled and snapshot.diagnosticInstanceCount == 0,
+		"Physics Lab diagnostics did not cleanly disable"
+	)
 	return snapshot
 end
 
@@ -209,7 +215,10 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 	for cycle = 1, cycleCount do
 		local enabled = PhysicsLabStudioDiagnostics.enable(lab)
 		assert(enabled.enabled, `diagnostics failed to enable at cycle {cycle}`)
-		assert(enabled.diagnosticInstanceCount > 0, `diagnostics created no inspectable readouts at cycle {cycle}`)
+		assert(
+			enabled.diagnosticInstanceCount > 0,
+			`diagnostics created no inspectable readouts at cycle {cycle}`
+		)
 		maxDiagnosticInstances = math.max(maxDiagnosticInstances, enabled.diagnosticInstanceCount)
 		if sample == nil then
 			sample = enabled.entities[1]
