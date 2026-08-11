@@ -9,7 +9,7 @@
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Reality/WorldEntity.luau", "tests/world_entity*.luau"],
-  "resources": [],
+  "resources": ["REALITY-CONTRACT"],
   "slots": [
     {"slotId":"primary","role":"WorldEntity source hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Reality/WorldEntity.luau","tests/world_entity*.luau"]},
     {"slotId":"test-adversary","role":"WorldEntity adversarial regression author","exclusive":true,"availableWhen":["READY","REVIEW","NEEDS_CHANGES"],"priorityBoost":220,"writeScopes":["tests/world_entity*.luau"]},
