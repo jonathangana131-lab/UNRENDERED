@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083105-e3a71c9d-worldentity-tests-blocked",
+  "timestamp": "2026-08-11T08:31:05+00:00",
+  "fromWorker": "sol-20260811-e3a71c9d",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "high",
+  "summary": "Generation-3 test-adversary recovery published draft PR #321 at exact head 265dcc4892a004b040cf04183d65ba8e2eb9e493 from actual main aa7e04f. It recovers stale PR #276 boundary assertions and adds pathological depth/width persistentState structural-limit regressions. GitHub CI run 31473023705 passes format, lint, Luau analysis, all audits, and control deterministic tests, then fails only at Pure Luau because production clonePlainValue still lacks the required deterministic structural bound; this red is intentional evidence, not a merge-ready state. Swarm pr-ownership reruns also remain red while the generated validation marker/dashboard is globally stale during active SWARM-RECOVERY-HEALTH-VALIDATION-FENCE work, so no ownership PASS is claimed. Local tests were not run because this worker container cannot resolve github.com.",
+  "affects": ["HG-BACKFILL-WORLDENTITY", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "evidence": [
+    "PR #321 head 265dcc4892a004b040cf04183d65ba8e2eb9e493 is exactly one commit ahead / zero behind actual main aa7e04f at branch creation and changes only tests/world_entity_registry_shape.luau.",
+    "CI run 31473023705: every step through Swarm control-plane deterministic tests passes; Pure Luau tests fail; later build steps are skipped.",
+    "Structural-limit regressions require project-owned diagnostic 'persistentState exceeds structural limits' for pathological depth and width, so a VM stack overflow or unbounded clone cannot count as success.",
+    "Current generated dashboard remains timestamped 08:17:56Z and reports stale canonical main 064e28f even though actual main is aa7e04f, proving the validation projection is lagging live control writes; active recovery lane owns that repair.",
+    "Superseded PR #320 was closed without result after direct main verification found its branch had been cut from stale dashboard parent 064e28f; replacement #321 corrected the base before validation."
+  ]
+}
