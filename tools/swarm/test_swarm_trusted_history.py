@@ -137,8 +137,7 @@ class QuarantinedHistoryTests(unittest.TestCase):
         self.assertEqual(len(rows), 65)
         self.assertEqual(len({row[0] for row in rows}), 65)
         actual_digest = _inventory_digest(rows)
-        print(f"MALFORMED_MANIFEST_SHA256={actual_digest}")
-        self.assertEqual(actual_digest, "TO_BE_PINNED")
+        self.assertEqual(actual_digest, "8c8c77f85c8210cfbca5a804364e3792bec347f7d62b994dee83a6870181bdfe")
         for event_id, first_write, blob_sha in rows:
             self.assertRegex(first_write, r"^[a-f0-9]{40}$")
             self.assertRegex(blob_sha, r"^[a-f0-9]{40}$")
@@ -225,8 +224,7 @@ class TrustedHistoryWorkflowTests(unittest.TestCase):
         self.assertEqual(len(rows), 21)
         self.assertEqual(len({row[0] for row in rows}), 21)
         actual_digest = _inventory_digest(rows)
-        print(f"WORKER_TRANSITIONS_SHA256={actual_digest}")
-        self.assertEqual(actual_digest, "TO_BE_PINNED")
+        self.assertEqual(actual_digest, "165419f1d0e6308a4f55d8c5f87b79fd03d508f477bcbfaaf7622f026e1ceafe")
         self.assertIn(("66e482d3b424c63c4bed277aafa897f0fa051bbc", "96f1bce06bb69738dc737ec01f51170ffdaa3667"), rows)
         self.assertIn(("d37f0480847b77459c3c23d7a020a94a40e69980", "489bb9662be6774bae676c17101c04f1bc74453a"), rows)
 
