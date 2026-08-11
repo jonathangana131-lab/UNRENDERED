@@ -13,7 +13,9 @@
     "The same regression requires PhysicsLabStudioHarness.start(workspace) in the server bootstrap and rejects PhysicsLabStudioHarness, PhysicsLabRuntime, and PhysicsLabRealizer names from the client bootstrap.",
     "GitHub review 4903938141 records the independent exact-head source approval; merge remains conditional on a fresh ownership PASS."
   ],
-  "pr": 297,
-  "headSha": "2a14f54ccecae5ea0e88f288f2c9185dbf885a9e",
-  "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+  "metadata": {
+    "pr": 297,
+    "headSha": "2a14f54ccecae5ea0e88f288f2c9185dbf885a9e",
+    "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+  }
 }

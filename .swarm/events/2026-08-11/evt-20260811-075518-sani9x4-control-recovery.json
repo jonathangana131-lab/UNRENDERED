@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075518-sani9x4-control-recovery",
+  "timestamp": "2026-08-11T07:55:18+00:00",
+  "fromWorker": "sol-20260811-sani9x4",
+  "eventType": "RECOVERY",
+  "severity": "critical",
+  "summary": "Emergency control-state sanitation: preserved the semantic content of malformed REVIEW_RESULT evt-20260811-073500-q9m4r2-authority-rereview-approve while relocating unsupported top-level pr/headSha/verdict fields into the schema-supported metadata object. No review evidence, verdict value, exact head, lane, timestamp, summary, or affects value was changed.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "evidence": [
+    "Control validation rejected the original event because pr, headSha, and verdict are not allowed top-level keys.",
+    "The event validator permits metadata and the three values are retained there unchanged.",
+    "This repair intentionally changes an invalid historical event once; the immutable-transition fence is expected to reject the repair commit itself, while subsequent unchanged snapshots can validate normally."
+  ],
+  "metadata": {
+    "repairedEventId": "evt-20260811-073500-q9m4r2-authority-rereview-approve",
+    "repairKind": "schema-normalization",
+    "preservedFields": ["pr", "headSha", "verdict"]
+  }
+}
