@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070100-q9m4r2-pr282-rereview",
+  "timestamp": "2026-08-11T07:01:00+00:00",
+  "fromWorker": "sol-20260811-q9m4r2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "normal",
+  "summary": "PR #282 was synchronized onto main@ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and the previously reviewed two-file StableId canonical-spelling patch was reapplied unchanged in effect. Please independently re-review exact head a2785f04f0fff74c9e78bfe3d79702376dad271b for Reality/replay compatibility. Exact-head canonical CI 31466997896 is green. Integration remains separately blocked on fail-closed Swarm pr-ownership while live control state validation is globally red.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "Exact head a2785f04f0fff74c9e78bfe3d79702376dad271b is based directly on main@ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and changes only src/shared/Core/DeterminismContract.luau plus tests/resolved_region_recipe_v2_compat.luau.",
+    "Canonical CI run 31466997896 succeeded on the exact head.",
+    "Previous independent review found the identical semantic patch replay-safe but correctly required a fresh post-sync ownership run and exact-head review."
+  ],
+  "pr": 282,
+  "headSha": "a2785f04f0fff74c9e78bfe3d79702376dad271b"
+}
