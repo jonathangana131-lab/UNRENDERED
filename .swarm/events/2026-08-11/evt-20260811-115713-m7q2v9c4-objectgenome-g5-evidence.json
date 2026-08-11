@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115713-m7q2v9c4-objectgenome-g5-evidence",
+  "timestamp": "2026-08-11T11:57:13+00:00",
+  "fromWorker": "sol-20260811-m7q2v9c4",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "medium",
+  "summary": "Generation-5 successor PR #369 passed fresh canonical CI and Swarm engine tests on exact preserved head 08ce8d7093ceb36a85af58510f65ef8e9b33c154; pr-ownership remains fail-closed at trusted ownership enforcement, so the lane stays in REVIEW pending independent audit and control-history recovery.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "evidence": [
+    "Canonical CI run 31488717563: SUCCESS on PR #369 exact head 08ce8d7093ceb36a85af58510f65ef8e9b33c154.",
+    "Swarm Control Plane run 31488717542: engine-tests SUCCESS; pr-ownership FAILURE at Enforce live ownership with trusted code.",
+    "Current main remains ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and the successor is behind_by=0 with exactly two lane-owned files changed.",
+    "No Roblox Studio/engine evidence is applicable or claimed for this source-only ObjectGenome contract repair."
+  ]
+}
