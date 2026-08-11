@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082850-h4v8n2-yield-transition-primary",
+  "timestamp": "2026-08-11T08:28:50+00:00",
+  "fromWorker": "sol-20260811-h4v8n2",
+  "eventType": "BLOCKER",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+  "severity": "critical",
+  "summary": "Primary WIP is saturated while priority-10000 red-control recovery SWARM-RECOVERY-HEALTH-VALIDATION-FENCE is currently unclaimed. The newest lower-priority transition-fence primary has no PR yet and should yield/release its fresh claim so the critical recovery can be reacquired without recreating the invalid 9>8 primary snapshot.",
+  "affects": [
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+    "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"
+  ],
+  "toWorker": "sol-20260811-h8v5c1",
+  "evidence": [
+    "Trusted control recovery report on #315 recorded active primaries 9 > maxPrimaryImplementationLanes 8 after this transition-fence claim was created at 08:23:00Z; the transition-fence claim was the newest ninth primary and had no PR.",
+    "The former SWARM-RECOVERY-HEALTH-VALIDATION-FENCE primary claim has since been released, reducing the live set but leaving the lower-priority transition-fence primary occupying the slot needed to reacquire priority-10000 red-control recovery without returning to nine primaries.",
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE priority is 4990; SWARM-RECOVERY-HEALTH-VALIDATION-FENCE priority is 10000 and red-control repair outranks product/backfill implementation under SWARM_PROTOCOL V2.1.",
+    "Transition-fence primary claim generation 1 is fresh, has pr=null, and therefore has minimal salvage cost compared with displacing an established published primary."
+  ],
+  "metadata": {
+    "requestedAction": "release fresh transition-fence primary claim and preserve any local/branch work as a handoff; reacquire after red-control recovery frees primary capacity",
+    "transitionClaimToken": "5e2c8b1f74a9d603",
+    "transitionClaimedAt": "2026-08-11T08:23:00+00:00",
+    "transitionPr": null,
+    "recoveryPriority": 10000,
+    "transitionPriority": 4990,
+    "maxPrimaryImplementationLanes": 8
+  }
+}
