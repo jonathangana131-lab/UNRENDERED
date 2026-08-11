@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071957-q9x4m2-authority-primary-takeover",
+  "timestamp": "2026-08-11T07:19:57+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "RECOVERY",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "medium",
+  "summary": "Generation-2 authority primary takeover salvages stale PR #287 onto current green main as draft PR #297. The patch preserves newer diagnostics integration and restores only the reviewed server-owned Physics Lab bootstrap regression. The claim remains explicitly source-only and does not substitute for HG151-TWOCLIENT Studio evidence.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT", "PR-287", "PR-297"],
+  "evidence": [
+    "Generation-1 primary lease expired before takeover; generation-2 claim token 4e7c9a12f6d3b805 is authoritative.",
+    "PR #297 starts from main 81a13b1138e26e7852c89685de5dbf9bd57753d8 and changes tests/hero_gate_contract_integration.luau only.",
+    "The source assertions are intentionally limited to bootstrap ownership/context and absence of named server-only Physics Lab imports in the client bootstrap."
+  ]
+}
