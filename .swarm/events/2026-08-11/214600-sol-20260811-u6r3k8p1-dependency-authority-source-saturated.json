@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t214600z-u6r3k8p1-authority-source-saturated",
+  "timestamp": "2026-08-11T21:46:00Z",
+  "fromWorker": "sol-20260811-u6r3k8p1",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "summary": "Authority capacity mining found no currently unlocked, non-duplicate public-source implementation gap. Current main deliberately has server-owned Physics Lab creation and a passive client bootstrap; the remaining HG151 two-client requirement is real Studio engine evidence under the fixed private bridge observer/evaluator contract, not permission to invent another public networking/evidence framework. Known source gaps are already owned by the HG-BACKFILL-AUTHORITY lineage (#348/#394) and HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY (#403). Keep new authority source work fail-closed until those lineages clear trusted pr-ownership, or until a post-display-recovery real two-client run exposes a concrete new defect.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-AUTHORITY",
+    "HG151-TWOCLIENT",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "OPS-STUDIO-DISPLAY",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "evidence": [
+    "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1: src/server/Bootstrap.server.luau owns PhysicsLabStudioHarness.start(workspace); src/client/Bootstrap.client.luau only reads shared Versions and does not create Physics Lab authority.",
+    "Docs/PROJECT_STATE.md and issue #151 explicitly say the broad Physics Lab source-contract work is closed and only diagnostics plus true two-client engine evidence remain; speculative evidence retries are forbidden while the Mac display preflight is red.",
+    "Docs/STUDIO_EXECUTOR.md assigns physics-lab-two-client to a fixed private bridge driver/evaluator requiring one real server, two observed clients, canonical agreement, and managed teardown; requests cannot inject an alternate public-source test framework.",
+    "HG-BACKFILL-AUTHORITY is already BLOCKED on retained #348 plus approved #394 sequencing, and HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY is already REVIEW on #403; both remain held by the separately owned trusted-history/pr-ownership recovery.",
+    "Source/document review only. No Studio, two-client, replication, transport, or gameplay authority PASS is claimed."
+  ]
+}
