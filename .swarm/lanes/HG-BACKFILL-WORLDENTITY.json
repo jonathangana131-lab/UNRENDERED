@@ -5,7 +5,7 @@
   "title": "WorldEntity adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete identity, registry-shape, snapshot, aliasing, immutability, or persistence-boundary defects in the already-unlocked WorldEntity foundation without depending on Roblox Studio.",
   "priority": 5200,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Reality/WorldEntity.luau", "tests/world_entity*.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"WorldEntity invariant and aliasing auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/world_entity*.luau","Docs/**"]}
   ],
   "acceptance": ["inspect current main before editing", "do not invent new architecture if no concrete gap exists", "any behavior change has a regression test", "preserve plain-data and deterministic identity boundaries", "report actionable findings through structured events"],
-  "notes": "PR #293 exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e preserves the prior lifecycle hardening and adds explicit bounded persistentState traversal/payload contracts: depth 64, nodes 4096, total string key/value bytes 65536. Separate deterministic regressions cover structural and byte boundaries. Exact-head product CI run 31474536191 is fully green against current main dd8f1581115c15ce6497db827d17e98d879d0267. Independent exact-head source-only review is required before DONE. Swarm ownership is independently blocked by malformed live worker status outside this lane; no Studio evidence is claimed.",
+  "notes": "Independent exact-head audit of PR #293 at 91b6e273c0c21326dfbfe9c5ee5227e99f26933e returned REQUEST_CHANGES. Required repairs: fail-closed canonical WorldEntityId preflight before registry lookup/mutation while preserving valid-but-absent get semantics; remove unauthorized shared tests/run.luau from the lane-owned effective diff; absorb reviewed exact-limit and registered fail-atomic regressions from stacked PR #344; replay the cleaned patch onto current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and rerun exact-head canonical CI plus trusted pr-ownership before fresh independent review. Expected-red #350/#364 isolate the registry identity gaps. Persistent-state source budgets, generator-version cap, revision exhaustion, and replacement-before-assignment atomicity were otherwise sound. REVIEW_RESULT evt-20260811-115804-p6m2x8v4-worldentity-review-result records the verdict.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
