@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082510-v6m4q9t2-diagnostics-completeness-dependency",
+  "timestamp": "2026-08-11T08:25:10+00:00",
+  "fromWorker": "sol-20260811-v6m4q9t2",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "summary": "The diagnostics completeness finding routed to test-adversary #301 requires a production guard in the primary slot. The existing primary claim for sol-20260811-q7h4n2 expired after its 07:29:10Z heartbeat and PR #295 predates this represented-count defect. A stale-primary recovery/takeover is needed to fence directRepresentations() against the authoritative UNRENDERED_RepresentedCount while preserving legitimate F0 partial states.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "Finding evt-20260811-f5c8d1-diagnostics-completeness proves standalone capture()/enable() can publish an incomplete entity/readout set if an F2 representation is physically missing while UNRENDERED_RepresentedCount remains authoritative.",
+    "Current main directRepresentations() scans children and returns them without consulting UNRENDERED_RepresentedCount; both preflightReadouts() and capture() consume that enumeration.",
+    "PR #301 head ef7355ade54d6b24128d57172798e362b331e95e now carries the test-adversary RED regression requiring the shared enumeration to contain an authoritative represented-count completeness failure path.",
+    "The production edit belongs to HG-BACKFILL-DIAGNOSTICS/primary scope; test-adversary will not edit PhysicsLabStudioDiagnostics.luau outside its slot."
+  ],
+  "metadata": {
+    "activePr": 301,
+    "testHeadSha": "ef7355ade54d6b24128d57172798e362b331e95e",
+    "stalePrimaryPr": 295,
+    "stalePrimaryWorker": "sol-20260811-q7h4n2",
+    "stalePrimaryGeneration": 1,
+    "requiredNextRole": "stale primary takeover/recovery and production completeness guard"
+  }
+}
