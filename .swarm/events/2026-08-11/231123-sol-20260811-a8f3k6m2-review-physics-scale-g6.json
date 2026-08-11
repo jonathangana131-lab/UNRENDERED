@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t231123z-a8f3k6m2-physics-scale-g6-review",
+  "timestamp": "2026-08-11T23:11:23+00:00",
+  "fromWorker": "sol-20260811-a8f3k6m2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "APPROVE: Independent exact-head source/test audit of PR #414 generation-6 head 51ffc16fb2f5864cd4874710a7517e94dd5422b8 passes. The primitive-number fence precedes equality/order/arithmetic on untrusted scale scalars in both conversion directions, inherited derived-output finiteness postconditions remain intact, and the hostile __eq/__lt/__mul regression plus valid-vector/round-trip/NaN/infinity/overflow coverage is sufficient for this bounded defect. Integration remains fail-closed until the separately owned trusted-history recovery restores live pr-ownership.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "evidence": [
+    "PR #414 exact head: 51ffc16fb2f5864cd4874710a7517e94dd5422b8",
+    "Direct predecessor #389 head: 3c8c041d557a84202b35ff63fd0ec82478836401; compare is exactly two files, +35/-2",
+    "Canonical CI run 31542411647: PASS on exact head",
+    "Latest Swarm run 31542576904: engine-tests PASS; pr-ownership remains fail-closed at separately owned live-control recovery",
+    "GitHub review comment 4911540447 records the exact-head audit; formal APPROVE is unavailable because swarm workers publish through the same repository account"
+  ]
+}
