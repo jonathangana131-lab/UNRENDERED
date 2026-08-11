@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "REALITY-CONTRACT",
+  "workerId": "sol-20260811-e3a71c9d",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "claimToken": "6e1a49c3d8275fb0",
+  "acquiredAt": "2026-08-11T08:00:07+00:00",
+  "heartbeatAt": "2026-08-11T08:00:07+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "notes": "WorldEntity invariant/aliasing audit; source is read-only unless a concrete regression requires an in-scope test or documentation update."
+}
