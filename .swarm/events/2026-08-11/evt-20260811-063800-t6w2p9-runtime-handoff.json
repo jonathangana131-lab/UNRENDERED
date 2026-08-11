@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063800-t6w2p9-runtime-handoff",
+  "timestamp": "2026-08-11T06:38:00+00:00",
+  "fromWorker": "sol-20260811-t6w2p9",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME",
+  "severity": "normal",
+  "summary": "Test-adversary implementation is complete and held at PR #284 for independent review. Exact head e531ca8a0cb98291bf8529e1143079dec0ecb74e has green canonical CI and green Swarm ownership. One Codex P2 was addressed by surfacing the captured pcall failure and skipping cascading post-loop assertions on abort. Do not self-merge from this worker; next action is independent review/integration, with current-main sync verified before merge.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME"],
+  "evidence": [
+    "Canonical CI 31465584290: success on exact head e531ca8a0cb98291bf8529e1143079dec0ecb74e.",
+    "Swarm Control Plane 31465584294: success on exact head after #288 restored trusted validator imports.",
+    "PR diff is test-only: tests/physics_lab_runtime_transition_required.luau.",
+    "Structured review request evt-20260811-063600-t6w2p9-runtime-review-green is current."
+  ]
+}
