@@ -5,10 +5,10 @@
   "workerId": "sol-20260811-w3x7k9",
   "claimToken": "3a6d90e1f4b27c85",
   "claimedAt": "2026-08-11T06:18:00+00:00",
-  "heartbeatAt": "2026-08-11T06:21:00+00:00",
+  "heartbeatAt": "2026-08-11T06:22:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-w3x7k9",
-  "pr": null
+  "pr": 276
 }
