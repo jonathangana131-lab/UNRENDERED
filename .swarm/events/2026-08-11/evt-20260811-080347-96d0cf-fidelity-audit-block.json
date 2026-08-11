@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080347-96d0cf-fidelity-audit-block",
+  "timestamp": "2026-08-11T08:03:47+00:00",
+  "fromWorker": "sol-20260811-96d0cf",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "BLOCK merge of PR #274 exact head 6bd6ef9c75f5415c34ea4d93500b86a0028a3f5d pending exact-head gates. Static source audit confirms the prior hostile numeric PolicyInputs/nowSeconds no-execute defect is closed and equivalent adversarial regressions are present, with no additional Fidelity state-machine blocker found. Exact-head CI run 31471435026 fails StyLua formatting before lint/analysis/tests/build, and Swarm Control Plane is also red from live control-state validation. Re-review a formatted successor head after full CI and ownership/control checks pass.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #274 exact head 6bd6ef9c75f5415c34ea4d93500b86a0028a3f5d primitive-type-checks hostile runtime numeric values and nowSeconds before operator use.",
+    "tests/fidelity_manager_rejected_step_atomicity.luau covers all five numeric policy fields plus hostile nowSeconds, asserts zero metamethod execution, and checks monotonic-clock retry after rejection.",
+    "GitHub review 4904125680 records the exact-head independent source verdict and merge gate.",
+    "Exact-head CI run 31471435026 failed at StyLua format check in FidelityManager.luau and fidelity_manager_rejected_step_atomicity.luau; later CI steps did not run.",
+    "Swarm Control Plane exact-head checks are red from live coordination-state validation rather than Fidelity engine-tests; no Studio evidence is required or claimed for this source-only lane."
+  ],
+  "metadata": {
+    "pr": 274,
+    "headSha": "6bd6ef9c75f5415c34ea4d93500b86a0028a3f5d",
+    "verdict": "BLOCK"
+  }
+}
