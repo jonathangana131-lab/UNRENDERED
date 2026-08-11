@@ -245,6 +245,13 @@ local function freezeVec3(value: Vec3): Vec3
 	return table.freeze({ x = value.x, y = value.y, z = value.z })
 end
 
+local function assertFiniteDerivedVec3(value: Vec3, label: string): ()
+	assert(
+		isFinite(value.x) and isFinite(value.y) and isFinite(value.z),
+		`Physics Lab {label} must remain finite`
+	)
+end
+
 local function resourceDelta(before: ResourceCounts, after: ResourceCounts): ResourceDelta
 	return table.freeze({
 		instances = after.instances - before.instances,
@@ -308,10 +315,14 @@ function PhysicsLabValidationContract.compareFullLabEnvelope(
 		y = actual.max.y - expected.max.y,
 		z = actual.max.z - expected.max.z,
 	}
+	assertFiniteDerivedVec3(minDrift, "minimum envelope drift")
+	assertFiniteDerivedVec3(maxDrift, "maximum envelope drift")
+
 	local maxAbs = 0
 	for _, drift in ipairs({ minDrift, maxDrift }) do
 		maxAbs = math.max(maxAbs, math.abs(drift.x), math.abs(drift.y), math.abs(drift.z))
 	end
+	assert(isFinite(maxAbs), "Physics Lab maximum absolute envelope drift must remain finite")
 	local ok = maxAbs <= tolerance
 	local drift: EnvelopeDrift = table.freeze({
 		min = freezeVec3(minDrift),
