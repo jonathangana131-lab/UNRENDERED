@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-11T11:50:00+00:00",
-  "lastSeenAt": "2026-08-11T11:51:00+00:00",
-  "laneId": "HG-PHYSICS-CHAIR-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-PHYSICS-CHAIR-GEOMETRY-q8c5t2m4",
-  "notes": "Won HG-PHYSICS-CHAIR-GEOMETRY/audit after earlier review races were claimed by peers; independently auditing exact PR #347 head source-only geometry closure."
+  "lastSeenAt": "2026-08-11T11:58:02+00:00",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-1",
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-q8c5t2m4",
+  "notes": "Published and released the PR #347 chair-geometry lane audit, then won the shared Physics completion-review slot to drain current review/integration backlog without new primaries or Studio retries."
 }
