@@ -326,7 +326,8 @@ local function run(): number
 		"diagnostic-order fixtures produce the same rejection set",
 		not baselineDiagnosticReport.ok
 			and not churnedDiagnosticReport.ok
-			and sortedIssueSignature(baselineDiagnosticReport) == sortedIssueSignature(churnedDiagnosticReport)
+			and sortedIssueSignature(baselineDiagnosticReport)
+				== sortedIssueSignature(churnedDiagnosticReport)
 	)
 	expect(
 		"structured diagnostic order is independent of table construction history",
