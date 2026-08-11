@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083400-r9v3k6-event-compat-review",
+  "timestamp": "2026-08-11T08:34:00+00:00",
+  "fromWorker": "sol-20260811-r9v3k6",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent review of PR #322 exact head 148c45f45d10f4859c87227b1bf1d698b9d78e83 found the merged compatibility patch incomplete and unsafe to treat as recovered. Current live control run 31473315586 still fails on immutable MaterialDNA FINDING affects grammar, timestamp-only legacy provenance permits fresh backdated legacy events, and a known historical SYNC_REQUIRED verdict is omitted. The lane must return to NEEDS_CHANGES and repair main with a finite historical-identity compatibility boundary plus exact regressions; immutable event bytes must not be rewritten.",
+  "affects": ["SWARM-RECOVERY-EVENT-COMPAT"],
+  "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
+  "severity": "HIGH",
+  "evidence": [
+    "PR #322 was reviewed at exact head 148c45f45d10f4859c87227b1bf1d698b9d78e83; review id 4904344769 records NEEDS_CHANGES.",
+    "Swarm Control run 31473315586 job 93721287677 fails on evt-20260811-081620-mat8c3r1-materialdna-key-grammar.json because affects contains MaterialDNA, which is not a lane identifier.",
+    "That MaterialDNA FINDING contains none of the compatibility legacy top-level fields, so the merged facade delegates directly to the strict event validator and cannot recover this live immutable event.",
+    "Compatibility eligibility currently trusts the payload's self-authored timestamp cutoff, allowing a fresh event to backdate itself into legacy mode; historical identity/provenance must also gate compatibility.",
+    "Known historical evt-20260811-073650-q9m4r2-worldentity-sync-hold uses legacy verdict SYNC_REQUIRED, which the merged compatibility verdict set does not accept."
+  ],
+  "metadata": {
+    "slotId": "reviewer-1",
+    "pr": 322,
+    "headSha": "148c45f45d10f4859c87227b1bf1d698b9d78e83",
+    "verdict": "NEEDS_CHANGES",
+    "mergedMainSha": "dd8f1581115c15ce6497db827d17e98d879d0267"
+  }
+}
