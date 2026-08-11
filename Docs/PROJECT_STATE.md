@@ -104,6 +104,7 @@ The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational; 
 - Request `20260810-029-two-client-ce56-n7` on exact UNRENDERED SHA `3332ae1d3e35bfcc844483b16ad9ad4ce1f7081a` is durable `physics-lab-two-client` `FAIL` with `transport status was not PASS` and no accepted evidence payload. It provides no two-client authority evidence; that row remains open.
 - Request `20260810-031-diagnostics-capture-090e-sol56k8` on exact UNRENDERED SHA `090e112c83126ebe8e6f9ba75f27b7bcc31dc3af` has raw transport `PASS` and proves the source-owned diagnostics behavior itself reached visible ON, completed all 20 bounded toggle cycles with checkpoints 1/5/10/20, preserved zero tracked resource deltas and zero envelope drift, emitted each request-bound runtime marker exactly once, and finished OFF. Its durable semantic status remains `FAIL` solely because the required live diagnostics-on viewport capture was missing (`NO_CAPTURE`). This is useful failure evidence, not an accepted diagnostics row.
 - Request `20260810-032-performance-observation-090e-sol56s9` on exact UNRENDERED SHA `090e112c83126ebe8e6f9ba75f27b7bcc31dc3af` is accepted as the bounded `physics-lab-performance-observation` row after hardened full-payload re-evaluation. The original Studio result records real server RunMode on Roblox engine `0.733.0.7330989`, 30 warmup + 120 measured Heartbeats (mean 17.785 ms, median 16.692 ms, p95 18.304 ms, max 93.643 ms), full-capture/restart observations, exact canonical WorldId/RegionId/fingerprint/repro identity, zero tracked restart resource deltas, and the documented 0.001-stud envelope preserved. Bridge #65 first added total/mean/sample and typed-zero consistency checks; #75 then added nearest-rank percentile/extrema feasibility; merged bridge #78 loaded the **entire durable request-032 result JSON** and required current `evaluate_evidence.evaluate()` acceptance under those hardened guards, with Bridge CI run `31450117146` green. This accepts measurement capture/consistency only under explicit `OBSERVED_NO_BUDGET`; it does **not** establish a permanent frame-time/startup/device-suitability budget. Fresh request `20260810-033-performance-post65-090e-sol56h3` later timed out before durable engine output and contributes no additional evidence.
+- Post-#97 recovery probes on exact public UNRENDERED SHA `835f6bc39f9468a0fbe3c8f6c1c1249365fc9540` confirmed an external runner blocker rather than a gameplay/evaluator regression. Diagnostics request `20260810-036-diagnostics-displayguard-835f-sol56r8` (Actions `31450964019`) and true-two-client request `20260810-039-two-client-post97-post93-835f-sol56m9` both published durable `FAIL` / `NO_CAPTURE` with empty evidence because CoreGraphics reported no active macOS display through every bounded wake/preflight attempt. The merged display guard correctly refused to launch Studio headlessly. Bridge issue #88 therefore remains OPEN until the self-hosted runner is restored under a logged-in macOS GUI/WindowServer session with at least one active display. **Do not queue speculative diagnostics/two-client evidence retries while this preflight remains red.** These failures provide no #151 evidence and imply no Hero Gate or downstream feature unlock.
 - Future engine evidence requests must pin an exact canonical SHA that is reachable from the named canonical ref and satisfy the job-specific evaluator. No lifecycle, single-server, physical-sanity, or measurement-only performance result may unlock the Hero Gate by itself.
 
 ## Current unlock status
@@ -116,6 +117,8 @@ Workers may still:
 - repair a concrete regression in the landed #10 contracts,
 - prepare or consume real Roblox Studio evidence for the permanent lab without inventing PASS results,
 - perform scheduler/contract maintenance needed to keep the swarm state accurate.
+
+While bridge #88's macOS display preflight is red, workers must not queue speculative Studio evidence retries. Resume diagnostics/two-client evidence gathering only after the runner has a real active GUI display or after a post-recovery run exposes a distinct code defect.
 
 Do not start a Reality-Grade door, chair, physical-player controller, world generator, or another major system merely because worker capacity is available.
 
@@ -134,7 +137,7 @@ Workers may inspect/review/decompose them, but should not build those major syst
 ## Known external setup gaps
 
 - No published Roblox universe/place is connected to automated publishing yet.
-- The bridge now has accepted lifecycle/rebuild, single-server bootstrap/baseline, canonical F2-shell physical-sanity/contact, and bounded measurement-only performance-observation evidence, but #151 still lacks accepted diagnostics and true two-client authority evidence.
+- The bridge now has accepted lifecycle/rebuild, single-server bootstrap/baseline, canonical F2-shell physical-sanity/contact, and bounded measurement-only performance-observation evidence, but #151 still lacks accepted diagnostics and true two-client authority evidence. Fresh post-#97 probes show both remaining rows are currently blocked before Studio launch by bridge #88: the self-hosted Mac has no active GUI/WindowServer display session. This requires external runner/session recovery; code-side wake/preflight is already fail-closed and verified.
 - Approved production PBR, audio and model libraries do not exist yet. Use project-owned fallbacks and do not add unlicensed content.
 
 ## Architecture migrations
@@ -154,7 +157,7 @@ Compatibility note: historical `ResolvedRegionRecipe` schema v1 remains replay-o
 
 ## Next critical outcomes
 
-1. gather the remaining accepted diagnostics and true two-client canonical-authority evidence without weakening source truth,
+1. restore `UNRENDERED-STUDIO-MAC` under a logged-in macOS GUI/WindowServer session with at least one active display, then gather the remaining accepted diagnostics and true two-client canonical-authority evidence without weakening source truth,
 2. keep source-owned lifecycle/repro/ownership, accepted physical-sanity, and bounded performance-observation evidence green, and keep every remaining evidence path fail closed on regressions,
 3. explicitly update this scheduler before opening the next major Hero Feature,
 4. when unlocked, deepen door/chair/physical-player work on these foundations rather than replacing them,
