@@ -134,6 +134,24 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(futureSchema), "genome.schema_version")
 	)
 
+	local hostileIdentityValueToStringCalls = 0
+	local hostileIdentityValue = setmetatable({}, {
+		__tostring = function()
+			hostileIdentityValueToStringCalls += 1
+			error("hostile identity scalar __tostring must not execute")
+		end,
+	})
+	local hostileIdentityScalar = deepCopy(Fixtures.officeChair)
+	hostileIdentityScalar.familyVersion = hostileIdentityValue
+	local hostileIdentityPartsOk = pcall(function()
+		ObjectGenome.identityParts(hostileIdentityScalar)
+	end)
+	expect("identityParts rejects hostile nested identity scalar", not hostileIdentityPartsOk)
+	expect(
+		"identityParts rejects hostile nested scalar before __tostring coercion",
+		hostileIdentityValueToStringCalls == 0
+	)
+
 	local maxIdentityFamily = deepCopy(Fixtures.officeChair)
 	maxIdentityFamily.familyId = "a" .. string.rep("b", 511)
 	local maxIdentityOk, maxIdentity = pcall(ObjectGenome.identityKey, maxIdentityFamily)
