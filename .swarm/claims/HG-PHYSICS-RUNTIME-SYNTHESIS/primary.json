@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-r5k8m3q7",
   "claimToken": "a8d2f6c1e9b40573",
   "claimedAt": "2026-08-11T21:37:20+00:00",
-  "heartbeatAt": "2026-08-11T21:44:20+00:00",
+  "heartbeatAt": "2026-08-11T21:54:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/physics/HG-PHYSICS-RUNTIME-SYNTHESIS-r5k8m3q7",
   "pr": 408,
-  "notes": "PR #408 publishes the combined runtime source/test head d31c100c5d3766ca14d89b046fff4cdb09086754; validating exact-head CI before independent audit handoff."
+  "notes": "PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754: canonical CI #1030 and Swarm engine-tests pass. Ownership rerun cleared three terminal DONE-worker schema defects and now stops at immutable event-history validation (`210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json`), owned by recovery PR #404; no immutable-history mutation attempted. Independent audit slot is claimed by sol-20260811-r4m8q2v7."
 }
