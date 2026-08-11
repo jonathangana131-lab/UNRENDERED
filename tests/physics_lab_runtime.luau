@@ -12,6 +12,24 @@ local function findEntity(recipe, key)
 	return nil
 end
 
+local function copyEntities(recipe)
+	local entities = {}
+	for _, entityRecipe in ipairs(recipe.entities) do
+		table.insert(entities, entityRecipe)
+	end
+	return entities
+end
+
+local function recipeCopy(recipe, entities)
+	return {
+		schemaVersion = recipe.schemaVersion,
+		recipeKey = recipe.recipeKey,
+		worldId = recipe.worldId,
+		regionId = recipe.regionId,
+		entities = entities or recipe.entities,
+	}
+end
+
 local function run(): number
 	local failures = 0
 
@@ -164,6 +182,78 @@ local function run(): number
 		PhysicsLabRuntime.new(duplicateRecipe)
 	end)
 	expect("runtime rejects duplicate placed WorldEntity identities", not duplicateAccepted)
+
+	local forgedWorldRecipe = recipeCopy(recipe)
+	forgedWorldRecipe.worldId = `${recipe.worldId}-forged`
+	local forgedWorldAccepted = pcall(function()
+		PhysicsLabRuntime.new(forgedWorldRecipe)
+	end)
+	expect("runtime rejects canonical recipe key with forged WorldId", not forgedWorldAccepted)
+
+	local forgedRegionRecipe = recipeCopy(recipe)
+	forgedRegionRecipe.regionId = `${recipe.regionId}-forged`
+	local forgedRegionAccepted = pcall(function()
+		PhysicsLabRuntime.new(forgedRegionRecipe)
+	end)
+	expect("runtime rejects canonical recipe key with forged RegionId", not forgedRegionAccepted)
+
+	local subsetEntities = copyEntities(recipe)
+	table.remove(subsetEntities)
+	local subsetAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, subsetEntities))
+	end)
+	expect("runtime rejects a strict subset of the canonical lab population", not subsetAccepted)
+
+	local unknownKeyEntities = copyEntities(recipe)
+	local unknownKeyEntry = table.clone(unknownKeyEntities[#unknownKeyEntities])
+	unknownKeyEntry.key = "not-a-canonical-lab-key"
+	unknownKeyEntities[#unknownKeyEntities] = unknownKeyEntry
+	local unknownKeyAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, unknownKeyEntities))
+	end)
+	expect("runtime rejects an unknown key in a full-size lab population", not unknownKeyAccepted)
+
+	local duplicateKeyEntities = copyEntities(recipe)
+	local duplicateKeyEntry = table.clone(duplicateKeyEntities[2])
+	duplicateKeyEntry.key = duplicateKeyEntities[1].key
+	duplicateKeyEntities[2] = duplicateKeyEntry
+	local duplicateKeyAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, duplicateKeyEntities))
+	end)
+	expect("runtime rejects duplicate canonical entity keys", not duplicateKeyAccepted)
+
+	local mismatchedIdEntities = copyEntities(recipe)
+	local mismatchedIdEntry = table.clone(mismatchedIdEntities[1])
+	mismatchedIdEntry.entity = mismatchedIdEntities[2].entity
+	mismatchedIdEntities[1] = mismatchedIdEntry
+	local mismatchedIdAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, mismatchedIdEntities))
+	end)
+	expect("runtime rejects a canonical key bound to the wrong stable entity id", not mismatchedIdAccepted)
+
+	local forgedOriginEntities = copyEntities(recipe)
+	local forgedOriginEntry = table.clone(forgedOriginEntities[1])
+	local forgedOriginRecord = table.clone(forgedOriginEntry.entity)
+	local forgedOrigin = table.clone(forgedOriginRecord.origin)
+	forgedOrigin.regionId = recipe.worldId
+	forgedOriginRecord.origin = forgedOrigin
+	forgedOriginEntry.entity = forgedOriginRecord
+	forgedOriginEntities[1] = forgedOriginEntry
+	local forgedOriginAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, forgedOriginEntities))
+	end)
+	expect("runtime rejects entity provenance that diverges from the canonical region", not forgedOriginAccepted)
+
+	local forgedFidelityEntities = copyEntities(recipe)
+	local forgedFidelityEntry = table.clone(forgedFidelityEntities[1])
+	local forgedFidelityRecord = table.clone(forgedFidelityEntry.entity)
+	forgedFidelityRecord.fidelity = "F0"
+	forgedFidelityEntry.entity = forgedFidelityRecord
+	forgedFidelityEntities[1] = forgedFidelityEntry
+	local forgedFidelityAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, forgedFidelityEntities))
+	end)
+	expect("runtime rejects noncanonical initial lab fidelity", not forgedFidelityAccepted)
 
 	local snapshotRuntime = PhysicsLabRuntime.new(recipe)
 	local snapshotId = floor.entity.id
