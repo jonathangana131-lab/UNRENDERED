@@ -2,11 +2,12 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-b7n4k2p9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "PARKED",
   "startedAt": "2026-08-11T20:19:30+00:00",
-  "lastSeenAt": "2026-08-11T20:19:30+00:00",
+  "lastSeenAt": "2026-08-11T20:20:30+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "primary",
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-b7n4k2p9-g7",
-  "notes": "Generation-7 continuation from exact generation-6 head f528b2187b06f73d97ef14fddba6caf9ca0055a4. Absorb PR #381 nested identity-scalar no-execute regression, preserve canonical identity, rerun exact-head validation, and hand off for fresh independent review."
+  "notes": "Registration parked after a concurrent generation-7 worker won the primary claim at 20:20Z. No ObjectGenome source or tests were mutated on this branch; do not treat this worker as active ownership.",
+  "parkedReason": "Concurrent primary claim won by sol-20260811-u7m2c9v4 before this worker acquired the slot."
 }
