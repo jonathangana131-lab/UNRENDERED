@@ -15,12 +15,14 @@
     "tests/materialdna_contract.luau covers direct rbxassetid:// rejection but has no percent-encoding regression; repository PR/lane search found no existing MaterialDNA percent/project-key-grammar repair lane.",
     "Suggested bounded leaf acceptance: preserve all shipped fixture identities/fingerprints; reject '%' in every validateProjectKey-backed field; add explicit percent regression(s); no schema/version bump or new key framework unless existing canonical '%' keys are discovered during implementation."
   ],
-  "proposedLane": {
-    "laneId": "HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR",
-    "kind": "source-hardening",
-    "scope": [
-      "src/shared/Materials/MaterialDNA.luau",
-      "tests/materialdna_contract.luau"
-    ]
+  "metadata": {
+    "proposedLane": {
+      "laneId": "HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR",
+      "kind": "source-hardening",
+      "scope": [
+        "src/shared/Materials/MaterialDNA.luau",
+        "tests/materialdna_contract.luau"
+      ]
+    }
   }
 }
