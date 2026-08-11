@@ -136,10 +136,7 @@ local function run(): number
 	local maxSafeGeneratorRecord = makeRecord()
 	maxSafeGeneratorRecord.id = "entity:max-safe-generator-registry"
 	maxSafeGeneratorRecord.origin.generatorVersion = MAX_SAFE_INTEGER
-	expect(
-		"registry accepts maximum safe generator version",
-		registerAccepts(maxSafeGeneratorRecord)
-	)
+	expect("registry accepts maximum safe generator version", registerAccepts(maxSafeGeneratorRecord))
 
 	local unsafeGeneratorRecord = makeRecord()
 	unsafeGeneratorRecord.id = "entity:unsafe-generator-registry"
