@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "231820-sol-q4m9v2c7-diagnostics-review-request-g8",
+  "createdAt": "2026-08-11T23:18:20+00:00",
+  "workerId": "sol-20260811-q4m9v2c7",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "claimToken": "7b2e4c9a6d1f8053",
+  "generation": 8,
+  "type": "REVIEW_REQUEST",
+  "severity": "info",
+  "summary": "Generation-8 diagnostics final-state race repair is ready for fresh exact-head independent review.",
+  "details": {
+    "pr": 416,
+    "exactHead": "183bea8da6462facb2a2429ebbc85b9b80a01869",
+    "basePr": 349,
+    "baseHead": "ee771bd50db972ad572f5d3cef8463220d69fa06",
+    "scope": "six diagnostics-owned files; production repair is one fail-closed final-state assertion and retained #411 regression coverage",
+    "regression": "tests/physics_lab_diagnostics_final_state.luau",
+    "ci": "PASS run 31545689864",
+    "swarmEngineTests": "PASS run 31545689879",
+    "prOwnership": "separately fail-closed behind SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY; not waived by this lane",
+    "studioEvidence": "NOT_RUN: Mac display preflight remains externally blocked",
+    "reviewDirective": "Verify final capture is guarded before evidence publication, confirm #411 regression is equivalent and exact-head green, confirm no out-of-lane prerequisite delta is carried by PR #416, and do not promote source confidence to viewport/engine evidence."
+  },
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-q4m9v2c7-g8",
+  "pr": 416
+}
