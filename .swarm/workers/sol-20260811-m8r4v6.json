@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-m8r4v6",
+  "model": "gpt-5.6-sol",
+  "status": "STOPPED",
+  "startedAt": "2026-08-11T05:43:00+00:00",
+  "lastSeenAt": "2026-08-11T05:43:00+00:00",
+  "notes": "Go-cycle triage only. Canonical main CI and Swarm Control Plane are green; there are no open PRs, live claims, or runnable slots. HG151 diagnostics and two-client evidence remain dependency-blocked by OPS-STUDIO-DISPLAY external GUI/WindowServer recovery, and bridge issue #88 remains open with no bridge PR ready for review. No claim, branch, speculative Studio retry, or gated feature work was started."
+}
