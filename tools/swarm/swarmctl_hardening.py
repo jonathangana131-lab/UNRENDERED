@@ -19,13 +19,34 @@ _STRICT_VALIDATE_EVENT = _base.core.validate_event
 _STRICT_READ_TREE = _base.read_tree
 _STRICT_TRANSITION_CHECK = _base.transition_check
 
-# Five pre-convergence immutable events have audited first-write identities. Four
-# were later rewritten after a failed transition and were then incorrectly used as
-# a descendant baseline. Recovery never edits/deletes those published bytes. The
-# exact observed laundered blobs are instead quarantined: accepted only as inert
-# historical artifacts, excluded from event authority, and permanently reserved by
-# eventId/path. Any other byte variant still fails closed. The MaterialDNA event
-# remains at its audited first-write blob and therefore has no quarantine variant.
+# Exact pre-anchor worker-state defects crossed by the one-time reset. Each row is
+# an invalid commit followed by the exact schema-valid repair that must also be in
+# the reviewed bootstrap candidate ancestry. This is data, not compatibility: the
+# invalid statuses remain rejected everywhere.
+FINITE_WORKER_TRANSITIONS = (
+    ("fa5b8f163603fa918c21b28c63bd20e6c25a2add", "7c62ff9a7b92c4ebe43c38323a5946e04881d3b7"),
+    ("a99ff757b842fa91ddd893d19fd1d826890ce306", "a193dd686323c27a7191d525b064c4257120de21"),
+    ("57245c334fdc19cae855796066f783fb64492c51", "db830924aa0b65a74c60ee345448f57381bbe137"),
+    ("8e631ba0da787af6c1c63f6a6dd96920ea7941f2", "bf852363faa7328d6707233b72909f6c4958d910"),
+    ("3c54f6ab741ba91d4fdf617cd24713b51ccd2950", "d0f00752e9b467d71d6875d3d1008c08f134992e"),
+    ("448cdc5a955192bb88120f22fb9152c43ca7c854", "67a12da7ece512c0467be3cdd78b3fcd896c9835"),
+    ("422ec28fbdffee92bbdceb7c111e46c8c23f234b", "4255e780384b5f5641e53900f201df03506035fa"),
+    ("55845e836fdaca1a5b9b89f7af7e8a0a5d2b14f8", "3ca920ee3e7516f141a7c04cf51a67fc545783c8"),
+    ("b0732a815ff12f099a9ca88363ffadeddec13172", "a10bae4a46560dcb707c1eefa1888467816a055b"),
+    ("504d5e72302c5c814961a4de3fa4aadd458887df", "b99b1715bc3eec419d2c2db9dc6c31d3e7b7b9fd"),
+    ("2dead634e81fa77f4c4cf9fc52924daa94e1e10c", "8a8963f14dbeafc14dbe3153a049226ebbaf5dfb"),
+    ("849a5c07efb10f7070c8e2e803a64216b26a3486", "70c7cbaddb31e34e50ec5d0e1a4bea965fc7db67"),
+    ("fecdd4109e7c0b93dae75ea69c8070c7ce0b7b70", "430362399ed3e2fa8eedbad63ac0842b75fac4db"),
+    ("d1aa5e7b12b4d8e9917bb77dab3225e4dee4deb8", "a888f8d1c25050e26427fb40945002585741d618"),
+    ("8bca8ca61902faf25efe9ef3a004ec032f132c5d", "5f0cb1f3d5618c3816e008adb6951b83de5c861e"),
+)
+
+# Pre-convergence immutable history has two distinct recovery classes:
+# 1) valid first-write bytes that were later rewritten; the rewritten bytes are
+#    inert quarantine while the audited first-write identity stays pinned;
+# 2) malformed first-write bytes that were never valid V2 authority; those exact
+#    bytes are quarantine-only and can never be returned as an authoritative event.
+# No event file is edited/deleted by this recovery. Any unlisted byte variant fails.
 _CANONICAL_IMMUTABLE_EVENTS = {
     "evt-20260811-073500-q9m4r2-authority-rereview-approve": {
         "date": "2026-08-11",
@@ -56,6 +77,16 @@ _CANONICAL_IMMUTABLE_EVENTS = {
         "canonicalGitBlobSha1": "9ef4e62ffb0aac9d4b18cb19911d8d3a25535158",
         "quarantinedGitBlobSha1": "c2b99475cdb95940d9a7ca329440880865da02cb",
     },
+    "evt-20260811-115302-a05c9683-runtime-transition-audit": {
+        "date": "2026-08-11",
+        "filename": "evt-20260811-115302-a05c9683-runtime-transition-audit.json",
+        "quarantineOnlyGitBlobSha1": "aa5b394feb3dbb6773beab3c504f8f7100c43f42",
+    },
+    "evt-20260811-120452-a05c9683-worldentity-capacity-finding": {
+        "date": "2026-08-11",
+        "filename": "evt-20260811-120452-a05c9683-worldentity-capacity-finding.json",
+        "quarantineOnlyGitBlobSha1": "f45217b586595660161bfaff88ac39ba135d8881",
+    },
 }
 
 TRUST_BRANCH = "swarm-trust"
@@ -75,7 +106,7 @@ def _relative_event_path(rule: dict) -> str:
     return f"events/{rule['date']}/{rule['filename']}"
 
 
-def _canonical_rule(path: Path, obj: dict) -> dict | None:
+def _canonical_rule(path: Path, obj: dict) -> tuple[str, dict] | None:
     event_id = obj.get("eventId")
     for expected_id, rule in _CANONICAL_IMMUTABLE_EVENTS.items():
         at_canonical_path = path.name == rule["filename"] and path.parent.name == rule["date"]
@@ -84,7 +115,7 @@ def _canonical_rule(path: Path, obj: dict) -> dict | None:
                 raise _base.core.ControlError(
                     f"{path}: audited immutable event path contains unexpected eventId {event_id!r}"
                 )
-            return rule
+            return expected_id, rule
         if event_id == expected_id:
             raise _base.core.ControlError(f"{path}: audited immutable event moved/replayed from its canonical path")
     return None
@@ -93,9 +124,23 @@ def _canonical_rule(path: Path, obj: dict) -> dict | None:
 def _validate_event_with_immutable_compat(path):
     path = Path(path)
     obj = _base.core.load_json(path, max_bytes=48_000)
-    rule = _canonical_rule(path, obj)
-    if rule is not None:
+    match = _canonical_rule(path, obj)
+    if match is not None:
+        expected_id, rule = match
         actual = _git_blob_sha1(path)
+        quarantine_only = rule.get("quarantineOnlyGitBlobSha1")
+        if quarantine_only is not None:
+            if actual != quarantine_only:
+                raise _base.core.ControlError(
+                    f"{path}: quarantine-only immutable event changed: {actual} != {quarantine_only}"
+                )
+            return {
+                "_quarantined": True,
+                "eventId": expected_id,
+                "gitBlobSha1": actual,
+                "quarantineOnly": True,
+            }
+
         canonical = rule["canonicalGitBlobSha1"]
         if actual == canonical:
             return obj
@@ -103,9 +148,10 @@ def _validate_event_with_immutable_compat(path):
         if quarantined is not None and actual == quarantined:
             return {
                 "_quarantined": True,
-                "eventId": obj["eventId"],
+                "eventId": expected_id,
                 "gitBlobSha1": actual,
                 "canonicalGitBlobSha1": canonical,
+                "quarantineOnly": False,
             }
         raise _base.core.ControlError(
             f"{path}: audited immutable event bytes are neither canonical nor the finite quarantined recovery blob: {actual}"
@@ -126,8 +172,6 @@ def _invalid_worker_statuses(root: Path) -> list[str]:
         try:
             obj = _base.core.load_json(path, max_bytes=24_000)
         except _base.core.ControlError:
-            # Strict tree validation remains authoritative for malformed JSON,
-            # schema, keys, and all non-status defects.
             continue
         status = obj.get("status")
         if status not in _base.core.WORKER_STATUSES:
@@ -135,11 +179,25 @@ def _invalid_worker_statuses(root: Path) -> list[str]:
     return errors
 
 
+def _invalid_event_errors(root: Path) -> list[str]:
+    """Enumerate every event schema/identity defect while honoring exact quarantine rules."""
+    errors: list[str] = []
+    events_dir = root / "events"
+    if not events_dir.is_dir():
+        return errors
+    for path in sorted(events_dir.glob("*/*.json")):
+        try:
+            _validate_event_with_immutable_compat(path)
+        except _base.core.ControlError as exc:
+            errors.append(str(exc))
+    return errors
+
+
 def read_tree(root: Path):
     """Read authoritative state, reserve all event IDs, and drop inert quarantine artifacts."""
-    status_errors = _invalid_worker_statuses(root)
-    if status_errors:
-        raise _base.core.ControlError("\n".join(status_errors))
+    errors = _invalid_worker_statuses(root) + _invalid_event_errors(root)
+    if errors:
+        raise _base.core.ControlError("\n".join(errors))
     result = _STRICT_READ_TREE(root)
     raw_events = result[6]
     seen: set[str] = set()
@@ -162,19 +220,29 @@ def quarantined_history(root: Path) -> list[dict]:
     """Return exact known inert historical artifacts present in this snapshot."""
     records = []
     for event_id, rule in _CANONICAL_IMMUTABLE_EVENTS.items():
-        bad = rule.get("quarantinedGitBlobSha1")
-        if bad is None:
-            continue
         path = root / "events" / rule["date"] / rule["filename"]
-        # Generic unit/simulation snapshots do not contain production history.
-        # Real deletion from a trusted production snapshot is still rejected by
-        # the raw immutable-event deletion fence in transition_check.
         if not path.exists():
             continue
         obj = _base.core.load_json(path, max_bytes=48_000)
         _canonical_rule(path, obj)
         actual = _git_blob_sha1(path)
-        if actual == rule["canonicalGitBlobSha1"]:
+
+        quarantine_only = rule.get("quarantineOnlyGitBlobSha1")
+        if quarantine_only is not None:
+            if actual != quarantine_only:
+                raise _base.core.ControlError(
+                    f"{path}: quarantine-only immutable event changed: {actual} != {quarantine_only}"
+                )
+            records.append({
+                "eventId": event_id,
+                "path": _relative_event_path(rule),
+                "quarantinedGitBlobSha1": quarantine_only,
+                "quarantineOnly": True,
+            })
+            continue
+
+        bad = rule.get("quarantinedGitBlobSha1")
+        if bad is None or actual == rule["canonicalGitBlobSha1"]:
             continue
         if actual != bad:
             raise _base.core.ControlError(f"{path}: quarantined immutable event changed: {actual} != {bad}")
@@ -183,6 +251,7 @@ def quarantined_history(root: Path) -> list[dict]:
             "path": _relative_event_path(rule),
             "quarantinedGitBlobSha1": bad,
             "canonicalGitBlobSha1": rule["canonicalGitBlobSha1"],
+            "quarantineOnly": False,
         })
     return records
 
