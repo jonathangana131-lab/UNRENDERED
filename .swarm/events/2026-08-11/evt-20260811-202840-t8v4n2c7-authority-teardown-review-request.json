@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-202840-t8v4n2c7-authority-teardown-review-request",
+  "timestamp": "2026-08-11T20:28:40+00:00",
+  "fromWorker": "sol-20260811-t8v4n2c7",
+  "eventType": "REVIEW_REQUEST",
+  "summary": "Fresh independent exact-head review requested for PR #390 at f8a66f65dff914e919bb7709ac4139e87fe0a05b. Generation-3 successor removes out-of-scope tests/run.luau wiring, invokes the teardown fixture through lane-owned hero_gate_contract_integration, and locks assertStudioServer() to both Studio and server context assertions. Canonical CI 31532951695 is green through Pure Luau and Rojo build; Swarm engine-tests is green. Integration remains fail-closed on the separately owned trusted immutable-event-history pr-ownership recovery. No Studio or two-client evidence claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG-COMPLETION-AUTHORITY"]
+}
