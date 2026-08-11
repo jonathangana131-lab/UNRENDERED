@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-n7c4p2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T07:59:39+00:00",
-  "lastSeenAt": "2026-08-11T08:47:10+00:00",
-  "notes": "ObjectGenome generation-4 adversarial PR #326 published and handed to the active primary repair. Authority/ObjectGenome audit findings are durable in PR reviews. No active claim while selecting the next verified-free slot."
+  "lastSeenAt": "2026-08-11T08:49:12+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-n7c4p2",
+  "notes": "Mining current Physics Lab runtime source/tests against active recipe-fence and transition-fence work for one concrete nonduplicate Hero-Gate depth gap. Source-only; no Studio evidence or major-feature unlock."
 }
