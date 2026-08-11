@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-CONTENT",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-bbd7b1e6",
+  "claimToken": "3a7d9c5e1f8246b0",
+  "claimedAt": "2026-08-11T10:09:00+00:00",
+  "heartbeatAt": "2026-08-11T10:09:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-CONTENT-review1-bbd7b1e6-g7",
+  "pr": null,
+  "notes": "Independent current-main ObjectGenome production review for PR #361. Audit exact effective diff, absorbed adversarial regressions, deterministic report ordering, decoder no-execute boundary, scope cleanup, identity/fingerprint stability, and integration evidence. No Studio claims."
+}
