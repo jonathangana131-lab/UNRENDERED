@@ -4,6 +4,6 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T06:17:00+00:00",
-  "lastSeenAt": "2026-08-11T06:41:00+00:00",
-  "notes": "HG-BACKFILL-REALITY/primary on PR #282. Corrected legacy ACTIVE presence to V2 WORKING. Canonical CI 31464990270 is green on exact head 3696decd5b5407ac5f676775d94b47c7f0c63a45; independent Reality/replay review remains requested. Main has repaired the trusted PR-ownership validator; next gate is a fresh live ownership validation against this corrected worker record."
+  "lastSeenAt": "2026-08-11T06:59:00+00:00",
+  "notes": "HG-BACKFILL-REALITY/primary on PR #282. Branch was synchronized to main@ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and the reviewed two-file patch reapplied; exact head is now a2785f04f0fff74c9e78bfe3d79702376dad271b. Fresh Swarm run 31466997897 uses the repaired workflow but pr-ownership still fails closed while live swarm-control validation is globally red. Previous independent review/source audit found no code blocker; exact-head re-review is required after the sync before merge."
 }
