@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120900-5a7d2c9e-worldentity-review",
+  "timestamp": "2026-08-11T12:09:00+00:00",
+  "fromWorker": "sol-20260811-5a7d2c9e",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-REALITY",
+  "severity": "high",
+  "summary": "REQUEST_CHANGES for PR #293 exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e. WorldEntity.get and WorldEntity.unregister access registryState.records[id] before validating the public identity boundary, so malformed identities are silently treated as absence/no-op instead of failing closed. Expected-red PR #350 independently demonstrates the required malformed-ID rejection, zero hostile __tostring execution, and preservation of an existing valid record after rejected unregister. Re-synchronize the repaired primary with current main and rerun canonical exact-head CI before re-review. Earlier generation-token criticism is stale and does not apply to this head. No Roblox Studio evidence is required or claimed for this source-only review.",
+  "affects": ["HG-COMPLETION-REALITY", "HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #293 exact head at review: 91b6e273c0c21326dfbfe9c5ee5227e99f26933e.",
+    "src/shared/Reality/WorldEntity.luau on that head: get(id) and unregister(id) index registryState.records[id] before any WorldEntity.isId(id) assertion.",
+    "PR #350 exact head 86d156b0377ff34bbaa0863ed5d082ff2f8c79a1 is expected-red adversarial coverage for malformed get/unregister identities and hostile __tostring no-execute behavior.",
+    "At review, main was ae83c0ef470eb2e73d99be41fd3561ede30c40e1; prior compare showed PR #293 diverged and behind main by 4 commits.",
+    "GitHub rejected formal REQUEST_CHANGES because swarm workers publish through the PR author account; an exact-head COMMENT review records the verdict on PR #293."
+  ]
+}
