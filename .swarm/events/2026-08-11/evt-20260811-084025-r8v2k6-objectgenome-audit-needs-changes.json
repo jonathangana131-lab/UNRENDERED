@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084025-r8v2k6-objectgenome-audit-needs-changes",
+  "timestamp": "2026-08-11T08:40:25+00:00",
+  "fromWorker": "sol-20260811-r8v2k6",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "high",
+  "summary": "REQUEST_CHANGES for broad ObjectGenome depth-lane integration at primary PR #318 head a136f305f432fa9c480e8d91e5d2151340795af7. The familyVersion <=2147483647 patch is patch-locally correct, but two current same-lane source-contract defects remain: canonical nested semantic keys are unbounded, and distinct mutable ObjectState semantic maps can reuse the same Lua table identity. Test PR #326 exact head a44c8c5a2ef93f3556a1ce1189ace0836e0d7d68 gives executable current-main proof of wear/damage and wear/mechanismPosition alias acceptance: all static/tooling checks passed before Pure Luau failed exactly those two new rejection assertions. Consume these source invariants or split them into explicit scheduler-owned child leaves before declaring the broad depth lane complete; then synchronize current main and require fresh exact-head CI/ownership/audit.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #318 exact head a136f305f432fa9c480e8d91e5d2151340795af7 correctly bounds familyVersion and changes only ObjectGenome.luau plus its contract-lock test.",
+    "Durable event evt-20260811-082635-e08449-objectgenome-key-bounds shows component/support/mechanism/affordance semantic keys still use unbounded isSemanticKey while familyId/variantKey use the <=512-byte guard.",
+    "PR #326 head a44c8c5a2ef93f3556a1ce1189ace0836e0d7d68, CI run 31474031912 / validate job 93723499941: format, lint, Luau analysis, randomness/domain/plain-value audits and Swarm deterministic tests passed; Pure Luau failed the two ObjectState alias assertions.",
+    "ObjectGenome.inspectState validates each mutable map independently and contains no cross-field table-identity rejection; ObjectGenome.defaultState constructs separate maps by design.",
+    "Docs/OBJECT_GENOME.md states ObjectState is mutable durable state and defaultState creates its mutable state separately; exact familyVersion bound remains pending in docs companion #299."
+  ]
+}
