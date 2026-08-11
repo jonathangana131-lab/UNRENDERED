@@ -1,20 +1,21 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T05:55:41.762284+00:00`
+Generated: `2026-08-11T05:56:13.115062+00:00`
 
 Canonical main: **GREEN** `10d3f6992ff243a9268ed8629893faf4fc40791c`
 
-State digest: `2a5c3ab2c39ff8a27700b89ed22754cb834dae1846d25641d33bc68c2a281d00`
+State digest: `3b30c64c6058dfdab0b8906a2f7b614f8b0073bfa1976e7992f94532c405e7a1`
 
 ## Summary
 
-- ready slots: **35**
+- ready slots: **36**
 - active claims: **0**
 - stale claims: **0**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
+- `SWARM-V21-CAPACITY/primary` — **V2.1 capacity protocol implementer** — score 10300 — dependencies satisfied; resources available
 - `HG-BACKFILL-WORLDENTITY/primary` — **WorldEntity source hardening** — score 5500 — dependencies satisfied; resources available
 - `HG-BACKFILL-OBJECTGENOME/primary` — **ObjectGenome source hardening** — score 5450 — dependencies satisfied; resources available
 - `HG-BACKFILL-WORLDENTITY/test-adversary` — **WorldEntity adversarial regression author** — score 5420 — dependencies satisfied
@@ -44,7 +45,6 @@ State digest: `2a5c3ab2c39ff8a27700b89ed22754cb834dae1846d25641d33bc68c2a281d00`
 - `HG-BACKFILL-AUTHORITY/audit` — **Two-client authority and trust-boundary auditor** — score 4920 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-worldentity` — **Mine WorldEntity for next concrete depth lane** — score 3680 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-objectgenome` — **Mine ObjectGenome for next concrete depth lane** — score 3670 — dependencies satisfied
-- `HG-CAPACITY-MINING/mine-materialdna` — **Mine MaterialDNA for next concrete depth lane** — score 3660 — dependencies satisfied
 
 ## Active claims
 
