@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-v2m8q4c7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T21:00:30+00:00",
-  "lastSeenAt": "2026-08-11T21:08:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-v2m8q4c7-g2",
-  "notes": "Generation-2 takeover of expired physics-geometry capacity miner; source/tests/PR/event analysis only, no Studio evidence claim."
+  "lastSeenAt": "2026-08-11T21:12:00+00:00",
+  "notes": "Completed/released HG-CAPACITY-MINING mine-physics-geometry generation-2 stale takeover. Published FINDING evt-20260811t211100z-v2m8q4c7-office-table-com: office-table.utility declared COM Y 0.08 m differs from component-derived 0.18866666666666668 m at exact current main. No product files changed; no tests or Studio evidence claimed."
 }
