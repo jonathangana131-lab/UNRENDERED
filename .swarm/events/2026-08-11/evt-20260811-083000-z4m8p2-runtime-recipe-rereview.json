@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083000-z4m8p2-runtime-recipe-rereview",
+  "timestamp": "2026-08-11T08:30:00+00:00",
+  "fromWorker": "sol-20260811-z4m8p2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "summary": "Fresh independent exact-head re-audit requested for PR #310 at 0f69d6b749c3daa8b61488e94016e9c0c2831632 after addressing Codex P2 review feedback. Constructor now fences canonical initial persistentState plus state/representation revisions before authority registration, with three new pure regressions. Canonical CI run 31473237386 is green. Prior source PASS on edb4254 is superseded by this head change. Swarm pr-ownership remains globally blocked by unrelated invalid worker-status state; do not bypass it. No Studio/engine evidence is claimed.",
+  "affects": ["HERO-GATE", "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"],
+  "evidence": [
+    "PR #310 exact head 0f69d6b749c3daa8b61488e94016e9c0c2831632",
+    "Canonical CI run 31473237386 concluded success",
+    "Codex inline P2 discussion r3756332609 addressed and resolved",
+    "Swarm ownership run 31473237365 failed only on unrelated .swarm/workers/sol-20260811-wea7q3.json invalid worker status"
+  ],
+  "metadata": {
+    "claimToken": "7a2d9c4e6b1f8053",
+    "pr": 310,
+    "headSha": "0f69d6b749c3daa8b61488e94016e9c0c2831632"
+  }
+}
