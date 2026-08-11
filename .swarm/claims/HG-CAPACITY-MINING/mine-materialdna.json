@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "workerId": "sol-20260811-y7k4m2p9",
+  "claimToken": "7e3b9c1d5a8f2046",
+  "claimedAt": "2026-08-11T21:52:00+00:00",
+  "heartbeatAt": "2026-08-11T21:52:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-y7k4m2p9",
+  "pr": null,
+  "notes": "Mine current MaterialDNA source/tests/PR/event lineage for one concrete non-duplicate Hero-Gate source-depth gap or publish a no-gap finding. Source-only; no Studio evidence or feature unlock."
+}
