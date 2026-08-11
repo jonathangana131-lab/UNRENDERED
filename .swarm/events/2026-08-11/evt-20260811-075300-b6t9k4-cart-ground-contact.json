@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075300-b6t9k4-cart-ground-contact",
+  "timestamp": "2026-08-11T07:53:00+00:00",
+  "fromWorker": "sol-20260811-b6t9k4",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Physics Lab rolling-cart F2 geometry violates its authored ground-support semantics: each caster is marked externalSupport='ground', but with localPositionM.y=-0.42 and dimensionsM.y=0.10 its local bottom is -0.47 m while the genome outer half-height is 0.475 m. The recipe grounds the outer envelope at y=0.475 m, so all four realized caster proxy boxes stop 0.005 m above the floor. PhysicsLabRealizer anchors components at these exact transforms, so the gap cannot settle out. Active PR #302 only checks the outer ObjectGenome envelope is grounded and therefore does not detect this component-support gap.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY", "HERO-GATE"],
+  "evidence": [
+    "src/shared/Physics/PhysicsLabObjectGenomes.luau: each rolling-cart caster uses localPositionM.y=-0.42, dimensionsM.y=0.10, and externalSupport='ground'; rollingCart.dimensionsM.y=0.95.",
+    "src/shared/Physics/PhysicsLabRecipe.luau places cart-a at positionM.y=0.475, grounding the 0.95 m outer envelope; caster global bottom therefore resolves to 0.475 + (-0.42 - 0.05) = 0.005 m.",
+    "src/server/PhysicsLab/PhysicsLabRealizer.luau realizes each component as an anchored Part at objectTransform * component.localPositionM, so the authored 5 mm gap persists physically in F2.",
+    "Open PR #302 adds outer-envelope grounding and shell/reachability tests but no externalSupport component-to-floor contact invariant.",
+    "Open PR #305 independently reports a rolling-cart center-of-mass mismatch in the same PhysicsLabObjectGenomes.luau file; combine both cart defects into one narrow follow-up rather than creating competing lanes."
+  ]
+}
