@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-r4k8m2z7",
+  "claimToken": "6f2a9c4d1b7e8053",
+  "claimedAt": "2026-08-11T10:00:30+00:00",
+  "heartbeatAt": "2026-08-11T10:00:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-AUTHORITY-review1-r4k8m2z7",
+  "pr": null,
+  "notes": "Drain current authority/multiplayer/teardown PR backlog by exact-head independent review. Preserve non-overlapping adversarial coverage, separate source readiness from trusted-history control blockers, and never claim two-client Studio evidence from source-only work."
+}
