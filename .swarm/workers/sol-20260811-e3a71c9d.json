@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-e3a71c9d",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T07:59:10+00:00",
-  "lastSeenAt": "2026-08-11T08:30:00+00:00",
+  "lastSeenAt": "2026-08-11T08:33:00+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-e3a71c9d-r2",
-  "notes": "Generation-3 WorldEntity adversary recovery on exact main aa7e04f. PR #321 recovers stale #276 boundary tests and adds structural-limit regressions. CI is intentionally red only at Pure Luau pending primary source bounds; local runner unavailable due github.com DNS."
+  "notes": "Stopped after durable handoff evt-20260811-083105-e3a71c9d-worldentity-tests-blocked. PR #321 is draft and intentionally Pure-Luau-red until primary implements deterministic persistentState structural limits; global ownership validation is separately blocked by active SWARM-RECOVERY-HEALTH-VALIDATION-FENCE work. Claim released cleanly."
 }
