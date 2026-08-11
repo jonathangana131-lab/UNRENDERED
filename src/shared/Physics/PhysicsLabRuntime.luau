@@ -61,7 +61,9 @@ local function assertCanonicalRecipe(recipe: Recipe): ()
 	)
 
 	local seenKeys: { [string]: boolean } = {}
+	local seenCount = 0
 	for _, entityRecipe in ipairs(recipe.entities) do
+		seenCount += 1
 		local canonical = CANONICAL_ENTITIES_BY_KEY[entityRecipe.key]
 		assert(canonical ~= nil, `unknown Physics Lab recipe entity key: {entityRecipe.key}`)
 		assert(not seenKeys[entityRecipe.key], `duplicate Physics Lab recipe entity key: {entityRecipe.key}`)
@@ -87,6 +89,10 @@ local function assertCanonicalRecipe(recipe: Recipe): ()
 			`Physics Lab entity recipe provenance mismatch: {entityRecipe.key}`
 		)
 	end
+	assert(
+		seenCount == #CANONICAL_RECIPE.entities,
+		"Physics Lab runtime requires a dense complete canonical entity population"
+	)
 end
 
 local function boundedFidelityManager(entityCount: number): Manager
