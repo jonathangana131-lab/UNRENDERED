@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081925-c3b2be-authority-audit-correction",
+  "timestamp": "2026-08-11T08:19:25+00:00",
+  "fromWorker": "sol-20260811-c3b2be",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "normal",
+  "summary": "Correction to evt-20260811-080207-c3b2be-worker-status-authority-audit: canonical hardening pr_check DOES consume worker status by explicitly rejecting STOPPED workers. Therefore accepting DONE as a mere additional valid enum value without semantic normalization would weaken ownership: a DONE worker with a still-live claim/resource lease would no longer hit the STOPPED guard. Any compatibility repair must normalize lifecycle aliases before authority use (DONE -> STOPPED, CLAIMING -> WORKING) or make the authority guard alias-aware. Claim/resource leases remain necessary but are not the only worker-lifecycle authority fence. The earlier event's narrower statement that worker status is validation-only is superseded by this correction.",
+  "affects": ["SWARM-RECOVERY-WORKER-STATUS-CONTRACT", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "evidence": [
+    "tools/swarm/swarmctl_hardening_base.py pr_check loads the worker record and raises 'worker is STOPPED' when worker.status == STOPPED before matching the authoritative claim.",
+    "tools/swarm/swarmctl.py validates the worker status vocabulary, while pr_check in the hardening engine provides the STOPPED authority semantic.",
+    "Observed compatibility aliases still map naturally as CLAIMING -> WORKING and DONE -> STOPPED; the safe repair must preserve those semantics rather than just widening WORKER_STATUSES."
+  ],
+  "metadata": {
+    "supersedes": "evt-20260811-080207-c3b2be-worker-status-authority-audit",
+    "safeRepairShape": "Centralize canonical worker-status normalization and use the normalized value in both validation and authority checks; keep unknown values rejected."
+  }
+}
