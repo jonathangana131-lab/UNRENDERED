@@ -74,6 +74,25 @@ local function run(): number
 			and not overlongVariantIdentityOk
 	)
 
+	local maxFamilyVersion = deepCopy(Fixtures.officeChair)
+	maxFamilyVersion.familyVersion = 2147483647
+	local maxFamilyVersionIdentityOk, maxFamilyVersionIdentity = pcall(ObjectGenome.identityKey, maxFamilyVersion)
+	expect(
+		"accepts the maximum bounded family revision as canonical identity input",
+		ObjectGenome.inspect(maxFamilyVersion).ok
+			and maxFamilyVersionIdentityOk
+			and type(maxFamilyVersionIdentity) == "string"
+	)
+
+	local overMaxFamilyVersion = deepCopy(Fixtures.officeChair)
+	overMaxFamilyVersion.familyVersion = 2147483648
+	local overMaxFamilyVersionIdentityOk = pcall(ObjectGenome.identityKey, overMaxFamilyVersion)
+	expect(
+		"rejects a family revision beyond the canonical bounded integer range",
+		hasCode(ObjectGenome.inspect(overMaxFamilyVersion), "genome.family_version")
+			and not overMaxFamilyVersionIdentityOk
+	)
+
 	local unknownTopLevelShape = deepCopy(Fixtures.officeChair)
 	unknownTopLevelShape.futureField = true
 	expect(
