@@ -200,6 +200,19 @@ local function run(): number
 		true
 	)
 
+	local recursiveStepManager = FidelityManager.new(reentrantConfig)
+	recursiveStepManager:register("entity:atomic-recursive-step", "F0")
+	pcall(function()
+		recursiveStepManager:step("entity:atomic-recursive-step", "F0", heroInputs(), 0, function(entityId)
+			recursiveStepManager:step(entityId, "F0", heroInputs(), 0, function() end)
+		end)
+	end)
+	expectEqual(
+		"recursive callback step cannot double-commit aggregate fidelity accounting",
+		metricsAreInternallyConsistent(recursiveStepManager:getMetrics()),
+		true
+	)
+
 	local registeringFailureManager = FidelityManager.new(reentrantConfig)
 	registeringFailureManager:register("entity:atomic-register-hook", "F0")
 	local registeringFailureAccepted = pcall(function()
