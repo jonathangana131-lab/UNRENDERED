@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-k8v3p6r1",
   "claimToken": "3d7a9e2c5f1b8064",
   "claimedAt": "2026-08-11T08:49:30+00:00",
-  "heartbeatAt": "2026-08-11T08:58:10+00:00",
+  "heartbeatAt": "2026-08-11T09:05:25+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-FIDELITY-k8v3p6r1-g3",
   "pr": 335,
   "takeoverOf": "sol-20260811-v6r2k9",
-  "notes": "Generation-3 stale takeover published PR #335 from current main. Preserves reviewed #274 transaction/reentrancy/accounting hardening and closes audited PolicyConfig plain-data/no-execute gaps, including maxRegisteredEntities primitive validation and explicit-false rejection. Exact-head CI/ownership and independent review remain required."
+  "notes": "Generation-3 stale takeover published PR #335. Current head repairs StyLua width while preserving the exact two-file Fidelity scope. Exact-head CI, live ownership, and fresh independent review remain required."
 }
