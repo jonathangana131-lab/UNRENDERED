@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-231830-r8n4m2q6-fidelity-control-blocked-invalid-worker-status",
+  "timestamp": "2026-08-11T23:18:30+00:00",
+  "fromWorker": "sol-20260811-r8n4m2q6",
+  "eventType": "BLOCKER",
+  "laneId": "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+  "severity": "high",
+  "summary": "PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 has canonical CI and Swarm engine-tests green, but live pr-ownership cannot reach lane ownership evaluation because trusted hardening rejects unrelated live worker record sol-20260811-j4r8p2m6 with invalid status DONE.",
+  "affects": [
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "evidence": [
+    "Canonical CI run 31545808224 completed success on exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3",
+    "Swarm Control Plane engine-tests job 93957903432 completed success on the same exact head",
+    "After attaching pr=419 to the live claim, rerun pr-ownership job 93958178666 fetched updated swarm-control and failed with: SWARM CONTROL ERROR: .../.swarm/workers/sol-20260811-j4r8p2m6.json: invalid worker status",
+    "Live .swarm/workers/sol-20260811-j4r8p2m6.json currently declares status DONE",
+    "Generation-6 SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY claim is live under sol-20260811-8d5d357a and explicitly owns exact finite live-control defects in PR #420"
+  ],
+  "recommendation": "Do not weaken PR ownership validation and do not patch shared worker state from this product lane. Let the active generation-6 recovery lineage normalize the finite live-control defect, then rerun PR #419 pr-ownership on the unchanged exact product head. Independent source review may proceed in parallel."
+}
