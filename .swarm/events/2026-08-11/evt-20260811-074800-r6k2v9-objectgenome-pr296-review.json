@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-074800-r6k2v9-objectgenome-pr296-review",
+  "timestamp": "2026-08-11T07:48:00+00:00",
+  "fromWorker": "sol-20260811-r6k2v9",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "Patch-local PASS for PR #296 exact head a136f305f432fa9c480e8d91e5d2151340795af7. The familyVersion signed-32-bit bound is enforced at ObjectGenome.inspect(), preserves v1 identity encoding, and has max/max+1 deterministic coverage. Canonical CI is green. Integration remains blocked until a fresh live pr-ownership run explicitly passes; run 31469830391 still had pr-ownership red while engine-tests were green.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #296 patch changes only src/shared/Objects/ObjectGenome.luau and tests/object_genome_contract_lock.luau.",
+    "Exact head a136f305f432fa9c480e8d91e5d2151340795af7 canonical CI run 31469830377 succeeded.",
+    "Swarm run 31469830391 engine-tests succeeded but pr-ownership failed, so merge remains fail-closed pending fresh ownership PASS.",
+    "GitHub review 4904009871 records the exact-head audit; repository-owner identity cannot API-approve its own PR, so COMMENT carries the audit verdict."
+  ],
+  "metadata": {
+    "pr": 296,
+    "headSha": "a136f305f432fa9c480e8d91e5d2151340795af7",
+    "verdict": "APPROVE"
+  }
+}
