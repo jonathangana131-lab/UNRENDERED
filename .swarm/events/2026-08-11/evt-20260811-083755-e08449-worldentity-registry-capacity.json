@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083755-e08449-worldentity-registry-capacity",
+  "timestamp": "2026-08-11T08:37:55+00:00",
+  "fromWorker": "sol-20260811-e08449",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "summary": "WorldEntity's primary live-record registry has no project-owned capacity: unique registrations accumulate without a maximum and count() rescans the full records map. Recommend a bounded follow-up after active WorldEntity closure rather than widening PR #293 in review.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "At active PR #293 exact head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d, createRegistry(config) exposes duplicateDiagnosticCapacity only; there is no maxRegisteredEntities/live-record budget.",
+    "Registry:register owns then inserts every unique WorldEntityId into records with no capacity rejection, so a long-lived authority can retain arbitrarily many live records subject only to process memory.",
+    "Registry:count iterates pairs(self.records) on every call, making the observable count path O(n) as the unbounded map grows.",
+    "tests/world_entity_registry_shape.luau covers identity, aliasing, lifecycle, duplicate diagnostics, and diagnostic-capacity boundaries but establishes no maximum live-record budget or at-capacity rejection invariant.",
+    "This is distinct from evt-20260811-080710-e08449-worldentity-capacity, which concerns duplicate-diagnostic retention, and from the active persistentState depth/width boundedness work; it concerns cardinality of owned WorldEntity records themselves.",
+    "Docs/QUALITY_STANDARD.md requires explicit queue/cache/core-foundation budgets; this is a source-only capacity finding and claims no Studio, physics, or two-client evidence."
+  ],
+  "metadata": {
+    "activePr": 293,
+    "activeHeadSha": "c301d8403d3c1b93ee3b2988f80e9d1e689eb33d",
+    "recommendedLaneId": "HG-WORLDENTITY-REGISTRY-CAPACITY",
+    "verdict": "ACTIONABLE_CAPACITY_FINDING",
+    "sourcePath": "src/shared/Reality/WorldEntity.luau",
+    "testPath": "tests/world_entity_registry_shape.luau"
+  }
+}
