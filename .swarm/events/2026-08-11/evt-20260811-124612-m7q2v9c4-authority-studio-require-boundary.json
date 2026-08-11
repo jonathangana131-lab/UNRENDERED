@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-124612-m7q2v9c4-authority-studio-require-boundary",
+  "timestamp": "2026-08-11T12:46:12+00:00",
+  "fromWorker": "sol-20260811-m7q2v9c4",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Post-#348 authority mining found a distinct production/Studio module-load boundary gap: Bootstrap.server.luau now correctly rejects non-server context before dependency traversal, but every valid production server still requires PhysicsLabStudioHarness before the later RunService:IsStudio() branch. The harness explicitly declares itself Studio-only and performs a top-level require of PhysicsLabRealizer, so live servers unnecessarily load the Studio representation stack even though they never start it.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HERO-GATE"],
+  "evidence": [
+    "Authority PR #348 exact Bootstrap.server.luau loads PhysicsLabStudioHarness at top level immediately after shared dependencies, then only later executes `if RunService:IsStudio() then ... start(workspace) end`.",
+    "PhysicsLabStudioHarness.luau explicitly asserts `PhysicsLabStudioHarness is Studio-only validation tooling` in its public operations, but top-level module evaluation first requires PhysicsLabRealizer before that guard can run.",
+    "The existing #348 source-order regression covers server/client wrong-context rejection and client exclusion of server-only modules, but does not assert that a valid non-Studio server avoids importing Studio-only lab realization code.",
+    "No existing authority lane/event/PR was found for this production-vs-Studio require boundary. Recommended bounded source lane: move the Studio harness require behind the IsStudio branch (or an equivalent lazy Studio-only adapter boundary) and add a source/pure regression proving production bootstrap cannot load PhysicsLabStudioHarness/Realizer while preserving server ownership in Studio. This does not substitute for two-client Studio evidence."
+  ]
+}
