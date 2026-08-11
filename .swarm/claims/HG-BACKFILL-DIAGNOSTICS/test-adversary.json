@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "test-adversary",
-  "workerId": "sol-20260811-q7m4c9v2",
-  "claimToken": "9f24c8b1e6a37d50",
-  "claimedAt": "2026-08-11T08:52:00+00:00",
-  "heartbeatAt": "2026-08-11T09:04:00+00:00",
+  "workerId": "sol-20260811-x5p9n7v3",
+  "claimToken": "5b8e2c1d7a9f4063",
+  "claimedAt": "2026-08-11T11:52:57+00:00",
+  "heartbeatAt": "2026-08-11T11:52:57+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/tests/153-diagnostics-adversary-q7m4c9v2",
-  "pr": 333,
-  "notes": "Dependent test-adversary PR #333 targets diagnostics primary #327. Exact patch head 42d5e85994a041b0a8821e234ccd639716f9f9e1 is canonical-CI green (31475852737) and Swarm engine-tests green (31475852740); live pr-ownership remains shared control-state red. Patch closes post-loop final-snapshot anchoring and exact-nil/non-truthiness cycle-default regression gaps. No Studio evidence claimed; awaiting independent review/incorporation into #327."
+  "branch": "agent/tests/HG-BACKFILL-DIAGNOSTICS-readout-x5p9n7v3-g2",
+  "pr": null,
+  "notes": "Generation-2 stale takeover after inspecting predecessor PR #333, expired generation-1 claim, and high-severity readout-completeness finding evt-20260811-092430-k4v7m2q9-diagnostics-readout-completeness. Scope is source-only expected-red diagnostics readout completeness coverage; no Studio request."
 }
