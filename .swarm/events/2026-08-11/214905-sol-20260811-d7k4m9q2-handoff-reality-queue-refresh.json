@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811T214905Z-sol-20260811-d7k4m9q2-handoff-reality-queue-refresh",
+  "eventType": "HANDOFF",
+  "at": "2026-08-11T21:49:05Z",
+  "workerId": "sol-20260811-d7k4m9q2",
+  "laneId": "HG-COMPLETION-REALITY",
+  "slotId": "reconcile",
+  "claimToken": "6c2e9a4d1b7f3058",
+  "generation": 1,
+  "branch": "agent/reconcile/HG-COMPLETION-REALITY-d7k4m9q2",
+  "pr": null,
+  "commit": null,
+  "resources": [],
+  "summary": "Refreshed Reality completion sequencing. Resolved-reality #359 + replay-depth #370 remain independently approved and globally ownership-blocked; WorldEntity #397 remains the retained consolidated candidate in NEEDS_CHANGES until trusted ownership can rerun, after which it still requires a fresh exact-head independent audit. The umbrella queue remains REVIEW because that child step is genuine.",
+  "validation": [
+    {"command":"inspect HG-BACKFILL-REALITY","result":"PASS","notes":"#359 and complementary #370 are independently approved; lane is BLOCKED on trusted live ownership/final consolidation only."},
+    {"command":"inspect HG-BACKFILL-WORLDENTITY","result":"PASS","notes":"#397 exact head 83850e9f2bab4572de800428fb510b6b75fc2c45 retains #378 and absorbs #379/#386; CI/engine-tests green, lane intentionally NEEDS_CHANGES pending ownership then fresh review."},
+    {"command":"inspect global history-recovery claim","result":"PASS","notes":"Generation-4 SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY successor #404 remains separately owned and must not be bypassed."}
+  ],
+  "details": {"laneState":"REVIEW","resolvedReality":[359,370],"worldEntity":397,"studioEvidenceClaimed":false,"productFilesChangedByThisWorker":false}
+}
