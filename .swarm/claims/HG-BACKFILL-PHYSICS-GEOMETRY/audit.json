@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-v6n2q8c4",
+  "claimToken": "9f2c6a1d8b4e7053",
+  "claimedAt": "2026-08-11T23:07:10+00:00",
+  "heartbeatAt": "2026-08-11T23:07:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-v6n2q8c4",
+  "pr": 414,
+  "notes": "Independent exact-head source/test audit of PR #414 generation 6 against current lane acceptance and no-execute/finite-output invariants."
+}
