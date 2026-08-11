@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-z4m8p2",
   "claimToken": "7a2d9c4e6b1f8053",
   "claimedAt": "2026-08-11T07:53:00+00:00",
-  "heartbeatAt": "2026-08-11T08:18:00+00:00",
+  "heartbeatAt": "2026-08-11T08:29:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE-z4m8p2",
   "pr": 310,
-  "notes": "PR #310 exact-head CI repair is in progress after applying the formatter's reported diff; independent review remains pending and no Studio evidence is claimed."
+  "notes": "PR #310 exact head 0f69d6b749c3daa8b61488e94016e9c0c2831632 addresses the P2 initial-state review finding and has canonical CI run 31473237386 green. Fresh independent exact-head re-audit required; no Studio evidence claimed."
 }
