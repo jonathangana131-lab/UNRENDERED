@@ -218,7 +218,9 @@ local function validateReadoutCompleteness(folder: Folder, entities: { ReadoutEx
 	return 1 + 2 * readoutCount
 end
 
-local function captureCanonicalWhileDiagnosticsEnabled(lab: PhysicsLabRealizer.RealizedLab): Validation.Snapshot
+local function captureCanonicalWhileDiagnosticsEnabled(
+	lab: PhysicsLabRealizer.RealizedLab
+): Validation.Snapshot
 	local liveRoot = diagnosticsRoot(lab.model)
 	assert(liveRoot ~= nil, "enabled canonical validation requires the owned diagnostics root")
 
@@ -401,9 +403,15 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 		local onSnapshot = captureCanonicalWhileDiagnosticsEnabled(lab)
 		local onComparison = Validation.compare(baseline, onSnapshot, 0.001)
 		for countName, delta in pairs(onComparison.delta) do
-			assert(delta == 0, `diagnostics-on canonical resource drift at cycle {cycle}: {countName}={delta}`)
+			assert(
+				delta == 0,
+				`diagnostics-on canonical resource drift at cycle {cycle}: {countName}={delta}`
+			)
 		end
-		assert(onComparison.envelope.ok, onComparison.envelope.reason or "diagnostics-on canonical envelope drifted")
+		assert(
+			onComparison.envelope.ok,
+			onComparison.envelope.reason or "diagnostics-on canonical envelope drifted"
+		)
 		maxDiagnosticInstances = math.max(maxDiagnosticInstances, enabled.diagnosticInstanceCount)
 		if sample == nil then
 			sample = enabled.entities[1]
