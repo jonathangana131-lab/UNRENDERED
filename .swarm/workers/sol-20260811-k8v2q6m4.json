@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-k8v2q6m4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T08:42:00+00:00",
+  "lastSeenAt": "2026-08-11T08:42:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-k8v2q6m4",
+  "notes": "Capacity-mining ObjectGenome for one concrete non-duplicate Hero-Gate source/test/contract gap; no product edits before a successful claim."
+}
