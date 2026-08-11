@@ -177,6 +177,16 @@ local function run(): number
 	end)
 	expect("negative envelope tolerance is rejected", not badToleranceAccepted)
 
+	-- Individually finite decoded coordinates can still overflow during derived drift subtraction.
+	-- Comparison evidence is JSON-serialized by the documented Studio workflow, so it must fail
+	-- closed instead of publishing infinities that are outside the project's plain finite-data boundary.
+	local extremeBaseline = snapshot(counts(46, 0), -1e308, 0)
+	local extremeCheckpoint = snapshot(counts(46, 0), 1e308, 1e308)
+	local extremeComparisonAccepted = pcall(function()
+		ValidationContract.compareFullLabEnvelope(extremeBaseline, extremeCheckpoint, 0.001)
+	end)
+	expect("finite envelope inputs cannot overflow into non-finite drift evidence", not extremeComparisonAccepted)
+
 	return failures
 end
 
