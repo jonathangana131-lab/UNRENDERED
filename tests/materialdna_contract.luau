@@ -266,6 +266,24 @@ local function run(): number
 		table.concat(oversizedRevisionResult.errors, "; ")
 	)
 
+	local maxSafeRepairCount = makeRecipe()
+	maxSafeRepairCount.maintenance.repairCount = 9007199254740991
+	local maxSafeRepairCountResult = MaterialDNA.validateRecipe(maxSafeRepairCount)
+	expect(
+		"maximum safe repair count accepted",
+		maxSafeRepairCountResult.ok,
+		table.concat(maxSafeRepairCountResult.errors, "; ")
+	)
+
+	local unsafeRepairCount = makeRecipe()
+	unsafeRepairCount.maintenance.repairCount = 9007199254740992
+	local unsafeRepairCountResult = MaterialDNA.validateRecipe(unsafeRepairCount)
+	expect(
+		"unsafe repair count rejected before canonical aliasing",
+		not unsafeRepairCountResult.ok and containsError(unsafeRepairCountResult, "repairCount"),
+		table.concat(unsafeRepairCountResult.errors, "; ")
+	)
+
 	local metatableRecipe: any = makeRecipe()
 	setmetatable(metatableRecipe, {
 		__index = {
