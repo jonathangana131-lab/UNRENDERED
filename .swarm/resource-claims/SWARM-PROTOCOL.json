@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260811-c9v2m7q4",
+  "workerId": "sol-20260811-d7k4m9q2",
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "claimToken": "3a8f6c1d9e4b2075",
-  "acquiredAt": "2026-08-11T21:33:20+00:00",
-  "heartbeatAt": "2026-08-11T21:54:30+00:00",
+  "claimToken": "5e1a9c3d7b4f2068",
+  "acquiredAt": "2026-08-11T22:31:05+00:00",
+  "heartbeatAt": "2026-08-11T22:31:05+00:00",
   "leaseSeconds": 1800,
-  "generation": 4,
-  "notes": "Generation-4 protected lease for successor PR #404. Fresh live-tip bootstrap run 31539949440 is executing; recovery remains finite/exact with no schema broadening or immutable event rewrite/delete."
+  "generation": 5,
+  "notes": "Generation-5 protected lease for the same #404 trusted-history recovery lineage. Immutable event history remains append-only; scope is the remaining trusted compatibility validation path and tests only."
 }
