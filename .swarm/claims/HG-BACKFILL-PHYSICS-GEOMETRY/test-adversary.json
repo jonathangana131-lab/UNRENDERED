@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-c4m8v2q7",
   "claimToken": "9c2e5a7d1f6b8043",
   "claimedAt": "2026-08-11T20:48:00+00:00",
-  "heartbeatAt": "2026-08-11T20:49:00+00:00",
+  "heartbeatAt": "2026-08-11T20:50:00+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-c4m8v2q7-g3",
-  "pr": null,
-  "notes": "Recover #332 unchanged geometry/property assertions on audited chair repair #347. Source-only; no Studio/contact evidence."
+  "pr": 393,
+  "notes": "Recover #332 unchanged geometry/property assertions on audited chair repair #347. Exact successor head f64f841b25a3fa50203137eff86b48192e70a597; source-only, no Studio/contact evidence."
 }
