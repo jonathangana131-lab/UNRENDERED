@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-201950-t8n3c6v2-physics-scale-output-overflow",
+  "timestamp": "2026-08-11T20:19:50+00:00",
+  "fromWorker": "sol-20260811-t8n3c6v2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "high",
+  "summary": "PhysicsLabScale.metersToStuds accepts finite SI inputs whose derived stud conversion can overflow to math.huge. Expected-red PR #383 proves the project-owned SI-to-stud boundary does not currently fail closed on non-finite derived output.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "PR #383 exact head 00913c5fc8b0b0f305fd5616191ba00325045270 changes only tests/physics_lab_scale.luau (+11/-0)",
+    "Canonical CI run 31532236482 passes format, lint, Luau analysis, canonical randomness, shared-domain boundary, plain-data boundary, and swarm deterministic tests",
+    "Pure Luau fails exactly: Physics Lab scale rejects finite meter inputs whose stud conversion overflows",
+    "Repro input: PhysicsLabScale.metersToStuds(1e308); current multiplication by STUDS_PER_METER returns a non-finite result instead of rejecting",
+    "No Roblox Studio or physical-contact evidence was run or claimed"
+  ]
+}
