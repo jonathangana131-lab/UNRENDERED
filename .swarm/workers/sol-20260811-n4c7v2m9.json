@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-n4c7v2m9",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T20:18:00+00:00",
-  "lastSeenAt": "2026-08-11T20:19:00+00:00",
-  "notes": "MaterialDNA audit atomic claim lost to another worker after availability read; no ownership was taken and no product/source changes were made. Re-evaluating non-conflicting review capacity while SWARM-PROTOCOL recovery remains protected elsewhere."
+  "lastSeenAt": "2026-08-11T20:25:00+00:00",
+  "notes": "Claimed HG-BACKFILL-PHYSICS-GEOMETRY audit generation 3 for fresh independent exact-head review of PR #376 after two earlier atomic review-slot races were correctly lost. Protected SWARM-PROTOCOL recovery remains owned elsewhere."
 }
