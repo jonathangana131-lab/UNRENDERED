@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-073100-went7k3-objectgenome-audit-handoff",
+  "timestamp": "2026-08-11T07:31:00+00:00",
+  "fromWorker": "sol-20260811-went7k3",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "ObjectGenome audit pass is parked at a clean prerequisite boundary so capacity can salvage the stale test-adversary slice. Primary #296 has patch-local audit PASS but must sync current main before exact-head approval; docs companion #299 records the new familyVersion domain and must be synchronized only after #296 is in main ancestry.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #296 exact head 0a01b95fa9dd5d39de9b2e86e53cbafd576a52d7 passed canonical CI 31468524030 and ownership retry job 93707416258; current main advanced afterward, so integration still requires synchronization and fresh exact-head evidence.",
+    "Audit companion PR #299 changes only Docs/OBJECT_GENOME.md and has green CI/control on head d6f19e760e3073ed0bc90ebec5c346f11c046cba, but Codex correctly requires #296 to be present in ancestry before the documentation can merge.",
+    "PR #299 title/body now explicitly block merge before #296 and the Codex prerequisite thread remains intentionally unresolved until post-#296 synchronization.",
+    "Test-adversary claim generation 1 last heartbeat was 2026-08-11T06:50:00Z with a 1800-second lease; its PR #277 is stale/non-mergeable and is a higher-value finishable recovery target."
+  ],
+  "metadata": {
+    "auditPr": 299,
+    "primaryPr": 296,
+    "testAdversaryPr": 277,
+    "auditHeadSha": "d6f19e760e3073ed0bc90ebec5c346f11c046cba"
+  }
+}
