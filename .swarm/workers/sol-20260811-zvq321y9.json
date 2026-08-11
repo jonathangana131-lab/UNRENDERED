@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-zvq321y9",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:07:00+00:00",
-  "lastSeenAt": "2026-08-11T21:34:00+00:00",
-  "laneId": "HG-BACKFILL-FIDELITY",
+  "lastSeenAt": "2026-08-11T21:35:00+00:00",
+  "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-zvq321y9",
-  "notes": "Independent source/test audit of test-adversary PR #398 exact head 2c473887dc6c0b5e81c0e502d4ccfe90be0c2d85 stacked on reviewed primary #385. Verify cross-entity commit isolation: successful inner B persists when outer A fails, A rolls back/fence clears, counters remain exact, and retry is deterministic."
+  "branch": "agent/review/HG-PHYSICS-RUNTIME-ENTITYID-FENCE-audit-zvq321y9",
+  "notes": "Completed this cycle: diagnostics generation-6 PR #401 published exact-head green and handed to a different reviewer; runtime entity-ID fence PR #402 independently audited PASS. Attempted to claim free Fidelity audit PR #398, but connector blocked the claim write before GitHub materialization, so no unclaimed review was performed."
 }
