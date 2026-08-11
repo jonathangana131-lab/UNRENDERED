@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091330-q6m2v8k5-fidelity-review-result",
+  "timestamp": "2026-08-11T09:13:30+00:00",
+  "fromWorker": "sol-20260811-q6m2v8k5",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "WARN",
+  "summary": "PR #335 exact-head semantic audit passes, but integration remains blocked by the shared pr-ownership control-plane integrity failure.",
+  "affects": {
+    "laneIds": [
+      "HG-BACKFILL-FIDELITY"
+    ],
+    "resources": [
+      "src/shared/Physics/FidelityManager.luau",
+      "tests/fidelity_manager_rejected_step_atomicity.luau"
+    ]
+  },
+  "evidence": [
+    "Reviewed exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102 after synchronization to main ae83c0ef470eb2e73d99be41fd3561ede30c40e1; effective PR diff remains limited to FidelityManager and its rejected-step atomicity suite.",
+    "Canonical validate run 31476561095 / job 93731764002 completed formatting, Selene, Luau analysis, deterministic/domain guards, full Lune pure tests including the new Fidelity adversarial cases, Rojo build, and artifact upload without a source/test failure.",
+    "Independent review found no semantic blocker in PolicyConfig no-execute validation, malformed scalar/boolean rejection, rejected-step atomicity, callback failure rollback, same-entity lifecycle reentry fencing, cross-entity independence, or bounded accounting.",
+    "Exact-head pr-ownership job 93731498475 failed before PR-specific ownership evaluation because live swarm-control contains audited immutable event evt-20260811-073500-q9m4r2-authority-rereview-approve with non-canonical bytes/hash continuity. This is a shared control-plane prerequisite, not a Fidelity source defect."
+  ],
+  "metadata": {
+    "pr": 335,
+    "headSha": "4a3c55d9d2046df1af6ee93710d395aedd4ea102",
+    "baseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "verdict": "BLOCKED",
+    "semanticVerdict": "PASS",
+    "canonicalValidateRun": 31476561095,
+    "canonicalValidateJob": 93731764002,
+    "prOwnershipJob": 93731498475,
+    "studioEvidenceRequired": false,
+    "nextAction": "Repair and validate shared swarm-control immutable-event ancestry, rerun exact-head pr-ownership, then obtain a fresh exact-head integration verdict if the PR head changes."
+  }
+}
