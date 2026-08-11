@@ -342,6 +342,57 @@ local function run(): number
 	end
 	recursiveRuntime:dispose()
 
+	local capabilityRuntime = PhysicsLabRuntime.new(recipe)
+	local capabilityOuterId = floor.entity.id
+	local capabilityInner = findEntity(recipe, "chair-a")
+	expect("runtime capability-leak fixture finds an independent inner entity", capabilityInner ~= nil)
+	if capabilityInner ~= nil then
+		local capabilityInnerId = capabilityInner.entity.id
+		capabilityRuntime:step(capabilityOuterId, noDemand, 0)
+		local capabilityMutationOk = pcall(function()
+			capabilityRuntime:step(capabilityOuterId, noDemand, 2, function(record)
+				return record.persistentState
+			end, function()
+				local leakedRegistry = (capabilityRuntime :: any)._registry
+				assert(leakedRegistry ~= nil, "PhysicsLabRuntime must not expose registry authority")
+				leakedRegistry.unregister(capabilityInnerId)
+			end)
+		end)
+		local afterCapabilityMutation = capabilityRuntime:snapshot()
+		expect("transition callback cannot invoke leaked registry authority", not capabilityMutationOk)
+		expect(
+			"capability tamper rejection preserves both authority populations",
+			afterCapabilityMutation.registered == #recipe.entities
+				and afterCapabilityMutation.fidelity.registered == #recipe.entities
+		)
+	end
+	capabilityRuntime:dispose()
+
+	local guardRuntime = PhysicsLabRuntime.new(recipe)
+	local guardOuterId = floor.entity.id
+	guardRuntime:step(guardOuterId, noDemand, 0)
+	local guardTamperOk = pcall(function()
+		guardRuntime:step(guardOuterId, noDemand, 2, function(record)
+			return record.persistentState
+		end, function()
+			(guardRuntime :: any)._transitionInFlight = false
+			guardRuntime:dispose()
+		end)
+	end)
+	local guardSnapshotOk, afterGuardTamper = pcall(function()
+		return guardRuntime:snapshot()
+	end)
+	expect("transition callback cannot reset the runtime guard and dispose authority", not guardTamperOk)
+	expect(
+		"guard tamper rejection keeps the runtime active and fully registered",
+		guardSnapshotOk
+			and afterGuardTamper.registered == #recipe.entities
+			and afterGuardTamper.fidelity.registered == #recipe.entities
+	)
+	if guardSnapshotOk then
+		guardRuntime:dispose()
+	end
+
 	runtime:dispose()
 	runtime:dispose()
 	local disposedSnapshotOk = pcall(function()
