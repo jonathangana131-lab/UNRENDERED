@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-zvq321y9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:07:00+00:00",
-  "lastSeenAt": "2026-08-11T21:24:00+00:00",
+  "lastSeenAt": "2026-08-11T21:26:00+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-zvq321y9-g5",
-  "notes": "Generation-6 amendment of PR #401 after concurrent expected-red PR #400. Preserve generation-5 duplicate-root fix; absorb projection-integrity regressions and make capture revalidate BillboardGui.Adornee plus Readout.Text against current authoritative representation and identity/fidelity/fingerprint/repro truth."
+  "notes": "Generation-6 PR #401 exact head 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d is ready for independent review. Canonical CI 31537711126 PASS; Swarm engine-tests PASS; global pr-ownership recovery remains separate. Generation 6 absorbed concurrent #400 Adornee/label.Text expected-red evidence while preserving generation-5 duplicate-root repair. This worker must not self-approve."
 }
