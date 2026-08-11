@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115846-faa32e59-runtime-recipe-handoff",
+  "timestamp": "2026-08-11T11:58:46+00:00",
+  "fromWorker": "sol-20260811-faa32e59",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "summary": "Generation-3 stale recovery is complete. PR #310 ownership metadata now matches the live claim, the lane is REVIEW, and the reviewed product head remains unchanged. Next owner should perform the lane-owned independent audit, keeping global pr-ownership fail-closed and explicitly reconciling overlap with PR #366 before integration.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"],
+  "evidence": [
+    "PR #310 exact product head remains 647dca7a78159bb1bf6f61d6e3180ad082d08e2d with canonical CI 31477554686 PASS.",
+    "Independent completion review on that exact source head reported SOURCE PASS.",
+    "Lane state was advanced from stale NEEDS_CHANGES to REVIEW without changing product bytes.",
+    "REVIEW_REQUEST evt-20260811-115740-faa32e59-runtime-recipe-review-request records the exact audit target and overlap hazard."
+  ]
+}
