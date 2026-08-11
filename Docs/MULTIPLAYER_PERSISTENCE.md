@@ -8,6 +8,30 @@ Players share a canonical WorldId even when multiple Roblox server processes hos
 
 A live region has an authority lease/record. Durable truth is stored through DataStore-backed repositories; rapidly changing cross-server routing/lease/cache state can use MemoryStore where appropriate. MessagingService can coordinate bounded notifications. All cloud calls stay behind project services.
 
+The server is the authority for gameplay-critical resolved truth inside its active simulation scope. Clients may observe, predict, render, and report evidence, but a client report is never itself permission to create or rewrite canonical WorldEntity identity, resolved-region recipes, persistence state, or authoritative ownership.
+
+## Hero Gate two-client authority contract
+
+The permanent Physics Lab uses a deliberately narrow multiplayer proof before broader network architecture is unlocked.
+
+Source-level invariants:
+- the server owns creation of the canonical lab runtime and its WorldEntity truth;
+- clients are independent observers of replicated canonical state, not alternate generators of canonical truth;
+- the server binds each observation to the actual calling player/session and server-established request context rather than trusting client-supplied observer identity or request ownership;
+- a client observation must be comparable using stable domain identity, not Roblox Instance identity alone;
+- canonical comparison includes the lab schema version and resolved-region schema version as truth provenance, not only recipe/world/region IDs and content fingerprints;
+- canonical count evidence must be internally consistent with structure: for the full-F2 Hero Gate baseline, entity/represented counts must agree with the server-owned canonical entity-ID set rather than merely matching echoed client fields;
+- client-supplied identity, counts, fingerprints, repro keys, schema versions, or state are untrusted evidence until checked against server-owned truth;
+- teardown or evidence handoff must fail closed: missing, duplicate, stale, malformed, unknown-version, or cross-request observations cannot be merged into a passing result.
+
+A true two-client Studio evidence row requires one real multiplayer server session with at least two independently observed clients. Acceptance requires exactly one canonical lab root and agreement across both clients on the server-established WorldId, RegionId, lab schema version, resolved-region schema version, resolved fingerprint/repro identity, canonical entity IDs, and required structure/count facts. At the full-F2 baseline, both canonical counts must equal the authoritative canonical entity-ID count, and each client must independently observe that same complete set. A mismatch is evidence of divergence; it is never repaired by choosing one client as canonical.
+
+The evidence transport/evaluator schema must itself be explicitly versioned. Adding a new canonical truth field to the server or client observation payload is not sufficient if the evaluator does not recognize and require that field; all three sides must advance together and preserve fail-closed handling for unknown/missing fields. Likewise, the semantic evaluator must independently enforce relationships between fields instead of relying on producer-side assertions to make inconsistent durable payloads impossible.
+
+Matching observations prove only the tested shared canonical view. They do not establish a blanket authority claim for future movement, physics ownership, damage, inventory, prediction, persistence, or networking systems.
+
+Offline/source tests may harden comparison, validation, serialization, and fail-closed rules, but they cannot satisfy the real two-client engine evidence requirement. Until accepted Studio evidence exists, true two-client canonical authority remains **UNVERIFIED**.
+
 ## Region convergence
 
 Unobserved space between distant players is potential. If independently observed bubbles approach, a reconciliation job receives both canonical boundaries and generates a bridge that preserves established truth.
