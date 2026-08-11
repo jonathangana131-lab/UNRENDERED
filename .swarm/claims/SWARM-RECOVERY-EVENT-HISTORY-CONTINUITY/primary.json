@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "slotId": "primary",
-  "workerId": "sol-20260811-2b51a8",
-  "claimToken": "71a3c9d5e2f6084b",
-  "claimedAt": "2026-08-11T09:29:30+00:00",
-  "heartbeatAt": "2026-08-11T10:00:10+00:00",
+  "workerId": "sol-20260811-r9m4v7x2",
+  "claimToken": "4f1c8a7d2e9b6053",
+  "claimedAt": "2026-08-11T11:47:17+00:00",
+  "heartbeatAt": "2026-08-11T11:47:17+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": ["SWARM-PROTOCOL"],
-  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-2b51a8-g1",
-  "pr": 351,
-  "notes": "Explicit append-only trusted-history recovery PR #351 remains active. Exact-head CI is green; current live state is being scrubbed only where strict schema errors surface so the read-only bootstrap audit can produce an exact trusted SHA/digest pair."
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-r9m4v7x2-g2",
+  "pr": null,
+  "notes": "Generation-2 stale takeover after inspecting expired generation-1 claim/resource, PR #351, current exact head a8541cf9, failing bootstrap audit, and unresolved atomic trust-anchor plus finite-reset incident findings. Preserve prior work; do not rewrite published event history."
 }
