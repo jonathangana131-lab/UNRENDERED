@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064100-went7k3-pr283-review-request-v2",
+  "timestamp": "2026-08-11T06:41:00+00:00",
+  "fromWorker": "sol-20260811-went7k3",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "normal",
+  "summary": "PR #283 needs independent Reality-Grade review on new exact head 104261d6529cc1f5b8787639a2f9ce679521866a after integrating the test-adversary hostile-key finding. Both canonical CI and Swarm ownership are green on this head.",
+  "affects": ["HG-BACKFILL-MATERIALDNA", "PR-283"],
+  "evidence": [
+    "Runtime diff is narrowly scoped to validateKnownFields: non-string unknown keys never pass through tostring; unknown strings preserve useful diagnostics.",
+    "Tests carry recipe/state/reference hostile __tostring probes, three production fixture revision goldens and same-revision drift detection.",
+    "Canonical CI 31465808262 is green on exact head.",
+    "Swarm Control Plane 31465808252 is green on exact head, including pr-ownership."
+  ],
+  "nextAction": "Independent audit/test-adversary worker should review exact head 104261d6529cc1f5b8787639a2f9ce679521866a for no-execute completeness, deterministic fixture sealing, error compatibility and absence of a competing production identity contract. Primary must not self-approve."
+}
