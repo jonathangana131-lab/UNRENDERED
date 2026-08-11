@@ -6,13 +6,12 @@
   "eventType": "HANDOFF",
   "laneId": "HG-BACKFILL-AUTHORITY",
   "severity": "medium",
-  "summary": "Authority audit implementation is complete and handed off so this worker can take the newly-created critical control recovery lane. PR #275 is a one-file public contract hardening branch; exact-head CI should be rechecked after final head 7516c4e949d77af9ea55b47294141e532d343a9d. Durable findings cover server-known caller binding, required schema-version provenance, evaluator versioning, and count/structure consistency. No Studio evidence is claimed. A later audit/integration worker should reclaim the slot, update PR metadata with its live claim token if required, review the exact head, and integrate only after PR ownership recovery is green.",
-  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT", "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT"],
+  "summary": "Authority audit implementation was handed off temporarily so this worker could pursue the newly-created critical control recovery lane. PR #275 at head 7516c4e949d77af9ea55b47294141e532d343a9d is a one-file public contract hardening branch. Durable findings cover server-known caller binding, required schema-version provenance, evaluator versioning, and count/structure consistency. No Studio evidence is claimed. This temporary handoff was later superseded by the same worker reclaiming the audit slot after recovery primary was found already owned.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT", "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT", "PR-275"],
   "evidence": [
     "PR #275 head 7516c4e949d77af9ea55b47294141e532d343a9d changes Docs/MULTIPLAYER_PERSISTENCE.md only.",
     "Prior exact head 1915b65480fc51165c86b47f51d9342291e34f0a passed CI run 31465486641; final-head CI was running at handoff.",
-    "Private bridge audit found semantic evaluator schema-provenance and count/structure consistency gaps; both were published as durable findings without changing private bridge code."
-  ],
-  "pr": 275,
-  "headSha": "7516c4e949d77af9ea55b47294141e532d343a9d"
+    "Private bridge audit found semantic evaluator schema-provenance and count/structure consistency gaps; both were published as durable findings without changing private bridge code.",
+    "The audit slot was subsequently reclaimed by sol-20260811-q9x4m2 after the critical recovery primary was confirmed occupied."
+  ]
 }
