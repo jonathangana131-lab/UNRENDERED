@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-210700-q6m9c4v2-objectgenome-g8-adversary",
+  "timestamp": "2026-08-11T21:07:00+00:00",
+  "fromWorker": "sol-20260811-q6m9c4v2",
+  "eventType": "FINDING",
+  "summary": "Independent test-adversary pass on ObjectGenome generation-8 PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 found no additional patch-local decodeMechanismPosition bypass requiring a new test stack. The new exact standalone mechanism validator mirrors every mechanism-local invariant from full ObjectGenome.inspect(); cross-component existence remains correctly owned by the surrounding genome. Existing executable tests cover canonical tilt, slide, caster and latch decode behavior plus the concrete malformed caster/latch and undeclared-field regression that triggered generation 8. No source or test patch is recommended from this slot; integration remains gated on independent audit plus a genuine live pr-ownership PASS after trusted-history recovery.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "INFO",
+  "evidence": [
+    "Exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962: standaloneMechanismIsCanonical rejects metatable-backed or non-exact records, requires kind-specific required fields, bounded semantic keys, non-self frame/catch references, positive caster/latch dimensions, exact finite unit axes, finite interpolation spans, and zero/reference inclusion for angular/slide ranges before decode.",
+    "tests/object_genome_contract_lock.luau on the exact head directly rejects incomplete plain caster/latch records, undeclared caster/latch fields, undeclared nested caster axis fields, and metatable-backed decoder input while preserving canonical caster/latch outputs.",
+    "tests/object_genome.luau on the exact head executes canonical tilt and slide decode paths and already covers non-unit axes, zero-excluding tilt/slide ranges, and overflowing finite interpolation endpoint failures at the full-genome boundary.",
+    "Canonical CI run 31535562114 job 93925716700 passed format, lint, strict Luau analysis, architecture audits, deterministic tests, Pure Luau tests, Rojo build, and artifact upload. Swarm engine-tests passed; current pr-ownership failures remain in the separately owned trusted-history recovery.",
+    "No local execution or Roblox Studio/engine-runtime evidence is claimed by this connector-only test-adversary pass."
+  ]
+}
