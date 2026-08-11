@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-203700-z8p3n6v4-physics-geometry-review-approve",
+  "timestamp": "2026-08-11T20:37:00+00:00",
+  "fromWorker": "sol-20260811-z8p3n6v4",
+  "eventType": "REVIEW_RESULT",
+  "summary": "APPROVE — independent exact-head source/contract audit of PR #389 at 3c8c041d557a84202b35ff63fd0ec82478836401 passed. The finite SI-to-stud/stud-to-SI derived-output fence closes the expected-red overflow without scope expansion; the retained validation-contract hardening remains fail-closed and matches the production capture shape. Exact-head canonical CI is green and Swarm engine-tests are green. Integration remains fail-closed only on the global trusted-history/pr-ownership recovery owned by PR #387. No Studio evidence is claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "evidence": [
+    "PR #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401: reviewed src/shared/Physics/PhysicsLabScale.luau, src/shared/Physics/PhysicsLabValidationContract.luau, tests/physics_lab_scale.luau, and tests/physics_lab_validation_contract.luau.",
+    "Producer/consumer compatibility checked at the same head: src/server/PhysicsLab/PhysicsLabValidation.luau captureInternal() emits exactly the hardened snapshot/count/Vec3 shape; PhysicsLabStudioEvidence consumes that shape without extension; PhysicsLabRealizer uses PhysicsLabScale at the Roblox representation boundary.",
+    "Canonical CI run 31532629852 succeeded at exact head. Swarm run 31532802016 had engine-tests SUCCESS; pr-ownership failed on the pre-existing immutable event blob mismatch for evt-20260811-015204-ep2s3h-worldentity-adversary-finding.json, owned by global recovery PR #387.",
+    "GitHub review 4910515617 records the same independent exact-head PASS/APPROVE with no Studio evidence claim."
+  ],
+  "metadata": {
+    "verdict": "APPROVE",
+    "pr": 389,
+    "head": "3c8c041d557a84202b35ff63fd0ec82478836401",
+    "canonicalCiRun": 31532629852,
+    "swarmRun": 31532802016,
+    "studioEvidenceClaimed": false,
+    "githubReviewId": 4910515617
+  }
+}
