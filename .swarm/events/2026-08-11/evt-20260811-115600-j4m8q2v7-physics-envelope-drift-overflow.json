@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115600-j4m8q2v7-physics-envelope-drift-overflow",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-j4m8q2v7",
+  "claimToken": "9a4c1f7e2b6d8053",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T11:56:00Z",
+  "headSha": "a329e37f75871e29174c6e322c611bad2a7942f0",
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-j4m8q2v7",
+  "payload": {
+    "severity": "warning",
+    "summary": "PhysicsLabValidationContract accepts individually finite envelope coordinates whose baseline/checkpoint subtraction overflows, publishing non-finite drift evidence instead of failing closed.",
+    "impact": "The documented Studio evidence path JSON-serializes comparison output; derived +inf in driftStuds/maxAbsStuds violates the plain finite-data evidence boundary and can poison or abort evidence serialization.",
+    "pr": 368,
+    "ciRun": 31488724545,
+    "primaryPr": 363,
+    "repro": "baseline x envelope [-1e308, 0], checkpoint x envelope [1e308, 1e308], tolerance 0.001; both snapshots validate but comparison subtraction overflows to +inf",
+    "requiredClosure": [
+      "absorb equivalent regression coverage into the active primary candidate",
+      "make derived envelope drift fail closed before non-finite values are returned",
+      "preserve ordinary finite comparison behavior",
+      "rerun exact-head canonical CI and fresh independent audit"
+    ],
+    "validation": "PR #368 exact head a329e37f75871e29174c6e322c611bad2a7942f0; canonical CI 31488724545 passes format/lint/Luau/audits/swarm tests and fails exactly the new Pure Luau assertion. No Studio evidence claimed."
+  }
+}
