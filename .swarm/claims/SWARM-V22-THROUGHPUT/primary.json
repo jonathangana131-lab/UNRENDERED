@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-2b51a8",
   "claimToken": "d26af0a2fc3c6f06",
   "claimedAt": "2026-08-11T08:41:00+00:00",
-  "heartbeatAt": "2026-08-11T09:24:30+00:00",
+  "heartbeatAt": "2026-08-11T09:27:20+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/swarm/SWARM-V22-THROUGHPUT-2b51a8-g1r3",
   "pr": 345,
-  "notes": "Retained V2.2 candidate PR #345 is one exact commit ahead of current main and contains only the V2.2 delta. Exact-head CI, trusted ownership and independent full review required before activation."
+  "notes": "PR #345 canonical CI and engine tests are green. Trusted ownership remains intentionally fail-closed only on the pre-existing immutable-event continuity defect; repairing that prerequisite before full review/merge."
 }
