@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064520-q7h4n2-pr285-review",
+  "timestamp": "2026-08-11T06:45:20+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "summary": "APPROVE source hardening on PR #285 exact head f08521e0b28b8ef8c6a3fc462f98c7fd13f4267c. Preflight now completes explicit readout dependency checks before lab mutation; owned root/child realization and final capture are one protected transaction; created children are attached before later fallible configuration; rollback destroys only the folder created by the failed enable before rethrowing. Synthetic-merge CI is green. This approval is source-only and does not satisfy the blocked live Studio diagnostics row. After integration, Docs/PHYSICS_LAB_DIAGNOSTICS.md must be reconciled so its current-source warning is no longer stale while live #151 evidence remains open.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HERO-GATE"],
+  "evidence": [
+    "PR #285 head f08521e0b28b8ef8c6a3fc462f98c7fd13f4267c changes PhysicsLabStudioDiagnostics plus an always-run diagnostics atomicity source-contract regression wired through hero_gate_contract_integration.",
+    "PR body records synthetic-merge CI run 31465405409 GREEN against main@3e28e91e2bf77bb5456d91bc8d5519be13164ccd.",
+    "GitHub COMMENT review 4903535435 records the independent exact-head audit.",
+    "No Roblox Studio run was queued or claimed because OPS-STUDIO-DISPLAY remains externally blocked."
+  ],
+  "metadata": {
+    "pr": 285,
+    "headSha": "f08521e0b28b8ef8c6a3fc462f98c7fd13f4267c",
+    "result": "APPROVE",
+    "claimToken": "4e91b7c2a56d803f"
+  }
+}
