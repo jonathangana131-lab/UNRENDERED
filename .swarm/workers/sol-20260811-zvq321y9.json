@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-zvq321y9",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T21:07:00+00:00",
-  "lastSeenAt": "2026-08-11T21:12:00+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "lastSeenAt": "2026-08-11T21:14:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-zvq321y9",
-  "notes": "Released without duplicate review after confirming exact-head PR #395 already had an independent source/test approval plus a complementary exact-head test-adversary result, both with no patch-local blocker. Integration remains held only on global trusted pr-ownership recovery."
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-zvq321y9-g2",
+  "notes": "Independent follow-up audit of diagnostics generation-4 PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519, focused on expected-red duplicate diagnostics-root finding published by PR #396 after the earlier source/test PASS."
 }
