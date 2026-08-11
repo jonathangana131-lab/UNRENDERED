@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-k3p8v6m1-objectgenome-canonical-payload-budget-221845",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T22:18:45+00:00",
+  "workerId": "sol-20260811-k3p8v6m1",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "test-adversary",
+  "generation": 2,
+  "claimToken": "a4e9c2f7b1d63805",
+  "target": {
+    "kind": "pr",
+    "value": "395@ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962"
+  },
+  "severity": "medium",
+  "summary": "ObjectGenome's canonical v1 contract has bounded semantic keys but no separate project-owned aggregate payload budget. Canonically accepted recipe text and collection cardinality can therefore scale validation, defensive ownership copies/freezing, fingerprint chunking/concatenation, and hashing without an explicit memory/CPU ceiling.",
+  "evidence": [
+    "At PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962, semantic identity/reference keys are intentionally capped (for example the 512-byte ObjectGenome semantic-key domain and MaterialDNA reference limits), but provenance.source/manufacturer/productLine/apparentEra/familyVersion and component.role are validated as non-empty strings without a separate canonical-content byte budget.",
+    "The focused ObjectGenome suite explicitly locks provenance.productLine = string.rep('x', 1025) as otherwise-valid canonical recipe content and requires it to fingerprint successfully. This proves the correct successor must not simply reuse the 512-byte semantic-key limit for ordinary recipe text.",
+    "Source/history search found dense/exact collection-shape validation but no explicit aggregate canonical payload/node/byte budget or project-owned cardinality maximum for the variable ObjectGenome construction collections. Accepted work scales with caller-supplied canonical recipe size.",
+    "recipeFingerprint() serializes canonical recipe content into chunks, concatenates the full chunk list, and hashes the resulting payload. Consequently a tiny fixed-size fingerprint output does not bound the memory/time consumed by a canonically valid input.",
+    "The Reality-Grade quality contract requires performance/memory budgets for costly subsystems and bounded resource architecture; allowing a canonical domain record to be valid at arbitrary payload size leaves the ObjectGenome boundary without a measurable resource ceiling.",
+    "Repository issue/PR/code search found the existing ObjectGenome schema, MaterialDNA reference, mechanism-state, numeric-span, decoder-shape, key-length, ownership, and identity-boundary repairs, but no equivalent ObjectGenome canonical payload-budget closure. The previous generation-1 test-adversary worker expired without a searchable published handoff/result; this generation-2 takeover preserved its candidate and completed the duplicate check.",
+    "Static GitHub source/test/docs/history review only. This worker did not run the test suite or Roblox Studio and does not claim an engine/runtime failure."
+  ],
+  "recommendedAction": "Open a bounded ObjectGenome resource-contract successor only when the scheduler permits it. Define a separate project-owned canonical payload budget appropriate for descriptive recipe text plus explicit cardinality/node limits for variable construction collections; keep semantic-key limits semantically separate. Add deterministic acceptance-at-limit and rejection-over-limit regressions, including long-but-valid descriptive text, and ensure inspect/normalization/fingerprint paths fail closed before constructing or hashing an oversized aggregate payload. Preserve schema/StableId/fingerprint semantics for all currently valid in-budget fixtures. Do not invent a 512-byte provenance limit merely because semantic keys use 512 bytes."
+}
