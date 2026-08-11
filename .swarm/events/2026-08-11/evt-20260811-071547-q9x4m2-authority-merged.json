@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071547-q9x4m2-authority-merged",
+  "timestamp": "2026-08-11T07:15:47+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "INTEGRATION_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "medium",
+  "summary": "Authority audit PR #275 merged to canonical main as 81a13b1138e26e7852c89685de5dbf9bd57753d8. The exact product PR passed canonical CI and fail-closed semantic ownership validation before integration, and post-merge main CI run 31468113697 completed successfully. This remains source/documentation authority hardening only; no real two-client Studio PASS is claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT", "PR-275"],
+  "evidence": [
+    "PR #275 exact-head ownership job 93704985083 emitted JSON status PASS for HG-BACKFILL-AUTHORITY/audit with one changed file and no protected scope touched.",
+    "Squash merge produced main commit 81a13b1138e26e7852c89685de5dbf9bd57753d8.",
+    "Post-merge canonical CI run 31468113697 concluded success.",
+    "Docs/MULTIPLAYER_PERSISTENCE.md now locks server-known caller binding, canonical schema provenance, fail-closed evaluator versioning, and full-F2 count/structure consistency without substituting source checks for Studio evidence."
+  ]
+}
