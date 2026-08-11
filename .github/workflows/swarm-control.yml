@@ -51,9 +51,15 @@ jobs:
           git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl.py"
           if git cat-file -e "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening.py" 2>/dev/null; then
             git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py"
-            python3 -m py_compile "$RUNNER_TEMP/trusted-swarm/swarmctl.py" "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py"
+            if git cat-file -e "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening_base.py" 2>/dev/null; then
+              git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening_base.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening_base.py"
+            fi
+            python3 -m py_compile "$RUNNER_TEMP/trusted-swarm/"*.py
+            PYTHONPATH="$RUNNER_TEMP/trusted-swarm" python3 -c 'import swarmctl_hardening'
             echo "engine=hardening" >> "$GITHUB_OUTPUT"
           else
+            # This one upgrade generation remains policed by the already-trusted
+            # V2 validator. Once merged, all later PRs use hardened base code.
             python3 -m py_compile "$RUNNER_TEMP/trusted-swarm/swarmctl.py"
             echo "engine=bootstrap" >> "$GITHUB_OUTPUT"
           fi
@@ -85,10 +91,13 @@ jobs:
       - name: Materialize current and previous control snapshots
         env:
           BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
         run: |
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
+          git cat-file -e "${AFTER_SHA}^{commit}"
+          echo "CONTROL_SHA=$AFTER_SHA" >> "$GITHUB_ENV"
           mkdir -p "$RUNNER_TEMP/control-after" "$RUNNER_TEMP/control-before"
-          git archive origin/swarm-control .swarm | tar -x -C "$RUNNER_TEMP/control-after"
+          git archive "$AFTER_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-after"
           if [[ -n "${BEFORE_SHA:-}" && "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ]] && git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
             if git ls-tree -d --name-only "$BEFORE_SHA" .swarm | grep -qx '.swarm'; then
               git archive "$BEFORE_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-before"
@@ -111,8 +120,8 @@ jobs:
         run: python3 tools/swarm/swarmctl_hardening.py render --root "$RUNNER_TEMP/control-after/.swarm"
       - name: Publish generated projection without overwriting newer state
         run: |
-          EXPECTED="$(git rev-parse origin/swarm-control)"
-          git switch --detach origin/swarm-control
+          EXPECTED="${CONTROL_SHA:?validated control snapshot SHA missing}"
+          git switch --detach "$EXPECTED"
           mkdir -p .swarm/generated
           rm -rf .swarm/generated/*
           cp -R "$RUNNER_TEMP/control-after/.swarm/generated/." .swarm/generated/
@@ -139,8 +148,10 @@ jobs:
       - name: Materialize live control state
         run: |
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
+          CONTROL_SHA="$(git rev-parse origin/swarm-control)"
+          echo "CONTROL_SHA=$CONTROL_SHA" >> "$GITHUB_ENV"
           mkdir -p "$RUNNER_TEMP/control-health"
-          git archive origin/swarm-control .swarm | tar -x -C "$RUNNER_TEMP/control-health"
+          git archive "$CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-health"
       - name: Apply canonical CI health as data
         env:
           MAIN_SHA: ${{ github.event.workflow_run.head_sha }}
@@ -154,8 +165,8 @@ jobs:
           python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/control-health/.swarm"
       - name: Publish health without overwriting newer state
         run: |
-          EXPECTED="$(git rev-parse origin/swarm-control)"
-          git switch --detach origin/swarm-control
+          EXPECTED="${CONTROL_SHA:?materialized control snapshot SHA missing}"
+          git switch --detach "$EXPECTED"
           mkdir -p .swarm/health
           cp "$RUNNER_TEMP/control-health/.swarm/health/main.json" .swarm/health/main.json
           cp "$RUNNER_TEMP/control-health/.swarm/lanes/OPS-MAIN-HEALTH.json" .swarm/lanes/OPS-MAIN-HEALTH.json
