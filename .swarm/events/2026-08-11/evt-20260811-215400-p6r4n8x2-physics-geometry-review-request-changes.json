@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-215400-p6r4n8x2-physics-geometry-review-request-changes",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-p6r4n8x2",
+  "claimToken": "9e4b1c7a3d5f8026",
+  "claimGeneration": 2,
+  "timestamp": "2026-08-11T21:54:00Z",
+  "headSha": "3c8c041d557a84202b35ff63fd0ec82478836401",
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-p6r4n8x2-g2",
+  "payload": {
+    "verdict": "REQUEST_CHANGES",
+    "pr": 389,
+    "reviewId": 4911003441,
+    "summary": "Newer expected-red PR #406 invalidates the prior merge-readiness assumption for #389: PhysicsLabScale.assertFinite evaluates caller equality before proving primitive-number type, allowing malformed metatable-backed scalars to execute __eq on the rejection path.",
+    "evidence": [
+      "PR #406 exact head b6fff28f586944c9e3c35dbfa0f243e6852e0980 is stacked directly on #389 head 3c8c041d557a84202b35ff63fd0ec82478836401",
+      "canonical CI 31538617979 passes preceding gates and fails Pure Luau exactly at the hostile malformed meters no-execute assertion",
+      "the existing #389 finite derived-output overflow repair remains correct and should be retained"
+    ],
+    "requiredClosure": [
+      "establish type(value) == number before equality, ordering, finiteness, or arithmetic in the shared scale finite-scalar helper",
+      "preserve #389 derived-output finite postconditions in both conversion directions",
+      "absorb #406 hostile __eq regression and rerun exact-head canonical CI",
+      "obtain fresh independent exact-head review after the production fix"
+    ],
+    "studioEvidence": "none performed or claimed"
+  }
+}
