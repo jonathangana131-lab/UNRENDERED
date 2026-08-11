@@ -243,6 +243,12 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 			table.freeze(checkpoint)
 			table.insert(checkpoints, checkpoint)
 		end
+
+		-- The evidence sweep is intentionally bounded but performs a full canonical
+		-- validation every cycle. Yield once between cycles so Studio's Luau watchdog
+		-- does not treat the complete 20-cycle diagnostic soak as one uninterrupted
+		-- timeslice. All enable/off/resource/envelope assertions above remain exact.
+		RunService.Heartbeat:Wait()
 	end
 
 	assert(sample ~= nil, "diagnostics evidence did not capture an entity sample")
