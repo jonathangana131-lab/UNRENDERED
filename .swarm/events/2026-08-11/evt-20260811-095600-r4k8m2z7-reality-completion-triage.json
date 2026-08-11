@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095600-r4k8m2z7-reality-completion-triage",
+  "timestamp": "2026-08-11T09:56:00+00:00",
+  "fromWorker": "sol-20260811-r4k8m2z7",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-REALITY",
+  "summary": "Reality completion-train review classified the current backlog without reopening accepted identity/replay contracts. ResolvedRegionRecipe source PR #306 exact head f813129849d48131da185ecf2158ff2c769d61fa remains product-source/test PASS but is stale (ahead 6/behind 2 current main) under an expired primary lease; salvage its exact three-file no-__tostring rejection payload onto current main. Test PR #312 exact head 41e7be8bdab7d96fe916c4c88eef33e94c0879a6 is one-file replay-boundary PASS with canonical CI 31471409531 green but also stale (ahead 1/behind 2); retain it as complementary v1 replay evidence. WorldEntity source PR #293 remains production-source PASS but cannot integrate because it edits shared tests/run.luau outside HG-BACKFILL-WORLDENTITY write scopes; regenerate the primary on current main, drop that runner edit, and preserve source behavior. Stacked PR #344 is PASS evidence for exact persistent-state budget/registry fail-atomicity boundaries. Older PR #321 is NOT fully superseded by #344: it uniquely covers 256-byte ID boundaries, duplicate-diagnostic immutability, unknown unregister atomicity, and duplicate-diagnostic capacity validation; absorb those unique assertions into an already-registered lane-owned world_entity test suite during WorldEntity salvage, deduplicating only the deep/wide overlap. Live trusted ownership remains blocked on separately-owned append-only history-continuity PR #351. After #351 integrates, create fresh current-main Reality and WorldEntity salvage heads, rerun exact-head canonical CI + trusted ownership, obtain fresh independent review, merge source before dependent docs, and close stale lineages only after retained assertions are visible in the merged/salvaged heads. No Studio evidence is claimed.",
+  "affects": ["HG-COMPLETION-REALITY", "HG-BACKFILL-REALITY", "HG-BACKFILL-WORLDENTITY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "verdict": "SYNC_REQUIRED",
+  "evidence": [
+    "PR #306 completion review 4904861524 records source/test PASS with current-main salvage requirement; compare main...f813129 is ahead 6/behind 2.",
+    "PR #312 completion review 4904845769 records one-file replay-test PASS with CI 31471409531 green and current-main salvage requirement; compare main...41e7be8 is ahead 1/behind 2.",
+    "PR #293 audit review 4904736085 records source PASS plus out-of-scope tests/run.luau ownership blocker; PR #344 review 4904737294 records stacked budget-test PASS.",
+    "PR #321 completion review 4904855282 records unique non-budget WorldEntity regressions that must be retained before stale-lineage closure.",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY primary is live on PR #351 with SWARM-PROTOCOL lease and heartbeat 2026-08-11T09:41:10Z."
+  ]
+}
