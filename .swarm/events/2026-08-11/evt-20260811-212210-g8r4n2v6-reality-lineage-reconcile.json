@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-212210-g8r4n2v6-reality-lineage-reconcile",
+  "timestamp": "2026-08-11T21:22:10+00:00",
+  "fromWorker": "sol-20260811-g8r4n2v6",
+  "eventType": "REVIEW_RESULT",
+  "summary": "HG-COMPLETION-REALITY reconciliation: retain WorldEntity generation-5 successor PR #397 exact head 83850e9f2bab4572de800428fb510b6b75fc2c45 as the single current completion lineage. #397 descends from #379/#378 and absorbs #386 numeric-ceiling evidence, so #378/#379/#386 must not merge independently; after #397 receives fresh independent exact-head review and live pr-ownership, retire those children plus older consumed WorldEntity provenance (#293/#350/#364/#372 and equivalent state-budget predecessors). For ResolvedRegionRecipe, retain current-main source PR #359 and complementary current-main replay-test PR #370; they touch distinct files and can be sequenced after trusted ownership recovery with exact integration-head ownership/CI. Existing WorldEntity metadata-string-budget finding remains a distinct unscheduled follow-on; do not silently scope-creep #397. Global integration remains fail-closed behind SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY / PR #387. No Studio evidence claimed.",
+  "affects": ["HG-BACKFILL-WORLDENTITY", "HG-BACKFILL-REALITY", "HG-COMPLETION-REALITY"]
+}
