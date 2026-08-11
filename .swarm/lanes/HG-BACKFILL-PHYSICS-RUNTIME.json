@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME",
+  "epicId": "HERO-GATE",
+  "title": "Physics Lab runtime lifecycle depth pass",
+  "objective": "Use otherwise-idle Sol capacity to find and fix concrete F2/F0 lifecycle, runtime ownership, teardown/rebuild, transition, resolved-identity, resource-count, or long-cycle drift defects in the Physics Lab without requiring Studio.",
+  "priority": 4950,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["src/shared/Physics/PhysicsLabRuntime.luau", "src/shared/Physics/PhysicsLabObjectGenomes.luau", "tests/physics_lab_runtime*.luau", "tests/physics_lab_resolved_identity.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"Physics runtime lifecycle hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Physics/PhysicsLabRuntime.luau","src/shared/Physics/PhysicsLabObjectGenomes.luau","tests/physics_lab_runtime*.luau","tests/physics_lab_resolved_identity.luau"]},
+    {"slotId":"test-adversary","role":"Long-cycle lifecycle and teardown regression tests","exclusive":true,"availableWhen":["READY","REVIEW","NEEDS_CHANGES"],"priorityBoost":220,"writeScopes":["tests/physics_lab_runtime*.luau","tests/physics_lab_resolved_identity.luau"]},
+    {"slotId":"audit","role":"Runtime ownership and drift auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/physics_lab_runtime*.luau","Docs/PHYSICS_LAB.md"]}
+  ],
+  "acceptance": ["stress beyond the existing happy-path cycle count where useful", "prove no identity/resource drift", "preserve authority separate from Workspace representation", "behavior changes get tests", "do not claim Studio physics evidence from headless tests"],
+  "tags": ["backfill", "hero-gate", "source-only"]
+}
