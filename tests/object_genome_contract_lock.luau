@@ -127,6 +127,24 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(metatableValidationGenome), "schema.metatable")
 	)
 
+	local decoderFieldReads = 0
+	local hostileDecoderMechanism = setmetatable({}, {
+		__index = function(_, key)
+			decoderFieldReads += 1
+			if key == "kind" then
+				return "caster"
+			end
+			return nil
+		end,
+	})
+	local hostileDecoderOk = pcall(function()
+		ObjectGenome.decodeMechanismPosition(hostileDecoderMechanism, 0.25)
+	end)
+	expect(
+		"mechanism decoder rejects metatable-backed records before field reads",
+		not hostileDecoderOk and decoderFieldReads == 0
+	)
+
 	local unknownStateField = ObjectGenome.defaultState(Fixtures.officeChair)
 	unknownStateField.futureState = true
 	expect(
