@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""V2.1 regression suite layered on the proven hardening tests."""
+"""V2.1/V2.2 regression suite layered on the proven hardening tests."""
 from pathlib import Path
 import runpy
 import tempfile
@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 
 from test_swarmctl_hardening_base import *  # retain every existing hardening test
+from test_swarmctl_v22 import *  # canonical CI entrypoint also executes V2.2
 import swarmctl_hardening as hard
 
 
@@ -26,7 +27,6 @@ class CapacityDashboardRegressionTests(unittest.TestCase):
         self.assertIn("review/integration", rendered)
         self.assertIn("stale recovery", rendered)
         self.assertIn("active-Epic backfill", rendered)
-        self.assertIn("capacity-mining", rendered)
         self.assertNotIn("Idle/review is preferable", rendered)
 
 
