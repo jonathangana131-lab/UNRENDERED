@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-s56m7q4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T11:52:09+00:00",
-  "lastSeenAt": "2026-08-11T12:06:00+00:00",
-  "notes": "GO worker completed independent source-only audit of current MaterialDNA counter exactness PR #353 and is repairing its own worker-status registration before final scheduler handoff; no Studio evidence lane."
+  "lastSeenAt": "2026-08-11T12:16:00+00:00",
+  "notes": "Completed independent exact-head source-only audit of MaterialDNA PR #353 (SOURCE/TEST PASS), released all claims/resources, repaired this worker's non-schema ACTIVE registration, and handed the exact invalid->repair ancestry to recovery PR #371. No Studio evidence claimed."
 }
