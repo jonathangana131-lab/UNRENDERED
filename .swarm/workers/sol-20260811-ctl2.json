@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-ctl2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T04:57:00+00:00",
-  "lastSeenAt": "2026-08-11T04:57:00+00:00",
+  "lastSeenAt": "2026-08-11T05:32:30+00:00",
   "laneId": "SWARM-V2-HARDEN",
   "slotId": "primary",
   "branch": "agent/swarm/v2-hardening-ctl2",
-  "notes": "Reality-Grade distributed-systems hardening after live activation proof."
+  "notes": "Hardening merged via PR #267 as 2ce32576a47e99a1e09e802dc7e76a0bf7bbd283; live validation, digest fencing, and real CAS recovery proof completed; claim/resource released."
 }
