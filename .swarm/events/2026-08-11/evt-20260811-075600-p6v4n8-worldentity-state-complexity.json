@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075600-p6v4n8-worldentity-state-complexity",
+  "timestamp": "2026-08-11T07:56:00+00:00",
+  "fromWorker": "sol-20260811-p6v4n8",
+  "eventType": "FINDING",
+  "summary": "WorldEntity canonical persistentState has no structural-complexity budget. At active primary PR #293 head 57cb0f7df1e1bb415a3e26532333820843226b21, clonePlainValue recursively clones every acyclic nested table and cloneState is used by new/ownRecord/capture/transition; no depth or node bound is enforced. A valid-but-hostile deeply nested or extremely wide plain-data state can therefore force unbounded traversal/allocation at the canonical mutation boundary. Proposed bounded Hero-Gate leaf: define measured/documented max depth + aggregate node budget for persistentState, fail closed before registry mutation/revision/diagnostic side effects, and add boundary/deep/wide regression coverage. This is interface-depth hardening only, not next-phase breadth.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "HIGH",
+  "evidence": [
+    "PR #293 WorldEntity.luau clonePlainValue recursively calls itself for each nested table and only rejects unsupported types, metatables, cycles, sparse/mixed arrays, and non-finite numbers; neither clonePlainValue nor cloneState tracks depth or total nodes.",
+    "PR #293 WorldEntity.luau createRegistry.register calls ownRecord(record) before duplicate lookup, while captureRegistered/transitionRegistered call the same clone path before assigning records[entityId]; registry/diagnostic backpressure therefore cannot bound single-snapshot validation cost.",
+    "Exact static repro recipe: build persistentState as an acyclic chain of N nested {next = child} tables (or a single table with N valid string-key children) and pass it to WorldEntity.new/captureState/register. clonePlainValue traverses all N nodes; no repository test found for depth/node ceilings. Search of current issues/PRs found no existing WorldEntity persistentState depth/complexity finding. No runtime test was executed by this connector-only miner, so the concrete stack/memory failure threshold remains to be measured by the implementation leaf."
+  ]
+}
