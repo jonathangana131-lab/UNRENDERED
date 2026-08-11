@@ -13,7 +13,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T06:03:10.767490+00:00",
+  "generatedAt": "2026-08-11T06:04:39.817360+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "5ee9091eb9d7af665a990381b0133d8ccedea503",
@@ -33,21 +33,35 @@
       "INTEGRATION_RESULT": 3,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T06:03:10.767490+00:00",
+    "generatedAt": "2026-08-11T06:04:39.817360+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
       "DONE": 6,
       "LOCKED": 1,
-      "READY": 13
+      "READY": 14
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 35,
+    "readySlots": 36,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 0
   },
   "readySlots": [
+    {
+      "laneId": "SWARM-V21-DASHBOARD",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [
+        "SWARM-PROTOCOL"
+      ],
+      "role": "Zero-slot dashboard repair implementer",
+      "score": 10400,
+      "slotId": "primary",
+      "writeScopes": [
+        "tools/swarm/swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening.py"
+      ]
+    },
     {
       "laneId": "HG-BACKFILL-WORLDENTITY",
       "reason": "dependencies satisfied; resources available",
@@ -671,13 +685,13 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "9e3efabb7f5bde119c25dea3c3d79f02047e649e1515eae22b491e705098267c",
+  "stateDigest": "32f1becd7e338e8e8b9d5767f7f30d74cdde1c1f63ea1dfcbebe3545932d530c",
   "summary": {
     "activeClaims": 0,
     "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
-    "lanes": 21,
-    "readySlots": 35,
+    "lanes": 22,
+    "readySlots": 36,
     "staleClaims": 0,
     "workers": 25
   }
