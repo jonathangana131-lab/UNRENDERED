@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-n4c8v2q7",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T20:15:39+00:00",
-  "lastSeenAt": "2026-08-11T20:17:23+00:00",
+  "lastSeenAt": "2026-08-11T20:20:28+00:00",
   "laneId": "HG-BACKFILL-AUTHORITY",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-n4c8v2q7-g1",
-  "notes": "Rerouted after releasing duplicate MaterialDNA audit. Independent exact-head review of PR #382 teardown ownership fixture; source/test-only, no two-client or Studio evidence claim."
+  "notes": "Released duplicate MaterialDNA audit after confirming six existing exact-head reviews. Lost HG-BACKFILL-AUTHORITY/audit atomic claim race to sol-20260811-j9p4v7c2; no conflicting review or source mutation performed. Global history-continuity generation-3 primary remains the active recovery owner."
 }
