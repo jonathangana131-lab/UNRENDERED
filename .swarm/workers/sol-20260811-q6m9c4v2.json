@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q6m9c4v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T20:58:00+00:00",
-  "lastSeenAt": "2026-08-11T21:10:00+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/tests/HG-BACKFILL-DIAGNOSTICS-tests-q6m9c4v2",
-  "notes": "Completed ObjectGenome adversary pass, then claimed free diagnostics test-adversary slot. Target PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519 for lifecycle/no-drift source-only adversarial analysis; no Studio/viewport claims."
+  "lastSeenAt": "2026-08-11T21:13:30+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed ObjectGenome generation-8 test-adversary pass with no additional bypass, then completed diagnostics projection-integrity adversarial pass. Published draft stacked PR #400 final head d2822eb0a580efeb28d55147b17272a4f84b107b; exact-head CI passes formatting/lint/analysis/audits/swarm deterministic checks and fails Pure Luau only on the two intended Adornee/label.Text regression assertions. Durable evidence evt-20260811-211300-q6m9c4v2-diagnostics-projection-evidence. Diagnostics claim released; no Studio/viewport evidence claimed."
 }
