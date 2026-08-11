@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "workerId": "sol-20260811-z5r8m2",
+  "claimToken": "4f8c1a7d9e2b6053",
+  "claimedAt": "2026-08-11T07:46:48+00:00",
+  "heartbeatAt": "2026-08-11T07:46:48+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-z5r8m2",
+  "pr": null,
+  "notes": "Independent audit of active diagnostics source/backfill PRs and exact evidence contract; no Studio rerun."
+}
