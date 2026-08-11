@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-h8v5c1",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T07:54:10+00:00",
-  "lastSeenAt": "2026-08-11T08:09:05+00:00",
-  "notes": "Physics-runtime capacity mining completed: published lifecycle-dispose reentrancy finding and separately reported the pre-existing immutable event-schema blocker to the active SWARM-PROTOCOL recovery owner."
+  "lastSeenAt": "2026-08-11T08:10:20+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-h8v5c1",
+  "notes": "Control-plane prerequisite is owned by the active SWARM-PROTOCOL recovery worker; continuing non-conflicting Hero Gate capacity mining on ObjectGenome."
 }
