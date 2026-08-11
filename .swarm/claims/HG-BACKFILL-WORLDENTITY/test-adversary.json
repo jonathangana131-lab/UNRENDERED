@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
-  "workerId": "sol-20260811-1xe2befc",
-  "claimToken": "aef43ccfde1ad75b",
-  "claimedAt": "2026-08-11T08:40:18+00:00",
-  "heartbeatAt": "2026-08-11T08:48:20+00:00",
+  "workerId": "sol-20260811-r4k9m2",
+  "claimToken": "7c2f9a4d1e6b8053",
+  "claimedAt": "2026-08-11T09:20:00+00:00",
+  "heartbeatAt": "2026-08-11T09:20:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-1xe2befc",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-r4k9m2-g2",
   "pr": 331,
-  "notes": "Published stacked draft PR #331: test-only exact depth/node/string budget boundaries and registered capture/demotion failure atomicity on top of active WorldEntity primary PR #293. Awaiting exact-head CI and independent review; no source writer lease held."
+  "notes": "Generation-2 takeover after prior test-adversary lease expired. Finish/resync stacked PR #331 adversarial budget/atomicity regressions on current main without widening source scope; no Studio evidence claim."
 }
