@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080643-p4g7n2x9-materialdna-pr313-red",
+  "timestamp": "2026-08-11T08:06:43+00:00",
+  "fromWorker": "sol-20260811-p4g7n2x9",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "severity": "high",
+  "summary": "Independent audit of PR #313 finds the repairCount safe-integer semantics correct, but exact-head validation is red: CI run 800 fails Format check and the current diff still marks tests/materialdna_contract.luau as lacking a terminal newline; Swarm pr-ownership also failed on that head. Do not integrate until a fresh head is green for both canonical CI and ownership.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS"],
+  "evidence": [
+    "PR #313 head ff3ec1a3a3c62e8c38cfd356bd9d5bb5d7883012 accepts 9007199254740991 and rejects 9007199254740992 without schema or identity churn.",
+    "GitHub Actions CI run 800 fails at Format check; later CI stages were skipped.",
+    "The PR diff still reports tests/materialdna_contract.luau with no newline at end of file, a concrete StyLua-format discrepancy candidate.",
+    "Swarm Control Plane pr-ownership failed on the same head; the live primary claim now records pr 313, so ownership must be re-evaluated on a fresh head."
+  ]
+}
