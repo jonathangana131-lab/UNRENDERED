@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:31:30+00:00",
-  "lastSeenAt": "2026-08-11T21:41:15+00:00",
+  "lastSeenAt": "2026-08-11T21:48:15+00:00",
   "laneId": "HG-COMPLETION-PHYSICS",
   "slotId": "review-2",
-  "branch": "agent/review/HG-COMPLETION-PHYSICS-review2-p8x4m6q2",
-  "notes": "Adversarial spot-check of overlapping PhysicsLabRuntime completion lineages #310/#388/#402; define safe synthesis preserving recipe, transition-mutation, and entity-id invariants without new product architecture."
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-405-p8x4m6q2",
+  "notes": "Independent exact-head review of PR #405 stacked test-only diagnostics projection-equality lock against retained #401 generation-6 source."
 }
