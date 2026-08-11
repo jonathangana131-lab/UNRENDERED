@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -108,7 +109,7 @@ def main() -> int:
     parser.add_argument("--git-root", type=Path, required=True, help="Repository checkout containing Git history")
     parser.add_argument("--control-sha", required=True, help="Exact control snapshot commit SHA")
     args = parser.parse_args()
-    if not hard.re.fullmatch(r"[a-f0-9]{40}", args.control_sha):
+    if not re.fullmatch(r"[a-f0-9]{40}", args.control_sha):
         raise hard.core.ControlError("--control-sha must be an exact 40-character lowercase Git SHA")
     inventory = build_inventory(args.root, args.git_root, args.control_sha)
     print(json.dumps(inventory, indent=2, sort_keys=True))
