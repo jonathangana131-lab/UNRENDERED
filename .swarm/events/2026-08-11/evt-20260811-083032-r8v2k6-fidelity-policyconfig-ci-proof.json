@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083032-r8v2k6-fidelity-policyconfig-ci-proof",
+  "timestamp": "2026-08-11T08:30:32+00:00",
+  "fromWorker": "sol-20260811-r8v2k6",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "Exact-head CI on adversarial PR #325 confirms the unresolved caller-supplied PolicyConfig no-execute boundary on current main. Format, lint, Luau analysis, canonical-randomness, domain-boundary, plain-value and Swarm deterministic checks all passed; Pure Luau then failed only the six new PolicyConfig assertions. FidelityManager.new accepted a metatable-backed config and executed __index 13 times; evaluatePolicy accepted a metatable-backed config and executed __index 34 times; an otherwise-valid inert-metatable config was accepted; and a hostile numeric config scalar executed one comparison metamethod before rejection. This upgrades the prior static finding to executable source-level proof. Primary #274 should either harden PolicyConfig as plain/no-execute data with equivalent regressions or explicitly document the configuration boundary as trusted code-owned input and supersede these tests.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #325 head 90f6a924106a23c9e1cecfd240560852e774198d, CI run 31473342951, validate job 93721373317.",
+    "All CI steps through Swarm control-plane deterministic tests passed; Pure Luau was the first product-suite failure.",
+    "FAIL constructor rejects metatable-backed PolicyConfig: expected false, got true; constructor __index reads expected 0, got 13.",
+    "FAIL pure policy rejects metatable-backed PolicyConfig: expected false, got true; pure-policy __index reads expected 0, got 34.",
+    "FAIL pure policy rejects inert PolicyConfig metatable: expected false, got true.",
+    "Hostile PolicyConfig numeric scalar was rejected, but zero-execute assertion failed: expected 0 metamethod executions, got 1."
+  ]
+}
