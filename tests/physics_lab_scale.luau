@@ -1,9 +1,23 @@
+local fs = require("@lune/fs")
+
 local ProductionLoader = require("./support/ProductionLoader")
 
 local PhysicsLabScale = ProductionLoader.requireShared("Physics/PhysicsLabScale")
 
 local function nearlyEqual(left, right, tolerance)
 	return math.abs(left - right) <= tolerance
+end
+
+local function orderedWithin(source, needles)
+	local cursor = 1
+	for _, needle in ipairs(needles) do
+		local found = string.find(source, needle, cursor, true)
+		if found == nil then
+			return false
+		end
+		cursor = found + #needle
+	end
+	return true
 end
 
 local function run(): number
@@ -96,6 +110,39 @@ local function run(): number
 	expect(
 		"Physics Lab scale rejects finite meter inputs whose stud conversion overflows",
 		not finiteOverflowAccepted
+	)
+
+	-- With the current 0.28 m/stud scale, a finite studs input cannot overflow the
+	-- studs->meters multiplication. Lock the symmetric postcondition in source so
+	-- a future scale revision cannot silently drop the reverse derived-output fence.
+	local scaleSource = fs.readFile("src/shared/Physics/PhysicsLabScale.luau")
+	local metersStart = string.find(scaleSource, "function PhysicsLabScale.metersToStuds", 1, true)
+	local studsStart = string.find(scaleSource, "function PhysicsLabScale.studsToMeters", 1, true)
+	local moduleReturn = string.find(scaleSource, "return table.freeze(PhysicsLabScale)", 1, true)
+	local metersBody = if metersStart ~= nil and studsStart ~= nil and metersStart < studsStart
+		then string.sub(scaleSource, metersStart, studsStart - 1)
+		else ""
+	local studsBody = if studsStart ~= nil and moduleReturn ~= nil and studsStart < moduleReturn
+		then string.sub(scaleSource, studsStart, moduleReturn - 1)
+		else ""
+
+	expect(
+		"Physics Lab meters-to-studs keeps input and derived-output finite fences ordered around arithmetic",
+		orderedWithin(metersBody, {
+			"assertFinite(\"meters\", meters)",
+			"local studs = meters * PhysicsLabScale.STUDS_PER_METER",
+			"assertFinite(\"converted studs\", studs)",
+			"return studs",
+		})
+	)
+	expect(
+		"Physics Lab studs-to-meters keeps input and derived-output finite fences ordered around arithmetic",
+		orderedWithin(studsBody, {
+			"assertFinite(\"studs\", studs)",
+			"local meters = studs * PhysicsLabScale.METERS_PER_STUD",
+			"assertFinite(\"converted meters\", meters)",
+			"return meters",
+		})
 	)
 
 	return failures
