@@ -170,6 +170,10 @@ local function validateFiniteNonNegative(name: string, value: number): ()
 	assert(isFinite(value) and value >= 0, `{name} must be finite and non-negative`)
 end
 
+local function validateBoolean(name: string, value: unknown): ()
+	assert(type(value) == "boolean", `{name} must be a boolean`)
+end
+
 local function validateConfig(config: PolicyConfig): ()
 	assert(
 		config.maxRegisteredEntities >= 1
@@ -213,6 +217,8 @@ end
 
 local function validateInputs(inputs: PolicyInputs): ()
 	validateFiniteNonNegative("distanceStuds", inputs.distanceStuds)
+	validateBoolean("visible", inputs.visible)
+	validateBoolean("directlyObserved", inputs.directlyObserved)
 	-- `math.huge` intentionally means the entity has never been interacted with.
 	validateNonNegative("secondsSinceInteraction", inputs.secondsSinceInteraction)
 	validateUnit("significance", inputs.significance)
