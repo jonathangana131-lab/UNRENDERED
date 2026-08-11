@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-205820-t8v4n2c7-chair-evidence-review-pass",
+  "timestamp": "2026-08-11T20:58:20+00:00",
+  "fromWorker": "sol-20260811-t8v4n2c7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "HG-COMPLETION-PHYSICS exact-head SOURCE/TEST EVIDENCE PASS for chair stack PR #393 at f64f841b25a3fa50203137eff86b48192e70a597. Both replayed files are byte-identical to original expected-red #332 head 6c573b2ba585f59dd003f4810657369a638ba858: physics_lab_recipe blob c6069c53628be3afe867e5048bc40ba5e0c1ba53 and physics_lab_scale blob a76052e488fd6c137eedfec42c1974de20d54c67. Exact assertions now pass against source repair #347, covering five caster ground contacts, five caster/base contacts, mass closure, COM closure, plus the broader permanent-lab source geometry property corpus. Canonical CI 31534290992 is green; Swarm engine-tests in 31534290883 are green. Integration remains HOLD: #393 is evidence stacked on source repair #347 and must not merge before it; live trusted pr-ownership remains separately blocked by SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY. No Roblox Studio/contact/viewport/two-client PASS claimed.",
+  "affects": ["HG-PHYSICS-CHAIR-GEOMETRY", "HG-BACKFILL-PHYSICS-GEOMETRY", "HG-COMPLETION-PHYSICS"]
+}
