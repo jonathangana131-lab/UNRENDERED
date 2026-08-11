@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-074900-s9k4m2-fidelity-config-noexecute",
+  "timestamp": "2026-08-11T07:49:00+00:00",
+  "fromWorker": "sol-20260811-s9k4m2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "FidelityManager still has a config-side no-execute/plain-data gap that is distinct from the active PolicyInputs hardening. FidelityManager.new(config) calls copyConfig(sourceConfig) before validateConfig(), so a metatable-backed config can execute __index while canonical configuration is copied. evaluatePolicy(inputs, config, ...) also validates config only after field dereference paths are reachable, and validateConfig's numeric helpers currently accept statically typed numbers without runtime primitive guards, so hostile scalar tables can reach comparison/arithmetic metamethods. PR #274 hardens PolicyInputs and transition atomicity but does not close the PolicyConfig record/scalar boundary.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "Current main FidelityManager.new resolves sourceConfig then copyConfig(sourceConfig) before validateConfig(resolvedConfig); copyConfig directly dereferences every config field.",
+    "Current main validateConfig compares maxRegisteredEntities and distance/relevance fields before any type(value) == number preflight.",
+    "PR #274 patch adds a top-level metatable guard and boolean validation to PolicyInputs but contains no equivalent PolicyConfig guard or config-scalar runtime type validation."
+  ]
+}
