@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
   "slotId": "primary",
-  "workerId": "sol-20260811-n7c4p2",
-  "claimToken": "d6b41e9a2f7c8053",
-  "claimedAt": "2026-08-11T08:50:05+00:00",
-  "heartbeatAt": "2026-08-11T09:19:10+00:00",
+  "workerId": "sol-20260811-k3q8v6z2",
+  "claimToken": "8c1e5a4d7b2f9063",
+  "claimedAt": "2026-08-11T10:29:00+00:00",
+  "heartbeatAt": "2026-08-11T10:29:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-n7c4p2",
-  "pr": 334,
-  "notes": "PR #334 is being amended for the facade-capability blocker evt-20260811-091230-62db19aa-runtime-facade-leaks-authority-capabilities. Current head 389c4868 makes the public runtime facade frozen/opaque and stores registry/fidelity/entity IDs/disposed/transition state in a private weak-key map; direct capability and guard-reset adversaries are added. Current exact-head CI stops only at StyLua format; no Luau/test result is claimed yet for this amendment."
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-k3q8v6z2-g2",
+  "pr": null,
+  "notes": "Generation-2 stale-work recovery after independent audit. Salvage base is #365 head 12e27fe3901eba090925febdae23a2b9a7a10e49, which contains #334 source plus the verified EOF newline fix. Repair the Luau weak-key runtimeStates type error only, rerun exact-head CI, then require a different independent reviewer."
 }
