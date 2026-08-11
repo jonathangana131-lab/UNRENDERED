@@ -8,6 +8,5 @@
   "heartbeatAt": "2026-08-11T23:08:18+00:00",
   "leaseSeconds": 1800,
   "generation": 6,
-  "takeoverOf": "sol-20260811-d7k4m9q2:g5:5e1a9c3d7b4f2068",
   "notes": "Generation-6 protected lease for the exact trusted-history recovery lineage after generation-5 CI surfaced additional finite live-control defects."
 }
