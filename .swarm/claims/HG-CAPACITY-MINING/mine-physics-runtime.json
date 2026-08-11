@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "workerId": "sol-20260811-h8v5c1",
+  "claimToken": "d4d87b0c73804667",
+  "claimedAt": "2026-08-11T07:55:10+00:00",
+  "heartbeatAt": "2026-08-11T07:55:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-h8v5c1",
+  "pr": null
+}
