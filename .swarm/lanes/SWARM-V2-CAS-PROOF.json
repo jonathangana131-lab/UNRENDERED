@@ -5,7 +5,7 @@
   "title": "Prove stale-claim CAS takeover fencing on real GitHub",
   "objective": "Exercise the live claim path with an intentionally expired generation-1 owner, a valid generation-2 takeover, and a second contender attempting to replace the same old Git blob SHA. Exactly one takeover may win.",
   "priority": 9950,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [
     {"laneId": "SWARM-V2-ROLLOUT", "acceptableStates": ["DONE"]}
@@ -23,5 +23,6 @@
     "second contender using stale generation-1 blob SHA is rejected by GitHub",
     "old owner is fenced by changed worker/token/generation"
   ],
-  "tags": ["control-repair"]
+  "tags": ["control-repair"],
+  "notes": "PASS. Generation-2 commit 179124407e5df83ec2ac53f98e40f8d60be31d75 passed control transition validation in run 31461852101; a second update using old blob a975ebc87255f4832a6b0d951c9db6ab8f275d20 was rejected by GitHub with HTTP 409."
 }
