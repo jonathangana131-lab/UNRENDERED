@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120452-a05c9683-worldentity-capacity-finding",
+  "kind": "FINDING",
+  "timestamp": "2026-08-11T12:04:52Z",
+  "workerId": "sol-20260811-a05c9683",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "claimToken": "d1b8f6c09a3e2475",
+  "generation": 1,
+  "key": "worldentity-next-depth-lane",
+  "value": "NO_NON_DUPLICATE_LANE",
+  "notes": "Current main still exposes raw registry map access for get/unregister/getRegistered before canonical WorldEntityId preflight, matching the exact REQUEST_CHANGES gap already owned by active HG-BACKFILL-WORLDENTITY generation-4 primary sol-20260811-r7n4c2x9. Existing issue #154 separately owns registry-to-FidelityManager transition composition. Opening another WorldEntity source/test lane would duplicate active work, so no new lane is recommended from this mining pass. Re-mine only after generation-4 review/integration or if its exact-head validation exposes a distinct invariant gap. No Studio/engine evidence is claimed."
+}
