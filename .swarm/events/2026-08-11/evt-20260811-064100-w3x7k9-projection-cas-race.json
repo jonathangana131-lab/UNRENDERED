@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064100-w3x7k9-projection-cas-race",
+  "timestamp": "2026-08-11T06:41:00+00:00",
+  "fromWorker": "sol-20260811-w3x7k9",
+  "eventType": "FINDING",
+  "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+  "severity": "CRITICAL",
+  "summary": "The control-branch generated-projection publisher has a stale-snapshot CAS race. `control-after` is archived from `origin/swarm-control` during the materialization step, but the publish step computes `EXPECTED=$(git rev-parse origin/swarm-control)` only later, immediately before switching to the then-current control head. If another worker advances swarm-control between materialization and publication, the job can copy a projection rendered from the old snapshot onto the newer head and still pass its final EXPECTED check, because EXPECTED was captured after the advance. With `scheduler.requireValidatedState=true`, this can leave validation.json fencing a different state than the live claims/workers/events. Capture the authoritative control SHA at materialization and use that same immutable SHA both for archive/render provenance and the final compare/push fence; never refresh EXPECTED after rendering.",
+  "affects": ["SWARM-RECOVERY-PR-OWNERSHIP-IMPORT", "SWARM-V2", "HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "Current `.github/workflows/swarm-control.yml` materializes `control-after` from `origin/swarm-control` without persisting that SHA for later publication.",
+    "The later `Publish generated projection without overwriting newer state` step sets EXPECTED from whatever `origin/swarm-control` points to at publication time, then switches to that head and copies the previously rendered projection.",
+    "Therefore an advance between materialization and publication is accepted rather than fenced; the final fetch/compare only detects advances after EXPECTED is captured.",
+    "Live `.swarm/generated/validation.json` currently reports validatedAt `2026-08-11T06:10:59.269555+00:00` while the same control branch contains many claims/workers/events created substantially later, consistent with stale projection fencing during heavy control churn."
+  ]
+}
