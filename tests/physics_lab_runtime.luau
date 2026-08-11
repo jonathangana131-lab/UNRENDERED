@@ -183,6 +183,115 @@ local function run(): number
 	end)
 	expect("runtime rejects duplicate placed WorldEntity identities", not duplicateAccepted)
 
+	local topLevelLookups = 0
+	local topLevelProxy = setmetatable({}, {
+		__index = function(_, key)
+			topLevelLookups += 1
+			return recipe[key]
+		end,
+	})
+	local topLevelProxyAccepted = pcall(function()
+		PhysicsLabRuntime.new(topLevelProxy)
+	end)
+	expect(
+		"runtime rejects metatable-backed top-level recipe before executing __index",
+		not topLevelProxyAccepted and topLevelLookups == 0
+	)
+
+	local entityListMetamethodCalls = 0
+	local entityListProxy = setmetatable({}, {
+		__len = function()
+			entityListMetamethodCalls += 1
+			return #recipe.entities
+		end,
+		__index = function(_, key)
+			entityListMetamethodCalls += 1
+			return recipe.entities[key]
+		end,
+	})
+	local entityListProxyAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, entityListProxy))
+	end)
+	expect(
+		"runtime rejects metatable-backed entity list before length or index execution",
+		not entityListProxyAccepted and entityListMetamethodCalls == 0
+	)
+
+	local entityRecipeLookups = 0
+	local entityRecipeEntities = copyEntities(recipe)
+	local canonicalEntityRecipe = entityRecipeEntities[1]
+	entityRecipeEntities[1] = setmetatable({}, {
+		__index = function(_, key)
+			entityRecipeLookups += 1
+			return canonicalEntityRecipe[key]
+		end,
+	})
+	local entityRecipeProxyAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, entityRecipeEntities))
+	end)
+	expect(
+		"runtime rejects metatable-backed entity-recipe wrapper before executing __index",
+		not entityRecipeProxyAccepted and entityRecipeLookups == 0
+	)
+
+	local recordLookups = 0
+	local recordProxyEntities = copyEntities(recipe)
+	local recordProxyEntry = table.clone(recordProxyEntities[1])
+	local canonicalRecord = recordProxyEntry.entity
+	recordProxyEntry.entity = setmetatable({}, {
+		__index = function(_, key)
+			recordLookups += 1
+			return canonicalRecord[key]
+		end,
+	})
+	recordProxyEntities[1] = recordProxyEntry
+	local recordProxyAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, recordProxyEntities))
+	end)
+	expect(
+		"runtime rejects metatable-backed entity record before executing __index",
+		not recordProxyAccepted and recordLookups == 0
+	)
+
+	local originLookups = 0
+	local originProxyEntities = copyEntities(recipe)
+	local originProxyEntry = table.clone(originProxyEntities[1])
+	local originProxyRecord = table.clone(originProxyEntry.entity)
+	local canonicalOrigin = originProxyRecord.origin
+	originProxyRecord.origin = setmetatable({}, {
+		__index = function(_, key)
+			originLookups += 1
+			return canonicalOrigin[key]
+		end,
+	})
+	originProxyEntry.entity = originProxyRecord
+	originProxyEntities[1] = originProxyEntry
+	local originProxyAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, originProxyEntities))
+	end)
+	expect(
+		"runtime rejects metatable-backed entity origin before executing __index",
+		not originProxyAccepted and originLookups == 0
+	)
+
+	local keyStringifyCalls = 0
+	local hostileKeyEntities = copyEntities(recipe)
+	local hostileKeyEntry = table.clone(hostileKeyEntities[1])
+	hostileKeyEntry.key = setmetatable({}, {
+		__tostring = function()
+			keyStringifyCalls += 1
+			return "forged-key"
+		end,
+	})
+	hostileKeyEntities[1] = hostileKeyEntry
+	local hostileKeyAccepted = pcall(function()
+		PhysicsLabRuntime.new(recipeCopy(recipe, hostileKeyEntities))
+	end)
+	expect(
+		"runtime rejects non-string entity keys without executing __tostring",
+		not hostileKeyAccepted and keyStringifyCalls == 0
+	)
+
 	local forgedWorldRecipe = recipeCopy(recipe)
 	forgedWorldRecipe.worldId = `${recipe.worldId}-forged`
 	local forgedWorldAccepted = pcall(function()
