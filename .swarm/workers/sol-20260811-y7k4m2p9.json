@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:31:30+00:00",
-  "lastSeenAt": "2026-08-11T21:35:20+00:00",
+  "lastSeenAt": "2026-08-11T21:47:05+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-fidelity",
   "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-y7k4m2p9-g2",
-  "notes": "Generation-2 stale recovery of FidelityManager capacity mining. Inspect current source/tests/PR lineage for one concrete non-duplicate source-depth gap or publish a no-gap finding."
+  "notes": "Generation-2 stale recovery of FidelityManager capacity mining. Concrete gap found: returned manager exposes live mutable authoritative _states/_metrics, allowing capability holders/callbacks to bypass accounting and transition-fence invariants. Screening duplicates before publishing finding."
 }
