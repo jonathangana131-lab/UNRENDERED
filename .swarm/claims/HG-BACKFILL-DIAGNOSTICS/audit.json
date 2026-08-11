@@ -5,10 +5,10 @@
   "workerId": "sol-20260811-diaga6r2k",
   "claimToken": "5a17c9e42d8b630f",
   "claimedAt": "2026-08-11T06:20:30+00:00",
-  "heartbeatAt": "2026-08-11T06:20:30+00:00",
+  "heartbeatAt": "2026-08-11T06:26:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-diaga6r2k",
-  "pr": null
+  "pr": 273
 }
