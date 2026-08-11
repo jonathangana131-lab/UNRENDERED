@@ -1,21 +1,20 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:15:34.507499+00:00`
+Generated: `2026-08-11T07:15:48.740113+00:00`
 
 Canonical main: **GREEN** `81a13b1138e26e7852c89685de5dbf9bd57753d8`
 
-State digest: `96a602954b843af5fd54753554e0160808acdf987748ee4ee7f1c79d06bd6d6b`
+State digest: `72f4f58d36af5c07b9063075a728f17013446d17bed9ad8466fd4698b3221639`
 
 ## Summary
 
-- ready slots: **16**
+- ready slots: **15**
 - active claims: **14**
 - stale claims: **2**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
-- `SWARM-RECOVERY-PR-OWNERSHIP-IMPORT/primary` — **Critical fail-closed PR ownership recovery** — score 11000 — dependencies satisfied; resources available
 - `HG-BACKFILL-PHYSICS-GEOMETRY/primary` — **Physics recipe and geometry hardening** — score 5200 — dependencies satisfied; resources available
 - `HG-BACKFILL-PHYSICS-GEOMETRY/test-adversary` — **Geometry, clearance, and reachability property tests** — score 5120 — dependencies satisfied
 - `HG-BACKFILL-REALITY/audit` — **WorldId, seed, and replay invariant auditor** — score 5120 — dependencies satisfied

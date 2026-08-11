@@ -15,16 +15,16 @@
     "REVIEW_REQUEST": 26,
     "REVIEW_RESULT": 30
   },
-  "generatedAt": "2026-08-11T07:15:34.507499+00:00",
+  "generatedAt": "2026-08-11T07:15:48.740113+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED_EXTERNAL": 1,
-    "DONE": 10,
+    "DONE": 11,
     "LOCKED": 1,
-    "READY": 12
+    "READY": 11
   },
   "note": "Gross lines written are diagnostic, not a success metric.",
-  "readySlots": 16,
+  "readySlots": 15,
   "reviewBacklog": 0,
   "schemaVersion": 1,
   "staleClaims": 2

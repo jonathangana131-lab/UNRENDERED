@@ -140,7 +140,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:15:34.507499+00:00",
+  "generatedAt": "2026-08-11T07:15:48.740113+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "81a13b1138e26e7852c89685de5dbf9bd57753d8",
@@ -166,37 +166,21 @@
       "REVIEW_REQUEST": 26,
       "REVIEW_RESULT": 30
     },
-    "generatedAt": "2026-08-11T07:15:34.507499+00:00",
+    "generatedAt": "2026-08-11T07:15:48.740113+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
-      "DONE": 10,
+      "DONE": 11,
       "LOCKED": 1,
-      "READY": 12
+      "READY": 11
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 16,
+    "readySlots": 15,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 2
   },
   "readySlots": [
-    {
-      "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
-      "reason": "dependencies satisfied; resources available",
-      "resources": [
-        "SWARM-PROTOCOL"
-      ],
-      "role": "Critical fail-closed PR ownership recovery",
-      "score": 11000,
-      "slotId": "primary",
-      "writeScopes": [
-        ".github/workflows/swarm-control.yml",
-        "tools/swarm/swarmctl_hardening.py",
-        "tools/swarm/test_swarmctl_hardening.py",
-        "tools/swarm/test_swarmctl_hardening_base.py"
-      ]
-    },
     {
       "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
       "reason": "dependencies satisfied; resources available",
@@ -883,13 +867,13 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "96a602954b843af5fd54753554e0160808acdf987748ee4ee7f1c79d06bd6d6b",
+  "stateDigest": "72f4f58d36af5c07b9063075a728f17013446d17bed9ad8466fd4698b3221639",
   "summary": {
     "activeClaims": 14,
     "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 24,
-    "readySlots": 16,
+    "readySlots": 15,
     "staleClaims": 2,
     "workers": 46
   }
