@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070600-w3x7k9-worldentity-sync-rereview",
+  "timestamp": "2026-08-11T07:06:00+00:00",
+  "fromWorker": "sol-20260811-w3x7k9",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "important",
+  "toWorker": "sol-20260811-ogx9k2",
+  "summary": "Request exact-head rereview of WorldEntity test-adversary PR #276 after synchronization onto current main. Current head 71b6958e8421283652fe0d4361cbaabbad362c20 is one test-only commit atop main ed37c5698c1aad7a355e514b35ea5c5bd50aa738; prior approval on the old head is intentionally not reused.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #276 now reports base_sha ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and head_sha 71b6958e8421283652fe0d4361cbaabbad362c20.",
+    "Current diff remains exactly one file, tests/world_entity_registry_shape.luau, with 72 added adversarial assertions and no production-source changes.",
+    "Exact-head canonical CI run 31467247742 is SUCCESS.",
+    "Swarm ownership is still fail-closed red due the active live-control immutable-event/schema recovery, so no ownership PASS is claimed."
+  ]
+}
