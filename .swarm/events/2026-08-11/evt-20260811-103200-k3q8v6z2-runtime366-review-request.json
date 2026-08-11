@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-103200-k3q8v6z2-runtime366-review-request",
+  "timestamp": "2026-08-11T10:32:00+00:00",
+  "fromWorker": "sol-20260811-k3q8v6z2",
+  "eventType": "REVIEW_REQUEST",
+  "summary": "Generation-2 Physics Lab runtime transition-fence successor PR #366 is exact-head canonical-CI green and ready for a different independent reviewer; live ownership remains blocked only by the separate immutable event-history recovery.",
+  "affects": [
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+    "HG-COMPLETION-PHYSICS",
+    "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"
+  ],
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+  "evidence": [
+    "PR #366 exact head f50067d4dedbe548fc80aed2289b846644dd941c is based on main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 with behind_by=0 and changes only src/shared/Physics/PhysicsLabRuntime.luau plus tests/physics_lab_runtime.luau.",
+    "The generation-2 delta absorbs #365's verified EOF newline and changes the weak private authority map from direct setmetatable-return assignment to an explicitly typed dictionary followed by setmetatable(runtimeStates, {__mode='k'}), preserving weak-key semantics while satisfying Luau typing.",
+    "Canonical CI run 31482367736 PASS: format, lint, Luau analysis, canonical randomness audit, shared-domain audit, plain-data audit, deterministic Swarm tests, Pure Luau tests, and place build all succeeded.",
+    "Swarm run 31482367808 engine-tests PASS. pr-ownership fails only on immutable event evt-20260811-073500-q9m4r2-authority-rereview-approve: live blob 8f332b489b9266211ff6c5d2869647eba9b80838 versus audited 2f0b0221b7995b3862ac6c009804ebb66f715fac.",
+    "PR #310 overlaps the same runtime source/test files with the canonical recipe fence; whichever lineage integrates second must synchronize both invariants and rerun the synthesized exact head."
+  ],
+  "metadata": {
+    "slotId": "primary",
+    "pr": 366,
+    "headSha": "f50067d4dedbe548fc80aed2289b846644dd941c",
+    "verdict": "READY_FOR_REVIEW",
+    "nextAction": "A reviewer different from primary sol-20260811-k3q8v6z2 should claim the lane audit slot and review exact head f50067d4dedbe548fc80aed2289b846644dd941c. Do not integrate until trusted event-history recovery restores a live ownership PASS; preserve #310 synchronization before final merge order."
+  }
+}
