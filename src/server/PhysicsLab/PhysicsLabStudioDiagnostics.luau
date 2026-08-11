@@ -64,7 +64,13 @@ local function requireToggleCycleCount(cycles: any): number
 end
 
 local function diagnosticsRoot(model: Model): Folder?
-	local existing = model:FindFirstChild(DIAGNOSTICS_ROOT_NAME)
+	local existing: Instance? = nil
+	for _, child in ipairs(model:GetChildren()) do
+		if child.Name == DIAGNOSTICS_ROOT_NAME then
+			assert(existing == nil, "duplicate Physics Lab diagnostics root")
+			existing = child
+		end
+	end
 	if existing == nil then
 		return nil
 	end
