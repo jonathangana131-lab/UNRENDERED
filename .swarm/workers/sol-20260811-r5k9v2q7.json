@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-r5k9v2q7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T08:37:30+00:00",
+  "lastSeenAt": "2026-08-11T08:37:30+00:00",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-FIDELITY-r5k9v2q7",
+  "notes": "Independent exact-head audit of active FidelityManager source hardening PR #274 against current main and adversarial coverage."
+}
