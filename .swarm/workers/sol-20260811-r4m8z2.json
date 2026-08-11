@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T06:17:21+00:00",
-  "lastSeenAt": "2026-08-11T07:00:29+00:00",
-  "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
-  "slotId": "primary",
-  "branch": "agent/swarm/SWARM-RECOVERY-PR-OWNERSHIP-IMPORT-r4m8z2-cas",
-  "notes": "Critical control recovery in PR #291: #290 restored fail-closed ownership exit propagation; current follow-up fences generated projection and health publication to the exact control snapshot they materialized. Investigating legacy malformed immutable event compatibility instead of rewriting historical event bytes."
+  "lastSeenAt": "2026-08-11T07:18:20+00:00",
+  "laneId": "HG-BACKFILL-REALITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-REALITY-audit-r4m8z2",
+  "notes": "Critical Swarm ownership recovery completed and released. Now independently auditing active Reality/replay PRs for exact-head identity/version correctness and integration readiness before starting new breadth."
 }
