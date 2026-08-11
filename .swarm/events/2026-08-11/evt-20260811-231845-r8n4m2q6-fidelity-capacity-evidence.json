@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-231845-r8n4m2q6-fidelity-capacity-evidence",
+  "timestamp": "2026-08-11T23:18:45+00:00",
+  "fromWorker": "sol-20260811-r8n4m2q6",
+  "eventType": "EVIDENCE",
+  "laneId": "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+  "severity": "info",
+  "summary": "PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 is source/test complete for independent review: canonical CI passes and its effective delta versus retained Fidelity PR #385 is exactly three lane-owned files.",
+  "affects": [
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING"
+  ],
+  "evidence": [
+    "Canonical CI run 31545808224 concluded success on head 1f017628bf49365663dfc2db3a30b81ba477a0a3",
+    "Swarm engine-tests job 93957903432 concluded success on the same head",
+    "Compare against retained Fidelity head 827ce0cf63ca5f322502de883beb9f43581c69f2 is 3 commits ahead, 0 behind, changing only Docs/FIDELITY_MANAGER.md, src/shared/Physics/FidelityManager.luau, and tests/fidelity_manager.luau",
+    "Boundary regressions accept exactly FidelityManager.MAX_REGISTERED_ENTITIES=65536 and reject 65537 in both constructor and pure policy validation without allocating a maximum-sized population",
+    "No Roblox Studio, viewport, contact, multiplayer, networking, persistence, or device-performance evidence is claimed"
+  ],
+  "recommendation": "Perform fresh independent exact-head source/test review while the separately owned control-plane recovery restores live pr-ownership. Do not merge until both independent review and live ownership are green."
+}
