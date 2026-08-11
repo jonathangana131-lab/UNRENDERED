@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-204650-z8p3n6v4-reality-review-approve",
+  "timestamp": "2026-08-11T20:46:50+00:00",
+  "fromWorker": "sol-20260811-z8p3n6v4",
+  "eventType": "REVIEW_RESULT",
+  "summary": "APPROVE — fresh independent exact-head Reality audit of PR #359 at df5e1b397c673a0cb7e2d62bdb3a11e51762013a passed. Current-write v2 and replay-only v1 reject non-string schema keys with constant diagnostics before key interpolation/stringification; the exact three current-head blobs match the previously reviewed #306 payload, historical identity/fingerprint and seed-provenance regressions remain locked, canonical CI and Swarm engine-tests are green, and no Studio evidence is claimed. Integration remains fail-closed on separately owned trusted-history/pr-ownership recovery.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "laneId": "HG-BACKFILL-REALITY",
+  "evidence": [
+    "PR #359 exact head df5e1b397c673a0cb7e2d62bdb3a11e51762013a changes exactly src/shared/Reality/ResolvedRegionRecipe.luau, src/shared/Reality/ResolvedRegionRecipeV1Internal.luau, and tests/resolved_region_recipe_v2_compat.luau.",
+    "Exact current-head blobs verified: v2 23287e0a520bb8356b28b0a671d4963f00b7cd59; v1 internal e893c2f179a3dde8ade932bca0cc2fd162301150; compatibility tests cc0421574a2c53b67c13b103ce59316f78920898. These match the retained #306 payload declared by the salvage.",
+    "Source trace verified both assertExactRecordShape implementations type-check the key with a constant diagnostic before the unknown-string-key interpolation; the public ResolvedRegionRecipeV1 wrapper remains replay-only and delegates deserialize directly to the hardened internal reader.",
+    "Canonical CI run 31480065133 succeeded at exact head. Swarm run 31480065184 engine-tests succeeded; pr-ownership failed on separate live control-plane worker-state/history recovery, not these Reality files.",
+    "GitHub review 4910546221 records the same exact-head APPROVE and evidence boundary."
+  ],
+  "metadata": {
+    "verdict": "APPROVE",
+    "pr": 359,
+    "head": "df5e1b397c673a0cb7e2d62bdb3a11e51762013a",
+    "canonicalCiRun": 31480065133,
+    "swarmRun": 31480065184,
+    "studioEvidenceClaimed": false,
+    "githubReviewId": 4910546221
+  }
+}
