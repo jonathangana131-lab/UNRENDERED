@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115740-faa32e59-runtime-recipe-review-request",
+  "timestamp": "2026-08-11T11:57:40+00:00",
+  "fromWorker": "sol-20260811-faa32e59",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "summary": "Generation-3 stale recovery advanced the runtime canonical-recipe fence to REVIEW without changing reviewed product bytes. Independently verify PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d against current main, preserve its no-execute/bounded-work invariants, and record synchronization requirements with overlapping runtime-transition PR #366. Global pr-ownership remains fail-closed on the separately owned immutable-history continuity recovery and must not be bypassed.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"],
+  "evidence": [
+    "PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d changes only PhysicsLabRuntime.luau and tests/physics_lab_runtime.luau.",
+    "Canonical CI run 31477554686 passed end-to-end on that product head.",
+    "Independent completion review reported SOURCE PASS on the same exact source head after the final hostile-key and bounded candidate-state repairs.",
+    "PR #366 concurrently edits the same runtime/test files, so whichever repair integrates second must synchronize both invariants and rerun exact-head validation."
+  ]
+}
