@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-p6m2x8v4",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "WORKING",
   "startedAt": "2026-08-11T11:49:00+00:00",
-  "lastSeenAt": "2026-08-11T11:49:00+00:00",
-  "notes": "Independent completion audit of HG-BACKFILL-WORLDENTITY PR #293."
+  "lastSeenAt": "2026-08-11T11:58:04+00:00",
+  "notes": "WorldEntity PR #293 completion audit published REQUEST_CHANGES and audit lease released; selecting the next non-conflicting active review/integration task."
 }
