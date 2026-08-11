@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-213100-zvq321y9-runtime-entityid-audit-pass",
+  "timestamp": "2026-08-11T21:31:00+00:00",
+  "fromWorker": "sol-20260811-zvq321y9",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head source audit PASS for PR #402 at 4b75bd054eb6a1b3b03d0a868aea46df41d3db42. WorldEntity.isId rejects non-strings before caller-controlled formatting/metamethod execution; getFidelity/step reach the guarded getRecord boundary before later diagnostics or mutation. Canonical CI 31537443884 is green and Swarm engine-tests pass. Final integration must still synthesize retained #310 canonical-recipe and #388 transition-mutation/frozen-facade invariants and remains blocked on global trusted pr-ownership recovery.",
+  "affects": ["HG-PHYSICS-RUNTIME-ENTITYID-FENCE", "HERO-GATE"],
+  "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
+  "severity": "INFO",
+  "evidence": [
+    "PR #402 review 4910908835 on exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42",
+    "Canonical CI run 31537443884 SUCCESS",
+    "WorldEntity.isId short-circuits on type(value) == string before length/control-character checks",
+    "No Studio, viewport, physical-contact, or two-client evidence claimed"
+  ]
+}
