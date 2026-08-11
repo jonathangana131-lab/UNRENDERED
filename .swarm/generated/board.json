@@ -1,15 +1,5 @@
 {
-  "activeClaims": [
-    {
-      "branch": "agent/swarm/v2-hardening-ctl2",
-      "expiresAt": "2026-08-11T06:00:00+00:00",
-      "generation": 1,
-      "laneId": "SWARM-V2-HARDEN",
-      "pr": 267,
-      "slotId": "primary",
-      "workerId": "sol-20260811-ctl2"
-    }
-  ],
+  "activeClaims": [],
   "blockedLanes": [
     {
       "laneId": "HERO-DOOR",
@@ -23,7 +13,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:33:00.975532+00:00",
+  "generatedAt": "2026-08-11T05:33:24.513211+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "2ce32576a47e99a1e09e802dc7e76a0bf7bbd283",
@@ -33,16 +23,16 @@
     "workflowRunId": 31461520021
   },
   "metrics": {
-    "activeClaims": 1,
+    "activeClaims": 0,
     "activeEpics": [
       "HERO-GATE"
     ],
     "eventCounts": {
       "EXTERNAL_BLOCKER": 1,
-      "INTEGRATION_RESULT": 1,
+      "INTEGRATION_RESULT": 2,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T05:33:00.975532+00:00",
+    "generatedAt": "2026-08-11T05:33:24.513211+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -117,6 +107,28 @@
       "severity": "info",
       "summary": "Live stale-lease recovery proof passed: generation 2 replaced an expired generation-1 owner, the control transition validator accepted the change, and GitHub rejected a second contender that still referenced the old blob SHA.",
       "timestamp": "2026-08-11T05:31:00+00:00"
+    },
+    {
+      "affects": [
+        "SWARM-V2-HARDEN",
+        "SWARM-V2-CAS-PROOF"
+      ],
+      "eventId": "evt-20260811-053200-v2-hardened",
+      "eventType": "INTEGRATION_RESULT",
+      "evidence": [
+        "PR 267 merged as 2ce32576a47e99a1e09e802dc7e76a0bf7bbd283",
+        "PR head canonical CI run 31461458040 passed",
+        "PR head Swarm Control Plane run 31461458050 passed engine-tests and live ownership enforcement",
+        "live hardened branch validation run 31461614754 passed",
+        "validated-state enforcement run 31461744980 passed",
+        "real stale-lease transition run 31461852101 passed and stale competing GitHub update returned HTTP 409"
+      ],
+      "fromWorker": "sol-20260811-ctl2",
+      "laneId": "SWARM-V2-HARDEN",
+      "schemaVersion": 1,
+      "severity": "info",
+      "summary": "Swarm Control Plane V2 hardening is merged and live. Trusted-base PR validation, validated-state fencing, transition validation, WIP and red-main scheduling, worker/PR fencing, generated metrics, and live stale-lease recovery are operational.",
+      "timestamp": "2026-08-11T05:32:00+00:00"
     }
   ],
   "resources": [
@@ -128,7 +140,7 @@
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 1,
+      "activeOwners": 0,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "SWARM-PROTOCOL",
@@ -158,10 +170,10 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "0086505814d3e9a2f86d3bfc089b89578b4f2f3692f8a49c26fb42032e98f774",
+  "stateDigest": "36afba442abc652ea2efc68b594c83e314039a38ed26cefb3a7b934cd4d37524",
   "summary": {
-    "activeClaims": 1,
-    "activeResourceClaims": 1,
+    "activeClaims": 0,
+    "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
     "lanes": 9,
     "readySlots": 0,
