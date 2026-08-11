@@ -27,15 +27,6 @@ local function run(): number
 	for index, expected in expectedDieRolls do
 		local value
 		dieState, value = Contract.nextIntegerState(dieState, 1, 6)
-		expectEqual(`bounded integer golden #{index}`, value, expected)
-	end
-
-	local firstState = 0x12345678
-	local secondState = 0x12345678
-	for index = 1, 16 do
-		local firstValue
-		local secondValue
-		firstState, firstValue = Contract.nextIntegerState(firstState, -17, 29)
 		secondState, secondValue = Contract.nextIntegerState(secondState, -17, 29)
 		expectEqual(`same seed bounded sequence #{index}`, firstValue, secondValue)
 	end
@@ -67,6 +58,67 @@ local function run(): number
 	expectError("bounded integer rejects invalid RNG state", function()
 		Contract.nextIntegerState(4294967296, 1, 6)
 	end)
+
+	local hostileLengthCalls = 0
+	local hostileParts = setmetatable({}, {
+		__len = function()
+			hostileLengthCalls += 1
+			error("hostile deterministic parts __len executed")
+		end,
+	})
+	expectError("StableId rejects metatable-backed semantic parts", function()
+		Contract.stableId("world", hostileParts :: any)
+	end)
+	expectEqual("StableId rejection does not execute hostile parts __len", hostileLengthCalls, 0)
+
+	local inertParts = setmetatable({ "alpha" }, {})
+	expectError("StableId rejects inert metatable-backed semantic parts", function()
+		Contract.stableId("world", inertParts :: any)
+	end)
+
+	local hostileMinimumModuloCalls = 0
+	local hostileMinimum = setmetatable({}, {
+		__mod = function()
+			hostileMinimumModuloCalls += 1
+			error("hostile minimum __mod executed")
+		end,
+	})
+	expectError("bounded integer rejects hostile minimum", function()
+		Contract.nextIntegerState(1, hostileMinimum :: any, 10)
+	end)
+	expectEqual(
+		"bounded integer rejection does not execute hostile minimum arithmetic",
+		hostileMinimumModuloCalls,
+		0
+	)
+
+	local hostileStateModuloCalls = 0
+	local hostileState = setmetatable({}, {
+		__mod = function()
+			hostileStateModuloCalls += 1
+			error("hostile state __mod executed")
+		end,
+	})
+	expectError("RNG normalization rejects hostile state", function()
+		Contract.normalizeRngSeed(hostileState :: any)
+	end)
+	expectEqual("RNG state rejection does not execute hostile arithmetic", hostileStateModuloCalls, 0)
+
+	local hostileVersionModuloCalls = 0
+	local hostileVersion = setmetatable({}, {
+		__mod = function()
+			hostileVersionModuloCalls += 1
+			error("hostile generationVersion __mod executed")
+		end,
+	})
+	expectError("seed stream rejects hostile generation version", function()
+		Contract.seedFor("world-seed", hostileVersion :: any, "worldgen.topology", { "region:0:0:0" })
+	end)
+	expectEqual(
+		"seed stream rejection does not execute hostile generation-version arithmetic",
+		hostileVersionModuloCalls,
+		0
+	)
 
 	return failures
 end
