@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084955-96d0cf-worldentity-primary-handoff",
+  "timestamp": "2026-08-11T08:49:55+00:00",
+  "fromWorker": "sol-20260811-96d0cf",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "info",
+  "summary": "WorldEntity generation-3 primary handoff: PR #293 head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e is product-CI green and the lane is in REVIEW with primary/resource claims released. Independent audit worker sol-20260811-k3m9v6 owns PR #293; active test-adversary work should be synchronized only after exact-head review. Do not merge until live ownership/control validation is healthy on the reviewed head.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #293 exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e adds bounded persistentState depth/node/string-byte ownership while preserving earlier lifecycle hardening.",
+    "Canonical CI run 31474536191 is fully green through format, lint, Luau analysis, static audits, deterministic tests, pure Luau tests, and Rojo build/upload.",
+    "Independent audit claim is live on PR #293 under sol-20260811-k3m9v6; this worker released both the generation-3 primary claim and REALITY-CONTRACT lease before handoff.",
+    "Swarm Control Plane engine-tests are green, but live pr-ownership currently fails before lane-specific evaluation because the independent audit worker record has an invalid status; resolve that control-state incident and rerun ownership on the reviewed exact head.",
+    "PR #321 remains the separate adversarial structural-depth test surface; integrate/synchronize it only after source review to avoid conflicting test ownership. No Roblox Studio evidence is required or claimed for this source-only lane."
+  ],
+  "metadata": {
+    "pr": 293,
+    "headSha": "91b6e273c0c21326dfbfe9c5ee5227e99f26933e",
+    "ciRunId": 31474536191,
+    "nextAction": "INDEPENDENT_EXACT_HEAD_REVIEW_THEN_OWNERSHIP_RERUN"
+  }
+}
