@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t222900z-d7k4m9q2-geometry-g6-handoff",
+  "timestamp": "2026-08-11T22:29:00+00:00",
+  "fromWorker": "sol-20260811-d7k4m9q2",
+  "eventType": "HANDOFF",
+  "summary": "Physics geometry generation 6 is source/test complete on review-ready successor PR #414 exact head 51ffc16fb2f5864cd4874710a7517e94dd5422b8. The successor preserves #389's finite derived-output checks and closes the expected-red #406 malformed-scalar no-execute defect by proving primitive number type before equality, ordering, or arithmetic. The regression covers hostile equality, ordering, and multiplication hooks through both public conversion directions with zero caller metamethod executions. Canonical CI and Swarm engine-tests are green. Integration remains blocked on the separately owned live pr-ownership recovery and a fresh independent exact-head review. No Studio, viewport, physical-contact, or two-client evidence was run or claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "info",
+  "evidence": [
+    "Retained predecessor #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401; direct generation-6 delta is exactly two files, +35/-2.",
+    "PR #414 exact head 51ffc16fb2f5864cd4874710a7517e94dd5422b8 is ready for review and mergeable against current main.",
+    "Canonical CI run 31542411647 passed formatting, lint, strict Luau analysis, architecture audits, deterministic control tests, Pure Luau tests, Rojo build, and artifact upload.",
+    "Swarm Control Plane run 31542411594 engine-tests passed; pr-ownership failed only at live ownership enforcement behind the separately owned trusted-history recovery.",
+    "Expected-red #406 regression evidence is absorbed and strengthened; earlier #389 REQUEST_CHANGES blocker is closed on this successor."
+  ],
+  "metadata": {
+    "pr": 414,
+    "head": "51ffc16fb2f5864cd4874710a7517e94dd5422b8",
+    "predecessorPr": 389,
+    "canonicalCi": 31542411647,
+    "swarmRun": 31542411594,
+    "laneState": "REVIEW",
+    "studioEvidenceClaimed": false
+  }
+}
