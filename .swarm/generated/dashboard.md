@@ -1,10 +1,10 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T06:04:39.817360+00:00`
+Generated: `2026-08-11T06:05:00.619008+00:00`
 
 Canonical main: **GREEN** `5ee9091eb9d7af665a990381b0133d8ccedea503`
 
-State digest: `32f1becd7e338e8e8b9d5767f7f30d74cdde1c1f63ea1dfcbebe3545932d530c`
+State digest: `b044ef9c6ec42c25659b111c3376c5e2fc35e2cfaa8409d057dbe645aaff7e31`
 
 ## Summary
 
