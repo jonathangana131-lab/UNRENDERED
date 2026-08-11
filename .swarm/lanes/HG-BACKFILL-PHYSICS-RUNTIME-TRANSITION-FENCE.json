@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime transition mutation fence",
   "objective": "Close the source-only runtime lifecycle reentrancy defect found by capacity mining: transition adapters must not be able to partially dismantle or recursively mutate PhysicsLabRuntime authority while an F2/F0 fidelity transaction is in flight.",
   "priority": 4990,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -44,6 +44,6 @@
     "pure regressions prove no partial teardown or count drift; no Roblox Studio/engine evidence claim",
     "independent review required before integration"
   ],
-  "pr": 366,
-  "notes": "Independent exact-head audit of PR #366 at f50067d4dedbe548fc80aed2289b846644dd941c returned REQUEST_CHANGES despite green canonical CI 31482367736 and green Swarm engine-tests. The callback-local transition fence, hidden runtime facade, retry semantics, and generation-2 weak-key typing repair are sound, but current-main FidelityManager still dereferences caller-owned PolicyInputs before PhysicsLabRuntime raises transitionInFlight. A metatable-backed PolicyInputs __index can therefore call runtime.dispose while the guard is false and tear down both authority populations before the outer step fails. Repair by putting PR #335/equivalent no-execute PolicyInputs + hostile-time preflight in ancestry, or by extending the runtime mutation transaction/preflight over the full FidelityManager.step call window; add a regression proving policy-input evaluation cannot mutate runtime authority. The eventual integration head must also synthesize overlapping canonical recipe-fence PR #310 and rerun exact-head canonical CI plus live pr-ownership. REVIEW_RESULT evt-20260811-121404-p6m2x8v4-runtime-transition-review-result records the dependency blocker."
+  "pr": 388,
+  "notes": "Generation-3 stale recovery PR #388 at exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1 closes the PR #366 review blocker by holding PhysicsLabRuntime's mutation fence across the full FidelityManager.step evaluation window, including caller-owned PolicyInputs access before any representation hook. Added adversarial metatable-backed PolicyInputs regression proving dispose() is rejected before authority teardown, registry/fidelity populations remain intact and synchronized at F2, and the guard clears for immediate retry. Canonical CI run 31532785322 passed format, lint, Luau analysis, randomness/domain/plain-value audits, control-plane deterministic tests, pure Luau tests, and place build. Swarm run 31532785365 engine-tests passed. Its pr-ownership job fails only on the separately owned live immutable-event continuity blocker: audited event evt-20260811-073500-q9m4r2-authority-rereview-approve.json has non-canonical bytes (8f332b4... != 2f0b022...). No local test or Studio evidence is claimed. Independent review is required; eventual integration must synthesize overlapping canonical recipe-fence PR #310 and rerun current-main exact-head CI/pr-ownership after the control recovery lands."
 }
