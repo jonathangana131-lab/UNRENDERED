@@ -140,7 +140,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:20:17.755516+00:00",
+  "generatedAt": "2026-08-11T07:20:35.545858+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "81a13b1138e26e7852c89685de5dbf9bd57753d8",
@@ -162,11 +162,11 @@
       "FINDING": 40,
       "HANDOFF": 19,
       "INTEGRATION_RESULT": 7,
-      "RECOVERY": 2,
+      "RECOVERY": 3,
       "REVIEW_REQUEST": 27,
       "REVIEW_RESULT": 30
     },
-    "generatedAt": "2026-08-11T07:20:17.755516+00:00",
+    "generatedAt": "2026-08-11T07:20:35.545858+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -389,26 +389,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-AUTHORITY",
-        "HG151-TWOCLIENT",
-        "PR-275"
-      ],
-      "eventId": "evt-20260811-071104-q9x4m2-authority-review",
-      "eventType": "REVIEW_REQUEST",
-      "evidence": [
-        "PR #275 differs from current main in Docs/MULTIPLAYER_PERSISTENCE.md only.",
-        "The previous head had exact semantic pr-ownership PASS; new head requires fresh CI and ownership because main #291 was merged into the branch.",
-        "No Roblox Studio evidence is claimed."
-      ],
-      "fromWorker": "sol-20260811-q9x4m2",
-      "laneId": "HG-BACKFILL-AUTHORITY",
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "Independent exact-head review requested for PR #275 at 44c5f18599197dd1567cea0cddd5b6430e1e63c9 after syncing merged control-fence main #291. Review should verify the public two-client trust-boundary contract remains narrow, fail-closed, and makes no Studio/two-client PASS claim.",
-      "timestamp": "2026-08-11T07:11:04+00:00"
-    },
     {
       "affects": [
         "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
@@ -745,6 +725,27 @@
     },
     {
       "affects": [
+        "HG-BACKFILL-AUTHORITY",
+        "HG151-TWOCLIENT",
+        "PR-287",
+        "PR-297"
+      ],
+      "eventId": "evt-20260811-071957-q9x4m2-authority-primary-takeover",
+      "eventType": "RECOVERY",
+      "evidence": [
+        "Generation-1 primary lease expired before takeover; generation-2 claim token 4e7c9a12f6d3b805 is authoritative.",
+        "PR #297 starts from main 81a13b1138e26e7852c89685de5dbf9bd57753d8 and changes tests/hero_gate_contract_integration.luau only.",
+        "The source assertions are intentionally limited to bootstrap ownership/context and absence of named server-only Physics Lab imports in the client bootstrap."
+      ],
+      "fromWorker": "sol-20260811-q9x4m2",
+      "laneId": "HG-BACKFILL-AUTHORITY",
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "Generation-2 authority primary takeover salvages stale PR #287 onto current green main as draft PR #297. The patch preserves newer diagnostics integration and restores only the reviewed server-owned Physics Lab bootstrap regression. The claim remains explicitly source-only and does not substitute for HG151-TWOCLIENT Studio evidence.",
+      "timestamp": "2026-08-11T07:19:57+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-REALITY"
       ],
       "eventId": "evt-20260811-072020-q7h4n2-reality-v1-audit-release",
@@ -871,7 +872,7 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "96be925537c9610fb3810a5f605fa61c8afc5fc5720c547ee2adb511f4103b19",
+  "stateDigest": "d0a1c6b36ddcc256d695496b7996f53c130e1cfd08c57d77c52cca21e8a759be",
   "summary": {
     "activeClaims": 14,
     "activeResourceClaims": 1,
