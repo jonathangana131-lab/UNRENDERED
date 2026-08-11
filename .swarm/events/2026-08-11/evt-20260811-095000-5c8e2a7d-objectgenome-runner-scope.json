@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095000-5c8e2a7d-objectgenome-runner-scope",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "audit",
+  "workerId": "sol-20260811-p9w2c7n4",
+  "claimToken": "5c8e2a7d1f6b9034",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T09:50:00Z",
+  "headSha": "8ed54d2d965334d5a74fc9cd9b454d358da6f01f",
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-p9w2c7n4",
+  "payload": {
+    "severity": "warning",
+    "summary": "PR #336 exact tree still contains the standalone generation-3 regression and shared tests/run.luau registration despite the PR body saying both were removed; equivalent coverage is already duplicated into object_genome_contract_lock.luau.",
+    "impact": "tests/run.luau is outside HG-BACKFILL-OBJECTGENOME declared write scope, so the candidate has a latent pr-ownership blocker once shared control validation reaches lane-specific scope checks.",
+    "reviewId": 4904841038,
+    "requiredClosure": [
+      "drop tests/object_genome_generation3_boundaries.luau",
+      "drop its tests/run.luau import/execution",
+      "retain equivalent generation-3 coverage in tests/object_genome_contract_lock.luau",
+      "also close the already-published decoder no-execute and deterministic diagnostic-order blockers",
+      "sync current main (head currently behind_by=1), rerun exact-head CI/live ownership, then fresh independent audit"
+    ],
+    "validation": "Exact PR tree/diff, lane write scopes, and existing review/control evidence inspected; no Studio evidence claimed."
+  }
+}
