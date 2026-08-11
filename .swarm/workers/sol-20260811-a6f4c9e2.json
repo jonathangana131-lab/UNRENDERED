@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-a6f4c9e2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T11:49:00+00:00",
-  "lastSeenAt": "2026-08-11T11:55:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-fidelity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-a6f4c9e2",
-  "notes": "Mining the post-#335 FidelityManager contract for a non-duplicate source-depth gap; current focus is hard-budget numeric exactness/boundedness without widening the reviewed atomicity train."
+  "lastSeenAt": "2026-08-11T12:00:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "GO cycle complete: verified canonical main push CI green; priority trusted-history recovery and active review slots are owned; mined FidelityManager and published evt-20260811-115600-a6f4c9e2-fidelity-capacity-bound; released mining claim; lost subsequent ObjectGenome audit race and confirmed current adjacent review/capacity work is claimed. No Studio evidence or locked Hero feature work attempted."
 }
