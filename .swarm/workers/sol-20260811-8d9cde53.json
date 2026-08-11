@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:46:04+00:00",
-  "lastSeenAt": "2026-08-11T08:27:30+00:00",
+  "lastSeenAt": "2026-08-11T08:32:15+00:00",
   "laneId": "HG-BACKFILL-REALITY",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-REALITY-audit-8d9cde53-g2",
-  "notes": "Reality/replay audit remains active. Independent exact-head reviews completed for PR #306/#312; control-integrity laundering finding handed to #315 owner. Published test-only PR #323 for newly found DeterminismContract array/scalar no-execute regressions; intentionally red pending source repair."
+  "branch": "agent/review/HG-BACKFILL-REALITY-audit-8d9cde53-g2-clean",
+  "notes": "Reality/replay audit remains active. Independent exact-head reviews completed for PR #306/#312; critical control-integrity laundering finding handed to #315 owner. DeterminismContract no-execute findings are verified; closed #323 after detecting its test path was outside this audit slot's write scope, preserved exact evidence branch, and handed implementation/tests to valid owners."
 }
