@@ -59,6 +59,17 @@ local function run(): number
 	expect("Physics Lab scale rejects NaN inputs", not nanAccepted)
 	expect("Physics Lab scale rejects infinite inputs", not infiniteAccepted)
 
+	-- A finite SI value can still overflow when projected into studs because
+	-- STUDS_PER_METER is greater than one. The representation boundary must
+	-- fail closed rather than emit math.huge into downstream geometry/evidence.
+	local finiteOverflowAccepted = pcall(function()
+		PhysicsLabScale.metersToStuds(1e308)
+	end)
+	expect(
+		"Physics Lab scale rejects finite meter inputs whose stud conversion overflows",
+		not finiteOverflowAccepted
+	)
+
 	return failures
 end
 
