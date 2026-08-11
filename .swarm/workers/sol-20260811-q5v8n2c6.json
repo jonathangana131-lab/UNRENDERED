@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q5v8n2c6",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T20:16:18+00:00",
-  "lastSeenAt": "2026-08-11T20:17:30+00:00",
+  "lastSeenAt": "2026-08-11T20:27:10+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-q5v8n2c6-g3",
-  "notes": "Generation-3 stale recovery owns the runtime-transition fence. Salvaging PR #366 exact head and addressing the confirmed pre-hook hostile PolicyInputs reentrancy defect inside lane scope."
+  "notes": "Generation-3 repair published as PR #388 at 89eb1c890d63de9b4e407caee215b6065b6ddac1. Exact-head canonical CI run 31532785322 passed all product checks including pure Luau tests/place build; Swarm engine-tests passed in run 31532785365. Lane transitioned to REVIEW and primary claim released for independent audit. pr-ownership remains externally blocked by separately owned non-canonical immutable-event history. Event-history recovery and eventual #310 recipe-fence synthesis remain outside this completed primary slot."
 }
