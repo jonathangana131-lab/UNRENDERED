@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q5v8n2c6",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T20:16:18+00:00",
-  "lastSeenAt": "2026-08-11T20:29:30+00:00",
+  "lastSeenAt": "2026-08-11T20:35:00+00:00",
   "laneId": "HG-BACKFILL-AUTHORITY",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-q5v8n2c6",
-  "notes": "Independent source-only audit of authority teardown successor PR #390. Prior runtime-transition primary PR #388 is already handed off and no longer owned by this worker."
+  "notes": "Authority audit complete: PR #390 exact head f8a66f65dff914e919bb7709ac4139e87fe0a05b received independent SOURCE/TEST PASS review 4910494826; canonical CI and engine-tests are green, integration remains held on separately owned immutable-history pr-ownership recovery and final reconciliation with primary #348. Audit claim and SERVER-AUTHORITY lease released. Prior runtime-transition PR #388 remains independently reviewable and no longer owned by this worker."
 }
