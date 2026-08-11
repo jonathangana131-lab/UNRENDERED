@@ -59,6 +59,33 @@ local IDENTITY_KEYS = table.freeze({
 	"resolvedRegionReproKey",
 })
 
+local SNAPSHOT_KEY_SET = table.freeze({
+	rootName = true,
+	labSchemaVersion = true,
+	labRecipeKey = true,
+	worldId = true,
+	regionId = true,
+	resolvedRegionSchemaVersion = true,
+	worldSeedRef = true,
+	resolvedRegionFingerprint = true,
+	resolvedRegionReproKey = true,
+	counts = true,
+	envelopeStuds = true,
+})
+
+local COUNT_KEY_SET = table.freeze({
+	instances = true,
+	models = true,
+	parts = true,
+	assemblies = true,
+	attachments = true,
+	constraints = true,
+	joints = true,
+})
+
+local ENVELOPE_KEY_SET = table.freeze({ min = true, max = true })
+local VEC3_KEY_SET = table.freeze({ x = true, y = true, z = true })
+
 local function isFinite(value: any): boolean
 	return type(value) == "number" and value == value and value ~= math.huge and value ~= -math.huge
 end
@@ -75,9 +102,26 @@ local function isPlainTable(value: any): boolean
 	return type(value) == "table" and getmetatable(value) == nil
 end
 
-local function inspectVec3(value: any, label: string): (boolean, string?)
+local function inspectExactPlainTable(
+	value: any,
+	label: string,
+	allowedKeys: { [string]: boolean }
+): (boolean, string?)
 	if not isPlainTable(value) then
 		return false, `{label} must be a plain table`
+	end
+	for key in pairs(value) do
+		if type(key) ~= "string" or allowedKeys[key] ~= true then
+			return false, `{label} contains an unknown field`
+		end
+	end
+	return true, nil
+end
+
+local function inspectVec3(value: any, label: string): (boolean, string?)
+	local shapeOk, shapeError = inspectExactPlainTable(value, label, VEC3_KEY_SET)
+	if not shapeOk then
+		return false, shapeError
 	end
 	for _, axis in ipairs({ "x", "y", "z" }) do
 		if not isFinite(value[axis]) then
@@ -88,8 +132,9 @@ local function inspectVec3(value: any, label: string): (boolean, string?)
 end
 
 local function inspectEnvelope(envelope: any): (boolean, string?)
-	if not isPlainTable(envelope) then
-		return false, "envelopeStuds must be a plain table when present"
+	local shapeOk, shapeError = inspectExactPlainTable(envelope, "envelopeStuds", ENVELOPE_KEY_SET)
+	if not shapeOk then
+		return false, shapeError
 	end
 	local minOk, minError = inspectVec3(envelope.min, "envelopeStuds.min")
 	if not minOk then
@@ -108,8 +153,9 @@ local function inspectEnvelope(envelope: any): (boolean, string?)
 end
 
 function PhysicsLabValidationContract.inspectSnapshot(snapshot: any): (boolean, string?)
-	if not isPlainTable(snapshot) then
-		return false, "snapshot must be a plain table"
+	local snapshotShapeOk, snapshotShapeError = inspectExactPlainTable(snapshot, "snapshot", SNAPSHOT_KEY_SET)
+	if not snapshotShapeOk then
+		return false, snapshotShapeError
 	end
 	if type(snapshot.rootName) ~= "string" or snapshot.rootName == "" then
 		return false, "snapshot.rootName must be a non-empty string"
@@ -125,8 +171,9 @@ function PhysicsLabValidationContract.inspectSnapshot(snapshot: any): (boolean, 
 			return false, `snapshot.{field} must be a non-empty string`
 		end
 	end
-	if not isPlainTable(snapshot.counts) then
-		return false, "snapshot.counts must be a plain table"
+	local countsShapeOk, countsShapeError = inspectExactPlainTable(snapshot.counts, "snapshot.counts", COUNT_KEY_SET)
+	if not countsShapeOk then
+		return false, countsShapeError
 	end
 	for _, key in ipairs(COUNT_KEYS) do
 		if not isNonNegativeInteger(snapshot.counts[key]) then
