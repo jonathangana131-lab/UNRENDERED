@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "primary",
+  "workerId": "sol-20260811-p6v2m8q4",
+  "claimToken": "7c4e1a9d2b6f8053",
+  "claimedAt": "2026-08-11T12:01:30+00:00",
+  "heartbeatAt": "2026-08-11T12:01:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 4,
+  "resources": [],
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-p6v2m8q4-g4",
+  "pr": null,
+  "notes": "Generation-4 successor to draft PR #336 after generation-3 primary release. Rebuild narrowly on current main: preserve reviewed familyVersion/nested-key/state-map ownership fixes, close decoder metatable no-execute and deterministic inspect diagnostic-order blockers, keep all changes within ObjectGenome source/tests scope, then rerun exact-head gates and request fresh independent audit."
+}
