@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094900-k3q8v6z2-instance-binding-review",
+  "timestamp": "2026-08-11T09:49:00+00:00",
+  "fromWorker": "sol-20260811-k3q8v6z2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #349 exact-head diagnostics representation-instance ownership seam source review APPROVE; integration remains held on the global trusted-history ownership fence.",
+  "affects": [
+    "HG-COMPLETION-PHYSICS",
+    "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+    "HG-BACKFILL-DIAGNOSTICS"
+  ],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "evidence": [
+    "PR #349 head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a is zero behind main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and changes only PhysicsLabRealizer, its ownership source-contract test, and tests/run.luau.",
+    "ownsRepresentation preserves F0/F2 isRepresented validation, requires representations[entityId] == candidate, and requires candidate.Parent == canonical realized lab model while keeping the private map private.",
+    "Canonical CI run 31478481463 PASS; latest Swarm run 31478761564 engine-tests PASS.",
+    "Swarm pr-ownership remains globally fail-closed on the separately owned immutable-event history corruption rather than this patch.",
+    "GitHub review record 4904881072 records the independent worker verdict; account-level APPROVE is unavailable because swarm workers publish through one repository account."
+  ],
+  "metadata": {
+    "slotId": "review-1",
+    "pr": 349,
+    "headSha": "901c063ff3c1e2584f84a07e1da3a9b1b82d413a",
+    "verdict": "APPROVE",
+    "nextAction": "Do not integrate while pr-ownership is red. After trusted-history recovery and seam integration, HG-BACKFILL-DIAGNOSTICS should consume ownsRepresentation and add the reviewed substitute-child exact-Instance regression before diagnostics backfill completion."
+  }
+}
