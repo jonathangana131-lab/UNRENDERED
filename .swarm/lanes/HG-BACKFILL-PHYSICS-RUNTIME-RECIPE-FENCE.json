@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime canonical-recipe fence",
   "objective": "Close the concrete source-only constructor gap found by capacity mining: PhysicsLabRuntime must fail closed before authority registration when an input bearing the canonical recipe key does not match the permanent lab's canonical WorldId/RegionId and complete key/id population.",
   "priority": 4980,
-  "state": "REVIEW",
+  "state": "BLOCKED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -43,6 +43,6 @@
     "do not claim Roblox Studio or engine evidence",
     "independent review required before integration"
   ],
-  "notes": "Generation-3 stale recovery on PR #310 preserves exact product head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d. All previously recorded recipe-fence blockers are closed; canonical CI run 31477554686 passed end-to-end and independent completion review reported SOURCE PASS on this exact source head. Lane advanced from stale NEEDS_CHANGES to REVIEW so the lane-owned independent audit can reconcile current-main ancestry, overlapping runtime-transition PR #366, and the globally fail-closed ownership gate. Do not merge until live pr-ownership is meaningful again after SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY and the second overlapping runtime repair is synchronized. No Studio or engine evidence claimed.",
+  "notes": "Lane-owned independent audit on PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d is SOURCE PASS with no additional constructor-fence defect. Integration is intentionally BLOCKED on sequencing: #310 is behind current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 by 2 commits and higher-priority HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE PR #366 is already current-main, independently source-approved, and edits the same PhysicsLabRuntime.luau/tests/physics_lab_runtime.luau files. Finish #366 first; then replay/synthesize this recipe fence onto the resulting current main, preserving both invariant sets, rerun exact-head canonical CI/live ownership, and obtain fresh exact-head audit. Global SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY remains a separate ownership gate. No Studio evidence claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "physics-runtime"]
 }
