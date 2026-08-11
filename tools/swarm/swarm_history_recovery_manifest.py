@@ -71,7 +71,7 @@ MALFORMED_EVENT_QUARANTINE = (
     ("evt-20260811-115804-p6m2x8v4-worldentity-review-result", "feb28b1d7469e34edeb1ce54f4c1c67e37b22e3e", "0c0cc50d60be0eb9e8eea217a1ef06449c8a6fa4"),
     ("evt-20260811-115810-j4m8q2v7-physics-overflow-handoff", "1b670efe403a12cf5f319b9fcc40140195b6d7cb", "fdd47237040f566a59a828bb080ad0dceb27dfd7"),
     ("evt-20260811-115900-cd3bb0-diagnostics-readout-review", "66877e22aacf34f78502014dc1606e402c217fb7", "4ef9034d0e8b4f18dd4418d40df65de055b830b3"),
-    ("evt-20260811-120452-a05c9683-worldentity-capacity-finding", "61c781bade06aec2b36c472acc7b336c1c8ce423", "f45217b586595660161bfaff88ac39ba135d8881"),
+    ("evt-20260811-120452-a05c9683-worldentity-capacity-finding", "1da5f4fb0dcefed6c8cd5a4c2c0d7fed5429ee9f", "f45217b586595660161bfaff88ac39ba135d8881"),
     ("evt-20260811-120522-p6m2x8v4-authority-review-result", "c66ad753b853d35d61f1b1673a9892d0f107ef58", "3af080afda21f96c3724fc4fc608e7c80badfebb"),
     ("evt-20260811-120700-j4m8q2v7-physics-runtime-mining-handoff", "57d41ff342fcc01a9cc4077e0213611f53b6aee2", "b43acecef3df2790889b6b9a5a7f6da2c7265ebf"),
     ("evt-20260811-120823-p6m2x8v4-diagnostics-instance-review-result", "93c4af4c2bbe4f6ec730e2e976ad15e7f212cbe2", "c9b164a5ddaa082fbe40078d6a5ee15a0e228c9f"),
