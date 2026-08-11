@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-v21dash",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T06:04:00+00:00",
-  "lastSeenAt": "2026-08-11T06:04:00+00:00",
+  "lastSeenAt": "2026-08-11T06:12:00+00:00",
   "laneId": "SWARM-V21-DASHBOARD",
   "slotId": "primary",
   "branch": "agent/swarm/v21-dashboard-v21dash",
-  "notes": "Addressing the P1 review finding that the generated zero-slot dashboard still recommended idling."
+  "notes": "Completed by PR #270; zero-slot dashboard now invokes the V2.1 fallback chain instead of recommending early idle."
 }
