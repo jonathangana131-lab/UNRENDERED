@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811T210500Z-sol-20260811-c7p4m8v2-handoff-content-reconciliation",
+  "eventType": "HANDOFF",
+  "at": "2026-08-11T21:05:00Z",
+  "workerId": "sol-20260811-c7p4m8v2",
+  "laneId": "HG-COMPLETION-CONTENT",
+  "slotId": "reconcile",
+  "claimToken": "c7p4m8v2a1d6e903",
+  "generation": 1,
+  "branch": "agent/reconcile/HG-COMPLETION-CONTENT-c7p4m8v2",
+  "pr": null,
+  "commit": null,
+  "resources": [],
+  "summary": "Reconciled active content-foundation lineage without new feature work: retired strict-ancestor primaries #335 and #336, retained Fidelity #385, ObjectGenome #395, and MaterialDNA #353 as authoritative current source heads, and redirected docs companions #292/#299/#317 to those retained lineages. Global pr-ownership remains fail-closed behind trusted event-history recovery; no Studio evidence was claimed.",
+  "validation": [
+    {
+      "command": "compare_commits 4a3c55d9d2046df1af6ee93710d395aedd4ea102 -> 827ce0cf63ca5f322502de883beb9f43581c69f2",
+      "result": "PASS",
+      "notes": "#335 is the exact merge base of #385; retained #385 is 2 commits ahead and 0 behind."
+    },
+    {
+      "command": "compare_commits 8ed54d2d965334d5a74fc9cd9b454d358da6f01f -> ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962",
+      "result": "PASS",
+      "notes": "#336 is the exact merge base of #395; retained #395 is 15 commits ahead and 0 behind."
+    },
+    {
+      "command": "inspect PR #313 and PR #380 status",
+      "result": "PASS",
+      "notes": "Both predecessor primaries were already closed by current swarm work; no duplicate retirement action taken."
+    },
+    {
+      "command": "inspect docs companions #292/#299/#317",
+      "result": "PASS",
+      "notes": "All remain open/draft as appropriate; reconciliation comments now point to retained source PRs #385/#395/#353 and preserve exact-head CI/ownership sequencing."
+    }
+  ],
+  "details": {
+    "retainedHeads": {
+      "FidelityManager": {"pr": 385, "head": "827ce0cf63ca5f322502de883beb9f43581c69f2"},
+      "ObjectGenome": {"pr": 395, "head": "ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962"},
+      "MaterialDNA": {"pr": 353, "head": "10559bfa836b10c3c39a6f04d9080023dc8ea94a"}
+    },
+    "retiredNow": [335, 336],
+    "alreadyRetired": [313, 380],
+    "docsRetargetedByComment": [292, 299, 317],
+    "evidenceBranchesClosed": [],
+    "globalBlocker": "trusted event-history / pr-ownership recovery (#387)",
+    "studioEvidenceClaimed": false
+  }
+}
