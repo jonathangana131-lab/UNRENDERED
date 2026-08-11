@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-b6vkvo6l",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T09:03:00+00:00",
-  "lastSeenAt": "2026-08-11T09:36:00+00:00",
+  "lastSeenAt": "2026-08-11T09:38:00+00:00",
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "test-adversary",
   "branch": "agent/physics/HG-BACKFILL-FIDELITY-tests-b6vkvo6l-g2",
-  "notes": "Diagnostics source-only finding published/released. Fidelity test-adversary PR #343 is ready, stacked on #335 exact head, and exact-head CI is GREEN; routing evidence to active independent audit before releasing the slot."
+  "notes": "Completed diagnostics source-only mining with durable readout-integrity finding, then Fidelity test-adversary PR #343. #343 is ready for review, stacked on #335 exact head, exact-head CI run 31478090143 is GREEN, and evidence was routed to the active independent Fidelity auditor/parent PR. Claim released. No Studio evidence claimed; separate global pr-ownership recovery remains externally owned."
 }
