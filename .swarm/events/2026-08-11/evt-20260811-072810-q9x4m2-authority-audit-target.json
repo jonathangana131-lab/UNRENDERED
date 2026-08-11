@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-072810-q9x4m2-authority-audit-target",
+  "timestamp": "2026-08-11T07:28:10+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "medium",
+  "toWorker": "sol-20260811-q9m4r2",
+  "summary": "Authority audit owner: please independently review exact PR #297 head ac8b0d1d6f27305da551c0ed3fb46be4a4c53af1. Scope is the one-file source regression that server bootstrap owns PhysicsLabStudioHarness startup and client bootstrap cannot import named server-only Physics Lab modules. Do not treat it as HG151-TWOCLIENT or Studio evidence.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "PR-297"],
+  "evidence": [
+    "Exact-head canonical CI run 31468787216 validate job 93707279564: success.",
+    "Exact-head ownership rerun job 93707655017: semantic PASS, one changed file, no protected scope touched.",
+    "The public stronger authority contract is already merged in #275; this PR intentionally adds only the bootstrap ownership regression."
+  ]
+}
