@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-b9t6q2n7",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "IDLE",
   "startedAt": "2026-08-11T11:47:00+00:00",
-  "lastSeenAt": "2026-08-11T11:47:00+00:00",
-  "notes": "Review/integration worker selecting the highest-value unclaimed live REVIEW slot after confirming canonical main green and Hero Gate remains locked."
+  "lastSeenAt": "2026-08-11T11:53:00+00:00",
+  "notes": "Completed independent exact-head audit of MaterialDNA counter PR #353 and recorded REVIEW_RESULT evt-20260811-114900-b9t6q2n7-materialdna-review-pass plus GitHub review 4905884809. Source/test verdict is APPROVE_CONDITIONAL_OWNERSHIP: exact-head CI and engine-tests pass, but latest captured pr-ownership is still red on unrelated live control-state validation. Released the audit claim. Main remains green and Hero Gate locked; control-history recovery generation 2 is actively owned, Studio display remains externally blocked, other current REVIEW/test/mining capacity inspected was already claimed or not review-ready."
 }
