@@ -5,7 +5,7 @@
   "title": "Physics Lab geometry and recipe depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete recipe geometry, scale, support reachability, door-proxy manufacturability, COM, clearance, component, or validation-contract defects without requiring Studio.",
   "priority": 4900,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/PhysicsLabRecipe.luau", "src/shared/Physics/PhysicsLabScale.luau", "src/shared/Physics/PhysicsLabValidationContract.luau", "tests/physics_lab_recipe.luau", "tests/physics_lab_scale.luau", "tests/physics_lab_validation_contract.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"Physics recipe realism and validation auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/physics_lab_recipe.luau","tests/physics_lab_validation_contract.luau","Docs/PHYSICS_LAB_VALIDATION.md"]}
   ],
   "acceptance": ["target measurable geometry/contract gaps", "do not turn the lab proxy into the locked Hero Door feature", "all geometry changes preserve deterministic recipes", "new invariants get tests", "do not claim engine contact proof from source-only work"],
-  "notes": "Generation-3 current-main validation-contract PR #363 exact head 140a1b1953635c9cc4ca4652480d03ada5ec2ffb preserves #303 plain-data/exact-shape/no-execute + exact-nil tolerance hardening and absorbs expected-red #346 safe-integer plus #356 canonical rootName identity findings. Exact integer evidence is bounded to <= 9007199254740991 with boundary acceptance/rejection regressions; snapshot.rootName must equal UNRENDERED_PhysicsLab before comparison/evidence use. Compare to main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is 2 ahead / 0 behind with exactly the source/test validation files changed. Canonical CI run 31480635841 is SUCCESS including format/lint/Luau/Pure Luau/build; Swarm engine-tests in run 31480635912 are SUCCESS. Live pr-ownership remains fail-closed on the separately owned immutable-event-history continuity recovery. #303/#346/#356 are closed as superseded. Fresh independent audit must be by a worker other than sol-20260811-k8v3p6r1. No Studio evidence claimed.",
+  "notes": "Fresh independent audit evt-20260811-115940-94hvgfgy-envelope-overflow-review returns generation-3 PR #363 to NEEDS_CHANGES after expected-red PR #368 proved a new finite-data escape: individually finite envelope coordinates can overflow during derived drift subtraction, publishing math.huge in driftStuds/maxAbsStuds. Primary must absorb #368's focused regression and fail closed if any derived envelope drift/maxAbs is non-finite, while preserving ordinary finite comparisons; then rerun exact-head canonical CI/live ownership and request fresh independent review. Prior #363 hardening remains valuable: plain-data/exact-shape/no-execute + exact-nil tolerance, safe-integer schema/count bounds, and canonical rootName identity. Live pr-ownership remains separately fail-closed on immutable-event-history recovery. Do not merge expected-red #368 independently. No Studio evidence claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
