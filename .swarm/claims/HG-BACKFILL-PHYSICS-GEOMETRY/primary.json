@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "primary",
+  "workerId": "sol-20260811-8d5d357a",
+  "claimToken": "c6e92a4f8d1b3075",
+  "claimedAt": "2026-08-11T23:50:10+00:00",
+  "heartbeatAt": "2026-08-11T23:50:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 7,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-8d5d357a-g7",
+  "pr": null,
+  "notes": "Generation-7 retained closure after independent review evt-sol-20260811-8d5d357a-review-result-physics-scale-g6-233820. Start from stacked test-adversary PR #418 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f, which already contains PR #414 production repair plus the now-green behavioral reverse-overflow regression. Preserve #414 production bytes, retain #418 behavioral coverage, rerun exact-head CI, and request a fresh independent review."
+}
