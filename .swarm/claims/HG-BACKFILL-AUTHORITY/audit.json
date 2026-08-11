@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-j9p4v7c2",
+  "claimToken": "2a7f9c4e1b6d8053",
+  "claimedAt": "2026-08-11T20:17:02+00:00",
+  "heartbeatAt": "2026-08-11T20:17:02+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["SERVER-AUTHORITY"],
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-j9p4v7c2",
+  "pr": null,
+  "notes": "Independent exact-head review of generation-5 authority PR #348. Verify server canonical authority, independently comparable client observations, teardown-safe fail-closed evidence contracts, exact scope, and no offline-to-Studio evidence inflation."
+}
