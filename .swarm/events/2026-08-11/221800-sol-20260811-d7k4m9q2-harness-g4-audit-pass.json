@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t221800z-d7k4m9q2-harness-g4-audit-pass",
+  "timestamp": "2026-08-11T22:18:00+00:00",
+  "fromWorker": "sol-20260811-d7k4m9q2",
+  "eventType": "HANDOFF",
+  "summary": "Independent exact-head source/test audit of harness lifecycle generation-4 PR #412 passed. The successor removes the stale deferred callback's global reconciliation-token write, preserves identity-fenced token retirement and synchronous destroy-before-reacquire behavior, and keeps its source-contract regression wired into the pure suite. Canonical CI and Swarm engine-tests are green. The lane is now BLOCKED only on the separately owned trusted-history/live-pr-ownership recovery; no Studio or two-client evidence was run or claimed.",
+  "affects": ["HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "severity": "info",
+  "evidence": [
+    "PR #412 exact head 807fb042b2fe96db32bda7a5c3346788e828a758; independent review 4911246444 reports SOURCE/TEST PASS.",
+    "Direct predecessor #410 to #412 production delta removes deferred currentReconcile retirement; stale generation cleanup no longer mutates the global token.",
+    "RealizedLab.destroy() destroys the model, clears representations, and disposes runtime synchronously; PhysicsLabRuntime.dispose() is a non-yielding unregister loop on this head.",
+    "tests/hero_gate_authority_teardown.luau remains connected through tests/hero_gate_contract_integration.luau and tests/run.luau.",
+    "Canonical CI 31540950626 PASS; Swarm engine-tests job 93942956193 PASS; live pr-ownership job 93942956243 remains the separate global blocker."
+  ],
+  "metadata": {
+    "pr": 412,
+    "head": "807fb042b2fe96db32bda7a5c3346788e828a758",
+    "reviewId": 4911246444,
+    "laneState": "BLOCKED",
+    "studioEvidenceClaimed": false
+  }
+}
