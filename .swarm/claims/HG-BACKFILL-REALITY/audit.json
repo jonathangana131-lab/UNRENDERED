@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-REALITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-n8v3q5d7",
+  "claimToken": "7c2e9a4d1b8f6053",
+  "claimedAt": "2026-08-11T12:00:10+00:00",
+  "heartbeatAt": "2026-08-11T12:00:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-REALITY-audit-n8v3q5d7",
+  "pr": 359,
+  "notes": "Independent exact-head audit of generation-2 current-main resolved-reality schema-key no-execute boundary PR #359."
+}
