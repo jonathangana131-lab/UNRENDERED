@@ -1,22 +1,11 @@
 local fs = require("@lune/fs")
+local luau = require("@lune/luau")
 local ProductionLoader = require("./support/ProductionLoader")
 
 local PhysicsLabScale = ProductionLoader.requireShared("Physics/PhysicsLabScale")
 
 local function nearlyEqual(left, right, tolerance)
 	return math.abs(left - right) <= tolerance
-end
-
-local function orderedWithin(source, needles)
-	local cursor = 1
-	for _, needle in ipairs(needles) do
-		local found = string.find(source, needle, cursor, true)
-		if found == nil then
-			return false
-		end
-		cursor = found + #needle
-	end
-	return true
 end
 
 local function run(): number
@@ -111,39 +100,28 @@ local function run(): number
 		not finiteOverflowAccepted
 	)
 
-	-- With the current 0.28 m/stud scale, a finite studs input cannot overflow the
-	-- studs->meters multiplication. Lock the symmetric postcondition in source so
-	-- a future scale revision cannot silently drop the reverse derived-output fence.
+	-- The production 0.28 m/stud factor cannot make a finite studs input overflow
+	-- during studs->meters conversion, so amplify only a loaded test copy. This
+	-- behaviorally exercises the otherwise unreachable reverse derived-output fence.
 	local scaleSource = fs.readFile("src/shared/Physics/PhysicsLabScale.luau")
-	local metersStart = string.find(scaleSource, "function PhysicsLabScale.metersToStuds", 1, true)
-	local studsStart = string.find(scaleSource, "function PhysicsLabScale.studsToMeters", 1, true)
-	local moduleReturn = string.find(scaleSource, "return table.freeze(PhysicsLabScale)", 1, true)
-	local metersBody = ""
-	if metersStart ~= nil and studsStart ~= nil and metersStart < studsStart then
-		metersBody = string.sub(scaleSource, metersStart, studsStart - 1)
-	end
-	local studsBody = ""
-	if studsStart ~= nil and moduleReturn ~= nil and studsStart < moduleReturn then
-		studsBody = string.sub(scaleSource, studsStart, moduleReturn - 1)
-	end
-
-	expect(
-		"Physics Lab meters-to-studs keeps input and derived-output finite fences ordered around arithmetic",
-		orderedWithin(metersBody, {
-			"assertFinite(\"meters\", meters)",
-			"local studs = meters * PhysicsLabScale.STUDS_PER_METER",
-			"assertFinite(\"converted studs\", studs)",
-			"return studs",
-		})
+	local amplifiedSource, replacements = string.gsub(
+		scaleSource,
+		"PhysicsLabScale.METERS_PER_STUD = 0.28",
+		"PhysicsLabScale.METERS_PER_STUD = 2"
 	)
+	expect("Physics Lab reverse-overflow adversary rewrites exactly one scale constant", replacements == 1)
+
+	local amplifiedChunk = luau.load(amplifiedSource, {
+		debugName = "PhysicsLabScale reverse-overflow adversary",
+		injectGlobals = true,
+	})
+	local amplifiedScale = amplifiedChunk()
+	local reverseOverflowAccepted = pcall(function()
+		amplifiedScale.studsToMeters(1e308)
+	end)
 	expect(
-		"Physics Lab studs-to-meters keeps input and derived-output finite fences ordered around arithmetic",
-		orderedWithin(studsBody, {
-			"assertFinite(\"studs\", studs)",
-			"local meters = studs * PhysicsLabScale.METERS_PER_STUD",
-			"assertFinite(\"converted meters\", meters)",
-			"return meters",
-		})
+		"Physics Lab scale rejects finite stud inputs when their meter conversion overflows",
+		not reverseOverflowAccepted
 	)
 
 	return failures
