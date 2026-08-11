@@ -232,7 +232,8 @@ local function run(): number
 
 	local hostileComponentIndex = deepCopy(Fixtures.officeChair)
 	hostileComponentIndex.components[{}] = hostileComponentIndex.components[1]
-	local hostileComponentIndexOk, hostileComponentIndexReport = pcall(ObjectGenome.inspect, hostileComponentIndex)
+	local hostileComponentIndexOk, hostileComponentIndexReport =
+		pcall(ObjectGenome.inspect, hostileComponentIndex)
 	expect(
 		"fails closed on non-numeric component collection keys without traversal crash",
 		hostileComponentIndexOk and hasCode(hostileComponentIndexReport, "array.shape")
@@ -268,7 +269,8 @@ local function run(): number
 	local hostileStateKey = ObjectGenome.defaultState(Fixtures.officeChair)
 	local functionKey = function() end
 	hostileStateKey.componentWear[functionKey] = 0
-	local hostileStateKeyOk, hostileStateKeyReport = pcall(ObjectGenome.inspectState, Fixtures.officeChair, hostileStateKey)
+	local hostileStateKeyOk, hostileStateKeyReport =
+		pcall(ObjectGenome.inspectState, Fixtures.officeChair, hostileStateKey)
 	expect(
 		"fails closed on non-string mutable-state keys without formatter crash",
 		hostileStateKeyOk and hasCode(hostileStateKeyReport, "state.unknown_key")
