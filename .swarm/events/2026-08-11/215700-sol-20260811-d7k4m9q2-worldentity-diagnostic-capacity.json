@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t215700z-d7k4m9q2-worldentity-diagnostic-capacity",
+  "timestamp": "2026-08-11T21:57:00+00:00",
+  "fromWorker": "sol-20260811-d7k4m9q2",
+  "eventType": "FINDING",
+  "summary": "WorldEntity generation-5 still permits a caller-controlled effectively unbounded duplicate-diagnostic history. createRegistry() validates duplicateDiagnosticCapacity only as a non-negative safe integer, so values up to 9007199254740991 are accepted and the registry retains duplicate diagnostics until that caller-supplied capacity. The default 64 and ring-eviction logic are bounded only when callers choose a practical value. This violates the project-owned bounded-cache/queue requirement. Current tests prove capacity=2 eviction, capacity=0 disablement, and rejection of math.huge, but do not reject an impractically large finite capacity. Recommended bounded follow-up: introduce an explicit project maximum diagnostic capacity, reject values above it, preserve default/zero/small behavior, and add exact boundary regressions. Do not spawn an overlapping implementation while the current WorldEntity primary/resource is live; route this into the retained successor lineage or a later non-overlapping one-shot after ownership is clear.",
+  "affects": ["HG-BACKFILL-WORLDENTITY", "HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "PR #397 exact head 83850e9f2bab4572de800428fb510b6b75fc2c45: createRegistry() feeds duplicateDiagnosticCapacity through assertNonNegativeInteger, whose ceiling is MAX_SAFE_INTEGER=9007199254740991.",
+    "The duplicate ring evicts only when #duplicates >= capacity, so a huge finite caller capacity removes the practical memory bound even though the default is 64.",
+    "tests/world_entity.luau covers capacity 2, capacity 0, and math.huge rejection but has no finite project-maximum boundary regression.",
+    "Repository/issue search found no existing duplicateDiagnosticCapacity maximum or dedicated bounded-capacity issue/lane."
+  ],
+  "metadata": {
+    "candidateFixScope": "src/shared/Reality/WorldEntity.luau + tests/world_entity.luau",
+    "productFilesChanged": false,
+    "studioEvidenceClaimed": false,
+    "recommendedDisposition": "absorb into retained WorldEntity successor when ownership is available"
+  }
+}
