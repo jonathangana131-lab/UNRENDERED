@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-t8n3c6v2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T20:15:10+00:00",
-  "lastSeenAt": "2026-08-11T20:44:10+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Completed diagnostics generation-4 successor PR #392: absorbed #384 lifecycle coverage into reviewed #391 source, exact-head canonical CI 31534174439 and Swarm engine-tests green, predecessors closed as superseded, lane returned to REVIEW, claim released."
+  "lastSeenAt": "2026-08-11T20:45:30+00:00",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-t8n3c6v2",
+  "notes": "Fresh independent exact-head review of combined authority stack PR #394."
 }
