@@ -35,11 +35,13 @@ local function run(): number
 	)
 	expect(
 		"server bootstrap fails closed outside server context",
-		serverBootstrap:find('assert(RunService:IsServer(), "server bootstrap must run on server")', 1, true) ~= nil
+		serverBootstrap:find('assert(RunService:IsServer(), "server bootstrap must run on server")', 1, true)
+			~= nil
 	)
 	expect(
 		"client bootstrap fails closed outside client context",
-		clientBootstrap:find('assert(RunService:IsClient(), "client bootstrap must run on client")', 1, true) ~= nil
+		clientBootstrap:find('assert(RunService:IsClient(), "client bootstrap must run on client")', 1, true)
+			~= nil
 	)
 	for _, moduleName in ipairs(serverAuthorityModules) do
 		expect(
