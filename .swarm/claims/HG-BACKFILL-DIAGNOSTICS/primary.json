@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-zvq321y9",
   "claimToken": "d066853f60f29a3a",
   "claimedAt": "2026-08-11T21:21:00+00:00",
-  "heartbeatAt": "2026-08-11T21:21:00+00:00",
+  "heartbeatAt": "2026-08-11T21:25:00+00:00",
   "leaseSeconds": 1800,
   "generation": 5,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-zvq321y9-g5",
-  "pr": 392,
-  "notes": "Generation-5 successor repair begins from expected-red PR #396 exact head ecd54b574ff0c390434a6ea14e509fb0680b7775. Preserve its test and fix diagnosticsRoot() to enumerate direct same-named roots and reject duplicates before class/ownership validation."
+  "pr": 401,
+  "notes": "Generation-5 successor PR #401 starts from expected-red PR #396 exact head ecd54b574ff0c390434a6ea14e509fb0680b7775 and repairs diagnosticsRoot() to enumerate direct same-named roots and reject duplicates before class/ownership validation. Exact product head 0e21c355e3c1fba398164e9757847c3433fc8956; fresh exact-head CI pending."
 }
