@@ -23,7 +23,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:29:07.340510+00:00",
+  "generatedAt": "2026-08-11T05:29:26.642322+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "2ce32576a47e99a1e09e802dc7e76a0bf7bbd283",
@@ -42,7 +42,7 @@
       "EXTERNAL_BLOCKER": 1,
       "INTEGRATION_RESULT": 1
     },
-    "generatedAt": "2026-08-11T05:29:07.340510+00:00",
+    "generatedAt": "2026-08-11T05:29:26.642322+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -54,7 +54,7 @@
     "readySlots": 2,
     "reviewBacklog": 0,
     "schemaVersion": 1,
-    "staleClaims": 0
+    "staleClaims": 1
   },
   "readySlots": [
     {
@@ -169,15 +169,25 @@
     }
   ],
   "schemaVersion": 1,
-  "staleClaims": [],
-  "stateDigest": "9c21796fc5749fcd8d6526e2b90d46ada4332889a64db5e720673290dee713e0",
+  "staleClaims": [
+    {
+      "branch": "agent/swarm/cas-proof-old",
+      "expiredAt": "2026-08-11T04:00:00+00:00",
+      "generation": 1,
+      "laneId": "SWARM-V2-CAS-PROOF",
+      "pr": null,
+      "slotId": "primary",
+      "workerId": "sol-20260811-cas1"
+    }
+  ],
+  "stateDigest": "9c327b99edc29a99e1c3453974372df95662400074f6adc8a609d2e03f91a48a",
   "summary": {
     "activeClaims": 1,
     "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 9,
     "readySlots": 2,
-    "staleClaims": 0,
-    "workers": 3
+    "staleClaims": 1,
+    "workers": 4
   }
 }
