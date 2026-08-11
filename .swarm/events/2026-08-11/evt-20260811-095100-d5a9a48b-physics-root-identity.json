@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095100-d5a9a48b-physics-root-identity",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-r79fdmxe",
+  "claimToken": "d5a9a48bb80f3ce0",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T09:51:00Z",
+  "headSha": "975274e8a69a8b9865029c8145bda623465e2377",
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-r79fdmxe",
+  "payload": {
+    "severity": "warning",
+    "summary": "PhysicsLabValidationContract accepts any non-empty snapshot.rootName and assertSameIdentity does not compare rootName, so a fabricated snapshot can rename the canonical Physics Lab root and still compare as the same lab truth.",
+    "impact": "The source-owned collector only emits the canonical UNRENDERED_PhysicsLab root, but decoded evidence can currently spoof that identity boundary after capture. This weakens fail-closed lifecycle/evidence comparison independently of PR #346 safe-integer coverage and PR #303 exact-shape/no-execute hardening.",
+    "pr": 356,
+    "relatedPrimaryPr": 303,
+    "requiredClosure": [
+      "bind snapshot.rootName to the canonical Physics Lab root value in the shared validation contract",
+      "retain deterministic regression coverage that inspectSnapshot rejects a forged root name",
+      "retain comparison coverage proving a forged checkpoint cannot compare against a genuine baseline",
+      "rerun canonical exact-head CI after the production repair absorbs the regression"
+    ],
+    "validation": "Draft PR #356 exact head 975274e8a69a8b9865029c8145bda623465e2377 is one-file test-only expected-red evidence. CI run 31479338936 passed format, lint, Luau analysis, canonical randomness audit, shared-domain audits, and swarm deterministic tests before failing at Pure Luau. No Roblox Studio/engine evidence claimed."
+  }
+}
