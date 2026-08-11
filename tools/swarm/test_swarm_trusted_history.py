@@ -131,6 +131,17 @@ class QuarantinedHistoryTests(unittest.TestCase):
         self.assertEqual(rule["canonicalGitBlobSha1"], "9ef4e62ffb0aac9d4b18cb19911d8d3a25535158")
         self.assertEqual(rule["quarantinedGitBlobSha1"], "c2b99475cdb95940d9a7ca329440880865da02cb")
 
+    def test_malformed_first_write_events_are_exact_quarantine_only_artifacts(self):
+        expected = {
+            "evt-20260811-115302-a05c9683-runtime-transition-audit": "aa5b394feb3dbb6773beab3c504f8f7100c43f42",
+            "evt-20260811-120452-a05c9683-worldentity-capacity-finding": "f45217b586595660161bfaff88ac39ba135d8881",
+        }
+        for event_id, blob_sha in expected.items():
+            rule = hard._CANONICAL_IMMUTABLE_EVENTS[event_id]
+            self.assertEqual(rule["quarantineOnlyGitBlobSha1"], blob_sha)
+            self.assertNotIn("canonicalGitBlobSha1", rule)
+            self.assertNotIn("quarantinedGitBlobSha1", rule)
+
 
 class SeparateTrustLedgerTests(unittest.TestCase):
     def setUp(self):
@@ -206,11 +217,25 @@ class TrustedHistoryWorkflowTests(unittest.TestCase):
         "a99ff757b842fa91ddd893d19fd1d826890ce306": "a193dd686323c27a7191d525b064c4257120de21",
         "57245c334fdc19cae855796066f783fb64492c51": "db830924aa0b65a74c60ee345448f57381bbe137",
         "8e631ba0da787af6c1c63f6a6dd96920ea7941f2": "bf852363faa7328d6707233b72909f6c4958d910",
+        "3c54f6ab741ba91d4fdf617cd24713b51ccd2950": "d0f00752e9b467d71d6875d3d1008c08f134992e",
+        "448cdc5a955192bb88120f22fb9152c43ca7c854": "67a12da7ece512c0467be3cdd78b3fcd896c9835",
+        "422ec28fbdffee92bbdceb7c111e46c8c23f234b": "4255e780384b5f5641e53900f201df03506035fa",
+        "55845e836fdaca1a5b9b89f7af7e8a0a5d2b14f8": "3ca920ee3e7516f141a7c04cf51a67fc545783c8",
+        "b0732a815ff12f099a9ca88363ffadeddec13172": "a10bae4a46560dcb707c1eefa1888467816a055b",
+        "504d5e72302c5c814961a4de3fa4aadd458887df": "b99b1715bc3eec419d2c2db9dc6c31d3e7b7b9fd",
+        "2dead634e81fa77f4c4cf9fc52924daa94e1e10c": "8a8963f14dbeafc14dbe3153a049226ebbaf5dfb",
+        "849a5c07efb10f7070c8e2e803a64216b26a3486": "70c7cbaddb31e34e50ec5d0e1a4bea965fc7db67",
+        "fecdd4109e7c0b93dae75ea69c8070c7ce0b7b70": "430362399ed3e2fa8eedbad63ac0842b75fac4db",
+        "d1aa5e7b12b4d8e9917bb77dab3225e4dee4deb8": "a888f8d1c25050e26427fb40945002585741d618",
+        "8bca8ca61902faf25efe9ef3a004ec032f132c5d": "5f0cb1f3d5618c3816e008adb6951b83de5c861e",
     }
 
     def workflow(self):
         path = Path(__file__).resolve().parents[2] / ".github" / "workflows" / "swarm-control.yml"
         return path.read_text(encoding="utf-8")
+
+    def test_finite_worker_manifest_pins_every_reviewed_invalid_to_repair_pair(self):
+        self.assertEqual(dict(hard.FINITE_WORKER_TRANSITIONS), self.INVALID_WORKER_TRANSITIONS)
 
     def test_pr_ownership_requires_separate_trust_digest(self):
         workflow = self.workflow()
@@ -228,12 +253,15 @@ class TrustedHistoryWorkflowTests(unittest.TestCase):
         self.assertNotIn("BEFORE_SHA: ${{ github.event.before }}", workflow)
         self.assertIn("refusing stale trust advance", workflow)
 
-    def test_bootstrap_candidate_proves_known_invalid_worker_transitions_are_explicitly_crossed(self):
+    def test_bootstrap_candidate_consumes_the_canonical_finite_worker_manifest(self):
         workflow = self.workflow()
-        self.assertIn("git merge-base --is-ancestor", workflow)
+        self.assertIn("hard.FINITE_WORKER_TRANSITIONS", workflow)
+        self.assertIn('git merge-base --is-ancestor "$INVALID_SHA" "$REPAIR_SHA"', workflow)
+        self.assertIn('git merge-base --is-ancestor "$REPAIR_SHA" "$CONTROL_SHA"', workflow)
+        self.assertIn("Finite worker transition manifest is empty.", workflow)
+        self.assertIn("enumerated by FINITE_WORKER_TRANSITIONS", workflow)
         for invalid_sha, repair_sha in self.INVALID_WORKER_TRANSITIONS.items():
-            self.assertIn(invalid_sha, workflow)
-            self.assertIn(repair_sha, workflow)
+            self.assertNotIn(f"git merge-base --is-ancestor {invalid_sha} {repair_sha}", workflow)
 
     def test_health_mutation_is_not_hidden_as_generated_only_commit(self):
         workflow = self.workflow()
