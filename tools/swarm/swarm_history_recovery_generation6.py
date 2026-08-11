@@ -11,6 +11,8 @@ FINITE_WORKER_TRANSITIONS = (
     ("0231453262d5ab6e12664e4c89fab3f90bdd28cd", "7bf593ab9fc7100905e90fda0d810bca6644b427"),
     ("2e770074c4a06d9e242fded0f137bba6f053ae0e", "1b5e69abcfd888d5378772eb1c0761800cb8f169"),
     ("274179bd30b8ad8c1c43130bf3fde99addc6cc12", "6d906215dd94f48eda00a5030fb6dc8694e3bf99"),
+    ("ad8f78e4996086178541c8674955e894609c576f", "0ab963faea3b6ea554a5172113913ba27be61c25"),
+    ("370f6ec7568a78fc98c38a825227f52cb65b6259", "ce4ad38f302fa4b094e3a1e58324352879fce969"),
 )
 
 # (eventId, exact filename, exact first-write commit, exact quarantine Git blob SHA-1)
@@ -176,6 +178,30 @@ MALFORMED_EVENT_QUARANTINE_ROWS = (
         "evt-20260811-215400-p6r4n8x2-physics-geometry-review-request-changes.json",
         "3964c9e9781df8f9d98c34a27c03a64d567d080b",
         "80be391a2a962980f4dca5c7e9915f6532bba764",
+    ),
+    (
+        "evt-sol-20260811-r4k9v2m7-diagnostics-authoritative-projection-231510",
+        "231510-sol-20260811-r4k9v2m7-finding-diagnostics-authoritative-projection.json",
+        "cced0f689ba5bd0871d0cdb4270d4881acf54a75",
+        "3725bbfd2ae3d9b838e2be51f65dcdba2f90e330",
+    ),
+    (
+        "evt-sol-20260811-j4r8p2m6-worldentity-no-fresh-gap-231630",
+        "231630-sol-20260811-j4r8p2m6-finding-worldentity-no-fresh-gap.json",
+        "b166d68aa235be91627a11b5e9b0c1e468f5797a",
+        "a013a74d2164d0ad23ec3bbb1640586afde19a28",
+    ),
+    (
+        "evt-20260811-230901-v6n2q8c4-physics-scale-g6-review",
+        "evt-20260811-230901-v6n2q8c4-physics-scale-g6-review.json",
+        "b936ea18bbba6fe32a36c61219370812d56622c4",
+        "43156457d3cadb0a231e832d4f7d6c8a3efe553f",
+    ),
+    (
+        "evt-20260811-231030-r8n4m2q6-fidelity-registration-capacity-ceiling",
+        "evt-20260811-231030-r8n4m2q6-fidelity-registration-capacity-ceiling.json",
+        "f41fb79aa5a8d1e26aaf03c5f2a6a7ebdef5446d",
+        "0e1a1d36ae2658bb090c7a401f6fe7909f8ef640",
     ),
 )
 
