@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-a3c8cf14",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T09:00:30+00:00",
-  "lastSeenAt": "2026-08-11T09:39:20+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": "agent/review/HG-PHYSICS-CHAIR-GEOMETRY-audit-a3c8cf14",
-  "notes": "Completed review cycle. PR #334 capability leak was found and source-repaired but remains validation-HOLD; PR #310 exact head received SOURCE PASS with green canonical CI; PR #347 current-main office-chair geometry replay received SOURCE PASS with green canonical CI and still requires #332 synchronized lab-level green evidence. All integration remains fail-closed on the separately owned immutable-event history-continuity recovery where applicable. Durable events: evt-20260811-091806-a3c8cf14-runtime-transition-capability-leak, evt-20260811-092610-a3c8cf14-pr334-rereview-hold, evt-20260811-093145-a3c8cf14-pr310-source-pass, evt-20260811-093840-a3c8cf14-pr347-chair-source-pass. No Studio evidence claimed."
+  "lastSeenAt": "2026-08-11T09:41:00+00:00",
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "slotId": "primary",
+  "branch": "agent/physics/HG-PHYSICS-CART-GEOMETRY-resync-a3c8cf14",
+  "notes": "Current-main replay of independently source-approved PR #311 two-file rolling-cart geometry repair; rerun exact-head CI and request fresh audit. No Studio evidence."
 }
