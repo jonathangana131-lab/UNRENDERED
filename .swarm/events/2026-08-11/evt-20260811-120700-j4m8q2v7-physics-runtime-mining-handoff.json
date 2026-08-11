@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120700-j4m8q2v7-physics-runtime-mining-handoff",
+  "eventType": "HANDOFF",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "workerId": "sol-20260811-j4m8q2v7",
+  "claimToken": "6d2a9f3c8b715e40",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T12:07:00Z",
+  "headSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-j4m8q2v7",
+  "payload": {
+    "summary": "Bounded exact-main PhysicsLabRuntime audit found no additional concrete unowned defect after separating active repair scopes; no product change is proposed from this miner.",
+    "reviewed": [
+      "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 src/shared/Physics/PhysicsLabRuntime.luau",
+      "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 src/shared/Physics/FidelityManager.luau",
+      "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 src/shared/Reality/WorldEntity.luau",
+      "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 src/shared/Physics/PhysicsLabRecipe.luau",
+      "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 src/server/PhysicsLab/PhysicsLabRealizer.luau",
+      "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE / PR #310 exact product head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d",
+      "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE / PR #366"
+    ],
+    "scopeSeparation": [
+      "constructor canonical WorldId/RegionId and complete key/id population fencing is already owned by PR #310",
+      "runtime facade mutation, callback reentrancy, and transition mutation fencing is already owned by PR #366",
+      "WorldEntity owns deep plain-data cloning/freezing for registered records and captured transition state",
+      "the current PhysicsLabRealizer builds the canonical recipe internally before runtime construction and consumes that same recipe for physical realization"
+    ],
+    "result": "No new lane requested. Preserve integration sequencing of #366 then replay/synthesize #310 on current main with fresh exact-head CI/review.",
+    "studioEvidence": "none performed or claimed"
+  }
+}
