@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-g4m8q2v7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T23:15:00+00:00",
-  "lastSeenAt": "2026-08-11T23:15:00+00:00",
+  "lastSeenAt": "2026-08-11T23:24:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-geometry",
   "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-g4m8q2v7",
-  "notes": "Generation-2 stale takeover after reconciling prior worker u6r3k8p1: lease expired, no branch/PR/discoverable event. Mine current Hero Gate physics geometry realization/source tests for one concrete non-duplicate boundedness/identity/integration gap. Avoid PR #414 malformed scale scalar work and do not claim Studio evidence."
+  "notes": "Completed generation-2 stale takeover and published DEPENDENCY evt-20260811-232300-g4m8q2v7-geometry-test-lineage-union: eventual fresh geometry integration must union #393/#302 broad authored-geometry property tests with #414 scale hardening and any accepted #418 symmetric fence rather than replacing physics_lab_scale.luau wholesale. No code or Studio evidence claimed. Claim released."
 }
