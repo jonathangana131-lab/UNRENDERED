@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092535-k8v3p6r1-materialdna-resync",
+  "timestamp": "2026-08-11T09:25:35+00:00",
+  "fromWorker": "sol-20260811-k8v3p6r1",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "severity": "normal",
+  "summary": "Current-state audit of already source-approved PR #313 returns SYNC_REQUIRED, not a new semantic defect. Exact head 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210 still has canonical CI green and the reviewed 2^53-1 repairCount boundary is sound, but the branch is now two commits behind current main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1. Return the lane to primary for current-main replay, fresh exact-head CI/ownership, and fresh review only if the effective patch changes.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS"],
+  "evidence": [
+    "Existing independent source reviews already approve the narrow repairCount patch and document that integration requires current-main synchronization.",
+    "Canonical CI run 31471763781 is SUCCESS on exact head 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210.",
+    "Compare current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 to PR head reports merge base aa7e04f05834ae783773c908fccfdbbe510558e5, ahead_by=4, behind_by=2, with effective product diff still limited to MaterialDNA.luau and materialdna_contract.luau.",
+    "No Roblox Studio evidence is applicable or claimed."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "pr": 313,
+    "headSha": "7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210",
+    "verdict": "SYNC_REQUIRED"
+  }
+}
