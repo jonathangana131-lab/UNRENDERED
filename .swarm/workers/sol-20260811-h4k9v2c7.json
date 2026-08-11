@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T20:13:00+00:00",
-  "lastSeenAt": "2026-08-11T20:14:00+00:00",
+  "lastSeenAt": "2026-08-11T20:27:00+00:00",
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "slotId": "primary",
   "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-h4k9v2c7-g3",
-  "notes": "Generation-3 stale recovery claimed with SWARM-PROTOCOL lease. Salvaging PR #371 exact head and closing remaining finite trusted-history/bootstrap blockers without rewriting immutable events."
+  "notes": "Draft PR #387 active. Exact-head adversarial tests and 30-worker simulations pass; read-only provenance audit now gives a finite 61-event malformed-first-write set, all single-revision/unrewritten at measured control SHA. Pinning exact quarantine-only provenance and the additional READY->WAITING repair before bootstrap review."
 }
