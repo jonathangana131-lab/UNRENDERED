@@ -147,27 +147,21 @@ local function run(): number
 	rollbackManager:register("entity:fidelity-rollback-outer", "F0")
 	rollbackManager:register("entity:fidelity-rollback-inner", "F0")
 	local rollbackOuterAccepted = pcall(function()
-		rollbackManager:step(
-			"entity:fidelity-rollback-outer",
-			"F0",
-			heroInputs,
-			0,
-			function()
-				local innerResult = rollbackManager:step(
-					"entity:fidelity-rollback-inner",
-					"F0",
-					heroInputs,
-					0,
-					function() end
-				)
-				expectEqual(
-					"independent inner transition commits before outer failure",
-					innerResult.transitioned,
-					true
-				)
-				error("intentional outer transition failure after inner commit")
-			end
-		)
+		rollbackManager:step("entity:fidelity-rollback-outer", "F0", heroInputs, 0, function()
+			local innerResult = rollbackManager:step(
+				"entity:fidelity-rollback-inner",
+				"F0",
+				heroInputs,
+				0,
+				function() end
+			)
+			expectEqual(
+				"independent inner transition commits before outer failure",
+				innerResult.transitioned,
+				true
+			)
+			error("intentional outer transition failure after inner commit")
+		end)
 	end)
 	expectEqual("outer hook failure propagates after inner commit", rollbackOuterAccepted, false)
 	expectEqual(
