@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-a8f3k6m2",
+  "claimToken": "8f3c6a1d9b4e2057",
+  "claimedAt": "2026-08-11T23:09:37+00:00",
+  "heartbeatAt": "2026-08-11T23:09:37+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-a8f3k6m2",
+  "pr": 414,
+  "notes": "Independent exact-head audit of generation-6 PR #414 at 51ffc16fb2f5864cd4874710a7517e94dd5422b8. Verify primitive-number type fencing precedes all equality/order/arithmetic on untrusted scalars, derived finite-output checks remain intact, and regression coverage cannot false-pass."
+}
