@@ -44,6 +44,8 @@ These rules keep aggregate fidelity accounting valid without copying the entire 
 - network relevance,
 - entity relevance.
 
+The top-level input record must be metatable-free. Reject a non-nil metatable before the first field access so `__index` or other metamethods cannot synthesize policy values or execute code at this boundary.
+
 All time is supplied explicitly by the caller. The policy contains no hidden clock and is deterministic for identical state/config/input/time sequences.
 
 `visible` and `directlyObserved` are strict booleans. Truthy non-boolean values such as `0` or `"false"` are malformed input and fail before policy state, mirrors, or metrics are mutated.
