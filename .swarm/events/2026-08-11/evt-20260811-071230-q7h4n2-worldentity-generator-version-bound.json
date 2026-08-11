@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071230-q7h4n2-worldentity-generator-version-bound",
+  "timestamp": "2026-08-11T07:12:30+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "medium",
+  "summary": "WorldEntity GenerationOrigin accepts generatorVersion values that canonical deterministic generation cannot replay. cloneOrigin only requires a finite positive integer, so 2147483648 is accepted into durable entity provenance, while DeterminismContract.seedFor and the normative determinism contract restrict generationVersion to [1, 2147483647]. Align WorldEntity origin validation with the canonical generator-version contract and add max/max+1 boundary regressions; prefer a shared contract/helper if available rather than duplicating a magic number.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "src/shared/Reality/WorldEntity.luau cloneOrigin validates origin.generatorVersion only as finite, >=1, integer and stores it unchanged in immutable GenerationOrigin.",
+    "src/shared/Core/DeterminismContract.luau seedFor requires generationVersion to be a safe integer in [1, 2147483647].",
+    "Docs/DETERMINISM_CONTRACT.md normatively defines generationVersion as an explicit integer in [1, 2147483647] and requires persisted generator/contract versions to reconstruct historical truth.",
+    "Docs/ARCHITECTURE.md defines GenerationOrigin as the WorldId/RegionId/generator name/version/recipe-key provenance for WorldEntity persistence across representation changes.",
+    "PR #271 comment 5250030735 records the actionable source handoff."
+  ],
+  "metadata": {
+    "pr": 271,
+    "headSha": "65f37ccddc4e4229722166acacd4fdcc02958eb9",
+    "claimToken": "5c91e7a2d4b8360f"
+  }
+}
