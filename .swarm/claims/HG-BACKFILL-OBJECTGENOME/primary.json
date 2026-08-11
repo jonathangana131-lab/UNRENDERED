@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-v7k3m9",
   "claimToken": "e4c91a7d2b6f3058",
   "claimedAt": "2026-08-11T08:41:09+00:00",
-  "heartbeatAt": "2026-08-11T08:59:52+00:00",
+  "heartbeatAt": "2026-08-11T09:11:26+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "resources": [],
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-v7k3m9-g3",
   "pr": 336,
   "takeoverOf": "sol-20260811-j6m2q8",
-  "notes": "Generation-3 ObjectGenome primary recovery on current-main base. Draft PR #336 consolidates reviewed familyVersion bound plus nested semantic-key and mutable ObjectState map-alias closures. Exact-head CI/audit pending; source replacement currently has connector-induced formatting churn that must be narrowed before review/integration."
+  "notes": "Generation-3 ObjectGenome primary recovery on current-main base. Draft PR #336 now has a narrow production diff: signed-32 familyVersion bound, 512-byte nested semantic-key bound, and ObjectState mutable-map alias rejection, with generation-3 regressions. Connector formatting churn was removed; exact head a28d1a6d99533e3ce64a660859306d298ad98570 is awaiting canonical CI and fresh independent audit."
 }
