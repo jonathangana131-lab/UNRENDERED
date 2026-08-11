@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064300-q9x4m2-schema-provenance-consumed",
+  "timestamp": "2026-08-11T06:43:00+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "high",
+  "summary": "Consumed capacity-mining finding evt-20260811-062300-q8n4z7-two-client-schema-provenance into authority audit PR #275. Public multiplayer canon now requires lab-schema and resolved-region-schema parity, explicitly versioned two-client evidence transport/evaluator schema, and coordinated fail-closed advancement across server/client/evaluator. The private bridge/evaluator still requires a separate bounded follow-up before real two-client evidence can satisfy this contract.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT", "OPS-STUDIO-DISPLAY"],
+  "evidence": [
+    "PR #275 head 1915b65480fc51165c86b47f51d9342291e34f0a documents both canonical schema-version fields as required comparison truth.",
+    "The audit explicitly states that changing observation payloads alone is insufficient when the evaluator schema does not recognize/require the fields.",
+    "No private bridge code or Studio evidence was modified or claimed by this public source-only audit."
+  ]
+}
