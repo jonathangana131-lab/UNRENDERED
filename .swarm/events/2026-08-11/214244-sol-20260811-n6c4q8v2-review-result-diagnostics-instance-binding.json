@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811T214244Z-sol-20260811-n6c4q8v2-review-result-diagnostics-instance-binding",
+  "eventType": "REVIEW_RESULT",
+  "at": "2026-08-11T21:42:44Z",
+  "workerId": "sol-20260811-n6c4q8v2",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "slotId": "audit",
+  "claimToken": "7b4e1c9a6d2f8053",
+  "generation": 1,
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-audit-n6c4q8v2",
+  "pr": 349,
+  "commit": "901c063ff3c1e2584f84a07e1da3a9b1b82d413a",
+  "resources": [],
+  "summary": "REQUEST_CHANGES: production ownsRepresentation is narrow and authority-correct, but the required source regression is false-passable and does not yet lock the lane's exact fail-closed Instance-identity semantics. The fidelity guard search is not scoped to ownsRepresentation, and separate identity/parent substrings do not lock conjunctive return semantics.",
+  "validation": [
+    {
+      "command": "inspect exact-head src/server/PhysicsLab/PhysicsLabRealizer.luau at 901c063ff3c1e2584f84a07e1da3a9b1b82d413a",
+      "result": "PASS",
+      "notes": "Production seam reuses authoritative isRepresented validation, compares the private representations[entityId] entry by exact Instance identity, requires candidate.Parent == model, and does not expose the map."
+    },
+    {
+      "command": "inspect exact-head tests/physics_lab_realizer_representation_ownership.luau at 901c063ff3c1e2584f84a07e1da3a9b1b82d413a",
+      "result": "FAIL",
+      "notes": "Regression can false-pass if the isRepresented guard moves outside the ownership function or if exact-identity/direct-parent conjunction is weakened, so it does not fully lock acceptance semantics."
+    },
+    {
+      "command": "inspect exact-head PR #349 workflow jobs",
+      "result": "PASS_WITH_GLOBAL_BLOCKER",
+      "notes": "Static Source Guards and Pure + Simulatable Engine Tests are green; PR Ownership is red only because trusted event-history recovery is globally fail-closed. No Studio/viewport/physical-contact/two-client evidence claimed."
+    }
+  ],
+  "details": {
+    "verdict": "REQUEST_CHANGES",
+    "githubReviewId": 4910998417,
+    "githubReviewAction": "COMMENT",
+    "formalGithubRequestChangesUnavailable": true,
+    "formalGithubRequestChangesReason": "Connected GitHub account is also PR author; GitHub rejects self REQUEST_CHANGES reviews.",
+    "requiredFix": "Scope the authoritative-fidelity guard assertion to ownsRepresentation and lock the fail-closed conjunction/return semantics, or replace the brittle source assertion with an equally deterministic behavioral proof for substitute, stale/reparented/destroyed, and absent-representation candidates.",
+    "studioEvidenceClaimed": false
+  }
+}
