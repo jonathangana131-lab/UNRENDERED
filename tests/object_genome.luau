@@ -68,8 +68,8 @@ local function run(): number
 		{
 			name = "office chair",
 			genome = Fixtures.officeChair,
-			identity = "object-genome:v1:51c5fd2813c6dfc8b3e089570b0632af",
-			fingerprint = "object-genome-recipe:v1:a5612083f6e2c89bd042f0825d507f87",
+			identity = "object-genome:v1:42d0e8a826051ae1c177be72e27f9f79",
+			fingerprint = "object-genome-recipe:v1:06c6fc3c9cd3d09f354dec104416a335",
 		},
 		{
 			name = "office table",
@@ -134,6 +134,63 @@ local function run(): number
 			ObjectGenome.inspectState(fixture.genome, state).ok
 		)
 	end
+
+	local chair = Fixtures.officeChair
+	local chairGroundY = -chair.dimensionsM.y / 2
+	local chairBase = findComponent(chair, "base")
+	local chairGroundSupportCount = 0
+	local chairGroundSupportsTouch = true
+	local chairBaseSupportsTouch = chairBase ~= nil
+	local chairBaseSupportCount = 0
+	local chairMass = 0
+	local weightedChairX = 0
+	local weightedChairY = 0
+	local weightedChairZ = 0
+	local chairComponentsByKey = {}
+	for _, component in ipairs(chair.components) do
+		chairComponentsByKey[component.key] = component
+		chairMass += component.massKg
+		weightedChairX += component.massKg * component.localPositionM.x
+		weightedChairY += component.massKg * component.localPositionM.y
+		weightedChairZ += component.massKg * component.localPositionM.z
+		if component.externalSupport == "ground" then
+			chairGroundSupportCount += 1
+			local componentBottom = component.localPositionM.y - component.dimensionsM.y / 2
+			if math.abs(componentBottom - chairGroundY) >= 1e-9 then
+				chairGroundSupportsTouch = false
+			end
+		end
+	end
+	if chairBase ~= nil then
+		local baseBottom = chairBase.localPositionM.y - chairBase.dimensionsM.y / 2
+		for _, supportKey in ipairs(chairBase.supportKeys) do
+			chairBaseSupportCount += 1
+			local caster = chairComponentsByKey[supportKey]
+			if caster == nil or caster.externalSupport ~= "ground" then
+				chairBaseSupportsTouch = false
+			else
+				local casterTop = caster.localPositionM.y + caster.dimensionsM.y / 2
+				if math.abs(casterTop - baseBottom) >= 1e-9 then
+					chairBaseSupportsTouch = false
+				end
+			end
+		end
+	end
+	local chairComMatches = chairMass > 0
+		and math.abs(chair.centerOfMassM.x - weightedChairX / chairMass) < 1e-9
+		and math.abs(chair.centerOfMassM.y - weightedChairY / chairMass) < 1e-9
+		and math.abs(chair.centerOfMassM.z - weightedChairZ / chairMass) < 1e-9
+	expect("office chair authored geometry revision is explicit", chair.familyVersion == 2)
+	expect(
+		"office chair ground-supported casters contact the authored ground plane",
+		chairGroundSupportCount == 5 and chairGroundSupportsTouch
+	)
+	expect(
+		"office chair caster supports contact the authored base underside",
+		chairBaseSupportCount == 5 and chairBaseSupportsTouch
+	)
+	expect("office chair component masses match authored total", math.abs(chairMass - chair.massKg) < 1e-9)
+	expect("office chair center of mass matches component mass distribution", chairComMatches)
 
 	local badDimensions = deepCopy(Fixtures.officeTable)
 	badDimensions.dimensionsM.x = 9
