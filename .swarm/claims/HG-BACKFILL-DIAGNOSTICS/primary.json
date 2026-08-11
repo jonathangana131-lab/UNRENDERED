@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-g5p2x8n4",
   "claimToken": "4d8c1a7f2b9e6035",
   "claimedAt": "2026-08-11T22:02:10+00:00",
-  "heartbeatAt": "2026-08-11T22:02:10+00:00",
+  "heartbeatAt": "2026-08-11T22:05:00+00:00",
   "leaseSeconds": 1800,
   "generation": 7,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-g5p2x8n4-g7",
-  "pr": null,
-  "notes": "Generation-7 successor from PR #401 exact head. Absorb corrected #405 projection-equality regression, bounding the exact label.Text comparison to validateReadoutCompleteness/readout loop before readoutCount increment/helper end; preserve generation-6 production source and shared readoutText projection checks. Source-only; no Studio retry/viewport evidence."
+  "pr": 409,
+  "notes": "Generation-7 successor PR #409 from #401 exact head. Production bytes preserved; corrected projection-equality regression is helper-slice bounded and requires label equality before readoutCount increment. Awaiting exact-head CI/engine-tests; source-only, no Studio retry/viewport evidence."
 }
