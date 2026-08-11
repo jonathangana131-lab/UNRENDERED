@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064300-diaga6r2k-diagnostics-failure-probe",
+  "timestamp": "2026-08-11T06:43:00+00:00",
+  "fromWorker": "sol-20260811-diaga6r2k",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "normal",
+  "summary": "After #285 merged, the diagnostics source is failure-atomic but the merged evidence doc still described it as unhardened. PR #289 reconciles that stale statement and defines a concrete live-Studio rollback probe: temporarily set a realized representation's optional UNRENDERED_RepresentationClass attribute to a number. preflightReadouts does not consume that field, while final capture requires string-or-nil, so the injected error occurs after owned-tree realization and exercises transaction rollback. Accepted evidence must show no diagnostics root after failure and a successful clean retry. This remains pending engine evidence and does not mark HG151 PASS.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "Merged source hardening: f4c4e4a2f89caba4d258669417f85206f96d4e98 (#285).",
+    "PR #289 changes only Docs/PHYSICS_LAB_DIAGNOSTICS.md and keeps CI/source review explicitly non-qualifying for the live engine row.",
+    "The injected attribute is restored before retry; the probe then requires root absence plus successful enable/disable retry.",
+    "No Studio run was queued because OPS-STUDIO-DISPLAY remains externally blocked."
+  ]
+}
