@@ -128,10 +128,6 @@ local function assertFiniteNumber(path: string, value: unknown): number
 	return numericValue
 end
 
-local function checkedFiniteNumber(path: string, value: unknown): number
-	return assertFiniteNumber(path, value)
-end
-
 local function assertNonNegativeInteger(path: string, value: unknown): number
 	local numericValue = assertFiniteNumber(path, value)
 	assert(
@@ -240,11 +236,8 @@ local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
 		regionId = checkedNonEmpty("origin.regionId", source.regionId)
 	end
 	local generator = checkedNonEmpty("origin.generator", source.generator)
-	local generatorVersion = checkedFiniteNumber("origin.generatorVersion", source.generatorVersion)
-	assert(
-		generatorVersion >= 1 and generatorVersion == math.floor(generatorVersion),
-		"origin.generatorVersion must be a positive integer"
-	)
+	local generatorVersion = assertNonNegativeInteger("origin.generatorVersion", source.generatorVersion)
+	assert(generatorVersion >= 1, "origin.generatorVersion must be a positive integer")
 	local recipeKey = checkedNonEmpty("origin.recipeKey", source.recipeKey)
 
 	return table.freeze({
