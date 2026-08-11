@@ -76,7 +76,8 @@ local function run(): number
 
 	local maxFamilyVersion = deepCopy(Fixtures.officeChair)
 	maxFamilyVersion.familyVersion = 2147483647
-	local maxFamilyVersionIdentityOk, maxFamilyVersionIdentity = pcall(ObjectGenome.identityKey, maxFamilyVersion)
+	local maxFamilyVersionIdentityOk, maxFamilyVersionIdentity =
+		pcall(ObjectGenome.identityKey, maxFamilyVersion)
 	expect(
 		"accepts the maximum bounded family revision as canonical identity input",
 		ObjectGenome.inspect(maxFamilyVersion).ok
