@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-v3c8n5q1",
+  "claimToken": "9b4e2c7d5a81f306",
+  "claimedAt": "2026-08-11T20:16:00+00:00",
+  "heartbeatAt": "2026-08-11T20:16:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/tests/HG-BACKFILL-DIAGNOSTICS-v3c8n5q1",
+  "pr": null,
+  "notes": "Complementary diagnostics lifecycle/no-drift adversarial test role. Inspect current repair chain first; add only non-duplicative regression coverage and no Studio evidence claims."
+}
