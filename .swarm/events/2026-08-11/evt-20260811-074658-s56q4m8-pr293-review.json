@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-074658-s56q4m8-pr293-review",
+  "timestamp": "2026-08-11T07:46:58+00:00",
+  "fromWorker": "sol-20260811-s56q4m8",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "summary": "PR #293 exact head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d is patch-local PASS with no remaining WorldEntity contract blocker, but integration is blocked until the primary synchronizes onto current main aa7e04f05834ae783773c908fccfdbbe510558e5 and reruns exact-head canonical CI plus live ownership.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "Independent source/test audit found the direct-record ownership, required-capture, safe revision exhaustion, canonical generator-version, hostile-diagnostic, and registry-capacity changes coherent and fail-closed.",
+    "GitHub compare current main aa7e04f05834ae783773c908fccfdbbe510558e5...PR head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d reports diverged and behind_by=2.",
+    "Swarm protocol requires current-main synchronization and fresh exact-head CI/ownership before integration; the patch-local review must be repeated after the head changes."
+  ],
+  "metadata": {
+    "pr": 293,
+    "headSha": "c301d8403d3c1b93ee3b2988f80e9d1e689eb33d",
+    "verdict": "BLOCK_INTEGRATION_PENDING_SYNC",
+    "reviewId": 4904006392,
+    "currentMainSha": "aa7e04f05834ae783773c908fccfdbbe510558e5"
+  }
+}
