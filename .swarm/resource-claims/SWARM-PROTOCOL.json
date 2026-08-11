@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260811-2b51a8",
+  "workerId": "sol-20260811-r9m4v7x2",
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "claimToken": "71a3c9d5e2f6084b",
-  "acquiredAt": "2026-08-11T09:30:10+00:00",
-  "heartbeatAt": "2026-08-11T10:00:00+00:00",
+  "claimToken": "4f1c8a7d2e9b6053",
+  "acquiredAt": "2026-08-11T11:47:17+00:00",
+  "heartbeatAt": "2026-08-11T11:47:17+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
-  "notes": "Exclusive protected control-plane lease for the explicit immutable-history continuity prerequisite. Read-only bootstrap audit is being rerun until current live state validates cleanly; V2.2 remains paused."
+  "generation": 2,
+  "notes": "Generation-2 protected lease for stale recovery of the trusted-history continuity repair. Scope remains append-only/fail-closed control integrity; no product or Studio work."
 }
