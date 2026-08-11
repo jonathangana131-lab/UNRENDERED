@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-211300-q6m9c4v2-diagnostics-projection-evidence",
+  "timestamp": "2026-08-11T21:13:00+00:00",
+  "fromWorker": "sol-20260811-q6m9c4v2",
+  "eventType": "EVIDENCE_RESULT",
+  "summary": "Final exact-head evidence for diagnostics projection-integrity adversary PR #400. After a formatting-only successor commit, final head d2822eb0a580efeb28d55147b17272a4f84b107b passes format, lint, strict Luau analysis, canonical-randomness/shared-domain/plain-value audits, and Swarm deterministic tests. Canonical CI run 31536644667 then fails Pure Luau on exactly the two newly introduced diagnostics-readout assertions requiring capture-time Adornee and label.Text revalidation; the pre-existing diagnostics-readout assertions and surrounding test suite pass. Swarm run 31536644790 engine-tests passes and pr-ownership remains separately fail-closed behind the live trusted-history recovery. PR #400 is therefore clean test-only adversarial evidence for absorption by the diagnostics primary, not an independently mergeable patch and not Studio/viewport evidence.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "INFO",
+  "evidence": [
+    "PR #400 final head d2822eb0a580efeb28d55147b17272a4f84b107b; base is diagnostics generation-4 head b21a0ecac4dc67900f004527291ebcb4daeea519; diff is tests/physics_lab_diagnostics_readout_contract.luau only, +17/-0.",
+    "CI run 31536644667 job 93929207582: format PASS, lint PASS, Luau analysis PASS, canonical-randomness PASS, shared-domain boundary PASS, plain shared-domain value PASS, Swarm deterministic tests PASS, Pure Luau FAIL exactly on the two added diagnostics projection-integrity assertions.",
+    "The two intended failures are capture-time visual projection target revalidation and displayed readout semantics revalidation; all earlier diagnostics-readout assertions in the same file pass on the exact head.",
+    "Swarm Control Plane run 31536644790 engine-tests job 93929208440 PASS; pr-ownership job 93929208417 remains separately FAIL at live trusted ownership enforcement and is not waived by this lane.",
+    "Initial discovery event evt-20260811-211100-q6m9c4v2-diagnostics-projection-integrity remains immutable; this evidence event supersedes only its provisional PR-head/line-count details.",
+    "No Roblox Studio or viewport observation was performed or claimed."
+  ]
+}
