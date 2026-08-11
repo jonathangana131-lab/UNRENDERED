@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-y7k4m2p9",
   "model": "gpt-5.6-sol",
-  "status": "DONE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T21:31:30+00:00",
-  "lastSeenAt": "2026-08-11T21:48:10+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-fidelity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-y7k4m2p9-g2",
-  "notes": "Published BLOCKED_CHILD finding .swarm/events/2026-08-11/214731-sol-20260811-y7k4m2p9-finding-fidelitymanager-capability-seal.json. FidelityManager exposes live mutable authoritative _states/_metrics; proposed follow-up seals backing state and adds adversarial capability tests. Mining claim released; no production source edits, Lune runs, engine runs, or Studio evidence claimed."
+  "lastSeenAt": "2026-08-11T21:49:05+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "audit",
+  "branch": "agent/audit/HG-BACKFILL-OBJECTGENOME-audit-y7k4m2p9",
+  "notes": "Fidelity mining finding published/released. Now fresh independent source-only audit of ObjectGenome generation-8 PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; no Studio evidence claim."
 }
