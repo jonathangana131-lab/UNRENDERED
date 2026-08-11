@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime lifecycle depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete F2/F0 lifecycle, runtime ownership, teardown/rebuild, transition, resolved-identity, resource-count, or long-cycle drift defects in the Physics Lab without requiring Studio.",
   "priority": 4950,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/PhysicsLabRuntime.luau", "src/shared/Physics/PhysicsLabObjectGenomes.luau", "tests/physics_lab_runtime*.luau", "tests/physics_lab_resolved_identity.luau"],
@@ -16,5 +16,7 @@
     {"slotId":"audit","role":"Runtime ownership and drift auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/physics_lab_runtime*.luau","Docs/PHYSICS_LAB.md"]}
   ],
   "acceptance": ["stress beyond the existing happy-path cycle count where useful", "prove no identity/resource drift", "preserve authority separate from Workspace representation", "behavior changes get tests", "do not claim Studio physics evidence from headless tests"],
+  "prs": [281, 284],
+  "notes": "Completed source-only Reality-Grade lifecycle depth. PR #284 merged 64-cycle and malformed-capture failure-atomicity regressions as fe07bf46a8450e855470e3d723ef2abb01a1e149; post-merge CI passed. PR #281 fixed the demotion capture/preview/commit ownership boundary so observer-side mutation cannot alter authoritative persistent truth after preview approval; independent swarm audit PASSed the exact reviewed head, and it merged as 9c2a16a64790f16f92d5709671bcfbaa18bccdbd with post-merge canonical CI run 31466108602 green. No Studio/engine evidence was claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
