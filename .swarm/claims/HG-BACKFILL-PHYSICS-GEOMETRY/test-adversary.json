@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-s6q2m9v4",
   "claimToken": "e7b2c9a14f6d8035",
   "claimedAt": "2026-08-11T23:10:55+00:00",
-  "heartbeatAt": "2026-08-11T23:18:30+00:00",
+  "heartbeatAt": "2026-08-11T23:29:54+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-s6q2m9v4",
   "pr": 418,
-  "notes": "Draft PR #418 is the current test-adversary branch for this claim, stacked on retained PR #414."
+  "notes": "Draft PR #418 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f is canonical-CI green. Test-only behavioral adversary loads an amplified copy of PhysicsLabScale to exercise the otherwise unreachable finite studs-to-meters output-overflow fence. No production or Studio bytes changed."
 }
