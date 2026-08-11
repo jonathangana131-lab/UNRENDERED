@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "audit",
+  "workerId": "sol-20260811-r8v2k6",
+  "claimToken": "2f8a6c1d9e4b7053",
+  "claimedAt": "2026-08-11T08:34:55+00:00",
+  "heartbeatAt": "2026-08-11T08:34:55+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-r8v2k6",
+  "pr": 318,
+  "notes": "Independent exact-head/current-main ObjectGenome audit for active generation-2 primary PR #318, including coordination with test-adversary PR #277 and identity/state-aliasing invariants."
+}
