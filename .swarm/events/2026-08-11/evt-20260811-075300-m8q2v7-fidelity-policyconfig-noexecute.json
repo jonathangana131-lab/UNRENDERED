@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075300-m8q2v7-fidelity-policyconfig-noexecute",
+  "timestamp": "2026-08-11T07:53:00+00:00",
+  "fromWorker": "sol-20260811-m8q2v7",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "FidelityManager still lacks a no-execute boundary for caller-supplied PolicyConfig. On exact PR #274 head 60de91b49338249c1ded74db0d722921ce2fb55d, new(config) calls copyConfig(sourceConfig) before any raw-config shape check and evaluatePolicy validates config by dereferencing fields directly. A metatable-backed config can therefore execute __index during nominal data validation/copy. This is distinct from the already-active PolicyInputs numeric-scalar finding and should be consumed by the existing HG-BACKFILL-FIDELITY primary rather than opening a competing source lane.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "Exact PR #274 head 60de91b49338249c1ded74db0d722921ce2fb55d: validateConfig(config) dereferences config fields without first asserting a plain table with no metatable.",
+    "Exact PR #274 head 60de91b49338249c1ded74db0d722921ce2fb55d: FidelityManager.new(config) calls copyConfig(sourceConfig) before validateConfig, so hostile __index code can run before validation.",
+    "Exact PR #274 head 60de91b49338249c1ded74db0d722921ce2fb55d: evaluatePolicy(inputs, config, currentLevel) calls validateConfig(resolvedConfig), which also dereferences a caller-supplied config before a no-metatable guard.",
+    "Current Fidelity tests and the active PR #274 adversarial closure cover PolicyInputs no-execute behavior but do not contain an equivalent hostile PolicyConfig metatable regression."
+  ]
+}
