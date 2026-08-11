@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "REVIEWING",
   "startedAt": "2026-08-11T11:46:16+00:00",
-  "lastSeenAt": "2026-08-11T11:46:16+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+  "lastSeenAt": "2026-08-11T11:49:00+00:00",
+  "laneId": "HG-BACKFILL-AUTHORITY",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-q7m4v9z2",
-  "notes": "Independent exact-head audit of recovery PR #366; no Studio evidence claims."
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-q7m4v9z2",
+  "notes": "Independent exact-head audit of authority PR #348; SERVER-AUTHORITY lease held; no real two-client/Studio evidence claims."
 }
