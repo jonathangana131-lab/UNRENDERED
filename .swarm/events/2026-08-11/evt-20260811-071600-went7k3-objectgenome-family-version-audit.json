@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071600-went7k3-objectgenome-family-version-audit",
+  "timestamp": "2026-08-11T07:16:00+00:00",
+  "fromWorker": "sol-20260811-went7k3",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "ObjectGenome primary branch head 72eb2257fa2c033e45c182656773063918848f55 adds a new familyVersion <= 2147483647 production restriction with no regression test and no current ObjectGenome contract statement establishing that exact maximum. Lane acceptance requires deterministic regression coverage for behavior changes and prefers demonstrated invariants over speculative redesign.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "The branch diff changes only src/shared/Objects/ObjectGenome.luau (+8/-2): it introduces MAX_FAMILY_VERSION = 2147483647 and rejects larger positive integral familyVersion values.",
+    "Current Docs/OBJECT_GENOME.md defines familyId + familyVersion + variantKey + schemaVersion as stable identity inputs but does not state a 31-bit familyVersion maximum.",
+    "Current main already bounds StableId semantic string parts to 512 bytes; familyVersion is serialized as its numeric semantic part and values above 2147483647 do not by themselves exceed that StableId v1 length boundary.",
+    "No tests are changed on the current primary head, so the newly introduced acceptance/rejection boundary is not locked."
+  ],
+  "metadata": {
+    "primaryHeadSha": "72eb2257fa2c033e45c182656773063918848f55",
+    "reviewerWorker": "sol-20260811-went7k3",
+    "requiredBeforeReviewPass": "Demonstrate the canonical/versioning defect that motivates the bound, choose/document the bound from that invariant rather than analogy, and add deterministic boundary regression coverage (accepted max plus rejected next value) on the same exact head."
+  }
+}
