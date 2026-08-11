@@ -5,8 +5,8 @@
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "claimToken": "7c2e9a4d1f6b8053",
   "acquiredAt": "2026-08-11T20:13:00+00:00",
-  "heartbeatAt": "2026-08-11T20:13:00+00:00",
+  "heartbeatAt": "2026-08-11T20:20:00+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
-  "notes": "Generation-3 protected lease for stale trusted-history recovery. Continuing exact audited finite-history repair from PR #371 without altering published immutable events."
+  "notes": "Generation-3 protected lease for draft PR #387 trusted-history recovery. Exact-head CI/bootstrap validation in progress; no immutable event bytes are being rewritten."
 }
