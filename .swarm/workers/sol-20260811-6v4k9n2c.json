@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T20:59:00+00:00",
-  "lastSeenAt": "2026-08-11T21:19:20+00:00",
+  "lastSeenAt": "2026-08-11T21:28:29+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "test-adversary",
   "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-test-adversary-6v4k9n2c",
-  "notes": "Completed/released WorldEntity mining and superseded audit work; current role is adversarial regression pass on ObjectGenome PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962."
+  "notes": "Completed/released WorldEntity mining and superseded audit work; current role is adversarial regression pass on ObjectGenome PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962. Dedupe-checking a candidate canonical-string resource-boundary gap before publishing or adding coverage."
 }
