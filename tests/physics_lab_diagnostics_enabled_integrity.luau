@@ -23,12 +23,8 @@ local function run(): number
 		1,
 		true
 	)
-	local helperEnd = helperStart and string.find(
-		source,
-		"\nfunction PhysicsLabStudioDiagnostics.capture",
-		helperStart,
-		true
-	)
+	local helperEnd = helperStart
+		and string.find(source, "\nfunction PhysicsLabStudioDiagnostics.capture", helperStart, true)
 	local helperSource = if helperStart ~= nil and helperEnd ~= nil
 		then string.sub(source, helperStart, helperEnd - 1)
 		else ""
@@ -62,23 +58,32 @@ local function run(): number
 			and destroyClone < propagate
 	)
 
-	local evidenceStart = string.find(
-		source,
-		"function PhysicsLabStudioDiagnostics.runToggleEvidence(",
-		1,
-		true
-	)
+	local evidenceStart =
+		string.find(source, "function PhysicsLabStudioDiagnostics.runToggleEvidence(", 1, true)
 	local evidenceEnd = evidenceStart and string.find(source, "\nreturn table.freeze", evidenceStart, true)
 	local evidenceSource = if evidenceStart ~= nil and evidenceEnd ~= nil
 		then string.sub(source, evidenceStart, evidenceEnd - 1)
 		else ""
 
-	local enable = string.find(evidenceSource, "local enabled = PhysicsLabStudioDiagnostics.enable(lab)", 1, true)
-	local onSnapshot = string.find(evidenceSource, "local onSnapshot = captureCanonicalWhileDiagnosticsEnabled(lab)", 1, true)
-	local onCompare = string.find(evidenceSource, "local onComparison = Validation.compare(baseline, onSnapshot, 0.001)", 1, true)
-	local onDelta = string.find(evidenceSource, "for countName, delta in pairs(onComparison.delta) do", 1, true)
+	local enable =
+		string.find(evidenceSource, "local enabled = PhysicsLabStudioDiagnostics.enable(lab)", 1, true)
+	local onSnapshot = string.find(
+		evidenceSource,
+		"local onSnapshot = captureCanonicalWhileDiagnosticsEnabled(lab)",
+		1,
+		true
+	)
+	local onCompare = string.find(
+		evidenceSource,
+		"local onComparison = Validation.compare(baseline, onSnapshot, 0.001)",
+		1,
+		true
+	)
+	local onDelta =
+		string.find(evidenceSource, "for countName, delta in pairs(onComparison.delta) do", 1, true)
 	local onEnvelope = string.find(evidenceSource, "assert(onComparison.envelope.ok", 1, true)
-	local disable = string.find(evidenceSource, "local disabled = PhysicsLabStudioDiagnostics.disable(lab)", 1, true)
+	local disable =
+		string.find(evidenceSource, "local disabled = PhysicsLabStudioDiagnostics.disable(lab)", 1, true)
 	local directLiveCapture = nil
 	if enable ~= nil and disable ~= nil and enable < disable then
 		directLiveCapture = string.find(
