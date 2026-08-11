@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r9v3k6",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T08:29:00+00:00",
-  "lastSeenAt": "2026-08-11T08:29:00+00:00",
+  "lastSeenAt": "2026-08-11T08:34:30+00:00",
   "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
   "slotId": "reviewer-1",
   "branch": "agent/review/SWARM-RECOVERY-EVENT-COMPAT-r9v3k6",
-  "notes": "Independent exact-head recovery review of PR #322 against the live immutable-event failures on swarm-control."
+  "notes": "Independent review complete: NEEDS_CHANGES on merged PR #322 compatibility. Review result evt-20260811-083400-r9v3k6-event-compat-review; handoff evt-20260811-083430-r9v3k6-event-compat-handoff. Lane returned to NEEDS_CHANGES for bounded main repair."
 }
