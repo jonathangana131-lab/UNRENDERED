@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082340-96d0cf-objectgenome-test-handoff",
+  "timestamp": "2026-08-11T08:23:40+00:00",
+  "fromWorker": "sol-20260811-96d0cf",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "info",
+  "summary": "ObjectGenome test-adversary handoff: PR #277 head e2e2f1c2dbc4777730307f02c879d46d23ba6dd9 now contains the minimal wear/damage alias regression and is intentionally red only at that assertion. Resume after the active generation-2 primary lands the source rejection; synchronize the test branch to that source/main, require the new regression to turn green, refresh live ownership metadata, and obtain independent exact-head review before merge.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "Audit review 4904204205 and event evt-20260811-081015-96d0cf-objectstate-alias define the source defect and exact repro.",
+    "PR #277 exact-head CI 31472662122 passes all gates through deterministic swarm tests, then fails only the intended ObjectState alias rejection assertion.",
+    "Active source owner is generation-2 primary worker sol-20260811-j6m2q8 on branch agent/objects/HG-BACKFILL-OBJECTGENOME-j6m2q8-g2; that branch still points to a136f305f432fa9c480e8d91e5d2151340795af7 at handoff time.",
+    "Swarm pr-ownership is independently red from worker sol-20260811-mat8c3r1 status DONE; the existing recovery lane owns that control-plane incident, so do not conflate it with ObjectGenome test correctness."
+  ],
+  "metadata": {
+    "pr": 277,
+    "headSha": "e2e2f1c2dbc4777730307f02c879d46d23ba6dd9",
+    "nextAction": "SYNC_AFTER_PRIMARY_SOURCE_FIX_AND_REVALIDATE"
+  }
+}
