@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-232100-h9p4x7m2-physics-scale-test-review",
+  "timestamp": "2026-08-11T23:21:00+00:00",
+  "fromWorker": "sol-20260811-h9p4x7m2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "MEDIUM",
+  "summary": "SOURCE/TEST NEEDS_CHANGES on stacked test-only PR #418 exact head b535968753c63a044d7696eb3957b7eeece93516. Its raw-text ordered source scan can false-pass when required guards are merely commented out, and exact-head canonical CI 31545864914 is red at Format check. Harden the regression so required statements are active-code/comment-resistant, format it, then rerun exact-head CI. Underlying production PR #414 is not rejected by this result.",
+  "affects": ["HG-COMPLETION-PHYSICS", "HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "PR #418 current exact head b535968753c63a044d7696eb3957b7eeece93516 is stacked directly on #414 head 51ffc16fb2f5864cd4874710a7517e94dd5422b8 and changes only tests/physics_lab_scale.luau (+49/-0).",
+    "orderedWithin() searches raw PhysicsLabScale source text. Replacing the active reverse guard with the line comment -- assertFinite(\"converted meters\", meters) preserves the exact needle/order and therefore lets the regression pass after the production postcondition is removed.",
+    "Canonical CI run 31545864914 / validate job 93958082817 fails at Format check; lint, Luau analysis, audits, Pure Luau tests, build, and artifact upload are skipped.",
+    "GitHub review 4911579052 records the exact-head NEEDS_CHANGES verdict and the concrete false-pass mutation.",
+    "No Roblox Studio, viewport, physical-contact, or two-client evidence was run or claimed."
+  ]
+}
