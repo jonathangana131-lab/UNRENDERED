@@ -5,7 +5,7 @@
   "title": "MaterialDNA repair-count integer closure",
   "objective": "Fail closed on maintenance.repairCount values outside a bounded deterministic integer domain while preserving MaterialDNA schema-v2 identity/state semantics; add a deterministic regression and contract note without depending on Roblox Studio.",
   "priority": 5080,
-  "state": "READY",
+  "state": "SUPERSEDED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau", "Docs/MATERIAL_DNA_CONTRACT.md"],
@@ -22,5 +22,6 @@
     "keep source-only confidence distinct from Roblox Studio evidence",
     "require independent review before DONE"
   ],
+  "notes": "Superseded before merge by HG-BACKFILL-MATERIALDNA-COUNTERS / PR #313 after live collision reconciliation. PR #313 uses the less restrictive exact IEEE-754 safe-integer boundary with both sides regression-tested; duplicate PR #309 was closed without merge.",
   "tags": ["backfill", "hero-gate", "source-only", "materialdna"]
 }
