@@ -2,13 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
-  "workerId": "sol-20260811-k7m4q2s8",
-  "claimToken": "5f7c2a91d4e8b603",
-  "claimedAt": "2026-08-11T20:13:00+00:00",
-  "heartbeatAt": "2026-08-11T20:28:00+00:00",
+  "workerId": "sol-20260811-h9p4x7m2",
+  "claimToken": "9c4e2a7f1b6d8053",
+  "claimedAt": "2026-08-11T23:09:00+00:00",
+  "heartbeatAt": "2026-08-11T23:09:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": ["REALITY-CONTRACT"],
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-k7m4q2s8",
-  "pr": 386
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-h9p4x7m2-g2",
+  "pr": null,
+  "takeoverOf": "sol-20260811-k7m4q2s8:g1:5f7c2a91d4e8b603",
+  "notes": "Stale test-adversary takeover after inspecting open PR #386 and current lane notes. #386's numeric-ceiling regression is already absorbed into retained #413; generation 2 will mine exact #413/current WorldEntity source for one new bounded adversarial invariant and will not rewrite the old branch."
 }
