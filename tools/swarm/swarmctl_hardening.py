@@ -7,7 +7,9 @@ ownership, fencing, scheduling, or transition invariants.
 """
 from __future__ import annotations
 
+import hashlib
 import re
+from pathlib import Path
 
 import swarmctl_hardening_base as _base
 from swarmctl_hardening_base import *  # re-export the proven engine API
@@ -15,11 +17,12 @@ from swarmctl_hardening_base import *  # re-export the proven engine API
 
 # A short-lived worker generation wrote benign review coordinates at event top
 # level before all writers converged on `metadata`. Event bytes are immutable, so
-# deleting/rewriting those records is not a valid recovery. Keep compatibility
-# finite: only the observed fields, only review/control-result event families,
-# only strongly typed values, and only events timestamped before this recovery
-# claim began. New event writes remain on the strict V2 schema.
+# deleting/rewriting those records is not a valid recovery. Validation keeps the
+# historical reader, while transition_check below freezes that compatibility set:
+# newly added events can never introduce these legacy top-level fields, even when
+# they forge an old payload timestamp.
 _STRICT_VALIDATE_EVENT = _base.core.validate_event
+_STRICT_TRANSITION_CHECK = _base.transition_check
 _LEGACY_EVENT_CUTOFF = _base.core.parse_time("2026-08-11T08:25:00+00:00")
 _LEGACY_EVENT_FIELDS = {"slotId", "pr", "headSha", "verdict", "nextAction"}
 _LEGACY_EVENT_TYPES = {
@@ -41,11 +44,46 @@ _LEGACY_VERDICTS = {
     "HOLD",
     "NEEDS_CHANGES",
     "INTEGRATION_READY",
+    "SYNC_REQUIRED",
+}
+
+# One historical FINDING was also emitted with a non-lane descriptive value in
+# `affects`. Its current bytes cannot be rewritten because events are immutable.
+# Admit only that exact Git blob at its exact historical path; any byte, path, or
+# identity change falls back to strict validation and therefore fails closed.
+_IMMUTABLE_EVENT_BLOB_COMPAT = {
+    "evt-20260811-081620-mat8c3r1-materialdna-key-grammar": {
+        "date": "2026-08-11",
+        "filename": "evt-20260811-081620-mat8c3r1-materialdna-key-grammar.json",
+        "gitBlobSha1": "9a7f679ea84600d6a28a8bef02436e5f85fd857e",
+    }
 }
 
 
+def _git_blob_sha1(path: Path) -> str:
+    raw = path.read_bytes()
+    header = f"blob {len(raw)}\0".encode("ascii")
+    return hashlib.sha1(header + raw).hexdigest()
+
+
+def _is_exact_immutable_blob_compat(path: Path, obj: dict) -> bool:
+    event_id = obj.get("eventId")
+    expected = _IMMUTABLE_EVENT_BLOB_COMPAT.get(event_id)
+    if expected is None:
+        return False
+    if path.name != expected["filename"] or path.parent.name != expected["date"]:
+        raise _base.core.ControlError(f"{path}: immutable compatibility event moved from its audited path")
+    if _git_blob_sha1(path) != expected["gitBlobSha1"]:
+        raise _base.core.ControlError(f"{path}: immutable compatibility event bytes differ from audited blob")
+    return True
+
+
 def _validate_event_with_immutable_compat(path):
+    path = Path(path)
     obj = _base.core.load_json(path, max_bytes=48_000)
+    if _is_exact_immutable_blob_compat(path, obj):
+        return obj
+
     legacy = set(obj) & _LEGACY_EVENT_FIELDS
     if not legacy:
         return _STRICT_VALIDATE_EVENT(path)
@@ -118,9 +156,31 @@ def _validate_event_with_immutable_compat(path):
 
 # core.read_tree resolves validate_event dynamically from the core module, so a
 # facade-level compatibility hook reaches every proven base operation while the
-# base engine itself remains unchanged. transition_check still compares raw event
-# bytes and therefore continues to reject rewrites/deletions exactly as before.
+# base engine itself remains unchanged.
 _base.core.validate_event = _validate_event_with_immutable_compat
+
+
+def transition_check(before: Path, after: Path) -> dict:
+    result = _STRICT_TRANSITION_CHECK(before, after)
+    before_events = {
+        str(path.relative_to(before)) for path in before.glob("events/*/*.json")
+    }
+    for path in after.glob("events/*/*.json"):
+        relative = str(path.relative_to(after))
+        if relative in before_events:
+            continue
+        obj = _base.core.load_json(path, max_bytes=48_000)
+        legacy = sorted(set(obj) & _LEGACY_EVENT_FIELDS)
+        if legacy:
+            raise _base.core.ControlError(
+                f"new event {relative} uses frozen legacy top-level fields: {legacy}"
+            )
+    return result
+
+
+# _base.main resolves transition_check from the base module's globals. Patch the
+# trusted CLI hook too, so `transition-check` enforces the no-new-legacy fence.
+_base.transition_check = transition_check
 
 
 def dashboard(board: dict) -> str:
