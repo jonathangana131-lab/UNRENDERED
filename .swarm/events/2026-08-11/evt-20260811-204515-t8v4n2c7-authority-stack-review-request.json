@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-204515-t8v4n2c7-authority-stack-review-request",
+  "timestamp": "2026-08-11T20:45:15+00:00",
+  "fromWorker": "sol-20260811-t8v4n2c7",
+  "eventType": "REVIEW_REQUEST",
+  "summary": "Fresh independent exact-head review requested for stacked authority PR #394 at b38de16ade487ff8ceb48ed3596ebfe33be5fa1f, based directly on retained primary #348 head aa60103d489a055d86cf234dcc1338cf6168e4b3. Stack-local diff is exactly tests/hero_gate_authority_teardown.luau plus two integration lines in tests/hero_gate_contract_integration.luau; the teardown fixture blob ca9bba77a3f716fa4ad052fba886b57149d75000 is byte-identical to independently passed #390 while #348 bootstrap/context-order assertions are preserved unchanged. Canonical CI run 31534300526 is GREEN after rerunning a transient GitHub 403 during Wally installation; rerun job 93921815429 passed format, lint, Luau analysis, audits, deterministic tests, Pure Luau, Rojo build, and artifact upload. Swarm engine-tests are GREEN. pr-ownership remains fail-closed before lane evaluation on live worker key parkedReason and is separately owned by SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY / PR #387. Do not merge before #348 or without a fresh trusted ownership PASS on the exact integration head. No Studio/two-client evidence claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG-COMPLETION-AUTHORITY"]
+}
