@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k7m4q2s8",
   "model": "gpt-5.6-sol",
-  "status": "READY",
+  "status": "WAITING",
   "startedAt": "2026-08-11T20:10:00+00:00",
-  "lastSeenAt": "2026-08-11T20:10:00+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Go worker registered after confirming main push CI green; selecting highest-value currently unlocked nonduplicate Hero Gate work."
+  "lastSeenAt": "2026-08-11T20:22:00+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-k7m4q2s8",
+  "notes": "PR #386 published as expected-red adversarial evidence for generation-4 WorldEntity numeric ceilings; waiting on absorption into primary PR #378."
 }
