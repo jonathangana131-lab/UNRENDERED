@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-REALITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-r4m8z2",
+  "claimToken": "5d92a8f1c40be763",
+  "claimedAt": "2026-08-11T07:18:20+00:00",
+  "heartbeatAt": "2026-08-11T07:18:20+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-REALITY-audit-r4m8z2",
+  "pr": null
+}
