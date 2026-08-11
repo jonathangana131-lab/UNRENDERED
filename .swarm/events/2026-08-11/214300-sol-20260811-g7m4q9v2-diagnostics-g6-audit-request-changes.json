@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811T214300Z-sol-20260811-g7m4q9v2-diagnostics-g6-audit-request-changes",
+  "eventType": "REVIEW_RESULT",
+  "at": "2026-08-11T21:43:00Z",
+  "workerId": "sol-20260811-g7m4q9v2",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "claimToken": "5a9c3e7d1b4f8062",
+  "generation": 1,
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-g7m4q9v2",
+  "pr": 401,
+  "commit": "2d3bfb09d996ccaafb329d07c6edd6af46c7f04d",
+  "resources": [],
+  "summary": "REQUEST_CHANGES: generation-6 diagnostics production source correctly enforces exact Adornee/text projection, but the retained source-contract regression only checks that the helper mentions Adornee and label.Text. Those equality fences can be removed and replaced by no-op reads while the exact-head test stays green. Absorb corrected exact-comparison coverage before integration.",
+  "validation": [
+    {
+      "command": "inspect PhysicsLabStudioDiagnostics.luau at 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d",
+      "result": "PASS",
+      "notes": "Production validateReadoutCompleteness performs child.Adornee == expectedEntity.adornee and label.Text == expectedEntity.text; duplicate diagnostics roots fail closed."
+    },
+    {
+      "command": "inspect tests/physics_lab_diagnostics_readout_contract.luau at 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d",
+      "result": "FAIL",
+      "notes": "The two new projection checks search only for generic Adornee/label.Text mentions inside the helper, so no-op reads can false-pass after the equality guards are removed."
+    },
+    {
+      "command": "inspect stacked test-adversary PR #405 head 8e5a5b89fac1db772a2befa395ce27a2d01deeab",
+      "result": "BLOCKED",
+      "notes": "#405 strengthens to exact comparisons, but its current text-comparison search has a separate independent REQUEST_CHANGES finding because the search is not upper-bounded to the helper/readout loop. Absorb a corrected equivalent, not the known false-pass unchanged."
+    },
+    {
+      "command": "canonical CI run 31537711126 and exact-head Swarm engine-tests 31537711106",
+      "result": "PASS",
+      "notes": "Existing exact-head source/engine validation is green; live pr-ownership is separately fail-closed on control-history recovery and is not waived."
+    }
+  ],
+  "details": {
+    "verdict": "REQUEST_CHANGES",
+    "exactHead": "2d3bfb09d996ccaafb329d07c6edd6af46c7f04d",
+    "productionDefect": false,
+    "regressionQualityDefect": true,
+    "requiredRepair": "Require the exact Adornee equality and exact label text equality on the per-readout completeness path, bound the text comparison before readoutCount increment or helper end, and retain shared readoutText projection checks.",
+    "relatedTestAdversaryPr": 405,
+    "studioEvidenceClaimed": false,
+    "viewportEvidenceClaimed": false,
+    "prReviewId": 4910999125
+  }
+}
