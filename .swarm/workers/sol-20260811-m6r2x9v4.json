@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-m6r2x9v4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T21:35:00+00:00",
-  "lastSeenAt": "2026-08-11T21:35:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-materialdna",
-  "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-m6r2x9v4-g2",
-  "notes": "Preparing fenced takeover of the expired MaterialDNA capacity-mining lease after verifying its recorded branch does not exist, no PR is attached, and no worker/branch search surfaced salvageable work."
+  "lastSeenAt": "2026-08-11T21:44:16+00:00",
+  "notes": "Completed/released HG-CAPACITY-MINING mine-materialdna generation 2 after fenced takeover of an expired unsalvageable claim. Rejected the already-covered dense-array scan-order gap as duplicate of HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS, then published FINDING evt-sol-20260811-m6r2x9v4-materialdna-validation-diagnostic-bounds-214416: validateKnownFields has no project-owned scan or diagnostic-retention bound on oversized unknown-key tables. Static exact-main source/test/PR/lane audit only; no local test suite or Studio evidence claimed because this role made no product edit and local GitHub DNS was unavailable."
 }
