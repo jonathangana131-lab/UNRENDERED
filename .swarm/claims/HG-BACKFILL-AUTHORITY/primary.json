@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-r4k9m2",
   "claimToken": "6b2f9c4d1e7a8053",
   "claimedAt": "2026-08-11T09:32:00+00:00",
-  "heartbeatAt": "2026-08-11T09:32:00+00:00",
+  "heartbeatAt": "2026-08-11T09:34:30+00:00",
   "leaseSeconds": 1800,
   "generation": 5,
   "resources": ["SERVER-AUTHORITY"],
   "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-r4k9m2-g5",
-  "pr": 316,
+  "pr": 348,
   "takeoverOf": "sol-20260811-q5x8n3z2",
-  "notes": "Generation-5 stale takeover after independent SOURCE PASS / SYNC_REQUIRED review. Reconstruct the same bounded three-file authority patch on current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1, then rerun exact-head CI/ownership and hand off for a different independent reviewer. No Studio/two-client evidence claim."
+  "notes": "Generation-5 current-main reconstruction is draft PR #348 at exact head aa60103d489a055d86cf234dcc1338cf6168e4b3, based directly on main ae83c0ef470eb2e73d99be41fd3561ede30c40e1. Effective diff is exactly the source-approved three-file authority patch; fresh CI/ownership and different independent reviewer required. No Studio/two-client evidence claim."
 }
