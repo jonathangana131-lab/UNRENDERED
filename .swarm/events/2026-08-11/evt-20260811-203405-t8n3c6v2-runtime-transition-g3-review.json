@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-203405-t8n3c6v2-runtime-transition-g3-review",
+  "timestamp": "2026-08-11T20:34:05+00:00",
+  "fromWorker": "sol-20260811-t8n3c6v2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+  "severity": "info",
+  "summary": "APPROVE source behavior on PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1. Generation 3 closes the hostile PolicyInputs pre-hook runtime-mutation window with a full FidelityManager.step transaction fence; no new blocking source defect found. This is not merge authorization while live ownership is fail-closed and overlapping recipe-fence PR #310 still requires synthesis/preservation.",
+  "affects": [
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+    "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"
+  ],
+  "evidence": [
+    "PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1",
+    "PhysicsLabRuntime raises transitionInFlight before the entire FidelityManager.step call and clears it after success or propagated error",
+    "Metatable-backed PolicyInputs regression executes the pre-hook __index window, rejects dispose(), preserves registry/fidelity populations and F2 authority, and proves immediate retry",
+    "Caller capture/observer callbacks execute before registry commit; closure-private runtime authority and frozen facade prevent callback bypass of the mutation fence",
+    "Canonical CI run 31532785322 SUCCESS",
+    "Latest Swarm run 31532920995 engine-tests SUCCESS; pr-ownership remains separately fail-closed on live control-state validation, currently unknown worker key parkedReason",
+    "No Roblox Studio or two-client evidence was run or claimed"
+  ]
+}
