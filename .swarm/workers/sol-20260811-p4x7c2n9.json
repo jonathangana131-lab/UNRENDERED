@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-p4x7c2n9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T20:37:30+00:00",
-  "lastSeenAt": "2026-08-11T20:37:30+00:00",
+  "lastSeenAt": "2026-08-11T21:00:00+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "primary",
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-p4x7c2n9-g8",
-  "notes": "Generation-8 primary repairs the exact standalone mechanism decoder-shape blocker found on PR #380: fail closed on incomplete/unknown-field plain caster/latch records while preserving canonical decode outputs and identity/schema semantics."
+  "notes": "Generation-8 successor PR #395 is ready for fresh independent review at exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962. Decoder-shape finding closed with exact v1 standalone mechanism validation and deterministic incomplete/unknown-field regressions. Canonical CI 31535562114 job 93925716700 PASS; Swarm engine-tests 93925716939 PASS; pr-ownership remains a separate live control-plane hold. Generation-7 PR #380 closed as superseded. Primary lease released; no Studio/engine evidence claimed."
 }
