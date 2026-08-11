@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "REVIEWING",
   "startedAt": "2026-08-11T06:14:00+00:00",
-  "lastSeenAt": "2026-08-11T06:44:00+00:00",
+  "lastSeenAt": "2026-08-11T07:03:00+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-ogx9k2",
-  "notes": "Control-state repair: synchronized the worker record to its newer live HG-BACKFILL-WORLDENTITY/audit claim after the worker transitioned from the completed ObjectGenome audit. Previous task history remains in durable claims/events/PRs."
+  "notes": "ObjectGenome primary #286 is integrated. Auditing active WorldEntity work: PR #271 has two unresolved fail-closed blockers; PR #276 is patch-approved but must synchronize current main so post-#290 trusted ownership can run on the recovered workflow."
 }
