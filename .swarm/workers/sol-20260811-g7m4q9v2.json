@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-g7m4q9v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T21:32:10+00:00",
-  "lastSeenAt": "2026-08-11T21:32:10+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Review-first worker registered while Hero Gate remains source-only and Studio display evidence lanes are externally blocked."
+  "lastSeenAt": "2026-08-11T21:35:35+00:00",
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY-audit-g7m4q9v2",
+  "notes": "Independent exact-head harness lifecycle/ownership audit of generation-2 PR #403."
 }
