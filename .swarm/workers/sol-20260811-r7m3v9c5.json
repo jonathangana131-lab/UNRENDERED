@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r7m3v9c5",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:12:33+00:00",
-  "lastSeenAt": "2026-08-11T21:12:33+00:00",
+  "lastSeenAt": "2026-08-11T21:15:04+00:00",
   "laneId": "HG-COMPLETION-PHYSICS",
   "slotId": "review-2",
   "branch": "agent/review/HG-COMPLETION-PHYSICS-review-2-r7m3v9c5",
-  "notes": "Independent adversarial completion review of fresh diagnostics duplicate-root regression PR #396; review-only, no source edits or Studio evidence claims."
+  "notes": "Completed independent adversarial review of PR #396 exact head ecd54b574ff0c390434a6ea14e509fb0680b7775. PASS for isolated expected-red duplicate diagnostics-root evidence only; review 4910819435 and evt-20260811-211504-r7m3v9c5-diagnostics-duplicate-root-review published. Audit PR must not merge independently; production successor must enforce direct-root cardinality before class/ownership validation."
 }
