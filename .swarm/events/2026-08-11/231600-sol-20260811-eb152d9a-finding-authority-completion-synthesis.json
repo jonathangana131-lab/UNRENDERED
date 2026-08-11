@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t231600z-eb152d9a-authority-completion-synthesis",
+  "timestamp": "2026-08-11T23:16:00Z",
+  "fromWorker": "sol-20260811-eb152d9a",
+  "eventType": "FINDING",
+  "summary": "HG-COMPLETION-AUTHORITY review-1 synthesis: retain the accepted bootstrap guard-order contract from PR #348/#394 and the newer lifecycle/teardown contract from PR #412. PR #412 exact head 807fb042b2fe96db32bda7a5c3346788e828a758 already has independent exact-head source/test approval and green canonical CI, so this review does not duplicate those verdicts. Completion-level disposition is APPROVE FOR SYNTHESIS once trusted pr-ownership is restored; do not integrate while SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY remains the global ownership prerequisite.",
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "affects": [
+    "HG-COMPLETION-AUTHORITY",
+    "HG-BACKFILL-AUTHORITY",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "HG151-TWOCLIENT"
+  ],
+  "evidence": [
+    "PR #348 head aa60103d489a055d86cf234dcc1338cf6168e4b3 is the retained bootstrap authority change: server/client wrong-context guards execute before ReplicatedStorage dependency traversal/requires.",
+    "PR #394 head b38de16ade487ff8ceb48ed3596ebfe33be5fa1f carries bootstrap source-order assertions in tests/hero_gate_contract_integration.luau and the accepted teardown fixture lineage.",
+    "PR #412 head 807fb042b2fe96db32bda7a5c3346788e828a758 supersedes the older raw-handle teardown expectations with an owned wrapper, synchronous invalidation reconciliation, external destroy/reparent handling, restart recovery, and generation-fenced deferred reconciliation. Its tests/hero_gate_authority_teardown.luau semantically subsumes and strengthens #394 teardown coverage.",
+    "PR #412 tests/hero_gate_contract_integration.luau does not include #394's fs-backed server/client bootstrap source-order assertions. Therefore an eventual authority synthesis that takes #412 alone would lose an accepted bootstrap regression guard.",
+    "Exact merge recipe: preserve #348 server/client bootstrap guard-before-dependency source edits; preserve #394 bootstrap source-order assertions in tests/hero_gate_contract_integration.luau; use #412 PhysicsLabStudioHarness lifecycle implementation and #412 tests/hero_gate_authority_teardown.luau as the current teardown/lifecycle contract; do not overlay #394's older raw-handle teardown expectations onto #412.",
+    "HG151-TWOCLIENT remains externally gated by OPS-STUDIO-DISPLAY; this source-only synthesis review makes no two-client or Studio evidence claim.",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY generation 6 is independently owned; trusted pr-ownership recovery remains the prerequisite before authority integration/merge decisions."
+  ]
+}
