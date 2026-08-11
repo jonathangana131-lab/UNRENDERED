@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085405-k3m9v6-worldentity-boundary-gap",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T08:54:05Z",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-k3m9v6",
+  "severity": "medium",
+  "summary": "PR #293 exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e closes bounded persistentState implementation and has green canonical CI run 31474536191, but lacks exact depth/node acceptance and registered lifecycle atomic-rejection regressions required to lock fail-closed boundary semantics.",
+  "artifact": "tests/world_entity_state_budget.luau"
+}
