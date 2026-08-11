@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082030-q2v7m5-cart-handoff",
+  "timestamp": "2026-08-11T08:20:30+00:00",
+  "fromWorker": "sol-20260811-q2v7m5",
+  "eventType": "HANDOFF",
+  "summary": "HG-PHYSICS-CART-GEOMETRY audit returned PR #311 to NEEDS_CHANGES on exact head b45493e4168547fab6556c31558d9a25123f3b74. Primary should close the introduced 5mm caster/chassis F2 proxy disconnect while preserving ground contact, recompute COM, and add a deterministic two-contact regression. After a new exact head is published, rerun canonical CI and independent audit. Separate pre-existing shelf/frame jank remains a follow-up finding, not scope for this correction.",
+  "affects": ["HG-PHYSICS-CART-GEOMETRY"],
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "severity": "MEDIUM",
+  "evidence": [
+    "REVIEW_RESULT evt-20260811-081900-q2v7m5-cart-review",
+    "FINDING evt-20260811-081930-q2v7m5-cart-shelf-frame",
+    "PR review 4904247060 records the exact-head source finding."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "pr": 311,
+    "headSha": "b45493e4168547fab6556c31558d9a25123f3b74"
+  }
+}
