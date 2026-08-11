@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094100-q5x8n3z2-diagnostics-instance-binding-review-ready",
+  "timestamp": "2026-08-11T09:41:00+00:00",
+  "fromWorker": "sol-20260811-q5x8n3z2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "severity": "medium",
+  "summary": "PR #349 is source-complete and moved to REVIEW on exact head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a, based on current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 with behind_by=0. The three-file patch adds RealizedLab.ownsRepresentation(entityId, candidate), which preserves authoritative F0/F2 presence validation, requires exact private representation Instance identity, requires the candidate to remain a direct child of this realized lab model, keeps the representation map private, and registers a dedicated pure source-contract regression. Canonical CI run 31478481463 is PASS and Swarm engine-tests job 93737698073 is PASS. Live pr-ownership remains globally fail-closed on the separately owned immutable event-history mismatch for evt-20260811-073500-q9m4r2-authority-rereview-approve; do not bypass that blocker. Independent exact-head audit is required before integration. This prerequisite does not edit diagnostics production code and claims no Roblox Studio, viewport, physical-contact, or two-client evidence.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING"],
+  "evidence": [
+    "PR #349 exact head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a changes exactly PhysicsLabRealizer, the dedicated representation-ownership regression, and tests/run registration; compare against main ae83c0ef reports behind_by=0.",
+    "Canonical CI run 31478481463 passed after a format-only repair; the first head failed only StyLua and no functional workaround was used.",
+    "Swarm Control run 31478481421 engine-tests passed; pr-ownership failed on the global audited immutable-event byte mismatch 8f332b... != 2f0b02..., already owned by SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY.",
+    "The public RealizedLab handle exposes ownsRepresentation but not the private representations map, preserving the physical-representation boundary."
+  ],
+  "metadata": {
+    "pr": 349,
+    "headSha": "901c063ff3c1e2584f84a07e1da3a9b1b82d413a",
+    "baseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "ciRun": 31478481463,
+    "nextAction": "Independent audit exact head 901c063; after control recovery require fresh green pr-ownership before integration."
+  }
+}
