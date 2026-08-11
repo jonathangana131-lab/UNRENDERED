@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-zvq321y9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:07:00+00:00",
-  "lastSeenAt": "2026-08-11T21:21:00+00:00",
+  "lastSeenAt": "2026-08-11T21:19:00+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-zvq321y9-g5",
-  "notes": "Generation-5 primary repair starts from expected-red PR #396 head ecd54b574ff0c390434a6ea14e509fb0680b7775, preserving its focused regression and repairing duplicate same-named diagnostics-root discovery in production source."
+  "notes": "Generation-5 PR #401 exact head 2f5603210a3d3d6af7db94b43fdfd6707b1f9b4a is ready for independent review. Canonical CI 31537175276 PASS; Swarm engine-tests PASS; global pr-ownership recovery remains separate. This worker must not self-approve because it confirmed the blocker and authored the repair."
 }
