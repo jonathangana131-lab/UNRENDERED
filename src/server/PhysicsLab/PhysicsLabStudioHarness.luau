@@ -17,12 +17,58 @@ end
 
 local function bindOwnedHandle(realized: RealizedLab): RealizedLab
 	local owned: RealizedLab = table.clone(realized)
-	owned.destroy = function(): ()
-		assertStudioServer()
-		if current ~= owned then
+	local expectedParent = realized.model.Parent
+	assert(expectedParent ~= nil, "Physics Lab realizer must publish an owned model before harness binding")
+
+	local tearingDown = false
+	local invalidated = false
+	local ancestryConnection: RBXScriptConnection? = nil
+	local destroyingConnection: RBXScriptConnection? = nil
+
+	local function disconnectLifecycleSignals(): ()
+		local ancestry = ancestryConnection
+		ancestryConnection = nil
+		if ancestry ~= nil then
+			ancestry:Disconnect()
+		end
+
+		local destroying = destroyingConnection
+		destroyingConnection = nil
+		if destroying ~= nil then
+			destroying:Disconnect()
+		end
+	end
+
+	local function invalidateExternalLifecycle(): ()
+		if tearingDown or invalidated or current ~= owned then
 			return
 		end
+		invalidated = true
+		current = nil
+		disconnectLifecycleSignals()
+		task.defer(function(): ()
+			realized.destroy()
+		end)
+	end
+
+	destroyingConnection = realized.model.Destroying:Connect(function(): ()
+		invalidateExternalLifecycle()
+	end)
+	ancestryConnection = realized.model.AncestryChanged:Connect(function(): ()
+		if realized.model.Parent ~= expectedParent then
+			invalidateExternalLifecycle()
+		end
+	end)
+
+	owned.destroy = function(): ()
+		assertStudioServer()
+		if current ~= owned or invalidated then
+			return
+		end
+		tearingDown = true
 		realized.destroy()
+		tearingDown = false
+		disconnectLifecycleSignals()
 		if current == owned then
 			current = nil
 		end
