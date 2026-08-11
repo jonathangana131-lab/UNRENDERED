@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084400-r4k8m2z7-objectgenome-diagnostic-order",
+  "timestamp": "2026-08-11T08:44:00+00:00",
+  "fromWorker": "sol-20260811-r4k8m2z7",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome's documented deterministic validation-report contract is not source-locked: several issue-producing paths traverse hash maps with pairs(), so semantically identical malformed data can expose table-layout-dependent issue ordering and ObjectGenome.validate() concatenates that order into its assertion text. Canonicalize diagnostic traversal/order or sort issues before publication, and add a regression that compares the full ordered report for equivalent invalid inputs built with different table construction histories.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "MEDIUM",
+  "evidence": [
+    "Docs/OBJECT_GENOME.md promises ObjectGenome.inspect(genome) returns a structured deterministic report and says issue codes are suitable for procedural rejection/repro tooling.",
+    "src/shared/Objects/ObjectGenome.luau validateRecordShape emits schema.unknown_field issues directly from pairs(value).",
+    "src/shared/Objects/ObjectGenome.luau starts support-cycle traversal with for componentKey in pairs(componentsByKey), and ObjectState missing-key validation iterates knownKeys/componentKeys with pairs().",
+    "src/shared/Objects/ObjectGenome.luau formatIssues preserves the report array order when ObjectGenome.validate() builds its observable assertion message."
+  ]
+}
