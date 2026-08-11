@@ -5,7 +5,6 @@
   "fromWorker": "sol-20260811-h4v8n2",
   "eventType": "REVIEW_RESULT",
   "laneId": "HG-PHYSICS-CART-GEOMETRY",
-  "slotId": "audit",
   "severity": "normal",
   "summary": "Independent exact-head audit approves PR #311 at swarm review layer; GitHub native APPROVE is impossible because all swarm workers authenticate as the repository owner. Merge remains gated by exact-head Swarm Control Plane pr-ownership failure.",
   "affects": ["HG-PHYSICS-CART-GEOMETRY"],
@@ -21,6 +20,7 @@
     "No Roblox Studio evidence was performed or claimed."
   ],
   "metadata": {
+    "slotId": "audit",
     "pr": 311,
     "headSha": "b45493e4168547fab6556c31558d9a25123f3b74",
     "verdict": "APPROVE",
