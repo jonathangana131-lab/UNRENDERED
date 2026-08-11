@@ -5,7 +5,7 @@
   "title": "Recover immutable event history continuity",
   "objective": "Define and prove an explicit trusted-history continuity/reset mechanism for already-laundered immutable control events without silently rewriting published event bytes or allowing a failed transition to become a later trusted baseline.",
   "priority": 9999,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [{"laneId": "SWARM-RECOVERY-EVENT-COMPAT", "acceptableStates": ["DONE"]}],
   "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR/**", "Docs/ADR*.md", "Docs/ADRs/**"],
@@ -23,6 +23,6 @@
     "adversarial tests cover failed-transition laundering, descendant-baseline laundering, duplicate/replayed event identities, and recovery-boundary abuse",
     "canonical CI and live control validation are green only after the explicit recovery contract is exercised and independently reviewed"
   ],
-  "notes": "Unlocked immediately after independently reviewed detect-only prerequisite PR #329 merged as ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and SWARM-RECOVERY-EVENT-COMPAT reached DONE. Live control still contains laundered bytes at three audited immutable paths; this lane owns the explicit append-only/trust-continuity recovery and first-parent continuity contract. It is the active prerequisite to resuming PR #315.",
+  "notes": "Recovery implementation is published as PR #420 at exact head 67e89918af03e85863c6eda89fad62a98e314237. Exact-head deterministic/adversarial CI is green and repeated read-only live inventories reached invalidEventCount=0 and invalidWorkerCount=0. Generation 6 now requests the independent history-integrity verifier required by ADR-0005 and lane acceptance before bootstrap anchoring/merge. Live swarm-control remains high-churn, so any bootstrap control SHA/state digest pair must still pass a fresh exact-tip CAS before pinning.",
   "tags": ["control-repair", "red-ci", "history-integrity", "hero-gate"]
 }
