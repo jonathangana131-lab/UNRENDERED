@@ -14,7 +14,10 @@ local function run(): number
 		end
 	end
 
-	local source = fs.readFile(DIAGNOSTICS_SOURCE)
+	local rawSource = fs.readFile(DIAGNOSTICS_SOURCE)
+	-- Source-contract tests must not be satisfiable by inactive comments. Strip
+	-- ordinary line comments before looking for the active diagnostics contract.
+	local source = string.gsub(rawSource, "%-%-[^\n]*", "")
 	local function position(needle: string): number?
 		return string.find(source, needle, 1, true)
 	end
@@ -42,11 +45,18 @@ local function run(): number
 	local readoutCountIncrement = helperPosition("readoutCount += 1")
 	local exactEntityCount = helperPosition("readoutCount == #entities")
 	local exactInstanceCount = helperPosition("return 1 + 2 * readoutCount")
+	local preflightProjection = position("key = record.origin.recipeKey")
 	local captureProjection =
-		position("text = readoutText(representation.Name, record.id, record.fidelity, fingerprint, reproKey)")
+		position("text = readoutText(record.origin.recipeKey, record.id, record.fidelity, fingerprint, reproKey)")
 	local realizationProjection = position(
 		"label.Text = readoutText(plan.key, plan.worldEntityId, plan.fidelity, fingerprint, reproKey)"
 	)
+	local mutableNameProjection = position("key = representation.Name")
+	local mutableNameTextProjection = position("readoutText(representation.Name")
+	local mutableClassProjection = position('representation:GetAttribute("UNRENDERED_RepresentationClass")')
+	local inertClassProjection = position("representationClass = nil")
+	local entityIdSort = position('requireStringAttribute(a, "UNRENDERED_WorldEntityId")')
+	local mutableNameSort = position("return a.Name < b.Name")
 	local captureCall = position("diagnosticInstanceCount = validateReadoutCompleteness(folder, entities)")
 	local descendantCountShortcut = position("diagnosticInstanceCount = 1 + #folder:GetDescendants()")
 
@@ -100,8 +110,20 @@ local function run(): number
 			and exactTextProjection < readoutCountIncrement
 	)
 	expect(
-		"realization and capture expectations share the same readout formatter",
-		captureProjection ~= nil and realizationProjection ~= nil
+		"realization and capture project the authoritative recipe key through the shared formatter",
+		preflightProjection ~= nil
+			and captureProjection ~= nil
+			and realizationProjection ~= nil
+			and mutableNameProjection == nil
+			and mutableNameTextProjection == nil
+	)
+	expect(
+		"diagnostics do not publish mutable representation-class attributes as authoritative evidence",
+		mutableClassProjection == nil and inertClassProjection ~= nil
+	)
+	expect(
+		"representation ordering is stable by WorldEntityId rather than mutable Instance name",
+		entityIdSort ~= nil and mutableNameSort == nil
 	)
 	expect(
 		"validated readouts form a one-to-one projection of authoritative entities",
