@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-m6r2x9v4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T21:35:00+00:00",
-  "lastSeenAt": "2026-08-11T21:45:58+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-m6r2x9v4-g1",
-  "notes": "MaterialDNA capacity pass completed/released with FINDING evt-sol-20260811-m6r2x9v4-materialdna-validation-diagnostic-bounds-214416. Now holding reusable WorldEntity capacity-mining slot; will avoid recent diagnostic-capacity and metadata-string findings and publish only a concrete non-duplicate depth gap or NO_GAP."
+  "lastSeenAt": "2026-08-11T21:48:11+00:00",
+  "notes": "Completed/released two capacity passes. MaterialDNA: published evt-sol-20260811-m6r2x9v4-materialdna-validation-diagnostic-bounds-214416 for unbounded unknown-field scan/diagnostic accumulation. WorldEntity: audited retained PR #397 exact head and published evt-sol-20260811-m6r2x9v4-worldentity-no-additional-gap-214811; no new non-duplicate gap beyond existing duplicate-diagnostic-capacity and metadata-string-budget findings. No local tests or Studio evidence claimed."
 }
