@@ -219,8 +219,15 @@ local function run(): number
 
 	local cartGenome = PhysicsLabRecipe.objectGenome("rollingCart")
 	local cartGroundY = -cartGenome.dimensionsM.y / 2
+	local cartComponentsByKey = {}
+	for _, component in ipairs(cartGenome.components) do
+		cartComponentsByKey[component.key] = component
+	end
+	local cartChassis = cartComponentsByKey.chassis
 	local cartGroundSupportsTouch = true
 	local cartGroundSupportCount = 0
+	local cartCasterChassisSupportsTouch = cartChassis ~= nil
+	local cartChassisSupportCount = 0
 	local authoredCartMass = 0
 	local weightedCartX = 0
 	local weightedCartY = 0
@@ -238,6 +245,21 @@ local function run(): number
 			end
 		end
 	end
+	if cartChassis ~= nil then
+		local chassisBottom = cartChassis.localPositionM.y - cartChassis.dimensionsM.y / 2
+		for _, supportKey in ipairs(cartChassis.supportKeys) do
+			cartChassisSupportCount += 1
+			local caster = cartComponentsByKey[supportKey]
+			if caster == nil or caster.externalSupport ~= "ground" then
+				cartCasterChassisSupportsTouch = false
+			else
+				local casterTop = caster.localPositionM.y + caster.dimensionsM.y / 2
+				if math.abs(casterTop - chassisBottom) >= 1e-9 then
+					cartCasterChassisSupportsTouch = false
+				end
+			end
+		end
+	end
 	local cartMassMatchesComponents = math.abs(authoredCartMass - cartGenome.massKg) < 1e-9
 	local cartCenterOfMassMatchesComponents = false
 	if authoredCartMass > 0 then
@@ -252,6 +274,10 @@ local function run(): number
 	expect(
 		"lab rolling cart ground-supported casters contact the authored ground plane",
 		cartGroundSupportCount == 4 and cartGroundSupportsTouch
+	)
+	expect(
+		"lab rolling cart caster supports contact the authored chassis underside",
+		cartChassisSupportCount == 4 and cartCasterChassisSupportsTouch
 	)
 	expect("lab rolling cart component masses match authored total", cartMassMatchesComponents)
 	expect(
