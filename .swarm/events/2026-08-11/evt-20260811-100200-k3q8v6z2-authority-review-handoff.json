@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-100200-k3q8v6z2-authority-review-handoff",
+  "timestamp": "2026-08-11T10:02:00+00:00",
+  "fromWorker": "sol-20260811-k3q8v6z2",
+  "eventType": "HANDOFF",
+  "summary": "Authority completion review-1 found no fresh exact-head approval work: #348 is already independently approved on current main; #307 and #300 retain useful test value but require post-#348 salvage rather than direct integration.",
+  "affects": [
+    "HG-COMPLETION-AUTHORITY",
+    "HG-BACKFILL-AUTHORITY"
+  ],
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "evidence": [
+    "PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3 already has fresh independent source/test PASS on current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1; trusted-history ownership recovery is its remaining integration gate.",
+    "PR #307 teardown regression retains unique value but its current stale head c9760f2ca1048cf5ea3049e1690642821f216214 edits out-of-scope shared tests/run.luau; salvage the authority teardown file after #348 and wire through lane-owned canonical authority/integration coverage.",
+    "PR #300 Rojo deployment regression retains unique value but its exact head b5fcd1d1ae6aa3c1dd762c20e15f4fc000f2f23c still has an unresolved independent REQUEST_CHANGES finding: exact src/server root counting does not reject a leaked ReplicatedStorage mapping to src/server/... descendants. A fresh salvage must make the replicated-subtree test overlap-aware and include a leaked-server-subpath negative fixture.",
+    "No two-client/Studio evidence is inferred from any of these source-only authority regressions."
+  ],
+  "metadata": {
+    "slotId": "review-1",
+    "verdict": "HANDOFF",
+    "nextAction": "After trusted control recovery, integrate #348 when live ownership passes. Then create fresh current-main test salvages for #307 and #300; #300 must close the subtree-aware replicated-server leak blocker before it can receive PASS."
+  }
+}
