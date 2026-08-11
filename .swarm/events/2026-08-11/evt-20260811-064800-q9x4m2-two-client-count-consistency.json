@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064800-q9x4m2-two-client-count-consistency",
+  "timestamp": "2026-08-11T06:48:00+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "high",
+  "summary": "Independent bridge audit found a second fail-closed gap beyond schema provenance: the semantic two-client evaluator validates entityCount/representedCount only as non-negative echoed identity fields and never ties them to canonicalEntityIds length. Its own passing fixture uses entityCount=20 and representedCount=20 with only two canonical entity IDs, and test_accepts_strong_two_client_evidence accepts that payload. The live client producer currently guards representedCount by waiting for exactly that many IDs, but evaluate_evidence.py is documented as the semantic PASS authority and should independently reject count/structure inconsistency rather than relying on producer behavior.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT", "OPS-STUDIO-DISPLAY"],
+  "evidence": [
+    "UNRENDERED-STUDIO-BRIDGE main tests/test_evaluate_evidence.py canonical_identity() sets entityCount=20 and representedCount=20 while passing_server(2) carries canonicalEntityIds=[world-entity:a, world-entity:b].",
+    "Current _require_server_evidence() checks identity equality and entity-ID equality but does not require representedCount/entityCount to equal canonicalEntityIds length.",
+    "Public PhysicsLabRealizer initial full-F2 realization creates every recipe entity, then syncMetrics sets registered entityCount and representedCount from the authoritative runtime/representation map, so the Hero Gate baseline has an independently checkable count/structure relationship."
+  ]
+}
