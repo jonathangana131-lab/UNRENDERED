@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:47:00+00:00",
-  "lastSeenAt": "2026-08-11T07:53:00+00:00",
+  "lastSeenAt": "2026-08-11T08:18:00+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE-z4m8p2",
-  "notes": "Implementing the source-only canonical Physics Lab runtime input fence from capacity-mining finding evt-20260811-075100-z4m8p2-runtime-recipe-fence; no Studio evidence claim."
+  "notes": "Repairing PR #310 exact-head gates for the source-only canonical Physics Lab runtime fence; formatter diff applied, independent review pending, no Studio evidence claim."
 }
