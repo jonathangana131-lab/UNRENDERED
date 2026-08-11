@@ -43,12 +43,6 @@ local function requireStringAttribute(instance: Instance, attributeName: string)
 	return value :: string
 end
 
-local function requireNumberAttribute(instance: Instance, attributeName: string): number
-	local value = instance:GetAttribute(attributeName)
-	assert(type(value) == "number", `missing diagnostics numeric attribute: {attributeName}`)
-	return value :: number
-end
-
 local function diagnosticsRoot(model: Model): Folder?
 	local existing = model:FindFirstChild(DIAGNOSTICS_ROOT_NAME)
 	if existing == nil then
