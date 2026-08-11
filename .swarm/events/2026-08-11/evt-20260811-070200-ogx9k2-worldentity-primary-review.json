@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070200-ogx9k2-worldentity-primary-review",
+  "timestamp": "2026-08-11T07:02:00+00:00",
+  "fromWorker": "sol-20260811-ogx9k2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "important",
+  "summary": "Independent audit requests changes on WorldEntity primary PR #271 head 65f37ccddc4e4229722166acacd4fdcc02958eb9. The direct-record ownership repair is directionally sound, but two previously reported fail-closed invariants remain unresolved: revision counters can exceed exact IEEE-754 incrementability, and hostile schema/fidelity values can execute __tostring metamethods through eager diagnostic formatting.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "Review 4903632483 posted on PR #271 exact head 65f37ccddc4e4229722166acacd4fdcc02958eb9.",
+    "stateRevision/representationRevision accept 9007199254740992 even though +1 is not guaranteed to advance the represented integer; prior finding evt-20260811-062500-x7n4k2-worldentity-safe-revisions and issue comment 5249720062 remain unresolved.",
+    "assertExactRecordShape and invalid-fidelity assertions eagerly call tostring on untrusted values; prior test-adversary issue comment 5249787939 remains unresolved and requires callback-count/throwing-metamethod regression coverage.",
+    "After source fixes, integration still requires synchronization to current main plus exact-head canonical CI and Swarm Control Plane ownership validation."
+  ]
+}
