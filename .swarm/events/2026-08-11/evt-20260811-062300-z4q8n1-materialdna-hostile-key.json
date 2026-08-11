@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062300-z4q8n1-materialdna-hostile-key",
+  "timestamp": "2026-08-11T06:23:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "high",
+  "summary": "MaterialDNA.validateKnownFields currently formats unknown keys with tostring(key). A plain canonical record can therefore contain a table key whose __tostring metamethod executes during validation, violating the no-execute hostile-input boundary even though the outer record itself has no metatable. Test branch agent/materials/HG-BACKFILL-MATERIALDNA-tests-z4q8n1 adds a deterministic regression to the already-enumerated materialdna_metatable_boundary suite; it is expected to fail until the primary source lane removes metamethod-capable key formatting.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "src/shared/Materials/MaterialDNA.luau validateKnownFields iterates arbitrary record keys and calls tostring(key) when a key is unknown.",
+    "Luau table keys may themselves carry metatables; __tostring is therefore executable behavior reachable from hostile canonical input.",
+    "tests/materialdna_metatable_boundary.luau now asserts that a hostile unknown-key __tostring callback remains at count zero while validation rejects the key."
+  ]
+}
