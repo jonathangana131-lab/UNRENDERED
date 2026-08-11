@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-m5q8v2c4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T21:08:00+00:00",
+  "lastSeenAt": "2026-08-11T21:08:00+00:00",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "reconcile",
+  "branch": "agent/reconcile/HG-COMPLETION-PHYSICS-m5q8v2c4",
+  "notes": "Reconcile reviewed Physics completion lineage around retained #389; retire only exact/safely superseded predecessors and preserve unresolved runtime/authority/evidence stacks."
+}
