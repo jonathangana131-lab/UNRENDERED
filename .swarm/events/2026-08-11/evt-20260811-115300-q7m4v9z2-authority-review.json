@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115300-q7m4v9z2-authority-review",
+  "timestamp": "2026-08-11T11:53:00+00:00",
+  "fromWorker": "sol-20260811-q7m4v9z2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "BLOCK integration of PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3 only on the separately owned trusted-history/pr-ownership prerequisite; source and pure contract tests PASS with no requested source changes. Both bootstraps assert exact RunService context before ReplicatedStorage traversal, shared-tree waiting, or module require; server retains PhysicsLabStudioHarness ownership; client contains no named server-only Physics Lab authority modules. No Studio/two-client evidence is claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "medium",
+  "evidence": [
+    "PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3 reviewed; effective diff is the bounded server bootstrap, client bootstrap, and hero-gate contract integration regression.",
+    "Canonical exact-head CI run 31478299998 PASS; current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 canonical CI run 31476168947 PASS; Swarm engine-tests PASS.",
+    "Swarm pr-ownership fails before lane evaluation on immutable event evt-20260811-073500-q9m4r2-authority-rereview-approve byte mismatch 8f332b489b9266211ff6c5d2869647eba9b80838 != 2f0b0221b7995b3862ac6c009804ebb66f715fac; live generation-2 recovery owner is sol-20260811-r9m4v7x2.",
+    "GitHub review 4905885971 records SOURCE/TEST PASS and the fail-closed integration block; no Roblox Studio, real two-client replication/session binding, or HG151 engine PASS inferred."
+  ],
+  "metadata": {
+    "verdict": "BLOCK",
+    "pr": 348,
+    "headSha": "aa60103d489a055d86cf234dcc1338cf6168e4b3",
+    "reviewId": 4905885971,
+    "blockerLane": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  }
+}
