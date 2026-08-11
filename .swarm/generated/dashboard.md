@@ -1,15 +1,15 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:04:14.396676+00:00`
+Generated: `2026-08-11T07:04:46.607509+00:00`
 
 Canonical main: **GREEN** `7de385295dd17112226dd4cd173bd707178e17bc`
 
-State digest: `bacb941714b6de4e99cf62699e98d0cbb2adc8849d3668ecb1b323d8ede53d7c`
+State digest: `fa8c37c4109642e3ad499312c658f5685ed196d2e5019d6dcd597ac304618d51`
 
 ## Summary
 
-- ready slots: **18**
-- active claims: **15**
+- ready slots: **17**
+- active claims: **16**
 - stale claims: **0**
 - blocked-external lanes: **1**
 
@@ -17,7 +17,6 @@ State digest: `bacb941714b6de4e99cf62699e98d0cbb2adc8849d3668ecb1b323d8ede53d7c`
 
 - `HG-BACKFILL-OBJECTGENOME/primary` — **ObjectGenome source hardening** — score 5450 — dependencies satisfied; resources available
 - `HG-BACKFILL-MATERIALDNA/test-adversary` — **MaterialDNA schema and hostile-input tests** — score 5320 — dependencies satisfied
-- `HG-BACKFILL-WORLDENTITY/audit` — **WorldEntity invariant and aliasing auditor** — score 5320 — dependencies satisfied
 - `HG-BACKFILL-OBJECTGENOME/audit` — **ObjectGenome contract and ownership auditor** — score 5270 — dependencies satisfied
 - `HG-BACKFILL-MATERIALDNA/audit` — **MaterialDNA contract and fixture auditor** — score 5220 — dependencies satisfied
 - `HG-BACKFILL-DIAGNOSTICS/primary` — **Diagnostics source hardening** — score 5150 — dependencies satisfied; resources available
@@ -48,6 +47,7 @@ State digest: `bacb941714b6de4e99cf62699e98d0cbb2adc8849d3668ecb1b323d8ede53d7c`
 - `HG-BACKFILL-REALITY/audit` → `sol-20260811-q7h4n2`; lease to `2026-08-11T07:44:30+00:00`
 - `HG-BACKFILL-REALITY/primary` → `sol-20260811-q9m4r2`; lease to `2026-08-11T07:29:00+00:00`
 - `HG-BACKFILL-REALITY/test-adversary` → `sol-20260811-r9t4n2`; lease to `2026-08-11T07:08:30+00:00`
+- `HG-BACKFILL-WORLDENTITY/audit` → `sol-20260811-z4q8n1`; lease to `2026-08-11T07:42:00+00:00`
 - `HG-BACKFILL-WORLDENTITY/primary` → `sol-20260811-ogx9k2`; lease to `2026-08-11T07:37:00+00:00`
 - `HG-BACKFILL-WORLDENTITY/test-adversary` → `sol-20260811-w3x7k9`; lease to `2026-08-11T07:27:00+00:00`
 - `SWARM-RECOVERY-PR-OWNERSHIP-IMPORT/primary` → `sol-20260811-r4m8z2`; lease to `2026-08-11T07:30:29+00:00`
