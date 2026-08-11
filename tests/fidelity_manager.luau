@@ -327,16 +327,14 @@ local function run(): number
 	local isolationInnerHookCalled = false
 	local isolationOuterAccepted = pcall(function()
 		isolationManager:step(isolationOuterId, "F0", nestedHeroInputs, 0, function()
-			local innerResult = isolationManager:step(
-				isolationInnerId,
-				"F0",
-				nestedHeroInputs,
-				0,
-				function()
-					isolationInnerHookCalled = true
-				end
+			local innerResult = isolationManager:step(isolationInnerId, "F0", nestedHeroInputs, 0, function()
+				isolationInnerHookCalled = true
+			end)
+			expectEqual(
+				"cross-entity inner transition commits before outer failure",
+				innerResult.transitioned,
+				true
 			)
-			expectEqual("cross-entity inner transition commits before outer failure", innerResult.transitioned, true)
 			error("intentional outer transition failure after independent inner commit")
 		end)
 	end)
@@ -367,13 +365,29 @@ local function run(): number
 		0.1,
 		function() end
 	)
-	expectEqual("outer fence clears after failure for independent retry", isolationRetryResult.transitioned, true)
-	expectEqual("outer retry reaches hero fidelity", isolationManager:getObservedLevel(isolationOuterId), "F4")
-	expectEqual("inner fidelity remains committed through outer retry", isolationManager:getObservedLevel(isolationInnerId), "F4")
+	expectEqual(
+		"outer fence clears after failure for independent retry",
+		isolationRetryResult.transitioned,
+		true
+	)
+	expectEqual(
+		"outer retry reaches hero fidelity",
+		isolationManager:getObservedLevel(isolationOuterId),
+		"F4"
+	)
+	expectEqual(
+		"inner fidelity remains committed through outer retry",
+		isolationManager:getObservedLevel(isolationInnerId),
+		"F4"
+	)
 	local isolationRetryMetrics = isolationManager:getMetrics()
 	expectEqual("cross-entity retry drains F0 accounting", isolationRetryMetrics.counts.F0, 0)
 	expectEqual("cross-entity retry leaves both entities at F4", isolationRetryMetrics.counts.F4, 2)
-	expectEqual("cross-entity retry counts both successful hooks", isolationRetryMetrics.transitionHookCalls, 2)
+	expectEqual(
+		"cross-entity retry counts both successful hooks",
+		isolationRetryMetrics.transitionHookCalls,
+		2
+	)
 	expectEqual("cross-entity retry counts both transitions", isolationRetryMetrics.transitions, 2)
 	expectEqual("cross-entity retry counts both promotions", isolationRetryMetrics.promotions, 2)
 
