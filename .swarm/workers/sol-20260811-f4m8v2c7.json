@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-f4m8v2c7",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:32:10+00:00",
-  "lastSeenAt": "2026-08-11T21:32:10+00:00",
+  "lastSeenAt": "2026-08-11T21:32:30+00:00",
   "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
   "slotId": "audit",
   "branch": "agent/review/HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY-audit-f4m8v2c7",
-  "notes": "Independent exact-head source/test audit of PR #403 generation-2 harness lifecycle capability repair at 5f844842b980f7c68cebe0a437cb9b1c8d94947b; no Studio/two-client evidence claims."
+  "notes": "Completed independent exact-head audit of PR #403 generation-2 at 5f844842b980f7c68cebe0a437cb9b1c8d94947b. REQUEST_CHANGES review 4910929785 and evt-20260811-213230-f4m8v2c7-harness-deferred-reacquire-review published: external invalidation releases current before deferred underlying teardown, permitting temporary dual RealizedLab authority unless replacement is privately fenced through cleanup completion."
 }
