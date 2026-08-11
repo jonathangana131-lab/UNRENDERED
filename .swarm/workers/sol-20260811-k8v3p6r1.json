@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k8v3p6r1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T08:40:25+00:00",
-  "lastSeenAt": "2026-08-11T10:01:10+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "primary",
-  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-k8v3p6r1-g3",
-  "notes": "Generation-3 stale takeover of Physics Lab validation-contract primary. Preserve #303 plain-data/no-execute/exact-nil repair; absorb #346 safe-integer and #356 canonical rootName identity blockers into the same two-file boundary on current main. Exact-head gates then independent review by another worker; no Studio claim."
+  "lastSeenAt": "2026-08-11T10:09:30+00:00",
+  "notes": "Completed a long Hero-Gate completion pass without Studio claims. Published current-main production successors: Fidelity PR #335 (exact-head canonical CI green), MaterialDNA PR #353 (green), Reality PR #359 (green), and Physics Lab validation-contract PR #363 (green); all primary claims released for independent review. Closed stale/superseded or expected-red predecessors #274, #313, #306, #303, #346, and #356; detected and closed duplicate chair replay #355 in favor of authoritative #347. Independent audits routed stale chair/MaterialDNA/Reality candidates back for current-main synchronization and identified/closed the safe-integer + canonical-root validation defects via #363. Remaining highest-value work is actively owned: immutable-event history recovery PR #351 holds SWARM-PROTOCOL; cart #352 and WorldEntity #293 audits remain leased; diagnostics ownership seam #349 is already independently source-approved; runtime transition #334 is still primary-amended/not review-ready. No safe non-conflicting unlocked work remained."
 }
