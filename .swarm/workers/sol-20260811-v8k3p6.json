@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-v8k3p6",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T07:46:30+00:00",
-  "lastSeenAt": "2026-08-11T07:46:30+00:00",
+  "lastSeenAt": "2026-08-11T08:19:00+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-v8k3p6-g2",
-  "notes": "Generation-2 stale-claim recovery after merged PR #279. Inspecting current Physics Lab recipe/scale/validation source for a new concrete source-only geometry or validation invariant; no Studio evidence claim and no Hero Door implementation."
+  "notes": "PR #303 exact head e09c617bac644a5a6a124ae8e22320d39fd59296 is source-complete: canonical CI green and independent audit PASS. PR intentionally remains draft/unmerged because Swarm control integrity is under exclusive recovery #315/SWARM-PROTOCOL after confirmed immutable-event laundering. Exact-head ownership must be rerun only after trusted-history recovery. No Studio/engine evidence claimed. Generation-2 primary claim remains leased until normal expiry for safe salvage/takeover rather than duplicate implementation."
 }
