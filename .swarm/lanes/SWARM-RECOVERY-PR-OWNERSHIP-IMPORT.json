@@ -5,7 +5,7 @@
   "title": "Restore fail-closed Swarm PR ownership checker",
   "objective": "Complete the critical PR-ownership recovery after #288 restored trusted hardening imports but exposed a fail-open V2.1 facade: swarmctl_hardening.py discards the base CLI return code, so rejected ownership checks can exit 0. Repair exit propagation, restore valid live control state, and mechanically prove both negative rejection and positive PASS behavior.",
   "priority": 10000,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -52,6 +52,6 @@
     "a real valid product PR receives explicit JSON status PASS from pr-check and a green ownership job",
     "control-plane deterministic/adversarial tests and canonical CI remain green"
   ],
-  "notes": "#288 fixed dependency materialization but run 31465489200 exposed the pre-existing fail-open facade: the validator printed a ControlError while GitHub marked pr-ownership successful because `_base.main()` was not passed to SystemExit. The same run surfaced this lane's invalid priority 20000; this control-state repair normalizes it to the schema maximum 10000. Durable finding: evt-20260811-063523-pr-check-fail-open-r4m8z2. New primary implementation should remain paused until this lane is independently verified.",
+  "notes": "DONE 2026-08-11. #290 merged fail-closed CLI exit propagation; #291 merged exact-snapshot CAS fencing for generated projection and main-health publication. Exact-head pr-ownership run 31466523712 job 93703950653 emitted explicit PASS, post-merge main CI run 31467811354 passed, and the workflow copy on swarm-control was synchronized at ddb802457cfb40a24573cf92875a5dfd9880136a. Production control run 31468034547 then validated that exact AFTER_SHA and refused a stale projection after the branch advanced, proving the snapshot fence fail closed under concurrent writes. Completion handoff: evt-20260811-071500-r4m8z2-pr-ownership-recovery-complete.",
   "tags": ["control-repair", "red-ci", "pr-ownership", "hero-gate"]
 }
