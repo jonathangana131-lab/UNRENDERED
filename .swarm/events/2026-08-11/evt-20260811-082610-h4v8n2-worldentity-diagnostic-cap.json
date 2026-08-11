@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082610-h4v8n2-worldentity-diagnostic-cap",
+  "timestamp": "2026-08-11T08:26:10+00:00",
+  "fromWorker": "sol-20260811-h4v8n2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "summary": "WorldEntity duplicate-diagnostic retention is type/exactness bounded but not practically resource bounded: generation-2 PR #293 accepts duplicateDiagnosticCapacity up to 2^53-1, allowing callers to configure an effectively unbounded diagnostics array despite project bounded-cache/queue rules.",
+  "affects": [
+    "HG-BACKFILL-WORLDENTITY"
+  ],
+  "evidence": [
+    "PR #293 exact head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d routes duplicateDiagnosticCapacity through assertNonNegativeInteger, whose upper bound is MAX_SAFE_INTEGER = 9007199254740991.",
+    "createRegistry retains duplicate diagnostics in a Lua array and evicts only once #duplicates >= capacity, so a caller-selected huge capacity removes any meaningful operational memory bound for a long-lived registry.",
+    "WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY is 64, demonstrating that this collection is intended to be bounded observability state rather than canonical identity data requiring the full safe-integer domain.",
+    "Current generation-2 tests cover false, hostile/metatable-backed, negative/fractional/non-finite capacity handling but do not lock a practical maximum capacity.",
+    "Open PR search found no separate WorldEntity duplicateDiagnosticCapacity practical-cap repair; #293 already owns overlapping WorldEntity source/tests, so the follow-up must be sequenced after #293 rather than competing with it."
+  ],
+  "metadata": {
+    "recommendedLaneId": "HG-BACKFILL-WORLDENTITY-DIAGNOSTIC-CAP",
+    "recommendedAfter": 293,
+    "recommendedScope": [
+      "src/shared/Reality/WorldEntity.luau",
+      "tests/world_entity_registry_shape.luau",
+      "Docs/WORLD_ENTITY.md"
+    ],
+    "recommendedAcceptance": [
+      "introduce an explicit project-owned practical maximum for duplicateDiagnosticCapacity distinct from MAX_SAFE_INTEGER",
+      "reject max+1 before any diagnostic-array mutation or comparison loop",
+      "lock default, zero, exact maximum, and first-over-maximum behavior with deterministic regressions",
+      "document the bounded-retention/performance rationale and preserve duplicate diagnostic FIFO semantics",
+      "no Roblox Studio evidence"
+    ],
+    "suggestedMaximum": 1024,
+    "suggestedMaximumRationale": "16x the current default of 64 while remaining a small fixed observability buffer; implementer/reviewer may choose another documented small project-owned cap without changing the finding."
+  }
+}
