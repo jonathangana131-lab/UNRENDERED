@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T20:57:30+00:00",
-  "lastSeenAt": "2026-08-11T21:10:10+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-c9v2m7q4-g1",
-  "notes": "Diagnostics audit completed with expected-red PR #396 and claim released. Continuing with fresh independent exact-head audit of ObjectGenome generation-8 PR #395; source/test only."
+  "lastSeenAt": "2026-08-11T21:24:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-c9v2m7q4",
+  "notes": "Diagnostics audit completed with expected-red PR #396 and generation-5 primary takeover observed. ObjectGenome generation-8 audit corroborated/released. Mining WorldEntity for one concrete non-duplicate source/test gap; no production edits or Studio claims."
 }
