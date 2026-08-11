@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084730-k9m4x2-fidelity-policyconfig-review",
+  "timestamp": "2026-08-11T08:47:30+00:00",
+  "fromWorker": "sol-20260811-k9m4x2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head audit of Fidelity PR #274 requests changes. PolicyInputs/timestamp/callback atomicity hardening is sound, but caller PolicyConfig still crosses the no-execute boundary before validation: constructor copies before a root plain-table fence, pure evaluation dereferences before a root fence, maxRegisteredEntities uses numeric operators before primitive type validation, and explicit false config silently selects defaults. PR #330 currently proves only the first two cases. The primary must close all four, synchronize to current main, rerun exact-head canonical CI plus live ownership, and request fresh audit before integration.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "HIGH",
+  "evidence": [
+    "PR #274 exact reviewed head 5251998df21e8f7f78cae5c046d346496cc65a28; review id 4904460616 records REQUEST_CHANGES/HOLD.",
+    "FidelityManager.new copies sourceConfig before validateConfig, so metatable-backed PolicyConfig can execute __index during ownership.",
+    "validateConfig dereferences fields before any root plain-table/metatable preflight and applies >=, <, and math.floor to maxRegisteredEntities before a primitive-number guard.",
+    "evaluatePolicy resolves config with `config or DEFAULT_CONFIG`, so explicit false is accepted as omission rather than malformed caller input.",
+    "PR #330 current head de125f342376af438bf723e630cfb51943752da1 covers constructor/pure-policy root metatable no-execute only; hostile maxRegisteredEntities and explicit false remain untested there.",
+    "Current main is dd8f1581115c15ce6497db827d17e98d879d0267 while PR #274 merge base remains 81a13b1138e26e7852c89685de5dbf9bd57753d8; exact-head pr-ownership check is red."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "pr": 274,
+    "headSha": "5251998df21e8f7f78cae5c046d346496cc65a28",
+    "verdict": "REQUEST_CHANGES"
+  }
+}
