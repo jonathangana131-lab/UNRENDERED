@@ -2,6 +2,12 @@ local fs = require("@lune/fs")
 
 local REALIZER_SOURCE = "src/server/PhysicsLab/PhysicsLabRealizer.luau"
 
+local function normalizeWhitespace(value: string): string
+	local normalized = string.gsub(value, "%s+", " ")
+	normalized = string.gsub(normalized, "^ ", "")
+	return string.gsub(normalized, " $", "")
+end
+
 local function run(): number
 	local failures = 0
 
@@ -26,6 +32,17 @@ local function run(): number
 	local ownsSource = if ownsStart ~= nil and ownsEnd ~= nil
 		then string.sub(source, ownsStart, ownsEnd - 1)
 		else ""
+	local expectedOwnsSource = normalizeWhitespace([[
+		local function ownsRepresentation(entityId: string, candidate: Instance): boolean
+			assert(not destroyed, "Physics Lab has been destroyed")
+			if not isRepresented(entityId) then
+				return false
+			end
+
+			local representation = representations[entityId]
+			return representation == candidate and candidate.Parent == model
+		end
+	]])
 	local returnStart = position("\treturn table.freeze({\n\t\tmodel = model,")
 	local returnEnd = returnStart and position("\n\t})\nend", returnStart) or nil
 	local publicHandle = if returnStart ~= nil and returnEnd ~= nil
@@ -34,18 +51,8 @@ local function run(): number
 
 	expect("RealizedLab exposes exact candidate ownership predicate", ownsType ~= nil and ownsStart ~= nil)
 	expect(
-		"ownership predicate preserves authoritative represented-state validation",
-		position("if not isRepresented(entityId) then", ownsStart) ~= nil
-			and ownsSource:find('assert(not destroyed, "Physics Lab has been destroyed")', 1, true) ~= nil
-	)
-	expect(
-		"ownership predicate binds candidate by exact Instance identity",
-		ownsSource:find("local representation = representations[entityId]", 1, true) ~= nil
-			and ownsSource:find("representation == candidate", 1, true) ~= nil
-	)
-	expect(
-		"ownership predicate rejects stale or reparented physical views",
-		ownsSource:find("candidate.Parent == model", 1, true) ~= nil
+		"ownership predicate locks authoritative fail-closed exact Instance semantics",
+		normalizeWhitespace(ownsSource) == expectedOwnsSource
 	)
 	expect(
 		"public handle exposes predicate without exposing private representation map",
