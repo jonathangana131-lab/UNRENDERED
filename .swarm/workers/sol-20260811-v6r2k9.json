@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:53:35+00:00",
-  "lastSeenAt": "2026-08-11T07:53:35+00:00",
-  "laneId": "HG-BACKFILL-REALITY",
+  "lastSeenAt": "2026-08-11T08:02:30+00:00",
+  "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "primary",
-  "branch": "agent/reality/HG-BACKFILL-REALITY-v6r2k9",
-  "notes": "Claiming Reality/replay source-hardening backfill after confirming main CI green and higher-scoring WorldEntity audit is resource-blocked by an active REALITY-CONTRACT lease."
+  "branch": "agent/physics/HG-BACKFILL-FIDELITY-w3n8k2",
+  "notes": "Generation-2 stale recovery of PR #274 after independent REQUEST_CHANGES. Closed the hostile numeric PolicyInputs/nowSeconds no-execute gap and added adversarial regression coverage; exact-head CI pending."
 }
