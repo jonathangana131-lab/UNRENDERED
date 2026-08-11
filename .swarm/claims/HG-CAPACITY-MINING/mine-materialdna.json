@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "workerId": "sol-20260811-q9m4r2",
+  "claimToken": "91e4b7c2d6a503f8",
+  "claimedAt": "2026-08-11T07:31:10+00:00",
+  "heartbeatAt": "2026-08-11T07:31:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-q9m4r2",
+  "pr": null
+}
