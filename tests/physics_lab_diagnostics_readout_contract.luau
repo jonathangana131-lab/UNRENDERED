@@ -20,18 +20,25 @@ local function run(): number
 	end
 
 	local helper = position("local function validateReadoutCompleteness(")
+	local function helperPosition(needle: string): number?
+		if helper == nil then
+			return nil
+		end
+		return string.find(source, needle, helper, true)
+	end
+
 	local identityWrite = position('billboard:SetAttribute("UNRENDERED_WorldEntityId", plan.worldEntityId)')
-	local directChildren = position("folder:GetChildren()")
-	local billboardClass = position('child:IsA("BillboardGui")')
-	local readoutIdentity = position('requireStringAttribute(child, "UNRENDERED_WorldEntityId")')
-	local expectedMembership = position("expectedEntityIds[entityId] == true")
-	local duplicateGuard = position("seenEntityIds[entityId] == nil")
-	local seenWrite = position("seenEntityIds[entityId] = true")
-	local labelLookup = position('child:FindFirstChild("Readout")')
-	local labelClass = position('label:IsA("TextLabel")')
-	local exactBillboardShape = position("#child:GetDescendants() == 1")
-	local exactEntityCount = position("readoutCount == #entities")
-	local exactInstanceCount = position("return 1 + 2 * readoutCount")
+	local directChildren = helperPosition("folder:GetChildren()")
+	local billboardClass = helperPosition('child:IsA("BillboardGui")')
+	local readoutIdentity = helperPosition('requireStringAttribute(child, "UNRENDERED_WorldEntityId")')
+	local expectedMembership = helperPosition("expectedEntityIds[entityId] == true")
+	local duplicateGuard = helperPosition("seenEntityIds[entityId] == nil")
+	local seenWrite = helperPosition("seenEntityIds[entityId] = true")
+	local labelLookup = helperPosition('child:FindFirstChild("Readout")')
+	local labelClass = helperPosition('label:IsA("TextLabel")')
+	local exactBillboardShape = helperPosition("#child:GetDescendants() == 1")
+	local exactEntityCount = helperPosition("readoutCount == #entities")
+	local exactInstanceCount = helperPosition("return 1 + 2 * readoutCount")
 	local captureCall = position("diagnosticInstanceCount = validateReadoutCompleteness(folder, entities)")
 	local descendantCountShortcut = position("diagnosticInstanceCount = 1 + #folder:GetDescendants()")
 
