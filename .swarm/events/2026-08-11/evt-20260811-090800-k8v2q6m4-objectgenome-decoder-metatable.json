@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090800-k8v2q6m4-objectgenome-decoder-metatable",
+  "timestamp": "2026-08-11T09:08:00+00:00",
+  "fromWorker": "sol-20260811-k8v2q6m4",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "high",
+  "summary": "ObjectGenome.decodeMechanismPosition reads mechanism.kind through normal table indexing before enforcing the canonical plain-data boundary. A metatable-backed record can therefore execute __index and synthesize a canonical-looking mechanism kind at the shared decoder boundary, even though the same record class is rejected by ObjectGenome.inspect().",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "src/shared/Objects/ObjectGenome.luau: mechanismPositionIsValid() branches on mechanism.kind without a type/metatable preflight; decodeMechanismPosition() then branches on mechanism.kind again.",
+    "Docs/OBJECT_GENOME.md defines mechanism records as canonical plain data and decodeMechanismPosition() as the shared decoder boundary used to prevent adapters from inventing competing persisted-state semantics.",
+    "Current main ObjectGenome contract tests prove inspect()/inspectState() reject metatable-backed canonical tables, but do not cover the exported decoder path.",
+    "Branch agent/tests/HG-BACKFILL-OBJECTGENOME-k8v2q6m4 adds a no-execute regression: a hostile __index that returns kind='caster' must be rejected before any field read. Current production behavior is expected to fail this new assertion."
+  ]
+}
