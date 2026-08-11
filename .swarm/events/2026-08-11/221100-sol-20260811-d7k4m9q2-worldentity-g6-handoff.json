@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t221100z-d7k4m9q2-worldentity-g6-handoff",
+  "timestamp": "2026-08-11T22:11:00+00:00",
+  "fromWorker": "sol-20260811-d7k4m9q2",
+  "eventType": "HANDOFF",
+  "summary": "WorldEntity generation 6 is source/test complete on draft successor PR #413 exact head b56c95e79e6e7352b177d6b6bc6cce0bb993f3bf. The successor preserves generation-5 #397 and closes the mined caller-unbounded duplicate diagnostic history by imposing a project maximum of 1024 with exact max/max+1 regressions. Canonical CI and Swarm engine-tests are green. The lane intentionally remains NEEDS_CHANGES and the PR remains draft because live pr-ownership is still fail-closed behind the separately owned event-history continuity recovery. After trusted ownership reruns green, transition to REVIEW and require a fresh independent exact-head audit. No Studio, viewport, engine-runtime, or two-client evidence is claimed.",
+  "affects": ["HG-BACKFILL-WORLDENTITY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "info",
+  "evidence": [
+    "Retained predecessor #397 exact head 83850e9f2bab4572de800428fb510b6b75fc2c45; generation-6 direct delta is exactly two files, +16/-0.",
+    "PR #413 exact head b56c95e79e6e7352b177d6b6bc6cce0bb993f3bf adds MAX_DUPLICATE_DIAGNOSTIC_CAPACITY=1024, rejects values above it after existing finite/non-negative/safe-integer validation, and adds exact maximum and maximum+1 regressions.",
+    "Canonical CI run 31541132474 passed formatting, lint, strict Luau analysis, architecture audits, deterministic swarm tests, Pure Luau tests, Rojo build, and artifact upload.",
+    "Swarm Control Plane run 31541132453 engine-tests passed; pr-ownership failed only at live ownership enforcement while the trusted-history recovery remains outstanding.",
+    "Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1; #413 is 6 ahead and 0 behind."
+  ],
+  "metadata": {
+    "pr": 413,
+    "head": "b56c95e79e6e7352b177d6b6bc6cce0bb993f3bf",
+    "predecessorPr": 397,
+    "canonicalCi": 31541132474,
+    "swarmRun": 31541132453,
+    "studioEvidenceClaimed": false
+  }
+}
