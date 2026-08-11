@@ -10,7 +10,7 @@
   "leaseSeconds": 1800,
   "generation": 2,
   "resources": [],
-  "branch": "agent/physics/diagnostics-instance-binding-r7k4m2p9",
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-q5x8n3z2",
   "pr": 349,
-  "notes": "Salvage/takeover of released NEEDS_CHANGES primary after independent audit; regression hardening only, then fresh independent exact-head review required."
+  "notes": "Continuing PR #349 regression hardening; fresh independent exact-head review required after changes."
 }
