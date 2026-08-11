@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-073320-q9m4r2-materialdna-repaircount-bound",
+  "timestamp": "2026-08-11T07:33:20+00:00",
+  "fromWorker": "sol-20260811-q9m4r2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "summary": "MaterialDNA source-depth finding: maintenance.repairCount is the only canonical recipe integer count currently validated by an unbounded validateNonNegativeInteger(), while recipeVersion and all continuous physical/material fields use explicit bounded domains. The validator therefore accepts arbitrarily large finite integral doubles, including values at/above the exact-integer precision boundary where a conceptual +1 repair cannot be represented as a distinct number. No existing PR/lane found in the live search addresses repairCount; merged #283 covers recipeVersion drift and hostile unknown-key execution instead. Recommend a narrow one-shot MaterialDNA backfill that gives repairCount an explicit bounded canonical domain and pins max/over-max regressions without changing fixture recipe seals unless authored content actually changes.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "src/shared/Materials/MaterialDNA.luau validateMaintenance() delegates maintenance.repairCount to validateNonNegativeInteger(), whose only checks are finite, >=0, and math.floor(value)==value; it has no upper bound.",
+    "The same module caps recipeVersion at 2147483647, historyEvents at 32, anomalyModifiers at 8, key length at 160, and assigns explicit maxima to physical dimensions/density/repeats, so repairCount is a domain-boundedness outlier.",
+    "tests/materialdna_contract.luau exercises recipeVersion zero/oversized bounds and general recipe validity, but the inspected suite has no repairCount maximum/over-maximum regression.",
+    "Repository PR search for repairCount/repair count found only merged MaterialDNA hardening #283, whose documented scope does not include this count domain."
+  ],
+  "recommendedLane": {
+    "title": "Bound MaterialDNA maintenance repair-count domain",
+    "scope": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau"],
+    "acceptance": [
+      "choose and document an explicit finite integer maximum for maintenance.repairCount consistent with canonical plain-data/persistence precision needs",
+      "maximum value validates and the first out-of-domain value fails closed",
+      "existing production fixture references/content seals remain unchanged unless a real authored fixture requires migration",
+      "no schema/version bump is assumed without checking whether the tightened domain invalidates any published canonical content"
+    ]
+  }
+}
