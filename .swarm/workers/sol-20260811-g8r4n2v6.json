@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:00:00+00:00",
-  "lastSeenAt": "2026-08-11T21:00:00+00:00",
-  "laneId": "HG-COMPLETION-AUTHORITY",
-  "slotId": "review-1",
-  "branch": "agent/review/HG-COMPLETION-AUTHORITY-review-1-g8r4n2v6",
-  "notes": "Independent exact-head authority completion review; prioritizing combined teardown stack PR #394 without claiming Studio/two-client evidence."
+  "lastSeenAt": "2026-08-11T21:08:00+00:00",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-2",
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-review-2-g8r4n2v6",
+  "notes": "Independent adversarial spot-check of PR #389 finite scale-output and validation-contract hardening; authority review #394 completed and published. No Studio evidence claimed."
 }
