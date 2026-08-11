@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084820-o8a4r7-cart-geometry-review",
+  "timestamp": "2026-08-11T08:48:20+00:00",
+  "fromWorker": "sol-20260811-o8a4r7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head source audit of PR #311 PASS. Rolling-cart caster ground/chassis contact closes exactly, 15.6 kg component mass and derived COM close to the declared hints, familyVersion 2 explicitly versions the corrected geometry, and deterministic regressions cover the prior gap/stale COM. Exact-head CI and authoritative-suite runs are green. Integration remains held until the live swarm ownership/control plane is healthy; no Roblox Studio evidence was run or claimed.",
+  "affects": ["HG-PHYSICS-CART-GEOMETRY"],
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "severity": "low",
+  "evidence": [
+    "PR #311 exact head 84408e1f8a8dfa5d99ecfcd2e14762c8e0265877 reviewed and published as a GitHub review comment.",
+    "Caster span: -0.4225 +/- 0.105/2 = [-0.475, -0.370] m; authored floor = -0.475 m; chassis underside = -0.370 m.",
+    "Component mass = 15.6 kg; weighted Y = -2.716 kg*m; derived COM Y = -0.1741025641025641 m; X/Z cancel by symmetry.",
+    "Exact-head CI run 31473259627 succeeded and authoritative-suite gate 31473259992 succeeded.",
+    "Current main is ahead by control-plane-only changes with no overlap in the two Physics files; the merge result is therefore not the exact tested SHA.",
+    "No Roblox Studio/contact evidence was run or claimed; separate cart shelf/frame manufacturability debt remains out of scope under evt-20260811-081930-q2v7m5-cart-shelf-frame."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "sourcePr": 311,
+    "reviewedHead": "84408e1f8a8dfa5d99ecfcd2e14762c8e0265877",
+    "verdict": "PASS_SOURCE_HOLD_INTEGRATION"
+  }
+}
