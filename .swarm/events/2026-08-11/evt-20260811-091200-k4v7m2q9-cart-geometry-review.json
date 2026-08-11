@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091200-k4v7m2q9-cart-geometry-review",
+  "timestamp": "2026-08-11T09:12:00+00:00",
+  "fromWorker": "sol-20260811-k4v7m2q9",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "severity": "HIGH",
+  "summary": "Fresh independent source review PASS on PR #311 exact head 84408e1f8a8dfa5d99ecfcd2e14762c8e0265877. Repaired caster geometry closes the authored ground and chassis contacts exactly, the component mass/COM derivation is correct, the deterministic regressions cover both contacts plus mass/COM/revision, and canonical CI run 31473259627 is green through pure tests/build. Integration remains HOLD because the exact-head Swarm Control Plane ownership check fails on live historical control state. Current main ae83c0e / merged #329 explicitly detects/fences historical event identities without restoring already-laundered live history, so merely rebasing the Physics PR is not sufficient; require SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY and a fresh green ownership/control result before merge. No Roblox Studio evidence claimed.",
+  "affects": ["HG-PHYSICS-CART-GEOMETRY"],
+  "evidence": [
+    "PR #311 review 4904634644 records PASS-at-source / HOLD-integration on exact head 84408e1f8a8dfa5d99ecfcd2e14762c8e0265877.",
+    "CI run 31473259627 exact head: format, lint, Luau analysis, audits, pure Luau tests, and place build all passed.",
+    "Swarm run 31473289867 pr-ownership fails while loading evt-20260811-081620-mat8c3r1-materialdna-key-grammar with invalid affects; this is outside the Physics product diff.",
+    "Merged PR #329/current main ae83c0e documents detect-and-fence-only historical compatibility and requires SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY before trusted live control state is restored."
+  ]
+}
