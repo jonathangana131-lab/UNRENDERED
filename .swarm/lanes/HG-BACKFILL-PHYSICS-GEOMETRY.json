@@ -5,7 +5,7 @@
   "title": "Physics Lab geometry and recipe depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete recipe geometry, scale, support reachability, door-proxy manufacturability, COM, clearance, component, or validation-contract defects without requiring Studio.",
   "priority": 4900,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/PhysicsLabRecipe.luau", "src/shared/Physics/PhysicsLabScale.luau", "src/shared/Physics/PhysicsLabValidationContract.luau", "tests/physics_lab_recipe.luau", "tests/physics_lab_scale.luau", "tests/physics_lab_validation_contract.luau"],
@@ -16,6 +16,5 @@
     {"slotId":"audit","role":"Physics recipe realism and validation auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/physics_lab_recipe.luau","tests/physics_lab_validation_contract.luau","Docs/PHYSICS_LAB_VALIDATION.md"]}
   ],
   "acceptance": ["target measurable geometry/contract gaps", "do not turn the lab proxy into the locked Hero Door feature", "all geometry changes preserve deterministic recipes", "new invariants get tests", "do not claim engine contact proof from source-only work"],
-  "notes": "Generation-5 successor PR #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401 preserves reviewed generation-4 #376 validation-contract hardening and absorbs expected-red #383. PhysicsLabScale now validates both finite input and finite derived output before returning SI/stud conversion results; the focused 1e308 meter overflow regression is locked. Canonical CI run 31532629852 is SUCCESS through format/lint/Luau/randomness/domain/plain-data/swarm/Pure Luau/place build/upload. Swarm run 31532629908 engine-tests is SUCCESS; pr-ownership remains separately fail-closed only on audited immutable-event history mismatch (live blob 8f332b489b9266211ff6c5d2869647eba9b80838 vs canonical 2f0b0221b7995b3862ac6c009804ebb66f715fac). Lane is back in REVIEW and requires fresh independent exact-head source audit before integration. #376/#383 are superseded by #389. No Studio/contact evidence claimed.",
-  "tags": ["backfill", "hero-gate", "source-only"]
+  "notes": "Generation-5 PR #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401 retains the reviewed finite-output overflow repair, but fresh audits at 2026-08-11T21:43:21Z and 21:47:01Z supersede earlier PASS reviews after expected-red PR #406 exposed a no-execute defect in PhysicsLabScale.assertFinite(): value equality/order checks occur before primitive-number proof, allowing a hostile metatable __eq path to execute before rejection. Required generation-6 closure is narrow: prove type(value)=='number' before equality/order/arithmetic, preserve both meters-to-studs and studs-to-meters derived-output finite checks, absorb equivalent #406 regression coverage, rerun exact-head canonical CI, then obtain fresh independent review. Expected-red #406 head b6fff28f586944c9e3c35dbfa0f243e6852e0980 failed Pure Luau exactly on the hostile-scalar regression while earlier CI stages and Swarm engine-tests passed. Live pr-ownership remains separately fail-closed on the trusted-history recovery. No Studio/contact evidence claimed."
 }
