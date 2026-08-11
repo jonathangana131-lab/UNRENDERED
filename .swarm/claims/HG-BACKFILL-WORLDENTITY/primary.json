@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "primary",
-  "workerId": "sol-20260811-s56t3v9",
-  "claimToken": "c7e2a91d5f8b3064",
-  "claimedAt": "2026-08-11T21:03:00+00:00",
-  "heartbeatAt": "2026-08-11T21:08:20+00:00",
+  "workerId": "sol-20260811-d7k4m9q2",
+  "claimToken": "2c7a5e1d9b4f8063",
+  "claimedAt": "2026-08-11T21:58:00+00:00",
+  "heartbeatAt": "2026-08-11T21:58:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 5,
+  "generation": 6,
   "resources": ["REALITY-CONTRACT"],
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-s56t3v9-g5",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-d7k4m9q2-g6",
   "pr": 397,
-  "notes": "Generation-5 successor PR #397 exact head 83850e9f2bab4572de800428fb510b6b75fc2c45 is canonical-CI green (run 31536277590) and Swarm engine-tests green (run 31536277554). pr-ownership remains fail-closed at separately owned trusted-history recovery. Keep draft/NEEDS_CHANGES until ownership reruns meaningfully green, then require fresh independent exact-head audit. Evidence event evt-20260811-210810-s56t3v9-worldentity-g5-evidence."
+  "takeoverOf": "sol-20260811-s56t3v9:g5:c7e2a91d5f8b3064",
+  "notes": "Generation-6 stale takeover preserving PR #397 exact head 83850e9f2bab4572de800428fb510b6b75fc2c45. Absorb capacity-mining finding evt-20260811t215700z-d7k4m9q2-worldentity-diagnostic-capacity: add a practical project maximum for duplicateDiagnosticCapacity with exact boundary tests, without weakening generation-5 identity/snapshot/fail-atomicity hardening. Live pr-ownership remains separately fail-closed; source-only, no Studio evidence."
 }
