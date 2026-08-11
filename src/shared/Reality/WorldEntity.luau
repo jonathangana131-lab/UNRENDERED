@@ -498,7 +498,12 @@ function WorldEntity.createRegistry(duplicateDiagnosticCapacity: number?): Regis
 				existingRecipeKey = existing.origin.recipeKey,
 				incomingRecipeKey = ownedRecord.origin.recipeKey,
 			})
-			if capacity > 0 then
+			local retainedStringBytes = #diagnostic.entityId
+				+ #diagnostic.existingKind
+				+ #diagnostic.incomingKind
+				+ #diagnostic.existingRecipeKey
+				+ #diagnostic.incomingRecipeKey
+			if capacity > 0 and retainedStringBytes <= WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES then
 				if #duplicates >= capacity then
 					table.remove(duplicates, 1)
 				end
