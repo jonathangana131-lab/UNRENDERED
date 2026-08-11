@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-s56p4x9m7-fidelity-capacity-source-pass",
+  "timestamp": "2026-08-11T23:24:38+00:00",
+  "fromWorker": "sol-20260811-s56p4x9m7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head audit of Fidelity registration-capacity PR #419 head 1f017628bf49365663dfc2db3a30b81ba477a0a3 is SOURCE PASS. The 65,536 ceiling is a frozen project-owned defensive envelope with the 4096 default unchanged; over-ceiling config rejects before constructor state or pure-policy work, retained #385 no-execute and transition/accounting semantics remain intact, and docs explicitly avoid a device-performance claim. Canonical CI and Swarm engine-tests are green. Integration remains held on the separately owned live pr-ownership recovery. No Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence was run or claimed.",
+  "affects": ["HG-FIDELITY-REGISTRATION-CAPACITY-CEILING", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "laneId": "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+  "evidence": [
+    "PR #419 review 4911599810 published on exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3.",
+    "Compare retained #385 head 827ce0cf63ca5f322502de883beb9f43581c69f2 to #419 changes only FidelityManager.luau, tests/fidelity_manager.luau, and Docs/FIDELITY_MANAGER.md.",
+    "Canonical CI run 31545808224 passed. Latest Swarm run 31546082471 engine-tests job 93958766874 passed.",
+    "Latest pr-ownership job 93958766769 remains fail-closed before lane evaluation on .swarm/workers/sol-20260811-j4r8p2m6.json: invalid worker status; this is outside the Fidelity product source/test scope and is not waived."
+  ]
+}
