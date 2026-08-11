@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "slotId": "audit",
+  "workerId": "sol-20260811-j7c4m9x2",
+  "claimToken": "5c8e1a4d9b2f7063",
+  "claimedAt": "2026-08-11T09:41:35+00:00",
+  "heartbeatAt": "2026-08-11T09:41:35+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-j7c4m9x2",
+  "pr": 349,
+  "notes": "Fresh independent exact-head review of PR #349; verify exact Instance authority semantics, stale/substitute/reparent rejection, private-map encapsulation, and pure regression coverage without extending engine evidence claims."
+}
