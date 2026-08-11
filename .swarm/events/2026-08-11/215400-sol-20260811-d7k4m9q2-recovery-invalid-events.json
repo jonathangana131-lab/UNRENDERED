@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t215400z-d7k4m9q2-control-event-recovery",
+  "timestamp": "2026-08-11T21:54:00+00:00",
+  "fromWorker": "sol-20260811-d7k4m9q2",
+  "eventType": "RECOVERY",
+  "summary": "Control-plane self-recovery: this worker detected that six handoff files it had just appended used an obsolete/noncanonical event field shape. Current swarmctl requires timestamp/fromWorker/affects and rejects unknown fields. The six malformed, never-valid event files were removed immediately before further product work. Their durable scheduler conclusions remain recorded in the corresponding lane notes: MaterialDNA counter #353 and rolling-cart #352 are source/test approved and BLOCKED on live ownership; content completion is BLOCKED; physics/reality/authority completion queues retain their refreshed sequencing. No product source or Studio evidence was changed by this recovery.",
+  "affects": [
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "HG-BACKFILL-MATERIALDNA-COUNTERS",
+    "HG-PHYSICS-CART-GEOMETRY",
+    "HG-COMPLETION-CONTENT",
+    "HG-COMPLETION-PHYSICS",
+    "HG-COMPLETION-REALITY",
+    "HG-COMPLETION-AUTHORITY"
+  ],
+  "severity": "high",
+  "evidence": [
+    "tools/swarm/swarmctl.py validate_event requires schemaVersion,eventId,timestamp,fromWorker,eventType,summary,affects and rejects unknown fields.",
+    "Removed malformed files: 213940 materialdna handoff; 214145 cart handoff; 214535 content queue; 214730 physics queue; 214905 reality queue; 215110 authority queue.",
+    "Corresponding lane JSON notes on swarm-control retain the reconciled integration/review sequencing, so no scheduler conclusion was lost."
+  ],
+  "metadata": {
+    "productFilesChanged": false,
+    "studioEvidenceClaimed": false,
+    "malformedFilesRemoved": 6
+  }
+}
