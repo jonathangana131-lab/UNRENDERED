@@ -21,12 +21,25 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Deterministic and adversarial control-plane tests
         run: |
           python3 tools/swarm/test_swarmctl.py
           python3 tools/swarm/test_swarmctl_hardening.py
           python3 tools/swarm/swarmctl.py simulate --workers 30
           python3 tools/swarm/swarmctl_hardening.py simulate --workers 30
+      - name: Read-only exact trust-bootstrap candidate
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch origin swarm-control:refs/remotes/origin/swarm-control
+          CONTROL_SHA="$(git rev-parse origin/swarm-control)"
+          mkdir -p "$RUNNER_TEMP/bootstrap-control"
+          git archive "$CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/bootstrap-control"
+          python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/bootstrap-control/.swarm"
+          STATE_DIGEST="$(python3 -c 'import sys; from pathlib import Path; sys.path.insert(0,"tools/swarm"); import swarmctl_hardening as h; print(h.state_digest(Path(sys.argv[1])))' "$RUNNER_TEMP/bootstrap-control/.swarm")"
+          echo "BOOTSTRAP_CONTROL_SHA=$CONTROL_SHA"
+          echo "BOOTSTRAP_STATE_DIGEST=$STATE_DIGEST"
 
   pr-ownership:
     if: github.event_name == 'pull_request'
@@ -129,11 +142,10 @@ jobs:
       - name: Rebuild board, metrics, and validation fence
         run: python3 tools/swarm/swarmctl_hardening.py render --root "$RUNNER_TEMP/control-after/.swarm"
       - name: Advance separate trust ledger only for this exact validated control tip
-        env:
-          VALIDATOR_MAIN_SHA: ${{ github.event.repository.default_branch == 'main' && github.event.head_commit.id || github.sha }}
         run: |
           EXPECTED_CONTROL="${CONTROL_SHA:?validated control snapshot SHA missing}"
           EXPECTED_TRUST="${TRUST_BRANCH_SHA:?trust branch snapshot SHA missing}"
+          git fetch origin main:refs/remotes/origin/main
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
           git fetch origin swarm-trust:refs/remotes/origin/swarm-trust
           [[ "$(git rev-parse origin/swarm-control)" == "$EXPECTED_CONTROL" ]] || { echo 'Control advanced; refusing stale trust advance.'; exit 1; }
