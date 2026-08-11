@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-v6m4q9t2",
+  "claimToken": "8c6a1f2d9e4b7035",
+  "claimedAt": "2026-08-11T07:48:20+00:00",
+  "heartbeatAt": "2026-08-11T07:48:20+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-tests-v6m4q9t2",
+  "pr": null
+}
