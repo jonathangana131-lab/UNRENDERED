@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T23:08:20+00:00",
-  "lastSeenAt": "2026-08-11T23:11:05+00:00",
+  "lastSeenAt": "2026-08-11T23:29:54+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "test-adversary",
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-s6q2m9v4",
-  "notes": "Claimed independent adversarial test depth on retained generation-6 Physics Lab geometry/scale PR #414. Scope is tests only; find a concrete non-duplicate source-contract gap or publish no-gap evidence."
+  "notes": "Draft PR #418 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f is canonical-CI green after replacing the rejected raw-source check with a behavioral reverse-overflow adversary. Awaiting independent re-review/primary absorption; no production or Studio evidence changed."
 }
