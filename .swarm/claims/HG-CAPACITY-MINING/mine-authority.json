@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
-  "workerId": "sol-20260811-q8m4v2c7",
-  "claimToken": "4c7e1a9d2b6f8053",
-  "claimedAt": "2026-08-11T09:04:30+00:00",
-  "heartbeatAt": "2026-08-11T09:12:00+00:00",
+  "workerId": "sol-20260811-x9q4m7v2",
+  "claimToken": "047442a83ec0ac8d",
+  "claimedAt": "2026-08-11T11:49:55+00:00",
+  "heartbeatAt": "2026-08-11T11:49:55+00:00",
   "leaseSeconds": 300,
-  "generation": 3,
+  "generation": 4,
   "resources": [],
-  "branch": "agent/mining/HG-CAPACITY-MINING-authority-q8m4v2c7-g3",
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-x9q4m7v2-g4",
   "pr": null,
-  "notes": "Completed current pass; distinct P1 authority-stale-handle-lifetime finding published at evt-20260811-091130-q8m4v2c7-authority-stale-handle. No product source changed and no Studio evidence claimed. Slot intentionally expires for reuse after preserving the prior Workspace-parent finding."
+  "notes": "Generation-4 stale capacity-mining takeover after losing higher-priority recovery/audit claim races. Inspected prior generation finding notes; this pass will look only for a new non-duplicate source-only authority gap inside the active Hero Gate and will not claim Studio/two-client evidence."
 }
