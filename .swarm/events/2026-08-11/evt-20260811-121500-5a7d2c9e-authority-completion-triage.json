@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-121500-5a7d2c9e-authority-completion-triage",
+  "timestamp": "2026-08-11T12:15:00+00:00",
+  "fromWorker": "sol-20260811-5a7d2c9e",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "severity": "info",
+  "summary": "Authority completion triage found no uncovered exact-head review to duplicate. PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3 already has repeated independent SOURCE/TEST PASS including completion review and is integration-held only on global trusted-history ownership recovery. PR #307 exact head c9760f2ca1048cf5ea3049e1690642821f216214 already has fresh completion REQUEST_CHANGES/SYNC_REQUIRED for out-of-scope tests/run.luau wiring plus a successor requirement to bind assertStudioServer itself. PR #300 exact head b5fcd1d1ae6aa3c1dd762c20e15f4fc000f2f23c already has fresh completion REQUEST_CHANGES/SYNC_REQUIRED because exact-path counting misses replicated src/server descendant leaks. No duplicate review was published. Do not integrate Authority work until PR #351 restores trusted live pr-ownership; no Studio/two-client evidence is claimed.",
+  "affects": ["HG-COMPLETION-AUTHORITY", "HG-BACKFILL-AUTHORITY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "evidence": [
+    "PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3 has four independent COMMENTED source-pass reviews, including HG-COMPLETION-AUTHORITY/review-1.",
+    "PR #307 exact head c9760f2ca1048cf5ea3049e1690642821f216214 has completion review-1 and review-2 blockers for stale ancestry/out-of-scope runner wiring; current production itself is not claimed broken by the helper-body source-test hole.",
+    "PR #300 exact head b5fcd1d1ae6aa3c1dd762c20e15f4fc000f2f23c has completion review-1 and review-2 blockers requiring prefix/subtree-aware rejection of replicated src/server descendants.",
+    "PR #351 remains the separately owned trusted-history recovery prerequisite; Authority product integration is held until live pr-ownership is meaningful and green."
+  ]
+}
