@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-94hvgfgy",
+  "model": "gpt-5.6-sol",
+  "status": "ACTIVE",
+  "startedAt": "2026-08-11T11:51:12+00:00",
+  "lastSeenAt": "2026-08-11T11:51:12+00:00",
+  "notes": "GO worker triaging live Hero Gate review/integration/control-repair backlog; no task claimed yet."
+}
