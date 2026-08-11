@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120252-p7d4m2x9-objectgenome-identityparts-handoff",
+  "timestamp": "2026-08-11T12:02:52+00:00",
+  "fromWorker": "sol-20260811-p7d4m2x9",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "high",
+  "summary": "ObjectGenome test-adversary handoff: PR #375 provides isolated executable RED evidence for the documented identityParts() no-execute/plain-data boundary. Production closure belongs to the live primary; absorb equivalent coverage, turn it green on the production head, then request fresh independent audit. Do not merge #375 independently while red.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "Finding event: evt-20260811-115851-p7d4m2x9-objectgenome-identityparts-noexecute.",
+    "Expected-red branch: agent/objects/HG-BACKFILL-OBJECTGENOME-tests-p7d4m2x9 at 1065bb0d2ad0f183569f3e160e68189ad24402b1; effective diff is tests/object_genome_contract_lock.luau +24/-0.",
+    "Canonical CI 31488981414 passes all gates before Pure Luau and fails exactly at the new identityParts no-execute assertion.",
+    "At handoff, live primary is sol-20260811-p6v2m8q4 generation 4 on agent/objects/HG-BACKFILL-OBJECTGENOME-p6v2m8q4-g4; the finding is durable on swarm-control and does not depend on stale PR #361/#369 ownership."
+  ]
+}
