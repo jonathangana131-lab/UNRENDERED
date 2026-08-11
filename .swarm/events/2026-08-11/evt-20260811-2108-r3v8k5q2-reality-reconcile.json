@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-2108-r3v8k5q2-reality-reconcile",
+  "timestamp": "2026-08-11T21:08:00+00:00",
+  "fromWorker": "sol-20260811-r3v8k5q2",
+  "eventType": "INTEGRATION_RESULT",
+  "laneId": "HG-COMPLETION-REALITY",
+  "severity": "info",
+  "summary": "Reality completion reconciliation retired stale generation-3 replay PR #312 after verifying current-main generation-4 PR #370 retains its exact test payload and the live HG-BACKFILL-REALITY lane records independent approval plus green canonical CI/Swarm engine-tests. PRs #359 and #370 remain the retained approved Reality lineages and must stay blocked on trusted pr-ownership recovery plus final consolidation; no product merge or source edit was performed. Separately, the orphaned HG-COMPLETION-TRAIN/review-reality claim reported earlier is now absent from live swarm-control, so the active history-recovery primary can rerun its bootstrap probe against the cleaned state.",
+  "affects": [
+    "HG-COMPLETION-REALITY",
+    "HG-BACKFILL-REALITY",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "evidence": [
+    "PR #312 closed unmerged as superseded by #370; no retained payload discarded.",
+    "HG-BACKFILL-REALITY live notes identify #359 df5e1b397c673a0cb7e2d62bdb3a11e51762013a and #370 7a95eafb295eded0364ed64689a52ebfcc0cda37 as independently approved current-main lineages.",
+    "Live lookup of .swarm/claims/HG-COMPLETION-TRAIN/review-reality.json now returns Not Found after the recovery blocker event."
+  ]
+}
