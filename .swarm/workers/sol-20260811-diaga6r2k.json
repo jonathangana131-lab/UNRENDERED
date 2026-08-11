@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-diaga6r2k",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T06:20:30+00:00",
+  "lastSeenAt": "2026-08-11T07:06:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-audit-docs-diaga6r2k",
+  "notes": "Diagnostics atomicity source hardening #285 is integrated; current audit PR #289 reconciles the engine evidence contract and adds a concrete future Studio rollback probe. Repairing live swarm-control validation before integration; no Studio rerun queued while OPS-STUDIO-DISPLAY remains externally blocked."
+}
