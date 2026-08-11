@@ -20,6 +20,10 @@ local function run(): number
 	end
 
 	local helper = position("local function validateReadoutCompleteness(")
+	local helperEnd = if helper ~= nil
+		then string.find(source, "\nfunction PhysicsLabStudioDiagnostics.capture", helper, true)
+		else nil
+	local helperSource = if helper ~= nil and helperEnd ~= nil then string.sub(source, helper, helperEnd - 1) else nil
 	local function helperPosition(needle: string): number?
 		if helper == nil then
 			return nil
@@ -39,6 +43,8 @@ local function run(): number
 	local exactBillboardShape = helperPosition("#child:GetDescendants() == 1")
 	local exactEntityCount = helperPosition("readoutCount == #entities")
 	local exactInstanceCount = helperPosition("return 1 + 2 * readoutCount")
+	local projectedAdorneeRead = helperSource ~= nil and string.find(helperSource, "Adornee", 1, true) or nil
+	local projectedLabelTextRead = helperSource ~= nil and string.find(helperSource, "label.Text", 1, true) or nil
 	local captureCall = position("diagnosticInstanceCount = validateReadoutCompleteness(folder, entities)")
 	local descendantCountShortcut = position("diagnosticInstanceCount = 1 + #folder:GetDescendants()")
 
@@ -76,6 +82,14 @@ local function run(): number
 	expect(
 		"validated readouts form a one-to-one projection of authoritative entities",
 		exactEntityCount ~= nil and exactInstanceCount ~= nil and exactEntityCount < exactInstanceCount
+	)
+	expect(
+		"capture revalidates the visual projection target instead of trusting a matching identity tag",
+		projectedAdorneeRead ~= nil
+	)
+	expect(
+		"capture revalidates displayed readout semantics instead of counting stale label text as complete",
+		projectedLabelTextRead ~= nil
 	)
 	expect(
 		"capture cannot bless an arbitrary descendant count as diagnostics completeness",
