@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-121200-u7m4c9p2-physics-reconcile",
+  "timestamp": "2026-08-11T12:12:00+00:00",
+  "fromWorker": "sol-20260811-u7m4c9p2",
+  "eventType": "INTEGRATION_RESULT",
+  "summary": "Physics completion reconciliation removed two proven stale duplicate lineages without consuming unfinished evidence: PR #302 is superseded by #332 because #332 preserves its physics_lab_scale patch byte-for-byte; PR #289 is superseded by #304 because #304 preserves and tightens its diagnostics failure-atomicity documentation/probe. #332 remains open expected-red evidence pending chair repair synchronization, and diagnostics #295/#301/#333 remain open until the documented #327 successor gates are actually satisfied.",
+  "affects": ["HG-COMPLETION-PHYSICS", "HG-BACKFILL-PHYSICS-GEOMETRY", "HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "info",
+  "evidence": [
+    "PR #302 closed after direct patch comparison showed tests/physics_lab_scale.luau preserved byte-for-byte in #332",
+    "PR #289 closed after direct patch comparison showed Docs/PHYSICS_LAB_DIAGNOSTICS.md preserved and tightened in #304",
+    "main push CI run 31476168947 is green on ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "CI run 31480151218 that appeared associated with main was actually pull/360/merge and failed only its ObjectGenome branch formatting check"
+  ],
+  "metadata": {
+    "closedPullRequests": [302, 289],
+    "retainedEvidencePullRequests": [332, 295, 301, 333, 368],
+    "mainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1"
+  }
+}
