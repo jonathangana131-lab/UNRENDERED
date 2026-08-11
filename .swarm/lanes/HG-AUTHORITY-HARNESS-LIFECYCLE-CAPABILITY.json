@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "epicId": "HERO-GATE",
+  "title": "Physics Lab harness lifecycle capability fence",
+  "objective": "Close the confirmed source-only ownership hole where PhysicsLabStudioHarness.get() exposes the raw RealizedLab.destroy() capability and can leave the harness bound to a destroyed lab, without broadening into multiplayer transport or Studio evidence work.",
+  "priority": 4830,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/hero_gate_authority_teardown.luau", "tests/hero_gate_contract_integration.luau"],
+  "resources": ["SERVER-AUTHORITY"],
+  "slots": [
+    {"slotId":"primary","role":"Harness lifecycle capability repair","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":320,"writeScopes":["src/server/PhysicsLab/PhysicsLabStudioHarness.luau","tests/hero_gate_authority_teardown.luau","tests/hero_gate_contract_integration.luau"]},
+    {"slotId":"audit","role":"Harness ownership and teardown auditor","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":160,"writeScopes":["tests/hero_gate_authority_teardown.luau","tests/hero_gate_contract_integration.luau"]}
+  ],
+  "acceptance": [
+    "callers outside the harness cannot destroy the owned lab while leaving the private current owner stale",
+    "use the narrowest production-worthy seam: centralize destroy/release under the harness or return an operational facade that does not expose uncoordinated destroy authority",
+    "Harness.get() and any replacement surface preserve the minimum read/diagnostic access actually required by existing source consumers without exposing the private ownership capability",
+    "stop remains nil-tolerant and idempotent and destroys the currently owned lab before releasing ownership",
+    "restart preserves destroy-before-reacquire ordering and exactly-one-lab ownership",
+    "Studio-only and server-only assertions remain fail-closed",
+    "add pure/source-contract regression proving an external handle cannot leave current bound to a destroyed lab and deterministic replacement remains possible",
+    "do not alter PhysicsLabRealizer ownership architecture, StableIds, world truth, networking, persistence, or fidelity policy",
+    "do not claim Roblox Studio, real two-client, replication/session, transport, or HG151-TWOCLIENT evidence from source-only validation",
+    "canonical CI, live pr-ownership after the separately owned trusted-history recovery, and fresh independent exact-head review are required before integration"
+  ],
+  "notes": "Materialized from capacity-mining findings evt-20260811-123820-j4m8q2v7-authority-harness-destroy-capability and fresh reconfirmation evt-20260811-210630-j9v4m2q7-authority-harness-capability-reconfirm. Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 still returns raw current from PhysicsLabStudioHarness.get(); authority stack PR #394 explicitly leaves this defect out of scope. Keep sequencing independent from #348/#394 except for overlapping authority tests: synchronize rather than drop their accepted bootstrap/teardown assertions. Global integration remains fail-closed behind SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY; no bypass is authorized.",
+  "tags": ["hero-gate", "source-only", "authority", "lifecycle", "prerequisite"]
+}
