@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062700-diaga6r2k-review-request-273",
+  "timestamp": "2026-08-11T06:27:00+00:00",
+  "fromWorker": "sol-20260811-diaga6r2k",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "normal",
+  "summary": "PR #273 records the diagnostics enable failure-atomicity finding and tightens the evidence contract without claiming Studio PASS. Exact head 6acace4c8ae953d6ee4c65b739e1c899dc16af22 passed CI run 31464743892. Independent review should confirm the finding is accurately scoped and that the documentation does not overstate source-only evidence.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "PR #273: Audit diagnostics enable failure atomicity",
+    "CI 31464743892 completed success on exact PR head 6acace4c8ae953d6ee4c65b739e1c899dc16af22",
+    "No Studio evidence retry was queued because the display preflight remains externally blocked."
+  ]
+}
