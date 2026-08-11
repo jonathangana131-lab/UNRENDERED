@@ -48,7 +48,9 @@ local function run(): number
 	expect("rejects state beyond owned depth budget", not deepAccepted)
 	expect(
 		"depth rejection uses owned structural diagnostic",
-		not deepAccepted and string.find(tostring(deepError), "persistentState exceeds structural limits", 1, true) ~= nil
+		not deepAccepted
+			and string.find(tostring(deepError), "persistentState exceeds structural limits", 1, true)
+				~= nil
 	)
 
 	local wideState = {}
@@ -59,7 +61,9 @@ local function run(): number
 	expect("rejects state beyond owned node budget", not wideAccepted)
 	expect(
 		"node rejection uses owned structural diagnostic",
-		not wideAccepted and string.find(tostring(wideError), "persistentState exceeds structural limits", 1, true) ~= nil
+		not wideAccepted
+			and string.find(tostring(wideError), "persistentState exceeds structural limits", 1, true)
+				~= nil
 	)
 
 	local payloadKey = "payload"
@@ -76,7 +80,8 @@ local function run(): number
 	expect(
 		"value byte rejection uses owned structural diagnostic",
 		not overByteAccepted
-			and string.find(tostring(overByteError), "persistentState exceeds structural limits", 1, true) ~= nil
+			and string.find(tostring(overByteError), "persistentState exceeds structural limits", 1, true)
+				~= nil
 	)
 
 	local overlongKey = string.rep("k", WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES + 1)
@@ -87,7 +92,8 @@ local function run(): number
 	expect(
 		"key byte rejection uses owned structural diagnostic",
 		not overKeyAccepted
-			and string.find(tostring(overKeyError), "persistentState exceeds structural limits", 1, true) ~= nil
+			and string.find(tostring(overKeyError), "persistentState exceeds structural limits", 1, true)
+				~= nil
 	)
 
 	return failures
