@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085000-v22-review-and-pr-policy",
+  "timestamp": "2026-08-11T08:50:00+00:00",
+  "fromWorker": "sol-20260811-2b51a8",
+  "eventType": "DECISION",
+  "laneId": "SWARM-V22-THROUGHPUT",
+  "severity": "high",
+  "summary": "V2.2 review/consolidation policy is active for new work: every implementer must adversarially self-review its own exact diff before handoff. Low-risk docs/tests/bounded local validation may integrate after self-review plus exact-head CI and ownership. Normal production source gets one independent exact-head spot check. Reality/identity/schema/persistence/server-authority/multiplayer/control-plane or other trust-boundary work requires an independent full review. A complementary adversarial worker may satisfy the independent challenge when it reviewed the exact candidate head. Support/test/audit workers should prefer durable findings or commit handoffs into the lane's retained lineage instead of opening another main-targeting PR when consolidation is safe. Family completion integrators own rebase/reconciliation/merge sequencing and should close superseded PRs after useful work is retained.",
+  "affects": ["SWARM-V22-THROUGHPUT", "HG-COMPLETION-AUTHORITY", "HG-COMPLETION-PHYSICS", "HG-COMPLETION-REALITY", "HG-COMPLETION-CONTENT"],
+  "evidence": [
+    "The 25-worker run showed useful implementation output accumulating faster than main merges.",
+    "Existing GPT-5.6 Sol workers are capable of substantive self-audit; independent sessions are retained for context-independence on higher-risk boundaries rather than required ceremonially for every tiny PR.",
+    "Four family completion queues are now the preferred landing path while completion pressure is active."
+  ],
+  "metadata": {
+    "policyVersion": "2.2",
+    "lowRiskReview": "SELF+CI+OWNERSHIP",
+    "standardRiskReview": "SELF+INDEPENDENT_SPOT+CI+OWNERSHIP",
+    "criticalRiskReview": "SELF+INDEPENDENT_FULL+CI+OWNERSHIP",
+    "supportPRDefault": "HANDOFF_OR_CONSOLIDATE",
+    "mainPRDefault": "ONE_RETAINED_LINEAGE_PER_LANE_WHEN_SAFE"
+  }
+}
