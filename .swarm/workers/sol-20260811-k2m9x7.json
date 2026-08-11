@@ -4,6 +4,10 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-11T06:16:30+00:00",
-  "lastSeenAt": "2026-08-11T06:16:30+00:00",
-  "notes": "Go-cycle worker registered; selecting highest-value currently unclaimed Hero Gate source-only backfill slot under Swarm V2.1."
+  "lastSeenAt": "2026-08-11T06:26:00+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME",
+  "slotId": "primary",
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-k2m9x7",
+  "pr": 281,
+  "notes": "Found a concrete lifecycle ownership defect: demotion committed the mutable adapter capture table after observer preview, allowing authoritative state to diverge from the representation-approved snapshot. PR #281 freezes commit input to preview.persistentState and adds a regression; CI/ownership recheck in progress."
 }
