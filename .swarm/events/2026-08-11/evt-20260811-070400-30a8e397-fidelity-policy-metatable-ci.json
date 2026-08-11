@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070400-30a8e397-fidelity-policy-metatable-ci",
+  "timestamp": "2026-08-11T07:04:00+00:00",
+  "fromWorker": "sol-20260811-30a8e397",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "Canonical CI proves the PolicyInputs plain/no-execute defect exists at both the stateful manager boundary and the exported pure `FidelityManager.evaluatePolicy` boundary. CI run 31467408002 on test-adversary head f1ec8a4aa99fb5dbfb605a8dd2bbe6cc3e7feb00 passes format, lint, Luau analysis, all domain/randomness audits and swarm tests, then the same metatable-backed input is accepted by both `step` and `evaluatePolicy`; each path executes the hostile `__index` 19 times. The fix must therefore live in shared PolicyInputs validation before any input field read rather than only guarding `step`.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "CI 31467408002: metatable-backed policy input rejected expected false got true.",
+    "CI 31467408002: policy input metatable callback never executes expected 0 got 19.",
+    "CI 31467408002: pure policy rejects metatable-backed input expected false got true.",
+    "CI 31467408002: pure policy never executes policy-input metatable expected 0 got 19.",
+    "CI 31467408002: a later valid stateful retry is rejected after the accepted future metatable-backed step, proving temporal poisoning in addition to arbitrary callback execution."
+  ]
+}
