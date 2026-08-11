@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-p6r4n8x2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:34:00+00:00",
-  "lastSeenAt": "2026-08-11T21:41:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-p6r4n8x2",
-  "notes": "Source-only Hero Gate capacity mining after releasing a redundant stale review slot; inspect Physics Lab geometry/scale/validation source and active repair lineage for one concrete nonduplicate defect or integration gap."
+  "lastSeenAt": "2026-08-11T21:56:00+00:00",
+  "notes": "Completed bounded Hero Gate capacity mining in physics geometry and authority with durable no-duplicate findings; then performed fresh HG-BACKFILL-PHYSICS-GEOMETRY audit after PR #406 expected-red evidence and recorded REQUEST_CHANGES on PR #389. All session claims released."
 }
