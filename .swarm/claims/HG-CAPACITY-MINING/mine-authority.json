@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-x9q4m7v2",
   "claimToken": "047442a83ec0ac8d",
   "claimedAt": "2026-08-11T11:49:55+00:00",
-  "heartbeatAt": "2026-08-11T11:52:18+00:00",
+  "heartbeatAt": "2026-08-11T11:56:03+00:00",
   "leaseSeconds": 300,
   "generation": 4,
   "resources": [],
   "branch": "agent/mining/HG-CAPACITY-MINING-authority-x9q4m7v2-g4",
   "pr": null,
-  "notes": "Generation-4 stale capacity-mining takeover after losing higher-priority recovery/audit claim races. Inspected prior generation finding notes; this pass will look only for a new non-duplicate source-only authority gap inside the active Hero Gate and will not claim Studio/two-client evidence."
+  "notes": "Generation-4 authority mining found a distinct two-client provenance/versioning gap in the private Studio bridge. Publishing structured finding; no product or bridge source changed and no Studio/two-client evidence claimed."
 }
