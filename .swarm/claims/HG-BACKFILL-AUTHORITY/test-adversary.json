@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-t8v4n2c7",
   "claimToken": "f1a6c3e8b4d29075",
   "claimedAt": "2026-08-11T20:22:27+00:00",
-  "heartbeatAt": "2026-08-11T20:22:27+00:00",
+  "heartbeatAt": "2026-08-11T20:24:35+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "resources": ["SERVER-AUTHORITY"],
   "branch": "agent/authority/HG-BACKFILL-AUTHORITY-tests-t8v4n2c7-g3",
-  "pr": null,
-  "notes": "Generation-3 successor repair for PR #382: preserve teardown fixture, remove out-of-scope tests/run.luau wiring, route through lane-owned authority integration entrypoint, and lock assertStudioServer helper semantics."
+  "pr": 390,
+  "notes": "Generation-3 successor PR #390 repairs #382 review blockers: lane-owned integration wiring plus explicit assertStudioServer helper semantics; awaiting exact-head CI."
 }
