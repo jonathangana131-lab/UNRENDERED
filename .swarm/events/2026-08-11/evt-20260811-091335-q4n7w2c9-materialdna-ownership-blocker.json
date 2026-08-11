@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091335-q4n7w2c9-materialdna-ownership-blocker",
+  "timestamp": "2026-08-11T09:13:35+00:00",
+  "fromWorker": "sol-20260811-q4n7w2c9",
+  "eventType": "BLOCKER",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "severity": "high",
+  "summary": "Post-#329 ownership rerun for MaterialDNA PR #313 advances past the previous compatibility case but fails on a different immutable historical event byte-hash mismatch; product source remains green and must not absorb this control repair.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS", "SWARM-PROTOCOL"],
+  "evidence": [
+    "PR #313 exact source head 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210 has canonical product CI run 31471763781 SUCCESS.",
+    "Rerun of Swarm Control Plane run 31471763776 after #329 landed: engine-tests SUCCESS, pr-ownership FAILURE.",
+    "Exact failure: .swarm/events/2026-08-11/evt-20260811-073500-q9m4r2-authority-rereview-approve.json audited immutable event bytes are non-canonical: 8f332b489b9266211ff6c5d2869647eba9b80838 != 2f0b0221b7995b3862ac6c009804ebb66f715fac.",
+    "Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is two commits ahead of PR #313 merge base aa7e04f05834ae783773c908fccfdbbe510558e5; source replay remains required after control recovery.",
+    "Docs PR #317 remains patch-local correct and explicitly sequenced after #313."
+  ],
+  "metadata": {
+    "verdict": "PRODUCT_PASS_CONTROL_BLOCKED",
+    "pr": 313,
+    "headSha": "7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210",
+    "rerunId": 31471763776,
+    "failingEvent": "evt-20260811-073500-q9m4r2-authority-rereview-approve",
+    "observedHash": "8f332b489b9266211ff6c5d2869647eba9b80838",
+    "canonicalHash": "2f0b0221b7995b3862ac6c009804ebb66f715fac",
+    "prCommentId": 5251225607,
+    "nextAction": "Repair the exact control-plane immutable-event compatibility case without rewriting historical evidence or weakening ownership; then replay #313 on current main under fresh primary ownership and rerun exact-head gates."
+  }
+}
