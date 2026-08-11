@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t204100z-v3c8n5q1-runtime-fidelity-noexecute",
+  "timestamp": "2026-08-11T20:41:00Z",
+  "fromWorker": "sol-20260811-v3c8n5q1",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "summary": "PhysicsLabRuntime transition-fence PR #388 and FidelityManager hardening PR #274 are source-compatible but their current adversarial tests are not composition-compatible: #388 requires hostile PolicyInputs.__index to execute (policyReads > 0) to exercise the pre-hook runtime fence, while #274 deliberately rejects metatable-backed PolicyInputs before any field dereference, so the combined safer implementation makes that #388 assertion red. During integration, preserve the runtime whole-step mutation fence but update the composed regression to accept/require zero hostile field execution under hardened FidelityManager, while separately retaining runtime-fence coverage through an executable callback/reentrancy path.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+    "HG-BACKFILL-FIDELITY"
+  ],
+  "evidence": [
+    "PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1 constructs metatable-backed hostileInputs whose __index increments policyReads and calls preHookRuntime:dispose(), then asserts policyReads > 0.",
+    "PR #274 exact head 5251998df21e8f7f78cae5c046d346496cc65a28 validates PolicyInputs with getmetatable(inputs) == nil before reading distanceStuds/visible/directlyObserved or any other policy field; its contract explicitly requires zero hostile __index execution.",
+    "With #274 semantics beneath #388, PhysicsLabRuntime.step still raises transitionInFlight before FidelityManager.step, but FidelityManager rejects hostileInputs before __index, so the runtime remains intact and policyReads stays 0; the existing #388 policyReads > 0 assertion becomes stale rather than identifying a production regression.",
+    "The existing #388 capture/observer recursive-step and dispose regressions still exercise the runtime mutation fence through legitimate executable adapter callbacks, so integration can preserve runtime-fence coverage without weakening #274's no-execute boundary.",
+    "This is a test/integration dependency only: no new runtime framework, policy change, StableId/schema change, or Studio evidence is required."
+  ]
+}
