@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092430-k4v7m2q9-diagnostics-readout-completeness",
+  "timestamp": "2026-08-11T09:24:30+00:00",
+  "fromWorker": "sol-20260811-k4v7m2q9",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "PhysicsLabStudioDiagnostics validates the owned diagnostics root only by Folder class plus its ownership attribute; capture() never proves that the readout descendants remain a complete one-to-one projection of the authoritative represented entity set. After enable(), deleting, substituting, or adding BillboardGui/TextLabel descendants can still yield a successful enabled snapshot, and runToggleEvidence() only requires diagnosticInstanceCount > 0. This can publish diagnostics evidence even when one or more canonical WorldEntityId/fidelity/fingerprint/repro readouts are no longer actually inspectable.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau diagnosticsRoot(model) checks only DIAGNOSTICS_ROOT_NAME, Folder class, and UNRENDERED_PhysicsLabDiagnosticsOwned == true; it does not validate descendants or bind a readout to an entity.",
+    "capture(lab) derives entities from physical lab representations, independently counts the diagnostics Folder as 1 + #folder:GetDescendants(), and returns enabled=true whenever the Folder exists. It therefore does not prove that every EntityDiagnostic has a corresponding live BillboardGui/TextLabel or that no unowned extra readout exists.",
+    "runToggleEvidence() asserts enabled.diagnosticInstanceCount > 0, but the owned Folder alone contributes 1. The check does not require the expected 1 + 2*N realization shape or any one-to-one entity/readout identity mapping.",
+    "Docs/PHYSICS_LAB_VALIDATION.md requires diagnostics-on evidence to make WorldEntityId, fidelity, resolved fingerprint, and repro key inspectable. A partially deleted or substituted readout tree violates that evidence contract while current capture semantics can still report success.",
+    "Active PR #327 addresses authoritative physical-representation set cardinality/membership and bounded cycle input; dependent #333 closes post-loop/defaulting test holes. Their current diffs do not validate diagnostics-root descendant completeness. The separate evt-20260811-085430-k8v2q6m4-diagnostics-instance-binding concerns binding physical representation children to runtime-owned Instances, not binding diagnostics readouts to those representations."
+  ]
+}
