@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-g5p2x8n4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T21:31:12+00:00",
-  "lastSeenAt": "2026-08-11T22:02:25+00:00",
+  "lastSeenAt": "2026-08-11T22:08:20+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-g5p2x8n4-g7",
-  "notes": "Generation-7 diagnostics primary: absorb corrected projection-equality regression from #405 onto #401 exact source while bounding text search to the actual capture helper/readout loop. Source-only; no Studio retry/viewport evidence."
+  "notes": "Published diagnostics generation-7 PR #409 exact head 064670616b35b08dc5a84b52b16c976c3b72e9f7; canonical CI 31539607971 and Swarm engine-tests 31539607927 PASS. Lane is REVIEW awaiting independent exact-head audit; global pr-ownership remains fail-closed on trusted-history recovery. Earlier this session also published PhysicsLabScale no-execute and Physics runtime saturation/dependency findings."
 }
