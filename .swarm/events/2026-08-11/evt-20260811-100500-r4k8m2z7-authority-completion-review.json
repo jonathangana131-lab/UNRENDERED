@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-100500-r4k8m2z7-authority-completion-review",
+  "timestamp": "2026-08-11T10:05:00+00:00",
+  "fromWorker": "sol-20260811-r4k8m2z7",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "summary": "Authority completion review established one retained merge train. Primary PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3 is fresh independent SOURCE/TEST PASS with canonical CI 31478299998 green and exact current-main ancestry; it correctly rejects wrong-context bootstrap before replicated dependency traversal while preserving server-owned Physics Lab startup and making no two-client/Studio claim. Integration is blocked only by the separately owned trusted-history recovery PR #351. Stale test PR #300 carries unique Rojo deployment-boundary evidence and should be replayed after #348 onto current main, preserving its authority_rojo_boundary test plus lane-owned integration wiring. Stale PR #307 carries useful teardown ownership regressions but cannot integrate as-is because its test-adversary edits shared tests/run.luau outside HG-BACKFILL-AUTHORITY write scopes; salvage the authority teardown file after #348 and wire it through tests/hero_gate_contract_integration.luau instead. After #351, rerun trusted ownership on #348, integrate it first, then replay/synchronize the two non-overlapping test payloads with exact-head CI/ownership. No real two-client or Studio evidence is claimed.",
+  "affects": ["HG-COMPLETION-AUTHORITY", "HG-BACKFILL-AUTHORITY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "verdict": "SYNC_REQUIRED",
+  "evidence": [
+    "PR #348 review 4904907185 records exact-head source/test PASS; CI run 31478299998 is green on aa60103d489a055d86cf234dcc1338cf6168e4b3.",
+    "PR #300 review 4904908929 records retained unique Rojo mapping evidence and stale ancestry ahead 3/behind 3 current main.",
+    "PR #307 review 4904910601 records retained teardown evidence plus out-of-scope tests/run.luau ownership defect and stale ancestry ahead 4/behind 2.",
+    "HG-BACKFILL-AUTHORITY write scopes permit tests/hero_gate_contract_integration.luau and tests/**authority*.luau but not tests/run.luau.",
+    "PR #351 owns the live append-only immutable-event history-continuity prerequisite."
+  ]
+}
