@@ -35,6 +35,18 @@ local function counts(instances, constraints)
 	}
 end
 
+local function rootOnlyCounts()
+	return {
+		instances = 1,
+		models = 1,
+		parts = 0,
+		assemblies = 0,
+		attachments = 0,
+		constraints = 0,
+		joints = 0,
+	}
+end
+
 local function run(): number
 	local failures = 0
 	local function expect(name, condition)
@@ -77,7 +89,7 @@ local function run(): number
 	local collapsedReport = ValidationContract.compareFullLabEnvelope(baseline, collapsed, 0.001)
 	expect("full-lab envelope shrink also fails the rebuild checkpoint", not collapsedReport.ok)
 
-	local missingEnvelope = snapshot(counts(1, 0), nil, nil)
+	local missingEnvelope = snapshot(rootOnlyCounts(), nil, nil)
 	local missingReport = ValidationContract.compareFullLabEnvelope(baseline, missingEnvelope, 0.001)
 	expect("missing checkpoint envelope fails closed", not missingReport.ok)
 
@@ -89,6 +101,26 @@ local function run(): number
 	local malformed = snapshot(counts(0, 0), -10, 10)
 	local malformedOk = ValidationContract.inspectSnapshot(malformed)
 	expect("snapshot validation rejects a count that omits the root", malformedOk == false)
+
+	local impossibleClassifiedTotal = snapshot(counts(45, 0), -10, 10)
+	local impossibleClassifiedTotalOk = ValidationContract.inspectSnapshot(impossibleClassifiedTotal)
+	expect(
+		"snapshot validation rejects classified Instance counts above total instances",
+		impossibleClassifiedTotalOk == false
+	)
+
+	local impossibleAssemblyCount = snapshot(counts(46, 0), -10, 10)
+	impossibleAssemblyCount.counts.assemblies = 41
+	local impossibleAssemblyCountOk = ValidationContract.inspectSnapshot(impossibleAssemblyCount)
+	expect("snapshot validation rejects more assemblies than BaseParts", impossibleAssemblyCountOk == false)
+
+	local partsWithoutEnvelope = snapshot(counts(46, 0), nil, nil)
+	local partsWithoutEnvelopeOk = ValidationContract.inspectSnapshot(partsWithoutEnvelope)
+	expect("snapshot validation rejects BaseParts without a physical envelope", partsWithoutEnvelopeOk == false)
+
+	local envelopeWithoutParts = snapshot(rootOnlyCounts(), -1, 1)
+	local envelopeWithoutPartsOk = ValidationContract.inspectSnapshot(envelopeWithoutParts)
+	expect("snapshot validation rejects an envelope without BaseParts", envelopeWithoutPartsOk == false)
 
 	local missingResolvedSchema = snapshot(counts(46, 0), -10, 10)
 	missingResolvedSchema.resolvedRegionSchemaVersion = 0
