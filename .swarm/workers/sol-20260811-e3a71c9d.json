@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:59:10+00:00",
-  "lastSeenAt": "2026-08-11T08:09:18+00:00",
+  "lastSeenAt": "2026-08-11T08:20:05+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-e3a71c9d",
-  "notes": "Auditing WorldEntity identity, aliasing, persistence-shape ownership, and boundedness; local CI unavailable due container DNS, so validation is source audit plus exact GitHub check evidence."
+  "slotId": "test-adversary",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-e3a71c9d",
+  "notes": "Generation-3 WorldEntity adversary recovery on fresh current-main branch; authoring bounded persistentState regression coverage only. Local runner remains unavailable due github.com DNS resolution failure, so no local test pass will be claimed."
 }
