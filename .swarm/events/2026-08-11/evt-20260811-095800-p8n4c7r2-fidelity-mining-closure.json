@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095800-p8n4c7r2-fidelity-mining-closure",
+  "timestamp": "2026-08-11T09:58:00+00:00",
+  "fromWorker": "sol-20260811-p8n4c7r2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "summary": "Fidelity capacity mining found no new non-duplicate source defect that justifies another lane. Current PR #335 covers rejected-input/config/callback atomicity and same-entity reentry fencing; claim-owned PR #354 adds the remaining cross-entity nested-step isolation proof with fresh green canonical CI. Do not broaden Fidelity work while these exact heads await the shared pr-ownership recovery; resume with integration/reconciliation after that prerequisite clears.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "Inspected FidelityManager source at PR #335 exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102 plus current Fidelity tests and Docs/FIDELITY_MANAGER.md.",
+    "PR #335 already covers plain-data config/input validation, rejected-step clock/count atomicity, callback failure rollback, same-entity step/unregister fencing, registration accounting, and current-source exact-head CI.",
+    "PR #354 adopts the independently requested cross-entity nested-step commit/outer-rollback regression at exact head 13ae5f8d575a534191067d8b12c6d6e13f08918c; fresh canonical CI run 31478964222 is green.",
+    "No Studio or two-client evidence is required or claimed for this source-only Fidelity closure."
+  ],
+  "metadata": {
+    "primaryPr": 335,
+    "testPr": 354,
+    "verdict": "NO_NEW_NON_DUPLICATE_GAP"
+  }
+}
