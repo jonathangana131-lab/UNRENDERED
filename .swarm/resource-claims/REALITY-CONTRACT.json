@@ -5,8 +5,8 @@
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "claimToken": "3b8f1d6a9c2e7054",
   "acquiredAt": "2026-08-11T12:00:05+00:00",
-  "heartbeatAt": "2026-08-11T12:00:05+00:00",
+  "heartbeatAt": "2026-08-11T12:08:30+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
-  "notes": "Exclusive Reality contract writer lease for WorldEntity generation-4 review-blocker repair."
+  "notes": "Exclusive Reality contract writer lease for WorldEntity generation-4 PR #378 exact-head validation and review transition."
 }
