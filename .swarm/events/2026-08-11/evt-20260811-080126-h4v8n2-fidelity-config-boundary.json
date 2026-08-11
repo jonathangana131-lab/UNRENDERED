@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080126-h4v8n2-fidelity-config-boundary",
+  "timestamp": "2026-08-11T08:01:26+00:00",
+  "fromWorker": "sol-20260811-h4v8n2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "summary": "FidelityManager still has an uncovered PolicyConfig no-execute/plain-data boundary after PR #274: constructor copy and pure-policy config validation can dereference or compare malformed metatable-backed config data before primitive/plain-data rejection.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #274 head 60de91b49338249c1ded74db0d722921ce2fb55d hardens PolicyInputs, registration ordering, transition-hook failure atomicity, and same-entity callback reentrancy, but does not add a PolicyConfig plain-data boundary.",
+    "At that head FidelityManager.new(config) calls copyConfig(sourceConfig) before validateConfig; copyConfig reads every config field, so a top-level __index metatable can execute before rejection.",
+    "validateConfig performs comparisons/arithmetic/finiteness checks on config scalars without first proving primitive number type; malformed metatable-backed scalar values can therefore reach comparison metamethods.",
+    "evaluatePolicy(inputs, config, currentLevel) accepts an optional PolicyConfig and calls validateConfig on it; there is no top-level type/metatable guard before config field reads.",
+    "Current main tests/fidelity_manager.luau covers infinite/overflow numeric config values, while PR #274 tests/fidelity_manager_rejected_step_atomicity.luau covers hostile PolicyInputs and callback atomicity; neither covers hostile PolicyConfig metatables or wrong-typed scalar no-execute behavior.",
+    "Open PR search found no separate Fidelity PolicyConfig hardening PR, so this is not duplicated by the active Fidelity source/audit work inspected in #274/#292."
+  ],
+  "metadata": {
+    "recommendedLaneId": "HG-BACKFILL-FIDELITY-CONFIG-BOUNDARY",
+    "recommendedAfter": "Integrate PR #274 first because the source scope overlaps src/shared/Physics/FidelityManager.luau.",
+    "recommendedScope": [
+      "src/shared/Physics/FidelityManager.luau",
+      "tests/fidelity_manager_config_boundary.luau"
+    ],
+    "recommendedAcceptance": [
+      "reject non-table or metatable-backed PolicyConfig before first field dereference in new() and evaluatePolicy()",
+      "primitive-type-check every numeric config scalar before equality/comparison/arithmetic/finiteness operations",
+      "prove hostile __index/__lt/__le callbacks execute zero times",
+      "preserve default policy outputs, deterministic behavior, O(1) evaluation, and existing #274 transaction invariants",
+      "source-only validation; no Roblox Studio evidence"
+    ],
+    "inspectedPrs": [274, 292]
+  }
+}
