@@ -166,7 +166,10 @@ end
 local function validateUnit(name: string, value: unknown): ()
 	assert(type(value) == "number", `{name} must be a number`)
 	local numericValue = value :: number
-	assert(numericValue == numericValue and numericValue >= 0 and numericValue <= 1, `{name} must be in [0, 1]`)
+	assert(
+		numericValue == numericValue and numericValue >= 0 and numericValue <= 1,
+		`{name} must be in [0, 1]`
+	)
 end
 
 local function validateNonNegative(name: string, value: unknown): ()
