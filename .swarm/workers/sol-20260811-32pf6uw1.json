@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-32pf6uw1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T08:39:52+00:00",
-  "lastSeenAt": "2026-08-11T08:55:09+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-runtime",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-32pf6uw1",
-  "notes": "Completed Fidelity mining and released it; now mining PhysicsLabRuntime for one concrete non-duplicate source-depth gap around active runtime recipe-fence work."
+  "lastSeenAt": "2026-08-11T09:02:10+00:00",
+  "notes": "Completed HG-CAPACITY-MINING/mine-physics-runtime. Published evt-20260811-090130-32pf6uw1-runtime-dispose-reentry with a distinct observer->dispose lifecycle atomicity gap; source patch intentionally deferred because active PR #310 owns PhysicsLabRuntime. Claim released. Earlier Fidelity mining also completed with a no-duplicate finding."
 }
