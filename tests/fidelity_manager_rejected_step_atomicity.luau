@@ -24,6 +24,13 @@ local function run(): number
 		}
 	end
 
+	local function heroInputs()
+		local inputs = validInputs()
+		inputs.distanceStuds = 10
+		inputs.directlyObserved = true
+		return inputs
+	end
+
 	local clockManager = FidelityManager.new()
 	clockManager:register("entity:atomic-clock", "F0")
 	clockManager:step("entity:atomic-clock", "F0", validInputs(), 1)
@@ -82,6 +89,60 @@ local function run(): number
 		"valid synchronization remains observable",
 		syncManager:getMetrics().externalSynchronizations,
 		beforeMetrics.externalSynchronizations + 1
+	)
+
+	local hookConfig = table.clone(FidelityManager.defaultConfig())
+	hookConfig.promotionHoldSeconds = 0.1
+	local hookManager = FidelityManager.new(hookConfig)
+	hookManager:register("entity:atomic-hook", "F0")
+
+	local initialHookResult = hookManager:step("entity:atomic-hook", "F0", heroInputs(), 0)
+	expectEqual("hook-failure setup enters promotion hold", initialHookResult.blockedReason, "hold")
+	local beforeHookFailureMetrics = hookManager:getMetrics()
+
+	local failedFutureHookAccepted = pcall(function()
+		hookManager:step("entity:atomic-hook", "F0", heroInputs(), 100, function()
+			error("intentional transition failure")
+		end)
+	end)
+	expectEqual("failing transition hook propagates rejection", failedFutureHookAccepted, false)
+	expectEqual(
+		"failing transition hook leaves observed fidelity uncommitted",
+		hookManager:getObservedLevel("entity:atomic-hook"),
+		"F0"
+	)
+
+	local afterHookFailureMetrics = hookManager:getMetrics()
+	expectEqual(
+		"failing transition hook does not count as a hook call",
+		afterHookFailureMetrics.transitionHookCalls,
+		beforeHookFailureMetrics.transitionHookCalls
+	)
+	expectEqual(
+		"failing transition hook does not count as a transition",
+		afterHookFailureMetrics.transitions,
+		beforeHookFailureMetrics.transitions
+	)
+	expectEqual("failing transition hook preserves F0 count", afterHookFailureMetrics.counts.F0, 1)
+	expectEqual("failing transition hook preserves F4 count", afterHookFailureMetrics.counts.F4, 0)
+
+	local retryHookCalled = false
+	local retryAfterFailedFutureHookAccepted = pcall(function()
+		local retryResult = hookManager:step("entity:atomic-hook", "F0", heroInputs(), 0.2, function()
+			retryHookCalled = true
+		end)
+		expectEqual("retry after failed future hook can commit", retryResult.transitioned, true)
+	end)
+	expectEqual(
+		"failed future transition hook does not poison monotonic clock",
+		retryAfterFailedFutureHookAccepted,
+		true
+	)
+	expectEqual("retry after failed future hook invokes transition", retryHookCalled, true)
+	expectEqual(
+		"retry after failed future hook commits observed fidelity",
+		hookManager:getObservedLevel("entity:atomic-hook"),
+		"F4"
 	)
 
 	return failures
