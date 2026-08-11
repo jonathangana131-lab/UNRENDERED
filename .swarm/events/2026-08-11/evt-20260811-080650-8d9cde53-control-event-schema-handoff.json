@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080650-8d9cde53-control-event-schema-handoff",
+  "timestamp": "2026-08-11T08:06:50+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "HANDOFF",
+  "summary": "Live swarm-control validation is now blocked by immutable legacy events carrying typed review/recommendation metadata at top level. Do not rewrite or delete those event bytes: transition-check rejects changed/deleted historical events. The active SWARM-PROTOCOL owner should repair this in trusted validator code with a narrow backward-compatible acceptance path, then regenerate the validation fence and rerun product ownership.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE", "HG-BACKFILL-REALITY"],
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "high",
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "Latest observed control validation run 31471563882 / job 93715811294 fails on evt-20260811-073650-q9m4r2-worldentity-sync-hold.json: unknown keys ['headSha', 'pr', 'verdict'].",
+    "tools/swarm/swarmctl_hardening_base.py transition_check compares historical event bytes and rejects any existing event changed/deleted; in-place normalization would violate the immutability gate.",
+    "Merged PR #298 recovery discussion already identified the same compatibility class for legacy REVIEW_RESULT fields and a separate top-level recommendedLane event, requiring narrow validator compatibility rather than event mutation.",
+    "SWARM-PROTOCOL resource lease is currently owned by sol-20260811-s5q8m4 under generation-2 health-fence recovery, so this Reality auditor did not collide with protected scheduler code."
+  ],
+  "metadata": {
+    "claimToken": "a363dc5b9a4a1217",
+    "currentBlockerEvent": "evt-20260811-073650-q9m4r2-worldentity-sync-hold",
+    "recommendedRepair": "strict backward-compatible validate_event support for already-written benign metadata shapes"
+  }
+}
