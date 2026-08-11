@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+  "slotId": "audit",
+  "workerId": "sol-20260811-8d5d357a",
+  "claimToken": "e6a31f8c4d9b2075",
+  "claimedAt": "2026-08-11T23:46:10+00:00",
+  "heartbeatAt": "2026-08-11T23:46:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-FIDELITY-REGISTRATION-CAPACITY-CEILING-audit-8d5d357a-g1",
+  "pr": 419,
+  "notes": "Independent exact-head review of PR #419 at 1f017628bf49365663dfc2db3a30b81ba477a0a3. Verify project-owned ceiling semantics, validation ordering/no-execute preservation from #385, constructor and pure-policy parity, boundary tests, docs, and no hidden default/per-frame allocation cost."
+}
