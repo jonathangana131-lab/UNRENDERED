@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "eventId": "20260811T214731Z-sol-20260811-y7k4m2p9-fidelitymanager-capability-seal",
+  "type": "FINDING",
+  "workerId": "sol-20260811-y7k4m2p9",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "claimToken": "4d8a1c7e9b2f6053",
+  "generation": 2,
+  "timestamp": "2026-08-11T21:47:31Z",
+  "summary": "FidelityManager exposes live authoritative _states/_metrics on its returned facade, allowing capability holders to bypass budget/accounting and transition-fence invariants.",
+  "details": {
+    "status": "BLOCKED_CHILD",
+    "sourceScope": [
+      "src/shared/Physics/FidelityManager.luau@827ce0cf63ca5f322502de883beb9f43581c69f2",
+      "tests/fidelity_manager.luau@827ce0cf63ca5f322502de883beb9f43581c69f2",
+      "tests/fidelity_manager_rejected_step_atomicity.luau@827ce0cf63ca5f322502de883beb9f43581c69f2",
+      "Docs/FIDELITY_MANAGER.md@827ce0cf63ca5f322502de883beb9f43581c69f2"
+    ],
+    "defect": "The returned manager table owns writable authoritative _states and _metrics. Public methods trust those fields for capacity, level accounting, transition fencing, hold/cooldown, timestamps, and diagnostics, so any holder of the manager reference can mutate canonical manager state outside validated methods.",
+    "evidence": [
+      "Manager construction stores _states and _metrics directly on the returned setmetatable facade; the Manager type definition names those backing fields as well.",
+      "register/step/unregister/getState/getMetrics read the same mutable tables; the same-entity reentrancy guard trusts state.transitioning from _states.",
+      "An applyTransition callback can close over the manager, set manager._states[entityId].transitioning = false, then call step recursively, bypassing the intended in-flight same-entity transition fence.",
+      "A capability holder can directly alter observedLevel, timestamps, registration state, or metrics, desynchronizing getState() from levelCounts/registeredEntities without passing registration or transition validation.",
+      "Current exact-head tests cover public-API reentrancy, atomicity, hostile inputs, budgets, timestamps, and frozen metric snapshots, but do not seal or adversarially probe the backing tables."
+    ],
+    "priorMiningScreen": [
+      "Repository PR/issue/code searches for FidelityManager capability/private/_states/_metrics/direct mutation found no dedicated active sealing child.",
+      "PR #398 covers cross-entity public-method commit isolation, not direct mutation of the authoritative backing tables.",
+      "PR #58 is a directly analogous WorldEntity authority-boundary repair using closure-private backing state, confirming the project already treats exposed mutable authoritative tables as an architectural defect class.",
+      "HG-BACKFILL-FIDELITY PR #385 is the generation-4 integration target; capacity-mining must not mutate its production scope."
+    ],
+    "proposedChild": {
+      "title": "FidelityManager: seal authoritative state behind a capability-safe facade",
+      "scope": [
+        "Move authoritative entity-state and mutable metric backing out of the returned manager table into closure-private or otherwise unreachable storage keyed to the manager capability.",
+        "Preserve the public FidelityManager API and exact-head observable semantics.",
+        "Add adversarial tests proving a callback/consumer cannot forge the same-entity transition fence or directly desynchronize observed state, capacity, timestamps, and metrics."
+      ],
+      "acceptance": [
+        "Returned managers expose no writable authoritative state or metric control surface.",
+        "The same-entity in-flight transition fence cannot be disabled by an applyTransition callback that holds the manager reference.",
+        "Observed-level, registration-capacity, timestamp, and metric invariants change only through validated public operations.",
+        "getMetrics remains a frozen snapshot and public PR #385 behavior remains compatible.",
+        "Canonical exact-head CI and relevant Lune tests are green; no Studio/viewport evidence is claimed for this source-only child."
+      ]
+    },
+    "verification": {
+      "commandsRun": [],
+      "existingEvidence": "PR #385 exact-head canonical CI run 31532320675 is green for the inspected source; it predates this finding and does not validate the proposed sealing fix.",
+      "engineEvidence": "NOT_RUN",
+      "studioEvidence": "NOT_RUN"
+    }
+  }
+}
