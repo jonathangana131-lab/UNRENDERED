@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-093305-4e7b1c9a-cart-audit-sync-required",
+  "eventType": "FINDING",
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-p9w2c7n4",
+  "claimToken": "4e7b1c9a6d2f8053",
+  "claimGeneration": 3,
+  "timestamp": "2026-08-11T09:33:05Z",
+  "headSha": "84408e1f8a8dfa5d99ecfcd2e14762c8e0265877",
+  "branch": "agent/review/HG-PHYSICS-CART-GEOMETRY-audit-p9w2c7n4",
+  "payload": {
+    "severity": "warning",
+    "verdict": "SYNC_REQUIRED",
+    "reviewId": 4904785930,
+    "summary": "Independent exact-head audit passes rolling-cart geometry, mass/COM, focused deterministic assertions, family-version bump, scope, and exact-head CI; merge readiness remains blocked because PR #311 is two commits behind current main.",
+    "sourceChecks": [
+      "caster center -0.4225 with height 0.105 gives bottom -0.475 and top -0.370",
+      "chassis center -0.33 with height 0.08 gives bottom -0.370, continuous with caster top",
+      "recipe origin y=0.475 places authored caster ground at world y=0",
+      "mass sum 15.6 kg and weighted COM y=-0.174102564... match authored massKg=15.6 and centerOfMass.y=-0.1741",
+      "tests assert semantic component identity, offsets, supportKeys, caster ground contact, and caster-top/chassis-bottom continuity",
+      "PR scope is exactly PhysicsLabObjectGenomes.luau plus physics_lab_recipe.luau"
+    ],
+    "ci": {
+      "runId": 31473259627,
+      "headSha": "84408e1f8a8dfa5d99ecfcd2e14762c8e0265877",
+      "conclusion": "success"
+    },
+    "integration": {
+      "currentMain": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+      "behindBy": 2,
+      "aheadBy": 1,
+      "note": "The two intervening main commits are swarm control-plane repairs; no cart product-file conflict was observed, but synchronized-head CI is still required."
+    },
+    "validation": "Source math, PR diff/scope, GitHub compare, and exact-head CI metadata only. No Studio/runtime evidence was attempted or claimed because OPS-STUDIO-DISPLAY remains active."
+  }
+}
