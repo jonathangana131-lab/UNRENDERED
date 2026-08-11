@@ -39,6 +39,22 @@ local function run(): number
 	local serverBootstrap = fs.readFile("src/server/Bootstrap.server.luau")
 	local harnessSource = fs.readFile("src/server/PhysicsLab/PhysicsLabStudioHarness.luau")
 
+	local authorityGuardBody = sliceFunction(
+		harnessSource,
+		"local function assertStudioServer(): ()",
+		"function PhysicsLabStudioHarness.start(parent: Instance?): RealizedLab"
+	)
+	expect("Studio/server authority helper remains discoverable", authorityGuardBody ~= nil)
+	if authorityGuardBody ~= nil then
+		expect(
+			"Studio/server authority helper preserves both execution-context fences",
+			containsInOrder(authorityGuardBody, {
+				'assert(RunService:IsStudio(), "PhysicsLabStudioHarness is Studio-only validation tooling")',
+				'assert(RunService:IsServer(), "PhysicsLabStudioHarness must run on the server")',
+			})
+		)
+	end
+
 	expect(
 		"server context guard gates Studio lab startup",
 		containsInOrder(serverBootstrap, {
