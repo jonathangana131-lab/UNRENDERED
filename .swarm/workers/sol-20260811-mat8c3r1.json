@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-mat8c3r1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-11T08:11:53+00:00",
-  "lastSeenAt": "2026-08-11T08:11:53+00:00",
+  "lastSeenAt": "2026-08-11T08:16:35+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-materialdna",
   "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-mat8c3r1",
-  "notes": "Deep source-only MaterialDNA capacity mining after the repairCount lane; must avoid duplicate active/completed findings and only publish concrete next-depth evidence."
+  "notes": "Published evt-20260811-081620-mat8c3r1-materialdna-key-grammar: production MaterialDNA accepts '%' despite declaring canonical stable-key alphabet [a-z0-9._/-]; proposed narrow source/test leaf HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR. No code or Studio evidence claimed."
 }
