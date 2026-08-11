@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-v2c7m9q4",
   "model": "gpt-5.6-sol",
-  "status": "DONE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:55:00+00:00",
   "lastSeenAt": "2026-08-11T22:01:10+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
   "branch": "agent/mining/HG-CAPACITY-MINING-authority-v2c7m9q4",
-  "notes": "Completed duplicate-aware authority/multiplayer source mining. Published evt-sol-20260811-v2c7m9q4-authority-no-new-gap-220045: no additional public-repo authority gap beyond retained #348/#300/#394, active harness generation-3 repair, and already codified two-client private-transport trust requirements. Static GitHub review only; no tests, Studio, private bridge, or two-client run."
+  "notes": "Completed duplicate-aware authority/multiplayer source mining. Published evt-sol-20260811-v2c7m9q4-authority-no-new-gap-220045: no additional public-repo authority gap beyond retained #348/#300/#394, active harness generation-3 repair, and already codified two-client private-transport trust requirements. Static GitHub review only; no tests, Studio, private bridge, or two-client run. Worker terminal state repaired to canonical STOPPED after completion with no live slot claim."
 }
