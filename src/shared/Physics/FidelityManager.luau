@@ -550,8 +550,8 @@ function FidelityManager.step(
 	-- rejected step is observationally atomic.
 	local desired: FidelityLevel, reason: PolicyReason = evaluatePolicy(inputs, self.config, currentLevel)
 	local externallySynchronized = currentLevel ~= state.observedLevel
-	local stagedPendingLevel = if externallySynchronized then nil else state.pendingLevel
-	local stagedPendingSince = if externallySynchronized then nil else state.pendingSince
+	local stagedPendingLevel: FidelityLevel? = if externallySynchronized then nil else state.pendingLevel
+	local stagedPendingSince: number? = if externallySynchronized then nil else state.pendingSince
 	local stagedLastTransitionAt = if externallySynchronized then nowSeconds else state.lastTransitionAt
 
 	if desired == currentLevel then
