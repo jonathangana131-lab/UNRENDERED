@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime transition mutation fence",
   "objective": "Close the source-only runtime lifecycle reentrancy defect found by capacity mining: transition adapters must not be able to partially dismantle or recursively mutate PhysicsLabRuntime authority while an F2/F0 fidelity transaction is in flight.",
   "priority": 4990,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -44,6 +44,6 @@
     "pure regressions prove no partial teardown or count drift; no Roblox Studio/engine evidence claim",
     "independent review required before integration"
   ],
-  "pr": 334,
-  "notes": "Independent audit on #334 head 1725658506c9b1d11bcd1254f801fc0f6887cb97 returned requested changes. Dependent audit PR #365 proves the prior missing-EOF-newline formatter defect is mechanically fixed: exact-head CI 31482051292 now passes format and lint, then fails Luau analysis at PhysicsLabRuntime.luau:46 on the private weak-key runtimeStates declaration. The expired primary must be taken over/recovered, repair that source typing issue inside lane scope, absorb #365's newline or equivalent, rerun full exact-head CI, then return to independent review. Runtime recipe-fence PR #310 still overlaps the same two files and must be synchronized before whichever repair integrates second."
+  "pr": 366,
+  "notes": "Generation-2 stale-work successor PR #366 at exact head f50067d4dedbe548fc80aed2289b846644dd941c preserves the reviewed #334 runtime transition/facade hardening, absorbs #365's verified EOF-newline correction, and fixes the private weak-key runtimeStates Luau typing blocker. Canonical CI run 31482367736 passes format, lint, Luau analysis, all audits, deterministic tests, Pure Luau, and place build; Swarm run 31482367808 engine-tests passes. pr-ownership remains fail-closed only on the separately owned immutable event-history mismatch evt-20260811-073500-q9m4r2-authority-rereview-approve (live 8f332b... vs audited 2f0b022...). A reviewer different from generation-2 primary sol-20260811-k3q8v6z2 must audit this exact head. Runtime recipe-fence PR #310 overlaps the same source/test files and must be synchronized before whichever repair integrates second."
 }
