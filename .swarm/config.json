@@ -27,6 +27,7 @@
     {"pattern": "ProjectSource/UNRENDERED_PROJECT_INSTRUCTIONS.txt", "resource": "SWARM-PROTOCOL"},
     {"pattern": "tools/swarm/**", "resource": "SWARM-PROTOCOL"},
     {"pattern": ".github/workflows/swarm-control.yml", "resource": "SWARM-PROTOCOL"},
+    {"pattern": ".github/workflows/ci.yml", "resource": "SWARM-PROTOCOL"},
     {"pattern": ".github/pull_request_template.md", "resource": "SWARM-PROTOCOL"},
     {"pattern": "src/shared/Reality/**", "resource": "REALITY-CONTRACT"},
     {"pattern": "src/server/Bootstrap.server.luau", "resource": "SERVER-AUTHORITY"}
