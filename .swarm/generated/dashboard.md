@@ -1,10 +1,10 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:21:10.865191+00:00`
+Generated: `2026-08-11T07:21:48.310309+00:00`
 
 Canonical main: **GREEN** `81a13b1138e26e7852c89685de5dbf9bd57753d8`
 
-State digest: `f823129ceb4c1ddc68f037567c557ff7244cab5ccc31dcb065def162cfe0ae7f`
+State digest: `2fd138dced23d0991e50e3837f7b650bb20eb3a857ce28011c5985a99b26fb40`
 
 ## Summary
 
@@ -47,7 +47,7 @@ State digest: `f823129ceb4c1ddc68f037567c557ff7244cab5ccc31dcb065def162cfe0ae7f`
 - `HG-BACKFILL-WORLDENTITY/audit` → `sol-20260811-z4q8n1`; lease to `2026-08-11T07:50:00+00:00`
 - `HG-BACKFILL-WORLDENTITY/primary` → `sol-20260811-ogx9k2`; lease to `2026-08-11T07:47:00+00:00`
 - `HG-BACKFILL-WORLDENTITY/test-adversary` → `sol-20260811-w3x7k9`; lease to `2026-08-11T07:48:00+00:00`
-- `SWARM-RECOVERY-HEALTH-VALIDATION-FENCE/primary` → `sol-20260811-diaga6r2k`; lease to `2026-08-11T07:47:00+00:00`
+- `SWARM-RECOVERY-HEALTH-VALIDATION-FENCE/primary` → `sol-20260811-diaga6r2k`; lease to `2026-08-11T07:51:30+00:00`
 
 ## Blocked lanes
 

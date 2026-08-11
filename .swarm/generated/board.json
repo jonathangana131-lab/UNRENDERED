@@ -119,10 +119,10 @@
     },
     {
       "branch": "agent/swarm/SWARM-RECOVERY-HEALTH-VALIDATION-FENCE-diaga6r2k",
-      "expiresAt": "2026-08-11T07:47:00+00:00",
+      "expiresAt": "2026-08-11T07:51:30+00:00",
       "generation": 1,
       "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
-      "pr": null,
+      "pr": 298,
       "slotId": "primary",
       "workerId": "sol-20260811-diaga6r2k"
     }
@@ -140,7 +140,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:21:10.865191+00:00",
+  "generatedAt": "2026-08-11T07:21:48.310309+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "81a13b1138e26e7852c89685de5dbf9bd57753d8",
@@ -163,10 +163,10 @@
       "HANDOFF": 19,
       "INTEGRATION_RESULT": 7,
       "RECOVERY": 3,
-      "REVIEW_REQUEST": 27,
+      "REVIEW_REQUEST": 29,
       "REVIEW_RESULT": 30
     },
-    "generatedAt": "2026-08-11T07:21:10.865191+00:00",
+    "generatedAt": "2026-08-11T07:21:48.310309+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -389,52 +389,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
-        "HG-BACKFILL-DIAGNOSTICS"
-      ],
-      "eventId": "evt-20260811-071130-diaga6r2k-health-invalidates-validation-fence",
-      "eventType": "BLOCKER",
-      "evidence": [
-        "PR #289 pr-ownership retry job 93704488089 fetched live control after health commit 2cc95b3a650c0621e0b2ed0633d469cc8a94becf and failed exactly with 'live control state changed after its validation marker'.",
-        "At that snapshot .swarm/generated/validation.json was validatedAt 2026-08-11T07:09:47.667472+00:00, while the health sync commit was authored at 2026-08-11T07:09:55Z.",
-        "Current workflow sync-main-health runs hardening validate after changing health data but its publish step copies only .swarm/health/main.json and .swarm/lanes/OPS-MAIN-HEALTH.json; it does not run render or publish .swarm/generated/validation.json.",
-        "GitHub Actions query for head 2cc95b3a650c0621e0b2ed0633d469cc8a94becf returned zero workflow runs, so this observed health publication did not receive a follow-on push validation that could refresh the fence."
-      ],
-      "fromWorker": "sol-20260811-diaga6r2k",
-      "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Merged control recovery #291 still leaves a deterministic validation-fence hole: sync-main-health validates its modified materialized tree but publishes only .swarm/health/main.json and OPS-MAIN-HEALTH.json. Those non-generated files participate in state_digest, while .swarm/generated/validation.json is not regenerated in that health job. The resulting health commit therefore makes the prior marker stale, and trusted pr-check rejects every product PR with 'live control state changed after its validation marker' until some later ordinary control push rebuilds generated state. Recovery should publish a matching regenerated validation fence from the exact same CONTROL_SHA-derived health snapshot (under the existing CAS) or otherwise prove an equivalent atomic refresh before considering PR ownership fully restored.",
-      "timestamp": "2026-08-11T07:11:30+00:00",
-      "toWorker": "sol-20260811-r4m8z2"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-WORLDENTITY"
-      ],
-      "eventId": "evt-20260811-071230-q7h4n2-worldentity-generator-version-bound",
-      "eventType": "FINDING",
-      "evidence": [
-        "src/shared/Reality/WorldEntity.luau cloneOrigin validates origin.generatorVersion only as finite, >=1, integer and stores it unchanged in immutable GenerationOrigin.",
-        "src/shared/Core/DeterminismContract.luau seedFor requires generationVersion to be a safe integer in [1, 2147483647].",
-        "Docs/DETERMINISM_CONTRACT.md normatively defines generationVersion as an explicit integer in [1, 2147483647] and requires persisted generator/contract versions to reconstruct historical truth.",
-        "Docs/ARCHITECTURE.md defines GenerationOrigin as the WorldId/RegionId/generator name/version/recipe-key provenance for WorldEntity persistence across representation changes.",
-        "PR #271 comment 5250030735 records the actionable source handoff."
-      ],
-      "fromWorker": "sol-20260811-q7h4n2",
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "metadata": {
-        "claimToken": "5c91e7a2d4b8360f",
-        "headSha": "65f37ccddc4e4229722166acacd4fdcc02958eb9",
-        "pr": 271
-      },
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "WorldEntity GenerationOrigin accepts generatorVersion values that canonical deterministic generation cannot replay. cloneOrigin only requires a finite positive integer, so 2147483648 is accepted into durable entity provenance, while DeterminismContract.seedFor and the normative determinism contract restrict generationVersion to [1, 2147483647]. Align WorldEntity origin validation with the canonical generator-version contract and add max/max+1 boundary regressions; prefer a shared contract/helper if available rather than duplicating a magic number.",
-      "timestamp": "2026-08-11T07:12:30+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-WORLDENTITY"
@@ -788,6 +742,44 @@
     },
     {
       "affects": [
+        "HG-BACKFILL-AUTHORITY",
+        "HG151-TWOCLIENT",
+        "PR-297"
+      ],
+      "eventId": "evt-20260811-072105-q9x4m2-authority-primary-review",
+      "eventType": "REVIEW_REQUEST",
+      "evidence": [
+        "Canonical CI run 31468514343 concluded success on exact head.",
+        "Swarm Control Plane run 31468514552 concluded success; pr-ownership job 93706451118 emitted semantic PASS with one changed file and no protected scope touched.",
+        "No Roblox Studio evidence is claimed."
+      ],
+      "fromWorker": "sol-20260811-q9x4m2",
+      "laneId": "HG-BACKFILL-AUTHORITY",
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "Independent exact-head review requested for ready PR #297 at 3ff2b15f52de4a2ee5d93c804f14129479fdac7d. The one-file takeover salvages stale PR #287's bootstrap ownership regression onto current main while preserving newer diagnostics integration. Review must keep the claim narrow: server/client bootstrap ownership only, not true two-client evidence.",
+      "timestamp": "2026-08-11T07:21:05+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-REALITY"
+      ],
+      "eventId": "evt-20260811-072200-q9m4r2-pr282-current-head-review",
+      "eventType": "REVIEW_REQUEST",
+      "evidence": [
+        "Exact head 63f1f4899af616904fba8521ffd1d2a418a0000a is two commits over main@81a13b1138e26e7852c89685de5dbf9bd57753d8 and changes only src/shared/Core/DeterminismContract.luau plus tests/resolved_region_recipe_v2_compat.luau.",
+        "Swarm Control Plane run 31468567798 completed success on the exact head; engine-tests and fail-closed pr-ownership both passed.",
+        "Prior independent reviews approved the identical semantic patch on earlier synchronized heads; this request exists only because the base/head changed again before integration."
+      ],
+      "fromWorker": "sol-20260811-q9m4r2",
+      "laneId": "HG-BACKFILL-REALITY",
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "Independent Reality/replay review requested for PR #282 current exact head 63f1f4899af616904fba8521ffd1d2a418a0000a after synchronization onto main@81a13b1138e26e7852c89685de5dbf9bd57753d8. The semantic two-file StableId canonical-spelling patch is unchanged. Fail-closed Swarm ownership run 31468567798 is now explicitly green, including pr-ownership job 93706609000. Canonical CI run 31468567781 is in progress. Please verify exact-head replay/schema compatibility before integration.",
+      "timestamp": "2026-08-11T07:22:00+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-REALITY"
       ],
       "eventId": "evt-20260811-072330-q7h4n2-pr282-exacthead-review",
@@ -872,7 +864,7 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "f823129ceb4c1ddc68f037567c557ff7244cab5ccc31dcb065def162cfe0ae7f",
+  "stateDigest": "2fd138dced23d0991e50e3837f7b650bb20eb3a857ce28011c5985a99b26fb40",
   "summary": {
     "activeClaims": 14,
     "activeResourceClaims": 1,
