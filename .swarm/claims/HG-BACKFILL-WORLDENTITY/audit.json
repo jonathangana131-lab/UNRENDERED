@@ -5,9 +5,9 @@
   "workerId": "sol-20260811-e3a71c9d",
   "claimToken": "b3d92f8a1c6e7405",
   "claimedAt": "2026-08-11T08:00:07+00:00",
-  "heartbeatAt": "2026-08-11T08:00:07+00:00",
+  "heartbeatAt": "2026-08-11T08:06:03+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
-  "resources": [],
+  "resources": ["REALITY-CONTRACT"],
   "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-e3a71c9d"
 }
