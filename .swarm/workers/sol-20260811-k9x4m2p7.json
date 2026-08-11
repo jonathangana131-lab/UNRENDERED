@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k9x4m2p7",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:00:39+00:00",
-  "lastSeenAt": "2026-08-11T09:00:39+00:00",
+  "lastSeenAt": "2026-08-11T09:05:20+00:00",
   "laneId": null,
   "slotId": null,
   "branch": null,
-  "notes": "Go worker registered; selecting highest-value live Hero Gate review/backfill work after checking scheduler and current main."
+  "notes": "Completed bounded ObjectGenome capacity mining after losing two higher-priority audit races. Published evt-20260811-090430-k9x4m2p7-objectgenome-cardinality-unbounded: ObjectGenome canonical collection counts are structurally dense but unbounded, allowing arbitrarily large valid recipes to scale validation/fingerprint work without an explicit budget. Recommended a narrow post-#336 cardinality-bound source/test lane. No Studio evidence claimed. Claim release was attempted but collided with control-branch churn; lease remains self-owned and will expire if not removed by a later control transition."
 }
