@@ -1,0 +1,103 @@
+name: Swarm Control Plane
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+  push:
+    branches: [swarm-control]
+    paths:
+      - '.swarm/**'
+      - 'tools/swarm/**'
+      - '.github/workflows/swarm-control.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  engine-tests:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Deterministic control-plane tests
+        run: |
+          python3 tools/swarm/test_swarmctl.py
+          python3 tools/swarm/swarmctl.py simulate --workers 30
+
+  pr-ownership:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Fetch live control branch
+        id: control
+        shell: bash
+        run: |
+          if git fetch origin swarm-control:refs/remotes/origin/swarm-control; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "Swarm V2 bootstrap: control branch does not exist yet; ownership enforcement is shadow-only."
+          fi
+
+      - name: Materialize authoritative control state
+        if: steps.control.outputs.available == 'true'
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/swarm-state"
+          git archive origin/swarm-control .swarm | tar -x -C "$RUNNER_TEMP/swarm-state"
+
+      - name: Collect changed files safely
+        if: steps.control.outputs.available == 'true'
+        shell: bash
+        run: |
+          git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}"
+          git diff --name-only "origin/${GITHUB_BASE_REF}...HEAD" > "$RUNNER_TEMP/swarm-changed-files.txt"
+
+      - name: Enforce live claim, scope, branch, and protected resources
+        if: steps.control.outputs.available == 'true'
+        run: |
+          python3 tools/swarm/swarmctl.py pr-check \
+            --root "$RUNNER_TEMP/swarm-state/.swarm" \
+            --event "$GITHUB_EVENT_PATH" \
+            --changed-files "$RUNNER_TEMP/swarm-changed-files.txt"
+
+  validate-control-branch:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/swarm-control' && !contains(github.event.head_commit.message, '[swarm-generated]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: swarm-control
+          fetch-depth: 0
+
+      - name: Validate state and adversarial ownership model
+        run: |
+          python3 tools/swarm/test_swarmctl.py
+          python3 tools/swarm/swarmctl.py validate --root .swarm
+          python3 tools/swarm/swarmctl.py simulate --workers 30
+
+      - name: Rebuild disposable board
+        run: python3 tools/swarm/swarmctl.py render --root .swarm
+
+      - name: Commit generated projection
+        shell: bash
+        run: |
+          if git diff --quiet -- .swarm/generated; then
+            echo "Generated board already current."
+            exit 0
+          fi
+          git config user.name "unrendered-swarm-control"
+          git config user.email "actions@users.noreply.github.com"
+          git add .swarm/generated
+          git commit -m "chore(swarm): rebuild control dashboard [swarm-generated]"
+          git push origin HEAD:swarm-control
