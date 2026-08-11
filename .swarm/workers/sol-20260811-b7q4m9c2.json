@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-b7q4m9c2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T09:04:31+00:00",
-  "lastSeenAt": "2026-08-11T09:04:31+00:00",
+  "lastSeenAt": "2026-08-11T09:26:20+00:00",
   "laneId": "HG-COMPLETION-PHYSICS",
   "slotId": "review-1",
   "branch": "agent/physics/HG-COMPLETION-PHYSICS-review-b7q4m9c2",
-  "notes": "Exact-head review/integration triage for the active Hero Gate physics and diagnostics backlog; no Studio evidence claim."
+  "notes": "Physics completion review queue drained: fresh exact-head source APPROVE on PR #334 replay df09e7a and PR #339 chair geometry 1f125129; REQUEST_CHANGES on PR #310 hostile record/origin key no-execute gap; PR #327 remains blocked by pre-existing exact Instance-binding finding. Fidelity #335 and cart #311 already independently reviewed. Global pr-ownership recovery is separately owned; no Studio evidence claimed. Handoff event evt-20260811-092540-b7q4m9c2-physics-review-handoff published."
 }
