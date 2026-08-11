@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-074030-q9m4r2-objectgenome-review-approve",
+  "timestamp": "2026-08-11T07:40:30+00:00",
+  "fromWorker": "sol-20260811-q9m4r2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "APPROVE source/test patch for PR #296 exact head a136f305f432fa9c480e8d91e5d2151340795af7, conditional on a fresh fail-closed ownership PASS. familyVersion is bounded to 1..2147483647 inside ObjectGenome.inspect(), and tests prove the exact max remains valid/stable-ID representable while 2147483648 fails before identity construction. Current main equals the PR base aa7e04f05834ae783773c908fccfdbbe510558e5; compare is ahead 6 / behind 0. Exact-head canonical CI 31469830377 is green. Swarm run 31469830391 has engine-tests green but pr-ownership red, so integration remains blocked on ownership only.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #296 changes only src/shared/Objects/ObjectGenome.luau and tests/object_genome_contract_lock.luau relative to current main.",
+    "ObjectGenome.inspect() now rejects non-positive or >2147483647 familyVersion values before identityKey() can accept the genome.",
+    "GitHub review 4903985032 records the independent exact-head source approval; no Studio or persistence execution evidence is claimed."
+  ],
+  "pr": 296,
+  "headSha": "a136f305f432fa9c480e8d91e5d2151340795af7",
+  "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+}
