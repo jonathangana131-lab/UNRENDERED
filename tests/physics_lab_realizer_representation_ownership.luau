@@ -20,17 +20,22 @@ local function run(): number
 	end
 
 	local ownsType = position("ownsRepresentation: (entityId: string, candidate: Instance) -> boolean")
-	local ownsStart = position("local function ownsRepresentation(entityId: string, candidate: Instance): boolean")
+	local ownsStart =
+		position("local function ownsRepresentation(entityId: string, candidate: Instance): boolean")
 	local ownsEnd = ownsStart and position("\n\tlocal function captureState", ownsStart) or nil
-	local ownsSource = if ownsStart ~= nil and ownsEnd ~= nil then string.sub(source, ownsStart, ownsEnd - 1) else ""
+	local ownsSource = if ownsStart ~= nil and ownsEnd ~= nil
+		then string.sub(source, ownsStart, ownsEnd - 1)
+		else ""
 	local returnStart = position("\treturn table.freeze({\n\t\tmodel = model,")
 	local returnEnd = returnStart and position("\n\t})\nend", returnStart) or nil
-	local publicHandle = if returnStart ~= nil and returnEnd ~= nil then string.sub(source, returnStart, returnEnd) else ""
+	local publicHandle = if returnStart ~= nil and returnEnd ~= nil
+		then string.sub(source, returnStart, returnEnd)
+		else ""
 
 	expect("RealizedLab exposes exact candidate ownership predicate", ownsType ~= nil and ownsStart ~= nil)
 	expect(
 		"ownership predicate preserves authoritative represented-state validation",
-		position('if not isRepresented(entityId) then', ownsStart) ~= nil
+		position("if not isRepresented(entityId) then", ownsStart) ~= nil
 			and ownsSource:find('assert(not destroyed, "Physics Lab has been destroyed")', 1, true) ~= nil
 	)
 	expect(
