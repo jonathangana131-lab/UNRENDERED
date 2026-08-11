@@ -226,6 +226,91 @@ local function run(): number
 	end
 	rejectionRuntime:dispose()
 
+	local transitionFenceRuntime = PhysicsLabRuntime.new(recipe)
+	expect("transition fence fixture finds chair entity", chair ~= nil)
+	if chair ~= nil then
+		local transitionFenceId = chair.entity.id
+		local witnessId = recipe.entities[1].entity.id
+		transitionFenceRuntime:step(transitionFenceId, noDemand, 0, function(record)
+			return record.persistentState
+		end)
+		local disposeFromObserverAccepted = pcall(function()
+			transitionFenceRuntime:step(transitionFenceId, noDemand, 2, function(record)
+				return record.persistentState
+			end, function()
+				transitionFenceRuntime:dispose()
+			end)
+		end)
+		expect("transition observer cannot dispose runtime authority", not disposeFromObserverAccepted)
+
+		local activeAfterRejectedDispose, afterRejectedDispose = pcall(function()
+			return transitionFenceRuntime:snapshot()
+		end)
+		expect("rejected callback dispose leaves runtime active", activeAfterRejectedDispose)
+		if activeAfterRejectedDispose then
+			expect(
+				"rejected callback dispose preserves registry population",
+				afterRejectedDispose.registered == #recipe.entities
+			)
+			expect(
+				"rejected callback dispose preserves fidelity population",
+				afterRejectedDispose.fidelity.registered == #recipe.entities
+			)
+		end
+		local witnessStillOwned = pcall(function()
+			transitionFenceRuntime:getRecord(witnessId)
+		end)
+		expect("rejected callback dispose cannot partially unregister earlier entities", witnessStillOwned)
+		expect(
+			"rejected callback dispose preserves target fidelity",
+			transitionFenceRuntime:getFidelity(transitionFenceId) == "F2"
+		)
+
+		local retryResult, retryRecord = transitionFenceRuntime:step(
+			transitionFenceId,
+			noDemand,
+			2.1,
+			function(record)
+				return record.persistentState
+			end,
+			function() end
+		)
+		expect(
+			"runtime transition guard clears after callback rejection",
+			retryResult.transitioned and retryRecord.fidelity == "F0"
+		)
+	end
+	transitionFenceRuntime:dispose()
+
+	local recursiveFenceRuntime = PhysicsLabRuntime.new(recipe)
+	local recursiveTarget = floor.entity.id
+	local recursiveOther = chair and chair.entity.id or recipe.entities[#recipe.entities].entity.id
+	recursiveFenceRuntime:step(recursiveTarget, noDemand, 0, function(record)
+		return record.persistentState
+	end)
+	local nestedStepAccepted = nil
+	local recursiveResult = recursiveFenceRuntime:step(recursiveTarget, noDemand, 2, function(record)
+		return record.persistentState
+	end, function()
+		nestedStepAccepted = pcall(function()
+			recursiveFenceRuntime:step(recursiveOther, noDemand, 0)
+		end)
+	end)
+	expect("transition observer cannot recursively mutate runtime step state", nestedStepAccepted == false)
+	expect("rejected nested step does not block outer transition", recursiveResult.transitioned)
+	local untouchedNestedResult = recursiveFenceRuntime:step(recursiveOther, noDemand, 2)
+	expect(
+		"rejected nested step leaves other-entity temporal state untouched",
+		untouchedNestedResult.blockedReason == "hold"
+	)
+	local recursiveSnapshot = recursiveFenceRuntime:snapshot()
+	expect(
+		"recursive mutation rejection preserves runtime population",
+		recursiveSnapshot.registered == #recipe.entities
+			and recursiveSnapshot.fidelity.registered == #recipe.entities
+	)
+	recursiveFenceRuntime:dispose()
+
 	runtime:dispose()
 	runtime:dispose()
 	local disposedSnapshotOk = pcall(function()
