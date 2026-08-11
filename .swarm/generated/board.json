@@ -29,7 +29,7 @@
     },
     {
       "branch": "agent/physics/HG-BACKFILL-FIDELITY-w3n8k2",
-      "expiresAt": "2026-08-11T07:31:17+00:00",
+      "expiresAt": "2026-08-11T07:38:00+00:00",
       "generation": 1,
       "laneId": "HG-BACKFILL-FIDELITY",
       "pr": 274,
@@ -44,6 +44,15 @@
       "pr": 278,
       "slotId": "test-adversary",
       "workerId": "sol-20260811-30a8e397"
+    },
+    {
+      "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-went7k3",
+      "expiresAt": "2026-08-11T07:38:20+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "pr": null,
+      "slotId": "audit",
+      "workerId": "sol-20260811-went7k3"
     },
     {
       "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-k2m9x7-b",
@@ -101,7 +110,7 @@
     },
     {
       "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-z4q8n1",
-      "expiresAt": "2026-08-11T07:42:00+00:00",
+      "expiresAt": "2026-08-11T07:46:00+00:00",
       "generation": 1,
       "laneId": "HG-BACKFILL-WORLDENTITY",
       "pr": null,
@@ -149,7 +158,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:07:11.238333+00:00",
+  "generatedAt": "2026-08-11T07:08:12.127345+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "7de385295dd17112226dd4cd173bd707178e17bc",
@@ -159,7 +168,7 @@
     "workflowRunId": 31466029227
   },
   "metrics": {
-    "activeClaims": 15,
+    "activeClaims": 16,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -169,13 +178,13 @@
       "EVIDENCE_RESULT": 5,
       "EXTERNAL_BLOCKER": 1,
       "FINDING": 36,
-      "HANDOFF": 16,
+      "HANDOFF": 17,
       "INTEGRATION_RESULT": 6,
       "RECOVERY": 2,
       "REVIEW_REQUEST": 23,
       "REVIEW_RESULT": 28
     },
-    "generatedAt": "2026-08-11T07:07:11.238333+00:00",
+    "generatedAt": "2026-08-11T07:08:12.127345+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -184,24 +193,12 @@
       "READY": 12
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 15,
+    "readySlots": 14,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 1
   },
   "readySlots": [
-    {
-      "laneId": "HG-BACKFILL-OBJECTGENOME",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "ObjectGenome contract and ownership auditor",
-      "score": 5270,
-      "slotId": "audit",
-      "writeScopes": [
-        "src/shared/Objects/ObjectGenome*.luau",
-        "tests/object_genome*.luau"
-      ]
-    },
     {
       "laneId": "HG-BACKFILL-DIAGNOSTICS",
       "reason": "dependencies satisfied; resources available",
@@ -382,32 +379,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-MATERIALDNA"
-      ],
-      "eventId": "evt-20260811-070000-z4q8n1-materialdna-integrated",
-      "eventType": "HANDOFF",
-      "evidence": [
-        "Independent audit approval: evt-20260811-065830-q7h4n2-pr283-rereview.json.",
-        "Independent adversarial approval: evt-20260811-064900-z4q8n1-materialdna-approved.json.",
-        "PR #283 merged with expected head 11334326196adba5ced6c50ffe32e856a047c2b9 to main commit ed37c5698c1aad7a355e514b35ea5c5bd50aa738.",
-        "PR #272 is closed as superseded; its test obligations are present in the merged #283 suite.",
-        "Post-merge main CI run 31466530602 started for ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and must be observed before claiming main healthy."
-      ],
-      "fromWorker": "sol-20260811-z4q8n1",
-      "laneId": "HG-BACKFILL-MATERIALDNA",
-      "metadata": {
-        "claimToken": "5f1a8c3d97e2b640",
-        "mergedPr": 283,
-        "mergedSha": "ed37c5698c1aad7a355e514b35ea5c5bd50aa738",
-        "supersededPr": 272
-      },
-      "schemaVersion": 1,
-      "severity": "info",
-      "summary": "MaterialDNA adversarial slot complete. Primary PR #283 passed independent exact-head audit and was squash-merged to main as ed37c5698c1aad7a355e514b35ea5c5bd50aa738. The merged change preserves all #272 hostile-key regressions, including recipe/state/reference callback-zero checks and the throwing-key fail-closed case, while fixing production validation and sealing fixture revisions. PR #272 is closed superseded and must not merge separately. The separate maintenance.repairCount upper-bound finding remains a non-blocking future slice.",
-      "timestamp": "2026-08-11T07:00:00+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-REALITY",
@@ -820,6 +791,29 @@
       "severity": "medium",
       "summary": "Historical ResolvedRegionRecipe v1 replay exact-shape validation can execute attacker-controlled formatting before rejection. ResolvedRegionRecipeV1Internal.assertExactRecordShape iterates arbitrary keys and interpolates tostring(key) in the assertion message; a plain outer record containing a table key with a __tostring metamethod therefore runs that callback. This is the same no-execute boundary class already hardened in MaterialDNA. Add a callback-zero adversarial replay regression and classify non-string keys with type(key) (while retaining literal names for unknown string keys) without changing any accepted historical v1 identity/fingerprint semantics.",
       "timestamp": "2026-08-11T07:19:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-REALITY"
+      ],
+      "eventId": "evt-20260811-072020-q7h4n2-reality-v1-audit-release",
+      "eventType": "HANDOFF",
+      "evidence": [
+        "evt-20260811-071830-q7h4n2-pr280-review.json",
+        "evt-20260811-071900-q7h4n2-v1-hostile-key-format.json",
+        "evt-20260811-063800-r9t4n2-reality-tests-handoff.json"
+      ],
+      "fromWorker": "sol-20260811-q7h4n2",
+      "laneId": "HG-BACKFILL-REALITY",
+      "metadata": {
+        "claimToken": "8a5d1c73e4b9206f",
+        "reviewedHead": "632e78b3162e34ddd5c17a702ac713fccdaa74ea",
+        "reviewedPr": 280
+      },
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "Reality v1 replay audit slot complete and released. PR #280 exact head 632e78b3 is independently approved at the test-delta level; it should be synchronized/retriggered against current main before integration because its synthetic merge/control evidence is stale. One distinct source hardening gap was published: v1 exact-shape validation can execute a hostile non-string key's __tostring while formatting rejection. The existing test-adversary worker is WAITING with an explicit handoff instructing that its claim remain attached for review/integration, so no stale takeover was attempted.",
+      "timestamp": "2026-08-11T07:20:20+00:00"
     }
   ],
   "resources": [
@@ -871,13 +865,13 @@
       "workerId": "sol-20260811-r6k2p9"
     }
   ],
-  "stateDigest": "02126c6d352c023ef64543bc7d7dffc9fda7702f8bd2be9007ba424fcdca51c0",
+  "stateDigest": "8627e7cbd7ad6332d8f33a5ee0a77e9a935e9d8b4f1e0c3615de33b2df5d0e43",
   "summary": {
-    "activeClaims": 15,
+    "activeClaims": 16,
     "activeResourceClaims": 2,
     "blockedExternalLanes": 1,
     "lanes": 24,
-    "readySlots": 15,
+    "readySlots": 14,
     "staleClaims": 1,
     "workers": 46
   }
