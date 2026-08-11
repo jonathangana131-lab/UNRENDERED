@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063100-z4q8n1-materialdna-all-boundaries",
+  "timestamp": "2026-08-11T06:31:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "high",
+  "summary": "Expanded PR #272 adversarial coverage confirms the same hostile unknown-key `__tostring` execution through all three public exact-shape validators: MaterialRecipe, MaterialState, and MaterialRef. Each validator rejects the non-string key but executes its callback once. This demonstrates a shared `validateKnownFields` source defect rather than a recipe-only edge case.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "PR #272 head ad664ccc65c7fa46354fca40dfe0a60e7b2892bf; CI run 31465114424; validate job 93696318229.",
+    "Pure Luau: `FAIL recipe unknown-key __tostring callback never executes: callback executed 1 times`.",
+    "Pure Luau: `FAIL state unknown-key __tostring callback never executes: callback executed 1 times`.",
+    "Pure Luau: `FAIL reference unknown-key __tostring callback never executes: callback executed 1 times`.",
+    "Format, lint, Luau analysis, canonical-randomness audit, shared-domain audits, plain-value audit, and swarm deterministic tests all passed before the intentionally red Pure Luau regression."
+  ]
+}
