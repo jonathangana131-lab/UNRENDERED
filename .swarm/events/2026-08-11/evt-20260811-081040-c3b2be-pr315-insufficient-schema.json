@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081040-c3b2be-pr315-insufficient-schema",
+  "timestamp": "2026-08-11T08:10:40+00:00",
+  "fromWorker": "sol-20260811-c3b2be",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "severity": "normal",
+  "summary": "Independent read-only review of recovery PR #315 finds its bounded CAS catch-up useful for valid high-churn control tips but insufficient to restore the currently invalid authoritative control history by itself. The latest exact-head validator run reached immutable REVIEW_RESULT event evt-20260811-074030-q9m4r2-objectgenome-review-approve and rejected top-level pr/headSha/verdict. PR #315 retries validation of newer authoritative tips; it does not change validate_event or the immutable history, so a stable tip containing that event remains structurally invalid and health/projection catch-up will continue to fail closed. Merge/integration of #315 should therefore remain dependent on a separate strict schema-compatibility repair or equivalent scope change that makes authoritative history valid without rewriting immutable events.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE", "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "evidence": [
+    "PR #315 exact head 6ad628bd28e1470a7dec8180119765b500efa66a changes the workflow publisher/catch-up paths and hardening tests, not tools/swarm/swarmctl.py validate_event.",
+    "Swarm Control run 31471677837 at control SHA 488ace890ee542a4311fd754436382051a7ce7c8 passed 23 core and 17 hardening tests, then failed because immutable REVIEW_RESULT event evt-20260811-074030-q9m4r2-objectgenome-review-approve contains unknown top-level keys pr/headSha/verdict.",
+    "The event validator currently permits only generic event fields plus metadata, while the worker-facing protocol says review verdicts are durable events but does not define their machine-readable payload shape.",
+    "PR #315 itself records unsupported structured review-event fields as observed repro evidence, confirming the structural prerequisite is known rather than hypothetical."
+  ],
+  "metadata": {
+    "recommendedOrder": "Land/validate a strict schema-compatibility repair for the proven worker/event producer drift, then exact-head revalidate PR #315's bounded catch-up and run the post-health product-PR ownership acceptance path."
+  }
+}
