@@ -202,6 +202,73 @@ local function run(): number
 		`callback executed {referenceCallbackCount} times`
 	)
 
+	local unknownRecipeKeyCallbackCount = 0
+	local hostileUnknownRecipeKey: any = {}
+	setmetatable(hostileUnknownRecipeKey, {
+		__tostring = function(): string
+			unknownRecipeKeyCallbackCount += 1
+			return "futureMeaning"
+		end,
+	})
+	local hostileKeyRecipe: any = deepCopy(wallpaper)
+	hostileKeyRecipe[hostileUnknownRecipeKey] = true
+	local hostileKeyRecipeResult = MaterialDNA.validateRecipe(hostileKeyRecipe)
+	expect(
+		"non-string unknown recipe key rejected",
+		not hostileKeyRecipeResult.ok,
+		table.concat(hostileKeyRecipeResult.errors, "; ")
+	)
+	expect(
+		"recipe unknown-key __tostring callback never executes",
+		unknownRecipeKeyCallbackCount == 0,
+		`callback executed {unknownRecipeKeyCallbackCount} times`
+	)
+
+	local unknownStateKeyCallbackCount = 0
+	local hostileUnknownStateKey: any = {}
+	setmetatable(hostileUnknownStateKey, {
+		__tostring = function(): string
+			unknownStateKeyCallbackCount += 1
+			return "futureMeaning"
+		end,
+	})
+	local hostileKeyState: any = MaterialDNA.defaultState(wallpaper)
+	hostileKeyState[hostileUnknownStateKey] = true
+	local hostileKeyStateResult = MaterialDNA.validateState(hostileKeyState)
+	expect(
+		"non-string unknown state key rejected",
+		not hostileKeyStateResult.ok,
+		table.concat(hostileKeyStateResult.errors, "; ")
+	)
+	expect(
+		"state unknown-key __tostring callback never executes",
+		unknownStateKeyCallbackCount == 0,
+		`callback executed {unknownStateKeyCallbackCount} times`
+	)
+
+	local unknownReferenceKeyCallbackCount = 0
+	local hostileUnknownReferenceKey: any = {}
+	setmetatable(hostileUnknownReferenceKey, {
+		__tostring = function(): string
+			unknownReferenceKeyCallbackCount += 1
+			return "futureMeaning"
+		end,
+	})
+	local hostileKeyReference: any = MaterialDNA.reference(wallpaper)
+	hostileKeyReference = deepCopy(hostileKeyReference)
+	hostileKeyReference[hostileUnknownReferenceKey] = true
+	local hostileKeyReferenceResult = MaterialDNA.validateReference(hostileKeyReference)
+	expect(
+		"non-string unknown reference key rejected",
+		not hostileKeyReferenceResult.ok,
+		table.concat(hostileKeyReferenceResult.errors, "; ")
+	)
+	expect(
+		"reference unknown-key __tostring callback never executes",
+		unknownReferenceKeyCallbackCount == 0,
+		`callback executed {unknownReferenceKeyCallbackCount} times`
+	)
+
 	local fixtureGoldens = {
 		{
 			name = "commercial wallpaper drywall",
