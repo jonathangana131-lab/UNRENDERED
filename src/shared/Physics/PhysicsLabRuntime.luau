@@ -39,8 +39,54 @@ type RuntimeImpl = {
 
 export type Runtime = typeof(setmetatable({} :: RuntimeImpl, PhysicsLabRuntime))
 
+local CANONICAL_RECIPE = PhysicsLabRecipe.build()
+local CANONICAL_ENTITIES_BY_KEY: { [string]: PhysicsLabRecipe.EntityRecipe } = {}
+for _, entityRecipe in ipairs(CANONICAL_RECIPE.entities) do
+	CANONICAL_ENTITIES_BY_KEY[entityRecipe.key] = entityRecipe
+end
+table.freeze(CANONICAL_ENTITIES_BY_KEY)
+
 local function assertActive(self: Runtime): ()
 	assert(not self._disposed, "PhysicsLabRuntime is disposed")
+end
+
+local function assertCanonicalRecipe(recipe: Recipe): ()
+	assert(recipe.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION, "unsupported Physics Lab recipe schema")
+	assert(recipe.recipeKey == PhysicsLabRecipe.RECIPE_KEY, "unexpected Physics Lab recipe key")
+	assert(recipe.worldId == CANONICAL_RECIPE.worldId, "unexpected Physics Lab WorldId")
+	assert(recipe.regionId == CANONICAL_RECIPE.regionId, "unexpected Physics Lab RegionId")
+	assert(
+		#recipe.entities == #CANONICAL_RECIPE.entities,
+		"Physics Lab runtime requires the complete canonical entity population"
+	)
+
+	local seenKeys: { [string]: boolean } = {}
+	for _, entityRecipe in ipairs(recipe.entities) do
+		local canonical = CANONICAL_ENTITIES_BY_KEY[entityRecipe.key]
+		assert(canonical ~= nil, `unknown Physics Lab recipe entity key: {entityRecipe.key}`)
+		assert(not seenKeys[entityRecipe.key], `duplicate Physics Lab recipe entity key: {entityRecipe.key}`)
+		seenKeys[entityRecipe.key] = true
+
+		local record = entityRecipe.entity
+		local canonicalRecord = canonical.entity
+		assert(record.id == canonicalRecord.id, `Physics Lab recipe key/id mismatch: {entityRecipe.key}`)
+		assert(record.kind == canonicalRecord.kind, `Physics Lab recipe entity kind mismatch: {entityRecipe.key}`)
+		assert(record.fidelity == canonicalRecord.fidelity, `Physics Lab recipe initial fidelity mismatch: {entityRecipe.key}`)
+		assert(record.origin.worldId == recipe.worldId, `Physics Lab entity WorldId mismatch: {entityRecipe.key}`)
+		assert(record.origin.regionId == recipe.regionId, `Physics Lab entity RegionId mismatch: {entityRecipe.key}`)
+		assert(
+			record.origin.generator == canonicalRecord.origin.generator,
+			`Physics Lab entity generator mismatch: {entityRecipe.key}`
+		)
+		assert(
+			record.origin.generatorVersion == canonicalRecord.origin.generatorVersion,
+			`Physics Lab entity generator version mismatch: {entityRecipe.key}`
+		)
+		assert(
+			record.origin.recipeKey == canonicalRecord.origin.recipeKey,
+			`Physics Lab entity recipe provenance mismatch: {entityRecipe.key}`
+		)
+	end
 end
 
 local function boundedFidelityManager(entityCount: number): Manager
@@ -50,9 +96,7 @@ local function boundedFidelityManager(entityCount: number): Manager
 end
 
 function PhysicsLabRuntime.new(recipe: Recipe): Runtime
-	assert(recipe.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION, "unsupported Physics Lab recipe schema")
-	assert(recipe.recipeKey == PhysicsLabRecipe.RECIPE_KEY, "unexpected Physics Lab recipe key")
-	assert(#recipe.entities > 0, "Physics Lab runtime requires at least one entity")
+	assertCanonicalRecipe(recipe)
 
 	local registry = WorldEntity.createRegistry()
 	local fidelity = boundedFidelityManager(#recipe.entities)
