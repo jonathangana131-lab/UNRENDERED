@@ -74,16 +74,19 @@ Fresh review, finding, or recovery authority after this reset must be expressed 
 
 ## Finite mutable-history reset incidents
 
-The reset also crosses two concrete malformed worker-state transitions that were repaired in later commits. These are not silently generalized into “all old invalid history”; they are an exact reviewed finite list:
+The reset also crosses three concrete malformed worker-state transitions that were repaired in later commits. These are not silently generalized into “all old invalid history”; they are an exact reviewed finite list:
 
 | Worker path | Invalid transition | Defect | Exact repair |
 | --- | --- | --- | --- |
 | `.swarm/workers/sol-20260811-j7c4m9x2.json` | `fa5b8f163603fa918c21b28c63bd20e6c25a2add` | unsupported `status: "ACTIVE"` | `7c62ff9a7b92c4ebe43c38323a5946e04881d3b7` |
 | `.swarm/workers/sol-20260811-u7m3c9q4.json` | `a99ff757b842fa91ddd893d19fd1d826890ce306` | unsupported `status: "ACTIVE"` | `a193dd686323c27a7191d525b064c4257120de21` |
+| `.swarm/workers/sol-20260811-6222f4fe.json` | `57245c334fdc19cae855796066f783fb64492c51` | unsupported `status: "ACTIVE"` | `db830924aa0b65a74c60ee345448f57381bbe137` |
+
+The third incident was not inferred from the earlier two. Exact-head generation-2 bootstrap CI surfaced the live invalid record at `57245c334fdc19cae855796066f783fb64492c51`; the recovery changed only its status from `ACTIVE` to the schema-valid `WORKING` value at `db830924aa0b65a74c60ee345448f57381bbe137`, preserving the rest of the worker record.
 
 The read-only bootstrap job proves for each row that the invalid transition is an ancestor of the named repair and that the named repair is an ancestor of the exact candidate `BOOTSTRAP_CONTROL_SHA`. If any commit is absent, reordered, or the bootstrap candidate predates a repair, no bootstrap pair is emitted.
 
-This reset does not make either invalid transition valid. It records that the one-time anchor is intentionally established only after the exact reviewed repairs. There is no generic “ignore earlier failures” mechanism.
+This reset does not make any invalid transition valid. It records that the one-time anchor is intentionally established only after the exact reviewed repairs. There is no generic “ignore earlier failures” mechanism.
 
 ## One-time bootstrap/reset
 
@@ -92,7 +95,7 @@ This reset does not make either invalid transition valid. It records that the on
 Before the recovery merge is accepted, the recovery candidate's read-only CI:
 
 1. resolves one exact live `swarm-control` SHA;
-2. proves the two named invalid worker transitions and exact repairs are in the required ancestry;
+2. proves the three named invalid worker transitions and exact repairs are in the required ancestry;
 3. validates the exact live snapshot using the finite immutable-history compatibility/quarantine above;
 4. prints an exact pair:
    - `BOOTSTRAP_CONTROL_SHA` — the reviewed live `swarm-control` snapshot;
@@ -112,7 +115,7 @@ If control or trust moves during the operation, the advance fails and must be re
 - Trust digest differs from current live state: product PR authorization fails closed.
 - Candidate control invalid: trust branch does not move.
 - Trusted snapshot invalid under current code: validation fails; do not select a newer baseline to escape the failure.
-- Bootstrap candidate does not descend from both exact worker repair commits: no bootstrap pair is emitted.
+- Bootstrap candidate does not descend from every exact worker repair commit in the finite manifest: no bootstrap pair is emitted.
 - Control tip changes during validation: stale trust advance is rejected.
 - Trust branch changes during validation: stale trust overwrite is rejected.
 - Generated projection publication races newer control state: stale projection is rejected.
@@ -142,7 +145,7 @@ Recovery acceptance requires:
 - separate trust digest matches authorize only when `bootstrap` is false;
 - any authoritative state mutation after trust publication fails the trust check;
 - bootstrap records cannot authorize PR state;
-- the read-only bootstrap job proves the exact two invalid worker transitions are followed by their exact repairs before emitting a candidate;
+- the read-only bootstrap job proves all three exact invalid worker transitions are followed by their exact repairs before emitting a candidate;
 - workflow source proves transition validation uses `TRUSTED_CONTROL_SHA`, not `github.event.before`;
 - workflow source proves health mutations are not skipped as generated-only state;
 - canonical full CI is green on the exact recovery head;
