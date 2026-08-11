@@ -71,7 +71,10 @@ local function run(): number
 	local validMissingGetAccepted, validMissingGetResult = pcall(function()
 		return WorldEntity.get(identityRegistry, "entity:valid-but-absent")
 	end)
-	expect("registry get permits a valid absent identity", validMissingGetAccepted and validMissingGetResult == nil)
+	expect(
+		"registry get permits a valid absent identity",
+		validMissingGetAccepted and validMissingGetResult == nil
+	)
 
 	local malformedGetAccepted = pcall(function()
 		WorldEntity.get(identityRegistry, "" :: any)
@@ -81,7 +84,10 @@ local function run(): number
 	local malformedUnregisterAccepted = pcall(function()
 		WorldEntity.unregister(identityRegistry, "" :: any)
 	end)
-	expect("registry unregister rejects malformed identity instead of reporting absence", not malformedUnregisterAccepted)
+	expect(
+		"registry unregister rejects malformed identity instead of reporting absence",
+		not malformedUnregisterAccepted
+	)
 	expect(
 		"rejected malformed unregister preserves the registered entity",
 		WorldEntity.get(identityRegistry, identityRecord.id) ~= nil
