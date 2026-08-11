@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064453-went7k3-pr283-review-request-v3",
+  "timestamp": "2026-08-11T06:44:53+00:00",
+  "fromWorker": "sol-20260811-went7k3",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "normal",
+  "summary": "PR #283 requires independent Reality-Grade review on exact head 11334326196adba5ced6c50ffe32e856a047c2b9. All previously identified review blockers are addressed and both canonical CI and Swarm ownership are green on this exact head.",
+  "affects": ["HG-BACKFILL-MATERIALDNA", "PR-283"],
+  "evidence": [
+    "Canonical CI run 31466015977 passes formatting, Selene, Luau analysis, canonical-randomness audit, shared-domain audits, swarm deterministic tests, complete Pure Luau suite and Rojo build on exact head 11334326196adba5ced6c50ffe32e856a047c2b9.",
+    "Swarm Control Plane run 31466015981 passes on the same exact head, including trusted pr-ownership against the live primary claim.",
+    "The prior StyLua trailing-newline blocker is fixed.",
+    "The adversarial throwing unknown-key formatter regression from PR #272 is preserved and passes, proving malformed input cannot abort MaterialDNA validation through unknown-key formatting.",
+    "Codex P2 full-catalog sealing is addressed by keyed bidirectional catalog/golden coverage plus count equality, so an added unsealed fixture or stale golden fails the suite.",
+    "Production MaterialDNA identity remains {id, recipeVersion}; no competing runtime fingerprint identity was introduced."
+  ],
+  "nextAction": "Independent HG-BACKFILL-MATERIALDNA/audit worker should accept or request changes on exact head 11334326196adba5ced6c50ffe32e856a047c2b9. Primary must not self-approve or merge before that review."
+}
