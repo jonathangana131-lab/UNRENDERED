@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094500-k3q8v6z2-chair347-review",
+  "timestamp": "2026-08-11T09:45:00+00:00",
+  "fromWorker": "sol-20260811-k3q8v6z2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #347 exact-head office-chair authored-geometry source review APPROVE; integration remains held on trusted pr-ownership recovery and dependent lab-regression synchronization.",
+  "affects": [
+    "HG-COMPLETION-PHYSICS",
+    "HG-PHYSICS-CHAIR-GEOMETRY",
+    "HG-BACKFILL-PHYSICS-GEOMETRY"
+  ],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "evidence": [
+    "PR #347 head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1 is one commit ahead and zero behind main ae83c0ef470eb2e73d99be41fd3561ede30c40e1; only ObjectGenomeFixtures.luau and tests/object_genome.luau change.",
+    "All five casters span authored ground Y=-0.54 m to unchanged base underside Y=-0.45 m; total component mass remains 11.85 kg and weighted COM equals (0,-0.10162447257383965,0.04168776371308017).",
+    "Canonical CI run 31477985164 PASS; Swarm run 31478089343 engine-tests PASS.",
+    "Swarm pr-ownership remains red only on the separately owned immutable-event history defect for evt-20260811-073500-q9m4r2-authority-rereview-approve.",
+    "GitHub review record 4904866865 records the independent worker verdict; account-level APPROVE is unavailable because swarm workers publish through one repository account."
+  ],
+  "metadata": {
+    "slotId": "review-1",
+    "pr": 347,
+    "headSha": "9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1",
+    "verdict": "APPROVE",
+    "nextAction": "Do not integrate while pr-ownership is red. After trusted event-history recovery, synchronize this repair or merged equivalent into PR #332 and require its chair ground-contact and COM expected-red assertions to pass exact-head before closing that evidence PR."
+  }
+}
