@@ -2,6 +2,8 @@ local ProductionLoader = require("./support/ProductionLoader")
 
 local ValidationContract = ProductionLoader.requireShared("Physics/PhysicsLabValidationContract")
 
+local MAX_SAFE_INTEGER = 9007199254740991
+
 local function snapshot(counts, minX, maxX)
 	return {
 		rootName = "UNRENDERED_PhysicsLab",
@@ -140,6 +142,29 @@ local function run(): number
 	missingResolvedSchema.resolvedRegionSchemaVersion = 0
 	local missingResolvedSchemaOk = ValidationContract.inspectSnapshot(missingResolvedSchema)
 	expect("snapshot validation rejects missing resolved schema identity", missingResolvedSchemaOk == false)
+
+	local unsafeLabSchema = snapshot(counts(46, 0), -10, 10)
+	unsafeLabSchema.labSchemaVersion = MAX_SAFE_INTEGER + 1
+	local unsafeLabSchemaOk = ValidationContract.inspectSnapshot(unsafeLabSchema)
+	expect(
+		"snapshot validation rejects lab schema versions beyond exact integer range",
+		unsafeLabSchemaOk == false
+	)
+
+	local unsafeResolvedSchema = snapshot(counts(46, 0), -10, 10)
+	unsafeResolvedSchema.resolvedRegionSchemaVersion = MAX_SAFE_INTEGER + 1
+	local unsafeResolvedSchemaOk = ValidationContract.inspectSnapshot(unsafeResolvedSchema)
+	expect(
+		"snapshot validation rejects resolved schema versions beyond exact integer range",
+		unsafeResolvedSchemaOk == false
+	)
+
+	local unsafeInstanceCount = snapshot(counts(MAX_SAFE_INTEGER + 1, 0), -10, 10)
+	local unsafeInstanceCountOk = ValidationContract.inspectSnapshot(unsafeInstanceCount)
+	expect(
+		"snapshot validation rejects resource counts beyond exact integer range",
+		unsafeInstanceCountOk == false
+	)
 
 	local missingWorldSeedRef = snapshot(counts(46, 0), -10, 10)
 	missingWorldSeedRef.worldSeedRef = ""
