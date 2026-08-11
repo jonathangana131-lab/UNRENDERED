@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-q5n8c2v7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T11:52:37+00:00",
+  "lastSeenAt": "2026-08-11T11:52:37+00:00",
+  "notes": "GO worker targeting an unclaimed HG-BACKFILL-OBJECTGENOME test-adversary slot after higher-priority recovery/review slots were freshly claimed."
+}
