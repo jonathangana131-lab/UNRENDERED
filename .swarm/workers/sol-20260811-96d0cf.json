@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:45:43+00:00",
-  "lastSeenAt": "2026-08-11T08:03:47+00:00",
-  "laneId": "HG-BACKFILL-FIDELITY",
+  "lastSeenAt": "2026-08-11T08:06:15+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-96d0cf",
-  "notes": "Independent Fidelity audit completed on PR #274 head 6bd6ef9c75f5415c34ea4d93500b86a0028a3f5d: hostile numeric/timestamp source defect is closed with adversarial regression coverage and no additional state-machine blocker found, but merge remains blocked until exact-head StyLua/full CI and Swarm ownership/control gates pass. Review 4904125680; durable event evt-20260811-080347-96d0cf-fidelity-audit-block."
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-96d0cf",
+  "notes": "Claimed the active source-only ObjectGenome audit after completing and releasing the Fidelity audit. Reviewing current primary/tests for exact-shape, ownership/aliasing, fingerprint, material-reference, transform, mutable-state binding, and malformed-input gaps without speculative redesign."
 }
