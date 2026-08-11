@@ -57,10 +57,7 @@ local function requireToggleCycleCount(cycles: any): number
 		return DEFAULT_TOGGLE_EVIDENCE_CYCLES
 	end
 	assert(
-		type(cycles) == "number"
-			and cycles >= 1
-			and cycles <= MAX_TOGGLE_EVIDENCE_CYCLES
-			and cycles % 1 == 0,
+		type(cycles) == "number" and cycles >= 1 and cycles <= MAX_TOGGLE_EVIDENCE_CYCLES and cycles % 1 == 0,
 		`diagnostics cycle count must be an integer in [1, {MAX_TOGGLE_EVIDENCE_CYCLES}]`
 	)
 	return cycles :: number
