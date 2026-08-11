@@ -83,6 +83,7 @@ type EntityState = {
 	pendingSince: number?,
 	lastTransitionAt: number,
 	lastEvaluatedAt: number,
+	transitioning: boolean,
 }
 
 type MutableMetrics = {
@@ -154,20 +155,37 @@ local function levelIndex(level: FidelityLevel): number
 	return LEVEL_INDEX[level]
 end
 
-local function isFinite(value: number): boolean
-	return value == value and value > -math.huge and value < math.huge
+local function isFinite(value: unknown): boolean
+	if type(value) ~= "number" then
+		return false
+	end
+	local numericValue = value :: number
+	return numericValue == numericValue and numericValue > -math.huge and numericValue < math.huge
 end
 
-local function validateUnit(name: string, value: number): ()
-	assert(value == value and value >= 0 and value <= 1, `{name} must be in [0, 1]`)
+local function validateUnit(name: string, value: unknown): ()
+	assert(type(value) == "number", `{name} must be a number`)
+	local numericValue = value :: number
+	assert(
+		numericValue == numericValue and numericValue >= 0 and numericValue <= 1,
+		`{name} must be in [0, 1]`
+	)
 end
 
-local function validateNonNegative(name: string, value: number): ()
-	assert(value == value and value >= 0, `{name} must be non-negative`)
+local function validateNonNegative(name: string, value: unknown): ()
+	assert(type(value) == "number", `{name} must be a number`)
+	local numericValue = value :: number
+	assert(numericValue == numericValue and numericValue >= 0, `{name} must be non-negative`)
 end
 
-local function validateFiniteNonNegative(name: string, value: number): ()
-	assert(isFinite(value) and value >= 0, `{name} must be finite and non-negative`)
+local function validateFiniteNonNegative(name: string, value: unknown): ()
+	assert(type(value) == "number", `{name} must be a number`)
+	local numericValue = value :: number
+	assert(isFinite(numericValue) and numericValue >= 0, `{name} must be finite and non-negative`)
+end
+
+local function validateBoolean(name: string, value: unknown): ()
+	assert(type(value) == "boolean", `{name} must be a boolean`)
 end
 
 local function validateConfig(config: PolicyConfig): ()
@@ -212,7 +230,11 @@ local function validateConfig(config: PolicyConfig): ()
 end
 
 local function validateInputs(inputs: PolicyInputs): ()
+	assert(type(inputs) == "table", "policy inputs must be a plain table")
+	assert(getmetatable(inputs :: any) == nil, "policy inputs must be metatable-free plain data")
 	validateFiniteNonNegative("distanceStuds", inputs.distanceStuds)
+	validateBoolean("visible", inputs.visible)
+	validateBoolean("directlyObserved", inputs.directlyObserved)
 	-- `math.huge` intentionally means the entity has never been interacted with.
 	validateNonNegative("secondsSinceInteraction", inputs.secondsSinceInteraction)
 	validateUnit("significance", inputs.significance)
@@ -444,11 +466,6 @@ end
 
 function FidelityManager.register(self: Manager, entityId: string, currentLevel: FidelityLevel?): ()
 	entityId = assertEntityId(entityId)
-	assert(self._states[entityId] == nil, `entity already registered: {entityId}`)
-	if self._metrics.registered >= self.config.maxRegisteredEntities then
-		self._metrics.registrationCapacityRejections += 1
-		error(`fidelity registration capacity reached: {self.config.maxRegisteredEntities}`)
-	end
 
 	local level: FidelityLevel
 	if currentLevel == nil then
@@ -458,12 +475,19 @@ function FidelityManager.register(self: Manager, entityId: string, currentLevel:
 	end
 	assert(isLevel(level), "currentLevel must be F0-F4")
 
+	assert(self._states[entityId] == nil, `entity already registered: {entityId}`)
+	if self._metrics.registered >= self.config.maxRegisteredEntities then
+		self._metrics.registrationCapacityRejections += 1
+		error(`fidelity registration capacity reached: {self.config.maxRegisteredEntities}`)
+	end
+
 	self._states[entityId] = {
 		observedLevel = level,
 		pendingLevel = nil,
 		pendingSince = nil,
 		lastTransitionAt = -math.huge,
 		lastEvaluatedAt = -math.huge,
+		transitioning = false,
 	}
 	self._metrics.registered += 1
 	adjustCount(self._metrics.counts, level, 1)
@@ -473,6 +497,7 @@ function FidelityManager.unregister(self: Manager, entityId: string): ()
 	entityId = assertEntityId(entityId)
 	local state = self._states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
+	assert(not state.transitioning, `cannot unregister entity during fidelity transition: {entityId}`)
 	self._metrics.registered -= 1
 	adjustCount(self._metrics.counts, state.observedLevel, -1)
 	self._states[entityId] = nil
@@ -504,6 +529,20 @@ local function synchronizeObservedLevel(
 	state.lastTransitionAt = nowSeconds
 end
 
+local function commitAcceptedEvaluation(
+	self: Manager,
+	state: EntityState,
+	currentLevel: FidelityLevel,
+	nowSeconds: number,
+	pendingLevel: FidelityLevel?,
+	pendingSince: number?
+): ()
+	state.lastEvaluatedAt = nowSeconds
+	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
+	state.pendingLevel = pendingLevel
+	state.pendingSince = pendingSince
+end
+
 function FidelityManager.step(
 	self: Manager,
 	entityId: string,
@@ -515,9 +554,10 @@ function FidelityManager.step(
 	entityId = assertEntityId(entityId)
 	local state = self._states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
+	assert(not state.transitioning, `fidelity transition callback must not reenter step: {entityId}`)
 	assert(isLevel(currentLevel), "currentLevel must be F0-F4")
 	assert(
-		isFinite(nowSeconds) and nowSeconds >= state.lastEvaluatedAt,
+		type(nowSeconds) == "number" and isFinite(nowSeconds) and nowSeconds >= state.lastEvaluatedAt,
 		"nowSeconds must be finite and monotonic per entity"
 	)
 
@@ -525,13 +565,13 @@ function FidelityManager.step(
 	-- mutating manager time, fidelity mirrors, pending targets, or metrics so a
 	-- rejected step is observationally atomic.
 	local desired: FidelityLevel, reason: PolicyReason = evaluatePolicy(inputs, self.config, currentLevel)
-
-	state.lastEvaluatedAt = nowSeconds
-	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
+	local externallySynchronized = currentLevel ~= state.observedLevel
+	local stagedPendingLevel: FidelityLevel? = if externallySynchronized then nil else state.pendingLevel
+	local stagedPendingSince: number? = if externallySynchronized then nil else state.pendingSince
+	local stagedLastTransitionAt = if externallySynchronized then nowSeconds else state.lastTransitionAt
 
 	if desired == currentLevel then
-		state.pendingLevel = nil
-		state.pendingSince = nil
+		commitAcceptedEvaluation(self, state, currentLevel, nowSeconds, nil, nil)
 		return {
 			transitioned = false,
 			currentLevel = currentLevel,
@@ -541,17 +581,25 @@ function FidelityManager.step(
 		}
 	end
 
-	if state.pendingLevel ~= desired then
-		state.pendingLevel = desired
-		state.pendingSince = nowSeconds
+	if stagedPendingLevel ~= desired then
+		stagedPendingLevel = desired
+		stagedPendingSince = nowSeconds
 	end
 
-	local pendingSince = state.pendingSince :: number
+	local pendingSince = stagedPendingSince :: number
 	local isPromotion = levelIndex(desired) > levelIndex(currentLevel)
 	local holdSeconds = if isPromotion
 		then self.config.promotionHoldSeconds
 		else self.config.demotionHoldSeconds
 	if nowSeconds - pendingSince < holdSeconds then
+		commitAcceptedEvaluation(
+			self,
+			state,
+			currentLevel,
+			nowSeconds,
+			stagedPendingLevel,
+			stagedPendingSince
+		)
 		self._metrics.blockedByHold += 1
 		return {
 			transitioned = false,
@@ -562,7 +610,15 @@ function FidelityManager.step(
 		}
 	end
 
-	if nowSeconds - state.lastTransitionAt < self.config.transitionCooldownSeconds then
+	if nowSeconds - stagedLastTransitionAt < self.config.transitionCooldownSeconds then
+		commitAcceptedEvaluation(
+			self,
+			state,
+			currentLevel,
+			nowSeconds,
+			stagedPendingLevel,
+			stagedPendingSince
+		)
 		self._metrics.blockedByCooldown += 1
 		return {
 			transitioned = false,
@@ -574,6 +630,14 @@ function FidelityManager.step(
 	end
 
 	if applyTransition == nil then
+		commitAcceptedEvaluation(
+			self,
+			state,
+			currentLevel,
+			nowSeconds,
+			stagedPendingLevel,
+			stagedPendingSince
+		)
 		self._metrics.blockedByMissingTransition += 1
 		return {
 			transitioned = false,
@@ -584,7 +648,22 @@ function FidelityManager.step(
 		}
 	end
 
-	applyTransition(entityId, currentLevel, desired, reason)
+	-- A ready transition is transactional with respect to FidelityManager state:
+	-- no accepted clock/pending/count mutation is committed until the external
+	-- representation hook succeeds. Same-entity lifecycle mutation is rejected
+	-- while the hook is in flight; mutation of other entities remains independent.
+	state.transitioning = true
+	local transitionSucceeded, transitionError = pcall(function(): boolean
+		applyTransition(entityId, currentLevel, desired, reason)
+		return true
+	end)
+	state.transitioning = false
+	if not transitionSucceeded then
+		error(transitionError, 0)
+	end
+
+	state.lastEvaluatedAt = nowSeconds
+	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
 	self._metrics.transitionHookCalls += 1
 	adjustCount(self._metrics.counts, currentLevel, -1)
 	adjustCount(self._metrics.counts, desired, 1)
