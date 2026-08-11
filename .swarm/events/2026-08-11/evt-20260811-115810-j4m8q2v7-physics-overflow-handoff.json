@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115810-j4m8q2v7-physics-overflow-handoff",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-j4m8q2v7",
+  "claimToken": "9a4c1f7e2b6d8053",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T11:58:10Z",
+  "headSha": "a329e37f75871e29174c6e322c611bad2a7942f0",
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-j4m8q2v7",
+  "payload": {
+    "summary": "Expected-red Physics Lab envelope-drift overflow regression is isolated in draft PR #368 and published as evt-20260811-115600-j4m8q2v7-physics-envelope-drift-overflow.",
+    "nextOwner": "independent audit / primary repair",
+    "primaryPr": 363,
+    "evidencePr": 368,
+    "ciRun": 31488724545,
+    "nextActions": [
+      "independently verify the overflow finding against the active primary candidate",
+      "absorb equivalent regression coverage into production repair",
+      "make derived envelope drift fail closed before non-finite evidence is returned",
+      "rerun exact-head canonical CI and independent audit"
+    ],
+    "validation": "Canonical CI passes format/lint/Luau/source audits/swarm tests and fails exactly the new Pure Luau overflow assertion. No Studio evidence claimed."
+  }
+}
