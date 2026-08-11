@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115540-m7q2v9c4-objectgenome-g5-recovery",
+  "timestamp": "2026-08-11T11:55:40+00:00",
+  "fromWorker": "sol-20260811-m7q2v9c4",
+  "eventType": "RECOVERY",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "medium",
+  "summary": "Recovered the expired generation-4 ObjectGenome primary without rewriting source: successor PR #369 points at exact independently approved head 08ce8d7093ceb36a85af58510f65ef8e9b33c154, old PR #361 is closed as superseded, and the lane is restored from stale NEEDS_CHANGES to REVIEW for fresh successor audit.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "Current main remains ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and is the exact merge base of the recovered head; compare is behind_by=0 with only src/shared/Objects/ObjectGenome.luau and tests/object_genome_contract_lock.luau changed.",
+    "Canonical CI run 31480999132 passed on exact head 08ce8d7093ceb36a85af58510f65ef8e9b33c154.",
+    "Independent source-contract review approved that exact head and found the decoder no-execute, deterministic diagnostics, family-version/key bounds, alias rejection, and runner-scope cleanup sound.",
+    "Live pr-ownership remains globally fail-closed on SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY; this recovery does not bypass or reinterpret that gate."
+  ]
+}
