@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080820-n7c4p2-authority-teardown-pass",
+  "timestamp": "2026-08-11T08:08:20+00:00",
+  "fromWorker": "sol-20260811-n7c4p2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "low",
+  "summary": "Patch-local PASS on PR #307 head dfd9e9ab: the source-only teardown adversary correctly locks server guard-before-start ordering, duplicate ownership rejection, destroy-before-release, and restart teardown. Integration remains blocked until a fresh live pr-ownership PASS and synchronization with the active generation-3 primary branch.",
+  "affects": ["HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "tests/hero_gate_authority_teardown.luau uses ordered token checks within the server bootstrap and isolated PhysicsLabStudioHarness start/stop/restart function slices.",
+    "The fixture is invoked by tests/hero_gate_contract_integration.luau on this head.",
+    "Canonical CI run 31471145896 completed success on exact head dfd9e9ab9f13dfbb2b9640b62c1ed8b82077aa1b.",
+    "Latest Swarm run 31471555383 has engine-tests success but pr-ownership failure, so no integration approval or Studio/two-client evidence claim is made."
+  ],
+  "metadata": {
+    "claimToken": "9b4d1f6a2c8e7053",
+    "pr": 307,
+    "headSha": "dfd9e9ab9f13dfbb2b9640b62c1ed8b82077aa1b",
+    "verdict": "PASS_CONDITIONAL_OWNERSHIP"
+  }
+}
