@@ -91,15 +91,16 @@ end
 
 local function assertCanonicalRecipe(recipe: Recipe): ()
 	local recipeTable = assertPlainTable(recipe, "Physics Lab runtime recipe must be a plain table")
-	assert(recipeTable.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION, "unsupported Physics Lab recipe schema")
+	assert(
+		recipeTable.schemaVersion == PhysicsLabRecipe.SCHEMA_VERSION,
+		"unsupported Physics Lab recipe schema"
+	)
 	assert(recipeTable.recipeKey == PhysicsLabRecipe.RECIPE_KEY, "unexpected Physics Lab recipe key")
 	assert(recipeTable.worldId == CANONICAL_RECIPE.worldId, "unexpected Physics Lab WorldId")
 	assert(recipeTable.regionId == CANONICAL_RECIPE.regionId, "unexpected Physics Lab RegionId")
 
-	local entities = assertPlainTable(
-		recipeTable.entities,
-		"Physics Lab runtime recipe entities must be a plain table"
-	)
+	local entities =
+		assertPlainTable(recipeTable.entities, "Physics Lab runtime recipe entities must be a plain table")
 	assert(
 		#entities == #CANONICAL_RECIPE.entities,
 		"Physics Lab runtime requires the complete canonical entity population"
@@ -109,10 +110,8 @@ local function assertCanonicalRecipe(recipe: Recipe): ()
 	local seenCount = 0
 	for _, rawEntityRecipe in ipairs(entities) do
 		seenCount += 1
-		local entityRecipe = assertPlainTable(
-			rawEntityRecipe,
-			"Physics Lab runtime entity recipe must be a plain table"
-		)
+		local entityRecipe =
+			assertPlainTable(rawEntityRecipe, "Physics Lab runtime entity recipe must be a plain table")
 		local entityKey = entityRecipe.key
 		assert(type(entityKey) == "string", "Physics Lab recipe entity key must be a string")
 
