@@ -1,6 +1,6 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T05:33:24.513211+00:00`
+Generated: `2026-08-11T05:33:31.668536+00:00`
 
 Canonical main: **GREEN** `2ce32576a47e99a1e09e802dc7e76a0bf7bbd283`
 
