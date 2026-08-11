@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-100500-k3q8v6z2-worldentity350-red-review",
+  "timestamp": "2026-08-11T10:05:00+00:00",
+  "fromWorker": "sol-20260811-k3q8v6z2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #350 exact-head WorldEntity registry malformed-identity adversary passes independent review as clean executable expected-RED evidence; production must validate IDs before registry lookup/mutation.",
+  "affects": [
+    "HG-COMPLETION-REALITY",
+    "HG-BACKFILL-WORLDENTITY"
+  ],
+  "laneId": "HG-COMPLETION-REALITY",
+  "evidence": [
+    "PR #350 head 86d156b0377ff34bbaa0863ed5d082ff2f8c79a1 is based on current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1, ahead 2 / behind 0, and changes only tests/world_entity_registry_shape.luau.",
+    "WorldEntity.isId already defines non-empty <=256-byte control-free string identity, while current registry get/unregister directly index records without validating supplied IDs.",
+    "Canonical CI run 31478803659 passes all gates before Pure Luau; valid-absent and preservation/no-execute controls pass while exactly four malformed empty/non-string get/unregister assertions fail.",
+    "GitHub review record 4905036077 records the independent exact-head verdict."
+  ],
+  "metadata": {
+    "slotId": "review-1",
+    "pr": 350,
+    "headSha": "86d156b0377ff34bbaa0863ed5d082ff2f8c79a1",
+    "verdict": "PASS_EXPECTED_RED",
+    "nextAction": "Do not merge #350 independently. The synchronized WorldEntity production primary should validate get/unregister identity arguments through WorldEntity.isId before lookup/mutation, absorb equivalent empty/non-string no-execute coverage plus representative control-character and overlength cases, then turn green under exact-head CI/trusted ownership before fresh independent review."
+  }
+}
