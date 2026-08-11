@@ -5,7 +5,7 @@
   "title": "Physics Lab rolling-cart authored geometry closure",
   "objective": "Close the two independently demonstrated source-only rolling-cart fixture defects in one bounded follow-up: make ground-supported casters contact the authored F2 ground plane and make the declared center of mass match the component mass distribution, with deterministic regressions and explicit recipe versioning.",
   "priority": 5090,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/PhysicsLabObjectGenomes.luau", "tests/physics_lab_recipe.luau"],
@@ -22,5 +22,6 @@
     "do not claim Roblox Studio contact evidence",
     "require independent review before DONE"
   ],
+  "notes": "Primary published PR #311 at head b45493e4168547fab6556c31558d9a25123f3b74 from current main aa7e04f05834ae783773c908fccfdbbe510558e5. Source-only arithmetic and exact-scope checks are complete; canonical CI and independent audit are required before integration. No Roblox Studio evidence is claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "physics", "geometry"]
 }
