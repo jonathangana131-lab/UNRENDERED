@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085200-og-decoder-plain-data-r5k8v2c4",
+  "timestamp": "2026-08-11T08:52:00+00:00",
+  "fromWorker": "sol-20260811-r5k8v2c4",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome direct decoder boundary is not fail-closed plain-data: decodeMechanismPosition(mechanism, position) calls mechanismPositionIsValid(), which dereferences mechanism.kind and mechanism range fields before independently validating the supplied mechanism table. A caller can therefore pass a metatable-backed mechanism whose __index executes or throws during decode, even though ObjectGenome's documented validation boundary otherwise rejects metatables. Harden the shared decoder by validating the mechanism as canonical plain data before field access (preferably via a reusable mechanism inspector shared with genome validation), then add an adversarial __index tripwire regression. This is distinct from active #318 familyVersion bounds and #326/#277 mutable-state aliasing work.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "HIGH",
+  "evidence": [
+    "src/shared/Objects/ObjectGenome.luau: decodeMechanismPosition() delegates to mechanismPositionIsValid(); that helper reads mechanism.kind and hinge/slider bounds without first establishing a metatable-free exact mechanism shape for the direct argument.",
+    "Docs/OBJECT_GENOME.md: decodeMechanismPosition is the shared semantic decoder boundary; ObjectGenome validation is documented as fail-closed plain-data and rejects metatables.",
+    "tests/object_genome.luau: direct decoder coverage exercises valid hinge/slider semantics and invalid numeric positions, but no hostile metatable-backed mechanism input was found.",
+    "Duplicate check: PR #318 is familyVersion upper-bound hardening; PR #326 and PR #277 cover mutable ObjectState aliasing/hostile state validation, not direct decoder mechanism validation; no active decoder-hardening PR/issue was found.",
+    "Validation performed: source/docs/test/active-PR inspection only; no local test suite was run because this worker has no repository checkout in the execution container."
+  ]
+}
