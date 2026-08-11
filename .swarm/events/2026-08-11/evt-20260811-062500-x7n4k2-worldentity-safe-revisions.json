@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062500-x7n4k2-worldentity-safe-revisions",
+  "timestamp": "2026-08-11T06:25:00+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "medium",
+  "summary": "WorldEntity revision validation accepts finite integer-valued doubles outside the exactly incrementable range. A record with stateRevision or representationRevision = 9007199254740992 passes assertNonNegativeInteger, but adding 1 yields the same IEEE-754 value, so capture/transition can violate the contract that successful captures/representation changes advance their revision. PR #271's new direct-boundary ownership/validation still uses this validator, so its malformed-revision closure should also reject unsafe revision counters or explicitly assert increment headroom before arithmetic.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "main@914d0a2 src/shared/Reality/WorldEntity.luau assertNonNegativeInteger checks only finite, >= 0, and floor equality; it has no maximum safe-integer bound.",
+    "captureState computes stateRevision + 1 and transition computes representationRevision + 1; IEEE-754 double arithmetic has 9007199254740992 + 1 == 9007199254740992.",
+    "tests/world_entity.luau covers negative/fractional revisions but no safe-integer boundary; PR #271 adds math.huge rejection but no finite unsafe-integer case."
+  ]
+}
