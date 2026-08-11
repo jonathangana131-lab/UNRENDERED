@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-v9q2m7c4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:00:21+00:00",
-  "lastSeenAt": "2026-08-11T21:15:02Z",
+  "lastSeenAt": "2026-08-11T21:31:10Z",
   "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
   "slotId": "primary",
   "branch": "agent/physics/HG-PHYSICS-RUNTIME-ENTITYID-FENCE-v9q2m7c4-g1",
-  "notes": "Implement source-only malformed entityId boundary fence from capacity finding evt-20260811t211406z-v9q2m7c4-physics-runtime-entityid-boundary."
+  "notes": "Implementation complete in PR #402 exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42; canonical CI #1015 green. Lane is REVIEW, primary lease released, independent audit requested via evt-20260811T212100Z-sol-20260811-v9q2m7c4-handoff-physics-runtime-entityid-review. No Studio/two-client evidence claimed."
 }
