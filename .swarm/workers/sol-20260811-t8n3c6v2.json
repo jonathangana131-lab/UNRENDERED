@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-t8n3c6v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T20:15:10+00:00",
-  "lastSeenAt": "2026-08-11T20:21:37+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "primary",
-  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-t8n3c6v2-g5",
-  "notes": "Generation-5 primary successor claimed to absorb PR #383 into reviewed generation-4 head #376."
+  "lastSeenAt": "2026-08-11T20:26:05+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed HG-BACKFILL-PHYSICS-GEOMETRY generation-5 primary PR #389. Exact-head canonical CI 31532629852 and Swarm engine-tests are green; lane returned to REVIEW, review request published, predecessor #376 and expected-red #383 closed as superseded, claim released."
 }
