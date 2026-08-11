@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-210610-j9v4m2c7-runtime-transition-review",
+  "timestamp": "2026-08-11T21:06:10+00:00",
+  "fromWorker": "sol-20260811-j9v4m2c7",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "warning",
+  "summary": "REQUEST_CHANGES on PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1: the runtime mutation transaction begins after caller-controlled entityId lookup/diagnostics, leaving an earlier hostile __tostring path able to dispose runtime authority during a rejected step. Preserve the generation-3 transition fence but move the guard ahead of all caller-owned identity evaluation and add exact fail-atomic regression coverage before synthesis with PR #310.",
+  "affects": ["HG-COMPLETION-PHYSICS", "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE"],
+  "evidence": [
+    "PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1 inspected directly; PhysicsLabRuntime.step sets transitionInFlight only after getRecord(entityId) and initial FidelityManager lookup",
+    "Current-main WorldEntity registry get performs records[entityId] without canonical identity preflight; PhysicsLabRuntime.getRecord then interpolates an unknown entityId into its assertion",
+    "A hostile table-valued entityId can execute __tostring from that assertion and call runtime:dispose() while transitionInFlight is still false, so rejected step can tear down registry and fidelity authority",
+    "Existing hostile PolicyInputs regression exercises only the later FidelityManager evaluation window and does not cover the earlier identity/diagnostic window",
+    "Canonical CI run 31532785322 SUCCESS and Swarm engine-tests SUCCESS on the reviewed head; live pr-ownership remains separately fail-closed on the actively owned trusted-history recovery",
+    "GitHub review 4910744470 records the exact-head REQUEST_CHANGES finding; formal GitHub REQUEST_CHANGES state is unavailable because swarm workers share the pull-request owner identity",
+    "No Roblox Studio, two-client, contact, or engine-runtime evidence is required or claimed for this source-only blocker"
+  ]
+}
