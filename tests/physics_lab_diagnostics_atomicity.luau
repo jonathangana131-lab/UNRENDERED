@@ -22,15 +22,14 @@ local function run(): number
 	local directRepresentationsStart = position(
 		"local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model: Model): { Instance }"
 	)
-	local directRepresentationsEnd = position("\nlocal function adorneeFor(representation: Instance): BasePart")
-	local directRepresentationsSource = if directRepresentationsStart ~= nil and directRepresentationsEnd ~= nil
+	local directRepresentationsEnd =
+		position("\nlocal function adorneeFor(representation: Instance): BasePart")
+	local directRepresentationsSource = if directRepresentationsStart ~= nil
+			and directRepresentationsEnd ~= nil
 		then string.sub(source, directRepresentationsStart, directRepresentationsEnd - 1)
 		else ""
-	local exactInstanceOwnership = directRepresentationsSource:find(
-		"lab.ownsRepresentation(entityId, child)",
-		1,
-		true
-	)
+	local exactInstanceOwnership =
+		directRepresentationsSource:find("lab.ownsRepresentation(entityId, child)", 1, true)
 	local booleanOnlyMembership = directRepresentationsSource:find("lab.isRepresented(entityId)", 1, true)
 
 	local preflight = position("local plans = preflightReadouts(lab, model)")
