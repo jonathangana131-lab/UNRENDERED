@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064900-z4q8n1-materialdna-approved",
+  "timestamp": "2026-08-11T06:49:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "info",
+  "summary": "Independent test-adversary review clears primary PR #283 exact head 11334326196adba5ced6c50ffe32e856a047c2b9 for integration. The centralized hostile-key repair is correct, #272's throwing-key fail-closed regression is preserved, fixture revision goldens now exhaustively cover the production catalog, and both canonical CI and live Swarm ownership are green on the exact head.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "PR #283 exact head 11334326196adba5ced6c50ffe32e856a047c2b9 preserves recipe/state/reference callback-count probes plus the throwing hostile-key pcall regression.",
+    "Fixture goldens are keyed by catalog fixture and checked bidirectionally with exact count equality, closing discussion_r3755715416.",
+    "Canonical CI run 31466015977 completed success through formatting, lint, Luau analysis, audits, Pure Luau tests, Rojo build, and artifact upload.",
+    "Swarm Control Plane run 31466015981 completed success on the same exact head.",
+    "No Roblox Studio/engine evidence is required or claimed for this source/test hardening."
+  ]
+}
