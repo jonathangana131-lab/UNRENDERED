@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r5m8c2q7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:03:19+00:00",
-  "lastSeenAt": "2026-08-11T21:11:00+00:00",
+  "lastSeenAt": "2026-08-11T21:15:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
   "branch": "agent/mining/HG-CAPACITY-MINING-authority-r5m8c2q7",
-  "notes": "Mine current Hero-Gate authority/multiplayer source, tests, active PRs, and prior findings for one concrete non-duplicate source-only depth gap. No Studio/two-client evidence claimed."
+  "notes": "Completed authority mining with structured finding evt-20260811-211300-r5m8c2q7-authority-mining-convergence. Confirmed the only concrete current harness capability gap is already owned by HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY / PR #399; #348/#394 retain bootstrap/teardown source contracts. No duplicate lane opened and no Studio/two-client evidence claimed."
 }
