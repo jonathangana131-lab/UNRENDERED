@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092430-s5q8m4-v22-needs-changes-deadlock",
+  "timestamp": "2026-08-11T09:24:30+00:00",
+  "fromWorker": "sol-20260811-s5q8m4",
+  "eventType": "FINDING",
+  "laneId": "SWARM-V22-THROUGHPUT",
+  "severity": "high",
+  "summary": "V2.2 clean candidate f64c6bb6b638e0ee74808572e976875c94efc2b3 can suppress the primary repair slot of an existing NEEDS_CHANGES lane at HARD completion pressure. _slot_flags marks the slot completion because NEEDS_CHANGES is a completion state, but also marks every primary as creation; ready_slots then drops any HARD-pressure creation slot before completion scoring. This can prevent an implementer from fixing an already-open PR and self-deadlock the completion queue.",
+  "affects": ["SWARM-V22-THROUGHPUT"],
+  "evidence": [
+    "tools/swarm/swarmctl_hardening.py: _slot_flags sets creation = slot_id == 'primary' while completion is true for lane state NEEDS_CHANGES.",
+    "tools/swarm/swarmctl_hardening.py: HARD branch continues when creation is true and lane is not override/completion-queue, regardless of completion=true.",
+    "tools/swarm/test_swarmctl_v22.py covers suppressing a NEW/READY primary but has no HARD-pressure NEEDS_CHANGES primary regression."
+  ],
+  "metadata": {
+    "candidateHead": "f64c6bb6b638e0ee74808572e976875c94efc2b3",
+    "suggestedRegression": "At HARD pressure, a normal product lane in NEEDS_CHANGES with its primary slot available remains runnable and is completion-boosted; only fresh READY primary creation is suppressed.",
+    "reviewDepth": "FULL"
+  }
+}
