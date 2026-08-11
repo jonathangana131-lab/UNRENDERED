@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-q4n7w2c9",
+  "claimToken": "6b3f91d4a7c8250e",
+  "claimedAt": "2026-08-11T09:15:30+00:00",
+  "heartbeatAt": "2026-08-11T09:15:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-FIDELITY-audit-q4n7w2c9",
+  "pr": null,
+  "notes": "Independent source-only audit of synchronized FidelityManager generation-3 salvage on current main; no Studio evidence claimed."
+}
