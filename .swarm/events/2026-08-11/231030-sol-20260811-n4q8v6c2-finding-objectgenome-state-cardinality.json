@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t231030z-n4q8v6c2-objectgenome-state-cardinality",
+  "timestamp": "2026-08-11T23:10:30Z",
+  "fromWorker": "sol-20260811-n4q8v6c2",
+  "eventType": "FINDING",
+  "summary": "Retained ObjectGenome generation-8 keeps ObjectState exact-snapshot semantics but inspectState still scans every supplied key in the top-level state and each mutable state map. Because valid cardinality is already exactly derivable from the v1 schema/genome, a hostile plain table can force validation and deterministic issue accumulation far beyond any valid snapshot before rejection. Add cardinality preflights that fail closed as soon as observed entries exceed the exact permitted count, using field-level deterministic diagnostics rather than scanning the remainder.",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-OBJECTGENOME"
+  ],
+  "evidence": [
+    "Retained PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 validates ObjectState as an exact complete snapshot and rejects unknown keys, but inspectState iterates all top-level state keys before later field checks.",
+    "The same head validateUnitMap() iterates all candidate componentWear/componentDamage entries after checking required known keys, and detachedComponents repeats that pattern; validateMechanismPositionMap() likewise iterates all supplied mechanism-position entries.",
+    "For these v1 maps the maximum valid cardinality is not speculative: component maps must contain exactly the genome component-key set and mechanismPosition exactly the mechanism-key set; the top-level ObjectState shape is the fixed STATE_FIELDS set.",
+    "PR #395 already closes familyVersion/key-length/aliasing/deterministic-diagnostic/decoder-shape gaps and has independent source/test approval; this finding is separate bounded-work behavior and should not rewrite or delay that retained candidate.",
+    "UNRENDERED Quality Standard requires bounded caches/queues/work and fail-closed hostile-input boundaries. A bounded cardinality preflight can reject at exact-valid-count + 1 without a new schema version or arbitrary content limit."
+  ]
+}
