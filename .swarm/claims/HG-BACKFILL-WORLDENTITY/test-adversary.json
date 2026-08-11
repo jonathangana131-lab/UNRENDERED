@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-z6m2q8r4",
+  "claimToken": "9e3b7c1d5a8f2046",
+  "claimedAt": "2026-08-11T10:14:00+00:00",
+  "heartbeatAt": "2026-08-11T10:14:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["REALITY-CONTRACT"],
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-z6m2q8r4",
+  "pr": null,
+  "notes": "Non-duplicate WorldEntity adversarial coverage for completion review finding on captureRegistered/transitionRegistered malformed identity no-execute boundary; source-test-only, no Studio claim."
+}
