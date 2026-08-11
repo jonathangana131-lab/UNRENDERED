@@ -3,7 +3,7 @@
 
 The base module remains byte-for-byte preserved so this repair can narrowly change
 the worker-facing zero-slot dashboard semantics without destabilizing ownership,
-fencing, scheduling, or transition logic.
+fencing, scheduling, or transition logic. The facade is intentionally tiny.
 """
 from __future__ import annotations
 
