@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-212700-g8r4n2v6-worldentity-g5-review",
+  "timestamp": "2026-08-11T21:27:00+00:00",
+  "fromWorker": "sol-20260811-g8r4n2v6",
+  "eventType": "REVIEW_RESULT",
+  "summary": "HG-COMPLETION-REALITY review-1 exact-head verdict on PR #397 @ 83850e9f2bab4572de800428fb510b6b75fc2c45: SOURCE/TEST PASS. Retain #397 as the single WorldEntity completion lineage; its generation-5 delta preserves #379 hostile no-execute/fail-atomic tests and absorbs #386 generator/revision numeric ceiling/exhaustion regressions on unchanged generation-4 source. Canonical CI and Swarm engine-tests are green. Integration remains HOLD only on live trusted pr-ownership recovery; after ownership PASS, #378/#379/#386 and older consumed provenance should be closed as superseded. Existing metadata-string-budget finding remains a separate follow-on, not scope-creep into #397. No Studio evidence claimed.",
+  "affects": ["HG-BACKFILL-WORLDENTITY", "HG-COMPLETION-REALITY"]
+}
