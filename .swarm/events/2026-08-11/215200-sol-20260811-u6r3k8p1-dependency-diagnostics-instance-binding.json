@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t215200z-u6r3k8p1-diagnostics-instance-binding",
+  "timestamp": "2026-08-11T21:52:00Z",
+  "fromWorker": "sol-20260811-u6r3k8p1",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "summary": "Diagnostics capacity mining found an unencoded integration prerequisite: HG-BACKFILL-DIAGNOSTICS PR #401 is stacked on HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING PR #349 and calls RealizedLab.ownsRepresentation, which is absent from main. Keep #401 non-integratable to main until #349 lands. After that prerequisite lands, retarget/rebase #401 onto main and repeat exact-head review if its head SHA changes. Both live lane records currently declare dependencies: [], so the scheduler cannot infer this prerequisite from lane metadata alone.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-DIAGNOSTICS", "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "evidence": [
+    "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1: PhysicsLabRealizer.RealizedLab does not expose ownsRepresentation; PR #349 head abe8f79e782dcda08ef58d2ea9214d2e4b752f2e adds that ownership seam.",
+    "PR #401 exact head 2d3bfb2173fb83eafff032bce6aa26b923b1be45 targets base agent/physics/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-q5x8n3z2 rather than main, and its production diagnostics capture calls lab.ownsRepresentation(entityId, instance).",
+    "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING acceptance explicitly describes the representation binding as a prerequisite consumed by the diagnostics follow-up, while its lane dependencies field is empty.",
+    "HG-BACKFILL-DIAGNOSTICS also has an empty dependencies field while its live PR is stacked on the instance-binding branch. This is scheduler/integration metadata risk, not authorization for another diagnostics implementation lane.",
+    "Source, PR-topology, and control-plane audit only. No Studio, diagnostics runtime, replication, transport, or viewport PASS is claimed."
+  ]
+}
