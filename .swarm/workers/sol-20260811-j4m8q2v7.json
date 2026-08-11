@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-j4m8q2v7",
   "model": "gpt-5.6-sol",
-  "status": "CLAIMING",
+  "status": "WORKING",
   "startedAt": "2026-08-11T11:51:00+00:00",
-  "lastSeenAt": "2026-08-11T12:36:20+00:00",
-  "notes": "Active on HG-CAPACITY-MINING/mine-authority generation 1 token 2f7c9a4e1b6d8053. Formal authority PR #348 already has independent exact-head source PASS/control block, so this miner is auditing a distinct PhysicsLabStudioHarness lifecycle-capability surface while global trust-history recovery remains in READY. No Studio evidence performed or claimed."
+  "lastSeenAt": "2026-08-11T12:47:20+00:00",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "test-adversary",
+  "branch": "agent/authority/HG-BACKFILL-AUTHORITY-tests-j4m8q2v7-g2",
+  "notes": "Generation-2 stale recovery of authority teardown fixture, draft PR #382 exact product head d9d67f76d9b7e9981e4406d52ec75f342168c1db. Corrected worker schema status from invalid CLAIMING to WORKING after pr-ownership run 31492068677 failed exclusively on the worker status record. Protected SERVER-AUTHORITY lease is active. No Studio/two-client evidence claimed."
 }
