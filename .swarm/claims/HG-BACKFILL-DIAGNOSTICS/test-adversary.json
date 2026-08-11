@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-p7d4m2x9",
   "claimToken": "4f8b1d6c2a9e7053",
   "claimedAt": "2026-08-11T12:06:41+00:00",
-  "heartbeatAt": "2026-08-11T12:06:41+00:00",
+  "heartbeatAt": "2026-08-11T12:11:32+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/tests/HG-BACKFILL-DIAGNOSTICS-ownsrepresentation-p7d4m2x9",
-  "pr": null,
-  "notes": "Focused expected-red diagnostics regression for evt-20260811-085430-k8v2q6m4-diagnostics-instance-binding: direct representation enumeration must consume the prerequisite exact-Instance ownsRepresentation(entityId, candidate) seam rather than boolean isRepresented membership. Test-only; no production or Studio evidence."
+  "pr": 377,
+  "notes": "Expected-red proven on exact head 8324a651: CI 31489895761 passes all gates before Pure Luau and fails exactly at diagnostics exact runtime-owned Instance assertion. Evidence event evt-20260811-121115-p7d4m2x9-diagnostics-exact-instance-consumption published. Production closure belongs to diagnostics primary after consuming #349 seam; PR #377 must not merge independently."
 }
