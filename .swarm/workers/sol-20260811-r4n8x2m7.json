@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T09:00:30+00:00",
-  "lastSeenAt": "2026-08-11T09:17:40+00:00",
+  "lastSeenAt": "2026-08-11T09:29:23+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE-z4m8p2",
-  "notes": "Exact head ed9042c59c77d17390fd6070d458605abef663d3 is canonical-CI green after closing the durable metatable/no-execute review blocker. Awaiting independent exact-head re-review; global pr-ownership is blocked by a pre-existing audited-event integrity fault, not this diff. No Studio evidence claimed."
+  "notes": "HANDOFF: PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d closes metatable/no-execute, hostile record/origin schema-key tostring, and bounded canonical-state comparison blockers. Canonical CI 31477554686 PASS end-to-end; Swarm engine-tests PASS. pr-ownership remains fail-closed on the pre-existing audited immutable-event byte mismatch, with SWARM-PROTOCOL currently exclusively leased elsewhere. Independent exact-head review is still required; @codex review could not run because repository code-review quota is exhausted. No Studio evidence claimed."
 }
