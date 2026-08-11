@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:45:43+00:00",
-  "lastSeenAt": "2026-08-11T08:31:10+00:00",
+  "lastSeenAt": "2026-08-11T08:34:10+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-96d0cf",
-  "notes": "Claimed the current-main WorldEntity invariant/aliasing audit with the REALITY-CONTRACT lease after completing the rolling-cart repair. Reviewing identity, registry shape, snapshot ownership, aliasing, immutability, and persistence boundaries for concrete source-level gaps only."
+  "slotId": "primary",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-ogx9k2",
+  "notes": "Generation-3 takeover of stale WorldEntity primary preserving PR #293 and the REALITY-CONTRACT lease. Finishing deterministic persistentState depth/node/byte bounds while preserving prior lifecycle hardening and avoiding the active test-adversary's registry-shape file."
 }
