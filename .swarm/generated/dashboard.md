@@ -1,21 +1,20 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:12:41.465053+00:00`
+Generated: `2026-08-11T07:12:59.039711+00:00`
 
 Canonical main: **GREEN** `b0bf5ba664483cdcc2af061b0fb652b0aea00706`
 
-State digest: `770f533432ab31fbd8197050a048f7bb0ecb26a97153f640b0de8b637af007f8`
+State digest: `6d27cd22d1b6395cb5346a93d7f16d40c7c8a7b8da017bb56896641edb5f547f`
 
 ## Summary
 
-- ready slots: **15**
-- active claims: **15**
+- ready slots: **14**
+- active claims: **16**
 - stale claims: **1**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
-- `HG-BACKFILL-DIAGNOSTICS/primary` — **Diagnostics source hardening** — score 5150 — dependencies satisfied; resources available
 - `HG-BACKFILL-PHYSICS-GEOMETRY/test-adversary` — **Geometry, clearance, and reachability property tests** — score 5120 — dependencies satisfied
 - `HG-BACKFILL-REALITY/audit` — **WorldId, seed, and replay invariant auditor** — score 5120 — dependencies satisfied
 - `HG-BACKFILL-AUTHORITY/primary` — **Server/client authority source hardening** — score 5100 — dependencies satisfied; resources available
@@ -35,6 +34,7 @@ State digest: `770f533432ab31fbd8197050a048f7bb0ecb26a97153f640b0de8b637af007f8`
 
 - `HG-BACKFILL-AUTHORITY/audit` → `sol-20260811-q9x4m2`; lease to `2026-08-11T07:41:04+00:00`
 - `HG-BACKFILL-DIAGNOSTICS/audit` → `sol-20260811-diaga6r2k`; lease to `2026-08-11T07:30:00+00:00`
+- `HG-BACKFILL-DIAGNOSTICS/primary` → `sol-20260811-q7h4n2`; lease to `2026-08-11T07:54:20+00:00`
 - `HG-BACKFILL-FIDELITY/audit` → `sol-20260811-x7n4k2`; lease to `2026-08-11T07:34:30+00:00`
 - `HG-BACKFILL-FIDELITY/primary` → `sol-20260811-w3n8k2`; lease to `2026-08-11T07:38:00+00:00`
 - `HG-BACKFILL-FIDELITY/test-adversary` → `sol-20260811-30a8e397`; lease to `2026-08-11T07:32:00+00:00`
