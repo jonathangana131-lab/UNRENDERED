@@ -5,7 +5,7 @@
   "title": "Restore immutable review-event compatibility",
   "objective": "Unblock trusted control validation without rewriting immutable historical events by narrowly accepting the already-emitted benign structured review fields at the V2.1 compatibility facade, while keeping new event writes strict and preserving immutable-byte transition fencing.",
   "priority": 10000,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -46,6 +46,6 @@
     "a real product PR reaches semantic ownership evaluation using base-branch trusted code after the prerequisite merges",
     "control deterministic/adversarial tests and canonical CI remain green"
   ],
-  "notes": "Critical prerequisite split from generation-2 validation-fence recovery PR #315 after independent review proved #315 cannot bootstrap its own ownership gate: PR ownership intentionally executes the trusted base-branch validator, and the current base validator rejects already-immutable review events written by a short-lived worker generation.",
+  "notes": "Exact head 148c45f45d10f4859c87227b1bf1d698b9d78e83 has canonical CI PASS and Swarm engine-tests PASS. Its trusted pr-ownership bootstrap check is expected to remain blocked by the strict base validator until this compatibility prerequisite is merged. Independent review is required before integration.",
   "tags": ["control-repair", "red-ci", "pr-ownership", "hero-gate"]
 }
