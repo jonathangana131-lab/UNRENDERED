@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:59:39+00:00",
-  "lastSeenAt": "2026-08-11T08:14:18+00:00",
-  "laneId": "HG-BACKFILL-AUTHORITY",
+  "lastSeenAt": "2026-08-11T08:21:15+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-n7c4p2",
-  "notes": "Independent Authority audit active. Patch-local PASS/control BLOCK on primary PR #316 due stale worker metadata; patch-local PASS on test-adversary #307 conditional ownership; REQUEST_CHANGES findings published for stale #297 ordering and draft #300 Rojo server-subpath leakage. No Studio/two-client evidence claim."
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-n7c4p2",
+  "notes": "Independent source-only ObjectGenome audit. Authority review handoff complete; now inspecting ObjectGenome current main plus active primary/test branches for concrete malformed-input, identity, ownership, transform, material-reference, fingerprint, state-binding, or immutability defects."
 }
