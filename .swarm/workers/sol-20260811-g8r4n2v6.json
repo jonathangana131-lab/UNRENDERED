@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:00:00+00:00",
-  "lastSeenAt": "2026-08-11T21:12:00+00:00",
+  "lastSeenAt": "2026-08-11T21:19:00+00:00",
   "laneId": "HG-COMPLETION-REALITY",
-  "slotId": "review-1",
-  "branch": "agent/review/HG-COMPLETION-REALITY-review-1-g8r4n2v6",
-  "notes": "Independent completion review of WorldEntity generation-4 primary PR #378, including outstanding same-lineage adversarial evidence. Authority #394 review completed/published; duplicate physics target #389 released. No Studio evidence claimed."
+  "slotId": "reconcile",
+  "branch": "agent/reconcile/HG-COMPLETION-REALITY-g8r4n2v6",
+  "notes": "Reality lineage reconciliation after WorldEntity #378 completion REQUEST_CHANGES; retaining exact current-main heads, child evidence, and integration order. Authority #394 review completed/published. No Studio evidence claimed."
 }
