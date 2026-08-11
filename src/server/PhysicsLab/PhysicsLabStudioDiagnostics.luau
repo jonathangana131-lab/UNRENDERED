@@ -177,16 +177,17 @@ function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab)
 	local plans = preflightReadouts(lab, model)
 
 	local folder = Instance.new("Folder")
-	folder.Name = DIAGNOSTICS_ROOT_NAME
-	folder:SetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned", true)
 
-	-- Instance realization is still transactional: unexpected property/capture
-	-- failures destroy only the tree created by this call before propagating the
-	-- original error. An unrelated same-name object is never adopted or deleted.
+	-- Instance realization is transactional: every created child is parented to
+	-- the owned tree before fallible configuration, so rollback destroys all
+	-- resources created by this call before propagating the original error.
 	local ok, result = pcall(function(): Snapshot
+		folder.Name = DIAGNOSTICS_ROOT_NAME
+		folder:SetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned", true)
 		folder.Parent = model
 		for index, plan in ipairs(plans) do
 			local billboard = Instance.new("BillboardGui")
+			billboard.Parent = folder
 			billboard.Name = string.format("Entity_%03d_%s", index, plan.key)
 			billboard.AlwaysOnTop = true
 			billboard.MaxDistance = 120
@@ -195,6 +196,7 @@ function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab)
 			billboard.Adornee = plan.adornee
 
 			local label = Instance.new("TextLabel")
+			label.Parent = billboard
 			label.Name = "Readout"
 			label.BackgroundTransparency = 0.2
 			label.Size = UDim2.fromScale(1, 1)
@@ -211,8 +213,6 @@ function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab)
 				fingerprint,
 				reproKey
 			)
-			label.Parent = billboard
-			billboard.Parent = folder
 		end
 		return PhysicsLabStudioDiagnostics.capture(lab)
 	end)
