@@ -2,13 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
-  "workerId": "sol-20260811-v6m4q9t2",
-  "claimToken": "4d9a2c7e1b6f8053",
-  "claimedAt": "2026-08-11T08:32:00+00:00",
-  "heartbeatAt": "2026-08-11T08:53:10+00:00",
+  "workerId": "sol-20260811-d8q3m6v1",
+  "claimToken": "5c8e2a7d1f6b9043",
+  "claimedAt": "2026-08-11T20:28:00+00:00",
+  "heartbeatAt": "2026-08-11T20:28:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 2,
+  "generation": 3,
   "resources": [],
-  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-primary-v6m4q9t2-g2",
-  "pr": 327
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-primary-d8q3m6v1-g3",
+  "pr": null,
+  "notes": "Generation-3 takeover of expired generation-2 PR #327. Stacked on reviewed prerequisite PR #349 exact head so diagnostics can consume ownsRepresentation without widening this lane into Realizer source."
 }
