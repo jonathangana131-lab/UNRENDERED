@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+  "slotId": "primary",
+  "workerId": "sol-20260811-x7n4k2",
+  "claimToken": "c3f8a1d6e42b7095",
+  "claimedAt": "2026-08-11T06:35:00+00:00",
+  "heartbeatAt": "2026-08-11T06:35:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/swarm/SWARM-RECOVERY-PR-OWNERSHIP-IMPORT-x7n4k2",
+  "pr": null
+}
