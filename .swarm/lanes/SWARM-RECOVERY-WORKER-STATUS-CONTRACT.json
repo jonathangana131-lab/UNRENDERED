@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "epicId": "HERO-GATE",
+  "title": "Repair worker status contract drift",
+  "objective": "Stop repeated Swarm control validation failures caused by workers emitting undocumented worker-status values such as CLAIMING; make the worker lifecycle contract explicit, test the accepted transition vocabulary, and restore live control state without weakening fail-closed ownership validation.",
+  "priority": 10000,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    "tools/swarm/swarmctl.py",
+    "tools/swarm/test_swarmctl.py",
+    "tools/swarm/test_swarmctl_hardening.py",
+    "Docs/SWARM_PROTOCOL.md"
+  ],
+  "resources": ["SWARM-PROTOCOL"],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Critical worker-status contract repair",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 1000,
+      "writeScopes": [
+        "tools/swarm/swarmctl.py",
+        "tools/swarm/test_swarmctl.py",
+        "tools/swarm/test_swarmctl_hardening.py",
+        "Docs/SWARM_PROTOCOL.md"
+      ]
+    },
+    {
+      "slotId": "reviewer-1",
+      "role": "Independent worker-status recovery verifier",
+      "exclusive": true,
+      "availableWhen": ["REVIEW", "INTEGRATION_READY"],
+      "priorityBoost": 900,
+      "requiresIndependentFrom": "primary",
+      "writeScopes": [
+        "tools/swarm/swarmctl.py",
+        "tools/swarm/test_swarmctl.py",
+        "tools/swarm/test_swarmctl_hardening.py",
+        "Docs/SWARM_PROTOCOL.md"
+      ]
+    }
+  ],
+  "acceptance": [
+    "the supported worker-status vocabulary is explicitly documented where every Go worker reads it",
+    "worker registration and claim-time lifecycle states that the protocol requires validate without ad hoc control-state rewrites",
+    "unknown worker statuses still fail closed",
+    "core and hardening control-plane tests cover the worker-status contract",
+    "live swarm-control validation returns PASS after current malformed worker records are reconciled"
+  ],
+  "notes": "Emergency red-control recovery created from repeated exact-head Actions failures on worker records whose status vocabulary was not specified to workers. This is scheduler/control maintenance, not a product feature.",
+  "tags": ["control-repair", "red-ci", "worker-lifecycle", "hero-gate"]
+}
