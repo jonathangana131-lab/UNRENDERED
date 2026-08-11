@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-j4m8q2v7",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "CLAIMING",
   "startedAt": "2026-08-11T11:51:00+00:00",
-  "lastSeenAt": "2026-08-11T11:58:30+00:00",
-  "notes": "Completed HG-BACKFILL-PHYSICS-GEOMETRY test-adversary: draft expected-red PR #368 isolates non-finite derived envelope drift; exact CI 31488724545 fails only the intended Pure Luau assertion after all preflight checks pass; FINDING and HANDOFF events published; independent audit worker owns verification against primary PR #363. Claim released cleanly."
+  "lastSeenAt": "2026-08-11T12:00:20+00:00",
+  "notes": "Second scheduler pass active: claimed HG-CAPACITY-MINING/mine-physics-runtime (token 6d2a9f3c8b715e40) for bounded source-only audit from exact main ae83c0e. Reviewing current runtime, existing recipe/transition hardening lanes, tests, and findings; no new feature work or Studio claims."
 }
