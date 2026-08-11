@@ -1,5 +1,7 @@
 local WorldEntity = require("../src/shared/Reality/WorldEntity")
 
+local MAX_SAFE_INTEGER = 9007199254740991
+
 local function makeRecord()
 	return {
 		id = "entity:registry-shape",
@@ -93,6 +95,19 @@ local function run(): number
 	expect("registry rejects origin metatable", not registerAccepts(metatableOrigin))
 	expect("registry rejects origin before __index", originIndexCalls == 0)
 
+	local hostileUnknownKeyCallbacks = 0
+	local hostileUnknownKey = setmetatable({}, {
+		__tostring = function()
+			hostileUnknownKeyCallbacks += 1
+			error("hostile schema key __tostring must not execute")
+		end,
+	})
+	local hostileKeySpec = makeSpec()
+	hostileKeySpec[hostileUnknownKey] = true
+	local hostileKeyAccepted = newResult(hostileKeySpec)
+	expect("new rejects hostile non-string schema key", not hostileKeyAccepted)
+	expect("new rejects hostile schema key before __tostring", hostileUnknownKeyCallbacks == 0)
+
 	local validSpecAccepted, validEntity = newResult(makeSpec())
 	expect("new accepts exact mutable spec shape", validSpecAccepted)
 	if validSpecAccepted then
@@ -159,11 +174,202 @@ local function run(): number
 		)
 	end
 
+	local hostileFidelityCallbacks = 0
+	local hostileFidelity = setmetatable({}, {
+		__tostring = function()
+			hostileFidelityCallbacks += 1
+			error("hostile fidelity __tostring must not execute")
+		end,
+	})
+	local hostileFidelitySpec = makeSpec()
+	hostileFidelitySpec.fidelity = hostileFidelity
+	local hostileFidelityAccepted = newResult(hostileFidelitySpec)
+	expect("new rejects hostile fidelity", not hostileFidelityAccepted)
+	expect("new rejects hostile fidelity before __tostring", hostileFidelityCallbacks == 0)
+	local hostileFidelityRankAccepted = pcall(function()
+		WorldEntity.fidelityRank(hostileFidelity :: any)
+	end)
+	expect("fidelityRank rejects hostile fidelity", not hostileFidelityRankAccepted)
+	expect("fidelityRank rejects before __tostring", hostileFidelityCallbacks == 0)
+
 	local captureTarget = WorldEntity.new(makeSpec())
 	local falseCaptureAccepted = pcall(function()
 		WorldEntity.captureState(captureTarget, false :: any)
 	end)
 	expect("captureState rejects false persistent state", not falseCaptureAccepted)
+	local nilCaptureAccepted = pcall(function()
+		WorldEntity.captureState(captureTarget, nil :: any)
+	end)
+	expect("captureState rejects omitted required state", not nilCaptureAccepted)
+
+	local nilCaptureRegistry = WorldEntity.createRegistry()
+	WorldEntity.register(nilCaptureRegistry, captureTarget)
+	local beforeNilRegisteredCapture = WorldEntity.get(nilCaptureRegistry, captureTarget.id)
+	local nilRegisteredCaptureAccepted = pcall(function()
+		WorldEntity.captureRegistered(nilCaptureRegistry, captureTarget.id, nil :: any)
+	end)
+	expect("captureRegistered rejects omitted required state", not nilRegisteredCaptureAccepted)
+	expect(
+		"rejected nil registered capture preserves registry record",
+		WorldEntity.get(nilCaptureRegistry, captureTarget.id) == beforeNilRegisteredCapture
+	)
+
+	local mutableDirectRecord = makeRecord()
+	mutableDirectRecord.persistentState = {
+		open = false,
+		mechanism = { angle = 12 },
+	}
+	mutableDirectRecord.stateRevision = 2
+	mutableDirectRecord.representationRevision = 3
+	local promoted = WorldEntity.transition(mutableDirectRecord :: any, "F2")
+	mutableDirectRecord.kind = "mutated-kind"
+	mutableDirectRecord.origin.recipeKey = "mutated/recipe"
+	mutableDirectRecord.persistentState.open = true
+	mutableDirectRecord.persistentState.mechanism.angle = 99
+	expect("direct promotion owns kind", promoted.kind == "office-chair")
+	expect("direct promotion owns origin", promoted.origin.recipeKey == "chair/registry-shape")
+	expect("direct promotion owns state", promoted.persistentState.open == false)
+	expect("direct promotion owns nested state", (promoted.persistentState.mechanism :: any).angle == 12)
+	expect("direct promotion advances representation revision", promoted.representationRevision == 4)
+	local promotedOriginMutationAccepted = pcall(function()
+		(promoted.origin :: any).recipeKey = "bypass"
+	end)
+	expect("direct promotion freezes owned origin", not promotedOriginMutationAccepted)
+	local promotedStateMutationAccepted = pcall(function()
+		(promoted.persistentState.mechanism :: any).angle = 45
+	end)
+	expect("direct promotion freezes owned nested state", not promotedStateMutationAccepted)
+
+	local captureSource = makeRecord()
+	captureSource.id = "entity:direct-capture"
+	captureSource.kind = "filing-cabinet"
+	captureSource.origin.recipeKey = "cabinet/direct-capture"
+	captureSource.fidelity = "F2"
+	captureSource.persistentState = { open = false }
+	captureSource.stateRevision = 5
+	captureSource.representationRevision = 7
+	local capturedState = {
+		open = true,
+		drawer = { extension = 0.5 },
+	}
+	local captured = WorldEntity.captureState(captureSource :: any, capturedState)
+	captureSource.origin.recipeKey = "mutated/capture-origin"
+	capturedState.open = false
+	capturedState.drawer.extension = 1
+	expect("direct capture owns origin", captured.origin.recipeKey == "cabinet/direct-capture")
+	expect("direct capture owns captured state", captured.persistentState.open == true)
+	expect(
+		"direct capture owns nested captured state",
+		(captured.persistentState.drawer :: any).extension == 0.5
+	)
+	expect("direct capture advances state revision", captured.stateRevision == 6)
+	expect("direct capture preserves representation revision", captured.representationRevision == 7)
+
+	local nearStateRevisionLimit = makeRecord()
+	nearStateRevisionLimit.id = "entity:near-state-revision-limit"
+	nearStateRevisionLimit.stateRevision = MAX_SAFE_INTEGER - 1
+	local finalStateRevision = WorldEntity.captureState(nearStateRevisionLimit :: any, { open = true })
+	expect("capture can advance to maximum safe state revision", finalStateRevision.stateRevision == MAX_SAFE_INTEGER)
+	local exhaustedStateRevision = makeRecord()
+	exhaustedStateRevision.id = "entity:exhausted-state-revision"
+	exhaustedStateRevision.stateRevision = MAX_SAFE_INTEGER
+	local exhaustedStateRevisionAccepted = pcall(function()
+		WorldEntity.captureState(exhaustedStateRevision :: any, { open = true })
+	end)
+	expect("capture rejects exhausted safe state revision", not exhaustedStateRevisionAccepted)
+	local unsafeStateRevision = makeRecord()
+	unsafeStateRevision.id = "entity:unsafe-state-revision"
+	unsafeStateRevision.stateRevision = MAX_SAFE_INTEGER + 1
+	expect("registry rejects state revision beyond safe integer range", not registerAccepts(unsafeStateRevision))
+
+	local nearRepresentationRevisionLimit = makeRecord()
+	nearRepresentationRevisionLimit.id = "entity:near-representation-revision-limit"
+	nearRepresentationRevisionLimit.representationRevision = MAX_SAFE_INTEGER - 1
+	local finalRepresentationRevision = WorldEntity.transition(nearRepresentationRevisionLimit :: any, "F2")
+	expect(
+		"transition can advance to maximum safe representation revision",
+		finalRepresentationRevision.representationRevision == MAX_SAFE_INTEGER
+	)
+	local exhaustedRepresentationRevision = makeRecord()
+	exhaustedRepresentationRevision.id = "entity:exhausted-representation-revision"
+	exhaustedRepresentationRevision.representationRevision = MAX_SAFE_INTEGER
+	local exhaustedRepresentationRevisionAccepted = pcall(function()
+		WorldEntity.transition(exhaustedRepresentationRevision :: any, "F2")
+	end)
+	expect("transition rejects exhausted safe representation revision", not exhaustedRepresentationRevisionAccepted)
+	local unsafeRepresentationRevision = makeRecord()
+	unsafeRepresentationRevision.id = "entity:unsafe-representation-revision"
+	unsafeRepresentationRevision.representationRevision = MAX_SAFE_INTEGER + 1
+	expect(
+		"registry rejects representation revision beyond safe integer range",
+		not registerAccepts(unsafeRepresentationRevision)
+	)
+
+	local malformedRevision = makeRecord()
+	malformedRevision.stateRevision = math.huge
+	local malformedTransitionAccepted = pcall(function()
+		WorldEntity.transition(malformedRevision :: any, "F2")
+	end)
+	expect("direct transition validates record revisions", not malformedTransitionAccepted)
+
+	local unknownDirectShape = makeRecord()
+	unknownDirectShape.unexpected = true
+	local unknownShapeAccepted = pcall(function()
+		WorldEntity.captureState(unknownDirectShape :: any, {})
+	end)
+	expect("direct capture rejects unknown record schema keys", not unknownShapeAccepted)
+
+	local hostileTargetCallbacks = 0
+	local hostileTarget = setmetatable({}, {
+		__tostring = function()
+			hostileTargetCallbacks += 1
+			error("hostile target __tostring must not execute")
+		end,
+	})
+	local hostileTargetAccepted = pcall(function()
+		WorldEntity.transition(makeRecord() :: any, hostileTarget :: any)
+	end)
+	expect("direct transition rejects hostile target fidelity", not hostileTargetAccepted)
+	expect("direct transition rejects target before __tostring", hostileTargetCallbacks == 0)
+
+	local falseCapacityAccepted = pcall(function()
+		WorldEntity.createRegistry(false :: any)
+	end)
+	expect("registry rejects false diagnostic capacity instead of defaulting it", not falseCapacityAccepted)
+
+	local hostileCapacityCallbacks = 0
+	local hostileCapacity = setmetatable({}, {
+		__lt = function()
+			hostileCapacityCallbacks += 1
+		error("hostile capacity comparison must not execute")
+		end,
+		__le = function()
+			hostileCapacityCallbacks += 1
+			error("hostile capacity comparison must not execute")
+		end,
+		__tostring = function()
+			hostileCapacityCallbacks += 1
+			error("hostile capacity __tostring must not execute")
+		end,
+	})
+	local hostileCapacityAccepted = pcall(function()
+		WorldEntity.createRegistry(hostileCapacity :: any)
+	end)
+	expect("registry rejects hostile diagnostic capacity", not hostileCapacityAccepted)
+	expect("registry rejects hostile capacity before metamethod callbacks", hostileCapacityCallbacks == 0)
+
+	local hostileIdCallbacks = 0
+	local hostileId = setmetatable({}, {
+		__tostring = function()
+			hostileIdCallbacks += 1
+			error("hostile entity id __tostring must not execute")
+		end,
+	})
+	local hostileIdAccepted = pcall(function()
+		WorldEntity.captureRegistered(WorldEntity.createRegistry(), hostileId :: any, {})
+	end)
+	expect("registered capture rejects hostile unknown identity", not hostileIdAccepted)
+	expect("registered capture rejects hostile identity before __tostring", hostileIdCallbacks == 0)
 
 	local wrongKind = makeSpec()
 	wrongKind.kind = 17
