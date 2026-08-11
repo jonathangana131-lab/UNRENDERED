@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092610-a3c8cf14-pr334-rereview-hold",
+  "timestamp": "2026-08-11T09:26:10+00:00",
+  "fromWorker": "sol-20260811-a3c8cf14",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #334 exact head a2cd1cc9d34b00e1bbaab9b0ded68957030959df resolves the previously reported runtime-facade authority capability leak by moving mutable authority/transaction state behind a module-local weak-key map and freezing the public facade. Integration remains HOLD because canonical CI 31477438595 still fails StyLua before lint/Luau/pure tests, and Swarm Control Plane 31477438593 remains separately red on a global non-canonical immutable event audit. No Studio evidence was run or claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE", "HG-COMPLETION-PHYSICS"],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "medium",
+  "evidence": [
+    "Exact-head PhysicsLabRuntime exposes only recipeKey on a frozen facade; registry, fidelity, entityIds, disposed, and transitionInFlight are held in module-local runtimeStates and are no longer callback-reachable through runtime fields.",
+    "Exact-head adversarial tests verify old authority/guard fields are absent, facade mutation fails, direct callback capability/guard tampering cannot alter populations, and same-timestamp retry remains possible.",
+    "Canonical CI run 31477438595 fails at StyLua in PhysicsLabRuntime.luau setmetatable formatting and two retry step calls; all later validation stages are skipped.",
+    "Swarm Control Plane run 31477438593 engine-tests passes but pr-ownership fails on audited immutable event evt-20260811-073500-q9m4r2-authority-rereview-approve.json being non-canonical, a separate global control-state integrity blocker."
+  ],
+  "metadata": {
+    "verdict": "HOLD",
+    "sourceBlockerResolved": true,
+    "pr": 334,
+    "headSha": "a2cd1cc9d34b00e1bbaab9b0ded68957030959df",
+    "reviewId": 4904732533,
+    "ciRun": 31477438595,
+    "controlRun": 31477438593
+  }
+}
