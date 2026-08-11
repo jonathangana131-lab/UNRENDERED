@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062500-q9x4m2-pr-ownership-import",
+  "timestamp": "2026-08-11T06:25:00+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "FINDING",
+  "laneId": "SWARM-V2-HARDEN",
+  "severity": "high",
+  "summary": "Current pull-request ownership validation is broken independently of PR scope: the workflow materializes trusted swarmctl_hardening.py without its imported swarmctl_hardening_base.py dependency, so pr-ownership exits with ModuleNotFoundError before validating the PR.",
+  "affects": ["SWARM-V2-HARDEN", "SWARM-V21-DASHBOARD", "HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "PR #275 Swarm Control Plane run 31464800316 failed in pr-ownership job 93695374278.",
+    "The trusted-validator materialization step copies swarmctl.py and swarmctl_hardening.py into RUNNER_TEMP/trusted-swarm but does not copy swarmctl_hardening_base.py.",
+    "The enforcement step raises ModuleNotFoundError: No module named 'swarmctl_hardening_base' before PR ownership validation executes."
+  ]
+}
