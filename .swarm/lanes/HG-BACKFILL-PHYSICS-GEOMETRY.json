@@ -5,7 +5,7 @@
   "title": "Physics Lab geometry and recipe depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete recipe geometry, scale, support reachability, door-proxy manufacturability, COM, clearance, component, or validation-contract defects without requiring Studio.",
   "priority": 4900,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/PhysicsLabRecipe.luau", "src/shared/Physics/PhysicsLabScale.luau", "src/shared/Physics/PhysicsLabValidationContract.luau", "tests/physics_lab_recipe.luau", "tests/physics_lab_scale.luau", "tests/physics_lab_validation_contract.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"Physics recipe realism and validation auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/physics_lab_recipe.luau","tests/physics_lab_validation_contract.luau","Docs/PHYSICS_LAB_VALIDATION.md"]}
   ],
   "acceptance": ["target measurable geometry/contract gaps", "do not turn the lab proxy into the locked Hero Door feature", "all geometry changes preserve deterministic recipes", "new invariants get tests", "do not claim engine contact proof from source-only work"],
-  "notes": "Validation-contract PR #303 exact head e09c617bac644a5a6a124ae8e22320d39fd59296 retains a sound plain-data/exact-shape/no-execute + exact-nil tolerance repair and canonical CI run 31471707012 green, but independent audit evt-20260811-093650-k8v3p6r1-validation-safe-integer-audit returns REQUEST_CHANGES + SYNC_REQUIRED. Expected-red PR #346 exact head 1580e24936c02c94609574ee0bf95c4005ef383d / CI 31478069707 proves 2^53 is still accepted for labSchemaVersion, resolvedRegionSchemaVersion, and counts.instances. Primary must bound integer evidence to <= 9007199254740991 with equivalent regressions, then replay the resulting two-file patch onto current main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 (current #303 ancestry is behind_by=2), rerun exact-head gates, and request fresh independent review. No Studio evidence claimed.",
+  "notes": "Generation-3 current-main validation-contract PR #363 exact head 140a1b1953635c9cc4ca4652480d03ada5ec2ffb preserves #303 plain-data/exact-shape/no-execute + exact-nil tolerance hardening and absorbs expected-red #346 safe-integer plus #356 canonical rootName identity findings. Exact integer evidence is bounded to <= 9007199254740991 with boundary acceptance/rejection regressions; snapshot.rootName must equal UNRENDERED_PhysicsLab before comparison/evidence use. Compare to main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is 2 ahead / 0 behind with exactly the source/test validation files changed. Canonical CI run 31480635841 is SUCCESS including format/lint/Luau/Pure Luau/build; Swarm engine-tests in run 31480635912 are SUCCESS. Live pr-ownership remains fail-closed on the separately owned immutable-event-history continuity recovery. #303/#346/#356 are closed as superseded. Fresh independent audit must be by a worker other than sol-20260811-k8v3p6r1. No Studio evidence claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
