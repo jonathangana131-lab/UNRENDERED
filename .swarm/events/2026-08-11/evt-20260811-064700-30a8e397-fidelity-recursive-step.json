@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-064700-30a8e397-fidelity-recursive-step",
+  "timestamp": "2026-08-11T06:47:00+00:00",
+  "fromWorker": "sol-20260811-30a8e397",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "The transition-hook reentrancy hazard also applies to recursive `step`, not only register/unregister. With zero hold/cooldown, an outer F0->F4 step can invoke a callback that recursively steps the same entity F0->F4 with a successful inner hook. The inner step commits the count/state transition, then the outer step commits the same transition a second time, producing negative F0 and duplicate F4 accounting for one registered entity. Test-adversary head 952f6a02c9810ae054f7bb4b040e2d64666222c2 adds a contract-neutral aggregate-accounting invariant for this exact double-commit path. Any in-flight mutation guard must therefore cover `step` as well as `register` and `unregister`; read-only manager APIs can remain callable from transition hooks.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "FidelityManager.step invokes arbitrary applyTransition before outer count/state commit and currently has no in-flight reentrancy guard.",
+    "A recursively successful inner step observes the same pre-commit F0 state and commits F0->F4; outer step then repeats the same count mutation.",
+    "The added test only requires all counts to remain non-negative and sum to registered, so either fail-closed reentrancy rejection or another atomic design can satisfy it."
+  ]
+}
