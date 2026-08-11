@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-96d0cf",
   "claimToken": "72e91b4fd6c304a8",
   "claimedAt": "2026-08-11T08:25:10+00:00",
-  "heartbeatAt": "2026-08-11T08:25:10+00:00",
+  "heartbeatAt": "2026-08-11T08:27:20+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
-  "branch": "agent/physics/HG-PHYSICS-CART-GEOMETRY-primary-96d0cf",
-  "pr": null,
-  "notes": "Claimed live NEEDS_CHANGES rolling-cart geometry repair after audit rejection of a 0.005m caster/chassis proxy disconnect. Preserve the existing ObjectGenome architecture, repair authored contacts/COM with deterministic source-only regressions, and do not claim Studio evidence."
+  "branch": "agent/physics/HG-PHYSICS-CART-GEOMETRY-primary-j4c8n2",
+  "pr": 311,
+  "notes": "Salvaging existing PR #311 rather than creating competing work. Repair the audit-reported 0.005m caster/chassis disconnect while preserving ground contact, recompute COM, and add deterministic caster-to-chassis contact coverage. No Studio evidence claimed."
 }
