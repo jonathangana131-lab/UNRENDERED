@@ -131,12 +131,12 @@ for _, caster in ipairs(casterPositions) do
 		materialKey = "material.v1.chair-caster.polymer-rubber",
 		materialRecipeVersion = 1,
 		massKg = 0.4,
-		-- The rolling-cart outer envelope is 0.95 m tall. Centering the 0.10 m
-		-- caster at -0.425 m puts its bottom exactly at local y=-0.475 m, so an
-		-- F2 cart whose outer envelope is grounded also grounds every caster proxy.
-		localPositionM = { x = caster.x, y = -0.425, z = caster.z },
+		-- The grounded cart envelope ends at local y=-0.475 m and the chassis
+		-- underside is y=-0.370 m. A 0.105 m caster centered between those planes
+		-- keeps the anchored F2 proxy in contact with both ground and chassis.
+		localPositionM = { x = caster.x, y = -0.4225, z = caster.z },
 		localRotationDeg = zero,
-		dimensionsM = { x = 0.10, y = 0.10, z = 0.05 },
+		dimensionsM = { x = 0.10, y = 0.105, z = 0.05 },
 		supportKeys = {},
 		externalSupport = "ground",
 	})
@@ -210,8 +210,8 @@ local cartAffordances: { AffordanceSpec } = {
 local rollingCart: Genome = {
 	schemaVersion = ObjectGenome.SCHEMA_VERSION,
 	familyId = "lab-cart.utility",
-	-- Revision 2 closes authored F2 caster contact and COM inconsistencies while
-	-- preserving the same manufactured family/variant contract.
+	-- Revision 2 closes authored F2 ground/chassis contact and COM inconsistencies
+	-- while preserving the same manufactured family/variant contract.
 	familyVersion = 2,
 	variantKey = "two-shelf",
 	provenance = {
@@ -226,7 +226,7 @@ local rollingCart: Genome = {
 	},
 	massKg = 15.6,
 	massLimitsKg = { min = 12, max = 24 },
-	centerOfMassM = { x = 0, y = -0.17435897435897435, z = 0 },
+	centerOfMassM = { x = 0, y = -0.1741025641025641, z = 0 },
 	components = cartComponents,
 	mechanisms = cartMechanisms,
 	affordances = cartAffordances,
