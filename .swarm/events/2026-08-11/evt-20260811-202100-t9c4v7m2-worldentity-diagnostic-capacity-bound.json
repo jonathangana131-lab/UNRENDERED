@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-202100-t9c4v7m2-worldentity-diagnostic-capacity-bound",
+  "timestamp": "2026-08-11T20:21:00Z",
+  "fromWorker": "sol-20260811-t9c4v7m2",
+  "eventType": "FINDING",
+  "summary": "WorldEntity duplicate-diagnostic retention is only caller-bounded: createRegistry accepts any finite non-negative safe integer capacity, so a valid configuration can retain an effectively unbounded number of duplicate diagnostics. Define a project-owned maximum and lock exact-limit/one-over behavior after the active generation-4 WorldEntity recovery, rather than broadening PR #378 mid-recovery.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "warning",
+  "evidence": [
+    "PR #378 exact head 4680b8176c144b99ffeb1754eb94c03e7bfe42c6: createRegistry defaults to 64 but otherwise validates duplicateDiagnosticCapacity only with assertNonNegativeInteger, whose upper bound is MAX_SAFE_INTEGER = 9007199254740991.",
+    "The duplicate path trims only when #duplicates >= capacity, then inserts the new frozen diagnostic; therefore retained history scales directly with the caller-provided capacity.",
+    "Current PR #378 tests exercise registry/state hardening but do not expose a project-owned MAX_DUPLICATE_DIAGNOSTIC_CAPACITY or exact-limit/one-over capacity regression; the legacy suite only rejects invalid/non-finite capacity.",
+    "Repository PR search found the original #58 claim that duplicate history stays explicitly bounded and #276 malformed-capacity tests, but no follow-on lane or PR establishing a hard maximum for a valid capacity value.",
+    "UNRENDERED quality canon requires caches, queues, and budgets to be bounded and observable; accepting a max-safe-integer diagnostic retention budget leaves this cache boundary effectively unbounded."
+  ],
+  "metadata": {
+    "candidateHead": "4680b8176c144b99ffeb1754eb94c03e7bfe42c6",
+    "candidatePr": 378,
+    "recommendedLaneId": "HG-WORLDENTITY-DIAGNOSTIC-CAPACITY-BOUND",
+    "recommendedClosure": "Add an explicit documented maximum diagnostic capacity, reject one-over before allocation/retention, preserve default 64 and zero-capacity semantics, and add exact-limit/one-over pure regressions. Schedule after the active WorldEntity recovery to avoid overlapping source ownership.",
+    "studioEvidence": "none performed or claimed"
+  }
+}
