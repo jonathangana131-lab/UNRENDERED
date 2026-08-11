@@ -8,13 +8,13 @@ quarantine-only authority.
 """
 
 import swarm_history_recovery_generation6 as _generation6
+import swarm_history_recovery_generation6_tail as _generation6_tail
 
 # One invalid worker record was first published with the unsupported REVIEWING
 # status and later moved through another unsupported alias before a claim-aware
 # mutable repair returned it to canonical IDLE. Pin the first invalid commit and
-# exact repair commit; all intermediate snapshots remain strict-invalid. The
-# generation-6 module adds only the three separately measured DONE->STOPPED
-# repairs from the live bootstrap inventory.
+# exact repair commit; all intermediate snapshots remain strict-invalid. Later
+# generation-6 worker defects are also crossed only by exact bad->repair commits.
 FINITE_WORKER_TRANSITIONS = (
     ("b5bd3a372a4d4f044873c9bedf86d82e7cc92c23", "ef789a2e2e1b56d7a816b8c2be39412f5b6f0ccc"),
 ) + _generation6.FINITE_WORKER_TRANSITIONS
@@ -96,7 +96,7 @@ MALFORMED_EVENT_QUARANTINE_ROWS = (
         "5fd3e69bd34f35abd4c03485aed15879163d95e6",
         "6bcb06468953ac55ab2cfec458ecb60b4d98d114",
     ),
-) + _generation6.MALFORMED_EVENT_QUARANTINE_ROWS
+) + _generation6.MALFORMED_EVENT_QUARANTINE_ROWS + _generation6_tail.MALFORMED_EVENT_QUARANTINE_ROWS
 
 
 def quarantine_rules() -> dict[str, dict[str, str]]:
