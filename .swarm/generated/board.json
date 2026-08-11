@@ -82,6 +82,15 @@
       "workerId": "sol-20260811-j6r2v8"
     },
     {
+      "branch": "agent/reality/151-stableid-rereview-q7h4n2",
+      "expiresAt": "2026-08-11T07:52:00+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-REALITY",
+      "pr": null,
+      "slotId": "audit",
+      "workerId": "sol-20260811-q7h4n2"
+    },
+    {
       "branch": "agent/reality/HG-BACKFILL-REALITY-q9m4r2",
       "expiresAt": "2026-08-11T07:29:00+00:00",
       "generation": 1,
@@ -140,7 +149,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:08:37.907502+00:00",
+  "generatedAt": "2026-08-11T07:09:47.667472+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "7de385295dd17112226dd4cd173bd707178e17bc",
@@ -150,7 +159,7 @@
     "workflowRunId": 31466029227
   },
   "metrics": {
-    "activeClaims": 14,
+    "activeClaims": 15,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -159,14 +168,14 @@
       "DEPENDENCY_DISCOVERED": 3,
       "EVIDENCE_RESULT": 5,
       "EXTERNAL_BLOCKER": 1,
-      "FINDING": 36,
+      "FINDING": 37,
       "HANDOFF": 17,
       "INTEGRATION_RESULT": 6,
       "RECOVERY": 2,
       "REVIEW_REQUEST": 24,
       "REVIEW_RESULT": 28
     },
-    "generatedAt": "2026-08-11T07:08:37.907502+00:00",
+    "generatedAt": "2026-08-11T07:09:47.667472+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -175,7 +184,7 @@
       "READY": 12
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 16,
+    "readySlots": 15,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 2
@@ -225,22 +234,6 @@
         "tests/physics_lab_recipe.luau",
         "tests/physics_lab_scale.luau",
         "tests/physics_lab_validation_contract.luau"
-      ]
-    },
-    {
-      "laneId": "HG-BACKFILL-REALITY",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "WorldId, seed, and replay invariant auditor",
-      "score": 5120,
-      "slotId": "audit",
-      "writeScopes": [
-        "src/shared/Reality/*.luau",
-        "src/shared/Core/*.luau",
-        "tests/resolved_region_recipe*.luau",
-        "tests/reality_versions.luau",
-        "tests/deterministic_rng.luau",
-        "tests/stable_id_headless.luau"
       ]
     },
     {
@@ -393,25 +386,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-WORLDENTITY"
-      ],
-      "eventId": "evt-20260811-070200-ogx9k2-worldentity-primary-review",
-      "eventType": "REVIEW_RESULT",
-      "evidence": [
-        "Review 4903632483 posted on PR #271 exact head 65f37ccddc4e4229722166acacd4fdcc02958eb9.",
-        "stateRevision/representationRevision accept 9007199254740992 even though +1 is not guaranteed to advance the represented integer; prior finding evt-20260811-062500-x7n4k2-worldentity-safe-revisions and issue comment 5249720062 remain unresolved.",
-        "assertExactRecordShape and invalid-fidelity assertions eagerly call tostring on untrusted values; prior test-adversary issue comment 5249787939 remains unresolved and requires callback-count/throwing-metamethod regression coverage.",
-        "After source fixes, integration still requires synchronization to current main plus exact-head canonical CI and Swarm Control Plane ownership validation."
-      ],
-      "fromWorker": "sol-20260811-ogx9k2",
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "schemaVersion": 1,
-      "severity": "important",
-      "summary": "Independent audit requests changes on WorldEntity primary PR #271 head 65f37ccddc4e4229722166acacd4fdcc02958eb9. The direct-record ownership repair is directionally sound, but two previously reported fail-closed invariants remain unresolved: revision counters can exceed exact IEEE-754 incrementability, and hostile schema/fidelity values can execute __tostring metamethods through eager diagnostic formatting.",
-      "timestamp": "2026-08-11T07:02:00+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-WORLDENTITY"
@@ -757,6 +731,25 @@
     },
     {
       "affects": [
+        "HG-BACKFILL-WORLDENTITY"
+      ],
+      "eventId": "evt-20260811-071700-z4q8n1-worldentity-generator-version-correction",
+      "eventType": "FINDING",
+      "evidence": [
+        "Docs/DETERMINISM_CONTRACT.md SeedStream v1 explicitly requires generationVersion to be an integer in [1, 2147483647].",
+        "The same document's version/migration law requires persisted generator/contract version information to reconstruct historical truth.",
+        "PR #293 head 093f2f6016427753647a00d2ea85c55ed7ce9ffa currently accepts any finite positive integral origin.generatorVersion, including 2147483648.",
+        "Independent worker q7h4n2 reached the same stricter bound in evt-20260811-071230-q7h4n2-worldentity-generator-version-bound.json."
+      ],
+      "fromWorker": "sol-20260811-z4q8n1",
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "Correction to evt-20260811-071400-z4q8n1-worldentity-generator-version: the normative upper bound for WorldEntity origin.generatorVersion is stricter than generic IEEE-754 max-safe. The deterministic generation contract defines generationVersion in [1, 2147483647], so provenance must reject 2147483648 even though it remains exactly representable as a double. Use the canonical deterministic version range rather than a standalone max-safe bound.",
+      "timestamp": "2026-08-11T07:17:00+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-REALITY"
       ],
       "eventId": "evt-20260811-071830-q7h4n2-pr280-review",
@@ -887,13 +880,13 @@
       "workerId": "sol-20260811-r9t4n2"
     }
   ],
-  "stateDigest": "88917cd54c365851dba7bc9fa645428a1085c6ed53f2cf08223f841a4c7732b6",
+  "stateDigest": "eba6b7dac5daded4b3f354979e20f13bf6f4991fb1f61039f3e8b5a42cb92549",
   "summary": {
-    "activeClaims": 14,
+    "activeClaims": 15,
     "activeResourceClaims": 2,
     "blockedExternalLanes": 1,
     "lanes": 24,
-    "readySlots": 16,
+    "readySlots": 15,
     "staleClaims": 2,
     "workers": 46
   }
