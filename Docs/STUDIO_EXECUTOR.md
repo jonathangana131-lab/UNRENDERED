@@ -8,7 +8,7 @@ This document defines the production protocol for submitting automated Roblox St
 - **Private Control Repository**: `jonathangana131-lab/UNRENDERED-STUDIO-BRIDGE` (hosts the dedicated macOS self-hosted runner `UNRENDERED-STUDIO-MAC`).
 - **Runner Machine**: Dedicated Mac running Roblox Studio and pinned project tools.
 - **Security Boundary**: Requests are data only. `customScript`, arbitrary Luau, shell commands, executable payloads, and arbitrary source repositories are rejected.
-- **Source Boundary**: `sourceSha` must be the exact current commit resolved by the requested canonical `sourceRef`; stale or mismatched requests fail before Studio execution.
+- **Source Boundary**: `sourceSha` must be an exact 40-character commit that is reachable as a real ancestor of the requested canonical `sourceRef` when the request is validated. Unrelated/non-ancestor SHAs fail before Studio execution. This preserves immutable exact-SHA evidence requests even if the canonical ref advances while they are queued.
 - **Evidence Boundary**: A completion sentinel or screenshot is transport evidence, not semantic PASS evidence. Job-specific evaluators own PASS.
 
 ---
@@ -23,7 +23,7 @@ Commit one JSON request under `requests/` in `jonathangana131-lab/UNRENDERED-STU
 
 ### Request Schema
 
-Resolve the canonical `main` SHA immediately before creating the request; the value below is intentionally shown as a placeholder because a hard-coded example becomes stale as soon as `main` advances.
+Resolve the intended canonical `main` SHA immediately before creating the request and pin that exact commit. The value below is intentionally shown as a placeholder; after submission, later commits may advance `main` without invalidating the queued request as long as the pinned SHA remains an ancestor of the named canonical ref.
 
 ```json
 {
@@ -39,7 +39,7 @@ Resolve the canonical `main` SHA immediately before creating the request; the va
 }
 ```
 
-The production request validator also rejects duplicate result IDs, unsafe refs/strings, unsupported keys, unsupported job types, and a `sourceSha` that does not match the canonical remote ref.
+The production request validator also rejects duplicate result IDs, unsafe refs/strings, unsupported keys, unsupported job types, and any `sourceSha` that is not a valid commit reachable as an ancestor of the named canonical `sourceRef`.
 
 ---
 
@@ -77,7 +77,7 @@ For each request the runner:
 - checks chunk count/ordering/content consistency before reassembly,
 - merges the reassembled row-specific proof into the compact verdict before semantic evaluation.
 
-A stale Studio log, truncated chunk stream, missing result payload, timeout, source-SHA mismatch, or evaluator rejection must fail closed.
+A stale Studio log, truncated chunk stream, missing result payload, timeout, source-SHA ancestry mismatch, or evaluator rejection must fail closed.
 
 ---
 
@@ -129,7 +129,7 @@ Durable results are published to `results/<requestId>/` in `UNRENDERED-STUDIO-BR
 
 When consuming a result for `Docs/PROJECT_STATE.md` or issue #151, verify all of the following rather than copying the top-level word `PASS` blindly:
 
-1. the result targets the intended exact canonical source SHA,
+1. the result targets the intended exact canonical source SHA, and that pinned SHA was accepted by the bridge as an ancestor of the named canonical ref,
 2. the job type proves the row being claimed,
 3. the evaluator contract was active for that bridge revision,
 4. raw/log provenance belongs to the same request,
