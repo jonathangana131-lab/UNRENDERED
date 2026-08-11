@@ -5,7 +5,7 @@
   "title": "Diagnostics source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden the Studio diagnostics code and its pure contracts while the Mac display path is blocked. Work here must improve source/test correctness without pretending to satisfy the missing live viewport evidence row.",
   "priority": 4850,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/**diagnostic*.luau", "tests/hero_gate_contract_integration.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"Diagnostics failure-path and capture-contract auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/**diagnostic*.luau","Docs/PHYSICS_LAB_DIAGNOSTICS.md"]}
   ],
   "acceptance": ["do not queue speculative Studio reruns", "do not convert source confidence into viewport PASS", "find concrete lifecycle/no-drift/failure-path gaps", "behavior changes get tests", "publish anything relevant to HG151-DIAGNOSTICS as a structured finding"],
-  "notes": "Generation-4 successor PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519 preserves generation-3 #391 production exact-Instance/readout-completeness source and absorbs green same-lane test-adversary #384 lifecycle coverage into tests/physics_lab_diagnostics_atomicity.luau. The combined contract now explicitly scopes enable() to prove no :Wait/task.wait yield from authority preflight through protected capture, and scopes disable() to prove nil-tolerant idempotent force-off cleanup, destroy-before-capture ordering, and exact disabled/zero postcondition. Canonical CI run 31534174439 is SUCCESS through format/lint/Luau/audits/swarm/Pure Luau/place build/upload. Swarm run 31534174438 engine-tests is SUCCESS; pr-ownership remains separately fail-closed because live worker sol-20260811-b7n4k2p9 contains unsupported parkedReason under the active trusted-history recovery. Lane returned to REVIEW. A different independent reviewer is required because sol-20260811-t8n3c6v2 performed the generation-3 review before implementing this generation-4 test consolidation. #391/#384 are superseded by #392. No Roblox Studio/viewport PASS is claimed.",
+  "notes": "Generation-4 PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519 is blocked by follow-up audit review 4910791311 after expected-red PR #396. diagnosticsRoot() uses FindFirstChild for UNRENDERED_PhysicsLabDiagnostics, so duplicate same-named direct roots can leave one stale/owned diagnostics tree invisible to capture/no-drift accounting while directRepresentations excludes all children with that name. Repair must enumerate direct children, reject duplicate root cardinality before returning a root, preserve Folder/owned checks, and absorb equivalent deterministic coverage from #396. #396 remains expected-red/non-integrating. No Studio retry while display preflight is externally blocked. pr-ownership remains a separate global trusted-history gate.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
