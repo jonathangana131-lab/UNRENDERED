@@ -145,6 +145,30 @@ local function run(): number
 		`callback executed {unknownRecipeKeyCallbackCount} times`
 	)
 
+	local throwingUnknownRecipeKey: any = {}
+	setmetatable(throwingUnknownRecipeKey, {
+		__tostring = function(): string
+			error("hostile unknown-key formatter executed")
+		end,
+	})
+	local throwingKeyRecipe: any = deepCopy(wallpaper)
+	throwingKeyRecipe[throwingUnknownRecipeKey] = true
+	local throwingKeyOk, throwingKeyResult = pcall(function(): any
+		return MaterialDNA.validateRecipe(throwingKeyRecipe)
+	end)
+	expect(
+		"hostile unknown recipe key cannot abort validation",
+		throwingKeyOk,
+		`validator raised {tostring(throwingKeyResult)}`
+	)
+	if throwingKeyOk then
+		expect(
+			"throwing non-string recipe key rejected",
+			not throwingKeyResult.ok,
+			table.concat(throwingKeyResult.errors, "; ")
+		)
+	end
+
 	local unknownStateKeyCallbackCount = 0
 	local hostileUnknownStateKey: any = {}
 	setmetatable(hostileUnknownStateKey, {
