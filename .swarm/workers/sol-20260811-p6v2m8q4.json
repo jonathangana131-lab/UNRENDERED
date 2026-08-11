@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-p6v2m8q4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T12:01:30+00:00",
-  "lastSeenAt": "2026-08-11T12:01:30+00:00",
+  "lastSeenAt": "2026-08-11T12:03:20+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "primary",
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-p6v2m8q4-g4",
-  "notes": "Generation-4 current-main recovery of NEEDS_CHANGES ObjectGenome lane. Preserve generation-3 boundary fixes; close decoder no-execute and deterministic diagnostic ordering blockers; keep runner/tests in declared scope; no Studio evidence claim."
+  "notes": "Stopped without product edits after detecting a control-plane race: generation-5 successor PR #369 already preserves exact independently reviewed/green ObjectGenome head 08ce8d7093ceb36a85af58510f65ef8e9b33c154 and the lane had advanced to REVIEW, making this later primary claim invalid for current state. Claim released immediately; no duplicate work or Studio evidence claimed."
 }
