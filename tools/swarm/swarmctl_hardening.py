@@ -102,9 +102,7 @@ def _quarantine_only_identity(path: Path) -> tuple[str, dict, str] | None:
         return None
     actual = _git_blob_sha1(path)
     if actual != expected_blob:
-        raise _base.core.ControlError(
-            f"{path}: quarantine-only immutable event changed: {actual} != {expected_blob}"
-        )
+        return None
     return expected_id, rule, actual
 
 
@@ -141,6 +139,11 @@ def _validate_event_with_immutable_compat(path):
     if match is not None:
         expected_id, rule = match
         actual = _git_blob_sha1(path)
+        quarantine_only = rule.get("quarantineOnlyGitBlobSha1")
+        if quarantine_only is not None:
+            raise _base.core.ControlError(
+                f"{path}: quarantine-only immutable event changed: {actual} != {quarantine_only}"
+            )
         canonical = rule["canonicalGitBlobSha1"]
         if actual == canonical:
             return obj
@@ -238,6 +241,11 @@ def quarantined_history(root: Path) -> list[dict]:
         obj = _base.core.load_json(path, max_bytes=48_000)
         _canonical_rule(path, obj)
         actual = _git_blob_sha1(path)
+        quarantine_only = rule.get("quarantineOnlyGitBlobSha1")
+        if quarantine_only is not None:
+            raise _base.core.ControlError(
+                f"{path}: quarantine-only immutable event changed: {actual} != {quarantine_only}"
+            )
         bad = rule.get("quarantinedGitBlobSha1")
         if bad is None or actual == rule["canonicalGitBlobSha1"]:
             continue
