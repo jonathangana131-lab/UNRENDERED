@@ -169,12 +169,7 @@ local function run(): number
 	hostileTimeManager:step("entity:atomic-hostile-time", "F0", validInputs(), 1)
 	local hostileNowSeconds, hostileNowCalls = hostileNumeric()
 	local hostileNowAccepted = pcall(function()
-		hostileTimeManager:step(
-			"entity:atomic-hostile-time",
-			"F0",
-			validInputs(),
-			hostileNowSeconds
-		)
+		hostileTimeManager:step("entity:atomic-hostile-time", "F0", validInputs(), hostileNowSeconds)
 	end)
 	expectEqual("hostile nowSeconds rejected", hostileNowAccepted, false)
 	expectEqual("hostile nowSeconds executes no metamethod", hostileNowCalls(), 0)
