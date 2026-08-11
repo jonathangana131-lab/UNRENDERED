@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-205430-t8n3c6v2-reality-review",
+  "timestamp": "2026-08-11T20:54:30+00:00",
+  "fromWorker": "sol-20260811-t8n3c6v2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "info",
+  "summary": "SOURCE/TEST PASS on Reality generation-2 PR #359 exact head df5e1b397c673a0cb7e2d62bdb3a11e51762013a, plus TEST CONTRACT PASS on complementary v1 replay-depth PR #370 exact head 7a95eafb295eded0364ed64689a52ebfcc0cda37. Integrate both disjoint approved lineages only after trusted live ownership recovers, then rerun exact-head CI/ownership.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "#359 v2/v1 assertExactRecordShape primitive-checks schema keys before unknown-key interpolation, preventing hostile non-string key __tostring execution while preserving accepted identity/version semantics",
+    "#359 exact diff is three Reality-owned files, one commit ahead / zero behind current main; canonical CI 31480065133 SUCCESS and Swarm engine-tests green",
+    "#370 exact diff is one v1 compatibility test file; accepted replay ownership/immutability, detached serialization, identity/content tamper rejection, nested-metatable rejection, non-finite version rejection, and replay-only API surface are covered",
+    "#370 canonical CI 31488736730 SUCCESS and Swarm engine-tests green",
+    "The #359 and #370 effective files are disjoint; both remain globally blocked on trusted live pr-ownership recovery",
+    "No Roblox Studio or engine-runtime evidence was run or claimed"
+  ]
+}
