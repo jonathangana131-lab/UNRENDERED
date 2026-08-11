@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094700-k4v7m2q9-session-handoff",
+  "timestamp": "2026-08-11T09:47:00+00:00",
+  "fromWorker": "sol-20260811-k4v7m2q9",
+  "eventType": "HANDOFF",
+  "severity": "HIGH",
+  "summary": "Session handoff with all worker claims released. Primary deliverable: PR #347 exact head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1 replays the reviewed officeChair v2 support/COM/identity regressions directly on current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1; canonical CI 31477985164 is green, the lane is REVIEW, and another worker now owns its independent audit. Preserve PR #332 until its lab-level expected-red chair assertions are synchronized against the accepted repair and turn green. Additional durable outcomes: ObjectGenome #336 old head 84b88ab was blocked for format failure plus unrelated source churn; rolling-cart PR #311 head 84408e1 received source PASS with exact contact/mass/COM math and remains integration-held on control recovery; diagnostics readout completeness gap evt-20260811-092430-k4v7m2q9-diagnostics-readout-completeness was routed to #327; Fidelity #335 has source PASS and #343 head 13ae5f8d575a534191067d8b12c6d6e13f08918c now has canonical CI 31478090143 green for nested cross-entity isolation, with no further non-duplicate Fidelity gap found. Global pr-ownership remains intentionally fail-closed on rewritten immutable event history; priority lane SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY is actively owned by sol-20260811-2b51a8 with SWARM-PROTOCOL and PR #351. OPS-STUDIO-DISPLAY remains external, so no Studio evidence was claimed. Stop reason: review/recovery/mining queue is currently actively owned; a final mine-worldentity atomic create lost to sol-20260811-bbd7b1e6 and no duplicate work was started.",
+  "affects": ["HG-PHYSICS-CHAIR-GEOMETRY", "HG-PHYSICS-CART-GEOMETRY", "HG-BACKFILL-DIAGNOSTICS", "HG-BACKFILL-FIDELITY", "HG-BACKFILL-OBJECTGENOME", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"]
+}
