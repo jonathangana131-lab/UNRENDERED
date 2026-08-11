@@ -74,6 +74,70 @@ local function run(): number
 		end
 	end
 
+	local function hostileConfigProxy()
+		local source = table.clone(FidelityManager.defaultConfig())
+		local reads = 0
+		local proxy = setmetatable({}, {
+			__index = function(_, key)
+				reads += 1
+				return source[key]
+			end,
+		})
+		return proxy, function()
+			return reads
+		end
+	end
+
+	local hostileNewConfig, hostileNewConfigReads = hostileConfigProxy()
+	local hostileNewConfigAccepted = pcall(function()
+		FidelityManager.new(hostileNewConfig)
+	end)
+	expectEqual("constructor rejects metatable-backed config", hostileNewConfigAccepted, false)
+	expectEqual("constructor config rejection executes no metamethod", hostileNewConfigReads(), 0)
+
+	local hostilePureConfig, hostilePureConfigReads = hostileConfigProxy()
+	local hostilePureConfigAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(validInputs(), hostilePureConfig, "F0")
+	end)
+	expectEqual("pure policy rejects metatable-backed config", hostilePureConfigAccepted, false)
+	expectEqual("pure policy config rejection executes no metamethod", hostilePureConfigReads(), 0)
+
+	local inertMetatableConfig = setmetatable(table.clone(FidelityManager.defaultConfig()), {
+		__metatable = "locked-policy-config",
+	})
+	local inertMetatableAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(validInputs(), inertMetatableConfig, "F0")
+	end)
+	expectEqual("pure policy rejects inert PolicyConfig metatable", inertMetatableAccepted, false)
+
+	local hostileDistanceConfig = table.clone(FidelityManager.defaultConfig())
+	local hostileDistanceValue, hostileDistanceCalls = hostileNumeric()
+	hostileDistanceConfig.heroDistanceStuds = hostileDistanceValue
+	local hostileDistanceAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(validInputs(), hostileDistanceConfig, "F0")
+	end)
+	expectEqual("pure policy rejects hostile PolicyConfig numeric scalar", hostileDistanceAccepted, false)
+	expectEqual("PolicyConfig scalar validation never executes metamethod", hostileDistanceCalls(), 0)
+
+	local hostileCapacityConfig = table.clone(FidelityManager.defaultConfig())
+	local hostileCapacityValue, hostileCapacityCalls = hostileNumeric()
+	hostileCapacityConfig.maxRegisteredEntities = hostileCapacityValue
+	local hostileCapacityConstructorAccepted = pcall(function()
+		FidelityManager.new(hostileCapacityConfig)
+	end)
+	expectEqual("constructor rejects hostile maxRegisteredEntities scalar", hostileCapacityConstructorAccepted, false)
+	expectEqual("constructor maxRegisteredEntities rejection executes no metamethod", hostileCapacityCalls(), 0)
+	local hostileCapacityPureAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(validInputs(), hostileCapacityConfig, "F0")
+	end)
+	expectEqual("pure policy rejects hostile maxRegisteredEntities scalar", hostileCapacityPureAccepted, false)
+	expectEqual("pure policy maxRegisteredEntities rejection executes no metamethod", hostileCapacityCalls(), 0)
+
+	local explicitFalseConfigAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(validInputs(), false :: any, "F0")
+	end)
+	expectEqual("explicit false PolicyConfig does not select defaults", explicitFalseConfigAccepted, false)
+
 	local clockManager = FidelityManager.new()
 	clockManager:register("entity:atomic-clock", "F0")
 	clockManager:step("entity:atomic-clock", "F0", validInputs(), 1)
