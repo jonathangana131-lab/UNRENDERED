@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-k3p8v6m1",
   "claimToken": "a4e9c2f7b1d63805",
   "claimedAt": "2026-08-11T22:12:05+00:00",
-  "heartbeatAt": "2026-08-11T22:12:05+00:00",
+  "heartbeatAt": "2026-08-11T22:18:30+00:00",
   "leaseSeconds": 1800,
   "generation": 2,
   "resources": [],
   "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-test-adversary-k3p8v6m1-g2",
   "pr": 395,
-  "notes": "Generation-2 stale takeover after prior heartbeat expired. Continue duplicate-aware adversarial pass on PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; first resolve prior worker's canonical-string resource-boundary candidate against existing findings/tests before publishing or editing."
+  "notes": "Generation-2 stale takeover. Confirmed a distinct canonical payload resource-boundary gap on PR #395 exact head: ObjectGenome intentionally accepts >512-byte recipe content, but provenance/component-role text and canonical collection cardinalities lack a separate aggregate project-owned budget while inspect/normalize/fingerprint scale with the accepted payload. No equivalent issue/PR/finding found in history search. Publishing finding rather than inventing an arbitrary expected-red threshold."
 }
