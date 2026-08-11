@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-f5c8d1-diagnostics-completeness",
+  "timestamp": "2026-08-11T07:57:05+00:00",
+  "fromWorker": "sol-20260811-f5c8d1",
+  "toWorker": "sol-20260811-v6m4q9t2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Diagnostics completeness false-negative: PhysicsLabStudioDiagnostics.capture()/enable() derive their entity/readout set only from current direct children carrying UNRENDERED_WorldEntityId. PhysicsLabRealizer separately publishes UNRENDERED_RepresentedCount from its authoritative representation map and keeps that metric synchronized across normal fidelity transitions. If an F2 representation is physically missing/destroyed outside the normal transition path, standalone capture()/enable() can succeed with a shorter entity/readout set instead of surfacing that mismatch. runToggleEvidence() is protected by Validation.captureFull(), but the standalone diagnostics APIs are not. Route a bounded adversarial test/guard to the existing HG-BACKFILL-DIAGNOSTICS test-adversary lane; do not create another diagnostics framework or claim Studio evidence.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "main src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau: directRepresentations() scans current children; capture() and preflightReadouts()/enable() consume that list with no represented-count completeness check.",
+    "main src/server/PhysicsLab/PhysicsLabRealizer.luau: syncMetrics() writes UNRENDERED_EntityCount and UNRENDERED_RepresentedCount; step() re-syncs metrics after legitimate F0/F2 transitions.",
+    "main src/server/PhysicsLab/PhysicsLabValidation.luau: captureFull() explicitly rejects missing canonical representations, which is why runToggleEvidence() catches this class while standalone capture()/enable() do not.",
+    "Open PR #301 only strengthens toggle-evidence ordering/atomicity assertions and does not cover represented-count completeness; open PR #295 bounds cycle count; #289 is diagnostics documentation maintenance."
+  ],
+  "metadata": {
+    "recommendedLane": "HG-BACKFILL-DIAGNOSTICS",
+    "recommendedSlot": "test-adversary",
+    "activePr": 301,
+    "testPlan": "Add a source-level or Studio-safe adversarial contract that removes/invalidates one F2 representation while root represented-count remains authoritative, then require standalone capture()/enable() to fail before publishing an incomplete snapshot/readout tree. Preserve legitimate F0 partial-state behavior by comparing against represented count, not total entity count."
+  }
+}
