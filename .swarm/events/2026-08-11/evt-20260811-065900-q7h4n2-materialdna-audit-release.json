@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-065900-q7h4n2-materialdna-audit-release",
+  "timestamp": "2026-08-11T06:59:00+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "info",
+  "summary": "MaterialDNA audit slot complete and released after exact-head approval of PR #283. Integration owner may merge #283 after normal final merge checks; PR #272 is superseded by the preserved regressions in #283 and should not be merged separately. The unrelated maintenance.repairCount upper-bound finding remains available for a later source/test slice and was not treated as a blocker for #283.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "evt-20260811-065830-q7h4n2-pr283-rereview.json",
+    "evt-20260811-063430-q7h4n2-materialdna-repaircount-bound.json"
+  ],
+  "metadata": {
+    "claimToken": "9b3e7c1a54d2608f",
+    "reviewedPr": 283,
+    "reviewedHead": "11334326196adba5ced6c50ffe32e856a047c2b9"
+  }
+}
