@@ -27,10 +27,10 @@ local function run(): number
 		then string.sub(source, helper, helperEnd - 1)
 		else nil
 	local function helperPosition(needle: string): number?
-		if helper == nil then
+		if helperSource == nil then
 			return nil
 		end
-		return string.find(source, needle, helper, true)
+		return string.find(helperSource, needle, 1, true)
 	end
 
 	local identityWrite = position('billboard:SetAttribute("UNRENDERED_WorldEntityId", plan.worldEntityId)')
@@ -39,28 +39,32 @@ local function run(): number
 	local readoutIdentity = helperPosition('requireStringAttribute(child, "UNRENDERED_WorldEntityId")')
 	local expectedMembership = helperPosition("expectedEntity ~= nil")
 	local duplicateGuard = helperPosition("seenEntityIds[entityId] == nil")
+	local exactAdorneeProjection = helperPosition("child.Adornee == expectedEntity.adornee")
 	local seenWrite = helperPosition("seenEntityIds[entityId] = true")
 	local labelLookup = helperPosition('child:FindFirstChild("Readout")')
 	local labelClass = helperPosition('label:IsA("TextLabel")')
 	local exactBillboardShape = helperPosition("#child:GetDescendants() == 1")
+	local exactTextProjection = helperPosition("label.Text == expectedEntity.text")
+	local readoutCountIncrement = helperPosition("readoutCount += 1")
 	local exactEntityCount = helperPosition("readoutCount == #entities")
 	local exactInstanceCount = helperPosition("return 1 + 2 * readoutCount")
-	local projectedAdorneeRead = helperSource ~= nil and string.find(helperSource, "Adornee", 1, true) or nil
-	local projectedLabelTextRead = helperSource ~= nil and string.find(helperSource, "label.Text", 1, true)
-		or nil
+	local captureProjection =
+		position("text = readoutText(representation.Name, record.id, record.fidelity, fingerprint, reproKey)")
+	local realizationProjection = position(
+		"label.Text = readoutText(plan.key, plan.worldEntityId, plan.fidelity, fingerprint, reproKey)"
+	)
 	local captureCall = position("diagnosticInstanceCount = validateReadoutCompleteness(folder, entities)")
 	local descendantCountShortcut = position("diagnosticInstanceCount = 1 + #folder:GetDescendants()")
 
 	expect("each diagnostics billboard carries the canonical WorldEntityId it projects", identityWrite ~= nil)
 	expect(
 		"capture validates the readout tree through an explicit completeness boundary",
-		helper ~= nil and captureCall ~= nil and helper < captureCall
+		helper ~= nil and helperEnd ~= nil and captureCall ~= nil and helper < helperEnd and helperEnd <= captureCall
 	)
 	expect(
 		"readout validation enumerates only direct diagnostics-root children",
 		directChildren ~= nil
 			and billboardClass ~= nil
-			and helper < directChildren
 			and directChildren < billboardClass
 	)
 	expect(
@@ -74,25 +78,44 @@ local function run(): number
 			and duplicateGuard < seenWrite
 	)
 	expect(
+		"capture compares each live Adornee to the authoritative represented BasePart",
+		exactAdorneeProjection ~= nil
+			and expectedMembership ~= nil
+			and seenWrite ~= nil
+			and expectedMembership < exactAdorneeProjection
+			and exactAdorneeProjection < seenWrite
+	)
+	expect(
 		"every entity readout has exactly one TextLabel named Readout",
 		labelLookup ~= nil
 			and labelClass ~= nil
 			and exactBillboardShape ~= nil
+			and billboardClass ~= nil
 			and billboardClass < labelLookup
 			and labelLookup < labelClass
 			and labelClass < exactBillboardShape
 	)
 	expect(
+		"capture compares displayed text to the exact authoritative readout projection before counting it",
+		exactTextProjection ~= nil
+			and labelClass ~= nil
+			and exactBillboardShape ~= nil
+			and readoutCountIncrement ~= nil
+			and labelClass < exactBillboardShape
+			and exactBillboardShape < exactTextProjection
+			and exactTextProjection < readoutCountIncrement
+	)
+	expect(
+		"realization and capture expectations share the same readout formatter",
+		captureProjection ~= nil and realizationProjection ~= nil
+	)
+	expect(
 		"validated readouts form a one-to-one projection of authoritative entities",
-		exactEntityCount ~= nil and exactInstanceCount ~= nil and exactEntityCount < exactInstanceCount
-	)
-	expect(
-		"capture revalidates the visual projection target instead of trusting a matching identity tag",
-		projectedAdorneeRead ~= nil
-	)
-	expect(
-		"capture revalidates displayed readout semantics instead of counting stale label text as complete",
-		projectedLabelTextRead ~= nil
+		exactEntityCount ~= nil
+			and exactInstanceCount ~= nil
+			and readoutCountIncrement ~= nil
+			and readoutCountIncrement < exactEntityCount
+			and exactEntityCount < exactInstanceCount
 	)
 	expect(
 		"capture cannot bless an arbitrary descendant count as diagnostics completeness",
