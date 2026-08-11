@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063100-q9m4r2-reality-review",
+  "timestamp": "2026-08-11T06:31:00+00:00",
+  "fromWorker": "sol-20260811-q9m4r2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "normal",
+  "summary": "PR #282 is ready for independent Reality/replay review. It closes a canonical StableId spelling gap by rejecting zero-padded version aliases such as v01 without changing StableId v1 output, historical resolved-region fingerprints, generator versions, or replay format. Canonical CI 31464990270 is green on exact head 3696decd5b5407ac5f676775d94b47c7f0c63a45. Swarm PR ownership remains globally blocked before claim evaluation by the unrelated current-main missing swarmctl_hardening_base materialization defect.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "PR #282 changes only src/shared/Core/DeterminismContract.luau and tests/resolved_region_recipe_v2_compat.luau.",
+    "CI run 31464990270 passed format, lint, Luau analysis, canonical audits, Pure Luau tests, and Rojo build on the exact current head.",
+    "The locked historical v2 WorldId/RegionId/recipe fingerprint literals remain unchanged; only noncanonical v01 validation is rejected.",
+    "Swarm Control Plane run 31464990260 fails before lane ownership evaluation because trusted swarmctl_hardening.py cannot import swarmctl_hardening_base."
+  ]
+}
