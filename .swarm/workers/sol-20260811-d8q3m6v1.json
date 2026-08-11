@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-d8q3m6v1",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T20:28:00+00:00",
+  "lastSeenAt": "2026-08-11T20:28:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-primary-d8q3m6v1-g3",
+  "notes": "Generation-3 stale-primary recovery. Stack diagnostics repair on reviewed exact-Instance prerequisite PR #349, absorb #333/#374/#377 contracts, close one-to-one readout completeness, and preserve source-only evidence boundaries."
+}
