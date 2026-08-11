@@ -153,12 +153,20 @@ local function assertCanonicalRecipe(recipe: Recipe): ()
 			entityRecipe.entity,
 			`Physics Lab recipe entity record must be a plain table: {entityKey}`
 		)
-		assertExactStringKeys(record, RECORD_KEYS, `Physics Lab recipe entity record has invalid schema: {entityKey}`)
+		assertExactStringKeys(
+			record,
+			RECORD_KEYS,
+			`Physics Lab recipe entity record has invalid schema: {entityKey}`
+		)
 		local origin = assertPlainTable(
 			record.origin,
 			`Physics Lab recipe entity origin must be a plain table: {entityKey}`
 		)
-		assertExactStringKeys(origin, ORIGIN_KEYS, `Physics Lab recipe entity origin has invalid schema: {entityKey}`)
+		assertExactStringKeys(
+			origin,
+			ORIGIN_KEYS,
+			`Physics Lab recipe entity origin has invalid schema: {entityKey}`
+		)
 		local canonicalRecord = canonical.entity
 		assert(record.id == canonicalRecord.id, `Physics Lab recipe key/id mismatch: {entityKey}`)
 		assert(record.kind == canonicalRecord.kind, `Physics Lab recipe entity kind mismatch: {entityKey}`)
