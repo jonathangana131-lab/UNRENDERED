@@ -24,6 +24,77 @@ local function hasCode(report, code)
 	return false
 end
 
+local function issueSignatures(report)
+	local signatures = {}
+	for index, issue in ipairs(report.issues) do
+		signatures[index] = `{issue.code}|{issue.path}|{issue.message}`
+	end
+	return signatures
+end
+
+local function orderedIssueSignature(report)
+	return table.concat(issueSignatures(report), "\n")
+end
+
+local function sortedIssueSignature(report)
+	local signatures = issueSignatures(report)
+	table.sort(signatures)
+	return table.concat(signatures, "\n")
+end
+
+local function makeDiagnosticHistoryState(withChurn)
+	local state = ObjectGenome.defaultState(Fixtures.officeChair)
+	local unknownStateFields = {
+		"futureAlpha",
+		"futureBravo",
+		"futureCharlie",
+		"futureDelta",
+		"futureEcho",
+		"futureFoxtrot",
+		"futureGolf",
+		"futureHotel",
+	}
+	local unknownComponentKeys = {
+		"future-component-alpha",
+		"future-component-bravo",
+		"future-component-charlie",
+		"future-component-delta",
+		"future-component-echo",
+		"future-component-foxtrot",
+		"future-component-golf",
+		"future-component-hotel",
+	}
+
+	if withChurn then
+		for index = 1, 96 do
+			state["transientState" .. tostring(index)] = true
+			state.componentWear["transient-component-" .. tostring(index)] = 0.25
+		end
+		for index = 1, 96 do
+			state["transientState" .. tostring(index)] = nil
+			state.componentWear["transient-component-" .. tostring(index)] = nil
+		end
+	end
+
+	if withChurn then
+		for index = #unknownStateFields, 1, -1 do
+			state[unknownStateFields[index]] = true
+		end
+		for index = #unknownComponentKeys, 1, -1 do
+			state.componentWear[unknownComponentKeys[index]] = 0.25
+		end
+	else
+		for _, key in ipairs(unknownStateFields) do
+			state[key] = true
+		end
+		for _, key in ipairs(unknownComponentKeys) do
+			state.componentWear[key] = 0.25
+		end
+	end
+
+	return state
+end
+
 local function makeAlignedComponentMechanismGenome()
 	local genome = deepCopy(Fixtures.officeChair)
 	genome.familyId = "office-chair.state-alias-g3"
@@ -211,6 +282,24 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(metatableValidationGenome), "schema.metatable")
 	)
 
+	local decoderFieldReads = 0
+	local hostileDecoderMechanism = setmetatable({}, {
+		__index = function(_, key)
+			decoderFieldReads += 1
+			if key == "kind" then
+				return "caster"
+			end
+			return nil
+		end,
+	})
+	local hostileDecoderOk = pcall(function()
+		ObjectGenome.decodeMechanismPosition(hostileDecoderMechanism, 0.25)
+	end)
+	expect(
+		"mechanism decoder rejects metatable-backed records before field reads",
+		not hostileDecoderOk and decoderFieldReads == 0
+	)
+
 	local unknownStateField = ObjectGenome.defaultState(Fixtures.officeChair)
 	unknownStateField.futureState = true
 	expect(
@@ -227,6 +316,21 @@ local function run(): number
 	expect(
 		"rejects metatable-backed mutable state maps",
 		hasCode(ObjectGenome.inspectState(Fixtures.officeChair, metatableState), "state.metatable")
+	)
+
+	local baselineDiagnosticState = makeDiagnosticHistoryState(false)
+	local churnedDiagnosticState = makeDiagnosticHistoryState(true)
+	local baselineDiagnosticReport = ObjectGenome.inspectState(Fixtures.officeChair, baselineDiagnosticState)
+	local churnedDiagnosticReport = ObjectGenome.inspectState(Fixtures.officeChair, churnedDiagnosticState)
+	expect(
+		"diagnostic-order fixtures produce the same rejection set",
+		not baselineDiagnosticReport.ok
+			and not churnedDiagnosticReport.ok
+			and sortedIssueSignature(baselineDiagnosticReport) == sortedIssueSignature(churnedDiagnosticReport)
+	)
+	expect(
+		"structured diagnostic order is independent of table construction history",
+		orderedIssueSignature(baselineDiagnosticReport) == orderedIssueSignature(churnedDiagnosticReport)
 	)
 
 	local sparseComponents = deepCopy(Fixtures.officeChair)
