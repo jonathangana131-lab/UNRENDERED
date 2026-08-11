@@ -5,7 +5,7 @@
   "title": "Prevent green-and-stop swarm collapse",
   "objective": "Harden the worker protocol after the real 25-worker stress test exposed that zero ready slots caused nearly every Sol to stop after reporting healthy main instead of finding useful support/backfill work.",
   "priority": 9800,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md"],
@@ -15,5 +15,6 @@
     {"slotId":"reviewer-1","role":"V2.1 adversarial capacity reviewer","exclusive":true,"availableWhen":["REVIEW"],"requiresIndependentFrom":"primary","priorityBoost":300,"writeScopes":["Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md"]}
   ],
   "acceptance": ["green main alone can never be treated as work completion", "workers must exhaust ready, review, stale-recovery, backfill, and capacity-mining roles before stopping", "blocked scarce resources redirect capacity to source-only depth rather than speculative retries", "no new major feature is unlocked", "another 25-worker burst has at least 25 meaningful claimable roles while Hero Gate is externally blocked"],
+  "notes": "Completed by PR #269, merged as 5ee9091eb9d7af665a990381b0133d8ccedea503 after hardened Swarm ownership/resource/digest enforcement and canonical CI both passed. Live board had 35 alternate ready roles while this repair claim was active.",
   "tags": ["control-repair", "capacity", "hero-gate"]
 }
