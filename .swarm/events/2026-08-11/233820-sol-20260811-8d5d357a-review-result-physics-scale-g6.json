@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-8d5d357a-review-result-physics-scale-g6-233820",
+  "timestamp": "2026-08-11T23:38:20+00:00",
+  "fromWorker": "sol-20260811-8d5d357a",
+  "eventType": "REVIEW_RESULT",
+  "summary": "REQUEST_CHANGES on PR #414 exact head 51ffc16fb2f5864cd4874710a7517e94dd5422b8. Production source passes the independent no-execute/finite-output audit: assertFinite proves primitive number type before equality/order checks, both conversion directions validate inputs before arithmetic, and both retain derived-output finite postconditions. Integration is not complete because stacked test-adversary PR #418 now provides a green behavioral regression for the otherwise unreachable studs-to-meters overflow fence. Absorb equivalent current #418 coverage into the retained primary/successor lineage, rerun exact-head canonical CI, then obtain fresh independent review; do not merge #418 independently.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "P1",
+  "evidence": [
+    "PR #414 head 51ffc16fb2f5864cd4874710a7517e94dd5422b8 changes only PhysicsLabScale.luau and physics_lab_scale.luau versus retained #389; canonical CI run 31542411647 passed.",
+    "PhysicsLabScale.assertFinite(value: unknown) performs type(value) == number before numeric equality/order checks; metersToStuds and studsToMeters both call it before arithmetic and again on converted output.",
+    "PR #418 head aad25ec8aeef7437ad0938ead2259a6e39f3670f changes only tests/physics_lab_scale.luau versus #414 and canonical CI run 31546627454 passed.",
+    "Current #418 behaviorally loads the production module source, rewrites exactly one METERS_PER_STUD constant in a test-only copy, and proves finite studs overflow is rejected by the active reverse derived-output fence; this supersedes the earlier false-passable raw-source check rejected in review."
+  ],
+  "metadata": {
+    "verdict": "REQUEST_CHANGES",
+    "reviewedPr": 414,
+    "reviewedHead": "51ffc16fb2f5864cd4874710a7517e94dd5422b8",
+    "supportPr": 418,
+    "supportHead": "aad25ec8aeef7437ad0938ead2259a6e39f3670f"
+  }
+}
