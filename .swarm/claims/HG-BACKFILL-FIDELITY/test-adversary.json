@@ -2,13 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "test-adversary",
-  "workerId": "sol-20260811-f7n2k9m4",
-  "claimToken": "8d31f6a20c4e7b95",
-  "claimedAt": "2026-08-11T11:47:18+00:00",
-  "heartbeatAt": "2026-08-11T11:55:12+00:00",
+  "workerId": "sol-20260811-42yqccht",
+  "claimToken": "f7ac77529cc1a988",
+  "claimedAt": "2026-08-11T20:16:30+00:00",
+  "heartbeatAt": "2026-08-11T20:16:30+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
   "branch": "agent/physics/HG-BACKFILL-FIDELITY-tests-f7n2k9m4",
-  "pr": 367
+  "pr": 367,
+  "notes": "Generation-2 stale takeover after inspecting completed tests-only PR #367 and current REVIEW lane. Preserve existing nested-transition unwind regression, perform fresh exact-head adversarial audit against primary PR #335, and add only concrete non-duplicate coverage."
 }
