@@ -189,10 +189,16 @@ local function validateBoolean(name: string, value: unknown): ()
 end
 
 local function validateConfig(config: PolicyConfig): ()
+	assert(type(config) == "table", "policy config must be a plain table")
+	assert(getmetatable(config :: any) == nil, "policy config must be metatable-free plain data")
+
+	local maxRegisteredEntities = config.maxRegisteredEntities
+	assert(type(maxRegisteredEntities) == "number", "maxRegisteredEntities must be a number")
+	local numericMaxRegisteredEntities = maxRegisteredEntities :: number
 	assert(
-		config.maxRegisteredEntities >= 1
-			and config.maxRegisteredEntities < math.huge
-			and config.maxRegisteredEntities == math.floor(config.maxRegisteredEntities),
+		numericMaxRegisteredEntities >= 1
+			and numericMaxRegisteredEntities < math.huge
+			and numericMaxRegisteredEntities == math.floor(numericMaxRegisteredEntities),
 		"maxRegisteredEntities must be a positive finite integer"
 	)
 	validateFiniteNonNegative("heroDistanceStuds", config.heroDistanceStuds)
@@ -313,7 +319,12 @@ local function evaluatePolicy(
 	config: PolicyConfig?,
 	currentLevel: FidelityLevel?
 ): (FidelityLevel, PolicyReason)
-	local resolvedConfig = config or DEFAULT_CONFIG
+	local resolvedConfig: PolicyConfig
+	if config == nil then
+		resolvedConfig = DEFAULT_CONFIG
+	else
+		resolvedConfig = config
+	end
 	local resolvedCurrent: FidelityLevel
 	if currentLevel == nil then
 		resolvedCurrent = "F0"
@@ -440,8 +451,8 @@ function FidelityManager.new(config: PolicyConfig?): Manager
 	else
 		sourceConfig = config
 	end
+	validateConfig(sourceConfig)
 	local resolvedConfig = copyConfig(sourceConfig)
-	validateConfig(resolvedConfig)
 
 	local self: ManagerImpl = {
 		config = table.freeze(resolvedConfig),
