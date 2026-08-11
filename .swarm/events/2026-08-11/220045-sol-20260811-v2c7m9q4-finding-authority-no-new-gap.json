@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-v2c7m9q4-authority-no-new-gap-220045",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T22:00:45+00:00",
+  "workerId": "sol-20260811-v2c7m9q4",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "generation": 1,
+  "claimToken": "f3a8c1d6b9e24705",
+  "target": {
+    "kind": "pr",
+    "value": "394@b38de16ade487ff8ceb48ed3596ebfe33be5fa1f"
+  },
+  "severity": "info",
+  "summary": "Duplicate-aware authority/multiplayer source mining found no additional concrete public-repo Hero-Gate gap beyond already retained/owned lineages. Do not create another authority source lane from this pass; the remaining true two-client row is engine evidence plus already documented private-transport trust requirements, not an invitation to invent a second public networking framework.",
+  "evidence": [
+    "Current public main bootstrap still performs dependency traversal before the server/client context assertion, but generation-5 retained primary PR #348 already owns the bounded wrong-context repair and source-order regression; republishing that defect would duplicate active retained work.",
+    "PR #300 already isolates the Rojo deployment trust boundary so src/server cannot be accidentally exposed through ReplicatedStorage while bootstrap text remains unchanged; no duplicate deployment lane is warranted.",
+    "PR #394 stacks the accepted authority teardown fixture on #348, covering server guard/startup ownership, duplicate-start fencing, idempotent stop, destroy-before-release and restart teardown-before-reacquire. The separate raw-destroy/stale-liveness capability is actively owned by HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY generation 3 and was excluded from this pass.",
+    "Docs/MULTIPLAYER_PERSISTENCE.md already codifies the stronger two-client trust boundary: actual caller/session binding, server-established request context, stable domain identity, lab/resolved schema provenance, count-to-canonical-ID consistency, untrusted client fields, versioned evaluator transport, and fail-closed missing/duplicate/stale/malformed/unknown-version/cross-request observations.",
+    "Repository search found no public RemoteEvent/RemoteFunction/FireServer/OnServerEvent evidence-transport surface to audit or harden. The real two-client bridge/evaluator remains outside this public product source, so adding a new networking implementation here would be breadth/architecture invention rather than closing an observed public defect.",
+    "default.project.json keeps src/shared under ReplicatedStorage, src/server under ServerScriptService, and src/client under StarterPlayerScripts; this matches the documented authority layering while the dedicated #300 regression remains retained lineage.",
+    "Static GitHub source/docs/PR review only. This worker did not run tests, Roblox Studio, a real multiplayer session, or the private bridge and makes no HG151-TWOCLIENT PASS/FAIL claim."
+  ],
+  "recommendedAction": "Do not open another public authority source lane from this mining result. Finish/integrate the retained #348/#394 lineage once trusted pr-ownership recovers, let the separately owned harness generation-3 repair close its synchronous liveness blocker, and keep HG151-TWOCLIENT fail-closed until the existing versioned private evidence path produces accepted real two-client Studio evidence satisfying Docs/MULTIPLAYER_PERSISTENCE.md."
+}
