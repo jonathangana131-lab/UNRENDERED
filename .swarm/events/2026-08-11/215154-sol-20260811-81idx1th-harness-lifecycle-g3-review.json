@@ -1,0 +1,51 @@
+{
+  "eventVersion": 1,
+  "eventId": "evt-20260811-215154-81idx1th-harness-lifecycle-g3-review",
+  "type": "HANDOFF",
+  "category": "REVIEW_READY",
+  "at": "2026-08-11T21:51:54+00:00",
+  "workerId": "sol-20260811-81idx1th",
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "slotId": "primary",
+  "branch": "agent/authority/HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY-81idx1th-g3",
+  "pr": 410,
+  "headSha": "d217ac07496cfe9021cac4e69fad6768ab83ccfd",
+  "mainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "ci": {
+    "provider": "github-actions",
+    "state": "pass",
+    "url": "https://github.com/jonathangana131-lab/UNRENDERED/actions/runs/31539618366"
+  },
+  "summary": "Generation-3 Physics Lab harness lifecycle capability repair is exact-head green and ready for independent source audit.",
+  "details": [
+    "PR #410 closes the generation-2 pre-callback stale-ownership window by synchronously reconciling the bound model Parent before get/start/stop/restart ownership decisions.",
+    "Destroying and AncestryChanged remain cleanup hooks; direct liveness reconciliation no longer depends on callback delivery order.",
+    "Teardown remains idempotent and fail-closed, including strict-Luau-safe propagation of destroy failures without falsely releasing ownership.",
+    "tests/hero_gate_authority_teardown.luau locks synchronous Parent-drift reconciliation and public API preflight ordering; the canonical integration fixture continues to invoke that contract.",
+    "Canonical CI run 31539618366 PASS on exact head d217ac07496cfe9021cac4e69fad6768ab83ccfd through format/lint/Luau/domain guards/Pure Luau tests/build/upload.",
+    "Swarm engine-tests job 93938810309 in run 31539618350 PASS. Live pr-ownership job 93938810067 remains separately fail-closed on unrelated malformed HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING/primary.json key role; no waiver or bypass is claimed.",
+    "No Roblox Studio, viewport, physical-contact, real two-client, replication/session, or transport evidence is claimed."
+  ],
+  "evidence": [
+    {
+      "kind": "pr",
+      "ref": "#410@d217ac07496cfe9021cac4e69fad6768ab83ccfd",
+      "result": "Ready for review; mergeable; generation-3 repair published."
+    },
+    {
+      "kind": "ci",
+      "ref": "31539618366/93938810423",
+      "result": "PASS canonical validation."
+    },
+    {
+      "kind": "swarm-test",
+      "ref": "31539618350/93938810309",
+      "result": "PASS engine-tests."
+    },
+    {
+      "kind": "control",
+      "ref": "31539618350/93938810067",
+      "result": "FAIL-CLOSED external blocker: unrelated live diagnostics-instance-binding claim contains unsupported role key."
+    }
+  ]
+}
