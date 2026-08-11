@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-203400-q3m7v9c2-objectgenome-bounds-finding",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "timestamp": "2026-08-11T20:34:00Z",
+  "workerId": "sol-20260811-q3m7v9c2",
+  "laneId": "HG-CAPACITY-MINING",
+  "claimToken": "c4e8a1f79b2d6053",
+  "generation": 2,
+  "summary": "ObjectGenome generation-7 has no explicit canonical work/cardinality budget for components, supportKeys, mechanisms, affordances, mutable state maps, or validation issue accumulation. This is a concrete bounded-work gap, but imposing v1 limits would narrow previously accepted canonical data, so implementation needs an explicit contract decision rather than an opportunistic validator edit.",
+  "evidence": [
+    "PR #380 exact head 0250b26afa018959f1aec450830680361d1a3dc2 is the current retained ObjectGenome generation-7 successor; its independent audit is already owned by another worker.",
+    "ObjectGenome.luau validates components as a dense non-empty array and then iterates every component/support edge; it defines semantic-key byte and familyVersion bounds but no collection-cardinality constants.",
+    "The same validator iterates every mechanism and affordance and appends structured issues without an explicit issue-count budget; inspectState likewise iterates all required/received mutable state-map keys.",
+    "Docs/OBJECT_GENOME.md specifies dense array shape and deterministic diagnostics but no maximum collection/state-map cardinalities or total canonical recipe byte budget.",
+    "tests/object_genome.luau intentionally accepts otherwise-valid provenance productLine content longer than 512 bytes and verifies fingerprinting it, confirming that the existing contract does not generally cap non-identity recipe strings.",
+    "Repository PR/issue search found no existing ObjectGenome cardinality/bounded-work lane or issue matching components/mechanisms/affordances capacity terminology."
+  ],
+  "links": [
+    "https://github.com/jonathangana131-lab/UNRENDERED/pull/380"
+  ]
+}
