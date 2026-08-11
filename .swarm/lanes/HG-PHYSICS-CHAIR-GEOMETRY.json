@@ -5,7 +5,7 @@
   "title": "Physics Lab office-chair authored geometry closure",
   "objective": "Close the independently demonstrated source-only office-chair fixture defects without widening the Physics Lab test lane: make all ground-declared casters span exactly from the authored ObjectGenome ground plane to the chair-base underside, make centerOfMassM match the component mass distribution, and explicitly version the canonical recipe change.",
   "priority": 5095,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Objects/ObjectGenomeFixtures.luau", "tests/object_genome.luau"],
@@ -24,6 +24,6 @@
     "do not claim Roblox Studio or engine-contact evidence",
     "require independent source review before DONE"
   ],
-  "notes": "Decomposed from capacity finding evt-20260811-084600-r4k9m2-chair-caster-ground-gap and exact CI evidence on draft PR #332. Current production F2 realizes every ObjectGenome component. chair-a places the 1.08m officeChair envelope on y=0, but each 0.08m caster centered at local y=-0.49 bottoms 0.01m above the envelope ground plane while its top contacts the base underside. PR #332 also proves the declared chair COM is inconsistent with component mass weighting. Keep the correction bounded to the canonical officeChair fixture plus object-level goldens/regressions; the lab-level test slot remains separately owned.",
+  "notes": "Primary implementation is draft PR #339 at exact head 1f125129daa6a29069bec85a35ec51e0dd64eefe. Canonical CI run 31476886262 is fully green: format, lint, Luau analysis, audits, deterministic swarm tests, Pure Luau, Rojo build, and build artifact upload. The repair makes every chair caster span exactly from the authored ground plane to the unchanged base underside, advances officeChair to familyVersion 2, recomputes component-weighted COM, refreshes exact identity/fingerprint goldens, and adds object-level regressions. Swarm pr-ownership remains independently blocked by SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY due audited historical immutable-event byte drift; this lane does not rewrite event history. No Studio evidence claimed. Independent audit is now required before DONE.",
   "tags": ["backfill", "hero-gate", "source-only", "physics", "geometry", "objectgenome"]
 }
