@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063800-z4q8n1-materialdna-validator-abort",
+  "timestamp": "2026-08-11T06:38:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "high",
+  "summary": "PR #272 exact-head CI now proves the hostile unknown-key formatter path can abort validateRecipe outright, not merely execute a callback. An unknown table key whose __tostring raises causes validateRecipe to raise instead of returning ValidationResult, contradicting the MaterialDNA contract that structurally malformed persisted/generated input reports errors instead of crashing.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "PR #272 head 97577ea87d4c70b8b5a4c0ea0ed63c13b6de92bd; CI run 31465418345; validate job 93697218767.",
+    "Pure Luau: `FAIL hostile unknown recipe key cannot abort validation: validator raised ... hostile unknown-key formatter executed`.",
+    "The same run retains the earlier callback-count failures for recipe/state/reference, while format, lint, Luau analysis, randomness/domain/plain-value audits and swarm deterministic tests pass before Pure Luau.",
+    "Docs/MATERIAL_DNA_CONTRACT.md Validation explicitly states validateRecipe accepts unknown plain data and structurally malformed persisted/generated input must report errors instead of crashing through malformed structure."
+  ]
+}
