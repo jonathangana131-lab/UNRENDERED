@@ -23,7 +23,9 @@ local function run(): number
 	local helperEnd = if helper ~= nil
 		then string.find(source, "\nfunction PhysicsLabStudioDiagnostics.capture", helper, true)
 		else nil
-	local helperSource = if helper ~= nil and helperEnd ~= nil then string.sub(source, helper, helperEnd - 1) else nil
+	local helperSource = if helper ~= nil and helperEnd ~= nil
+		then string.sub(source, helper, helperEnd - 1)
+		else nil
 	local function helperPosition(needle: string): number?
 		if helper == nil then
 			return nil
@@ -44,7 +46,8 @@ local function run(): number
 	local exactEntityCount = helperPosition("readoutCount == #entities")
 	local exactInstanceCount = helperPosition("return 1 + 2 * readoutCount")
 	local projectedAdorneeRead = helperSource ~= nil and string.find(helperSource, "Adornee", 1, true) or nil
-	local projectedLabelTextRead = helperSource ~= nil and string.find(helperSource, "label.Text", 1, true) or nil
+	local projectedLabelTextRead = helperSource ~= nil and string.find(helperSource, "label.Text", 1, true)
+		or nil
 	local captureCall = position("diagnosticInstanceCount = validateReadoutCompleteness(folder, entities)")
 	local descendantCountShortcut = position("diagnosticInstanceCount = 1 + #folder:GetDescendants()")
 
