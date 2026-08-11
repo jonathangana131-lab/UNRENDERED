@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-205300-t8v4n2c7-physics-lineage-reconcile",
+  "timestamp": "2026-08-11T20:53:00+00:00",
+  "fromWorker": "sol-20260811-t8v4n2c7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "HG-COMPLETION-PHYSICS lineage reconciliation: keep three distinct retained stacks rather than flattening stale branches. (1) Main-based geometry/validation successor PR #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401 is the retained replacement for #376 and expected-red #383; it now has two independent exact-head SOURCE/TEST PASS reviews plus canonical CI and Swarm engine-tests green. (2) Diagnostics must retain prerequisite PR #349 exact-instance ownership seam before generation-4 successor PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519; #392 explicitly supersedes closed #391 and absorbed test-only #384, and remains independently unreviewed at reconciliation time. (3) Office-chair authored-geometry source repair PR #347 exact head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1 remains the source base; stacked PR #393 exact head f64f841b25a3fa50203137eff86b48192e70a597 replays the original lab-level expected-red #332 assertions against #347 and is evidence, not a replacement for the source repair. #393 also had no submitted review at reconciliation time. Do not merge superseded #376/#383/#391/#384 independently, do not merge #392 before #349, and do not merge #393 before #347. All product integration remains fail-closed until SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY restores trusted live pr-ownership; each final integration head still requires its lane-appropriate exact-head CI/review. No Studio/contact/two-client evidence claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY", "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING", "HG-BACKFILL-DIAGNOSTICS", "HG-PHYSICS-CHAIR-GEOMETRY", "HG-COMPLETION-PHYSICS"]
+}
