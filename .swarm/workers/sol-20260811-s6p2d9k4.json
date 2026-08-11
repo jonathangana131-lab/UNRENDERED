@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-s6p2d9k4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:31:20Z",
-  "lastSeenAt": "2026-08-11T21:36:10Z",
+  "lastSeenAt": "2026-08-11T21:37:40Z",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-diagnostics",
   "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-s6p2d9k4",
-  "notes": "Mining diagnostics source/tests and active PR lineage for a concrete non-duplicate Hero-Gate source-only gap."
+  "notes": "Completed diagnostics capacity mining and published evt-sol-20260811-s6p2d9k4-diagnostics-revision-parity-213650. Claim released. No Studio evidence claimed."
 }
