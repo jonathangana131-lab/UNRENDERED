@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-214300-p6r4n8x2-physics-geometry-mining-no-gap",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "workerId": "sol-20260811-p6r4n8x2",
+  "claimToken": "c4e8a1f7d2b96035",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T21:43:00Z",
+  "headSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-p6r4n8x2",
+  "payload": {
+    "severity": "info",
+    "summary": "No additional nonduplicate Physics Lab geometry/scale/validation defect was found in this bounded mining pass after accounting for current repair and adversarial lineages.",
+    "inspected": [
+      "main PhysicsLabRecipe authored shell/object placements and source geometry invariants",
+      "PhysicsLabRealizer SI-to-stud producer path and PhysicsLabValidation canonical geometry consumer path",
+      "PR #389 exact-head scale overflow and validation-contract hardening plus its existing independent reviews",
+      "PR #406 active expected-red malformed-scale-scalar no-execute regression",
+      "PR #347/#393 chair authored-geometry repair and unchanged lab-level replay assertions"
+    ],
+    "coverageAlreadyOwned": [
+      "finite authored placements and positive primitive dimensions",
+      "floor/wall/ceiling alignment and door aperture/clearance",
+      "object grounding, stair continuity/rise, ramp incline/entry-lip bounds, spawn grounding",
+      "chair caster/base support, mass and center-of-mass closure",
+      "finite conversion-output and derived-envelope-drift rejection",
+      "malformed scale scalar no-execute gap is actively owned by PR #406"
+    ],
+    "nextAction": "Do not create another physics-geometry lane from this shard. Preserve the existing #389/#406 and #347/#393 lineages and redirect capacity to another Hero Gate shard.",
+    "studioEvidence": "none performed or claimed"
+  }
+}
