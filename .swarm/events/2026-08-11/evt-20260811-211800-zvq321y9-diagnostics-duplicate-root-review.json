@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-211800-zvq321y9-diagnostics-duplicate-root-review",
+  "timestamp": "2026-08-11T21:18:00+00:00",
+  "fromWorker": "sol-20260811-zvq321y9",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Blocking diagnostics follow-up audit: PR #392 exact head b21a0eca uses FindFirstChild for the diagnostics root, so duplicate same-named direct roots can leave one stale/owned diagnostics tree outside capture and no-drift accounting. Lane moved to NEEDS_CHANGES; repair must enumerate direct children, reject duplicate root cardinality, preserve Folder/owned checks, and absorb PR #396 expected-red coverage.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "BLOCKER",
+  "evidence": [
+    "PR #392 review 4910791311 on exact head b21a0ecac4dc67900f004527291ebcb4daeea519",
+    "PR #396 expected-red canonical CI 31536376917 fails exactly diagnostics root duplicate assertion",
+    "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau diagnosticsRoot() uses model:FindFirstChild(DIAGNOSTICS_ROOT_NAME)"
+  ]
+}
