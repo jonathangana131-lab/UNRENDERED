@@ -35,17 +35,25 @@ jobs:
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
           CONTROL_SHA="$(git rev-parse origin/swarm-control)"
 
-          # The one-time reset crosses only these reviewed malformed mutable
-          # worker-state transitions. Prove each invalid commit precedes its exact
-          # repair, and each repair precedes the exact bootstrap candidate.
-          git merge-base --is-ancestor fa5b8f163603fa918c21b28c63bd20e6c25a2add 7c62ff9a7b92c4ebe43c38323a5946e04881d3b7
-          git merge-base --is-ancestor 7c62ff9a7b92c4ebe43c38323a5946e04881d3b7 "$CONTROL_SHA"
-          git merge-base --is-ancestor a99ff757b842fa91ddd893d19fd1d826890ce306 a193dd686323c27a7191d525b064c4257120de21
-          git merge-base --is-ancestor a193dd686323c27a7191d525b064c4257120de21 "$CONTROL_SHA"
-          git merge-base --is-ancestor 57245c334fdc19cae855796066f783fb64492c51 db830924aa0b65a74c60ee345448f57381bbe137
-          git merge-base --is-ancestor db830924aa0b65a74c60ee345448f57381bbe137 "$CONTROL_SHA"
-          git merge-base --is-ancestor 8e631ba0da787af6c1c63f6a6dd96920ea7941f2 bf852363faa7328d6707233b72909f6c4958d910
-          git merge-base --is-ancestor bf852363faa7328d6707233b72909f6c4958d910 "$CONTROL_SHA"
+          # Keep the one-time mutable-history reset manifest in one audited source.
+          # Every invalid commit must precede its exact repair, and every repair
+          # must precede the exact bootstrap candidate before a trust pair is emitted.
+          TRANSITIONS_FILE="$RUNNER_TEMP/finite-worker-transitions.txt"
+          python3 - "$TRANSITIONS_FILE" <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, "tools/swarm")
+          import swarmctl_hardening as hard
+          Path(sys.argv[1]).write_text(
+              "".join(f"{invalid_sha} {repair_sha}\n" for invalid_sha, repair_sha in hard.FINITE_WORKER_TRANSITIONS),
+              encoding="utf-8",
+          )
+          PY
+          [[ -s "$TRANSITIONS_FILE" ]] || { echo 'Finite worker transition manifest is empty.'; exit 1; }
+          while read -r INVALID_SHA REPAIR_SHA; do
+            git merge-base --is-ancestor "$INVALID_SHA" "$REPAIR_SHA"
+            git merge-base --is-ancestor "$REPAIR_SHA" "$CONTROL_SHA"
+          done < "$TRANSITIONS_FILE"
 
           mkdir -p "$RUNNER_TEMP/bootstrap-control"
           git archive "$CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/bootstrap-control"
@@ -187,7 +195,7 @@ jobs:
               "validatedAt": sys.argv[3],
               "validatorMainSha": sys.argv[4],
               "resetId": "reset-20260811-history-continuity",
-              "resetReason": "Reviewed finite reset quarantines four exact rewritten immutable event blobs with first-write provenance and explicitly crosses four invalid worker-status transitions repaired at 7c62ff9a, a193dd68, db830924, and bf852363; all later authority is strict append-only/trusted history.",
+              "resetReason": "Reviewed finite reset quarantines the exact immutable-event artifacts enumerated by the recovery validator and crosses every malformed worker transition enumerated by FINITE_WORKER_TRANSITIONS; all later authority is strict append-only/trusted history.",
               "bootstrap": False,
           }
           with open('.swarm/trust.json', 'w', encoding='utf-8') as handle:
