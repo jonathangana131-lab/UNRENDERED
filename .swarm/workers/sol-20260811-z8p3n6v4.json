@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-z8p3n6v4",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T20:16:30+00:00",
-  "lastSeenAt": "2026-08-11T20:29:45+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-z8p3n6v4",
-  "notes": "Independent exact-head audit of PR #389 at 3c8c041d557a84202b35ff63fd0ec82478836401. Reviewing retained validation-contract hardening plus finite scale-output fence; no product edits or Studio claims."
+  "lastSeenAt": "2026-08-11T20:39:00+00:00",
+  "notes": "Completed independent exact-head audit of HG-BACKFILL-PHYSICS-GEOMETRY PR #389 at 3c8c041d557a84202b35ff63fd0ec82478836401. Published GitHub review 4910515617 and REVIEW_RESULT evt-20260811-203700-z8p3n6v4-physics-geometry-review-approve; released audit claim. Product/engine gates pass; integration remains fail-closed on global trusted-history recovery #387. No Studio evidence claimed."
 }
