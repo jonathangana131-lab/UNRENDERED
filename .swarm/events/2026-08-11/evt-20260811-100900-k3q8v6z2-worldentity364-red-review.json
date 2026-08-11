@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-100900-k3q8v6z2-worldentity364-red-review",
+  "timestamp": "2026-08-11T10:09:00+00:00",
+  "fromWorker": "sol-20260811-k3q8v6z2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #364 exact-head WorldEntity mutation identity adversary passes independent review as clean executable expected-RED evidence; hostile non-string capture/transition IDs currently reject only after executing caller __tostring.",
+  "affects": [
+    "HG-COMPLETION-REALITY",
+    "HG-BACKFILL-WORLDENTITY"
+  ],
+  "laneId": "HG-COMPLETION-REALITY",
+  "evidence": [
+    "PR #364 head c154221860c4135b4bd0c7c84b39f433937c80c8 is based directly on current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and changes only tests/world_entity_registry_shape.luau.",
+    "Current captureRegistered/transitionRegistered route through getRegistered, which indexes records[entityId] then interpolates an unknown-ID diagnostic without first validating the supplied identity; hostile non-string IDs therefore execute __tostring while rejecting.",
+    "Canonical CI run 31480705053 passes all gates before Pure Luau and fails only the two intended zero-callback assertions; rejection and valid-record-preservation controls pass.",
+    "Swarm run 31480705057 engine-tests PASS; pr-ownership fails before lane evaluation on unrelated live HG-BACKFILL-FIDELITY/audit.json leaseSeconds bounds corruption.",
+    "GitHub review record 4905064413 records the independent exact-head verdict."
+  ],
+  "metadata": {
+    "slotId": "review-1",
+    "pr": 364,
+    "headSha": "c154221860c4135b4bd0c7c84b39f433937c80c8",
+    "verdict": "PASS_EXPECTED_RED",
+    "nextAction": "Do not merge #364 independently. The fresh WorldEntity production successor should centralize canonical/no-execute ID validation before every registry lookup/mutation, absorb #350 and #364 plus #344 state-budget coverage on lane-owned tests, remove the stale unauthorized tests/run.luau edit from #293, and turn exact-head CI/trusted ownership green before final independent review."
+  }
+}
