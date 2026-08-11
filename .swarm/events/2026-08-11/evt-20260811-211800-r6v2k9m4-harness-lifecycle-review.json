@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-211800-r6v2k9m4-harness-lifecycle-review",
+  "timestamp": "2026-08-11T21:18:00+00:00",
+  "fromWorker": "sol-20260811-r6v2k9m4",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+  "severity": "warning",
+  "summary": "REQUEST_CHANGES on PR #399 exact head 2c33c31f3ab96528308f01d18a72d2446adb1553. The new owned-handle wrapper correctly coordinates the copied destroy() function, but table.clone(realized) also republishes the live RealizedLab.model Roblox Model. Callers of start()/get() can still invoke lab.model:Destroy() directly, bypassing owned.destroy(), leaving the underlying runtime/representation teardown uncoordinated and private current non-nil; the next start() remains fenced against a dead physical lab. The current regression proves the raw destroy function was replaced but does not cover direct mutable model authority. Preserve minimum read/diagnostic access without exporting an uncoordinated lifecycle-capable Model reference, or explicitly coordinate out-of-band model destruction back into matching harness/runtime teardown; add a direct-model destruction regression. Canonical CI green is not disputed. No Studio/two-client evidence is claimed.",
+  "affects": ["HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY"],
+  "evidence": [
+    "PR #399 bindOwnedHandle shallow-clones the full RealizedLab and replaces only owned.destroy; RealizedLab includes model: Model.",
+    "PhysicsLabRealizer.destroy() performs model destruction, representation clearing, and runtime disposal, while direct model destruction bypasses those latter ownership teardown steps.",
+    "Bootstrap currently uses the returned lab.model only for read-only attribute inspection, so a narrower read/diagnostic surface is feasible without claiming a specific implementation architecture.",
+    "GitHub review 4910825181 records the exact-head REQUEST_CHANGES verdict."
+  ],
+  "metadata": {
+    "pr": 399,
+    "headSha": "2c33c31f3ab96528308f01d18a72d2446adb1553",
+    "baseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "reviewId": 4910825181,
+    "verdict": "REQUEST_CHANGES",
+    "finding": "direct-model-lifecycle-capability"
+  }
+}
