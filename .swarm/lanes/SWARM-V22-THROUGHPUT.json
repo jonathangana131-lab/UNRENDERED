@@ -8,10 +8,10 @@
   "state": "READY",
   "mode": "exclusive",
   "dependencies": [],
-  "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", ".github/workflows/ci.yml", ".github/pull_request_template.md", "Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md", "Docs/ADR/0004-swarm-control-plane.md"],
+  "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", ".github/workflows/ci.yml", ".github/pull_request_template.md", "Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md", "Docs/SWARM_V22_COMPLETION_THROUGHPUT.md", "Docs/ADR/0004-swarm-control-plane.md"],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
-    {"slotId":"primary","role":"Implement and prove Swarm V2.2 throughput policy","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":1000,"writeScopes":["tools/swarm/**",".github/workflows/swarm-control.yml",".github/workflows/ci.yml",".github/pull_request_template.md","Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md","Docs/ADR/0004-swarm-control-plane.md"]},
+    {"slotId":"primary","role":"Implement and prove Swarm V2.2 throughput policy","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":1000,"writeScopes":["tools/swarm/**",".github/workflows/swarm-control.yml",".github/workflows/ci.yml",".github/pull_request_template.md","Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md","Docs/SWARM_V22_COMPLETION_THROUGHPUT.md","Docs/ADR/0004-swarm-control-plane.md"]},
     {"slotId":"audit","role":"Adversarial review of V2.2 scheduler and review policy","exclusive":true,"availableWhen":["REVIEW","INTEGRATION_READY"],"requiresIndependentFrom":"primary","priorityBoost":800,"writeScopes":["tools/swarm/test_swarmctl_hardening.py","tools/swarm/test_swarmctl_v22.py","Docs/**"]},
     {"slotId":"integration","role":"Integrate V2.2 after exact-head gates","exclusive":true,"availableWhen":["INTEGRATION_READY"],"requiresIndependentFrom":"primary","priorityBoost":700,"writeScopes":["Docs/**"]}
   ],
