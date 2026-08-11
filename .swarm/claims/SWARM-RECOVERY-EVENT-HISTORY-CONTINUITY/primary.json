@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-h4k9v2c7",
   "claimToken": "7c2e9a4d1f6b8053",
   "claimedAt": "2026-08-11T20:13:00+00:00",
-  "heartbeatAt": "2026-08-11T20:58:00+00:00",
+  "heartbeatAt": "2026-08-11T21:03:00+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-h4k9v2c7-g3",
   "pr": 387,
-  "notes": "Draft PR #387 generation-3 recovery active. Finite manifest now pins 65 malformed immutable first-writes and 21 exact worker invalid->repair transitions. Four released live worker records were narrowly normalized from unsupported terminal PARKED/DONE bookkeeping to STOPPED after verifying their claims were absent or reassigned; the PARKED-only extra key was removed. Exact inventory digest probe CI is in progress before hard-pinning the expanded manifests; no compatibility broadening."
+  "notes": "Draft PR #387 generation-3 recovery active. Exact head a59e318a has green canonical CI; Swarm engine-tests remains fail-closed during bootstrap. Finite manifest pins 65 malformed immutable first-writes and 21 exact worker invalid->repair transitions. Reading the exact failing annotation before any further finite recovery change; no compatibility broadening."
 }
