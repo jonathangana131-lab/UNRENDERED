@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "slotId": "audit",
+  "workerId": "sol-20260811-t8v4n2c7",
+  "claimToken": "c7e2a9d4f1b68035",
+  "claimedAt": "2026-08-11T20:33:38+00:00",
+  "heartbeatAt": "2026-08-11T20:33:38+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-audit-t8v4n2c7",
+  "pr": 349,
+  "notes": "Independent exact-head audit of PR #349 exact owned-representation predicate prerequisite for diagnostics."
+}
