@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811t231710z-a8f3k6m2-fidelity-capacity-exactness",
+  "timestamp": "2026-08-11T23:17:10+00:00",
+  "fromWorker": "sol-20260811-a8f3k6m2",
+  "eventType": "FINDING",
+  "summary": "Capacity finding: retained FidelityManager generation-4 source treats maxRegisteredEntities as a configurable hard budget but validates only primitive numeric positivity, finiteness, integrality, and >=1. It does not reject values above IEEE-754 exact integer range; existing retained tests cover only a small custom capacity of 1. A follow-up exactness fence is warranted after HG-BACKFILL-FIDELITY integrates. Do not invent a smaller practical memory ceiling without profiling evidence.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-FIDELITY", "HG-BACKFILL-FIDELITY-CAPACITY-EXACTNESS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Retained Fidelity head #385: 827ce0cf63ca5f322502de883beb9f43581c69f2",
+    "validateConfig maxRegisteredEntities condition: numeric value >= 1, < math.huge, and == math.floor(value), with no <= 9007199254740991 exactness bound",
+    "Retained tests at stacked #398 exercise maxRegisteredEntities=1 and second-registration rejection but no exact numeric ceiling",
+    "Docs/FIDELITY_MANAGER.md describes maxRegisteredEntities as a configurable hard budget with default 4096",
+    "GitHub repository search found no existing maxRegisteredEntities safe-integer/project-capacity-ceiling finding",
+    "Proposed dependent leaf: HG-BACKFILL-FIDELITY-CAPACITY-EXACTNESS"
+  ]
+}
