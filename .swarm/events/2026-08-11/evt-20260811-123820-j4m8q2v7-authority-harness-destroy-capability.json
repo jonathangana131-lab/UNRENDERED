@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-123820-j4m8q2v7-authority-harness-destroy-capability",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "workerId": "sol-20260811-j4m8q2v7",
+  "claimToken": "2f7c9a4e1b6d8053",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T12:38:20Z",
+  "headSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-contract-j4m8q2v7",
+  "payload": {
+    "severity": "warning",
+    "summary": "PhysicsLabStudioHarness owns a singleton RealizedLab through its private current closure, but get() returns the raw RealizedLab including its public destroy() capability. A caller can therefore destroy the owned lab without clearing harness ownership, leaving current bound to a dead handle.",
+    "impact": "After out-of-band destroy(), Harness.get() still returns the destroyed handle and Harness.start() rejects a replacement as already owned even though the canonical physical/runtime lab has been disposed. This can poison a Studio validation/evidence session until Harness.stop() is explicitly called, and it weakens the intended single-owner teardown boundary by exposing lifecycle authority outside the harness.",
+    "sourceProof": [
+      "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 PhysicsLabStudioHarness.start() assigns the raw PhysicsLabRealizer.realize() result to private current; get() returns current directly",
+      "the RealizedLab public type includes destroy, and PhysicsLabRealizer.destroy() marks the handle destroyed, destroys its model, clears representations, and disposes runtime without any callback into PhysicsLabStudioHarness",
+      "PhysicsLabStudioHarness.stop() is the only harness path that calls active.destroy() and then clears current",
+      "stale teardown test PR #307 verifies start duplicate fencing, stop destroy-before-clear ordering, restart teardown, and bootstrap order, but does not test or prevent an external caller invoking get().destroy() and desynchronizing current"
+    ],
+    "sourceLevelRepro": "In Studio-server context by source inspection: local lab = assert(PhysicsLabStudioHarness.get()); lab.destroy(); PhysicsLabStudioHarness.get() still returns that same destroyed table because current is unchanged; a subsequent PhysicsLabStudioHarness.start(workspace) reaches the current ~= nil ownership assertion. No Studio execution is claimed.",
+    "nonDuplicate": "PR #307 is specifically teardown ownership but only locks harness-owned stop/restart sequencing. Repository PR/issue search found no existing direct-destroy capability or stale-current repair.",
+    "recommendedClosure": [
+      "keep lifecycle authority centralized: callers that only need diagnostics/runtime access should not receive an uncoordinated destroy capability",
+      "use the narrowest production-worthy seam, such as a harness-owned facade without destroy or a destruction path that atomically clears the matching current owner",
+      "add a source/pure regression that an external handle cannot leave current pointing at a destroyed lab and that replacement remains deterministic",
+      "preserve stop idempotency, restart ordering, exactly-one-lab ownership, and existing Studio-only/server-only assertions",
+      "do not translate source closure into two-client or Studio evidence PASS"
+    ],
+    "recommendedLaneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "studioEvidence": "none performed or claimed"
+  }
+}
