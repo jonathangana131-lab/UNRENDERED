@@ -5,8 +5,8 @@
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "claimToken": "afc07ec87d7b640a",
   "acquiredAt": "2026-08-11T23:08:18+00:00",
-  "heartbeatAt": "2026-08-11T23:08:18+00:00",
+  "heartbeatAt": "2026-08-11T23:17:56+00:00",
   "leaseSeconds": 1800,
   "generation": 6,
-  "notes": "Generation-6 protected lease for the exact trusted-history recovery lineage after generation-5 CI surfaced additional finite live-control defects."
+  "notes": "Generation-6 protected lease for exact trusted-history recovery PR #420 after generation-5 CI surfaced additional finite live-control defects."
 }
