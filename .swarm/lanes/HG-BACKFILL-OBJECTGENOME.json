@@ -5,7 +5,7 @@
   "title": "ObjectGenome adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete ObjectGenome shape, component, ownership, fingerprint, transform, material-reference, state-binding, immutability, or malformed-input defects without depending on Studio.",
   "priority": 5150,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Objects/ObjectGenome*.luau", "tests/object_genome*.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"ObjectGenome contract and ownership auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/object_genome*.luau","Docs/OBJECT_GENOME.md"]}
   ],
   "acceptance": ["inspect current main and existing contract-lock tests", "prefer a concrete defect or missing invariant over speculative redesign", "new behavior is covered by deterministic regression tests", "preserve canonical identity and plain-data boundaries", "publish cross-lane findings as structured events"],
-  "notes": "Generation-5 successor PR #369 preserves exact head 08ce8d7093ceb36a85af58510f65ef8e9b33c154 from independently source-approved generation-4 PR #361 after the primary lease expired. Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is the exact merge base; effective diff is only src/shared/Objects/ObjectGenome.luau and tests/object_genome_contract_lock.luau. Exact-head canonical CI run 31480999132 is green and the prior independent source review approved the exact commit. Lane is back in REVIEW for a fresh successor completion audit and live pr-ownership after SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY restores trusted control. No Studio evidence required or claimed.",
+  "notes": "Generation-5 successor PR #369 exact head 08ce8d7093ceb36a85af58510f65ef8e9b33c154 remains green for its prior decoder/order/bounds/ownership closures, but new test-adversary PR #375 exact head 1065bb0d2ad0f183569f3e160e68189ad24402b1 establishes isolated executable RED for a distinct public identity boundary: ObjectGenome.identityParts() dereferences metatable-backed caller input before proving plain data, allowing caller __index execution. CI 31488981414 passes format/lint/Luau/static/control stages then fails Pure Luau exactly at the identityParts no-execute assertion; the rest of the contract-lock suite continues green. Lane returned to NEEDS_CHANGES so the active primary must absorb equivalent coverage and close identityParts before caller field reads, preserving the stable identity tuple/algorithm and all prior #369 closures. Global pr-ownership remains separately blocked on SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY. No Studio evidence applicable or claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
