@@ -9,6 +9,8 @@ local PhysicsLabStudioDiagnostics = {}
 
 local DIAGNOSTICS_ROOT_NAME = "UNRENDERED_PhysicsLabDiagnostics"
 local DIAGNOSTICS_SCHEMA_VERSION = 1
+local DEFAULT_TOGGLE_EVIDENCE_CYCLES = 20
+local MAX_TOGGLE_EVIDENCE_CYCLES = 20
 local CHECKPOINT_CYCLES = table.freeze({ [1] = true, [5] = true, [10] = true, [20] = true })
 
 export type EntityDiagnostic = {
@@ -50,6 +52,20 @@ local function requireStringAttribute(instance: Instance, attributeName: string)
 	return value :: string
 end
 
+local function requireToggleCycleCount(cycles: any): number
+	if cycles == nil then
+		return DEFAULT_TOGGLE_EVIDENCE_CYCLES
+	end
+	assert(
+		type(cycles) == "number"
+			and cycles >= 1
+			and cycles <= MAX_TOGGLE_EVIDENCE_CYCLES
+			and cycles % 1 == 0,
+		`diagnostics cycle count must be an integer in [1, {MAX_TOGGLE_EVIDENCE_CYCLES}]`
+	)
+	return cycles :: number
+end
+
 local function diagnosticsRoot(model: Model): Folder?
 	local existing = model:FindFirstChild(DIAGNOSTICS_ROOT_NAME)
 	if existing == nil then
@@ -64,12 +80,24 @@ local function diagnosticsRoot(model: Model): Folder?
 end
 
 local function directRepresentations(model: Model): { Instance }
+	local expectedRepresentedCount = model:GetAttribute("UNRENDERED_RepresentedCount")
+	assert(
+		type(expectedRepresentedCount) == "number"
+			and expectedRepresentedCount >= 0
+			and expectedRepresentedCount % 1 == 0,
+		"invalid authoritative Physics Lab represented-count metric"
+	)
+
 	local representations = {}
 	for _, child in ipairs(model:GetChildren()) do
 		if child.Name ~= DIAGNOSTICS_ROOT_NAME and child:GetAttribute("UNRENDERED_WorldEntityId") ~= nil then
 			table.insert(representations, child)
 		end
 	end
+	assert(
+		#representations == expectedRepresentedCount,
+		`diagnostics representation count disagrees with authoritative lab metric: expected {expectedRepresentedCount}, got {#representations}`
+	)
 	table.sort(representations, function(a: Instance, b: Instance): boolean
 		return a.Name < b.Name
 	end)
@@ -243,8 +271,7 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 	cycles: number?
 ): { [string]: any }
 	assertStudioServer()
-	local cycleCount = cycles or 20
-	assert(cycleCount >= 1 and cycleCount % 1 == 0, "diagnostics cycle count must be a positive integer")
+	local cycleCount = requireToggleCycleCount(cycles)
 
 	PhysicsLabStudioDiagnostics.disable(lab)
 	local baseline = Validation.captureFull(lab.model)
