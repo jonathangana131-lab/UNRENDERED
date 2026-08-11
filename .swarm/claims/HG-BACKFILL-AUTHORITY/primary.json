@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-q5x8n3z2",
   "claimToken": "8f2c6a1d9e4b7053",
   "claimedAt": "2026-08-11T08:53:30+00:00",
-  "heartbeatAt": "2026-08-11T08:53:30+00:00",
+  "heartbeatAt": "2026-08-11T08:57:30+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
   "resources": [],
   "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-s56r7n2-g3",
   "pr": 316,
   "takeoverOf": "sol-20260811-s56r7n2",
-  "notes": "Generation-4 stale takeover of existing PR #316 after inspecting exact patch, prior independent source PASS reviews, current main dd8f158, and current lack of Studio/two-client claims. Scope is salvage/resync only: preserve reviewed guard-order behavior, synchronize the existing PR head to current main, refresh ownership metadata, and require fresh exact-head CI/pr-ownership before integration."
+  "notes": "Generation-4 stale takeover resynced PR #316 onto exact main dd8f158 with preserved reviewed three-file patch. Current exact head is 983afcac3f78492b2f171afdbd888d8beee71a56; compare reports ahead 3 / behind 0. Canonical CI run 31475495680 and Swarm Control run 31475495590 are active; fresh exact-head PASS and independent review remain required. No Studio/two-client evidence claim."
 }
