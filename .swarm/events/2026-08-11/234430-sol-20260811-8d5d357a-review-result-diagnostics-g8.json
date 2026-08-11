@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-8d5d357a-review-result-diagnostics-g8-234430",
+  "timestamp": "2026-08-11T23:44:30+00:00",
+  "fromWorker": "sol-20260811-8d5d357a",
+  "eventType": "REVIEW_RESULT",
+  "summary": "REQUEST_CHANGES on diagnostics PR #416 exact head 183bea8da6462facb2a2429ebbc85b9b80a01869. The generation-8 one-line final post-disable re-enable fence is correct and exact-head canonical CI is green, but two source-only evidence-integrity gaps remain before this lane is integration-ready. First, canonical world integrity cannot currently be proven while diagnostics are enabled; PR #422 exposes the missing enabled-window check, but its raw source-text regression is false-passable by comments and its prescribed direct Validation.captureFull call would currently reject the diagnostics-owned root as an unexpected direct representation, so the successor needs a real diagnostics-aware canonical-validation seam plus behaviorally robust coverage rather than absorbing #422 verbatim. Second, standalone diagnostics preflight/capture projects representation.Name and UNRENDERED_RepresentationClass from mutable owned Instance metadata without proving those fields against authoritative recipe/representation truth; an exact-owned Instance can therefore publish coherent-looking false diagnostic keys/classes. Keep viewport evidence blocked externally; these are source/test correctness issues only.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "P1",
+  "evidence": [
+    "PR #416 head 183bea8da6462facb2a2429ebbc85b9b80a01869 is exactly one production-line ahead of expected-red #411 for the final re-enable defect; canonical CI run 31545689864 passed.",
+    "runToggleEvidence validates the canonical lab before the sweep and after each disable, but between PhysicsLabStudioDiagnostics.enable(lab) and disable(lab) it performs no canonical world validation.",
+    "PR #422 head 5c10f385a8533e5ddeaa6644d5149d0487ba5028 is expected-red exactly at the enabled-integrity source-contract test in CI run 31546768419, but that test raw-searches for Validation.captureFull and can false-pass if the token exists only in a comment.",
+    "PhysicsLabValidation.captureFull calls assertCanonicalRepresentationSet over every direct child; the diagnostics folder UNRENDERED_PhysicsLabDiagnostics is not a canonical recipe entity and would be rejected while enabled, so a direct captureFull insertion is not a production-ready fix without a diagnostics-aware validation boundary.",
+    "At #416 exact head, preflightReadouts sets plan.key = representation.Name and capture publishes key = representation.Name plus UNRENDERED_RepresentationClass after only nil-or-string validation; directRepresentations proves exact Instance ownership and fidelity but not those mutable metadata values."
+  ],
+  "metadata": {
+    "verdict": "REQUEST_CHANGES",
+    "reviewedPr": 416,
+    "reviewedHead": "183bea8da6462facb2a2429ebbc85b9b80a01869",
+    "enabledIntegrityPr": 422,
+    "enabledIntegrityHead": "5c10f385a8533e5ddeaa6644d5149d0487ba5028"
+  }
+}
