@@ -113,6 +113,25 @@ local function run(): number
 				"invalidateExternalLifecycle()",
 			})
 		)
+
+		local invalidateBody = sliceFunction(
+			bindBody,
+			"local function invalidateExternalLifecycle(): ()",
+			"local function reconcileExternalLifecycle(): boolean"
+		)
+		expect("external lifecycle invalidation helper remains discoverable", invalidateBody ~= nil)
+		if invalidateBody ~= nil then
+			expect(
+				"stale deferred cleanup cannot retire a newer generation reconciliation token",
+				containsInOrder(invalidateBody, {
+					"current = nil",
+					"task.defer(function(): ()",
+					"if not cleanupComplete then",
+					"destroyRealized()",
+				}) and invalidateBody:find("currentReconcile = nil", 1, true) == nil
+			)
+		end
+
 		expect(
 			"pre-callback reconciliation detects parent drift and finishes teardown synchronously",
 			containsInOrder(bindBody, {
