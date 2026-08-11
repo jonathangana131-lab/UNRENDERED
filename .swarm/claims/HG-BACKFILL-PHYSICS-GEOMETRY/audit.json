@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-p7d4x9m2",
+  "claimToken": "9a4e1c7d6b2f8053",
+  "claimedAt": "2026-08-11T21:44:30+00:00",
+  "heartbeatAt": "2026-08-11T21:44:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-p7d4x9m2-r2",
+  "pr": 389,
+  "notes": "Independent re-audit of PR #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401 specifically against newer expected-red PR #406 / hostile scalar __eq no-execute evidence. No Studio/contact evidence claim."
+}
