@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "epicId": "HERO-GATE",
-  "title": "Repair worker status contract drift",
-  "objective": "Stop repeated Swarm control validation failures caused by workers emitting undocumented worker-status values such as CLAIMING; make the worker lifecycle contract explicit, test the accepted transition vocabulary, and restore live control state without weakening fail-closed ownership validation.",
+  "title": "Repair worker and event schema contract drift",
+  "objective": "Stop repeated Swarm control validation failures caused by worker-facing producer conventions drifting from the strict validator: workers emit intuitive lifecycle aliases such as CLAIMING/DONE and immutable REVIEW_RESULT events already carry typed pr/headSha/verdict fields that the current generic event validator rejects. Make the accepted lifecycle/event contract explicit, preserve strict typing and unknown-field fail-closed behavior, and restore live control validity without weakening authoritative claim/resource fencing.",
   "priority": 10000,
   "state": "READY",
   "mode": "exclusive",
@@ -12,13 +12,14 @@
     "tools/swarm/swarmctl.py",
     "tools/swarm/test_swarmctl.py",
     "tools/swarm/test_swarmctl_hardening.py",
-    "Docs/SWARM_PROTOCOL.md"
+    "Docs/SWARM_PROTOCOL.md",
+    "Docs/SWARM_CONTROL_PLANE.md"
   ],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
     {
       "slotId": "primary",
-      "role": "Critical worker-status contract repair",
+      "role": "Critical control schema contract repair",
       "exclusive": true,
       "availableWhen": ["READY", "NEEDS_CHANGES"],
       "priorityBoost": 1000,
@@ -26,12 +27,13 @@
         "tools/swarm/swarmctl.py",
         "tools/swarm/test_swarmctl.py",
         "tools/swarm/test_swarmctl_hardening.py",
-        "Docs/SWARM_PROTOCOL.md"
+        "Docs/SWARM_PROTOCOL.md",
+        "Docs/SWARM_CONTROL_PLANE.md"
       ]
     },
     {
       "slotId": "reviewer-1",
-      "role": "Independent worker-status recovery verifier",
+      "role": "Independent control schema recovery verifier",
       "exclusive": true,
       "availableWhen": ["REVIEW", "INTEGRATION_READY"],
       "priorityBoost": 900,
@@ -40,17 +42,19 @@
         "tools/swarm/swarmctl.py",
         "tools/swarm/test_swarmctl.py",
         "tools/swarm/test_swarmctl_hardening.py",
-        "Docs/SWARM_PROTOCOL.md"
+        "Docs/SWARM_PROTOCOL.md",
+        "Docs/SWARM_CONTROL_PLANE.md"
       ]
     }
   ],
   "acceptance": [
-    "the supported worker-status vocabulary is explicitly documented where every Go worker reads it",
-    "worker registration and claim-time lifecycle states that the protocol requires validate without ad hoc control-state rewrites",
-    "unknown worker statuses still fail closed",
-    "core and hardening control-plane tests cover the worker-status contract",
-    "live swarm-control validation returns PASS after current malformed worker records are reconciled"
+    "the supported canonical worker-status vocabulary is explicitly documented where every Go worker reads it, with only evidence-backed compatibility aliases accepted",
+    "CLAIMING and DONE compatibility records validate without changing claim/resource ownership authority, while genuinely unknown worker statuses still fail closed",
+    "immutable typed REVIEW_RESULT history using pr/headSha/verdict validates through strict event-specific type/domain checks; unrelated unknown top-level event fields remain rejected",
+    "future structured review events have one documented canonical payload shape so producers and validators do not drift again",
+    "core and hardening control-plane tests cover worker aliases, typed review events, unknown-status rejection, unknown-event-field rejection, and unchanged claim/resource fencing",
+    "live swarm-control validation returns PASS on authoritative history without rewriting immutable events"
   ],
-  "notes": "Emergency red-control recovery created from repeated exact-head Actions failures on worker records whose status vocabulary was not specified to workers. This is scheduler/control maintenance, not a product feature.",
-  "tags": ["control-repair", "red-ci", "worker-lifecycle", "hero-gate"]
+  "notes": "Emergency red-control prerequisite broadened after exact-head validation advanced from repeated worker status aliases into an immutable structured REVIEW_RESULT event with top-level pr/headSha/verdict. The lane ID is retained to preserve durable references; scope now reflects the proven shared producer/validator contract failure. This is scheduler/control maintenance, not a product feature.",
+  "tags": ["control-repair", "red-ci", "worker-lifecycle", "event-schema", "hero-gate"]
 }
