@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-220800-g5p2x8n4-diagnostics-g7-handoff",
+  "timestamp": "2026-08-11T22:08:00+00:00",
+  "fromWorker": "sol-20260811-g5p2x8n4",
+  "eventType": "HANDOFF",
+  "summary": "Diagnostics generation 7 is ready for independent exact-head review on PR #409 at 064670616b35b08dc5a84b52b16c976c3b72e9f7. Production bytes are preserved from generation-6 #401. The one-file test delta absorbs #405 exact Adornee/Text projection checks and closes its remaining false-pass by requiring label.Text == expectedEntity.text before the helper-local readoutCount += 1 acceptance sentinel. Canonical CI 31539607971 PASS and Swarm engine-tests in 31539607927 PASS. pr-ownership remains separately fail-closed on trusted-history recovery. No Studio/viewport evidence is claimed or requested while display preflight is blocked.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "INFO",
+  "evidence": [
+    "PR #409 exact review head 064670616b35b08dc5a84b52b16c976c3b72e9f7; generation-6 source base #401 exact head 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d.",
+    "New semantic delta relative to #401 is tests/physics_lab_diagnostics_readout_contract.luau only; exact production source from #401 is unchanged.",
+    "Canonical CI run 31539607971 PASS: format, lint, strict Luau analysis, audits, deterministic Swarm tests, Pure Luau, Rojo build, and artifact upload.",
+    "Swarm Control Plane run 31539607927 engine-tests PASS; pr-ownership fails closed at Enforce live ownership with trusted code behind the separately owned history-continuity recovery.",
+    "No local Luau, Roblox Studio, viewport, physical-contact, or two-client execution is claimed."
+  ]
+}
