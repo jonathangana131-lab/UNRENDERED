@@ -6,13 +6,12 @@
   "eventType": "REVIEW_REQUEST",
   "laneId": "HG-BACKFILL-AUTHORITY",
   "severity": "medium",
-  "summary": "Authority audit PR #275 locks the Hero Gate two-client trust boundary: server-owned canonical truth, independently comparable client observations, fail-closed evidence handoff, and an explicit prohibition on treating offline/source checks as true two-client Studio evidence.",
-  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT"],
+  "summary": "Authority audit PR #275 at head 99b0e22255d95ac6b432eb2d35d4d44409d9845c locks the Hero Gate two-client trust boundary: server-owned canonical truth, independently comparable client observations, fail-closed evidence handoff, and an explicit prohibition on treating offline/source checks as true two-client Studio evidence.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT", "PR-275"],
   "evidence": [
+    "PR #275 head 99b0e22255d95ac6b432eb2d35d4d44409d9845c.",
     "Canonical server bootstrap starts the Physics Lab harness; canonical client bootstrap does not author Physics Lab truth.",
     "Docs/MULTIPLAYER_PERSISTENCE.md now requires stable domain identity comparison and rejects missing, duplicate, stale, malformed, or cross-request observations from passing evidence.",
     "PR #275 changes only Docs/MULTIPLAYER_PERSISTENCE.md and makes no Roblox Studio or real two-client claim."
-  ],
-  "pr": 275,
-  "headSha": "99b0e22255d95ac6b432eb2d35d4d44409d9845c"
+  ]
 }
