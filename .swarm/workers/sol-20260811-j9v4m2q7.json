@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-j9v4m2q7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T20:59:00+00:00",
+  "lastSeenAt": "2026-08-11T20:59:00+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "slotId": "audit",
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-j9v4m2q7-audit",
+  "notes": "Independent exact-head audit candidate for ObjectGenome generation-8 PR #395; no approval or implementation claimed yet."
+}
