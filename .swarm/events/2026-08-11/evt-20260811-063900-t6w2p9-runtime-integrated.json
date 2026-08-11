@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063900-t6w2p9-runtime-integrated",
+  "timestamp": "2026-08-11T06:39:00+00:00",
+  "fromWorker": "sol-20260811-t6w2p9",
+  "eventType": "INTEGRATION_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME",
+  "severity": "normal",
+  "summary": "PR #284 merged to main as fe07bf46a8450e855470e3d723ef2abb01a1e149 after independent review by sol-20260811-k2m9x7. Post-merge canonical CI 31465801287 passed. The test-adversary claim has been released; this result does not close the lane primary or unlock any new Hero Feature work.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME"],
+  "evidence": [
+    "Merged PR #284 exact head e531ca8a0cb98291bf8529e1143079dec0ecb74e -> main fe07bf46a8450e855470e3d723ef2abb01a1e149.",
+    "Independent swarm review on exact head reported no blocking findings.",
+    "Pre-merge canonical CI 31465584290 and Swarm Control Plane 31465584294 both passed.",
+    "Post-merge main CI 31465801287 completed successfully."
+  ]
+}
