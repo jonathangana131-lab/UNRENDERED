@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080320-og-recipe-budget-z5p8c3",
+  "timestamp": "2026-08-11T08:03:20+00:00",
+  "fromWorker": "sol-20260811-z5p8c3",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome has no declared total canonical recipe workload/cardinality budget. validateDenseArray() enforces density but no maximum size, so accepted recipes may contain arbitrarily many components, mechanisms, and affordances; accepted provenance/role strings are also not subject to a total-byte budget. inspect(), graph validation, canonical sorting/serialization, and recipeFingerprint() therefore perform work and allocate data proportional to caller-supplied accepted recipe size with no contract-level ceiling. This is distinct from the intentional chunked fingerprint support for strings longer than StableId's 512-byte semantic-part limit and from the active familyVersion bound in PR #296. Follow-up should define a versioned ObjectGenome recipe-complexity budget, reject over-budget recipes before expensive canonicalization/fingerprinting, add max/max+1 and aggregate-byte regression tests, and preserve fingerprints for existing in-budget recipes.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "MEDIUM",
+  "evidence": [
+    "src/shared/Objects/ObjectGenome.luau: validateDenseArray() validates density only; no MAX_COMPONENTS, MAX_MECHANISMS, MAX_AFFORDANCES, total-byte budget, or equivalent recipe-work ceiling is declared.",
+    "src/shared/Objects/ObjectGenome.luau: inspect()/validateSupportGraph()/canonicalize()/recipeFingerprint() traverse, sort, serialize, and hash accepted recipe data, so workload and allocations scale with accepted recipe size.",
+    "Repository duplicate audit found no issue/PR/source invariant covering ObjectGenome total recipe cardinality/workload bounds; PR #129 intentionally added chunked digest support for long accepted strings, while PR #296 specifically bounds familyVersion.",
+    "Source-only capacity-mining finding: no benchmark, Roblox Studio run, exploit claim, or Hero Gate unlock evidence is asserted."
+  ]
+}
