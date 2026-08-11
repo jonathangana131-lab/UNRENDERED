@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "REALITY-CONTRACT",
-  "workerId": "sol-20260811-s56t3v9",
+  "workerId": "sol-20260811-d7k4m9q2",
   "laneId": "HG-BACKFILL-WORLDENTITY",
-  "claimToken": "c7e2a91d5f8b3064",
-  "acquiredAt": "2026-08-11T21:03:00+00:00",
-  "heartbeatAt": "2026-08-11T21:09:40+00:00",
+  "claimToken": "2c7a5e1d9b4f8063",
+  "acquiredAt": "2026-08-11T21:58:05+00:00",
+  "heartbeatAt": "2026-08-11T21:58:05+00:00",
   "leaseSeconds": 1800,
-  "generation": 2,
-  "notes": "Generation-5 PR #397 is exact-head green and source-complete; lease remains protected only while waiting for separately owned trusted-history recovery / meaningful pr-ownership rerun. Safe stale takeover after expiry must preserve PR #397 exact head and require fresh independent review before integration."
+  "generation": 3,
+  "notes": "Generation-6 stale takeover of REALITY-CONTRACT for WorldEntity successor work preserving PR #397 and adding only bounded duplicate-diagnostic capacity hardening plus regressions."
 }
