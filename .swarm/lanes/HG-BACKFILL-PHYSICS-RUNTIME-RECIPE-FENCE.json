@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime canonical-recipe fence",
   "objective": "Close the concrete source-only constructor gap found by capacity mining: PhysicsLabRuntime must fail closed before authority registration when an input bearing the canonical recipe key does not match the permanent lab's canonical WorldId/RegionId and complete key/id population.",
   "priority": 4980,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -43,6 +43,6 @@
     "do not claim Roblox Studio or engine evidence",
     "independent review required before integration"
   ],
-  "notes": "Exact-head audit on PR #310 head 0f69d6b749c3daa8b61488e94016e9c0c2831632 published REQUEST_CHANGES in evt-20260811-083620-h8v5c1-runtime-recipe-review: assertCanonicalRecipe must reject metatable-backed recipe/list/entity-recipe wrappers before any dereference/metamethod execution. The prior P2 initial persistentState/stateRevision/representationRevision repair is sound and canonical CI run 31473237386 is green. No Studio or engine evidence is claimed.",
+  "notes": "Generation-3 stale recovery on PR #310 preserves exact product head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d. All previously recorded recipe-fence blockers are closed; canonical CI run 31477554686 passed end-to-end and independent completion review reported SOURCE PASS on this exact source head. Lane advanced from stale NEEDS_CHANGES to REVIEW so the lane-owned independent audit can reconcile current-main ancestry, overlapping runtime-transition PR #366, and the globally fail-closed ownership gate. Do not merge until live pr-ownership is meaningful again after SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY and the second overlapping runtime repair is synchronized. No Studio or engine evidence claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "physics-runtime"]
 }
