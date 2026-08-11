@@ -152,7 +152,7 @@ jobs:
           echo "CONTROL_SHA=$CONTROL_SHA" >> "$GITHUB_ENV"
           mkdir -p "$RUNNER_TEMP/control-health"
           git archive "$CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-health"
-      - name: Apply canonical CI health as data
+      - name: Apply canonical CI health and rebuild validation fence
         env:
           MAIN_SHA: ${{ github.event.workflow_run.head_sha }}
           MAIN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
@@ -163,18 +163,21 @@ jobs:
             --root "$RUNNER_TEMP/control-health/.swarm" --sha "$MAIN_SHA" \
             --conclusion "$MAIN_CONCLUSION" --run-id "$MAIN_RUN_ID" --updated-at "$MAIN_UPDATED_AT"
           python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/control-health/.swarm"
-      - name: Publish health without overwriting newer state
+          python3 tools/swarm/swarmctl_hardening.py render --root "$RUNNER_TEMP/control-health/.swarm"
+      - name: Publish health and matching validation fence without overwriting newer state
         run: |
           EXPECTED="${CONTROL_SHA:?materialized control snapshot SHA missing}"
           git switch --detach "$EXPECTED"
-          mkdir -p .swarm/health
+          mkdir -p .swarm/health .swarm/generated
           cp "$RUNNER_TEMP/control-health/.swarm/health/main.json" .swarm/health/main.json
           cp "$RUNNER_TEMP/control-health/.swarm/lanes/OPS-MAIN-HEALTH.json" .swarm/lanes/OPS-MAIN-HEALTH.json
-          [[ -n "$(git status --porcelain -- .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json)" ]] || exit 0
+          rm -rf .swarm/generated/*
+          cp -R "$RUNNER_TEMP/control-health/.swarm/generated/." .swarm/generated/
+          [[ -n "$(git status --porcelain -- .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json .swarm/generated)" ]] || exit 0
           git config user.name unrendered-swarm-health
           git config user.email actions@users.noreply.github.com
-          git add .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json
-          git commit -m 'chore(swarm): sync canonical main CI health [swarm-health]'
+          git add .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json .swarm/generated
+          git commit -m 'chore(swarm): sync canonical main CI health and validation fence [swarm-generated]'
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
           [[ "$(git rev-parse origin/swarm-control)" == "$EXPECTED" ]] || { echo 'Control advanced; refusing stale health push.'; exit 1; }
           git push origin HEAD:swarm-control
