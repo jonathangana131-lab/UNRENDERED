@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "slotId": "primary",
+  "workerId": "sol-20260811-k4v7m2q9",
+  "claimToken": "d6a31f8c4b729e05",
+  "claimedAt": "2026-08-11T09:15:00+00:00",
+  "heartbeatAt": "2026-08-11T09:15:00+00:00",
+  "leaseSeconds": 3600,
+  "generation": 1,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-primary-k4v7m2q9",
+  "pr": null,
+  "notes": "Implement explicit trusted-history continuity recovery after detect-only #329. Preserve immutable published event bytes, exact first-write provenance, fail-closed descendant continuity, digest/marker safety, adversarial tests, and ADR."
+}
