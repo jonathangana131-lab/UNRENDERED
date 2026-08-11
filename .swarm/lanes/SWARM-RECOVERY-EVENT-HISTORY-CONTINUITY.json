@@ -8,11 +8,11 @@
   "state": "READY",
   "mode": "exclusive",
   "dependencies": [{"laneId": "SWARM-RECOVERY-EVENT-COMPAT", "acceptableStates": ["DONE"]}],
-  "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR*.md", "Docs/ADRs/**"],
+  "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR/**", "Docs/ADR*.md", "Docs/ADRs/**"],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
-    {"slotId": "primary", "role": "Trusted history continuity implementation", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 1000, "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR*.md", "Docs/ADRs/**"]},
-    {"slotId": "reviewer-1", "role": "Independent history-integrity verifier", "exclusive": true, "availableWhen": ["REVIEW", "INTEGRATION_READY"], "priorityBoost": 1000, "requiresIndependentFrom": "primary", "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR*.md", "Docs/ADRs/**"]}
+    {"slotId": "primary", "role": "Trusted history continuity implementation", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 1000, "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR/**", "Docs/ADR*.md", "Docs/ADRs/**"]},
+    {"slotId": "reviewer-1", "role": "Independent history-integrity verifier", "exclusive": true, "availableWhen": ["REVIEW", "INTEGRATION_READY"], "priorityBoost": 1000, "requiresIndependentFrom": "primary", "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR/**", "Docs/ADR*.md", "Docs/ADRs/**"]}
   ],
   "acceptance": [
     "the recovery never silently edits or deletes already-published immutable event files",
