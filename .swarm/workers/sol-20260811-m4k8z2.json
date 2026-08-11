@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:46:31+00:00",
-  "lastSeenAt": "2026-08-11T07:48:00+00:00",
-  "laneId": "HG-BACKFILL-FIDELITY",
+  "lastSeenAt": "2026-08-11T07:51:56+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-FIDELITY-pr274-m4k8z2",
-  "notes": "Authority audit race lost cleanly; rerouted to independent exact-head FidelityManager audit for active PR #274 before integration. No Studio evidence claim."
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-pr296-m4k8z2",
+  "notes": "Fidelity PR #274 review completed with durable REQUEST_CHANGES; now independently auditing ObjectGenome primary PR #296 after the main-health validation-fence recovery landed."
 }
