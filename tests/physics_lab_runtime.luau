@@ -226,6 +226,122 @@ local function run(): number
 	end
 	rejectionRuntime:dispose()
 
+	local captureDisposeRuntime = PhysicsLabRuntime.new(recipe)
+	local captureDisposeId = floor.entity.id
+	captureDisposeRuntime:step(captureDisposeId, noDemand, 0)
+	local captureDisposeOk = pcall(function()
+		captureDisposeRuntime:step(captureDisposeId, noDemand, 2, function(record)
+			captureDisposeRuntime:dispose()
+			return record.persistentState
+		end, function() end)
+	end)
+	local afterCaptureDispose = captureDisposeRuntime:snapshot()
+	expect("capture callback cannot dispose the runtime", not captureDisposeOk)
+	expect(
+		"capture callback dispose rejection preserves registry population",
+		afterCaptureDispose.registered == #recipe.entities
+			and afterCaptureDispose.fidelity.registered == #recipe.entities
+	)
+	expect(
+		"capture callback dispose rejection preserves fidelity authority",
+		captureDisposeRuntime:getFidelity(captureDisposeId) == "F2"
+	)
+	local captureRetry, captureRetryRecord = captureDisposeRuntime:step(
+		captureDisposeId,
+		noDemand,
+		2,
+		function(record)
+			return record.persistentState
+		end,
+		function() end
+	)
+	expect(
+		"capture callback rejection clears the runtime transition guard for retry",
+		captureRetry.transitioned and captureRetryRecord.fidelity == "F0"
+	)
+	captureDisposeRuntime:dispose()
+
+	local observerDisposeRuntime = PhysicsLabRuntime.new(recipe)
+	local observerDisposeId = floor.entity.id
+	observerDisposeRuntime:step(observerDisposeId, noDemand, 0)
+	local observerDisposeOk = pcall(function()
+		observerDisposeRuntime:step(observerDisposeId, noDemand, 2, function(record)
+			return record.persistentState
+		end, function()
+			observerDisposeRuntime:dispose()
+		end)
+	end)
+	local afterObserverDispose = observerDisposeRuntime:snapshot()
+	expect("transition observer cannot dispose the runtime", not observerDisposeOk)
+	expect(
+		"observer dispose rejection preserves both authority populations",
+		afterObserverDispose.registered == #recipe.entities
+			and afterObserverDispose.fidelity.registered == #recipe.entities
+	)
+	expect(
+		"observer dispose rejection leaves runtime authority synchronized",
+		observerDisposeRuntime:getFidelity(observerDisposeId) == "F2"
+	)
+	local observerRetry, observerRetryRecord = observerDisposeRuntime:step(
+		observerDisposeId,
+		noDemand,
+		2,
+		function(record)
+			return record.persistentState
+		end,
+		function() end
+	)
+	expect(
+		"observer dispose rejection clears the runtime transition guard for retry",
+		observerRetry.transitioned and observerRetryRecord.fidelity == "F0"
+	)
+	observerDisposeRuntime:dispose()
+
+	local recursiveRuntime = PhysicsLabRuntime.new(recipe)
+	local recursiveOuterId = floor.entity.id
+	local recursiveInner = findEntity(recipe, "chair-a")
+	expect("runtime reentrancy fixture finds an independent inner entity", recursiveInner ~= nil)
+	if recursiveInner ~= nil then
+		local recursiveInnerId = recursiveInner.entity.id
+		local innerBefore = recursiveRuntime:getRecord(recursiveInnerId)
+		recursiveRuntime:step(recursiveOuterId, noDemand, 0)
+		local recursiveStepOk = pcall(function()
+			recursiveRuntime:step(recursiveOuterId, noDemand, 2, function(record)
+				return record.persistentState
+			end, function()
+				recursiveRuntime:step(recursiveInnerId, noDemand, 0)
+			end)
+		end)
+		local afterRecursiveStep = recursiveRuntime:snapshot()
+		local innerAfter = recursiveRuntime:getRecord(recursiveInnerId)
+		expect("transition observer cannot recursively step the runtime", not recursiveStepOk)
+		expect(
+			"recursive step rejection preserves runtime population",
+			afterRecursiveStep.registered == #recipe.entities
+				and afterRecursiveStep.fidelity.registered == #recipe.entities
+		)
+		expect(
+			"recursive step rejection does not mutate the independent inner entity",
+			innerAfter.fidelity == innerBefore.fidelity
+				and innerAfter.stateRevision == innerBefore.stateRevision
+				and innerAfter.representationRevision == innerBefore.representationRevision
+		)
+		local recursiveRetry, recursiveRetryRecord = recursiveRuntime:step(
+			recursiveOuterId,
+			noDemand,
+			2,
+			function(record)
+				return record.persistentState
+			end,
+			function() end
+		)
+		expect(
+			"recursive step rejection clears the runtime transition guard for retry",
+			recursiveRetry.transitioned and recursiveRetryRecord.fidelity == "F0"
+		)
+	end
+	recursiveRuntime:dispose()
+
 	runtime:dispose()
 	runtime:dispose()
 	local disposedSnapshotOk = pcall(function()
