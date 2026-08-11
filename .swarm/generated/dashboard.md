@@ -1,15 +1,15 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:15:48.740113+00:00`
+Generated: `2026-08-11T07:16:59.997417+00:00`
 
 Canonical main: **GREEN** `81a13b1138e26e7852c89685de5dbf9bd57753d8`
 
-State digest: `72f4f58d36af5c07b9063075a728f17013446d17bed9ad8466fd4698b3221639`
+State digest: `1c167a6ef11d8ca90bb854afe01d1e168f6d14613a013b13fb77a23d02fe44a9`
 
 ## Summary
 
-- ready slots: **15**
-- active claims: **14**
+- ready slots: **16**
+- active claims: **13**
 - stale claims: **2**
 - blocked-external lanes: **1**
 
@@ -22,6 +22,7 @@ State digest: `72f4f58d36af5c07b9063075a728f17013446d17bed9ad8466fd4698b3221639`
 - `HG-BACKFILL-DIAGNOSTICS/test-adversary` — **Diagnostics lifecycle and no-drift test author** — score 5070 — dependencies satisfied
 - `HG-BACKFILL-AUTHORITY/test-adversary` — **Canonical agreement and teardown fixture author** — score 5020 — dependencies satisfied
 - `HG-BACKFILL-PHYSICS-GEOMETRY/audit` — **Physics recipe realism and validation auditor** — score 5020 — dependencies satisfied
+- `HG-BACKFILL-AUTHORITY/audit` — **Two-client authority and trust-boundary auditor** — score 4920 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-worldentity` — **Mine WorldEntity for next concrete depth lane** — score 3680 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-objectgenome` — **Mine ObjectGenome for next concrete depth lane** — score 3670 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-materialdna` — **Mine MaterialDNA for next concrete depth lane** — score 3660 — dependencies satisfied
@@ -33,7 +34,6 @@ State digest: `72f4f58d36af5c07b9063075a728f17013446d17bed9ad8466fd4698b3221639`
 
 ## Active claims
 
-- `HG-BACKFILL-AUTHORITY/audit` → `sol-20260811-q9x4m2`; lease to `2026-08-11T07:41:04+00:00`
 - `HG-BACKFILL-DIAGNOSTICS/audit` → `sol-20260811-diaga6r2k`; lease to `2026-08-11T07:30:00+00:00`
 - `HG-BACKFILL-DIAGNOSTICS/primary` → `sol-20260811-q7h4n2`; lease to `2026-08-11T07:54:20+00:00`
 - `HG-BACKFILL-FIDELITY/audit` → `sol-20260811-x7n4k2`; lease to `2026-08-11T07:34:30+00:00`
@@ -46,7 +46,7 @@ State digest: `72f4f58d36af5c07b9063075a728f17013446d17bed9ad8466fd4698b3221639`
 - `HG-BACKFILL-REALITY/test-adversary` → `sol-20260811-q8n4z7`; lease to `2026-08-11T07:42:30+00:00`
 - `HG-BACKFILL-WORLDENTITY/audit` → `sol-20260811-z4q8n1`; lease to `2026-08-11T07:50:00+00:00`
 - `HG-BACKFILL-WORLDENTITY/primary` → `sol-20260811-ogx9k2`; lease to `2026-08-11T07:47:00+00:00`
-- `HG-BACKFILL-WORLDENTITY/test-adversary` → `sol-20260811-w3x7k9`; lease to `2026-08-11T07:43:00+00:00`
+- `HG-BACKFILL-WORLDENTITY/test-adversary` → `sol-20260811-w3x7k9`; lease to `2026-08-11T07:48:00+00:00`
 
 ## Blocked lanes
 

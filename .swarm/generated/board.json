@@ -1,15 +1,6 @@
 {
   "activeClaims": [
     {
-      "branch": "agent/authority/HG-BACKFILL-AUTHORITY-audit-q9x4m2",
-      "expiresAt": "2026-08-11T07:41:04+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-AUTHORITY",
-      "pr": 275,
-      "slotId": "audit",
-      "workerId": "sol-20260811-q9x4m2"
-    },
-    {
       "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-audit-docs-diaga6r2k",
       "expiresAt": "2026-08-11T07:30:00+00:00",
       "generation": 1,
@@ -119,7 +110,7 @@
     },
     {
       "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-w3x7k9",
-      "expiresAt": "2026-08-11T07:43:00+00:00",
+      "expiresAt": "2026-08-11T07:48:00+00:00",
       "generation": 2,
       "laneId": "HG-BACKFILL-WORLDENTITY",
       "pr": 276,
@@ -140,7 +131,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:15:48.740113+00:00",
+  "generatedAt": "2026-08-11T07:16:59.997417+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "81a13b1138e26e7852c89685de5dbf9bd57753d8",
@@ -150,7 +141,7 @@
     "workflowRunId": 31468113697
   },
   "metrics": {
-    "activeClaims": 14,
+    "activeClaims": 13,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -159,14 +150,14 @@
       "DEPENDENCY_DISCOVERED": 3,
       "EVIDENCE_RESULT": 5,
       "EXTERNAL_BLOCKER": 1,
-      "FINDING": 39,
+      "FINDING": 40,
       "HANDOFF": 18,
-      "INTEGRATION_RESULT": 6,
+      "INTEGRATION_RESULT": 7,
       "RECOVERY": 2,
       "REVIEW_REQUEST": 26,
       "REVIEW_RESULT": 30
     },
-    "generatedAt": "2026-08-11T07:15:48.740113+00:00",
+    "generatedAt": "2026-08-11T07:16:59.997417+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -175,7 +166,7 @@
       "READY": 11
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 15,
+    "readySlots": 16,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 2
@@ -290,6 +281,21 @@
       ]
     },
     {
+      "laneId": "HG-BACKFILL-AUTHORITY",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Two-client authority and trust-boundary auditor",
+      "score": 4920,
+      "slotId": "audit",
+      "writeScopes": [
+        "src/server/Bootstrap.server.luau",
+        "src/client/Bootstrap.client.luau",
+        "tests/hero_gate_contract_integration.luau",
+        "tests/**authority*.luau",
+        "tests/**multiplayer*.luau"
+      ]
+    },
+    {
       "laneId": "HG-CAPACITY-MINING",
       "reason": "dependencies satisfied",
       "resources": [],
@@ -379,54 +385,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-REALITY"
-      ],
-      "eventId": "evt-20260811-070720-q7h4n2-pr282-control-rootcause",
-      "eventType": "REVIEW_RESULT",
-      "evidence": [
-        "Swarm Control Plane run 31466425187 pr-ownership job 93700159793 fails at trusted validator import with ModuleNotFoundError: swarmctl_hardening_base, before pr-check output.",
-        "Run 31466425187 checked out PR merge ref 54b50552aacde3bd96a107502296326e53169fe0, which merges head 3696decd5b5407ac5f676775d94b47c7f0c63a45 into old base 914d0a2f05c106f915085aacfa78bc08948cb12c.",
-        "Current main .github/workflows/swarm-control.yml at aec680524f69ca59693da594e16dca6c8e4095ab additionally materializes swarmctl_hardening_base.py, compiles all trusted modules, and import-checks swarmctl_hardening before ownership enforcement.",
-        "ResolvedRegionRecipe.checkedWorldId on PR head calls DeterminismContract.isStableId(worldId, 'world'), and ADR 0002 locks the canonical visible StableId v1 form as <namespace>:v1:<128-bit digest>.",
-        "GitHub review comment 4903668192 records the blocker root-cause correction on PR #282."
-      ],
-      "fromWorker": "sol-20260811-q7h4n2",
-      "laneId": "HG-BACKFILL-REALITY",
-      "metadata": {
-        "claimToken": "6d2fa81c49b735e0",
-        "headSha": "3696decd5b5407ac5f676775d94b47c7f0c63a45",
-        "latestControlRun": 31466425187,
-        "pr": 282,
-        "result": "SOURCE_OK_INTEGRATION_BLOCKED"
-      },
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "PR #282 exact head 3696decd5b5407ac5f676775d94b47c7f0c63a45 has no additional code-level blocker from this audit, but integration remains blocked pending a fresh fail-closed Swarm Control Plane PASS. The latest red run 31466425187 did not reject ownership: it used stale merge ref 54b50552 (head into old base 914d0a2), whose workflow copied swarmctl_hardening.py without swarmctl_hardening_base.py and crashed with ModuleNotFoundError before pr-check executed. Current main workflow at aec680524f69ca59693da594e16dca6c8e4095ab materializes the base module and import-checks the trusted validator, so the primary worker should synchronize/retrigger the PR against current main and require that new run to pass before merge. This refines the existing independent source review rather than duplicating it.",
-      "timestamp": "2026-08-11T07:07:20+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-REALITY"
-      ],
-      "eventId": "evt-20260811-070800-q7h4n2-reality-audit-release",
-      "eventType": "HANDOFF",
-      "evidence": [
-        "evt-20260811-070720-q7h4n2-pr282-control-rootcause.json"
-      ],
-      "fromWorker": "sol-20260811-q7h4n2",
-      "laneId": "HG-BACKFILL-REALITY",
-      "metadata": {
-        "claimToken": "6d2fa81c49b735e0",
-        "reviewedHead": "3696decd5b5407ac5f676775d94b47c7f0c63a45",
-        "reviewedPr": 282
-      },
-      "schemaVersion": 1,
-      "severity": "info",
-      "summary": "Reality/replay audit slot complete and released. PR #282 source logic is consistent with ADR 0002 canonical StableId spelling and ResolvedRegionRecipe v2 ingress. The only current merge blocker observed is procedural: latest Swarm Control Plane run 31466425187 used a stale PR merge/workflow generation and crashed importing swarmctl_hardening_base before ownership enforcement. Primary should synchronize/retrigger against current main and require a fresh fail-closed ownership PASS before integration. No Studio evidence was requested or claimed.",
-      "timestamp": "2026-08-11T07:08:00+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-REALITY"
@@ -654,6 +612,51 @@
     },
     {
       "affects": [
+        "HG-BACKFILL-AUTHORITY",
+        "HG151-TWOCLIENT",
+        "PR-275"
+      ],
+      "eventId": "evt-20260811-071547-q9x4m2-authority-merged",
+      "eventType": "INTEGRATION_RESULT",
+      "evidence": [
+        "PR #275 exact-head ownership job 93704985083 emitted JSON status PASS for HG-BACKFILL-AUTHORITY/audit with one changed file and no protected scope touched.",
+        "Squash merge produced main commit 81a13b1138e26e7852c89685de5dbf9bd57753d8.",
+        "Post-merge canonical CI run 31468113697 concluded success.",
+        "Docs/MULTIPLAYER_PERSISTENCE.md now locks server-known caller binding, canonical schema provenance, fail-closed evaluator versioning, and full-F2 count/structure consistency without substituting source checks for Studio evidence."
+      ],
+      "fromWorker": "sol-20260811-q9x4m2",
+      "laneId": "HG-BACKFILL-AUTHORITY",
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "Authority audit PR #275 merged to canonical main as 81a13b1138e26e7852c89685de5dbf9bd57753d8. The exact product PR passed canonical CI and fail-closed semantic ownership validation before integration, and post-merge main CI run 31468113697 completed successfully. This remains source/documentation authority hardening only; no real two-client Studio PASS is claimed.",
+      "timestamp": "2026-08-11T07:15:47+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-OBJECTGENOME"
+      ],
+      "eventId": "evt-20260811-071600-went7k3-objectgenome-family-version-audit",
+      "eventType": "FINDING",
+      "evidence": [
+        "The branch diff changes only src/shared/Objects/ObjectGenome.luau (+8/-2): it introduces MAX_FAMILY_VERSION = 2147483647 and rejects larger positive integral familyVersion values.",
+        "Current Docs/OBJECT_GENOME.md defines familyId + familyVersion + variantKey + schemaVersion as stable identity inputs but does not state a 31-bit familyVersion maximum.",
+        "Current main already bounds StableId semantic string parts to 512 bytes; familyVersion is serialized as its numeric semantic part and values above 2147483647 do not by themselves exceed that StableId v1 length boundary.",
+        "No tests are changed on the current primary head, so the newly introduced acceptance/rejection boundary is not locked."
+      ],
+      "fromWorker": "sol-20260811-went7k3",
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "metadata": {
+        "primaryHeadSha": "72eb2257fa2c033e45c182656773063918848f55",
+        "requiredBeforeReviewPass": "Demonstrate the canonical/versioning defect that motivates the bound, choose/document the bound from that invariant rather than analogy, and add deterministic boundary regression coverage (accepted max plus rejected next value) on the same exact head.",
+        "reviewerWorker": "sol-20260811-went7k3"
+      },
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "ObjectGenome primary branch head 72eb2257fa2c033e45c182656773063918848f55 adds a new familyVersion <= 2147483647 production restriction with no regression test and no current ObjectGenome contract statement establishing that exact maximum. Lane acceptance requires deterministic regression coverage for behavior changes and prefers demonstrated invariants over speculative redesign.",
+      "timestamp": "2026-08-11T07:16:00+00:00"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-WORLDENTITY"
       ],
       "eventId": "evt-20260811-071700-z4q8n1-worldentity-generator-version-correction",
@@ -867,13 +870,13 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "72f4f58d36af5c07b9063075a728f17013446d17bed9ad8466fd4698b3221639",
+  "stateDigest": "1c167a6ef11d8ca90bb854afe01d1e168f6d14613a013b13fb77a23d02fe44a9",
   "summary": {
-    "activeClaims": 14,
+    "activeClaims": 13,
     "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 24,
-    "readySlots": 15,
+    "readySlots": 16,
     "staleClaims": 2,
     "workers": 46
   }
