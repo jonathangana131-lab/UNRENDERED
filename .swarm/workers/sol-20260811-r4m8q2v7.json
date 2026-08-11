@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r4m8q2v7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:31:30+00:00",
-  "lastSeenAt": "2026-08-11T21:42:10+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-objectgenome",
-  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-r4m8q2v7",
-  "notes": "Diagnostics/ObjectGenome review slots were won by other workers; rerouted under protocol to mine current ObjectGenome source/tests/PR lineage for a concrete non-duplicate depth gap."
+  "lastSeenAt": "2026-08-11T21:46:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed HG-CAPACITY-MINING/mine-objectgenome. Published evt-20260811t214430z-r4m8q2v7-objectgenome-caster-axis-independence: ObjectGenome caster axes are independently unit-validated but collinear/antiparallel pairs appear accepted; recommend bounded source-only regression/repair lane. No Studio or engine evidence claimed."
 }
