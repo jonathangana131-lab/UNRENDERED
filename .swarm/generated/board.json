@@ -1,5 +1,15 @@
 {
-  "activeClaims": [],
+  "activeClaims": [
+    {
+      "branch": "agent/swarm/v21-dashboard-v21dash",
+      "expiresAt": "2026-08-11T06:34:10+00:00",
+      "generation": 1,
+      "laneId": "SWARM-V21-DASHBOARD",
+      "pr": null,
+      "slotId": "primary",
+      "workerId": "sol-20260811-v21dash"
+    }
+  ],
   "blockedLanes": [
     {
       "laneId": "HERO-DOOR",
@@ -13,7 +23,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T06:05:00.619008+00:00",
+  "generatedAt": "2026-08-11T06:05:12.664088+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "5ee9091eb9d7af665a990381b0133d8ccedea503",
@@ -23,7 +33,7 @@
     "workflowRunId": 31463572108
   },
   "metrics": {
-    "activeClaims": 0,
+    "activeClaims": 1,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -33,7 +43,7 @@
       "INTEGRATION_RESULT": 3,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T06:05:00.619008+00:00",
+    "generatedAt": "2026-08-11T06:05:12.664088+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -42,26 +52,12 @@
       "READY": 14
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 36,
+    "readySlots": 35,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 0
   },
   "readySlots": [
-    {
-      "laneId": "SWARM-V21-DASHBOARD",
-      "reason": "dependencies satisfied; resources available",
-      "resources": [
-        "SWARM-PROTOCOL"
-      ],
-      "role": "Zero-slot dashboard repair implementer",
-      "score": 10400,
-      "slotId": "primary",
-      "writeScopes": [
-        "tools/swarm/swarmctl_hardening.py",
-        "tools/swarm/test_swarmctl_hardening.py"
-      ]
-    },
     {
       "laneId": "HG-BACKFILL-WORLDENTITY",
       "reason": "dependencies satisfied; resources available",
@@ -685,13 +681,13 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "b044ef9c6ec42c25659b111c3376c5e2fc35e2cfaa8409d057dbe645aaff7e31",
+  "stateDigest": "5c902edba9d91e87c00499072e3948cdaf6dc7aca8aa9b8cfe749981de18b916",
   "summary": {
-    "activeClaims": 0,
+    "activeClaims": 1,
     "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
     "lanes": 22,
-    "readySlots": 36,
+    "readySlots": 35,
     "staleClaims": 0,
     "workers": 26
   }
