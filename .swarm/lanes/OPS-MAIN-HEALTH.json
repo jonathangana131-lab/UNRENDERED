@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "laneId": "OPS-MAIN-HEALTH",
+  "epicId": "SWARM-V2",
+  "title": "Repair canonical red main",
+  "objective": "Restore canonical main CI before normal feature implementation continues. This emergency lane is automatically READY while canonical CI is red and DONE when canonical CI is green.",
+  "priority": 10000,
+  "state": "DONE",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    "src/**",
+    "tests/**",
+    "scripts/**",
+    "tools/**",
+    ".github/**",
+    "Docs/**",
+    "default.project.json",
+    "rokit.toml"
+  ],
+  "resources": [],
+  "slots": [
+    {"slotId": "primary", "role": "Red-main repair implementer", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 1000},
+    {"slotId": "tests-1", "role": "Red-main diagnosis/regression", "exclusive": true, "availableWhen": ["READY", "IMPLEMENTING", "REVIEW"], "priorityBoost": 700, "writeScopes": ["tests/**", "scripts/**", "tools/**", "Docs/**"]},
+    {"slotId": "reviewer-1", "role": "Independent red-main reviewer", "exclusive": true, "availableWhen": ["REVIEW"], "requiresIndependentFrom": "primary", "priorityBoost": 800},
+    {"slotId": "integration", "role": "Red-main integration", "exclusive": true, "availableWhen": ["INTEGRATION_READY"], "requiresIndependentFrom": "primary", "priorityBoost": 900}
+  ],
+  "acceptance": [
+    "canonical main CI is green again",
+    "repair is minimal and does not broaden architecture without evidence",
+    "post-merge main remains green"
+  ],
+  "tags": ["red-main", "control-repair"],
+  "notes": "State is synchronized from canonical CI workflow completion; workers must not manually fake GREEN."
+}
