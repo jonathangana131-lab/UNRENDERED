@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092720-s5q8m4-v22-review-claim-binding",
+  "timestamp": "2026-08-11T09:27:20+00:00",
+  "fromWorker": "sol-20260811-s5q8m4",
+  "eventType": "FINDING",
+  "laneId": "SWARM-V22-THROUGHPUT",
+  "severity": "high",
+  "summary": "V2.2 adaptive review gates on candidate f64c6bb6b638e0ee74808572e976875c94efc2b3 treat a REVIEW_RESULT as independent when fromWorker merely differs from the primary worker. The gate does not bind the review event to an authoritative independent audit/reviewer claim for that lane/PR/head. Because control events are data records, a differing workerId string alone is not ownership evidence and can accidentally or deliberately satisfy STANDARD/CRITICAL review without the required review slot being held.",
+  "affects": ["SWARM-V22-THROUGHPUT"],
+  "evidence": [
+    "tools/swarm/swarmctl_hardening.py: _independent_review checks eventType, fromWorker != primary, lane, metadata.pr/headSha/verdict/depth, but receives no claims/workers and verifies no reviewer slot/claim.",
+    "tools/swarm/test_swarmctl_v22.py: add_review writes a REVIEW_RESULT for arbitrary reviewer strings without creating a reviewer claim, and those fixtures are expected to satisfy STANDARD/FULL review gates."
+  ],
+  "metadata": {
+    "candidateHead": "f64c6bb6b638e0ee74808572e976875c94efc2b3",
+    "suggestedRegression": "A REVIEW_RESULT from a different worker without a matching authoritative independent review claim for the lane/PR cannot satisfy V2.2 review; matching claim plus exact-head event can.",
+    "reviewDepth": "FULL"
+  }
+}
