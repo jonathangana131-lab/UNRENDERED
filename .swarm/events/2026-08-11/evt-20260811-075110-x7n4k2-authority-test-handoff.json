@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075110-x7n4k2-authority-test-handoff",
+  "timestamp": "2026-08-11T07:51:10+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "summary": "Authority test-adversary pass produced draft PR #300 at b5fcd1d1ae6aa3c1dd762c20e15f4fc000f2f23c. The new canonical Pure Luau regression structurally decodes default.project.json and locks the deployment trust boundary: src/shared uniquely under ReplicatedStorage, src/server uniquely under ServerScriptService, and src/client uniquely under StarterPlayerScripts. Canonical CI run 31470478249 is green and Swarm engine-tests are green. PR #300 intentionally remains draft because primary PR #297 touches the shared Hero Gate integration file and must land first; after that merge, adopt/synchronize #300, preserve both regression families, and rerun exact-head CI plus live ownership. No Studio/two-client evidence is claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "PR #300 head b5fcd1d1ae6aa3c1dd762c20e15f4fc000f2f23c",
+    "Canonical CI run 31470478249 completed success.",
+    "Swarm Control Plane run 31470478358 engine-tests completed success; pr-ownership failed closed against moving live control state, so no ownership pass is claimed.",
+    "PR #297 remains open and overlaps tests/hero_gate_contract_integration.luau; #300 is deliberately draft until primary sequencing is complete."
+  ]
+}
