@@ -12,10 +12,5 @@
     "GitHub compare current main 064e28f2306095dadd6a514b96f397cd810ac556 to PR head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d reports status diverged, ahead_by=9, behind_by=1, merge base 81a13b1138e26e7852c89685de5dbf9bd57753d8.",
     "The current-main delta after the reviewed base includes merged #282, which tightens the shared DeterminismContract StableId validation boundary used by Reality-domain consumers.",
     "GitHub review 4903949941 records the synchronization requirement; no Studio evidence is involved."
-  ],
-  "metadata": {
-    "pr": 293,
-    "headSha": "c301d8403d3c1b93ee3b2988f80e9d1e689eb33d",
-    "verdict": "SYNC_REQUIRED"
-  }
+  ]
 }
