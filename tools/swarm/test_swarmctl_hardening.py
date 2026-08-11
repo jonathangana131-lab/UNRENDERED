@@ -2,6 +2,7 @@
 """V2.1 regression suite layered on the proven hardening tests."""
 from pathlib import Path
 import runpy
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -121,6 +122,80 @@ class ImmutableLegacyEventCompatibilityTests(unittest.TestCase):
         self.write_event(self.event(unknownCompatibilityEscape=True))
         with self.assertRaises(core.ControlError):
             hard.validate_all(self.fx.root, self.now)
+
+    def test_historical_sync_required_verdict_is_accepted(self):
+        self.write_event(
+            self.event(
+                verdict="SYNC_REQUIRED",
+                metadata={"pr": 315, "headSha": "a" * 40, "verdict": "SYNC_REQUIRED"},
+            )
+        )
+        result = hard.validate_all(self.fx.root, self.now)
+        self.assertEqual(result["events"], 1)
+
+
+class ImmutableEventIdentityFenceTests(unittest.TestCase):
+    EVENT_ID = "evt-20260811-081620-test-materialdna-key-grammar"
+
+    def malformed_finding(self):
+        return {
+            "schemaVersion": 1,
+            "eventId": self.EVENT_ID,
+            "timestamp": "2026-08-11T08:16:20+00:00",
+            "fromWorker": "sol-20260811-a81f",
+            "eventType": "FINDING",
+            "laneId": "HG-CAPACITY-MINING",
+            "severity": "medium",
+            "summary": "Historical malformed affects fixture.",
+            "affects": ["HERO-GATE", "MaterialDNA"],
+            "evidence": ["Fixture is accepted only by exact immutable bytes."],
+            "metadata": {"proposedLane": {"laneId": "HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR"}},
+        }
+
+    def test_exact_blob_compat_accepts_only_audited_bytes(self):
+        fx = Fx()
+        try:
+            path = fx.root / "events" / "2026-08-11" / f"{self.EVENT_ID}.json"
+            write(path, self.malformed_finding())
+            before = path.read_bytes()
+            compat = {
+                "date": "2026-08-11",
+                "filename": path.name,
+                "gitBlobSha1": hard._git_blob_sha1(path),
+            }
+            with patch.dict(hard._IMMUTABLE_EVENT_BLOB_COMPAT, {self.EVENT_ID: compat}, clear=False):
+                result = hard.validate_all(fx.root, core.parse_time("2026-08-11T08:24:30+00:00"))
+                self.assertEqual(result["events"], 1)
+                self.assertEqual(path.read_bytes(), before)
+
+                changed = self.malformed_finding()
+                changed["summary"] = "Changed historical bytes must fail closed."
+                write(path, changed)
+                with self.assertRaises(core.ControlError):
+                    hard.validate_all(fx.root, core.parse_time("2026-08-11T08:24:30+00:00"))
+        finally:
+            fx.close()
+
+    def test_transition_rejects_new_backdated_legacy_event(self):
+        with tempfile.TemporaryDirectory() as before_dir, tempfile.TemporaryDirectory() as after_dir:
+            before = Path(before_dir)
+            after = Path(after_dir)
+            path = after / "events" / "2026-08-11" / "forged.json"
+            write(
+                path,
+                {
+                    "schemaVersion": 1,
+                    "eventId": "evt-20260811-080520-forged-legacy-review",
+                    "timestamp": "2026-08-11T08:05:20+00:00",
+                    "fromWorker": "sol-20260811-a81f",
+                    "eventType": "REVIEW_RESULT",
+                    "summary": "Fresh event with forged historical timestamp.",
+                    "affects": ["LANE-A"],
+                    "slotId": "reviewer-1",
+                },
+            )
+            with self.assertRaises(core.ControlError):
+                hard.transition_check(before, after)
 
 
 class WorkflowSnapshotFenceRegressionTests(unittest.TestCase):
