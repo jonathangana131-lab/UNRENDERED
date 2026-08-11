@@ -5,7 +5,7 @@
   "title": "Restore trusted PR ownership validator materialization",
   "objective": "Repair the project-wide Swarm Control Plane pr-ownership failure introduced when the V2.1 hardening facade began importing swarmctl_hardening_base without the trusted-validator workflow materializing that sibling module. Keep the repair minimal, trusted-base-only, and fail closed.",
   "priority": 10000,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -36,5 +36,7 @@
     "Swarm Control Plane pr-ownership passes on the repair PR",
     "canonical CI remains green after merge"
   ],
+  "pr": 288,
+  "notes": "Recovered by PR #288, squash-merged as 55221d4bcaf265f845477b15c9c6e9b83fe4c4cb. Exact-head PR CI run 31465489199 passed; Swarm Control Plane run 31465489200 passed with pr-ownership and engine-tests green; post-merge canonical CI run 31465566765 passed. Trusted dependencies remain sourced only from origin/base and the pre-hardening bootstrap branch is unchanged.",
   "tags": ["control-repair", "recovery", "swarm-v2"]
 }
