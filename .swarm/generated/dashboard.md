@@ -1,21 +1,23 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T05:47:13.644250+00:00`
+Generated: `2026-08-11T05:52:41.184623+00:00`
 
 Canonical main: **GREEN** `10d3f6992ff243a9268ed8629893faf4fc40791c`
 
-State digest: `02a97a2989538392eceec06f8b1d1532157a8ba80b1165b1d15b05537ef6332d`
+State digest: `357ee56b11d68159faa7f098326c1e9cac11ee16f674fcd3333ddcb11e9bcaf8`
 
 ## Summary
 
-- ready slots: **0**
+- ready slots: **3**
 - active claims: **0**
 - stale claims: **0**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
-_No runnable slot. Idle/review is preferable to duplicate implementation._
+- `HG-BACKFILL-WORLDENTITY/primary` — **WorldEntity source hardening** — score 5500 — dependencies satisfied; resources available
+- `HG-BACKFILL-WORLDENTITY/test-adversary` — **WorldEntity adversarial regression author** — score 5420 — dependencies satisfied
+- `HG-BACKFILL-WORLDENTITY/audit` — **WorldEntity invariant and aliasing auditor** — score 5320 — dependencies satisfied
 
 ## Active claims
 
