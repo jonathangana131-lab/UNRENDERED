@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-s56p4x9m7-runtime-synthesis-source-pass",
+  "timestamp": "2026-08-11T23:16:30+00:00",
+  "fromWorker": "sol-20260811-s56p4x9m7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent generation-2 stale-takeover audit of PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754 is SOURCE PASS. The synthesis preserves the retained #388 runtime private-state/transaction fence, #310 canonical-recipe/no-execute authority fence, and #402 WorldEntity ID-before-lookup fence. Canonical CI is green and Swarm engine-tests are green. Integration remains held only by the global pr-ownership trusted-history quarantine currently owned by recovery PR #415. No Roblox Studio, viewport, physical-contact, or true two-client evidence was run or claimed.",
+  "affects": ["HG-PHYSICS-RUNTIME-SYNTHESIS", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "laneId": "HG-PHYSICS-RUNTIME-SYNTHESIS",
+  "evidence": [
+    "PR #408 review published on exact head d31c100c5d3766ca14d89b046fff4cdb09086754.",
+    "Canonical CI run 31539261229 passed all jobs including Pure Luau tests and place build.",
+    "Swarm run 31539261221 engine-tests passed; pr-ownership failed only on legacy immutable event 210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json because validation.0.command is forbidden under the current protocol schema.",
+    "Compared synthesis against retained predecessor heads #388 89eb1c890d63de9b4e407caee215b6065b6ddac1, #310 647dca7a78159bb1bf6f61d6e3180ad082d08e2d, and #402 4b75bd054eb6a1b3b03d0a868aea46df41d3db42."
+  ]
+}
