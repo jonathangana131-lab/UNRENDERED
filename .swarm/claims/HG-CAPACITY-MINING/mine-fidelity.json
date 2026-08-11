@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "workerId": "sol-20260811-a6f4c9e2",
+  "claimToken": "2f8c6a1d9e4b7053",
+  "claimedAt": "2026-08-11T11:52:00+00:00",
+  "heartbeatAt": "2026-08-11T11:52:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-a6f4c9e2",
+  "pr": null,
+  "notes": "Mine current FidelityManager source/tests and active PR/review history for one concrete non-duplicate Hero-Gate depth gap. Publish a structured finding or no-gap result; do not widen into a new feature or claim engine evidence."
+}
