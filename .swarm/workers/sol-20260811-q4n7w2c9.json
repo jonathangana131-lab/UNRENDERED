@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q4n7w2c9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T09:00:20+00:00",
-  "lastSeenAt": "2026-08-11T09:09:40+00:00",
-  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "lastSeenAt": "2026-08-11T09:17:20+00:00",
+  "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "audit",
-  "branch": "agent/materials/HG-BACKFILL-MATERIALDNA-COUNTERS-audit-q4n7w2c9",
-  "notes": "WorldEntity and ObjectGenome audits completed. Reviewing MaterialDNA repairCount source/docs closure."
+  "branch": "agent/physics/HG-BACKFILL-FIDELITY-audit-q4n7w2c9",
+  "notes": "WorldEntity, ObjectGenome, and MaterialDNA counter audits completed/handoff published. Reviewing current-main FidelityManager generation-3 salvage PR #335."
 }
