@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-42yqccht",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T20:16:00+00:00",
-  "lastSeenAt": "2026-08-11T20:17:30+00:00",
+  "lastSeenAt": "2026-08-11T20:27:00+00:00",
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "test-adversary",
   "branch": "agent/physics/HG-BACKFILL-FIDELITY-tests-f7n2k9m4",
-  "notes": "Generation-2 stale takeover of PR #367; auditing primary #335 exact head for a concrete additional finite-state/atomicity regression before editing."
+  "notes": "Generation-2 stale takeover completed. PR #367 retargeted onto generation-4 successor #385; added cross-entity commit-isolation regression. Canonical CI 31532587044 green; retarget engine-tests 31532722395 green; pr-ownership remains blocked only by separately owned audited immutable-event history mismatch. Claim released at swarm-control e2e8af0dc4e0ca6f68faae76d03d2540af71f183."
 }
