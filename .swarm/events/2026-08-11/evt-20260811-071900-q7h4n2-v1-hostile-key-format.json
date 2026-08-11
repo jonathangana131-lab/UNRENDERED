@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071900-q7h4n2-v1-hostile-key-format",
+  "timestamp": "2026-08-11T07:19:00+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "medium",
+  "summary": "Historical ResolvedRegionRecipe v1 replay exact-shape validation can execute attacker-controlled formatting before rejection. ResolvedRegionRecipeV1Internal.assertExactRecordShape iterates arbitrary keys and interpolates tostring(key) in the assertion message; a plain outer record containing a table key with a __tostring metamethod therefore runs that callback. This is the same no-execute boundary class already hardened in MaterialDNA. Add a callback-zero adversarial replay regression and classify non-string keys with type(key) (while retaining literal names for unknown string keys) without changing any accepted historical v1 identity/fingerprint semantics.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "src/shared/Reality/ResolvedRegionRecipeV1Internal.luau assertExactRecordShape checks the record metatable, then for each key formats `{path} contains unknown schema key {tostring(key)}` when the key is non-string or unknown.",
+    "A table used as a key may itself carry a __tostring metamethod even when the enclosing serialized record has no metatable, so rejection can invoke user-provided code.",
+    "PR #280 already expands adversarial v1 replay validation but currently covers unknown string fields and nested record metatables, not hostile non-string key formatting.",
+    "GitHub review 4903746640 records this source finding alongside approval of PR #280's existing test delta."
+  ],
+  "metadata": {
+    "pr": 280,
+    "headSha": "632e78b3162e34ddd5c17a702ac713fccdaa74ea",
+    "claimToken": "8a5d1c73e4b9206f"
+  }
+}
