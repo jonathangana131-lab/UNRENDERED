@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:49:08+00:00",
-  "lastSeenAt": "2026-08-11T07:54:41+00:00",
+  "lastSeenAt": "2026-08-11T08:09:00+00:00",
   "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
   "slotId": "primary",
   "branch": "agent/swarm/SWARM-RECOVERY-HEALTH-VALIDATION-FENCE-s5q8m4-g2",
-  "notes": "Generation-2 takeover after merged #298 still left post-merge sync-main-health red on canonical main."
+  "notes": "Generation-2 takeover after merged #298 still left post-merge sync-main-health red on canonical main. PR #315 head 6ad628bd28e1470a7dec8180119765b500efa66a is under exact-head CI/review."
 }
