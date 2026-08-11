@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-065800-30a8e397-fidelity-policy-metatable",
+  "timestamp": "2026-08-11T06:58:00+00:00",
+  "fromWorker": "sol-20260811-30a8e397",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "FidelityManager PolicyInputs are documented as plain data, but the runtime boundary dereferences input fields before rejecting metatable-backed records. A hostile `__index` can therefore execute arbitrary code during policy validation, synthesize accepted values, and let a far-future evaluation commit temporal state. Canonical CI run 31467005511 reproduces the boundary failure: a metatable-backed PolicyInputs record is accepted, its `__index` callback executes 19 times, and the accepted t=100 evaluation poisons a later valid t=1 retry. The production boundary should reject a non-plain/metatable-backed PolicyInputs table before any field read or metamethod execution.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "Docs/FIDELITY_MANAGER.md defines PolicyInputs as plain data.",
+    "CI run 31467005511 passes format, lint, Luau analysis, randomness/domain/plain-value audits, and swarm tests before Pure Luau reaches the adversarial Fidelity cases.",
+    "Exact Pure Luau failures: metatable-backed policy input rejected expected false got true; policy input metatable callback never executes expected 0 got 19; metatable-backed input cannot poison monotonic clock expected true got false.",
+    "Canonical WorldEntity, MaterialDNA, and ObjectGenome boundary tests already reject metatable-bearing plain-domain records before metamethod callbacks execute, establishing the project-wide fail-closed no-execute pattern."
+  ]
+}
