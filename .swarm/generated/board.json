@@ -82,15 +82,6 @@
       "workerId": "sol-20260811-j6r2v8"
     },
     {
-      "branch": "agent/reality/151-stableid-rereview-q7h4n2",
-      "expiresAt": "2026-08-11T07:52:00+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-REALITY",
-      "pr": null,
-      "slotId": "audit",
-      "workerId": "sol-20260811-q7h4n2"
-    },
-    {
       "branch": "agent/reality/HG-BACKFILL-REALITY-q9m4r2",
       "expiresAt": "2026-08-11T07:29:00+00:00",
       "generation": 1,
@@ -101,10 +92,10 @@
     },
     {
       "branch": "agent/reality/HG-BACKFILL-REALITY-tests-q8n4z7",
-      "expiresAt": "2026-08-11T07:40:30+00:00",
+      "expiresAt": "2026-08-11T07:42:30+00:00",
       "generation": 2,
       "laneId": "HG-BACKFILL-REALITY",
-      "pr": null,
+      "pr": 294,
       "slotId": "test-adversary",
       "workerId": "sol-20260811-q8n4z7"
     },
@@ -158,7 +149,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:12:00.907339+00:00",
+  "generatedAt": "2026-08-11T07:12:27.184974+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "b0bf5ba664483cdcc2af061b0fb652b0aea00706",
@@ -168,12 +159,12 @@
     "workflowRunId": 31467811354
   },
   "metrics": {
-    "activeClaims": 16,
+    "activeClaims": 15,
     "activeEpics": [
       "HERO-GATE"
     ],
     "eventCounts": {
-      "BLOCKER": 2,
+      "BLOCKER": 3,
       "DEPENDENCY_DISCOVERED": 3,
       "EVIDENCE_RESULT": 5,
       "EXTERNAL_BLOCKER": 1,
@@ -182,9 +173,9 @@
       "INTEGRATION_RESULT": 6,
       "RECOVERY": 2,
       "REVIEW_REQUEST": 25,
-      "REVIEW_RESULT": 28
+      "REVIEW_RESULT": 29
     },
-    "generatedAt": "2026-08-11T07:12:00.907339+00:00",
+    "generatedAt": "2026-08-11T07:12:27.184974+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -193,7 +184,7 @@
       "READY": 12
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 14,
+    "readySlots": 15,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 1
@@ -227,6 +218,22 @@
         "tests/physics_lab_recipe.luau",
         "tests/physics_lab_scale.luau",
         "tests/physics_lab_validation_contract.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-REALITY",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "WorldId, seed, and replay invariant auditor",
+      "score": 5120,
+      "slotId": "audit",
+      "writeScopes": [
+        "src/shared/Reality/*.luau",
+        "src/shared/Core/*.luau",
+        "tests/resolved_region_recipe*.luau",
+        "tests/reality_versions.luau",
+        "tests/deterministic_rng.luau",
+        "tests/stable_id_headless.luau"
       ]
     },
     {
@@ -379,52 +386,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-PHYSICS-GEOMETRY"
-      ],
-      "eventId": "evt-20260811-070340-q7h4n2-pr279-rereview",
-      "eventType": "REVIEW_RESULT",
-      "evidence": [
-        "GitHub COMMENT review 4903634596 records the independent exact-head re-review.",
-        "src/server/PhysicsLab/PhysicsLabValidation.luau captureInternal inspects the selected Model root, uses an elseif class-count chain, assigns one assembly-root key per BasePart, and only builds envelopeStuds when hasPart is true.",
-        "CI run 31465831640 and Swarm Control Plane run 31465831645 succeeded on PR head 83a0f370de680c6db59787578f6931c25dd854b6.",
-        "Comparison from PR head to current main aec680524f69ca59693da594e16dca6c8e4095ab lists no changes to src/shared/Physics/PhysicsLabValidationContract.luau or tests/physics_lab_validation_contract.luau."
-      ],
-      "fromWorker": "sol-20260811-q7h4n2",
-      "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-      "metadata": {
-        "claimToken": "2f8c61d4a9e7350b",
-        "headSha": "83a0f370de680c6db59787578f6931c25dd854b6",
-        "pr": 279,
-        "result": "APPROVE",
-        "reviewBaseMain": "aec680524f69ca59693da594e16dca6c8e4095ab"
-      },
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "APPROVE PR #279 exact head 83a0f370de680c6db59787578f6931c25dd854b6 after the requested snapshot lower-bound repairs. The new constraints now match PhysicsLabValidation.captureInternal: selected root implies models >= 1; every encountered BasePart contributes an assembly root so parts > 0 implies assemblies >= 1; unique assembly roots cannot exceed encountered parts; the disjoint classified Instance subtotal cannot exceed total Instances; and a physical envelope exists iff BaseParts exist. Deterministic malformed-shape regressions cover each relationship. Current main aec680524f69ca59693da594e16dca6c8e4095ab is nine commits ahead, but reverse comparison shows none touch the two PR files; final integration should still refresh normal checks against current main before merge.",
-      "timestamp": "2026-08-11T07:03:40+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-FIDELITY"
-      ],
-      "eventId": "evt-20260811-070400-30a8e397-fidelity-policy-metatable-ci",
-      "eventType": "FINDING",
-      "evidence": [
-        "CI 31467408002: metatable-backed policy input rejected expected false got true.",
-        "CI 31467408002: policy input metatable callback never executes expected 0 got 19.",
-        "CI 31467408002: pure policy rejects metatable-backed input expected false got true.",
-        "CI 31467408002: pure policy never executes policy-input metatable expected 0 got 19.",
-        "CI 31467408002: a later valid stateful retry is rejected after the accepted future metatable-backed step, proving temporal poisoning in addition to arbitrary callback execution."
-      ],
-      "fromWorker": "sol-20260811-30a8e397",
-      "laneId": "HG-BACKFILL-FIDELITY",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Canonical CI proves the PolicyInputs plain/no-execute defect exists at both the stateful manager boundary and the exported pure `FidelityManager.evaluatePolicy` boundary. CI run 31467408002 on test-adversary head f1ec8a4aa99fb5dbfb605a8dd2bbe6cc3e7feb00 passes format, lint, Luau analysis, all domain/randomness audits and swarm tests, then the same metatable-backed input is accepted by both `step` and `evaluatePolicy`; each path executes the hostile `__index` 19 times. The fix must therefore live in shared PolicyInputs validation before any input field read rather than only guarding `step`.",
-      "timestamp": "2026-08-11T07:04:00+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-PHYSICS-GEOMETRY"
@@ -639,6 +600,27 @@
     },
     {
       "affects": [
+        "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+        "HG-BACKFILL-DIAGNOSTICS"
+      ],
+      "eventId": "evt-20260811-071130-diaga6r2k-health-invalidates-validation-fence",
+      "eventType": "BLOCKER",
+      "evidence": [
+        "PR #289 pr-ownership retry job 93704488089 fetched live control after health commit 2cc95b3a650c0621e0b2ed0633d469cc8a94becf and failed exactly with 'live control state changed after its validation marker'.",
+        "At that snapshot .swarm/generated/validation.json was validatedAt 2026-08-11T07:09:47.667472+00:00, while the health sync commit was authored at 2026-08-11T07:09:55Z.",
+        "Current workflow sync-main-health runs hardening validate after changing health data but its publish step copies only .swarm/health/main.json and .swarm/lanes/OPS-MAIN-HEALTH.json; it does not run render or publish .swarm/generated/validation.json.",
+        "GitHub Actions query for head 2cc95b3a650c0621e0b2ed0633d469cc8a94becf returned zero workflow runs, so this observed health publication did not receive a follow-on push validation that could refresh the fence."
+      ],
+      "fromWorker": "sol-20260811-diaga6r2k",
+      "laneId": "SWARM-RECOVERY-PR-OWNERSHIP-IMPORT",
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "Merged control recovery #291 still leaves a deterministic validation-fence hole: sync-main-health validates its modified materialized tree but publishes only .swarm/health/main.json and OPS-MAIN-HEALTH.json. Those non-generated files participate in state_digest, while .swarm/generated/validation.json is not regenerated in that health job. The resulting health commit therefore makes the prior marker stale, and trusted pr-check rejects every product PR with 'live control state changed after its validation marker' until some later ordinary control push rebuilds generated state. Recovery should publish a matching regenerated validation fence from the exact same CONTROL_SHA-derived health snapshot (under the existing CAS) or otherwise prove an equivalent atomic refresh before considering PR ownership fully restored.",
+      "timestamp": "2026-08-11T07:11:30+00:00",
+      "toWorker": "sol-20260811-r4m8z2"
+    },
+    {
+      "affects": [
         "HG-BACKFILL-WORLDENTITY"
       ],
       "eventId": "evt-20260811-071230-q7h4n2-worldentity-generator-version-bound",
@@ -814,6 +796,33 @@
       "severity": "medium",
       "summary": "Reality v1 replay audit slot complete and released. PR #280 exact head 632e78b3 is independently approved at the test-delta level; it should be synchronized/retriggered against current main before integration because its synthetic merge/control evidence is stale. One distinct source hardening gap was published: v1 exact-shape validation can execute a hostile non-string key's __tostring while formatting rejection. The existing test-adversary worker is WAITING with an explicit handoff instructing that its claim remain attached for review/integration, so no stale takeover was attempted.",
       "timestamp": "2026-08-11T07:20:20+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-REALITY"
+      ],
+      "eventId": "evt-20260811-072330-q7h4n2-pr282-exacthead-review",
+      "eventType": "REVIEW_RESULT",
+      "evidence": [
+        "GitHub COMMENT review 4903779675 records the independent exact-head Reality/replay review.",
+        "PR #282 exact head a2785f04f0fff74c9e78bfe3d79702376dad271b is based on main ed37c5698c1aad7a355e514b35ea5c5bd50aa738 and changes only src/shared/Core/DeterminismContract.luau plus tests/resolved_region_recipe_v2_compat.luau.",
+        "Canonical CI run 31466997896 is green on the exact head.",
+        "Swarm Control Plane run 31467814969 pr-ownership job 93704311270 executed the trusted hardening validator and failed only because live control state changed after its validation marker; engine-tests job 93704311391 succeeded.",
+        "Live primary claim remains worker sol-20260811-q9m4r2 / token c6b9e17d4a28f350 / PR 282, matching PR metadata."
+      ],
+      "fromWorker": "sol-20260811-q7h4n2",
+      "laneId": "HG-BACKFILL-REALITY",
+      "metadata": {
+        "claimToken": "3e8a1c56d9f4207b",
+        "headSha": "a2785f04f0fff74c9e78bfe3d79702376dad271b",
+        "mergeSha": "e8703426c3e846795e814740671317367c3f3c95",
+        "pr": 282,
+        "result": "APPROVE_INTEGRATION_BLOCKED_CONTROL_REFRESH"
+      },
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "APPROVE PR #282 source/test patch on exact synchronized head a2785f04f0fff74c9e78bfe3d79702376dad271b; integration remains BLOCKED only until a fresh fail-closed PR-ownership PASS is obtained. The StableId validator now requires the parsed numeric version token to exactly equal the canonical decimal spelling emitted by stableId(), preserving existing v1 output while rejecting aliases such as v01. The v2 resolved-region regression proves the noncanonical world ID fails closed. Canonical CI 31466997896 is green. Latest Swarm Control Plane run 31467814969 reached hardened pr-check and failed with 'live control state changed after its validation marker' rather than any lane/scope/claim denial; engine-tests passed. Retrigger after a stable validated control snapshot and require explicit PASS before merge.",
+      "timestamp": "2026-08-11T07:23:30+00:00"
     }
   ],
   "resources": [
@@ -865,13 +874,13 @@
       "workerId": "sol-20260811-r6k2p9"
     }
   ],
-  "stateDigest": "77d372685e01392a32b92a4ca1e435762642676b0b125f651f40a72b522c328d",
+  "stateDigest": "770f533432ab31fbd8197050a048f7bb0ecb26a97153f640b0de8b637af007f8",
   "summary": {
-    "activeClaims": 16,
+    "activeClaims": 15,
     "activeResourceClaims": 2,
     "blockedExternalLanes": 1,
     "lanes": 24,
-    "readySlots": 14,
+    "readySlots": 15,
     "staleClaims": 1,
     "workers": 46
   }
