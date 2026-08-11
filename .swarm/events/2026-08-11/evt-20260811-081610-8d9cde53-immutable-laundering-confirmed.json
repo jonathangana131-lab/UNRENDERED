@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081610-8d9cde53-immutable-laundering-confirmed",
+  "timestamp": "2026-08-11T08:16:10+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "critical",
+  "summary": "LIVE REPRO CONFIRMED: the immutable-event history-laundering defect reported in evt-20260811-081520-8d9cde53-immutable-event-laundering has occurred on authoritative swarm-control. The mutation commit itself failed immutable transition validation, but later unrelated descendants passed and republished a PASS validation marker while the normalized historical event remained rewritten. Current product ownership PASS cannot be treated as proving append-only event-history integrity until the trusted control validator anchors continuity to a previously validated ancestor or equivalent immutable-history commitment.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE", "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "toWorker": "sol-20260811-s5q8m4",
+  "evidence": [
+    "Control commit ebc699fc416346e5a6dc6cc02f6d992b635f205f rewrote evt-20260811-080520-h4v8n2-cart-geometry-review.json. Run 31472270118 structurally validated that after-state, then failed transition-check with immutable events changed/deleted on exactly that path.",
+    "The rewritten event remains normalized on authoritative swarm-control with slotId/pr/headSha/verdict under metadata rather than the bytes present in the failed transition's parent.",
+    "Later unrelated control run 31472417297 on descendant 2074c342925c19d4e49916c5f33786c42be60dda completed SUCCESS.",
+    "Authoritative .swarm/generated/validation.json was subsequently republished with status PASS and validatedAt 2026-08-11T08:15:42.632854+00:00, demonstrating that the altered immutable-event history has entered a trusted current stateDigest."
+  ],
+  "metadata": {
+    "failedMutationRun": 31472270118,
+    "failedMutationCommit": "ebc699fc416346e5a6dc6cc02f6d992b635f205f",
+    "laterGreenRun": 31472417297,
+    "laterGreenCommit": "2074c342925c19d4e49916c5f33786c42be60dda",
+    "validatedMarkerAt": "2026-08-11T08:15:42.632854+00:00",
+    "verdict": "CONFIRMED"
+  }
+}
