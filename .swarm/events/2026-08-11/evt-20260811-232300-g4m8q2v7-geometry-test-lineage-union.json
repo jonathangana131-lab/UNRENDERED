@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-232300-g4m8q2v7-geometry-test-lineage-union",
+  "timestamp": "2026-08-11T23:23:00+00:00",
+  "fromWorker": "sol-20260811-g4m8q2v7",
+  "eventType": "DEPENDENCY",
+  "summary": "Physics-geometry capacity mining found a concrete cross-lineage integration dependency: generation-6 geometry successor PR #414 exact head 51ffc16fb2f5864cd4874710a7517e94dd5422b8 hardens PhysicsLabScale/tests but does not contain the broad authored-geometry reachability/property corpus originally introduced by PR #302 and replayed byte-for-byte in chair evidence PR #393 exact head f64f841b25a3fa50203137eff86b48192e70a597. PR #393 is explicitly replay evidence and must not merge independently; therefore the eventual fresh integration head must union the still-needed #393/#302 physics_lab_scale geometry properties with the retained #414 scale hardening (and any separately accepted #418 symmetric output-fence regression), rather than choosing either test-file blob wholesale. Rerun exact-head CI/ownership after that union. This is source/test sequencing only and claims no Studio/contact evidence.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY", "HG-PHYSICS-CHAIR-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "MEDIUM",
+  "evidence": [
+    "Current main tests/physics_lab_scale.luau contains only the basic SI boundary vectors/round-trips/NaN/infinity checks; it does not contain PR #302's authored-placement, shell flushness, aperture/door clearance, object grounding, stair continuity, ramp-bounds, or spawn-anchor property corpus.",
+    "PR #393 exact head f64f841b25a3fa50203137eff86b48192e70a597 intentionally reuses #332/#302-era test blobs and its independent completion audit explicitly says #393 must remain replay evidence: integrate #347 first, then preserve any still-needed test delta on the fresh integration head.",
+    "PR #414 exact head 51ffc16fb2f5864cd4874710a7517e94dd5422b8 changes tests/physics_lab_scale.luau for malformed scalar/no-execute and retained finite-output overflow behavior, but its retained #389 lineage is separate from the #393 replay stack.",
+    "Open PR #418 is additionally stacked on #414 and touches the same test file to lock symmetric derived-output fences, so any accepted final geometry test integration should preserve that accepted delta too instead of resolving the overlap by file replacement.",
+    "No production source was changed, no executable test was run by this miner, and no Roblox Studio, viewport, physical-contact, or two-client evidence is claimed."
+  ]
+}
