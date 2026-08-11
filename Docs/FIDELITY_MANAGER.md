@@ -20,9 +20,17 @@ The manager stores only an observed fidelity mirror for diagnostics/counts plus 
 
 If that current value differs from the manager's mirror, the manager synchronizes its diagnostic counts, clears stale pending work, and starts a cooldown from the synchronization point. This lets reconnects, reconstruction, or other legitimate lifecycle owners repair the manager without making the manager authoritative.
 
-When a transition becomes eligible, `step` requires an `applyTransition` callback. The callback runs **before** the manager updates its mirror or metrics. A production adapter should perform the `WorldEntity.transition` there and then realize/demote Roblox representation as appropriate.
+When a transition becomes eligible, `step` requires an `applyTransition` callback. The callback runs **before** the manager commits the accepted evaluation, mirror, or transition metrics. A production adapter should perform the `WorldEntity.transition` there and then realize/demote Roblox representation as appropriate.
 
 For demotion, `WorldEntity.transition` requires fresh captured persistent state. Therefore an unsafe demotion callback fails before the Fidelity Manager can commit its mirror. The pure integration test exercises this exact behavior.
+
+## Rejected-step atomicity and callback reentrancy
+
+A transition callback is a commit boundary. If `applyTransition` raises, the attempted step must not advance the entity's accepted evaluation clock, pending hold state, mirrored fidelity, transition counters, or fidelity counts. A later retry is therefore judged against the last **accepted** evaluation time rather than a timestamp from the rejected callback attempt.
+
+The transition callback must not recursively mutate the same Fidelity Manager entity while its transition is in flight. Same-entity `step` or `unregister` attempts fail closed; read-only diagnostics such as `getObservedLevel` and `getMetrics` remain usable by adapters. Operations on different registered entities are independent transactions and are not rolled back merely because this entity's callback later fails, so production callbacks should make cross-entity manager mutations only when that independence is intentional.
+
+These rules keep aggregate fidelity accounting valid without copying the entire bounded registry for every transition. At every observable boundary, each fidelity count must remain non-negative and the F0-F4 count sum must equal `registered`.
 
 ## Policy inputs
 
@@ -37,6 +45,8 @@ For demotion, `WorldEntity.transition` requires fresh captured persistent state.
 - entity relevance.
 
 All time is supplied explicitly by the caller. The policy contains no hidden clock and is deterministic for identical state/config/input/time sequences.
+
+`visible` and `directlyObserved` are strict booleans. Truthy non-boolean values such as `0` or `"false"` are malformed input and fail before policy state, mirrors, or metrics are mutated.
 
 Significance alone only keeps distant state at F1 by default. Inside render range, unseen significance still does not force F4. Hero fidelity requires close active demand or exceptional relevance that is actually visible.
 
@@ -71,7 +81,7 @@ The default values are an initial Foundation-Lock profile, not permanent world-s
 
 ## Bounded state and metrics
 
-The manager has a configurable `maxRegisteredEntities` hard budget (4096 by default). Registration beyond that capacity fails closed and increments an observable rejection counter. Callers must unregister entities when their interest/streaming ownership ends.
+The manager has a configurable `maxRegisteredEntities` hard budget (4096 by default). Registration beyond that capacity fails closed and increments an observable rejection counter. Malformed registration input, including an invalid entity ID or fidelity level, fails before capacity accounting and does not consume that metric. Callers must unregister entities when their interest/streaming ownership ends.
 
 The manager exposes bounded aggregate metrics:
 
@@ -93,10 +103,10 @@ Callers should register/evaluate only entities relevant to current streaming/int
 ## Integration flow
 
 1. WorldEntity/interest owner supplies entity ID, current authoritative fidelity, and policy inputs.
-2. Fidelity Manager evaluates desired F0-F4 plus a deterministic primary reason and applies hysteresis/holds/cooldown.
-3. When eligible, the manager invokes `applyTransition` with the reason before touching its own mirror.
+2. Fidelity Manager validates inputs, evaluates desired F0-F4 plus a deterministic primary reason, and applies hysteresis/holds/cooldown.
+3. When eligible, the manager invokes `applyTransition` with the reason before committing its accepted evaluation or mirror.
 4. The callback applies `WorldEntity.transition`; demotion includes captured persistent state.
-5. After the callback succeeds, manager counters/mirror commit to the same level.
+5. If the callback succeeds, manager counters/mirror commit to the same level. If it fails, the attempted evaluation remains uncommitted and the error propagates.
 6. A Roblox realization adapter promotes/demotes the physical representation without changing domain identity.
 
 No furniture-specific, character-specific, persistence-service, networking-service, or Roblox rendering logic belongs in the core manager.
