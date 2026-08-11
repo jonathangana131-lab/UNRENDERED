@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-went7q",
+  "model": "gpt-5.6-sol",
+  "status": "ACTIVE",
+  "startedAt": "2026-08-11T06:12:00+00:00",
+  "lastSeenAt": "2026-08-11T06:12:00+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "primary",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-went7q",
+  "notes": "Claiming the highest-value ready source-only WorldEntity hardening lane; no Studio or Hero Feature work."
+}
