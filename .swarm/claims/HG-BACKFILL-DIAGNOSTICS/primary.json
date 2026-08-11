@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "workerId": "sol-20260811-zvq321y9",
+  "claimToken": "e3a7c1f9b4d26085",
+  "claimedAt": "2026-08-11T21:24:00+00:00",
+  "heartbeatAt": "2026-08-11T21:24:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 6,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-zvq321y9-g5",
+  "pr": 401,
+  "notes": "Generation-6 amendment of PR #401 exact generation-5 head 2f5603210a3d3d6af7db94b43fdfd6707b1f9b4a. Absorb PR #400 expected-red Adornee/label.Text projection-integrity coverage while preserving duplicate-root repair."
+}
