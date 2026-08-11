@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r6m2v9c4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-11T20:40:30+00:00",
-  "lastSeenAt": "2026-08-11T20:40:30+00:00",
+  "lastSeenAt": "2026-08-11T20:44:30+00:00",
   "laneId": "HG-COMPLETION-PHYSICS",
   "slotId": "reconcile",
   "branch": "agent/reconcile/HG-COMPLETION-PHYSICS-r6m2v9c4",
-  "notes": "Reconcile overlapping PhysicsLabRuntime recipe-fence #310 and transition-fence #388 lineages. Preserve both reviewed invariants; no source rewrite or merge while trusted ownership is fail-closed."
+  "notes": "Reconciled #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d with #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1. Retain #388 as current-main runtime base and replay #310 canonical-recipe/no-execute/bounded-comparison semantics before authority allocation; union both test corpora. Durable PR reviews: #388 4910545311 and #310 4910546719. Integration remains HOLD on trusted-history recovery; no Studio evidence claimed."
 }
