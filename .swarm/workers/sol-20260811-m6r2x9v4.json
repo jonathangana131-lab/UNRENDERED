@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-m6r2x9v4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T21:35:00+00:00",
-  "lastSeenAt": "2026-08-11T21:55:18+00:00",
-  "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY-audit-m6r2x9v4-g1",
-  "notes": "Capacity passes completed/released with durable events. Now independently reviewing retained authority harness PR #410 exact head d217ac07496cfe9021cac4e69fad6768ab83ccfd for synchronous stale-owner reconciliation, destroy capability confinement, teardown/restart ordering, and regression strength. Source-only; no Studio/two-client evidence."
+  "lastSeenAt": "2026-08-11T22:00:41+00:00",
+  "notes": "Completed and released capacity passes plus the independent exact-head authority-harness audit. MaterialDNA: published validation diagnostic-bound finding. WorldEntity retained #397: NO_ADDITIONAL_GAP. Physics runtime retained #408: NO_ADDITIONAL_GAP. ObjectGenome duplicate review intentionally avoided. Authority harness PR #410 exact head d217ac07496cfe9021cac4e69fad6768ab83ccfd: blocking REVIEW_RESULT evt-sol-20260811-m6r2x9v4-authority-harness-generation-fence-215924 and native review 4911102573 identify cross-generation deferred currentReconcile token retirement; lane moved REVIEW -> NEEDS_CHANGES for a narrow generation fence/regression. Source-only connector audit; no local tests, Studio, two-client, or runtime scheduler reproduction claimed."
 }
