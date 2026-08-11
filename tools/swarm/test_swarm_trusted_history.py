@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Adversarial regressions for the append-only trusted-history recovery."""
+import hashlib
 from pathlib import Path
 import unittest
 from unittest.mock import patch
 
 from test_swarmctl_hardening_base import Fx, NOW, core, write
+import swarm_history_recovery_manifest as recovery
 import swarmctl_hardening as hard
 
 
@@ -131,13 +133,23 @@ class QuarantinedHistoryTests(unittest.TestCase):
         self.assertEqual(rule["canonicalGitBlobSha1"], "9ef4e62ffb0aac9d4b18cb19911d8d3a25535158")
         self.assertEqual(rule["quarantinedGitBlobSha1"], "c2b99475cdb95940d9a7ca329440880865da02cb")
 
-    def test_malformed_first_write_events_are_exact_quarantine_only_artifacts(self):
-        expected = {
-            "evt-20260811-115302-a05c9683-runtime-transition-audit": "aa5b394feb3dbb6773beab3c504f8f7100c43f42",
-            "evt-20260811-120452-a05c9683-worldentity-capacity-finding": "f45217b586595660161bfaff88ac39ba135d8881",
-        }
-        for event_id, blob_sha in expected.items():
+    def test_complete_malformed_first_write_manifest_is_exact_quarantine_only(self):
+        self.assertEqual(len(recovery.MALFORMED_EVENT_QUARANTINE), 63)
+        canonical = "\n".join(
+            f"{event_id}|{first_write}|{blob_sha}"
+            for event_id, first_write, blob_sha in sorted(recovery.MALFORMED_EVENT_QUARANTINE)
+        )
+        self.assertEqual(
+            hashlib.sha256(canonical.encode("utf-8")).hexdigest(),
+            "2da95a4afca74ac17bb63e859f4f9870027210ffb524e39196d244666fe055c1",
+        )
+        self.assertEqual(len({row[0] for row in recovery.MALFORMED_EVENT_QUARANTINE}), 63)
+        for event_id, first_write, blob_sha in recovery.MALFORMED_EVENT_QUARANTINE:
+            self.assertRegex(first_write, r"^[a-f0-9]{40}$")
+            self.assertRegex(blob_sha, r"^[a-f0-9]{40}$")
             rule = hard._CANONICAL_IMMUTABLE_EVENTS[event_id]
+            self.assertEqual(rule["date"], "2026-08-11")
+            self.assertEqual(rule["filename"], f"{event_id}.json")
             self.assertEqual(rule["quarantineOnlyGitBlobSha1"], blob_sha)
             self.assertNotIn("canonicalGitBlobSha1", rule)
             self.assertNotIn("quarantinedGitBlobSha1", rule)
@@ -228,6 +240,7 @@ class TrustedHistoryWorkflowTests(unittest.TestCase):
         "fecdd4109e7c0b93dae75ea69c8070c7ce0b7b70": "430362399ed3e2fa8eedbad63ac0842b75fac4db",
         "d1aa5e7b12b4d8e9917bb77dab3225e4dee4deb8": "a888f8d1c25050e26427fb40945002585741d618",
         "8bca8ca61902faf25efe9ef3a004ec032f132c5d": "5f0cb1f3d5618c3816e008adb6951b83de5c861e",
+        "66e482d3b424c63c4bed277aafa897f0fa051bbc": "96f1bce1e17b085d4f29b444036c498bcfefe45a",
     }
 
     def workflow(self):
@@ -262,6 +275,14 @@ class TrustedHistoryWorkflowTests(unittest.TestCase):
         self.assertIn("enumerated by FINITE_WORKER_TRANSITIONS", workflow)
         for invalid_sha, repair_sha in self.INVALID_WORKER_TRANSITIONS.items():
             self.assertNotIn(f"git merge-base --is-ancestor {invalid_sha} {repair_sha}", workflow)
+
+    def test_bootstrap_proves_every_quarantine_first_write_from_manifest(self):
+        workflow = self.workflow()
+        self.assertIn("recovery.MALFORMED_EVENT_QUARANTINE", workflow)
+        self.assertIn("FIRST_WRITE_SHA", workflow)
+        self.assertIn("FIRST_WRITE_BLOB", workflow)
+        self.assertIn("expected exactly one first-add commit", workflow)
+        self.assertIn("first-write blob mismatch", workflow)
 
     def test_health_mutation_is_not_hidden_as_generated_only_commit(self):
         workflow = self.workflow()
