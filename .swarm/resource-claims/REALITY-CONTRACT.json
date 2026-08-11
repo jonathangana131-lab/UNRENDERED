@@ -5,8 +5,8 @@
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "claimToken": "9c4e2a7f1b6d8053",
   "acquiredAt": "2026-08-11T23:09:10+00:00",
-  "heartbeatAt": "2026-08-11T23:09:10+00:00",
+  "heartbeatAt": "2026-08-11T23:14:00+00:00",
   "leaseSeconds": 1800,
   "generation": 2,
-  "notes": "Generation-2 WorldEntity test-adversary lease; test-only mining of retained #413 for one concrete bounded invariant."
+  "notes": "Generation-2 WorldEntity test-adversary lease; draft stacked PR #417 exact head 41be04102188381c2bbac08b3c5ceabf07a49e37 is under exact-head CI validation."
 }
