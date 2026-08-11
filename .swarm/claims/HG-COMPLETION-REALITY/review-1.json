@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-REALITY",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-bbd7b1e6",
+  "claimToken": "7a91d4c2e8bf5036",
+  "claimedAt": "2026-08-11T09:49:00+00:00",
+  "heartbeatAt": "2026-08-11T09:49:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-REALITY-review1-bbd7b1e6-g3",
+  "pr": null,
+  "notes": "Independent Reality completion-queue review. Select the highest-value current Reality/identity/provenance PR that is not already conclusively reviewed on its exact head; publish an exact-head verdict and durable handoff, without implementing unrelated source changes."
+}
