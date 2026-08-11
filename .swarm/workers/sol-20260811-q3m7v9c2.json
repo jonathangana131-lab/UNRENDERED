@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q3m7v9c2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T20:30:30+00:00",
-  "lastSeenAt": "2026-08-11T20:30:30+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Registered after completing Fidelity adversary work; preparing fenced generation-2 takeover of stale ObjectGenome capacity miner."
+  "lastSeenAt": "2026-08-11T20:31:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-q3m7v9c2-g2",
+  "notes": "Generation-2 stale takeover active. Mining current ObjectGenome source/tests/live PR lineage for one concrete non-duplicate source-depth finding; docs/events only."
 }
