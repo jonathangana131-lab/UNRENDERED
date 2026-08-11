@@ -342,6 +342,37 @@ local function run(): number
 	end
 	recursiveRuntime:dispose()
 
+	local preHookRuntime = PhysicsLabRuntime.new(recipe)
+	local preHookId = floor.entity.id
+	local policyReads = 0
+	local hostileInputs = setmetatable({}, {
+		__index = function()
+			policyReads += 1
+			preHookRuntime:dispose()
+			return nil
+		end,
+	})
+	local preHookAccepted = pcall(function()
+		preHookRuntime:step(preHookId, hostileInputs, 0)
+	end)
+	local afterPreHook = preHookRuntime:snapshot()
+	expect("hostile policy inputs cannot dispose runtime before transition hook", not preHookAccepted)
+	expect("hostile policy inputs exercised the pre-hook evaluation window", policyReads > 0)
+	expect(
+		"pre-hook mutation rejection preserves both authority populations",
+		afterPreHook.registered == #recipe.entities
+			and afterPreHook.fidelity.registered == #recipe.entities
+	)
+	expect(
+		"pre-hook mutation rejection preserves fidelity authority",
+		preHookRuntime:getFidelity(preHookId) == "F2"
+	)
+	local preHookRetryOk = pcall(function()
+		preHookRuntime:step(preHookId, noDemand, 0)
+	end)
+	expect("pre-hook mutation rejection clears runtime guard for retry", preHookRetryOk)
+	preHookRuntime:dispose()
+
 	local facadeRuntime = PhysicsLabRuntime.new(recipe)
 	expect(
 		"runtime facade hides mutable authority capabilities",
