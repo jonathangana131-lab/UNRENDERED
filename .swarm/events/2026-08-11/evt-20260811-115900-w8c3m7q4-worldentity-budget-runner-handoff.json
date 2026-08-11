@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115900-w8c3m7q4-worldentity-budget-runner-handoff",
+  "timestamp": "2026-08-11T11:59:00+00:00",
+  "fromWorker": "sol-20260811-w8c3m7q4",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "high",
+  "summary": "Draft PR #372 moves the reviewed WorldEntity persistent-state budget/atomicity regressions into already-enumerated tests/world_entity_registry_shape.luau, eliminating the need for the primary's out-of-scope tests/run.luau registration. Canonical CI is expected-red only at Pure Luau against current main because the production bounds live on primary #293; all earlier validation stages pass. Primary should absorb #372's one-file delta while synchronizing its source onto current main, drop shared-runner edits, then rerun exact-head CI and ownership.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #372 head 8564a7a088ff62701f56c28760a2e58e751682b6 changes only tests/world_entity_registry_shape.luau (+106/-0).",
+    "CI run 31488843306 passes format, lint, Luau analysis, canonical randomness, shared-domain, plain-value and swarm deterministic tests; Pure Luau fails on the newly asserted missing state-budget contract against main.",
+    "PR #293 conversation handoff comment 5252838880 records the exact absorption/synchronization path and no Studio evidence claim."
+  ]
+}
