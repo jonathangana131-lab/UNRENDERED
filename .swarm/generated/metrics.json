@@ -1,5 +1,5 @@
 {
-  "activeClaims": 2,
+  "activeClaims": 1,
   "activeEpics": [
     "HERO-GATE",
     "SWARM-V2"
@@ -9,13 +9,13 @@
     "INTEGRATION_RESULT": 1,
     "RECOVERY": 1
   },
-  "generatedAt": "2026-08-11T05:31:30.960476+00:00",
+  "generatedAt": "2026-08-11T05:31:51.090016+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED_EXTERNAL": 1,
-    "DONE": 2,
+    "DONE": 3,
     "LOCKED": 1,
-    "READY": 5
+    "READY": 4
   },
   "note": "Gross lines written are diagnostic, not a success metric.",
   "readySlots": 1,
