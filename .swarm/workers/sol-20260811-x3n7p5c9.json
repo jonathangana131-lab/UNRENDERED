@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-x3n7p5c9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T20:16:00+00:00",
-  "lastSeenAt": "2026-08-11T20:16:00+00:00",
-  "notes": "Review/integration worker. Control-history primary was atomically taken by generation 3 during triage; switching to fresh independent exact-head audit of HG-BACKFILL-REALITY PR #359 without bypassing global ownership recovery."
+  "lastSeenAt": "2026-08-11T20:34:00+00:00",
+  "notes": "Triage/review/mining pass complete. Avoided duplicate global history recovery and redundant exact-head reviews; independently verified the PhysicsLabStudioHarness raw RealizedLab.destroy lifecycle escape already durably recorded by authority PR #382/#390, then released HG-CAPACITY-MINING/mine-authority. Final live pass found recovery #387 active and review/mining slots concurrently occupied/taken; no safe non-conflicting unlocked slot claimed."
 }
