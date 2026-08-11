@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-8d5d357a",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T23:08:18+00:00",
-  "lastSeenAt": "2026-08-11T23:48:10+00:00",
-  "notes": "Reconciled stale Fidelity capacity lane metadata after discovering prior independent exact-head SOURCE PASS evt-sol-s56p4x9m7-fidelity-capacity-source-pass / review 4911599810. Duplicate audit independently found no additional source/test blocker, published no duplicate verdict, moved the lane to BLOCKED only on trusted live ownership, and released its claim."
+  "lastSeenAt": "2026-08-11T23:50:34+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "primary",
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-8d5d357a-g7",
+  "notes": "Generation-7 retained closure starts from support PR #418 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f, preserving PR #414 production repair and absorbing the reviewed behavioral reverse-overflow regression before fresh exact-head CI/review."
 }
