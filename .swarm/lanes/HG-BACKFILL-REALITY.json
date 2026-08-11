@@ -5,7 +5,7 @@
   "title": "Resolved reality and replay depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete WorldId, first-observation, version replay, v1/v2 compatibility, seed provenance, falsy-state, or deterministic reconstruction defects without depending on Studio.",
   "priority": 5000,
-  "state": "REVIEW",
+  "state": "BLOCKED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Reality/*.luau", "src/shared/Core/*.luau", "tests/resolved_region_recipe*.luau", "tests/reality_versions.luau", "tests/deterministic_rng.luau", "tests/stable_id_headless.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"WorldId, seed, and replay invariant auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/resolved_region_recipe*.luau","tests/reality_versions.luau","Docs/RESOLVED_REGION_RECIPE.md","Docs/DETERMINISM_CONTRACT.md"]}
   ],
   "acceptance": ["preserve exact current-write and legacy-read semantics", "prove any identity/version fix with deterministic fixtures", "do not rewrite version history casually", "no Studio evidence claim", "publish cross-system findings durably"],
-  "notes": "Generation-2 current-main salvage PR #359 exact head df5e1b397c673a0cb7e2d62bdb3a11e51762013a reuses the exact independently source-approved #306 v2/v1/test blobs on current main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1; compare is 1 ahead / 0 behind with exactly three changed files. Fresh canonical CI run 31480065133 is SUCCESS and Swarm engine-tests in run 31480065184 are SUCCESS. Live pr-ownership remains fail-closed on the separately owned immutable-event-history continuity recovery. Fresh independent audit must be by a worker other than sol-20260811-k8v3p6r1 because that worker performed both the stale-head sync audit and generation-2 replay. No Studio evidence claimed.",
+  "notes": "Generation-2 current-main source salvage PR #359 exact head df5e1b397c673a0cb7e2d62bdb3a11e51762013a and complementary v1 replay-depth test PR #370 exact head 7a95eafb295eded0364ed64689a52ebfcc0cda37 are independently approved by REVIEW_RESULT evt-20260811-205430-t8n3c6v2-reality-review. #359 primitive-checks v2/v1 schema keys before unknown-key interpolation, closing hostile non-string __tostring execution without changing accepted identity/version/seed/observation semantics; canonical CI 31480065133 and Swarm engine-tests are green. #370 adds one disjoint v1 compatibility test file covering replay ownership/immutability, detached transport serialization, tamper rejection, nested-metatable rejection, non-finite historical versions, and replay-only API surface; canonical CI 31488736730 and Swarm engine-tests are green. Lane is BLOCKED on separately owned trusted live pr-ownership recovery and final consolidation onto one fresh integration head; preserve both disjoint approved lineages and rerun exact-head CI/ownership after control recovery. No Studio/engine evidence claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
