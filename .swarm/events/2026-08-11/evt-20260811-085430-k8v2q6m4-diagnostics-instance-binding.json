@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085430-k8v2q6m4-diagnostics-instance-binding",
+  "timestamp": "2026-08-11T08:54:30+00:00",
+  "fromWorker": "sol-20260811-k8v2q6m4",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Diagnostics represented-set hardening still lacks concrete Instance binding. PhysicsLabRealizer.isRepresented(entityId) proves only that the private representation map has a non-nil entry consistent with F0/F2 authority; it does not prove that the direct Workspace child currently being enumerated by PhysicsLabStudioDiagnostics is that exact runtime-owned Instance. A stale destroyed map entry plus a substituted child carrying the same canonical WorldEntityId/fidelity can therefore satisfy unique-id, represented-count, and boolean membership checks while diagnostics publishes evidence for an unowned substitute.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "src/server/PhysicsLab/PhysicsLabRealizer.luau stores the actual physical views in the private representations map, but RealizedLab exposes only isRepresented(entityId): boolean; that function computes representations[entityId] ~= nil and does not compare a candidate Instance to the stored map value or verify that stored value remains parented to the owned lab model.",
+    "Active recovery PR #327 strengthens diagnostics with unique WorldEntityIds, lab.isRepresented(id) membership, and authoritative UNRENDERED_RepresentedCount equality. Those checks prove cardinality and ID membership but cannot bind an enumerated child to the concrete Instance owned by the representation map.",
+    "A one-for-one substitution can preserve all three proposed predicates: externally destroy the real child without changing the private map, parent a substitute child under the lab with the same WorldEntityId/fidelity, and keep the represented count unchanged. The boolean map membership remains true because the stale map reference is still non-nil, while diagnostics observes the substitute.",
+    "Search across current diagnostics PRs found no separate Instance-identity binding fix; #327 explicitly claims represented-count + membership hardening, while #301 covers count completeness and lifecycle ordering and #304 covers failure-atomicity/cycle-input documentation."
+  ]
+}
