@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115600-a6f4c9e2-fidelity-capacity-bound",
+  "timestamp": "2026-08-11T11:56:00+00:00",
+  "fromWorker": "sol-20260811-a6f4c9e2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "FidelityManager's configured hard registration budget is not itself bounded to an exact/project-owned integer domain. The reviewed #335 head type-fences maxRegisteredEntities but still accepts any positive finite math.floor-stable number, including values above IEEE-754's exact-integer range and values so large that the documented hard budget ceases to provide a meaningful memory ceiling before process exhaustion. This is distinct from #335's no-execute/config atomicity work and #367's nested transition coverage. Recommend a separate one-shot Fidelity budget-contract lane rather than widening the integration-bound primary: define a project-owned maximum/safe-integer ceiling, reject above it in constructor and pure-policy config validation, and regression-lock exact-boundary acceptance/rejection while preserving the default 4096 profile.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "Docs/FIDELITY_MANAGER.md calls maxRegisteredEntities a configurable hard budget and says total manager records are capped by configuration.",
+    "Exact reviewed Fidelity primary head 4a3c55d9d2046df1af6ee93710d395aedd4ea102 validates maxRegisteredEntities only as >= 1, finite, and equal to math.floor(value); it has no safe-integer or project maximum check.",
+    "Open Fidelity work already owns transition atomicity/no-execute/cross-entity nested-step coverage (#335/#367); repository issue/PR search found no existing Fidelity lane or issue specifically owning an upper capacity/safe-integer contract, so this finding is intentionally kept as a separate follow-up."
+  ]
+}
