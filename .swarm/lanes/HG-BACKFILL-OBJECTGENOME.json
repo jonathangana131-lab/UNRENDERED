@@ -5,7 +5,7 @@
   "title": "ObjectGenome adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete ObjectGenome shape, component, ownership, fingerprint, transform, material-reference, state-binding, immutability, or malformed-input defects without depending on Studio.",
   "priority": 5150,
-  "state": "REVIEW",
+  "state": "BLOCKED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Objects/ObjectGenome*.luau", "tests/object_genome*.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"ObjectGenome contract and ownership auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/object_genome*.luau","Docs/OBJECT_GENOME.md"]}
   ],
   "acceptance": ["inspect current main and existing contract-lock tests", "prefer a concrete defect or missing invariant over speculative redesign", "new behavior is covered by deterministic regression tests", "preserve canonical identity and plain-data boundaries", "publish cross-lane findings as structured events"],
-  "notes": "Generation-8 successor PR #395 is ready for fresh independent review at exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962. It closes exact-head audit review 4910534785 / finding evt-20260811-202000-r6p3v8n2-objectgenome-decoder-shape by fail-closing decodeMechanismPosition on incomplete or undeclared-field standalone mechanism records while preserving canonical valid fixture decode outputs and all schema/StableId/fingerprint/ObjectState contracts. Relative to generation-7 head 0250b26afa018959f1aec450830680361d1a3dc2 the successor remains exactly two lane-owned files: ObjectGenome +92/-2 and object_genome_contract_lock +55/-0. Canonical CI run 31535562114 job 93925716700 PASS through StyLua, Selene, strict Luau analysis, architecture audits, swarm deterministic tests, Pure Luau tests, Rojo build, and artifact upload. Swarm engine-tests job 93925716939 PASS. pr-ownership job 93925717016 remains separately fail-closed on live control-plane state and is not waived by this lane. PR #380 is superseded and must not be integrated. No Roblox Studio/engine evidence is applicable or claimed. Fresh audit/test-adversary work must target #395 exact head, not #380.",
+  "notes": "Generation-8 successor PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 is source/test approved and retained. It closes the decoder-shape gap without widening ObjectGenome v1 identity/schema contracts. Canonical CI run 31535562114 remains SUCCESS on the exact head. Independent lane-owned exact-head audit by sol-20260811-z8k4m6p2 was published on PR #395 at 2026-08-11T21:04:37Z with SOURCE/TEST APPROVE and no new patch-local blocker. Generation-2 reconciliation by sol-20260811-d7k4m9q2 verified the head and CI remain unchanged and intentionally posted no duplicate review. Lane is BLOCKED only on the separately owned SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY / fresh live pr-ownership gate. PR #380 remains superseded and must not integrate independently. No Roblox Studio/engine evidence is applicable or claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
