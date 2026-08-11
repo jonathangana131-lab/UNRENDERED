@@ -13,7 +13,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:52:41.184623+00:00",
+  "generatedAt": "2026-08-11T05:53:16.010523+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "10d3f6992ff243a9268ed8629893faf4fc40791c",
@@ -32,16 +32,16 @@
       "INTEGRATION_RESULT": 3,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T05:52:41.184623+00:00",
+    "generatedAt": "2026-08-11T05:53:16.010523+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
       "DONE": 5,
       "LOCKED": 1,
-      "READY": 4
+      "READY": 6
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 3,
+    "readySlots": 9,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 0
@@ -60,6 +60,18 @@
       ]
     },
     {
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [],
+      "role": "ObjectGenome source hardening",
+      "score": 5450,
+      "slotId": "primary",
+      "writeScopes": [
+        "src/shared/Objects/ObjectGenome*.luau",
+        "tests/object_genome*.luau"
+      ]
+    },
+    {
       "laneId": "HG-BACKFILL-WORLDENTITY",
       "reason": "dependencies satisfied",
       "resources": [],
@@ -72,6 +84,42 @@
       ]
     },
     {
+      "laneId": "HG-BACKFILL-MATERIALDNA",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [],
+      "role": "MaterialDNA source hardening",
+      "score": 5400,
+      "slotId": "primary",
+      "writeScopes": [
+        "src/shared/Materials/*.luau",
+        "tests/materialdna*.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "ObjectGenome malformed-input and identity tests",
+      "score": 5370,
+      "slotId": "test-adversary",
+      "writeScopes": [
+        "src/shared/Objects/ObjectGenome*.luau",
+        "tests/object_genome*.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-MATERIALDNA",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "MaterialDNA schema and hostile-input tests",
+      "score": 5320,
+      "slotId": "test-adversary",
+      "writeScopes": [
+        "src/shared/Materials/*.luau",
+        "tests/materialdna*.luau"
+      ]
+    },
+    {
       "laneId": "HG-BACKFILL-WORLDENTITY",
       "reason": "dependencies satisfied",
       "resources": [],
@@ -81,6 +129,30 @@
       "writeScopes": [
         "src/shared/Reality/WorldEntity.luau",
         "tests/world_entity*.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "ObjectGenome contract and ownership auditor",
+      "score": 5270,
+      "slotId": "audit",
+      "writeScopes": [
+        "src/shared/Objects/ObjectGenome*.luau",
+        "tests/object_genome*.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-MATERIALDNA",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "MaterialDNA contract and fixture auditor",
+      "score": 5220,
+      "slotId": "audit",
+      "writeScopes": [
+        "src/shared/Materials/*.luau",
+        "tests/materialdna*.luau"
       ]
     }
   ],
@@ -228,13 +300,13 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "357ee56b11d68159faa7f098326c1e9cac11ee16f674fcd3333ddcb11e9bcaf8",
+  "stateDigest": "dacadfcc1fcdb53aa149c15374c3bfad3f596d1e5a0cc0c44edd9071f1a888a4",
   "summary": {
     "activeClaims": 0,
     "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
-    "lanes": 11,
-    "readySlots": 3,
+    "lanes": 13,
+    "readySlots": 9,
     "staleClaims": 0,
     "workers": 24
   }
