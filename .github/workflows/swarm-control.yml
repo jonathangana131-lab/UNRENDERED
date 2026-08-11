@@ -56,6 +56,33 @@ jobs:
             git merge-base --is-ancestor "$REPAIR_SHA" "$CONTROL_SHA"
           done < "$TRANSITIONS_FILE"
 
+          # Every malformed immutable event is an exact quarantine-only artifact.
+          # Prove the manifest's first-add commit and blob directly from Git history;
+          # never infer a compatibility exception from the live validation failure.
+          MALFORMED_FILE="$RUNNER_TEMP/malformed-event-quarantine.txt"
+          python3 - "$MALFORMED_FILE" <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, "tools/swarm")
+          import swarm_history_recovery_manifest as recovery
+          Path(sys.argv[1]).write_text(
+              "".join(
+                  f"{event_id} {first_write} {blob_sha}\n"
+                  for event_id, first_write, blob_sha in recovery.MALFORMED_EVENT_QUARANTINE
+              ),
+              encoding="utf-8",
+          )
+          PY
+          [[ -s "$MALFORMED_FILE" ]] || { echo 'Malformed event quarantine manifest is empty.'; exit 1; }
+          while read -r EVENT_ID FIRST_WRITE_SHA FIRST_WRITE_BLOB; do
+            EVENT_PATH=".swarm/events/2026-08-11/${EVENT_ID}.json"
+            mapfile -t ADD_COMMITS < <(git log --format=%H --reverse --diff-filter=A "$CONTROL_SHA" -- "$EVENT_PATH")
+            [[ "${#ADD_COMMITS[@]}" -eq 1 ]] || { echo "$EVENT_ID: expected exactly one first-add commit"; exit 1; }
+            [[ "${ADD_COMMITS[0]}" == "$FIRST_WRITE_SHA" ]] || { echo "$EVENT_ID: first-write commit mismatch"; exit 1; }
+            git merge-base --is-ancestor "$FIRST_WRITE_SHA" "$CONTROL_SHA"
+            [[ "$(git rev-parse "${FIRST_WRITE_SHA}:${EVENT_PATH}")" == "$FIRST_WRITE_BLOB" ]] || { echo "$EVENT_ID: first-write blob mismatch"; exit 1; }
+          done < "$MALFORMED_FILE"
+
           mkdir -p "$RUNNER_TEMP/bootstrap-control"
           git archive "$CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/bootstrap-control"
           python3 tools/swarm/audit_history_recovery.py \
