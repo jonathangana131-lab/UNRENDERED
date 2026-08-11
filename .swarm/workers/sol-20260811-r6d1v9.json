@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r6d1v9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T08:44:30+00:00",
-  "lastSeenAt": "2026-08-11T08:44:30+00:00",
+  "lastSeenAt": "2026-08-11T08:50:30+00:00",
   "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
   "slotId": "reviewer-1",
   "branch": "agent/review/SWARM-RECOVERY-EVENT-COMPAT-r6d1v9",
-  "notes": "Independent exact-head audit of generation-3 immutable-event compatibility recovery PR #329; adversarial focus on finite historical identity, strict-first laundering bypass, full immutable continuity, backdating, unknown keys, and transition rewrites."
+  "notes": "Completed exact-head security audit of PR #329 at 275ba90d. Scheduler verdict REQUEST_CHANGES/P0: strict-first laundering bypass plus missing exact path/blob provenance and replay uniqueness. Review 4904461613 and event evt-20260811-084930-r6d1v9-event-compat-review-block published; lane returned to NEEDS_CHANGES and reviewer claim released."
 }
