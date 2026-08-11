@@ -13,7 +13,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:33:43.867952+00:00",
+  "generatedAt": "2026-08-11T05:34:53.561667+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "2ce32576a47e99a1e09e802dc7e76a0bf7bbd283",
@@ -25,28 +25,41 @@
   "metrics": {
     "activeClaims": 0,
     "activeEpics": [
-      "HERO-GATE"
+      "HERO-GATE",
+      "SWARM-V2"
     ],
     "eventCounts": {
       "EXTERNAL_BLOCKER": 1,
       "INTEGRATION_RESULT": 2,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T05:33:43.867952+00:00",
+    "generatedAt": "2026-08-11T05:34:53.561667+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
       "DONE": 4,
       "LOCKED": 1,
-      "READY": 3
+      "READY": 4
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 0,
+    "readySlots": 1,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 0
   },
-  "readySlots": [],
+  "readySlots": [
+    {
+      "laneId": "SWARM-V2-E2E",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [],
+      "role": "Post-hardening E2E proof implementer",
+      "score": 10400,
+      "slotId": "primary",
+      "writeScopes": [
+        "Docs/SWARM_V2_E2E_PROOF.md"
+      ]
+    }
+  ],
   "recentEvents": [
     {
       "affects": [
@@ -170,13 +183,13 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "b68c3302ad205a55605182abbe20a9946538ce06274fb4d0cf5ad497148631e3",
+  "stateDigest": "d8b8968dcbfad43b003194db97a41d23b3efa7c5ebd54635cbd0e79e2557622e",
   "summary": {
     "activeClaims": 0,
     "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
-    "lanes": 9,
-    "readySlots": 0,
+    "lanes": 10,
+    "readySlots": 1,
     "staleClaims": 0,
     "workers": 5
   }
