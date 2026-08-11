@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070430-ogx9k2-worldentity-boundary-audit",
+  "timestamp": "2026-08-11T07:04:30+00:00",
+  "fromWorker": "sol-20260811-ogx9k2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "important",
+  "summary": "WorldEntity audit found two additional runtime-boundary gaps on current main/PR #271: required capture APIs silently accept nil as empty durable state because cloneState also implements constructor defaulting, and createRegistry silently treats false capacity as omitted while non-number hostile tables can reach numeric comparison metamethods before rejection.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #271 issue comment 5249983545 records both findings and requested regression coverage.",
+    "WorldEntity.captureState(record, nil :: any) reaches cloneState(nil), becomes {}, and advances stateRevision; captureRegistered inherits the same behavior despite a non-optional PlainData contract.",
+    "WorldEntity.createRegistry(false :: any) evaluates false through `duplicateDiagnosticCapacity or DEFAULT`, silently selecting the default capacity instead of rejecting malformed input.",
+    "createRegistry passes runtime input directly to assertFiniteNumber, whose comparisons occur without an initial type check; a table can therefore reach comparison metamethods such as __lt before fail-closed rejection.",
+    "The hostile diagnostic-formatting fix should also audit fidelityRank and unknown registered-ID formatting, which interpolate runtime values at public typed boundaries."
+  ]
+}
