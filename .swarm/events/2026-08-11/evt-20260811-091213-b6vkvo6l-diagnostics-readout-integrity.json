@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091213-b6vkvo6l-diagnostics-readout-integrity",
+  "timestamp": "2026-08-11T09:12:13+00:00",
+  "fromWorker": "sol-20260811-b6vkvo6l",
+  "eventType": "FINDING",
+  "summary": "Source-only diagnostics mining found a non-duplicate proof-surface integrity gap. PhysicsLabStudioDiagnostics.capture() treats an enabled diagnostics tree as valid when diagnosticInstanceCount is merely positive; runToggleEvidence() likewise proves enabled/disabled lifecycle and no physical-lab drift but does not fail closed on missing, duplicated, wrong-type, misbound, or content-drifted per-entity BillboardGui/TextLabel readouts after enable(). The manual diagnostics contract requires the viewport readout to expose and agree on stable WorldEntityId, recipe identity, effective fidelity, recipe fingerprint and repro key. A readout can therefore be removed or altered after construction while capture/evidence still reports an enabled diagnostics surface and the later disable cycle cleans it up successfully. This is distinct from evt-20260811-085430-k8v2q6m4-diagnostics-instance-binding, which concerns whether the enumerated physical representation is the runtime-owned Instance. Recommended bounded closure after current #327/#333 integration: validate the diagnostics proof tree semantically against the planned entity set (exact one owned billboard+label per expected representation, Adornee bound to that representation, displayed/captured tuple derived from canonical WorldEntityId/recipeKey/fidelity/fingerprint/repro), reject missing/extra/misbound/content-drifted readouts in capture/evidence, and add source regressions that mutate/remove/misbind a readout after enable. No Studio/viewport PASS is claimed by this finding.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG-CAPACITY-MINING"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "toWorker": "sol-20260811-z5r8m2",
+  "evidence": [
+    "main@dd8f1581 src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau: capture() records diagnosticInstanceCount = 1 + #diagnosticsFolder:GetDescendants() but does not validate semantic readout ownership/content; runToggleEvidence() only requires enabled count nonzero and disabled count zero around full-lab validation.",
+    "main@dd8f1581 Docs/PHYSICS_LAB_DIAGNOSTICS.md: visual/manual acceptance requires stable WorldEntityId, entity recipe identity, effective fidelity, recipe fingerprint and repro key to agree with representation attributes/authoritative records.",
+    "PR #327 discussion already routes the separate exact-physical-Instance ownership seam via evt-20260811-085430-k8v2q6m4-diagnostics-instance-binding; PR #333 closes lifecycle/bounds source-test requests, not readout-tree semantic integrity.",
+    "Repository PR search for diagnosticInstanceCount/readout/BillboardGui/TextLabel returned the active diagnostics work but no dedicated readout-integrity closure."
+  ]
+}
