@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "epicId": "HERO-GATE",
+  "title": "Physics Lab runtime canonical-recipe fence",
+  "objective": "Close the concrete source-only constructor gap found by capacity mining: PhysicsLabRuntime must fail closed before authority registration when an input bearing the canonical recipe key does not match the permanent lab's canonical WorldId/RegionId and complete key/id population.",
+  "priority": 4980,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    "src/shared/Physics/PhysicsLabRuntime.luau",
+    "tests/physics_lab_runtime*.luau"
+  ],
+  "resources": [],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Canonical Physics Lab runtime input fence",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 300,
+      "writeScopes": [
+        "src/shared/Physics/PhysicsLabRuntime.luau",
+        "tests/physics_lab_runtime*.luau"
+      ]
+    },
+    {
+      "slotId": "audit",
+      "role": "Independent runtime recipe-fence reviewer",
+      "exclusive": true,
+      "requiresIndependentFrom": "primary",
+      "availableWhen": ["REVIEW"],
+      "priorityBoost": 120,
+      "writeScopes": ["tests/physics_lab_runtime*.luau", "Docs/PHYSICS_LAB.md"]
+    }
+  ],
+  "acceptance": [
+    "reject mismatched canonical WorldId or RegionId before runtime authority registration",
+    "reject missing, duplicate-key, unknown-key, or substituted key/id population relative to the canonical permanent Physics Lab recipe",
+    "preserve the deterministic canonical PhysicsLabRecipe.build() path and current F2/F0 lifecycle behavior",
+    "prove behavior with pure runtime regressions",
+    "do not claim Roblox Studio or engine evidence",
+    "independent review required before integration"
+  ],
+  "notes": "Created from capacity-mining finding evt-20260811-075100-z4m8p2-runtime-recipe-fence. This is a bounded source-contract repair inside the active Hero Gate, not a new feature framework.",
+  "tags": ["backfill", "hero-gate", "source-only", "physics-runtime"]
+}
