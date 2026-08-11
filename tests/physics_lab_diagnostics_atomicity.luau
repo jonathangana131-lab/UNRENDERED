@@ -19,6 +19,29 @@ local function run(): number
 		return string.find(source, needle, 1, true)
 	end
 
+	local directRepresentationsStart = position("local function directRepresentations(model: Model): { Instance }")
+	local directRepresentationsEnd = position("\nlocal function adorneeFor(representation: Instance): BasePart")
+	local directRepresentationsSource = nil
+	if directRepresentationsStart ~= nil and directRepresentationsEnd ~= nil then
+		directRepresentationsSource = string.sub(source, directRepresentationsStart, directRepresentationsEnd - 1)
+	end
+	local representedCountMetric = directRepresentationsSource ~= nil
+		and string.find(directRepresentationsSource, '"UNRENDERED_RepresentedCount"', 1, true)
+	local observedRepresentationCount = directRepresentationsSource ~= nil
+		and string.find(directRepresentationsSource, "#representations", 1, true)
+	local completenessFailurePath = directRepresentationsSource ~= nil
+		and (
+			string.find(directRepresentationsSource, "assert(", 1, true)
+			or string.find(directRepresentationsSource, "error(", 1, true)
+		)
+	local preflightDefinition = position("local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model)")
+	local captureDefinition = position("function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab): Snapshot")
+	local preflightEnumeration = position("for _, representation in ipairs(directRepresentations(model)) do")
+	local captureEnumeration = nil
+	if captureDefinition ~= nil then
+		captureEnumeration = string.find(source, "for _, representation in ipairs(directRepresentations(model)) do", captureDefinition, true)
+	end
+
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
 	local rootName = position("folder.Name = DIAGNOSTICS_ROOT_NAME")
@@ -45,6 +68,23 @@ local function run(): number
 	local evidenceFinalState = position("finallyEnabled = finalSnapshot.enabled")
 	local evidenceFreeze = position("\ttable.freeze(evidence)")
 
+	expect(
+		"direct representation enumeration is fenced by authoritative represented-count completeness",
+		directRepresentationsSource ~= nil
+			and representedCountMetric ~= nil
+			and observedRepresentationCount ~= nil
+			and completenessFailurePath ~= nil
+	)
+	expect(
+		"standalone preflight and capture both consume the completeness-fenced enumeration",
+		preflightDefinition ~= nil
+			and captureDefinition ~= nil
+			and preflightEnumeration ~= nil
+			and captureEnumeration ~= nil
+			and preflightDefinition < preflightEnumeration
+			and preflightEnumeration < captureDefinition
+			and captureDefinition < captureEnumeration
+	)
 	expect(
 		"all readout dependencies are preflighted before the owned root is parented",
 		preflight ~= nil and parentMutation ~= nil and preflight < parentMutation
