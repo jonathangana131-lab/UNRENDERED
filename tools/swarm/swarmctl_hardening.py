@@ -84,16 +84,41 @@ def _relative_event_path(rule: dict) -> str:
     return f"events/{rule['date']}/{rule['filename']}"
 
 
+def _canonical_rule_for_path(path: Path) -> tuple[str, dict] | None:
+    for expected_id, rule in _CANONICAL_IMMUTABLE_EVENTS.items():
+        if path.name == rule["filename"] and path.parent.name == rule["date"]:
+            return expected_id, rule
+    return None
+
+
+def _quarantine_only_identity(path: Path) -> tuple[str, dict, str] | None:
+    """Recognize only exact byte-pinned inert history without parsing its payload."""
+    match = _canonical_rule_for_path(path)
+    if match is None:
+        return None
+    expected_id, rule = match
+    expected_blob = rule.get("quarantineOnlyGitBlobSha1")
+    if expected_blob is None:
+        return None
+    actual = _git_blob_sha1(path)
+    if actual != expected_blob:
+        raise _base.core.ControlError(
+            f"{path}: quarantine-only immutable event changed: {actual} != {expected_blob}"
+        )
+    return expected_id, rule, actual
+
+
 def _canonical_rule(path: Path, obj: dict) -> tuple[str, dict] | None:
     event_id = obj.get("eventId")
+    path_match = _canonical_rule_for_path(path)
+    if path_match is not None:
+        expected_id, rule = path_match
+        if event_id != expected_id:
+            raise _base.core.ControlError(
+                f"{path}: audited immutable event path contains unexpected eventId {event_id!r}"
+            )
+        return expected_id, rule
     for expected_id, rule in _CANONICAL_IMMUTABLE_EVENTS.items():
-        at_canonical_path = path.name == rule["filename"] and path.parent.name == rule["date"]
-        if at_canonical_path:
-            if event_id != expected_id:
-                raise _base.core.ControlError(
-                    f"{path}: audited immutable event path contains unexpected eventId {event_id!r}"
-                )
-            return expected_id, rule
         if event_id == expected_id:
             raise _base.core.ControlError(f"{path}: audited immutable event moved/replayed from its canonical path")
     return None
@@ -101,24 +126,21 @@ def _canonical_rule(path: Path, obj: dict) -> tuple[str, dict] | None:
 
 def _validate_event_with_immutable_compat(path):
     path = Path(path)
+    quarantine_identity = _quarantine_only_identity(path)
+    if quarantine_identity is not None:
+        expected_id, _rule, actual = quarantine_identity
+        return {
+            "_quarantined": True,
+            "eventId": expected_id,
+            "gitBlobSha1": actual,
+            "quarantineOnly": True,
+        }
+
     obj = _base.core.load_json(path, max_bytes=48_000)
     match = _canonical_rule(path, obj)
     if match is not None:
         expected_id, rule = match
         actual = _git_blob_sha1(path)
-        quarantine_only = rule.get("quarantineOnlyGitBlobSha1")
-        if quarantine_only is not None:
-            if actual != quarantine_only:
-                raise _base.core.ControlError(
-                    f"{path}: quarantine-only immutable event changed: {actual} != {quarantine_only}"
-                )
-            return {
-                "_quarantined": True,
-                "eventId": expected_id,
-                "gitBlobSha1": actual,
-                "quarantineOnly": True,
-            }
-
         canonical = rule["canonicalGitBlobSha1"]
         if actual == canonical:
             return obj
@@ -201,24 +223,21 @@ def quarantined_history(root: Path) -> list[dict]:
         path = root / "events" / rule["date"] / rule["filename"]
         if not path.exists():
             continue
-        obj = _base.core.load_json(path, max_bytes=48_000)
-        _canonical_rule(path, obj)
-        actual = _git_blob_sha1(path)
 
-        quarantine_only = rule.get("quarantineOnlyGitBlobSha1")
-        if quarantine_only is not None:
-            if actual != quarantine_only:
-                raise _base.core.ControlError(
-                    f"{path}: quarantine-only immutable event changed: {actual} != {quarantine_only}"
-                )
+        quarantine_identity = _quarantine_only_identity(path)
+        if quarantine_identity is not None:
+            _expected_id, _rule, actual = quarantine_identity
             records.append({
                 "eventId": event_id,
                 "path": _relative_event_path(rule),
-                "quarantinedGitBlobSha1": quarantine_only,
+                "quarantinedGitBlobSha1": actual,
                 "quarantineOnly": True,
             })
             continue
 
+        obj = _base.core.load_json(path, max_bytes=48_000)
+        _canonical_rule(path, obj)
+        actual = _git_blob_sha1(path)
         bad = rule.get("quarantinedGitBlobSha1")
         if bad is None or actual == rule["canonicalGitBlobSha1"]:
             continue
@@ -294,8 +313,8 @@ def transition_check(before: Path, after: Path) -> dict:
 
     seen: set[str] = set()
     for path in before_paths.values():
-        obj = _base.core.load_json(path, max_bytes=48_000)
-        event_id = obj.get("eventId")
+        event = _validate_event_with_immutable_compat(path)
+        event_id = event.get("eventId")
         if not isinstance(event_id, str):
             raise _base.core.ControlError(f"{path}: eventId required during transition replay check")
         if event_id in seen:
