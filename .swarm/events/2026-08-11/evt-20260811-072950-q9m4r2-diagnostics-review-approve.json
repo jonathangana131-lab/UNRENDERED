@@ -13,7 +13,9 @@
     "tests/physics_lab_diagnostics_bounds.luau is wired into the always-run hero_gate_contract_integration suite and locks default=20, max=20, validation-before-loop, and checkpoint-20 structure.",
     "GitHub review 4903903031 records the exact-head independent source approval; no Studio PASS is claimed."
   ],
-  "pr": 295,
-  "headSha": "1814b4d08a02c9d650dea6288af9a8264e58d3c9",
-  "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+  "metadata": {
+    "pr": 295,
+    "headSha": "1814b4d08a02c9d650dea6288af9a8264e58d3c9",
+    "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+  }
 }
