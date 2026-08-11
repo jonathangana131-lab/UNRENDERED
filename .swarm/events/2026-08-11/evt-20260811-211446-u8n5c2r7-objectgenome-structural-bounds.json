@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-211446-u8n5c2r7-objectgenome-structural-bounds",
+  "timestamp": "2026-08-11T21:14:46+00:00",
+  "fromWorker": "sol-20260811-u8n5c2r7",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome's canonical structural collections are shape-validated but not cardinality-bounded, so accepted/corrupt data can drive unbounded validation, graph, recursion, diagnostic, and fingerprint work. In particular, support reachability currently rescans every component for up to componentCount passes; a deterministic valid reverse dependency chain cN->...->c2->c1 with only c1 grounded permits only one new supported component per pass, producing quadratic component visits. Cycle detection is recursive with depth proportional to support-graph depth, and recipe fingerprinting recursively canonicalizes/sorts accepted collections. This is distinct from PR #395's decoder-shape repair. Recommend a bounded source-only successor lane HG-BACKFILL-OBJECTGENOME-STRUCTURAL-BOUNDS: define project-owned v1 maxima for components/mechanisms/affordances/support edges and relevant nested arrays; fail fast before expensive graph/fingerprint work; replace N-pass support propagation with O(V+E) traversal; make cycle detection iterative or otherwise depth-bounded; add deterministic too-wide diagnostics and exact-max/max+1 plus long-chain regressions while preserving fingerprints for existing accepted recipes. Static source analysis only; no measured timing or Studio evidence claimed.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "HIGH",
+  "evidence": [
+    "src/shared/Objects/ObjectGenome.luau at PR #395 head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962: dense-array/shape validation enumerates collection keys and nested structural arrays but defines no project-owned maximum cardinality before subsequent inspection work.",
+    "src/shared/Objects/ObjectGenome.luau: externallySupported propagation executes up to componentCount outer passes and scans value.components each pass; reverse-ordered valid support chain cN->...->c1 with only c1 externalSupport='ground' advances one node per pass, giving deterministic O(V^2) component visits before edge work.",
+    "src/shared/Objects/ObjectGenome.luau: support-cycle detection recursively follows supportKeys, so accepted graph depth also controls call-stack depth; recipeFingerprint recursively canonicalizes/sorts accepted structures, widening the same unbounded-work surface.",
+    "Docs/OBJECT_GENOME.md documents dense structural arrays and support-graph semantics but no v1 cardinality/work/depth limits. Project canon and QUALITY_STANDARD require bounded queues/caches/budgets and exact deterministic repro; MaterialDNA already has a precedent lane HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS for analogous fail-fast structural bounds.",
+    "Duplicate check covered active ObjectGenome PR #395 and recent ObjectGenome generation lineage; #395 addresses decoder record-shape fail-closed semantics, not structural collection cardinality or support-graph work bounds. No production change made while that fresh review is active."
+  ]
+}
