@@ -1448,7 +1448,7 @@ function ObjectGenome.decodeMechanismPosition(
 	position: number
 ): DecodedMechanismPosition
 	assert(
-		type(mechanism) == "table" and getmetatable(mechanism) == nil,
+		type(mechanism) == "table" and getmetatable(mechanism :: any) == nil,
 		"mechanism must be a plain ObjectGenome mechanism table"
 	)
 	assert(
