@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081900-v7k3m9-physics-ramp-entry-gap",
+  "timestamp": "2026-08-11T08:19:00+00:00",
+  "fromWorker": "sol-20260811-v7k3m9",
+  "eventType": "FINDING",
+  "summary": "Independent Physics Lab geometry audit: PR #303 exact head e09c617bac644a5a6a124ae8e22320d39fd59296 is patch-locally clean and has exact-head canonical CI PASS, but test-adversary PR #302 exact head c226479ee13f2bc0000822ce04df3a61aa42584f has a Reality-Grade reachability gap. Its ramp-entry invariant accepts the current low walkable surface at about 0.154 m above the floor because it only requires the lip to be <= the first stair top (0.18 m), so a substantial vertical step is normalized as a valid ramp entry. Audit verdict on #302 is REQUEST_CHANGES: define a small explicit floor-entry tolerance or deliberate transition geometry and make the authored recipe/test satisfy it. Roblox traversability/contact remains UNVERIFIED pending Studio evidence.",
+  "affects": ["HERO-GATE", "HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "MEDIUM",
+  "evidence": [
+    "PR #303 review 4904241592 records patch-local PASS on e09c617bac644a5a6a124ae8e22320d39fd59296; canonical CI run 31471707012 succeeded.",
+    "PR #302 review 4904244720 records the independent REQUEST_CHANGES verdict on c226479ee13f2bc0000822ce04df3a61aa42584f.",
+    "PhysicsLabRecipe ramp: sizeM.x=3.0, sizeM.y=0.20, positionM.y=0.42, rotationDeg.z=-14; low top surface = 0.42 - 1.5*sin(14deg) + 0.1*cos(14deg) ~= 0.154 m while floor top = 0 m.",
+    "PR #302 currently permits lowSurfaceY <= firstStairTop where firstStairTop = 0.18 m, so the 0.154 m lip passes despite not being floor-continuous."
+  ]
+}
