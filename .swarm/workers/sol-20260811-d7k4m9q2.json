@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-d7k4m9q2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "WORKING",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T22:19:05+00:00",
+  "lastSeenAt": "2026-08-11T22:20:05+00:00",
   "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-d7k4m9q2-g2",
-  "notes": "Recover expired geometry audit only to reconcile already-published REQUEST_CHANGES on #389 after expected-red #406; no duplicate review."
+  "slotId": "primary",
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-d7k4m9q2-g6",
+  "notes": "Generation-6 geometry successor from #389: primitive-number no-execute preflight plus expected-red #406 regression, preserving finite-output checks."
 }
