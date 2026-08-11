@@ -163,7 +163,7 @@ local function run(): number
 		entityRelevance = 0,
 	}
 
-	local longCycleAccepted = pcall(function()
+	local longCycleAccepted, longCycleFailure = pcall(function()
 		for cycle = 1, cycleCount do
 			local baseTime = cycle * 10
 			local capturedState = {
@@ -233,47 +233,51 @@ local function run(): number
 			)
 		end
 	end)
-	expect("64-cycle runtime rebuild stress completes without lifecycle drift", longCycleAccepted)
-	local longCycleAfter = longCycleRuntime:getRecord(longCycleId)
-	local longCycleAfterSnapshot = longCycleRuntime:snapshot()
-	expect("long-cycle demotions capture exactly once per cycle", longCycleCaptures == cycleCount)
-	expect(
-		"long-cycle observers run exactly once per committed transition",
-		longCycleObservers == cycleCount * 2
-	)
-	expect("long-cycle final fidelity is F4", longCycleAfter.fidelity == "F4")
-	expect(
-		"long-cycle state revisions advance once per demotion",
-		longCycleAfter.stateRevision == longCycleBefore.stateRevision + cycleCount
-	)
-	expect(
-		"long-cycle representation revisions advance twice per cycle",
-		longCycleAfter.representationRevision == longCycleBefore.representationRevision + cycleCount * 2
-	)
-	expect(
-		"long-cycle transition metric matches committed transitions",
-		longCycleAfterSnapshot.fidelity.transitions == cycleCount * 2
-	)
-	expect(
-		"long-cycle demotion metric matches cycles",
-		longCycleAfterSnapshot.fidelity.demotions == cycleCount
-	)
-	expect(
-		"long-cycle promotion metric matches cycles",
-		longCycleAfterSnapshot.fidelity.promotions == cycleCount
-	)
-	expect(
-		"long-cycle transition-hook metric matches committed transitions",
-		longCycleAfterSnapshot.fidelity.transitionHookCalls == cycleCount * 2
-	)
-	expect(
-		"long-cycle registry population remains constant",
-		longCycleAfterSnapshot.registered == longCycleBeforeSnapshot.registered
-	)
-	expect(
-		"long-cycle FidelityManager population remains constant",
-		longCycleAfterSnapshot.fidelity.registered == longCycleBeforeSnapshot.fidelity.registered
-	)
+	if longCycleAccepted then
+		expect("64-cycle runtime rebuild stress completes without lifecycle drift", true)
+		local longCycleAfter = longCycleRuntime:getRecord(longCycleId)
+		local longCycleAfterSnapshot = longCycleRuntime:snapshot()
+		expect("long-cycle demotions capture exactly once per cycle", longCycleCaptures == cycleCount)
+		expect(
+			"long-cycle observers run exactly once per committed transition",
+			longCycleObservers == cycleCount * 2
+		)
+		expect("long-cycle final fidelity is F4", longCycleAfter.fidelity == "F4")
+		expect(
+			"long-cycle state revisions advance once per demotion",
+			longCycleAfter.stateRevision == longCycleBefore.stateRevision + cycleCount
+		)
+		expect(
+			"long-cycle representation revisions advance twice per cycle",
+			longCycleAfter.representationRevision == longCycleBefore.representationRevision + cycleCount * 2
+		)
+		expect(
+			"long-cycle transition metric matches committed transitions",
+			longCycleAfterSnapshot.fidelity.transitions == cycleCount * 2
+		)
+		expect(
+			"long-cycle demotion metric matches cycles",
+			longCycleAfterSnapshot.fidelity.demotions == cycleCount
+		)
+		expect(
+			"long-cycle promotion metric matches cycles",
+			longCycleAfterSnapshot.fidelity.promotions == cycleCount
+		)
+		expect(
+			"long-cycle transition-hook metric matches committed transitions",
+			longCycleAfterSnapshot.fidelity.transitionHookCalls == cycleCount * 2
+		)
+		expect(
+			"long-cycle registry population remains constant",
+			longCycleAfterSnapshot.registered == longCycleBeforeSnapshot.registered
+		)
+		expect(
+			"long-cycle FidelityManager population remains constant",
+			longCycleAfterSnapshot.fidelity.registered == longCycleBeforeSnapshot.fidelity.registered
+		)
+	else
+		expect(`64-cycle runtime rebuild stress failed: {tostring(longCycleFailure)}`, false)
+	end
 	longCycleRuntime:dispose()
 
 	return failures
