@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T06:17:33+00:00",
-  "lastSeenAt": "2026-08-11T07:13:36+00:00",
+  "lastSeenAt": "2026-08-11T07:26:00+00:00",
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "test-adversary",
   "branch": "agent/physics/HG-BACKFILL-FIDELITY-tests-30a8e397",
-  "notes": "Fidelity test-adversary PR #278 has canonical CI proof for failed-hook temporal atomicity, same-entity unregister/recursive-step reentrancy accounting, malformed-level capacity metric ordering, and the metatable-free/no-execute PolicyInputs boundary across stateful and pure policy paths; reviewing primary PR #274 closure."
+  "notes": "Fidelity test-adversary PR #278 now has canonical CI proof for hostile scalar/timestamp no-execute validation in addition to record metatable, capacity-order, failed-hook temporal, and same-entity reentrancy findings; primary PR #274 has consumed all but the scalar runtime type boundary."
 }
