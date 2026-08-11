@@ -23,7 +23,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:57:29.051088+00:00",
+  "generatedAt": "2026-08-11T05:57:41.532695+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "10d3f6992ff243a9268ed8629893faf4fc40791c",
@@ -42,7 +42,7 @@
       "INTEGRATION_RESULT": 3,
       "RECOVERY": 1
     },
-    "generatedAt": "2026-08-11T05:57:29.051088+00:00",
+    "generatedAt": "2026-08-11T05:57:41.532695+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -629,7 +629,7 @@
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 0,
+      "activeOwners": 1,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "SWARM-PROTOCOL",
@@ -659,10 +659,10 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "40878f74b42d9cf536dcc7b4ebc98beabaa9496dd53a7307f6c8394ad5067e82",
+  "stateDigest": "6e1aa92bc288a87eb2352d05a973297db93101fc81bc85325de4ed9c331430a8",
   "summary": {
     "activeClaims": 1,
-    "activeResourceClaims": 0,
+    "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 21,
     "readySlots": 35,
