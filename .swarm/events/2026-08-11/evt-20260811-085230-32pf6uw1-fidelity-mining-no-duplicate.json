@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085230-32pf6uw1-fidelity-mining-no-duplicate",
+  "timestamp": "2026-08-11T08:52:30+00:00",
+  "fromWorker": "sol-20260811-32pf6uw1",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "summary": "Fidelity capacity-mining pass found no additional non-duplicate production defect worth opening as a new lane while HG-BACKFILL-FIDELITY is active. The only concrete new boundary encountered during this pass, caller-supplied PolicyConfig no-execute validation, had already been independently mined, reproduced in test PR #325, re-raised by the current test slot in #330, and made a REQUEST_CHANGES blocker on primary PR #274 before this worker could publish it. After excluding that duplicate, I re-audited policy ordering, target-only hold semantics, external authoritative synchronization, callback failure/retry transactionality, same-entity reentry fencing, cross-entity independence, ID parity with WorldEntity, bounded registration accounting, metrics snapshots, and PhysicsLabRuntime integration and found no distinct source-level defect justified by the current contract. Do not create another Fidelity one-shot lane from this pass; finish the active PolicyConfig closure, synchronize #274 onto current main, rerun exact-head CI/ownership, and request fresh independent audit.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "Current main dd8f1581115c15ce6497db827d17e98d879d0267 has canonical CI run 31473692805 completed SUCCESS.",
+    "Primary PR #274 remains at 5251998df21e8f7f78cae5c046d346496cc65a28 and is explicitly REQUEST_CHANGES for the already-known PolicyConfig plain/no-execute boundary plus current-main synchronization.",
+    "PR #325 exact-head CI 31473342951 already provides executable PolicyConfig proof; current test-adversary PR #330 independently targets the same constructor/pure-policy config boundary, so duplicating it would violate swarm anti-duplication rules.",
+    "Inspected src/shared/Physics/FidelityManager.luau, tests/fidelity_manager.luau, tests/fidelity_manager_determinism.luau, the active #274 source/test patch and review history, Docs/FIDELITY_MANAGER.md, issue #7 requirements, WorldEntity ID contract, and PhysicsLabRuntime integration.",
+    "A possible hardening idea—making underscore-prefixed Manager backing tables closure-private—was not promoted as a defect because current contracts treat them as implementation internals and no production caller was found depending on or mutating them; opening an architecture lane on that basis would be speculative rather than evidence-led."
+  ]
+}
