@@ -254,6 +254,55 @@ local function run(): number
 	expectEqual("same target matures despite changed causes", stableResult.transitioned, true)
 	expectEqual("stable target reaches interactive", stableTargetEntity.fidelity, "F3")
 
+	local nestedConfig = table.clone(FidelityManager.defaultConfig())
+	nestedConfig.promotionHoldSeconds = 0
+	nestedConfig.transitionCooldownSeconds = 0
+	local nestedManager = FidelityManager.new(nestedConfig)
+	local outerId = "entity:nested-transition-outer"
+	local innerId = "entity:nested-transition-inner"
+	nestedManager:register(outerId, "F0")
+	nestedManager:register(innerId, "F0")
+	local nestedHeroInputs = inputs({ distanceStuds = 10, directlyObserved = true })
+
+	local nestedFailureAccepted = pcall(function()
+		nestedManager:step(outerId, "F0", nestedHeroInputs, 0, function()
+			nestedManager:step(innerId, "F0", nestedHeroInputs, 0, function()
+				nestedManager:step(outerId, "F0", nestedHeroInputs, 0, function() end)
+			end)
+		end)
+	end)
+	expectEqual("nested callback cannot reenter already-transitioning outer entity", nestedFailureAccepted, false)
+	expectEqual("nested failure leaves outer fidelity uncommitted", nestedManager:getObservedLevel(outerId), "F0")
+	expectEqual("nested failure leaves inner fidelity uncommitted", nestedManager:getObservedLevel(innerId), "F0")
+	local nestedFailureMetrics = nestedManager:getMetrics()
+	expectEqual("nested failure preserves registrations", nestedFailureMetrics.registered, 2)
+	expectEqual("nested failure preserves F0 accounting", nestedFailureMetrics.counts.F0, 2)
+	expectEqual("nested failure leaves F4 accounting empty", nestedFailureMetrics.counts.F4, 0)
+	expectEqual("nested failure counts no successful transition hooks", nestedFailureMetrics.transitionHookCalls, 0)
+	expectEqual("nested failure counts no transitions", nestedFailureMetrics.transitions, 0)
+
+	local innerRetryHookCalled = false
+	local nestedRetryAccepted = pcall(function()
+		local outerRetryResult = nestedManager:step(outerId, "F0", nestedHeroInputs, 0.1, function()
+			local innerRetryResult = nestedManager:step(innerId, "F0", nestedHeroInputs, 0.1, function()
+				innerRetryHookCalled = true
+			end)
+			expectEqual("nested inner retry commits after unwind", innerRetryResult.transitioned, true)
+		end)
+		expectEqual("nested outer retry commits after unwind", outerRetryResult.transitioned, true)
+	end)
+	expectEqual("nested failure clears both transition fences for retry", nestedRetryAccepted, true)
+	expectEqual("nested retry invokes inner transition hook", innerRetryHookCalled, true)
+	expectEqual("nested retry commits outer hero fidelity", nestedManager:getObservedLevel(outerId), "F4")
+	expectEqual("nested retry commits inner hero fidelity", nestedManager:getObservedLevel(innerId), "F4")
+	local nestedRetryMetrics = nestedManager:getMetrics()
+	expectEqual("nested retry preserves registrations", nestedRetryMetrics.registered, 2)
+	expectEqual("nested retry drains F0 accounting", nestedRetryMetrics.counts.F0, 0)
+	expectEqual("nested retry commits both F4 counts", nestedRetryMetrics.counts.F4, 2)
+	expectEqual("nested retry counts both successful hooks", nestedRetryMetrics.transitionHookCalls, 2)
+	expectEqual("nested retry counts both transitions", nestedRetryMetrics.transitions, 2)
+	expectEqual("nested retry counts both promotions", nestedRetryMetrics.promotions, 2)
+
 	return failures
 end
 
