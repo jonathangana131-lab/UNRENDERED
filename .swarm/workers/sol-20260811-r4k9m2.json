@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-11T08:40:30+00:00",
-  "lastSeenAt": "2026-08-11T08:43:20+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-r4k9m2",
-  "notes": "Two higher-priority review/test claims were lost atomically to other workers. Now mining Physics Lab authored geometry for one concrete non-duplicate Hero Gate depth gap; no Studio evidence claim."
+  "lastSeenAt": "2026-08-11T08:48:25+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "test-adversary",
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-r4k9m2-g2",
+  "notes": "Generation-2 takeover after #302 test-adversary lease expiry. Resyncing current-main geometry properties and adding a focused office-chair caster ground-contact regression from capacity finding evt-20260811-084600-r4k9m2-chair-caster-ground-gap."
 }
