@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-v7k3m9",
   "claimToken": "c7e41a9d5b203f68",
   "claimedAt": "2026-08-11T08:31:00+00:00",
-  "heartbeatAt": "2026-08-11T08:46:00+00:00",
+  "heartbeatAt": "2026-08-11T08:37:15+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-v7k3m9",
   "pr": null,
-  "notes": "Independent audit remains active. PR #274 exact head 5251998 has REQUEST_CHANGES for one cohesive PolicyConfig closure: reject non-plain/metatable config before first access, primitive-type preflight maxRegisteredEntities before operators, and default exported evaluatePolicy config only on exact nil. PR #325 is red adversarial evidence; existing callback transaction/reentry/accounting work is patch-locally sound."
+  "notes": "Independent audit remains active. PR #274 exact head 5251998 has REQUEST_CHANGES for one cohesive PolicyConfig closure: reject non-plain/metatable config before first access, primitive-type preflight maxRegisteredEntities before operators, and default exported evaluatePolicy config only on exact nil. PR #325 is red adversarial evidence; existing callback transaction/reentry/accounting work is patch-locally sound. Heartbeat timestamp corrected to actual current UTC after a local metadata clock-skew mistake."
 }
