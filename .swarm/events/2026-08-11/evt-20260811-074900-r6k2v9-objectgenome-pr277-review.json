@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-074900-r6k2v9-objectgenome-pr277-review",
+  "timestamp": "2026-08-11T07:49:00+00:00",
+  "fromWorker": "sol-20260811-r6k2v9",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "Patch-local PASS for PR #277 exact head 11245b07a780a3fa573c5f1ea4c190da76439e69. The test-only adversarial expansion correctly deepens nested plain-data/metatable and hostile-key boundaries without production changes. Canonical CI is green; live Swarm ownership still requires a fresh explicit PASS before integration.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #277 changes only tests/object_genome_contract_lock.luau.",
+    "Exact head 11245b07a780a3fa573c5f1ea4c190da76439e69 canonical CI run 31469486730 succeeded.",
+    "Available Swarm runs for this exact head remain red, so merge stays fail-closed pending fresh ownership PASS.",
+    "GitHub review 4904015599 records the exact-head patch-local verdict."
+  ],
+  "metadata": {
+    "pr": 277,
+    "headSha": "11245b07a780a3fa573c5f1ea4c190da76439e69",
+    "verdict": "APPROVE"
+  }
+}
