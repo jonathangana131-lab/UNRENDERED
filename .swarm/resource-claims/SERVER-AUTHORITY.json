@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "SERVER-AUTHORITY",
+  "workerId": "sol-20260811-j9k4v7n2",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "claimToken": "9e4b71c2f6a8035d",
+  "acquiredAt": "2026-08-11T09:38:40+00:00",
+  "heartbeatAt": "2026-08-11T09:38:40+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "notes": "Independent source audit lease for PR #348; no implementation edits planned."
+}
