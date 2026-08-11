@@ -113,10 +113,18 @@ local function run(): number
 					innerHookCalls += 1
 				end
 			)
-			expectEqual("cross-entity nested transition commits inside hook", nestedInnerResult.transitioned, true)
+			expectEqual(
+				"cross-entity nested transition commits inside hook",
+				nestedInnerResult.transitioned,
+				true
+			)
 		end
 	)
-	expectEqual("outer transition commits after nested cross-entity step", nestedOuterResult.transitioned, true)
+	expectEqual(
+		"outer transition commits after nested cross-entity step",
+		nestedOuterResult.transitioned,
+		true
+	)
 	expectEqual("nested inner hook called once", innerHookCalls, 1)
 	expectEqual(
 		"nested outer observed fidelity committed",
@@ -152,7 +160,11 @@ local function run(): number
 					0,
 					function() end
 				)
-				expectEqual("independent inner transition commits before outer failure", innerResult.transitioned, true)
+				expectEqual(
+					"independent inner transition commits before outer failure",
+					innerResult.transitioned,
+					true
+				)
 				error("intentional outer transition failure after inner commit")
 			end
 		)
