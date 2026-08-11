@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-REALITY",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-5a7d2c9e",
+  "claimToken": "6c2f9a4d1e7b8053",
+  "claimedAt": "2026-08-11T11:52:30+00:00",
+  "heartbeatAt": "2026-08-11T11:52:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-REALITY-5a7d2c9e",
+  "pr": null,
+  "notes": "Drain exact-head Reality/schema/replay/WorldEntity review backlog. Preserve accepted historical truth; source-only review does not imply engine evidence."
+}
