@@ -117,6 +117,8 @@ Workers may still:
 - prepare or consume real Roblox Studio evidence for the permanent lab without inventing PASS results,
 - perform scheduler/contract maintenance needed to keep the swarm state accurate.
 
+While bridge #88's macOS display preflight is red, workers must not queue speculative diagnostics/two-client evidence retries. Resume those evidence lanes only after the runner has a real active GUI display or a post-recovery run exposes a distinct code defect.
+
 Do not start a Reality-Grade door, chair, physical-player controller, world generator, or another major system merely because worker capacity is available.
 
 ## Hero Gate exit direction
