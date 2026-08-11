@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-073500-q9m4r2-authority-rereview-approve",
+  "timestamp": "2026-08-11T07:35:00+00:00",
+  "fromWorker": "sol-20260811-q9m4r2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "normal",
+  "summary": "APPROVE source/test patch for PR #297 exact head 2a14f54ccecae5ea0e88f288f2c9185dbf885a9e after requested-change repair. The regression now locks the actual fail-closed server/client bootstrap assertions rather than mere RunService context tokens, preserves server-owned PhysicsLabStudioHarness startup, and rejects client imports of the known server-only Physics Lab modules. Exact-head canonical CI 31469371509 is green. Integration remains blocked only by the separate fail-closed pr-ownership gate, which is red in Swarm run 31469371499 while engine-tests pass. No two-client Studio evidence is claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY"],
+  "evidence": [
+    "tests/hero_gate_contract_integration.luau now requires the literal fail-closed assert(RunService:IsServer(), ...) and assert(RunService:IsClient(), ...) guard forms.",
+    "The same regression requires PhysicsLabStudioHarness.start(workspace) in the server bootstrap and rejects PhysicsLabStudioHarness, PhysicsLabRuntime, and PhysicsLabRealizer names from the client bootstrap.",
+    "GitHub review 4903938141 records the independent exact-head source approval; merge remains conditional on a fresh ownership PASS."
+  ],
+  "pr": 297,
+  "headSha": "2a14f54ccecae5ea0e88f288f2c9185dbf885a9e",
+  "verdict": "APPROVE_CONDITIONAL_OWNERSHIP"
+}
