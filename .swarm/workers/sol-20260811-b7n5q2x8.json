@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:53:00+00:00",
-  "lastSeenAt": "2026-08-11T08:18:00+00:00",
+  "lastSeenAt": "2026-08-11T08:24:00+00:00",
   "laneId": "HG-BACKFILL-AUTHORITY",
   "slotId": "test-adversary",
   "branch": "agent/authority/HG-BACKFILL-AUTHORITY-tests-b7n5q2x8",
-  "notes": "PR #307 exact head c9760f2: source-only authority teardown/duplicate-root adversary; canonical CI green; exact-head audit and live pr-ownership pending; pr-ownership currently blocked by shared validation-marker CAS churn. No Studio/two-client evidence claim."
+  "notes": "PR #307 exact head c9760f2: source-only authority teardown/duplicate-root adversary; canonical CI green; exact-head independent audit APPROVE; live pr-ownership remains blocked by the shared validation-fence recovery. PR #315 now has a confirmed immutable-event history-laundering blocker under exclusive SWARM-PROTOCOL ownership. No Studio/two-client evidence claim."
 }
