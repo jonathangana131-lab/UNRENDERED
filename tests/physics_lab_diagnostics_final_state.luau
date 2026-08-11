@@ -15,23 +15,15 @@ local function run(): number
 	end
 
 	local source = fs.readFile(DIAGNOSTICS_SOURCE)
-	local sweepStart = string.find(
-		source,
-		"function PhysicsLabStudioDiagnostics.runToggleEvidence(",
-		1,
-		true
-	)
-	local sweepEnd = sweepStart and string.find(source, "\nreturn table.freeze(PhysicsLabStudioDiagnostics)", sweepStart, true)
+	local sweepStart = string.find(source, "function PhysicsLabStudioDiagnostics.runToggleEvidence(", 1, true)
+	local sweepEnd = sweepStart
+		and string.find(source, "\nreturn table.freeze(PhysicsLabStudioDiagnostics)", sweepStart, true)
 	local sweepSource = if sweepStart ~= nil and sweepEnd ~= nil
 		then string.sub(source, sweepStart, sweepEnd - 1)
 		else ""
 
-	local finalSnapshot = string.find(
-		sweepSource,
-		"local finalSnapshot = PhysicsLabStudioDiagnostics.capture(lab)",
-		1,
-		true
-	)
+	local finalSnapshot =
+		string.find(sweepSource, "local finalSnapshot = PhysicsLabStudioDiagnostics.capture(lab)", 1, true)
 	local finalDisabledGuard = string.find(sweepSource, "assert(not finalSnapshot.enabled", 1, true)
 	local finalStatePublish = string.find(sweepSource, "finallyEnabled = finalSnapshot.enabled", 1, true)
 
