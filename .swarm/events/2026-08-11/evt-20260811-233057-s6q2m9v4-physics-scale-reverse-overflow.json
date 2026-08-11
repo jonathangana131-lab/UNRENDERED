@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-233057-s6q2m9v4-physics-scale-reverse-overflow",
+  "timestamp": "2026-08-11T23:30:57+00:00",
+  "fromWorker": "sol-20260811-s6q2m9v4",
+  "eventType": "FINDING",
+  "summary": "PhysicsLabScale's studs-to-meters derived-output finite fence is not behaviorally reachable as an overflow under the production 0.28 meters-per-stud multiplier. Draft PR #418 adds a test-only behavioral adversary that loads the production module source with exactly one amplified scale-field rewrite and proves finite stud input is rejected when the converted meter result overflows. This closes a regression-coverage blind spot without changing production bytes.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "LOW",
+  "evidence": [
+    "PR #418 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f is stacked directly on retained generation-6 PR #414 head 51ffc16fb2f5864cd4874710a7517e94dd5422b8 and changes only tests/physics_lab_scale.luau.",
+    "An independent review rejected the earlier raw-source search because comments could false-pass it; that approach was removed and replaced with an executed amplified module copy.",
+    "Canonical CI run 31546627454 passes format, lint, Luau analysis, canonical-randomness/shared-domain/plain-data audits, deterministic swarm tests, Pure Luau, Rojo build, and artifact upload.",
+    "Swarm Control Plane run 31546627450 engine-tests passes; pr-ownership remains separately fail-closed at live ownership enforcement while trusted-history continuity recovery is active.",
+    "No Roblox Studio, viewport, physical-contact, or two-client evidence was run or claimed."
+  ]
+}
