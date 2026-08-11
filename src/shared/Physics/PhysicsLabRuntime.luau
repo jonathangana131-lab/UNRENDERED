@@ -158,7 +158,10 @@ function PhysicsLabRuntime.step(
 				end
 
 				local committed = self._registry.transitionRegistered(entityId, toLevel, committedState)
-				assert(committed.fidelity == preview.fidelity, "Physics Lab transition commit fidelity mismatch")
+				assert(
+					committed.fidelity == preview.fidelity,
+					"Physics Lab transition commit fidelity mismatch"
+				)
 				assert(
 					committed.stateRevision == preview.stateRevision,
 					"Physics Lab transition commit state mismatch"
