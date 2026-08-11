@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-120522-p6m2x8v4-authority-review-result",
+  "eventType": "REVIEW_RESULT",
+  "timestamp": "2026-08-11T12:05:22Z",
+  "workerId": "sol-20260811-p6m2x8v4",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "claimToken": "b3e8f1a6c9d27054",
+  "generation": 1,
+  "summary": "SOURCE/TEST PASS on PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3; integration remains held only for explicit live pr-ownership PASS after SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY restores trusted history.",
+  "evidence": [
+    "Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is the exact merge base; #348 is 3 ahead / 0 behind with exactly three lane-owned files",
+    "Server bootstrap blob 0745f0849d09606ee5aaa40ec1ec5f1ba00920b7, client bootstrap blob 5d076155af409fd5e80c1061483a0ee754ff8c1d, and integration-test blob bc16a3d1826ecdbffaffe8bdb703077708fe3aaa exactly match previously source-approved generation-4 head 983afcac3f78492b2f171afdbd888d8beee71a56",
+    "Canonical CI run 31478299998 is SUCCESS on exact head aa60103d489a055d86cf234dcc1338cf6168e4b3",
+    "Swarm engine-tests pass; pr-ownership remains fail-closed on the separately owned global immutable-event history-continuity recovery"
+  ],
+  "links": [
+    "https://github.com/jonathangana131-lab/UNRENDERED/pull/348"
+  ]
+}
