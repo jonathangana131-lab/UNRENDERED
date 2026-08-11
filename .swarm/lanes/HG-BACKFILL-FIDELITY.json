@@ -5,7 +5,7 @@
   "title": "FidelityManager adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete fidelity transition, rejected-step atomicity, finite-state, deterministic ordering, entity-id boundary, or resource-accounting defects without depending on Studio.",
   "priority": 5050,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/FidelityManager.luau", "tests/fidelity_manager*.luau"],
@@ -16,5 +16,6 @@
     {"slotId":"audit","role":"Fidelity state-machine auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/fidelity_manager*.luau","Docs/FIDELITY_MANAGER.md"]}
   ],
   "acceptance": ["target concrete finite-state or atomicity gaps", "preserve deterministic ordering", "new behavior has adversarial regression coverage", "no Studio claim is required", "publish findings that affect other lanes"],
-  "tags": ["backfill", "hero-gate", "source-only"]
+  "tags": ["backfill", "hero-gate", "source-only"],
+  "notes": "PR #335 generation-3 salvage is synchronized to main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 at head 4a3c55d9d2046df1af6ee93710d395aedd4ea102. Exact-head CI run 31476561095 attempt 2 is green. Await fresh independent audit plus live pr-ownership after the separately owned immutable-event control recovery."
 }
