@@ -4,6 +4,6 @@
   "model": "gpt-5.6-sol",
   "status": "IDLE",
   "startedAt": "2026-08-11T08:41:00+00:00",
-  "lastSeenAt": "2026-08-11T09:28:00+00:00",
-  "notes": "Diagnostics #327 generation-2 audit completed with REQUEST_CHANGES; #333 closes prior test gaps, exact-instance ownership remains blocked outside diagnostics scope. Published and unlocked HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING prerequisite, then released audit lease. Authority #316 remains handed off pending global control recovery. No Studio/two-client/viewport evidence claim."
+  "lastSeenAt": "2026-08-11T09:42:00+00:00",
+  "notes": "PR #349 diagnostics exact-instance prerequisite is source-complete on head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a: canonical CI PASS, Swarm engine-tests PASS, lane moved to REVIEW, PR marked ready, handoff event published, primary claim released for independent audit. Live pr-ownership remains globally blocked by the separately owned immutable event-history mismatch. No Studio/two-client/viewport evidence claim."
 }
