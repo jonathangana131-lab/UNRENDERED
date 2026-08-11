@@ -157,6 +157,7 @@ local MASS_TOLERANCE_FRACTION = 0.05
 local BOUNDS_TOLERANCE_M = 0.005
 local AXIS_UNIT_TOLERANCE = 0.0001
 local ROTATION_LIMIT_DEG = 180
+local STABLE_ID_SEMANTIC_PART_MAX_BYTES = 512
 
 local AFFORDANCE_KINDS = {
 	grip = true,
@@ -554,6 +555,12 @@ local function isSemanticKey(value: any): boolean
 	return type(value) == "string" and string.match(value, "^[a-z0-9][a-z0-9._-]*$") ~= nil
 end
 
+local function isStableIdSemanticKey(value: any): boolean
+	return type(value) == "string"
+		and #value <= STABLE_ID_SEMANTIC_PART_MAX_BYTES
+		and string.match(value, "^[a-z0-9][a-z0-9._-]*$") ~= nil
+end
+
 local function isVec3(value: any): boolean
 	return type(value) == "table" and isFinite(value.x) and isFinite(value.y) and isFinite(value.z)
 end
@@ -852,18 +859,23 @@ function ObjectGenome.inspect(value: any): ValidationResult
 			`unsupported ObjectGenome schema version; expected {ObjectGenome.SCHEMA_VERSION}`
 		)
 	end
-	if not isSemanticKey(value.familyId) then
-		addIssue(issues, "genome.family_id", "familyId", "familyId must be a stable lowercase semantic key")
+	if not isStableIdSemanticKey(value.familyId) then
+		addIssue(
+			issues,
+			"genome.family_id",
+			"familyId",
+			`familyId must be a stable lowercase semantic key of at most {STABLE_ID_SEMANTIC_PART_MAX_BYTES} bytes`
+		)
 	end
 	if not isPositiveInteger(value.familyVersion) then
 		addIssue(issues, "genome.family_version", "familyVersion", "familyVersion must be a positive integer")
 	end
-	if not isSemanticKey(value.variantKey) then
+	if not isStableIdSemanticKey(value.variantKey) then
 		addIssue(
 			issues,
 			"genome.variant_key",
 			"variantKey",
-			"variantKey must be a stable lowercase semantic key"
+			`variantKey must be a stable lowercase semantic key of at most {STABLE_ID_SEMANTIC_PART_MAX_BYTES} bytes`
 		)
 	end
 
