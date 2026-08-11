@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-093250-eeu3obwl-validation-safe-integer-proof",
+  "timestamp": "2026-08-11T09:32:50+00:00",
+  "fromWorker": "sol-20260811-eeu3obwl",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "medium",
+  "summary": "Expected-red PR #346 cleanly proves the Physics Lab validation safe-integer gap: all preflight/tooling/audits pass and Pure Luau fails exactly the three new >2^53-1 schema/count rejection assertions.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "PR #346 corrected exact head 1580e24936c02c94609574ee0bf95c4005ef383d is based on current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and changes only tests/physics_lab_validation_contract.luau.",
+    "Canonical CI run 31478069707 passes format, lint, Luau analysis, canonical randomness, domain/plain-value audits, and deterministic swarm tests.",
+    "Pure Luau fails exactly: lab schema versions beyond exact integer range; resolved schema versions beyond exact integer range; resource counts beyond exact integer range.",
+    "Neighboring Physics Lab validation tests in the same suite pass, isolating the failure to production acceptance of unsafe integer evidence."
+  ],
+  "metadata": {
+    "sourcePr": 303,
+    "testPr": 346,
+    "testHeadSha": "1580e24936c02c94609574ee0bf95c4005ef383d",
+    "ciRun": 31478069707,
+    "ciJob": 93736378996,
+    "verdict": "EXPECTED_RED_CONFIRMED",
+    "studioEvidence": false,
+    "nextAction": "Source primary bounds schema/count integer evidence to <= 9007199254740991, consumes equivalent tests, synchronizes current main, reruns exact-head gates, and requests fresh audit."
+  }
+}
