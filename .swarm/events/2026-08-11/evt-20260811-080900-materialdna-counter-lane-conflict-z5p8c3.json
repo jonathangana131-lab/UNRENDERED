@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080900-materialdna-counter-lane-conflict-z5p8c3",
+  "timestamp": "2026-08-11T08:09:00+00:00",
+  "fromWorker": "sol-20260811-z5p8c3",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "summary": "Concurrent MaterialDNA repairCount lanes overlap the same source/test scope but encode different canonical ceilings. HG-BACKFILL-MATERIALDNA-COUNTERS (priority 5150, PR #313) explicitly requires rejection only above the exact IEEE-754 safe-integer boundary and tests 2^53-1 accepted / 2^53 rejected. HG-MATERIALDNA-REPAIRCOUNT-BOUND (priority 5080, PR #309) instead chooses a signed-31-bit ceiling of 2147483647 by analogy to recipeVersion. Because repairCount is a canonical count rather than the recipe revision identity counter, these patches are not merge-compatible and must not both integrate. The active independent HG-BACKFILL-MATERIALDNA-COUNTERS auditor should reconcile the semantic choice and the control plane should supersede/close the losing duplicate lane before merge.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS", "HG-MATERIALDNA-REPAIRCOUNT-BOUND"],
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "severity": "HIGH",
+  "evidence": [
+    ".swarm/lanes/HG-BACKFILL-MATERIALDNA-COUNTERS.json: priority 5150; acceptance explicitly says repairCount rejects integers above the exact IEEE-754 safe-integer boundary.",
+    ".swarm/lanes/HG-MATERIALDNA-REPAIRCOUNT-BOUND.json: priority 5080; objective requires a bounded deterministic integer domain but does not specify 31-bit in acceptance.",
+    "PR #313 implements [0, 9007199254740991] with max/max+1 regressions; PR #309 implements a 2147483647 ceiling in the same MaterialDNA validation surface.",
+    "src/shared/Materials/MaterialDNA.luau on main currently bounds recipeVersion to 2147483647 but repairCount uses a separate non-negative-integer validator with no maximum."
+  ]
+}
