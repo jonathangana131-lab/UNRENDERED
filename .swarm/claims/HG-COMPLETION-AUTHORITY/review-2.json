@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "slotId": "review-2",
+  "workerId": "sol-20260811-q6x4m9p2",
+  "claimToken": "e91c4b7a2d6f8053",
+  "claimedAt": "2026-08-11T11:58:21+00:00",
+  "heartbeatAt": "2026-08-11T11:58:21+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-AUTHORITY-q6x4m9p2",
+  "pr": null,
+  "notes": "Authority adversarial spot-check reviewer. Drain exact-head current-main authority/teardown source backlog, preserve server trust boundaries, and never infer two-client Studio evidence from source-only work."
+}
