@@ -86,7 +86,7 @@ local function run(): number
 		if snapshotOk then
 			local retryOk = pcall(function()
 				local retryRecord = boundaryRuntime:getRecord(entityId)
-				assert(retryRecord.id == entityId)
+				assert(retryRecord.id == entityId, "valid runtime retry returned the wrong WorldEntity")
 			end)
 			expect(`${name} rejection leaves an immediate valid retry available`, retryOk)
 		end
