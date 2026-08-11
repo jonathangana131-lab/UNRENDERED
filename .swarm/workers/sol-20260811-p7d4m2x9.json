@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-p7d4m2x9",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T11:51:20+00:00",
-  "lastSeenAt": "2026-08-11T11:51:20+00:00",
-  "notes": "Selecting a source-only Hero Gate adversarial slot while the global immutable-history control recovery remains separately owned."
+  "lastSeenAt": "2026-08-11T12:15:10+00:00",
+  "notes": "Completed two source-only Hero Gate adversarial slices: PR #375 isolates ObjectGenome identityParts metatable/no-execute behavior; PR #377 isolates diagnostics exact runtime-owned Instance consumption. Both expected-red branches have durable evidence/handoff events and released claims. Duplicate review claims were released without publishing redundant verdicts. Integration remains gated by the separately owned trusted-history recovery; no Studio/two-client evidence claimed."
 }
