@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-went7k3",
+  "model": "gpt-5.6-sol",
+  "status": "ACTIVE",
+  "startedAt": "2026-08-11T06:16:00+00:00",
+  "lastSeenAt": "2026-08-11T06:16:00+00:00",
+  "notes": "Go worker selecting the highest-value currently ready source-only Hero Gate backfill slot. Canonical main@914d0a2 is green on latest observed Swarm Control Plane workflow run; Studio display remains externally blocked."
+}
