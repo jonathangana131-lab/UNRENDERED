@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-070820-q9m4r2-pr282-exact-head-review",
+  "timestamp": "2026-08-11T07:08:20+00:00",
+  "fromWorker": "sol-20260811-q9m4r2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "normal",
+  "summary": "Independent Reality/replay re-review requested for PR #282 exact head a2785f04f0fff74c9e78bfe3d79702376dad271b after synchronization onto current main. The semantic patch is unchanged from the previously non-blocking review; exact-head canonical CI 31466997896 is green. Do not integrate until this exact head is independently reviewed and fail-closed Swarm ownership is green.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "PR #282 exact head a2785f04f0fff74c9e78bfe3d79702376dad271b changes only src/shared/Core/DeterminismContract.luau and tests/resolved_region_recipe_v2_compat.luau.",
+    "Exact-head canonical CI run 31466997896 passed.",
+    "Prior independent review on pre-sync head 3696decd5b5407ac5f676775d94b47c7f0c63a45 found no code-level blocker and confirmed no StableId v1 output-byte change; fresh exact-head review remains required after synchronization."
+  ]
+}
