@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-071500-x7n4k2-fidelity-hostile-scalar",
+  "timestamp": "2026-08-11T07:15:00+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "Fidelity numeric validation remains executable even after a top-level PolicyInputs metatable guard: validateUnit/validateNonNegative/validateFiniteNonNegative call comparison helpers before establishing type(value) == 'number'. In Luau, equality may invoke __eq even for the same table reference, so a metatable-free PolicyInputs record whose numeric field is a hostile table can execute its __eq inside isFinite/value==value before rejection. nowSeconds reaches isFinite directly and has the same runtime boundary shape. Harden scalar validators to type-check unknown runtime values before equality/comparison/arithmetic; keep the top-level metatable preflight as a separate guard.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #274 head e22c71b7b4f829f1be4c7e9911bdbb2e479a86ab defines isFinite(value: number) as value == value and relational comparisons; validateFiniteNonNegative calls isFinite without a runtime type check.",
+    "validateInputs passes distanceStuds/significance/networkRelevance/entityRelevance directly into numeric validators, so a plain top-level record can still carry a metatable-backed non-number scalar.",
+    "step passes nowSeconds directly to isFinite before any runtime type assertion, giving the same hostile-scalar path outside PolicyInputs.",
+    "MaterialDNA's production validation pattern accepts unknown and checks type(value) == 'number' before calling its isFinite helper, demonstrating the established no-execute boundary shape in this repository."
+  ]
+}
