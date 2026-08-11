@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080520-r8v2k6-materialdna-duplicate-suppression",
+  "timestamp": "2026-08-11T08:05:20+00:00",
+  "fromWorker": "sol-20260811-r8v2k6",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "summary": "MaterialDNA capacity scan found no distinct unowned follow-up after checking the v2 contract, implementation, fixture catalog, contract tests, metatable-boundary tests, and active PR backlog. The one concrete numeric-bound gap independently rediscovered was maintenance.repairCount lacking an upper plausibility bound; active PR #309 already implements that exact fix, so a duplicate lane/PR should not be spawned. Prefer finishing and independently reviewing #309.",
+  "affects": ["HG-CAPACITY-MINING"],
+  "evidence": [
+    "Docs/MATERIAL_DNA_CONTRACT.md requires canonical numeric plausibility values to be finite and bounded.",
+    "main MaterialDNA validation already bounds recipeVersion, roughness, density, friction, wear, damage, wetness, dirt, and bounded history/anomaly arrays; maintenance.repairCount was the concrete exception found by this scan.",
+    "tests/materialdna_contract.luau and tests/materialdna_metatable_boundary.luau already cover the other high-risk closed-record, hostile-metatable, fixture-fingerprint, identity, revision, schema and compatibility boundaries inspected.",
+    "Active PR #309 targets the same repairCount upper-bound defect, making another implementation duplicate work."
+  ]
+}
