@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-s56m9k3v",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T11:49:00+00:00",
+  "lastSeenAt": "2026-08-11T11:49:00+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "slotId": "primary",
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-s56m9k3v-g2",
+  "notes": "Stale-primary recovery candidate for the priority-9999 trusted-history continuity lane; inspected PR #351, review blockers, claims, resource lease, and current main before attempting the generation-2 takeover."
+}
