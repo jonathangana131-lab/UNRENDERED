@@ -19,6 +19,33 @@ local function run(): number
 		return string.find(source, needle, init or 1, true)
 	end
 
+	local diagnosticsRootStart = position("local function diagnosticsRoot(model: Model): Folder?")
+	local diagnosticsRootEnd = diagnosticsRootStart
+			and position("\nlocal function directRepresentations", diagnosticsRootStart)
+		or nil
+	local diagnosticsRootSource = if diagnosticsRootStart ~= nil and diagnosticsRootEnd ~= nil
+		then string.sub(source, diagnosticsRootStart, diagnosticsRootEnd - 1)
+		else ""
+	local diagnosticsRootEnumeration = string.find(diagnosticsRootSource, "model:GetChildren()", 1, true)
+	local diagnosticsRootNameFilter = string.find(
+		diagnosticsRootSource,
+		"child.Name == DIAGNOSTICS_ROOT_NAME",
+		1,
+		true
+	)
+	local diagnosticsRootDuplicateGuard = string.find(
+		diagnosticsRootSource,
+		"duplicate Physics Lab diagnostics root",
+		1,
+		true
+	)
+	local diagnosticsRootSingleLookup = string.find(
+		diagnosticsRootSource,
+		"model:FindFirstChild(DIAGNOSTICS_ROOT_NAME)",
+		1,
+		true
+	)
+
 	local directRepresentationsStart = position(
 		"local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model: Model): { Instance }"
 	)
@@ -118,6 +145,13 @@ local function run(): number
 	local evidenceFinalState = position("finallyEnabled = finalSnapshot.enabled")
 	local evidenceFreeze = position("\ttable.freeze(evidence)")
 
+	expect(
+		"diagnostics root discovery rejects duplicate same-named roots",
+		diagnosticsRootEnumeration ~= nil
+			and diagnosticsRootNameFilter ~= nil
+			and diagnosticsRootDuplicateGuard ~= nil
+			and diagnosticsRootSingleLookup == nil
+	)
 	expect(
 		"direct representation enumeration proves authoritative count and exact Instance ownership",
 		directRepresentationsSource ~= nil
