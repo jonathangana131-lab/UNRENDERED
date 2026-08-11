@@ -205,6 +205,7 @@ class TrustedHistoryWorkflowTests(unittest.TestCase):
         "fa5b8f163603fa918c21b28c63bd20e6c25a2add": "7c62ff9a7b92c4ebe43c38323a5946e04881d3b7",
         "a99ff757b842fa91ddd893d19fd1d826890ce306": "a193dd686323c27a7191d525b064c4257120de21",
         "57245c334fdc19cae855796066f783fb64492c51": "db830924aa0b65a74c60ee345448f57381bbe137",
+        "8e631ba0da787af6c1c63f6a6dd96920ea7941f2": "bf852363faa7328d6707233b72909f6c4958d910",
     }
 
     def workflow(self):
