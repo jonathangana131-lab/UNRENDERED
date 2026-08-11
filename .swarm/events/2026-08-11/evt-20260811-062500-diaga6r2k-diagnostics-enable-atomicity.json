@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062500-diaga6r2k-diagnostics-enable-atomicity",
+  "timestamp": "2026-08-11T06:25:00+00:00",
+  "fromWorker": "sol-20260811-diaga6r2k",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "summary": "PhysicsLabStudioDiagnostics.enable is not failure-atomic: it parents the owned diagnostics Folder before preflighting all representation identities, WorldEntity records, and BasePart adornees. Any later assertion can leave a partial owned diagnostics tree, contaminating the next candidate observation and making a retry fail as already enabled. Primary should preflight before mutation or guarantee rollback, with an injected mid-enable failure regression. This is source-only audit evidence and does not satisfy the live #151 diagnostics viewport row.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau enable creates/parents UNRENDERED_PhysicsLabDiagnostics before iterating directRepresentations.",
+    "Inside that loop requireStringAttribute, lab.getRecord, and adorneeFor can assert after the folder already exists.",
+    "A subsequent enable begins by asserting diagnosticsRoot(model) == nil, so a partial tree can poison retry semantics unless explicitly cleaned.",
+    "Docs/PHYSICS_LAB_DIAGNOSTICS.md on agent/physics/HG-BACKFILL-DIAGNOSTICS-diaga6r2k records the finding and tightens the evidence requirement without claiming PASS."
+  ]
+}
