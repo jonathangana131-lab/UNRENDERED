@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-b8n2v5c7",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:25:30+00:00",
-  "lastSeenAt": "2026-08-11T21:25:30+00:00",
+  "lastSeenAt": "2026-08-11T21:27:16+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-b8n2v5c7",
-  "notes": "Independent exact-head audit of consolidated diagnostics generation-6 PR #401 at 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d; no source edits or Studio/viewport evidence claims."
+  "notes": "Completed independent exact-head audit of PR #401 generation-6 at 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d. SOURCE/TEST PASS; review 4910900282 and evt-20260811-212716-b8n2v5c7-diagnostics-g6-review published. Duplicate-root and visual-projection blockers are closed; Studio/viewport evidence and global trusted pr-ownership remain open integration gates."
 }
