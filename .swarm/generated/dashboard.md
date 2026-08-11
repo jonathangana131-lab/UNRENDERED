@@ -1,6 +1,6 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T07:08:29.043924+00:00`
+Generated: `2026-08-11T07:08:33.747688+00:00`
 
 Canonical main: **GREEN** `7de385295dd17112226dd4cd173bd707178e17bc`
 
@@ -8,13 +8,14 @@ State digest: `88917cd54c365851dba7bc9fa645428a1085c6ed53f2cf08223f841a4c7732b6`
 
 ## Summary
 
-- ready slots: **15**
-- active claims: **15**
-- stale claims: **1**
+- ready slots: **16**
+- active claims: **14**
+- stale claims: **2**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
+- `HG-BACKFILL-REALITY/test-adversary` — **Reality version and deterministic replay tests** — score 5220 — dependencies satisfied
 - `HG-BACKFILL-DIAGNOSTICS/primary` — **Diagnostics source hardening** — score 5150 — dependencies satisfied; resources available
 - `HG-BACKFILL-PHYSICS-GEOMETRY/test-adversary` — **Geometry, clearance, and reachability property tests** — score 5120 — dependencies satisfied
 - `HG-BACKFILL-REALITY/audit` — **WorldId, seed, and replay invariant auditor** — score 5120 — dependencies satisfied
@@ -43,7 +44,6 @@ State digest: `88917cd54c365851dba7bc9fa645428a1085c6ed53f2cf08223f841a4c7732b6`
 - `HG-BACKFILL-OBJECTGENOME/test-adversary` → `sol-20260811-q7n4m9`; lease to `2026-08-11T07:20:00+00:00`
 - `HG-BACKFILL-PHYSICS-GEOMETRY/primary` → `sol-20260811-j6r2v8`; lease to `2026-08-11T07:15:00+00:00`
 - `HG-BACKFILL-REALITY/primary` → `sol-20260811-q9m4r2`; lease to `2026-08-11T07:29:00+00:00`
-- `HG-BACKFILL-REALITY/test-adversary` → `sol-20260811-r9t4n2`; lease to `2026-08-11T07:08:30+00:00`
 - `HG-BACKFILL-WORLDENTITY/audit` → `sol-20260811-z4q8n1`; lease to `2026-08-11T07:46:00+00:00`
 - `HG-BACKFILL-WORLDENTITY/primary` → `sol-20260811-ogx9k2`; lease to `2026-08-11T07:37:00+00:00`
 - `HG-BACKFILL-WORLDENTITY/test-adversary` → `sol-20260811-w3x7k9`; lease to `2026-08-11T07:43:00+00:00`
