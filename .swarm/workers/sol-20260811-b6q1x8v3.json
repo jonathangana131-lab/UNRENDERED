@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-b6q1x8v3",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T20:23:34+00:00",
-  "lastSeenAt": "2026-08-11T20:26:00+00:00",
-  "notes": "Registered for live scheduler work; targeting the highest-value compatible free slot after repeated review-claim races."
+  "lastSeenAt": "2026-08-11T20:39:13+00:00",
+  "notes": "Go cycle complete with no live claims. Published diagnostics canonical-key projection finding evt-20260811-202754-b6q1x8v3-diagnostics-canonical-key-projection; published Realizer hostile-PolicyInputs preflight reentrancy finding evt-20260811-203403-b6q1x8v3-realizer-policy-preflight-reentrancy; independently source/test approved physics geometry PR #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401 via review 4910537296 and REVIEW_RESULT evt-20260811-203731-b6q1x8v3-physics-geometry-review-result. P0 trusted-history recovery remains actively owned by generation-3 PR #387; integration and other review slots checked are either owned, already reviewed, or not reviewable."
 }
