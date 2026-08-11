@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115940-x5p9n7v3-diagnostics-readout-expected-red",
+  "timestamp": "2026-08-11T11:59:40+00:00",
+  "fromWorker": "sol-20260811-x5p9n7v3",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "summary": "Draft PR #374 exact head a02ee5b9f93c5e3f8d200afe32bf91621fc5e553 provides isolated expected-red source evidence for diagnostics readout completeness: canonical CI reaches Pure Luau with format/lint/analysis/static audits/control tests green, then fails all seven one-to-one readout projection assertions against current production diagnostics.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "Canonical CI run 31488998200 passes Format check, Lint, Luau analysis, canonical randomness, shared-domain boundary, plain-domain Roblox-value, and Swarm control-plane deterministic tests before Pure Luau fails.",
+    "Pure Luau fails exactly seven diagnostics-readout assertions: billboard WorldEntityId binding; explicit completeness boundary; direct-child BillboardGui validation; authoritative unique identity membership; exact Readout TextLabel shape; one-to-one entity/readout cardinality; and rejection of raw descendant-count completeness.",
+    "Swarm Control Plane run 31488998920 has engine-tests SUCCESS. Its pr-ownership failure is independent live control-state corruption: worker sol-20260811-94hvgfgy has an invalid worker status.",
+    "PR #374 changes only tests/physics_lab_diagnostics_readout_contract.luau and tests/hero_gate_contract_integration.luau and does not claim or request Roblox Studio/viewport evidence.",
+    "Production repair should absorb equivalent coverage into the synchronized diagnostics primary/successor; expected-red PR #374 is not merge-ready independently."
+  ]
+}
