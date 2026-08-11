@@ -225,12 +225,10 @@ local function run(): number
 					stairsContiguous = false
 				end
 				local rise = stairTop - priorTop
-				if rise <= 0 then
-					stairsRiseMonotonic = false
-				elseif canonicalRise ~= nil and not nearlyEqual(rise, canonicalRise, EPSILON) then
-					stairsRiseMonotonic = false
-				else
+				if rise > 0 and (canonicalRise == nil or nearlyEqual(rise, canonicalRise, EPSILON)) then
 					canonicalRise = rise
+				else
+					stairsRiseMonotonic = false
 				end
 			end
 			priorStair = stair
