@@ -13,6 +13,8 @@
     "Current swarm-control worker record sol-20260811-ogx9k2.json still reports status ACTIVE at lastSeenAt 2026-08-11T06:44:00Z.",
     "This is mechanically stronger than the pre-#290 green-with-error behavior: the same class of invalid live state now blocks ownership as intended."
   ],
-  "pr": 275,
-  "headSha": "7516c4e949d77af9ea55b47294141e532d343a9d"
+  "metadata": {
+    "pr": 275,
+    "headSha": "7516c4e949d77af9ea55b47294141e532d343a9d"
+  }
 }
