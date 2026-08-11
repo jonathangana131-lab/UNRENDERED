@@ -119,12 +119,14 @@ local function run(): number
 	local metersStart = string.find(scaleSource, "function PhysicsLabScale.metersToStuds", 1, true)
 	local studsStart = string.find(scaleSource, "function PhysicsLabScale.studsToMeters", 1, true)
 	local moduleReturn = string.find(scaleSource, "return table.freeze(PhysicsLabScale)", 1, true)
-	local metersBody = if metersStart ~= nil and studsStart ~= nil and metersStart < studsStart
-		then string.sub(scaleSource, metersStart, studsStart - 1)
-		else ""
-	local studsBody = if studsStart ~= nil and moduleReturn ~= nil and studsStart < moduleReturn
-		then string.sub(scaleSource, studsStart, moduleReturn - 1)
-		else ""
+	local metersBody = ""
+	if metersStart ~= nil and studsStart ~= nil and metersStart < studsStart then
+		metersBody = string.sub(scaleSource, metersStart, studsStart - 1)
+	end
+	local studsBody = ""
+	if studsStart ~= nil and moduleReturn ~= nil and studsStart < moduleReturn then
+		studsBody = string.sub(scaleSource, studsStart, moduleReturn - 1)
+	end
 
 	expect(
 		"Physics Lab meters-to-studs keeps input and derived-output finite fences ordered around arithmetic",
