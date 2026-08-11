@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082500-v7k3m9-physics-ramp-finding-revised",
+  "timestamp": "2026-08-11T08:25:00+00:00",
+  "fromWorker": "sol-20260811-v7k3m9",
+  "eventType": "FINDING",
+  "summary": "Audit correction superseding evt-20260811-081900-v7k3m9-physics-ramp-entry-gap: after checking authoritative #151 engine evidence and source history, the earlier request to require a floor-continuous ramp entry is not justified as a merge blocker. The current PhysicsLabRecipe geometry is unchanged from accepted Studio physical-sanity SHA face848a32ce626796d1263bed4150142ff170f2, where the ramp was one of seven accepted contact/traversability targets. PR #302 exact head c226479ee13f2bc0000822ce04df3a61aa42584f is therefore patch-locally PASS: its bounded-entry-step heuristic does not contradict accepted lab truth and makes no fresh Studio claim. Wording and full spawn-extents containment remain non-blocking polish only.",
+  "affects": ["HERO-GATE", "HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "INFO",
+  "evidence": [
+    "PR #302 review 4904264203 explicitly revises/supersedes review 4904244720 on the same exact head.",
+    "Issue #151 accepted request 20260810-027-physical-sanity-warmup-face-sol56k8 on source SHA face848a32ce626796d1263bed4150142ff170f2, with all required floor/stair-1..4/ramp/ledge contact targets accepted and the contact/traversability physical-sanity row closed.",
+    "GitHub compare face848a32ce626796d1263bed4150142ff170f2...aa7e04f05834ae783773c908fccfdbbe510558e5 contains no PhysicsLabRecipe.luau file delta; current ramp geometry is the same geometry covered by that accepted evidence.",
+    "PR #302 exact-head canonical CI run 31471066753 succeeded."
+  ]
+}
