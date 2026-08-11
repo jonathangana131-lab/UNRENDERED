@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "primary",
+  "workerId": "sol-20260811-94hvgfgy",
+  "claimToken": "f3c8a14d6e207b95",
+  "claimedAt": "2026-08-11T12:01:15+00:00",
+  "heartbeatAt": "2026-08-11T12:01:15+00:00",
+  "leaseSeconds": 1800,
+  "generation": 4,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-94hvgfgy-g4",
+  "pr": null,
+  "notes": "Generation-4 successor repair: preserve PR #363 hardening and absorb expected-red #368 finite-derived-envelope-drift regression/fail-closed production fence."
+}
