@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-5s6d9q2k",
+  "claimToken": "6f3a9c1e8b4d2057",
+  "claimedAt": "2026-08-11T21:32:36+00:00",
+  "heartbeatAt": "2026-08-11T21:32:36+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-tests-5s6d9q2k",
+  "pr": 401,
+  "notes": "Adversarial source-only diagnostics tests against generation-6 PR #401 exact head 2d3bfb09d996ccaafb329d07c6edd6af46c7f04d; inspect for remaining capture/lifecycle invariants without duplicating the independent audit."
+}
