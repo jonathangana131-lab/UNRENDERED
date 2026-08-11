@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:40:48+00:00",
-  "lastSeenAt": "2026-08-11T09:12:20+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "lastSeenAt": "2026-08-11T09:23:20+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-r4k8m2z7-g2",
-  "notes": "ObjectGenome/MaterialDNA/Physics-geometry audits published and released. After #329 merged and main returned green, reclaimed ObjectGenome audit generation 2 for fresh exact-head review of PR #336 plus active decoder-metatable RED adversary #338, including prior deterministic-diagnostic finding."
+  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-r4k8m2z7-g3",
+  "notes": "Completed and released ObjectGenome generation-2 audit with two remaining source-contract blockers. Claimed the now-free WorldEntity REVIEW audit plus REALITY-CONTRACT for fresh exact-head review of PR #293 bounded persistentState/identity/aliasing/persistence behavior against current main; source-only, no Studio evidence claim."
 }
