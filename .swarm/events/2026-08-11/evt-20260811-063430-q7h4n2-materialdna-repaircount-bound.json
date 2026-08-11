@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063430-q7h4n2-materialdna-repaircount-bound",
+  "timestamp": "2026-08-11T06:34:30+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "medium",
+  "summary": "MaterialDNA schema-v2 documents finite and bounded numeric plausibility, but maintenance.repairCount is the lone recipe numeric validated by validateNonNegativeInteger with no production upper bound. Extremely large finite integer values therefore validate even though every other recipe magnitude/count has an explicit cap or unit interval. Primary/test lanes should either add a deliberate repair-count cap with a deterministic boundary regression or explicitly amend the contract if unbounded counts are intentional; do not pick a cap silently without documenting the semantic limit.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "Docs/MATERIAL_DNA_CONTRACT.md Validation states: Numeric plausibility ranges are finite and bounded.",
+    "src/shared/Materials/MaterialDNA.luau validateMaintenance calls validateNonNegativeInteger for maintenance.repairCount; that helper checks finite/non-negative/integer but has no maximum.",
+    "The same module explicitly caps recipeVersion, history/anomaly counts, age, thickness, seam period, density, friction and all normalized response/state fields, leaving repairCount as the numeric-boundary exception."
+  ]
+}
