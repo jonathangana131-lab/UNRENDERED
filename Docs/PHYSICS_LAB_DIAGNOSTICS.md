@@ -21,6 +21,14 @@ The readout surface exposes:
 
 The visual labels are diagnostic representation only. They are never canonical world data and are excluded from all diagnostics-off validation evidence by being destroyed before `PhysicsLabValidation.captureFull()` runs.
 
+## Failure atomicity audit
+
+The diagnostics boundary must be fail-closed as well as leak-free. A failed diagnostics-on attempt must not leave a partial owned tree that changes the next observation or causes the next enable attempt to fail as "already enabled."
+
+Current source does not yet prove that invariant for every assertion path: `enable()` creates and parents the owned diagnostics folder before it has preflighted every realized representation, authoritative record, required identity attribute, and usable `BasePart` adornee. If any later validation/assertion fails, the partially-created folder can remain under the lab root. This is a source-level audit finding, **not** a claim that the engine evidence row has failed or passed.
+
+Until the implementation is hardened, evidence collection must treat any interrupted/errored diagnostics-on attempt as contaminated. Explicitly disable/clean the owned diagnostics tree and re-establish the canonical lab baseline before collecting a new candidate observation. A production fix should make enable failure-atomic by validating all required inputs before mutation or by guaranteed rollback of every owned Instance created during a failed attempt. The fix requires a regression test for an injected mid-enable failure and must preserve the rule that an unrelated same-name object is never adopted or destroyed.
+
 ## Manual server procedure
 
 Use the **server** Command Bar in a running Roblox Studio server session:
@@ -80,6 +88,7 @@ The diagnostics row remains open until a tester/bridge run on the exact commit e
 5. diagnostics-off leaves no owned diagnostics tree;
 6. the 20-cycle sweep records zero scoped resource drift and stable full-lab envelope at required checkpoints;
 7. diagnostics are still off by default after normal bootstrap/rebuild;
-8. no unrelated same-name Instance is silently destroyed or adopted.
+8. no unrelated same-name Instance is silently destroyed or adopted;
+9. a failed/interrupted diagnostics-on attempt cannot leave a partial owned diagnostics tree or poison the next candidate observation.
 
 CI, a successful Rojo build, or source review alone cannot satisfy these observations.
