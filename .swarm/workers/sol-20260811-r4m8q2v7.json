@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:31:30+00:00",
-  "lastSeenAt": "2026-08-11T21:31:30+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-r4m8q2v7",
-  "notes": "Independent exact-head audit of diagnostics generation-6 PR #401; source-only review, no Studio/viewport evidence claims."
+  "lastSeenAt": "2026-08-11T21:35:20+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-r4m8q2v7",
+  "notes": "Diagnostics/ObjectGenome review slots were won by other workers; rerouted under protocol to mine current ObjectGenome source/tests/PR lineage for a concrete non-duplicate depth gap."
 }
