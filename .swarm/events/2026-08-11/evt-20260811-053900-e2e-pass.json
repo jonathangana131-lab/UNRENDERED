@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-053900-e2e-pass",
+  "timestamp": "2026-08-11T05:39:00+00:00",
+  "fromWorker": "sol-20260811-e2e1",
+  "eventType": "INTEGRATION_RESULT",
+  "laneId": "SWARM-V2-E2E",
+  "severity": "info",
+  "summary": "Post-hardening end-to-end worker path passed. A fresh worker registered, claimed the exclusive lane before branch creation, waited for exact live-state validation, then PR #268 passed hardened trusted-base claim/worker/branch/scope/digest enforcement plus canonical CI and merged successfully.",
+  "affects": ["SWARM-V2-E2E"],
+  "evidence": [
+    "claim creation commit fb84a93b18a692f3666859deb6afd443b76aa258",
+    "claim-validation generated commit 5c45b3c7b850af7120429740774495da5ec6e87c",
+    "PR #268 Swarm run 31462286246: engine-tests and pr-ownership PASS",
+    "PR #268 pr-ownership log used trusted base swarmctl_hardening.py and validated state digest e2f4c0bcc6d1e67dd162599a394eaa37a3bdf00a24127de2b77603ff0169cca3",
+    "PR #268 canonical CI run 31462286239 PASS",
+    "merge commit 10d3f6992ff243a9268ed8629893faf4fc40791c"
+  ]
+}
