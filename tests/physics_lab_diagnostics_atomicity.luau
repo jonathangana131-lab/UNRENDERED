@@ -19,14 +19,18 @@ local function run(): number
 		return string.find(source, needle, init or 1, true)
 	end
 
-	local enableStart = position("function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab): Snapshot")
-	local enableEnd = enableStart and position("\nfunction PhysicsLabStudioDiagnostics.disable", enableStart) or nil
+	local enableStart =
+		position("function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab): Snapshot")
+	local enableEnd = enableStart and position("\nfunction PhysicsLabStudioDiagnostics.disable", enableStart)
+		or nil
 	local enableSource = if enableStart ~= nil and enableEnd ~= nil
 		then string.sub(source, enableStart, enableEnd - 1)
 		else ""
 	local enablePreflight = string.find(enableSource, "local plans = preflightReadouts(lab, model)", 1, true)
-	local enableTransaction = string.find(enableSource, "local ok, result = pcall(function(): Snapshot", 1, true)
-	local enableCapture = string.find(enableSource, "return PhysicsLabStudioDiagnostics.capture(lab)", 1, true)
+	local enableTransaction =
+		string.find(enableSource, "local ok, result = pcall(function(): Snapshot", 1, true)
+	local enableCapture =
+		string.find(enableSource, "return PhysicsLabStudioDiagnostics.capture(lab)", 1, true)
 	local yieldAfterPreflight = if enablePreflight ~= nil
 		then string.find(enableSource, ":Wait(", enablePreflight, true)
 		else nil
@@ -34,20 +38,21 @@ local function run(): number
 		then string.find(enableSource, "task.wait(", enablePreflight, true)
 		else nil
 
-	local disableStart = position("function PhysicsLabStudioDiagnostics.disable(lab: PhysicsLabRealizer.RealizedLab): Snapshot")
-	local disableEnd = disableStart and position("\nfunction PhysicsLabStudioDiagnostics.runToggleEvidence", disableStart) or nil
+	local disableStart = position(
+		"function PhysicsLabStudioDiagnostics.disable(lab: PhysicsLabRealizer.RealizedLab): Snapshot"
+	)
+	local disableEnd = disableStart
+			and position("\nfunction PhysicsLabStudioDiagnostics.runToggleEvidence", disableStart)
+		or nil
 	local disableSource = if disableStart ~= nil and disableEnd ~= nil
 		then string.sub(source, disableStart, disableEnd - 1)
 		else ""
 	local disableOptionalGuard = string.find(disableSource, "if folder ~= nil then", 1, true)
 	local disableDestroy = string.find(disableSource, "folder:Destroy()", 1, true)
-	local disableCapture = string.find(disableSource, "local snapshot = PhysicsLabStudioDiagnostics.capture(lab)", 1, true)
-	local disablePostcondition = string.find(
-		disableSource,
-		"not snapshot.enabled and snapshot.diagnosticInstanceCount == 0",
-		1,
-		true
-	)
+	local disableCapture =
+		string.find(disableSource, "local snapshot = PhysicsLabStudioDiagnostics.capture(lab)", 1, true)
+	local disablePostcondition =
+		string.find(disableSource, "not snapshot.enabled and snapshot.diagnosticInstanceCount == 0", 1, true)
 
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
