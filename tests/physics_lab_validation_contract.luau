@@ -103,6 +103,36 @@ local function run(): number
 	local malformedOk = ValidationContract.inspectSnapshot(malformed)
 	expect("snapshot validation rejects a count that omits the root", malformedOk == false)
 
+	local unknownSnapshotField = snapshot(counts(46, 0), -10, 10)
+	unknownSnapshotField.syntheticEvidence = true
+	local unknownSnapshotFieldOk = ValidationContract.inspectSnapshot(unknownSnapshotField)
+	expect("snapshot validation rejects fields captureInternal cannot produce", unknownSnapshotFieldOk == false)
+
+	local metatableSnapshot = snapshot(counts(46, 0), -10, 10)
+	setmetatable(metatableSnapshot, { __index = { syntheticEvidence = true } })
+	local metatableSnapshotOk = ValidationContract.inspectSnapshot(metatableSnapshot)
+	expect("snapshot validation rejects metatable-backed evidence", metatableSnapshotOk == false)
+
+	local unknownCountField = snapshot(counts(46, 0), -10, 10)
+	unknownCountField.counts.unclassified = 0
+	local unknownCountFieldOk = ValidationContract.inspectSnapshot(unknownCountField)
+	expect("snapshot validation rejects unknown resource-count fields", unknownCountFieldOk == false)
+
+	local metatableCounts = snapshot(counts(46, 0), -10, 10)
+	setmetatable(metatableCounts.counts, { __index = { unclassified = 0 } })
+	local metatableCountsOk = ValidationContract.inspectSnapshot(metatableCounts)
+	expect("snapshot validation rejects metatable-backed resource counts", metatableCountsOk == false)
+
+	local unknownEnvelopeField = snapshot(counts(46, 0), -10, 10)
+	unknownEnvelopeField.envelopeStuds.padding = 0
+	local unknownEnvelopeFieldOk = ValidationContract.inspectSnapshot(unknownEnvelopeField)
+	expect("snapshot validation rejects unknown envelope fields", unknownEnvelopeFieldOk == false)
+
+	local unknownVectorField = snapshot(counts(46, 0), -10, 10)
+	unknownVectorField.envelopeStuds.min.w = 0
+	local unknownVectorFieldOk = ValidationContract.inspectSnapshot(unknownVectorField)
+	expect("snapshot validation rejects unknown envelope-vector fields", unknownVectorFieldOk == false)
+
 	local missingRootModel = snapshot(counts(46, 0), -10, 10)
 	missingRootModel.counts.models = 0
 	local missingRootModelOk = ValidationContract.inspectSnapshot(missingRootModel)
