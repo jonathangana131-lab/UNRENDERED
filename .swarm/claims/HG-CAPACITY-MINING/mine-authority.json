@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "workerId": "sol-20260811-eb152d9a",
+  "claimToken": "19556291b7b8dac1",
+  "claimedAt": "2026-08-11T23:10:12+00:00",
+  "heartbeatAt": "2026-08-11T23:10:12+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-authority-eb152d9a",
+  "pr": null,
+  "notes": "Inspect current-main authority/multiplayer source plus active retained authority PRs and recent findings for one concrete non-duplicate invariant, test, or integration gap. Source-only capacity mining; do not claim Studio or two-client evidence."
+}
