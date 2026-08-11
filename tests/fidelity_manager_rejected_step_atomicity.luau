@@ -31,6 +31,18 @@ local function run(): number
 		return inputs
 	end
 
+	local function metricsAreInternallyConsistent(metrics)
+		local total = 0
+		for _, level in { "F0", "F1", "F2", "F3", "F4" } do
+			local count = metrics.counts[level]
+			if count < 0 then
+				return false
+			end
+			total += count
+		end
+		return total == metrics.registered
+	end
+
 	local clockManager = FidelityManager.new()
 	clockManager:register("entity:atomic-clock", "F0")
 	clockManager:step("entity:atomic-clock", "F0", validInputs(), 1)
@@ -143,6 +155,50 @@ local function run(): number
 		"retry after failed future hook commits observed fidelity",
 		hookManager:getObservedLevel("entity:atomic-hook"),
 		"F4"
+	)
+
+	local reentrantConfig = table.clone(FidelityManager.defaultConfig())
+	reentrantConfig.promotionHoldSeconds = 0
+	reentrantConfig.transitionCooldownSeconds = 0
+
+	local unregisteringHookManager = FidelityManager.new(reentrantConfig)
+	unregisteringHookManager:register("entity:atomic-unregister-hook", "F0")
+	pcall(function()
+		unregisteringHookManager:step(
+			"entity:atomic-unregister-hook",
+			"F0",
+			heroInputs(),
+			0,
+			function(entityId)
+				unregisteringHookManager:unregister(entityId)
+			end
+		)
+	end)
+	expectEqual(
+		"callback reentrancy cannot corrupt aggregate fidelity accounting",
+		metricsAreInternallyConsistent(unregisteringHookManager:getMetrics()),
+		true
+	)
+
+	local registeringFailureManager = FidelityManager.new(reentrantConfig)
+	registeringFailureManager:register("entity:atomic-register-hook", "F0")
+	local registeringFailureAccepted = pcall(function()
+		registeringFailureManager:step(
+			"entity:atomic-register-hook",
+			"F0",
+			heroInputs(),
+			0,
+			function()
+				registeringFailureManager:register("entity:atomic-register-side-effect", "F1")
+				error("intentional failure after manager mutation")
+			end
+		)
+	end)
+	expectEqual("failing manager-mutating hook propagates rejection", registeringFailureAccepted, false)
+	expectEqual(
+		"callback rollback cannot desynchronize global counts from registered state",
+		metricsAreInternallyConsistent(registeringFailureManager:getMetrics()),
+		true
 	)
 
 	return failures
