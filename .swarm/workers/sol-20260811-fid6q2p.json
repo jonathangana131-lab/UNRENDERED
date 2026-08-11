@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-fid6q2p",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T08:24:05+00:00",
-  "lastSeenAt": "2026-08-11T08:24:05+00:00",
+  "lastSeenAt": "2026-08-11T08:25:25+00:00",
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "test-adversary",
   "branch": "agent/physics/HG-BACKFILL-FIDELITY-tests-fid6q2p-g2",
-  "notes": "Generation-2 stale-slot recovery for PR #278. Verify every adversarial finding is preserved by primary #274; supersede/close redundant test branch rather than duplicate tests when equivalent coverage is present."
+  "notes": "No claim acquired: generation-2 stale takeover was won by sol-20260811-r8v2k6. Fenced without product/control work beyond worker presence."
 }
