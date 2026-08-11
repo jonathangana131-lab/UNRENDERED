@@ -5,38 +5,14 @@
   "title": "Diagnostics exact representation-instance authority seam",
   "objective": "Provide the narrow project-owned source seam needed for Physics Lab diagnostics to prove that an enumerated Workspace representation is the exact runtime-owned Instance for its canonical WorldEntity id, without exposing the private representation map or treating Workspace as canonical data.",
   "priority": 4860,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
-  "writeScopes": [
-    "src/server/PhysicsLab/PhysicsLabRealizer.luau",
-    "tests/physics_lab_realizer_representation_ownership.luau",
-    "tests/run.luau"
-  ],
+  "writeScopes": ["src/server/PhysicsLab/PhysicsLabRealizer.luau", "tests/physics_lab_realizer_representation_ownership.luau", "tests/run.luau"],
   "resources": [],
   "slots": [
-    {
-      "slotId": "primary",
-      "role": "Exact Instance ownership seam implementation and pure regression",
-      "exclusive": true,
-      "availableWhen": ["READY", "NEEDS_CHANGES"],
-      "priorityBoost": 320,
-      "writeScopes": [
-        "src/server/PhysicsLab/PhysicsLabRealizer.luau",
-        "tests/physics_lab_realizer_representation_ownership.luau",
-        "tests/run.luau"
-      ]
-    },
-    {
-      "slotId": "audit",
-      "role": "Representation-authority boundary reviewer",
-      "exclusive": true,
-      "availableWhen": ["REVIEW"],
-      "priorityBoost": 160,
-      "writeScopes": [
-        "tests/physics_lab_realizer_representation_ownership.luau"
-      ]
-    }
+    {"slotId":"primary","role":"Exact Instance ownership seam implementation and pure regression","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":320,"writeScopes":["src/server/PhysicsLab/PhysicsLabRealizer.luau","tests/physics_lab_realizer_representation_ownership.luau","tests/run.luau"]},
+    {"slotId":"audit","role":"Representation-authority boundary reviewer","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":160,"writeScopes":["tests/physics_lab_realizer_representation_ownership.luau"]}
   ],
   "acceptance": [
     "expose a narrow project-owned predicate that receives both canonical entity id and candidate Instance and succeeds only when the candidate is the exact private runtime-owned representation for that id",
