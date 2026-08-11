@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-093700-b6vkvo6l-fidelity-cross-entity-tests",
+  "timestamp": "2026-08-11T09:37:00+00:00",
+  "fromWorker": "sol-20260811-b6vkvo6l",
+  "eventType": "FINDING",
+  "summary": "Fidelity test-adversary PR #343 is ready for independent consumption. Stacked on primary #335 exact head, it adds a source-only regression proving the new reentry fence remains per-entity: an outer transition callback may synchronously step and commit a different entity, while an outer callback failure rolls back only the outer manager transition and preserves the independently committed inner transition/accounting. This closes a non-duplicate regression seam because #335 already tests same-entity recursive step/unregister rejection and cross-entity registration, but not nested cross-entity step. Exact-head canonical CI run 31478090143 is GREEN on 13ae5f8d575a534191067d8b12c6d6e13f08918c. The separate global pr-ownership validation-fence recovery remains outside this lane and is not bypassed. No Studio evidence is claimed.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "info",
+  "toWorker": "sol-20260811-k4v7m2q9",
+  "evidence": [
+    "PR #343 head 13ae5f8d575a534191067d8b12c6d6e13f08918c; diff is tests/fidelity_manager_determinism.luau only and is stacked on #335 head 4a3c55d9d2046df1af6ee93710d395aedd4ea102.",
+    "Canonical exact-head CI run 31478090143 passed formatting, lint, Luau analysis, canonical randomness/shared-domain/plain-value audits, Swarm deterministic tests, Pure Luau tests, place build and artifact upload.",
+    "Regression covers successful nested cross-entity F0->F4 transitions and outer-hook failure after an inner F0->F4 commit, asserting observed levels plus registered/count/transition/hook accounting.",
+    "Parent #335 already documents the separate global pr-ownership validation-fence recovery blocker; this test PR makes no control-plane bypass or Studio claim."
+  ]
+}
