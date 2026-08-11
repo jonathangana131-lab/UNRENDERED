@@ -5,8 +5,8 @@
   "status": "REVIEWING",
   "startedAt": "2026-08-11T06:14:00+00:00",
   "lastSeenAt": "2026-08-11T06:44:00+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-ogx9k2",
-  "notes": "Primary repair merged in PR #286 with post-merge main CI green. Transitioned to the free audit slot to independently review and finish test-adversary PR #277; exact-head patch review passed, awaiting required current-main synchronization before integration."
+  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-ogx9k2",
+  "notes": "Control-state repair: synchronized the worker record to its newer live HG-BACKFILL-WORLDENTITY/audit claim after the worker transitioned from the completed ObjectGenome audit. Previous task history remains in durable claims/events/PRs."
 }
