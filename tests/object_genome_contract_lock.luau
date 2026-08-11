@@ -74,6 +74,30 @@ local function run(): number
 			and not overlongVariantIdentityOk
 	)
 
+	local identityPartReads = 0
+	local hostileIdentityPartsGenome = setmetatable({}, {
+		__index = function(_, key)
+			identityPartReads += 1
+			if key == "schemaVersion" then
+				return ObjectGenome.SCHEMA_VERSION
+			elseif key == "familyId" then
+				return Fixtures.officeChair.familyId
+			elseif key == "familyVersion" then
+				return Fixtures.officeChair.familyVersion
+			elseif key == "variantKey" then
+				return Fixtures.officeChair.variantKey
+			end
+			return nil
+		end,
+	})
+	local hostileIdentityPartsOk = pcall(function()
+		ObjectGenome.identityParts(hostileIdentityPartsGenome)
+	end)
+	expect(
+		"identityParts rejects metatable-backed genomes before field reads",
+		not hostileIdentityPartsOk and identityPartReads == 0
+	)
+
 	local unknownTopLevelShape = deepCopy(Fixtures.officeChair)
 	unknownTopLevelShape.futureField = true
 	expect(
