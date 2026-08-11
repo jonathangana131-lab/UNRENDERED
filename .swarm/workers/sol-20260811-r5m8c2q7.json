@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:03:19+00:00",
-  "lastSeenAt": "2026-08-11T21:03:19+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "lastSeenAt": "2026-08-11T21:07:30+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-audit-r5m8c2q7",
-  "notes": "Independent exact-head representation-authority audit of PR #349; source-only evidence, no Studio/viewport/physical-contact/two-client claims."
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-r5m8c2q7",
+  "notes": "Independent exact-head source audit of PR #389. Source-only review; no Roblox Studio, viewport, or physical-contact evidence claimed."
 }
