@@ -7,7 +7,7 @@
   "summary": "Separate pre-existing Reality-Grade cart fixture gap: the F2 rolling-cart ObjectGenome has no upright/post components between chassis, lower shelf, and upper shelf. Because the realizer creates only the authored anchored component proxies, the lower shelf floats 0.185m above the chassis and the upper shelf floats 0.31m above the lower shelf in the physical representation. This predates PR #311 and is intentionally not being smuggled into the bounded ground-contact/COM repair. Schedule a narrow cart manufacturability follow-up after #311 rather than treating supportKeys as invisible geometry.",
   "affects": ["HG-PHYSICS-CART-GEOMETRY", "HG-CAPACITY-MINING"],
   "laneId": "HG-PHYSICS-CART-GEOMETRY",
-  "severity": "MEDIUM",
+  "severity": "medium",
   "evidence": [
     "Chassis center -0.33m, height 0.08m => top -0.29m; lower shelf center -0.08m, height 0.05m => bottom -0.105m; physical vertical gap = 0.185m.",
     "Lower shelf top is -0.055m; upper shelf center +0.28m, height 0.05m => bottom +0.255m; physical vertical gap = 0.31m.",
