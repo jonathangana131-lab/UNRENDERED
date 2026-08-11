@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090430-k9x4m2p7-objectgenome-cardinality-unbounded",
+  "timestamp": "2026-08-11T09:04:30+00:00",
+  "fromWorker": "sol-20260811-k9x4m2p7",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "ObjectGenome v1 has no explicit cardinality budget for canonical collections. validateDenseArray() proves only contiguous 1-based shape and returns maxIndex; ObjectGenome.inspect() then iterates every component and later mechanisms/affordances/supportKeys without a maximum count. recipeFingerprint() also walks the complete validated immutable recipe. Consequently a structurally valid recipe can contain arbitrarily large dense component/mechanism/affordance/support arrays and force unbounded validator/fingerprint CPU+memory work. This is distinct from active PR #336, which bounds semantic-key byte length, familyVersion, and mutable ObjectState aliasing but does not add collection cardinality limits. Recommend a bounded one-shot source/test lane after #336 settles: define explicit production-worthy v1 maxima for components, mechanisms, affordances, and per-component supportKeys; reject over-budget inputs before expensive graph/fingerprint work; add exact max/max+1 deterministic regressions and preserve existing fixture validity. No Studio evidence is claimed or required for this source-only contract/performance boundary.",
+  "affects": ["HERO-GATE", "HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "main src/shared/Objects/ObjectGenome.luau validateDenseArray() counts numeric keys and maxIndex but contains no cardinality ceiling.",
+    "main ObjectGenome.inspect() accepts any nonzero dense components count then iterates ipairs(value.components); the same contract validates nested support arrays and later mechanisms/affordances without an explicit maximum.",
+    "ObjectGenome.recipeFingerprint() fingerprints the entire validated immutable recipe, so accepted collection size directly scales canonical fingerprint work.",
+    "Open PR #336 changes familyVersion bounds, semantic-key byte bounds, and ObjectState collection alias rejection; its published scope does not include collection cardinality budgets.",
+    "Repository PR search found no existing ObjectGenome component/mechanism/affordance count-bound repair."
+  ],
+  "metadata": {
+    "claimToken": "7c3f91b2a6d84e10",
+    "slotId": "mine-objectgenome"
+  }
+}
