@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-6v4k9n2c",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T20:59:00+00:00",
-  "lastSeenAt": "2026-08-11T21:09:28+00:00",
+  "lastSeenAt": "2026-08-11T21:11:54+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-worldentity",
   "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-6v4k9n2c",
-  "notes": "ObjectGenome audit claim race lost cleanly; rerouted to claimed WorldEntity capacity-mining slot. Duplicate diagnostic-capacity finding was deduped; verifying a distinct metadata-string resource-boundary gap."
+  "notes": "Completed exact-head WorldEntity capacity mining on PR #378. Deduped the already-recorded duplicate-diagnostic-capacity gap, then published a distinct medium-severity FINDING for unbounded retained metadata strings (kind and origin worldId/regionId/generator/recipeKey). Static source audit only; no tests or Studio claimed. Claim released."
 }
