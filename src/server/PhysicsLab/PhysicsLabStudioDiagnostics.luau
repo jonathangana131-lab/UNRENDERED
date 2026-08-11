@@ -1,0 +1,268 @@
+--!strict
+
+local RunService = game:GetService("RunService")
+
+local PhysicsLabRealizer = require(script.Parent.PhysicsLabRealizer)
+local Validation = require(script.Parent.PhysicsLabValidation)
+
+local PhysicsLabStudioDiagnostics = {}
+
+local DIAGNOSTICS_ROOT_NAME = "UNRENDERED_PhysicsLabDiagnostics"
+local DIAGNOSTICS_SCHEMA_VERSION = 1
+local CHECKPOINT_CYCLES = table.freeze({ [1] = true, [5] = true, [10] = true, [20] = true })
+
+export type EntityDiagnostic = {
+	key: string,
+	worldEntityId: string,
+	fidelity: string,
+	recipeKey: string,
+	representationRevision: number,
+	stateRevision: number,
+	representationClass: string?,
+}
+
+export type Snapshot = {
+	schemaVersion: number,
+	enabled: boolean,
+	worldId: string,
+	regionId: string,
+	resolvedRegionFingerprint: string,
+	resolvedRegionReproKey: string,
+	diagnosticInstanceCount: number,
+	entities: { EntityDiagnostic },
+}
+
+local function assertStudioServer(): ()
+	assert(RunService:IsStudio(), "Physics Lab diagnostics are Studio-only")
+	assert(RunService:IsServer(), "Physics Lab diagnostics must run on the server")
+end
+
+local function requireStringAttribute(instance: Instance, attributeName: string): string
+	local value = instance:GetAttribute(attributeName)
+	assert(type(value) == "string" and value ~= "", `missing diagnostics identity attribute: {attributeName}`)
+	return value :: string
+end
+
+local function diagnosticsRoot(model: Model): Folder?
+	local existing = model:FindFirstChild(DIAGNOSTICS_ROOT_NAME)
+	if existing == nil then
+		return nil
+	end
+	assert(existing:IsA("Folder"), `unexpected diagnostics root class: {existing.ClassName}`)
+	assert(
+		existing:GetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned") == true,
+		"refusing to operate on unrelated Physics Lab diagnostics root"
+	)
+	return existing
+end
+
+local function directRepresentations(model: Model): { Instance }
+	local representations = {}
+	for _, child in ipairs(model:GetChildren()) do
+		if child.Name ~= DIAGNOSTICS_ROOT_NAME and child:GetAttribute("UNRENDERED_WorldEntityId") ~= nil then
+			table.insert(representations, child)
+		end
+	end
+	table.sort(representations, function(a: Instance, b: Instance): boolean
+		return a.Name < b.Name
+	end)
+	return representations
+end
+
+local function adorneeFor(representation: Instance): BasePart
+	if representation:IsA("BasePart") then
+		return representation
+	end
+	local part = representation:FindFirstChildWhichIsA("BasePart", true)
+	assert(
+		part ~= nil and part:IsA("BasePart"),
+		`diagnostics representation has no BasePart: {representation.Name}`
+	)
+	return part
+end
+
+function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab): Snapshot
+	assertStudioServer()
+	local model = lab.model
+	local folder = diagnosticsRoot(model)
+	local entities: { EntityDiagnostic } = {}
+
+	for _, representation in ipairs(directRepresentations(model)) do
+		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
+		local record = lab.getRecord(entityId)
+		local representedFidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity")
+		assert(
+			record.fidelity == representedFidelity,
+			`diagnostics fidelity disagrees with authoritative WorldEntity: {entityId}`
+		)
+
+		local representationClass = representation:GetAttribute("UNRENDERED_RepresentationClass")
+		assert(
+			representationClass == nil or type(representationClass) == "string",
+			`invalid representation class diagnostics attribute: {representation.Name}`
+		)
+
+		local entity: EntityDiagnostic = {
+			key = representation.Name,
+			worldEntityId = record.id,
+			fidelity = record.fidelity,
+			recipeKey = record.origin.recipeKey,
+			representationRevision = record.representationRevision,
+			stateRevision = record.stateRevision,
+			representationClass = representationClass :: string?,
+		}
+		table.freeze(entity)
+		table.insert(entities, entity)
+	end
+
+	table.freeze(entities)
+	local diagnosticInstanceCount = 0
+	if folder ~= nil then
+		diagnosticInstanceCount = 1 + #folder:GetDescendants()
+	end
+
+	local snapshot: Snapshot = {
+		schemaVersion = DIAGNOSTICS_SCHEMA_VERSION,
+		enabled = folder ~= nil,
+		worldId = requireStringAttribute(model, "UNRENDERED_WorldId"),
+		regionId = requireStringAttribute(model, "UNRENDERED_RegionId"),
+		resolvedRegionFingerprint = requireStringAttribute(model, "UNRENDERED_ResolvedRegionFingerprint"),
+		resolvedRegionReproKey = requireStringAttribute(model, "UNRENDERED_ResolvedRegionReproKey"),
+		diagnosticInstanceCount = diagnosticInstanceCount,
+		entities = entities,
+	}
+	table.freeze(snapshot)
+	return snapshot
+end
+
+function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab): Snapshot
+	assertStudioServer()
+	local model = lab.model
+	assert(diagnosticsRoot(model) == nil, "Physics Lab diagnostics are already enabled")
+
+	local folder = Instance.new("Folder")
+	folder.Name = DIAGNOSTICS_ROOT_NAME
+	folder:SetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned", true)
+	folder.Parent = model
+
+	local fingerprint = requireStringAttribute(model, "UNRENDERED_ResolvedRegionFingerprint")
+	local reproKey = requireStringAttribute(model, "UNRENDERED_ResolvedRegionReproKey")
+
+	for index, representation in ipairs(directRepresentations(model)) do
+		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
+		local record = lab.getRecord(entityId)
+		local billboard = Instance.new("BillboardGui")
+		billboard.Name = string.format("Entity_%03d_%s", index, representation.Name)
+		billboard.AlwaysOnTop = true
+		billboard.MaxDistance = 120
+		billboard.Size = UDim2.fromOffset(560, 116)
+		billboard.StudsOffsetWorldSpace = Vector3.new(0, 2, 0)
+		billboard.Adornee = adorneeFor(representation)
+
+		local label = Instance.new("TextLabel")
+		label.Name = "Readout"
+		label.BackgroundTransparency = 0.2
+		label.Size = UDim2.fromScale(1, 1)
+		label.Font = Enum.Font.Code
+		label.TextSize = 12
+		label.TextWrapped = true
+		label.TextXAlignment = Enum.TextXAlignment.Left
+		label.TextYAlignment = Enum.TextYAlignment.Top
+		label.Text = string.format(
+			"%s | %s | fidelity=%s\nfingerprint=%s\nrepro=%s",
+			representation.Name,
+			record.id,
+			record.fidelity,
+			fingerprint,
+			reproKey
+		)
+		label.Parent = billboard
+		billboard.Parent = folder
+	end
+
+	return PhysicsLabStudioDiagnostics.capture(lab)
+end
+
+function PhysicsLabStudioDiagnostics.disable(lab: PhysicsLabRealizer.RealizedLab): Snapshot
+	assertStudioServer()
+	local folder = diagnosticsRoot(lab.model)
+	if folder ~= nil then
+		folder:Destroy()
+	end
+	local snapshot = PhysicsLabStudioDiagnostics.capture(lab)
+	assert(
+		not snapshot.enabled and snapshot.diagnosticInstanceCount == 0,
+		"Physics Lab diagnostics did not cleanly disable"
+	)
+	return snapshot
+end
+
+function PhysicsLabStudioDiagnostics.runToggleEvidence(
+	lab: PhysicsLabRealizer.RealizedLab,
+	cycles: number?
+): { [string]: any }
+	assertStudioServer()
+	local cycleCount = cycles or 20
+	assert(cycleCount >= 1 and cycleCount % 1 == 0, "diagnostics cycle count must be a positive integer")
+
+	PhysicsLabStudioDiagnostics.disable(lab)
+	local baseline = Validation.captureFull(lab.model)
+	local initial = PhysicsLabStudioDiagnostics.capture(lab)
+	local checkpoints = {}
+	local maxDiagnosticInstances = 0
+	local sample: EntityDiagnostic? = nil
+
+	for cycle = 1, cycleCount do
+		local enabled = PhysicsLabStudioDiagnostics.enable(lab)
+		assert(enabled.enabled, `diagnostics failed to enable at cycle {cycle}`)
+		assert(
+			enabled.diagnosticInstanceCount > 0,
+			`diagnostics created no inspectable readouts at cycle {cycle}`
+		)
+		maxDiagnosticInstances = math.max(maxDiagnosticInstances, enabled.diagnosticInstanceCount)
+		if sample == nil then
+			sample = enabled.entities[1]
+		end
+
+		local disabled = PhysicsLabStudioDiagnostics.disable(lab)
+		assert(not disabled.enabled, `diagnostics remained enabled at cycle {cycle}`)
+		local offSnapshot = Validation.captureFull(lab.model)
+		local comparison = Validation.compare(baseline, offSnapshot, 0.001)
+		for countName, delta in pairs(comparison.delta) do
+			assert(delta == 0, `diagnostics-off resource drift at cycle {cycle}: {countName}={delta}`)
+		end
+		assert(comparison.envelope.ok, comparison.envelope.reason or "diagnostics-off envelope drifted")
+
+		if CHECKPOINT_CYCLES[cycle] == true or cycle == cycleCount then
+			local checkpoint = {
+				cycle = cycle,
+				diagnosticInstanceCount = enabled.diagnosticInstanceCount,
+				delta = comparison.delta,
+				envelope = comparison.envelope,
+			}
+			table.freeze(checkpoint)
+			table.insert(checkpoints, checkpoint)
+		end
+	end
+
+	assert(sample ~= nil, "diagnostics evidence did not capture an entity sample")
+	table.freeze(checkpoints)
+	local finalSnapshot = PhysicsLabStudioDiagnostics.capture(lab)
+	local evidence = {
+		schemaVersion = DIAGNOSTICS_SCHEMA_VERSION,
+		cycleCount = cycleCount,
+		initiallyEnabled = initial.enabled,
+		finallyEnabled = finalSnapshot.enabled,
+		maxDiagnosticInstances = maxDiagnosticInstances,
+		worldId = finalSnapshot.worldId,
+		regionId = finalSnapshot.regionId,
+		resolvedRegionFingerprint = finalSnapshot.resolvedRegionFingerprint,
+		resolvedRegionReproKey = finalSnapshot.resolvedRegionReproKey,
+		entitySample = sample,
+		checkpoints = checkpoints,
+	}
+	table.freeze(evidence)
+	return evidence
+end
+
+return table.freeze(PhysicsLabStudioDiagnostics)
