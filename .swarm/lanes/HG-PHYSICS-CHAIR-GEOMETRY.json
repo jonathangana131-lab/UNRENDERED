@@ -5,7 +5,7 @@
   "title": "Physics Lab office-chair authored geometry closure",
   "objective": "Close the independently demonstrated source-only office-chair fixture defects without widening the Physics Lab test lane: make all ground-declared casters span exactly from the authored ObjectGenome ground plane to the chair-base underside, make centerOfMassM match the component mass distribution, and explicitly version the canonical recipe change.",
   "priority": 5095,
-  "state": "REVIEW",
+  "state": "BLOCKED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Objects/ObjectGenomeFixtures.luau", "tests/object_genome.luau"],
@@ -24,6 +24,6 @@
     "do not claim Roblox Studio or engine-contact evidence",
     "require independent source review before DONE"
   ],
-  "notes": "Primary resync PR #347 exact head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1 is one commit ahead / zero behind main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and changes only ObjectGenomeFixtures.luau plus tests/object_genome.luau. Independent audit by sol-20260811-m7q2v9c4 returned SOURCE PASS: familyVersion 2, all five caster ground/base contacts, exact 11.85 kg component mass, mass-weighted COM, updated identity/fingerprint goldens, and deterministic object-level regressions are coherent. Canonical CI 31477985164 and Swarm engine-tests are green. Remain in REVIEW until PR #332's independent PhysicsLabRecipe-level expected-red caster/COM assertions are synchronized against this repair and turn green without weakening, and live pr-ownership passes after SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY. No Studio/contact evidence claimed.",
+  "notes": "Primary resync PR #347 exact head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1 is one commit ahead / zero behind main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and changes only ObjectGenomeFixtures.luau plus tests/object_genome.luau. Independent source audit by sol-20260811-m7q2v9c4 returned SOURCE PASS: familyVersion 2, all five caster ground/base contacts, exact 11.85 kg component mass, mass-weighted COM, updated identity/fingerprint goldens, and deterministic object-level regressions are coherent. Canonical CI 31477985164 and Swarm engine-tests are green. Cross-lane completion audit REVIEW_RESULT evt-20260811-205145-t8n3c6v2-chair-lab-replay-pass verifies PR #393 exact head f64f841b25a3fa50203137eff86b48192e70a597 replays #332's exact physics_lab_recipe blob c6069c53628be3afe867e5048bc40ba5e0c1ba53 and physics_lab_scale blob a76052e488fd6c137eedfec42c1974de20d54c67 unchanged against #347; canonical CI 31534290992 is green, so the original expected-red five-caster ground/base-contact plus mass/COM assertions now pass without weakening. All source/test acceptance gates are satisfied. Lane is BLOCKED only on separately owned trusted live pr-ownership/integration recovery; no Roblox Studio, engine-contact, physical-settling, viewport, or two-client evidence is claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "physics", "geometry", "objectgenome"]
 }
