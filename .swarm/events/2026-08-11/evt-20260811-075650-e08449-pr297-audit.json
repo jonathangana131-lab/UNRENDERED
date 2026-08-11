@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075650-e08449-pr297-audit",
+  "timestamp": "2026-08-11T07:56:50+00:00",
+  "fromWorker": "sol-20260811-e08449",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "normal",
+  "summary": "PR #297 exact head 2a14f54ccecae5ea0e88f288f2c9185dbf885a9e remains source-review acceptable but is blocked from integration because it is one main commit behind aa7e04f05834ae783773c908fccfdbbe510558e5; synchronize current main and rerun exact-head CI/ownership before fresh audit.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT"],
+  "evidence": [
+    "GitHub compare current main aa7e04f05834ae783773c908fccfdbbe510558e5...PR head 2a14f54ccecae5ea0e88f288f2c9185dbf885a9e reports diverged and behind_by=1 with merge base 064e28f2306095dadd6a514b96f397cd810ac556.",
+    "Current main commit #298 changes the Swarm validation/main-health fence, so prior ownership evidence cannot authorize integration on the stale merge base.",
+    "Swarm pr-ownership job 93709105725 failed because an authority review event used invalid top-level keys headSha, pr, and verdict; engine-tests on the same head were successful.",
+    "No Roblox Studio run or real two-client evidence is claimed by this audit."
+  ],
+  "metadata": {
+    "pr": 297,
+    "headSha": "2a14f54ccecae5ea0e88f288f2c9185dbf885a9e",
+    "verdict": "BLOCK_INTEGRATION_PENDING_SYNC",
+    "reviewId": 4904073744,
+    "currentMainSha": "aa7e04f05834ae783773c908fccfdbbe510558e5"
+  }
+}
