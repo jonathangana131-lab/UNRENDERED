@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k4p8v2q6",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:00:38+00:00",
-  "lastSeenAt": "2026-08-11T09:35:10+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "audit",
+  "lastSeenAt": "2026-08-11T09:37:40+00:00",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-k4p8v2q6",
-  "notes": "Independent exact-head source-only audit of diagnostics PR #327 at acb728242741716487a5825542061d20f5c4bde4. Preserve viewport evidence gap; no Studio PASS claims."
+  "notes": "Diagnostics audit claim lost a same-window CAS race to worker sol-20260811-p9w2c7n4; no lane claim acquired and no review/work performed. Returned IDLE immediately to avoid duplicate audit. Prior cart, WorldEntity and Fidelity audits remain published."
 }
