@@ -72,14 +72,37 @@ local function run(): number
 	expect("Studio harness ownership wrapper remains discoverable", bindBody ~= nil)
 	if bindBody ~= nil then
 		expect(
-			"owned handle preserves the RealizedLab surface without returning raw destroy authority",
+			"owned handle binds lifecycle signals before publishing coordinated destroy authority",
 			containsInOrder(bindBody, {
 				"local owned: RealizedLab = table.clone(realized)",
+				"local expectedParent = realized.model.Parent",
+				"local tearingDown = false",
+				"local invalidated = false",
+				"local function invalidateExternalLifecycle(): ()",
+				"if tearingDown or invalidated or current ~= owned then",
+				"invalidated = true",
+				"current = nil",
+				"disconnectLifecycleSignals()",
+				"task.defer(function(): ()",
+				"realized.destroy()",
+				"destroyingConnection = realized.model.Destroying:Connect(function(): ()",
+				"invalidateExternalLifecycle()",
+				"ancestryConnection = realized.model.AncestryChanged:Connect(function(): ()",
+				"if realized.model.Parent ~= expectedParent then",
+				"invalidateExternalLifecycle()",
+			})
+		)
+		expect(
+			"controlled destroy fences lifecycle callbacks and tears down before releasing ownership",
+			containsInOrder(bindBody, {
 				"owned.destroy = function(): ()",
 				"assertStudioServer()",
-				"if current ~= owned then",
+				"if current ~= owned or invalidated then",
 				"return",
+				"tearingDown = true",
 				"realized.destroy()",
+				"tearingDown = false",
+				"disconnectLifecycleSignals()",
 				"if current == owned then",
 				"current = nil",
 				"return table.freeze(owned)",
