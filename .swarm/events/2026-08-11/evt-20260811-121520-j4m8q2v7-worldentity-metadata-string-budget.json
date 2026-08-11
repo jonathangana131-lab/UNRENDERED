@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-121520-j4m8q2v7-worldentity-metadata-string-budget",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "workerId": "sol-20260811-j4m8q2v7",
+  "claimToken": "c5e81a3d7f2b9046",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T12:15:20Z",
+  "headSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-j4m8q2v7",
+  "payload": {
+    "severity": "warning",
+    "summary": "WorldEntity bounds stable entity IDs and the pending generation-4 repair bounds persistentState depth/nodes/string bytes, but record metadata strings remain unbounded: kind plus origin.worldId, origin.regionId, origin.generator, and origin.recipeKey accept arbitrary non-empty control-free string length.",
+    "impact": "A domain record can therefore carry arbitrarily large immutable metadata outside the newly bounded persistent-state budget. That leaves a concrete persistence/memory work boundary unbounded in the canonical WorldEntity contract and can also inflate duplicate diagnostics through kind/recipeKey copies.",
+    "sourceProof": [
+      "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1: checkedNonEmpty only enforces string type, non-empty, and no control characters; WorldEntity.isId separately caps id at 256 bytes",
+      "PR #378 exact head 4680b8176c144b99ffeb1754eb94c03e7bfe42c6 retains the same unbounded checkedNonEmpty path while adding explicit persistent-state string-byte budgets",
+      "PR #378 tests lock persistent-state byte limits and malformed metadata types but contain no metadata length-bound regression",
+      "repository PR/issue search found no existing WorldEntity metadata-length lane or issue"
+    ],
+    "sourceLevelRepro": "Construct WorldEntity.new with a canonical <=256-byte id and ordinary empty persistentState, but set kind and/or origin.worldId/origin.regionId/origin.generator/origin.recipeKey to string.rep('x', 1048576). By source inspection these fields pass checkedNonEmpty because they are non-empty and control-free; no execution claim is made.",
+    "recommendedClosure": [
+      "define explicit documented byte maxima for WorldEntity metadata strings rather than relying on producer discipline",
+      "apply the same bounds to WorldEntity.new and owned registry records before storage/diagnostic construction",
+      "add exact-limit and one-byte-over pure regressions for kind and each origin metadata field",
+      "preserve the existing <=256-byte entity-id contract and pending persistent-state budgets",
+      "keep failure atomic and avoid caller-controlled formatting/metamethod execution"
+    ],
+    "recommendedLaneId": "HG-WORLDENTITY-METADATA-STRING-BOUND",
+    "integrationNote": "This is a distinct follow-on boundary found while PR #378 is awaiting trusted-history recovery. Do not broaden or merge around the active generation-4 recovery without normal lane ownership and fresh exact-head review.",
+    "studioEvidence": "none performed or claimed"
+  }
+}
