@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T21:49:35+00:00",
-  "laneId": "HG-COMPLETION-AUTHORITY",
-  "slotId": "reconcile",
-  "branch": "agent/reconcile/HG-COMPLETION-AUTHORITY-d7k4m9q2",
-  "notes": "Refresh authority completion sequencing across bootstrap/teardown and harness-lifecycle lineages; preserve external Studio/two-client evidence block."
+  "lastSeenAt": "2026-08-11T21:52:25+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-d7k4m9q2",
+  "notes": "Mine WorldEntity generation-5 source/tests for one concrete non-duplicate Reality-Grade gap; findings only unless a bounded one-shot lane is justified."
 }
