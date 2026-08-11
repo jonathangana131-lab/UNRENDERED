@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-r9m4v7x2",
   "claimToken": "4f1c8a7d2e9b6053",
   "claimedAt": "2026-08-11T11:47:17+00:00",
-  "heartbeatAt": "2026-08-11T12:28:31+00:00",
+  "heartbeatAt": "2026-08-11T12:32:05+00:00",
   "leaseSeconds": 1800,
   "generation": 2,
   "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-r9m4v7x2-g2",
   "pr": 371,
-  "notes": "Generation-2 recovery PR #371 remains active. Core/adversarial suites are green; exact-head bootstrap audit exposed the full pre-anchor malformed event debt. Building a finite exact-byte event manifest with Git first-write provenance and keeping strict V2 schema authoritative."
+  "notes": "Generation-2 recovery PR #371 remains active. Core/adversarial suites are green; finishing finite exact-byte malformed-event inventory with Git first-write provenance, centralized reset data, and strict V2 validation unchanged outside named artifacts."
 }
