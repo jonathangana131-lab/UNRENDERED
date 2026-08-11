@@ -5,7 +5,7 @@
   "title": "Physics Lab office-chair authored geometry closure",
   "objective": "Close the independently demonstrated source-only office-chair fixture defects without widening the Physics Lab test lane: make all ground-declared casters span exactly from the authored ObjectGenome ground plane to the chair-base underside, make centerOfMassM match the component mass distribution, and explicitly version the canonical recipe change.",
   "priority": 5095,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Objects/ObjectGenomeFixtures.luau", "tests/object_genome.luau"],
@@ -24,6 +24,6 @@
     "do not claim Roblox Studio or engine-contact evidence",
     "require independent source review before DONE"
   ],
-  "notes": "Primary implementation is draft PR #339 at exact head 1f125129daa6a29069bec85a35ec51e0dd64eefe. Canonical CI run 31476886262 is fully green: format, lint, Luau analysis, audits, deterministic swarm tests, Pure Luau, Rojo build, and build artifact upload. The repair makes every chair caster span exactly from the authored ground plane to the unchanged base underside, advances officeChair to familyVersion 2, recomputes component-weighted COM, refreshes exact identity/fingerprint goldens, and adds object-level regressions. Swarm pr-ownership remains independently blocked by SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY due audited historical immutable-event byte drift; this lane does not rewrite event history. No Studio evidence claimed. Independent audit is now required before DONE.",
+  "notes": "Independent audit event evt-20260811-092210-k8v3p6r1-chair-geometry-audit returns SYNC_REQUIRED for PR #339 head 1f125129daa6a29069bec85a35ec51e0dd64eefe. The source patch itself passes geometry/version/COM review and canonical CI run 31476886262, but compare to current main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 is behind_by=1 with merge base dd8f1581115c15ce6497db827d17e98d879d0267. Replay the unchanged two-file patch onto current main, rerun exact-head CI, then request fresh independent review. Live ownership remains separately blocked by immutable-event history continuity recovery; no Studio evidence claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "physics", "geometry", "objectgenome"]
 }
