@@ -59,6 +59,23 @@ local function run(): number
 	expect("Physics Lab scale rejects NaN inputs", not nanAccepted)
 	expect("Physics Lab scale rejects infinite inputs", not infiniteAccepted)
 
+	-- Runtime callers are not protected by static Luau annotations. Reject a malformed
+	-- scalar before equality/order/arithmetic operators can invoke caller metamethods.
+	local hostileEqualityCalls = 0
+	local hostileMeters = setmetatable({}, {
+		__eq = function()
+			hostileEqualityCalls += 1
+			error("hostile scale equality executed")
+		end,
+	})
+	local hostileMetersAccepted = pcall(function()
+		PhysicsLabScale.metersToStuds(hostileMeters)
+	end)
+	expect(
+		"Physics Lab scale rejects malformed meters before caller equality metamethod execution",
+		not hostileMetersAccepted and hostileEqualityCalls == 0
+	)
+
 	-- A finite SI value can still overflow when projected into studs because
 	-- STUDS_PER_METER is greater than one. The representation boundary must
 	-- fail closed rather than emit math.huge into downstream geometry/evidence.
