@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-FIDELITY-CAPACITY-EXACTNESS",
+  "epicId": "HERO-GATE",
+  "title": "Fidelity configured-capacity exactness fence",
+  "objective": "Close the demonstrated FidelityManager maxRegisteredEntities numeric-domain gap so the configured registration budget remains an exact positive integer rather than accepting aliased IEEE-754 integer values, without changing F0-F4 policy or inventing an unmeasured device-memory ceiling.",
+  "priority": 5045,
+  "state": "PROPOSED",
+  "mode": "exclusive",
+  "dependencies": [{"laneId":"HG-BACKFILL-FIDELITY","acceptableStates":["DONE"]}],
+  "writeScopes": ["src/shared/Physics/FidelityManager.luau", "tests/fidelity_manager*.luau", "Docs/FIDELITY_MANAGER.md"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"Fidelity configured-capacity exactness hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Physics/FidelityManager.luau","tests/fidelity_manager*.luau"]},
+    {"slotId":"audit","role":"Fidelity capacity-domain auditor","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":120,"writeScopes":["tests/fidelity_manager*.luau","Docs/FIDELITY_MANAGER.md"]}
+  ],
+  "acceptance": [
+    "maxRegisteredEntities remains a primitive positive finite integer and additionally rejects values above the exact IEEE-754 safe-integer boundary 9007199254740991",
+    "the exact safe-integer boundary is accepted and one-over is rejected before manager state construction or registration accounting",
+    "default maxRegisteredEntities remains 4096 and existing small custom-capacity behavior remains unchanged",
+    "do not invent a lower practical memory ceiling without measured profiling evidence; record that as a separate performance-budget dependency if needed",
+    "preserve retained Fidelity transition atomicity, per-entity reentrancy, cross-entity isolation, policy semantics, metrics, and plain-data/no-execute validation",
+    "add deterministic source-only regressions for exact-boundary acceptance/rejection; no Studio or timing claim"
+  ],
+  "notes": "Capacity-mined against retained Fidelity generation-4 PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 and stacked completion PR #398. The retained source validates maxRegisteredEntities as number >=1, <math.huge, and equal to math.floor(value), but has no <=9007199254740991 exactness fence. Existing tests cover a small custom capacity of 1 and runtime over-cap rejection only. Docs call maxRegisteredEntities a configurable hard budget (4096 default). This proposed leaf is intentionally dependent on HG-BACKFILL-FIDELITY DONE so it cannot overlap retained #385/#398 or bypass the separately owned trusted-history/pr-ownership recovery. Finding: evt-20260811t231710z-a8f3k6m2-fidelity-capacity-exactness.",
+  "tags": ["backfill", "hero-gate", "source-only", "fidelity", "bounded-state", "numeric-exactness"]
+}
