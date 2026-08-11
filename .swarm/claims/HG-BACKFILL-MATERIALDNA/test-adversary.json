@@ -5,10 +5,10 @@
   "workerId": "sol-20260811-z4q8n1",
   "claimToken": "5f1a8c3d97e2b640",
   "claimedAt": "2026-08-11T06:20:30+00:00",
-  "heartbeatAt": "2026-08-11T06:23:00+00:00",
+  "heartbeatAt": "2026-08-11T06:24:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/materials/HG-BACKFILL-MATERIALDNA-tests-z4q8n1",
-  "pr": null
+  "pr": 272
 }
