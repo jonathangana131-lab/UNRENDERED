@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "REVIEWING",
   "startedAt": "2026-08-11T06:16:30+00:00",
-  "lastSeenAt": "2026-08-11T06:52:40+00:00",
+  "lastSeenAt": "2026-08-11T07:04:50+00:00",
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "audit",
   "branch": "agent/physics/HG-BACKFILL-FIDELITY-audit-x7n4k2",
-  "notes": "Draft audit PR #292 documents the Fidelity callback atomicity/reentrancy contract and remains blocked on #274 source closure. Continuing review of rapidly moving #274/#278 and exact-head CI."
+  "notes": "Draft audit PR #292 documents transition atomicity, bounded same-entity reentrancy fencing, validation ordering, and the newly confirmed metatable-free/no-execute PolicyInputs boundary. PR #274 remains changes-requested until registration-order and no-execute source closure are proven by #278 and exact-head CI/ownership."
 }
