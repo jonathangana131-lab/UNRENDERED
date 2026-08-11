@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083620-h8v5c1-runtime-recipe-review",
+  "timestamp": "2026-08-11T08:36:20+00:00",
+  "fromWorker": "sol-20260811-h8v5c1",
+  "eventType": "REVIEW_RESULT",
+  "summary": "REQUEST_CHANGES on PR #310 exact head 0f69d6b749c3daa8b61488e94016e9c0c2831632. The canonical constructor checks named population/provenance/initial-state invariants before authority creation, but assertCanonicalRecipe dereferences caller-supplied recipe wrappers before proving they are plain/metatable-free. An empty metatable-backed recipe can execute __index and synthesize canonical schemaVersion/recipeKey/worldId/regionId/entities from PhysicsLabRecipe.build(), causing PhysicsLabRuntime.new() to accept executable proxy data and return a live runtime. Add pre-dereference no-metatable/plain wrapper validation for recipe, entity list, and entity-recipe wrappers plus a pure regression requiring zero metamethod execution. No Studio evidence required or claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"],
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+  "severity": "medium",
+  "evidence": [
+    "PR #310 head 0f69d6b7: assertCanonicalRecipe begins with recipe.schemaVersion / recipe.recipeKey / recipe.worldId / recipe.regionId / recipe.entities field access and does not inspect recipe metatable first.",
+    "Deterministic pure repro: setmetatable({}, {__index=function(_, key) lookups += 1; return PhysicsLabRecipe.build()[key] end}) can synthesize the entire canonical top-level recipe; current constructor follows those values into canonical registration rather than rejecting before metamethod execution.",
+    "The P2 canonical persistentState/stateRevision/representationRevision blocker is fixed on this exact head, and canonical CI run 31473237386 is green; this review blocker is independent of the still-red global Swarm ownership/control recovery."
+  ],
+  "metadata": {
+    "verdict": "REQUEST_CHANGES",
+    "pr": 310,
+    "headSha": "0f69d6b749c3daa8b61488e94016e9c0c2831632",
+    "reviewId": 4904381532
+  }
+}
