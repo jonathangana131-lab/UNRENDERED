@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:40:48+00:00",
-  "lastSeenAt": "2026-08-11T09:02:20+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "lastSeenAt": "2026-08-11T09:12:20+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-r4k8m2z7-g2",
-  "notes": "Completed ObjectGenome and MaterialDNA audits with durable verdicts. Continuing on fresh Physics Lab geometry audit: current main, stale primary #303, active RED property PR #332, deterministic recipe/COM/clearance/contact invariants; no Studio evidence claim."
+  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-r4k8m2z7-g2",
+  "notes": "ObjectGenome/MaterialDNA/Physics-geometry audits published and released. After #329 merged and main returned green, reclaimed ObjectGenome audit generation 2 for fresh exact-head review of PR #336 plus active decoder-metatable RED adversary #338, including prior deterministic-diagnostic finding."
 }
