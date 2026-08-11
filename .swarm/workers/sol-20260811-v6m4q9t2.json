@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:46:10+00:00",
-  "lastSeenAt": "2026-08-11T07:52:10+00:00",
+  "lastSeenAt": "2026-08-11T08:06:35+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "test-adversary",
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-tests-v6m4q9t2",
-  "notes": "Claimed diagnostics test-adversary and opened draft PR #301 at head 950ba9acb7f2c4700790ec0b63b4cfd05dd596b7. First CI reached format check and failed; first ownership run also failed while this worker record still described a lost ObjectGenome claim race. Repairing both before rerun."
+  "notes": "Draft PR #301 is at exact product head 2bc01a772eea58c836b12f8552f0769785182a7b. Canonical CI run 31471690355 passed. Swarm engine tests passed, but live pr-ownership remains fail-closed while the separately owned validation-fence recovery is active."
 }
