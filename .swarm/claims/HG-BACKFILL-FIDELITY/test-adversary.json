@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "test-adversary",
-  "workerId": "sol-20260811-f3q8v1z6",
-  "claimToken": "c8f31a6d4e2b9075",
-  "claimedAt": "2026-08-11T21:01:26+00:00",
-  "heartbeatAt": "2026-08-11T21:09:30+00:00",
+  "workerId": "sol-20260811-d7k4m9q2",
+  "claimToken": "4b7e1c9d5a2f8063",
+  "claimedAt": "2026-08-11T22:14:30+00:00",
+  "heartbeatAt": "2026-08-11T22:14:30+00:00",
   "leaseSeconds": 1800,
-  "generation": 3,
+  "generation": 4,
   "resources": [],
-  "branch": "agent/tests/HG-BACKFILL-FIDELITY-tests-f3q8v1z6",
+  "branch": "agent/tests/HG-BACKFILL-FIDELITY-tests-d7k4m9q2-g4",
   "pr": 398,
-  "notes": "Generation-3 recovery is published and ready for independent review at PR #398 exact head 2c473887dc6c0b5e81c0e502d4ccfe90be0c2d85 on #385 base 827ce0cf63ca5f322502de883beb9f43581c69f2. Fresh canonical CI 31536288741 PASS and Swarm engine-tests 31536288770 PASS. pr-ownership fails before this lane is evaluated because live global control contains invalid HG-COMPLETION-CONTENT/reconcile claimToken c7p4m8v2a1d6e903; separately owned recovery remains authoritative. Stale generation-2 PR #367 is closed superseded. No Studio evidence claimed."
+  "takeoverOf": "sol-20260811-f3q8v1z6:g3:c8f31a6d4e2b9075",
+  "notes": "Generation-4 stale takeover solely to reconcile already-completed exact-head test-adversary review. PR #398 head 2c473887dc6c0b5e81c0e502d4ccfe90be0c2d85 already has lane-owned independent SOURCE/TEST PASS at 2026-08-11T21:12:21Z; verify retained #385 ancestry/CI and park Fidelity on global live-ownership blocker without duplicate review or product edits."
 }
