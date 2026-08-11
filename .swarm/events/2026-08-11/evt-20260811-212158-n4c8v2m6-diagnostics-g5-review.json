@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-212158-n4c8v2m6-diagnostics-g5-review",
+  "timestamp": "2026-08-11T21:21:58+00:00",
+  "fromWorker": "sol-20260811-n4c8v2m6",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "warning",
+  "summary": "REQUEST_CHANGES on PR #401 exact head 2f5603210a3d3d6af7db94b43fdfd6707b1f9b4a. Generation 5 correctly closes duplicate diagnostics-root cardinality, but capture still blesses structurally complete readouts without revalidating BillboardGui.Adornee or displayed TextLabel semantics. Absorb the already-isolated PR #400 regression and validate exact visual projection identity/text before integration.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG-COMPLETION-PHYSICS"],
+  "evidence": [
+    "Exact #401 diagnosticsRoot enumerates model:GetChildren(), rejects a second same-named root before candidate validation, preserves zero-root nil and single-root Folder/owned checks; the #396 duplicate-root blocker is closed",
+    "Exact #401 validateReadoutCompleteness checks BillboardGui class, WorldEntityId membership/uniqueness, one Readout TextLabel descendant, and count equality but never reads or compares child.Adornee or label.Text",
+    "Docs/PHYSICS_LAB_DIAGNOSTICS.md requires viewport labels to agree with representation attributes and authoritative WorldEntity state and diagnostics-on to visibly expose identity/fidelity/fingerprint/repro on real representations",
+    "Open test-adversary PR #400 adds expected-red assertions for capture-time Adornee and label.Text revalidation against the same generation-4 diagnostics lineage; direct inspection confirms #401 does not absorb those semantics",
+    "Canonical CI run 31537175276 and Swarm run 31537175141 engine-tests are green on #401; current suite therefore does not cover this remaining Reality-Grade projection-integrity gap",
+    "GitHub review 4910865792 records the exact-head REQUEST_CHANGES verdict; no Roblox Studio/viewport PASS or FAIL is claimed"
+  ]
+}
