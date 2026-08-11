@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-a8f3k6m2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T23:09:37+00:00",
-  "lastSeenAt": "2026-08-11T23:13:40+00:00",
+  "lastSeenAt": "2026-08-11T23:18:12+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-fidelity",
   "branch": "agent/mining/HG-CAPACITY-MINING-mine-fidelity-a8f3k6m2-g1",
-  "notes": "Completed independent exact-head SOURCE/TEST PASS for PR #414, recorded as review 4911540447 and REVIEW_RESULT event. Continuing with standing mine-fidelity capacity slot: inspect current FidelityManager source/tests plus retained #385/#398 for one concrete non-duplicate depth gap or explicit no-gap evidence."
+  "notes": "Cycle complete. Independent exact-head SOURCE/TEST PASS for PR #414 recorded as GitHub review 4911540447 plus REVIEW_RESULT event evt-20260811t231123z-a8f3k6m2-physics-scale-g6-review; audit lease released without advancing the lane while peer test-adversary remained live. Fidelity mining then found the maxRegisteredEntities exact-integer boundary gap, recorded FINDING evt-20260811t231710z-a8f3k6m2-fidelity-capacity-exactness, and proposed dependent leaf HG-BACKFILL-FIDELITY-CAPACITY-EXACTNESS. Mining lease released. No product code or Studio evidence claimed; global live pr-ownership remains owned by SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY generation 6."
 }
