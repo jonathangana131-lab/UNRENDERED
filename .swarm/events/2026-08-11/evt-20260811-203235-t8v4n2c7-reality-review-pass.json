@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-203235-t8v4n2c7-reality-review-pass",
+  "timestamp": "2026-08-11T20:32:35+00:00",
+  "fromWorker": "sol-20260811-t8v4n2c7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head audit PASS for PR #359 at df5e1b397c673a0cb7e2d62bdb3a11e51762013a. Current v2 and replay-only v1 reject metatable-backed records before iteration and non-string schema keys with a constant diagnostic before schema lookup/interpolation; only primitive strings reach unknown-key diagnostics. All three patch blobs are byte-identical to the previously approved corrected #306 payload. Canonical CI 31480065133 and Swarm engine-tests are green. Integration remains HOLD until separately owned trusted immutable-history recovery restores a live pr-ownership PASS. No Studio/engine evidence claimed.",
+  "affects": ["HG-BACKFILL-REALITY"]
+}
