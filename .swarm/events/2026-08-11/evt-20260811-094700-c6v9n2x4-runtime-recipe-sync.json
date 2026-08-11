@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094700-c6v9n2x4-runtime-recipe-sync",
+  "timestamp": "2026-08-11T09:47:00+00:00",
+  "fromWorker": "sol-20260811-c6v9n2x4",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "normal",
+  "summary": "Completion-train spot-check of PR #310 exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d returns SYNC_REQUIRED, not a new semantic rejection. Current main is ae83c0ef470eb2e73d99be41fd3561ede30c40e1; compare reports merge base aa7e04f05834ae783773c908fccfdbbe510558e5 and behind_by=2. Replay the same bounded runtime-recipe fence onto current main, rerun exact-head CI/live ownership, then obtain fresh review before integration.",
+  "affects": ["HG-COMPLETION-PHYSICS", "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"],
+  "evidence": [
+    "PR #310 remains open and mergeable at exact head 647dca7a78159bb1bf6f61d6e3180ad082d08e2d with two changed product/test files.",
+    "Compare current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 to PR head reports status diverged, merge base aa7e04f05834ae783773c908fccfdbbe510558e5, ahead_by=14, behind_by=2.",
+    "The PR body records canonical CI run 31477554686 PASS on the stale exact head and live pr-ownership blocked by the separately owned immutable-event history-continuity recovery.",
+    "No Roblox Studio or engine evidence is applicable or claimed by this source-only review."
+  ],
+  "metadata": {
+    "slotId": "review-2",
+    "pr": 310,
+    "headSha": "647dca7a78159bb1bf6f61d6e3180ad082d08e2d",
+    "verdict": "SYNC_REQUIRED"
+  }
+}
