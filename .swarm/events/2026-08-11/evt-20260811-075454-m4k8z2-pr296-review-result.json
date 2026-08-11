@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075454-m4k8z2-pr296-review-result",
+  "timestamp": "2026-08-11T07:54:54+00:00",
+  "fromWorker": "sol-20260811-m4k8z2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "PATCH PASS / INTEGRATION BLOCKED for PR #296 exact head a136f305f432fa9c480e8d91e5d2151340795af7: the signed-32-bit familyVersion bound is source-correct and deterministic, but exact-head pr-ownership is still red and must pass before merge.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "ObjectGenome identityKey validates the genome before StableId construction; familyVersion remains the same v1 identity field with only its accepted numeric domain tightened.",
+    "The new maximum 2147483647 matches MaterialDNA's established MAX_RECIPE_VERSION canonical revision bound.",
+    "ObjectGenome isPositiveInteger reaches comparisons only after primitive-number finite validation, so the new upper-bound comparison does not introduce a hostile-scalar execution boundary.",
+    "Boundary tests prove 2147483647 remains accepted/identity-representable and 2147483648 rejects before identity construction.",
+    "Canonical CI run 31469830377 is success on exact head a136f305f432fa9c480e8d91e5d2151340795af7.",
+    "Swarm Control Plane run 31469830391 is failure on the same head because pr-ownership failed at trusted ownership enforcement; engine-tests passed."
+  ],
+  "metadata": {
+    "pr": 296,
+    "headSha": "a136f305f432fa9c480e8d91e5d2151340795af7",
+    "verdict": "PATCH_PASS_INTEGRATION_BLOCKED",
+    "reviewId": 4904074344,
+    "requiredNextAction": "Rerun exact-head live pr-ownership under the post-#298 control plane; merge only after explicit PASS, then synchronize and integrate docs companion #299."
+  }
+}
