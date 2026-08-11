@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-045500-ctl1-activation",
+  "timestamp": "2026-08-11T04:55:00+00:00",
+  "fromWorker": "sol-20260811-ctl1",
+  "eventType": "INTEGRATION_RESULT",
+  "laneId": "SWARM-V2-ROLLOUT",
+  "severity": "info",
+  "summary": "First real Swarm V2 protected-scope activation PR passed live claim/branch/scope/resource enforcement plus canonical CI and merged as cb6bbc953e1687cb11a0e6afbb0d454ecd23c9b1.",
+  "affects": ["SWARM-V2-ROLLOUT"],
+  "evidence": [
+    "PR #266 Swarm Control Plane engine-tests: PASS",
+    "PR #266 pr-ownership live claim/scope/protected-resource check: PASS",
+    "PR #266 canonical CI: PASS",
+    "Duplicate create attempt on SWARM-V2-ROLLOUT/primary was rejected by GitHub because the authoritative path already existed."
+  ]
+}
