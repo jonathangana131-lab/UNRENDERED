@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080242-0ca069-diagnostics-representation-trust",
+  "timestamp": "2026-08-11T08:02:42+00:00",
+  "fromWorker": "sol-20260811-0ca069",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Diagnostics standalone capture/enable can accept a forged or duplicate direct child that copies a valid WorldEntityId and fidelity, because directRepresentations selects any direct child with the identity attribute and preflightReadouts only resolves the record plus fidelity/adornee. Unlike PhysicsLabValidation, this boundary does not prove unique entity IDs, canonical recipe membership/name, or representation identity before publishing a readout. The 20-cycle runToggleEvidence path is protected later by captureFull, but the manual enable/capture evidence surface can become non-canonical. Recommend a one-shot source hardening lane after the active diagnostics primary lands: fail closed on duplicate/foreign representations before any diagnostics allocation and regression-lock the rejection without claiming Studio evidence.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "evidence": [
+    "main@aa7e04f05834ae783773c908fccfdbbe510558e5 src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau: directRepresentations includes every direct child whose UNRENDERED_WorldEntityId attribute is non-nil.",
+    "preflightReadouts resolves lab.getRecord(entityId), compares only UNRENDERED_Fidelity with the authoritative record, and finds an adornee; it does not reject duplicate IDs or verify the child name/recipe identity against the canonical PhysicsLab recipe.",
+    "capture repeats the same permissive selection and can therefore publish multiple EntityDiagnostic rows for one authoritative record or a row attached to a foreign child carrying copied attributes.",
+    "src/server/PhysicsLab/PhysicsLabValidation.luau already rejects duplicate WorldEntityIds, unexpected representation keys, recipe mismatches, and wrong canonical representation geometry, proving the stronger invariant exists elsewhere but is not applied by standalone diagnostics enable/capture.",
+    "Active diagnostics work #295/#301/#304 covers bounded cycle input, lifecycle/no-drift ordering, and failure-atomicity documentation; repository search found no existing finding for forged/duplicate diagnostics representation trust."
+  ],
+  "metadata": {
+    "claimToken": "295fd65125c419d6",
+    "mainSha": "aa7e04f05834ae783773c908fccfdbbe510558e5",
+    "recommendedLane": "HG-DIAGNOSTICS-REPRESENTATION-TRUST",
+    "recommendedScope": [
+      "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
+      "tests/physics_lab_diagnostics_*.luau"
+    ],
+    "blockingDependency": "Do not overlap the active HG-BACKFILL-DIAGNOSTICS primary source branch; take after that source edit is integrated or otherwise retired."
+  }
+}
