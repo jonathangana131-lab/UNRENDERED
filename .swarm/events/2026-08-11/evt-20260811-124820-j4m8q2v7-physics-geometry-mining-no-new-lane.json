@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-124820-j4m8q2v7-physics-geometry-mining-no-new-lane",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "workerId": "sol-20260811-j4m8q2v7",
+  "claimToken": "7c2e9a4f1b6d8053",
+  "claimGeneration": 1,
+  "timestamp": "2026-08-11T12:48:20Z",
+  "headSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-j4m8q2v7",
+  "payload": {
+    "severity": "info",
+    "summary": "Bounded Physics geometry mining found no additional concrete nonduplicate source lane beyond the envelope-overflow defect already isolated in PR #368 and owned by generation-4 successor PR #376.",
+    "reviewed": [
+      "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 src/server/PhysicsLab/PhysicsLabRealizer.luau",
+      "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 src/server/PhysicsLab/PhysicsLabValidation.luau",
+      "HG-BACKFILL-PHYSICS-GEOMETRY lane acceptance and PR #376 recovery notes"
+    ],
+    "keyClosureEvidence": [
+      "realization derives primitive/object transforms and dimensions from the canonical PhysicsLabRecipe using the project scale conversion and ObjectGenome extrinsic XYZ rotation contract",
+      "captureFull() proves canonical root identity and complete representation membership before snapshot publication",
+      "every primitive proxy is checked for anchored/collision/query/touch/transparency, exact canonical size, position, and basis vectors within GEOMETRY_TOLERANCE",
+      "every ObjectGenome component is checked for unique/comprehensive component keys, material identity/version, dimensions, local-to-world position, and orientation",
+      "therefore an interior geometry mutation cannot evade the full rebuild checkpoint merely by preserving the outer min/max envelope",
+      "the remaining derived-envelope finite arithmetic gap is already explicitly owned by PR #376 with exact-head green canonical CI per live lane notes"
+    ],
+    "result": "No new geometry lane recommended. Preserve independent exact-head audit for PR #376 and the global trusted-history control-plane recovery; do not manufacture overlapping geometry WIP.",
+    "studioEvidence": "none performed or claimed"
+  }
+}
