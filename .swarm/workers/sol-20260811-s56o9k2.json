@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-s56o9k2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:00:00+00:00",
-  "lastSeenAt": "2026-08-11T21:01:40+00:00",
+  "lastSeenAt": "2026-08-11T21:13:10+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-runtime",
   "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-s56o9k2",
-  "notes": "ObjectGenome test-adversary claim lost atomically to another worker; rerouted to physics-runtime capacity mining. Inspecting current source/tests/PR overlap for a concrete non-duplicate Hero-Gate depth lane; no Studio evidence claimed."
+  "notes": "Completed runtime mining; finding evt-20260811-210640-s56o9k2-runtime-entity-list-hidden-entry published and claim released. No Studio evidence claimed."
 }
