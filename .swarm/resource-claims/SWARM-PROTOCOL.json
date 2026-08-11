@@ -5,8 +5,8 @@
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "claimToken": "71a3c9d5e2f6084b",
   "acquiredAt": "2026-08-11T09:30:10+00:00",
-  "heartbeatAt": "2026-08-11T09:30:10+00:00",
+  "heartbeatAt": "2026-08-11T10:00:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
-  "notes": "Exclusive protected control-plane lease temporarily transferred from paused V2.2 to the explicit immutable-history continuity prerequisite."
+  "notes": "Exclusive protected control-plane lease for the explicit immutable-history continuity prerequisite. Read-only bootstrap audit is being rerun until current live state validates cleanly; V2.2 remains paused."
 }
