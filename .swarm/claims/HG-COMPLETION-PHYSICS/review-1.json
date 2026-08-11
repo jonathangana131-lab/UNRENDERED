@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-h9p4x7m2",
+  "claimToken": "4f9a2c7e1b6d8053",
+  "claimedAt": "2026-08-11T23:17:35+00:00",
+  "heartbeatAt": "2026-08-11T23:17:35+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-PHYSICS-review-1-h9p4x7m2-g1",
+  "pr": 414,
+  "notes": "Independent completion-queue exact-head review of Physics Lab geometry generation-6 PR #414. Verify no-execute scalar validation ordering, finite output fences in both directions, regression strength, and exact-head evidence. Source/test only; no Studio evidence."
+}
