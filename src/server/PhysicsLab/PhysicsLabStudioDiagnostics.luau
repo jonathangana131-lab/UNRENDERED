@@ -76,7 +76,7 @@ local function diagnosticsRoot(model: Model): Folder?
 	return existing
 end
 
-local function directRepresentations(model: Model): { Instance }
+local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model: Model): { Instance }
 	local expectedRepresentedCount = model:GetAttribute("UNRENDERED_RepresentedCount")
 	assert(
 		type(expectedRepresentedCount) == "number"
@@ -86,8 +86,13 @@ local function directRepresentations(model: Model): { Instance }
 	)
 
 	local representations = {}
+	local seenEntityIds: { [string]: boolean } = {}
 	for _, child in ipairs(model:GetChildren()) do
 		if child.Name ~= DIAGNOSTICS_ROOT_NAME and child:GetAttribute("UNRENDERED_WorldEntityId") ~= nil then
+			local entityId = requireStringAttribute(child, "UNRENDERED_WorldEntityId")
+			assert(not seenEntityIds[entityId], `duplicate diagnostics representation id: {entityId}`)
+			assert(lab.isRepresented(entityId), `diagnostics child is not an authoritative representation: {entityId}`)
+			seenEntityIds[entityId] = true
 			table.insert(representations, child)
 		end
 	end
@@ -115,7 +120,7 @@ end
 
 local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model): { ReadoutPlan }
 	local plans: { ReadoutPlan } = {}
-	for _, representation in ipairs(directRepresentations(model)) do
+	for _, representation in ipairs(directRepresentations(lab, model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
 		local representedFidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity")
@@ -142,7 +147,7 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 	local folder = diagnosticsRoot(model)
 	local entities: { EntityDiagnostic } = {}
 
-	for _, representation in ipairs(directRepresentations(model)) do
+	for _, representation in ipairs(directRepresentations(lab, model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
 		local representedFidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity")
