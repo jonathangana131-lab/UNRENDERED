@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r7m3x9q5",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "INTEGRATING",
   "startedAt": "2026-08-11T09:43:50+00:00",
-  "lastSeenAt": "2026-08-11T09:49:00+00:00",
-  "notes": "Physics integration slot released after durable HOLD event evt-20260811-094800-r7m3x9q5-physics-integration-hold. No candidate may merge yet without bypassing trusted ownership and/or candidate-specific evidence/review gates; no Studio evidence claimed."
+  "lastSeenAt": "2026-08-11T09:52:10+00:00",
+  "laneId": "HG-COMPLETION-CONTENT",
+  "slotId": "reconcile",
+  "branch": "agent/reconcile/HG-COMPLETION-CONTENT-r7m3x9q5",
+  "notes": "Reconciling explicitly superseded content-foundation PR lineages only; preserving active evidence and no source/Studio changes."
 }
