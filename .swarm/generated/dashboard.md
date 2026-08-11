@@ -1,14 +1,14 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T05:28:29.506305+00:00`
+Generated: `2026-08-11T05:29:07.340510+00:00`
 
 Canonical main: **GREEN** `2ce32576a47e99a1e09e802dc7e76a0bf7bbd283`
 
-State digest: `477f6a83b93bb9b797027784ae2357bff387b3362bd7075e0f020c4b9cf5c35e`
+State digest: `9c21796fc5749fcd8d6526e2b90d46ada4332889a64db5e720673290dee713e0`
 
 ## Summary
 
-- ready slots: **1**
+- ready slots: **2**
 - active claims: **1**
 - stale claims: **0**
 - blocked-external lanes: **1**
@@ -16,6 +16,7 @@ State digest: `477f6a83b93bb9b797027784ae2357bff387b3362bd7075e0f020c4b9cf5c35e`
 ## Ready slots
 
 - `SWARM-V2-HARDEN/tests-1` — **Adversarial distributed-systems tests** — score 10550 — dependencies satisfied
+- `SWARM-V2-CAS-PROOF/primary` — **CAS takeover proof owner** — score 10450 — dependencies satisfied; resources available
 
 ## Active claims
 

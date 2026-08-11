@@ -23,7 +23,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T05:28:29.506305+00:00",
+  "generatedAt": "2026-08-11T05:29:07.340510+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "2ce32576a47e99a1e09e802dc7e76a0bf7bbd283",
@@ -42,16 +42,16 @@
       "EXTERNAL_BLOCKER": 1,
       "INTEGRATION_RESULT": 1
     },
-    "generatedAt": "2026-08-11T05:28:29.506305+00:00",
+    "generatedAt": "2026-08-11T05:29:07.340510+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
       "DONE": 2,
       "LOCKED": 1,
-      "READY": 4
+      "READY": 5
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 1,
+    "readySlots": 2,
     "reviewBacklog": 0,
     "schemaVersion": 1,
     "staleClaims": 0
@@ -75,6 +75,17 @@
         "Docs/SWARM_PROTOCOL.md",
         "Docs/ADR/0004-swarm-control-plane.md",
         "ProjectSource/UNRENDERED_PROJECT_INSTRUCTIONS.txt"
+      ]
+    },
+    {
+      "laneId": "SWARM-V2-CAS-PROOF",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [],
+      "role": "CAS takeover proof owner",
+      "score": 10450,
+      "slotId": "primary",
+      "writeScopes": [
+        "Docs/SWARM_CONTROL_PLANE.md"
       ]
     }
   ],
@@ -159,13 +170,13 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [],
-  "stateDigest": "477f6a83b93bb9b797027784ae2357bff387b3362bd7075e0f020c4b9cf5c35e",
+  "stateDigest": "9c21796fc5749fcd8d6526e2b90d46ada4332889a64db5e720673290dee713e0",
   "summary": {
     "activeClaims": 1,
     "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
-    "lanes": 8,
-    "readySlots": 1,
+    "lanes": 9,
+    "readySlots": 2,
     "staleClaims": 0,
     "workers": 3
   }
