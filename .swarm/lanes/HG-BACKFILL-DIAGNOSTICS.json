@@ -5,7 +5,7 @@
   "title": "Diagnostics source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden the Studio diagnostics code and its pure contracts while the Mac display path is blocked. Work here must improve source/test correctness without pretending to satisfy the missing live viewport evidence row.",
   "priority": 4850,
-  "state": "READY",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/**diagnostic*.luau", "tests/hero_gate_contract_integration.luau"],
@@ -16,5 +16,6 @@
     {"slotId":"audit","role":"Diagnostics failure-path and capture-contract auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/**diagnostic*.luau","Docs/PHYSICS_LAB_DIAGNOSTICS.md"]}
   ],
   "acceptance": ["do not queue speculative Studio reruns", "do not convert source confidence into viewport PASS", "find concrete lifecycle/no-drift/failure-path gaps", "behavior changes get tests", "publish anything relevant to HG151-DIAGNOSTICS as a structured finding"],
+  "notes": "Scheduler reconciliation from unchanged PR #327 head acb728242741716487a5825542061d20f5c4bde4: independent audit at 2026-08-11T09:23:12Z remains REQUEST_CHANGES. Primary must (1) absorb dependent PR #333's green post-loop final-snapshot and exact-nil/non-truthiness cycle-bound regressions, (2) close evt-20260811-085430-k8v2q6m4-diagnostics-instance-binding with a narrow project-owned `(entityId, candidateInstance)` ownership seam so a one-for-one substitute Workspace child cannot satisfy boolean `isRepresented`, (3) close the distinct evt-20260811-092430-k4v7m2q9-diagnostics-readout-completeness gap by validating the owned diagnostics readout tree one-to-one against authoritative represented entities, and (4) sync current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 because the current PR head is behind_by=2, then rerun exact-head canonical CI/live ownership and request fresh independent review. Existing exact-head CI 31475082378 is green but stale for the required repair/sync. No Roblox Studio/viewport PASS is claimed or requested while OPS-STUDIO-DISPLAY remains active.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
