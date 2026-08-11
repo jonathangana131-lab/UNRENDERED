@@ -106,7 +106,10 @@ local function run(): number
 	local unknownSnapshotField = snapshot(counts(46, 0), -10, 10)
 	unknownSnapshotField.syntheticEvidence = true
 	local unknownSnapshotFieldOk = ValidationContract.inspectSnapshot(unknownSnapshotField)
-	expect("snapshot validation rejects fields captureInternal cannot produce", unknownSnapshotFieldOk == false)
+	expect(
+		"snapshot validation rejects fields captureInternal cannot produce",
+		unknownSnapshotFieldOk == false
+	)
 
 	local unknownCountField = snapshot(counts(46, 0), -10, 10)
 	unknownCountField.counts.unclassified = 0
