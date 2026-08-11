@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-tje2y48p",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:31:44+00:00",
-  "lastSeenAt": "2026-08-11T21:31:44+00:00",
-  "laneId": "HG-BACKFILL-FIDELITY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-tje2y48p",
-  "notes": "Rerouted after losing the diagnostics audit atomic claim race. Independent exact-head source/test audit of PR #398 generation-3 cross-entity commit-isolation regression stacked on retained Fidelity primary #385; no Studio evidence."
+  "lastSeenAt": "2026-08-11T21:48:00+00:00",
+  "notes": "Stopped cleanly after atomic claim races showed diagnostics audit and Fidelity mining were already owned, and PR #398 was already independently exact-head reviewed. No product code or evidence claims were duplicated; Fidelity audit claim was released."
 }
