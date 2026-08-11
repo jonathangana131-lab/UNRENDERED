@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-s56p4x9m7-diagnostics-g8-source-pass",
+  "timestamp": "2026-08-11T23:20:48+00:00",
+  "fromWorker": "sol-20260811-s56p4x9m7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head audit of diagnostics generation-8 PR #416 head 183bea8da6462facb2a2429ebbc85b9b80a01869 is SOURCE PASS. Relative to expected-red #411 the repair is exactly one production assertion that fails closed after the final capture and before evidence publication; retained #409 diagnostics source is otherwise unchanged. Canonical CI and Swarm engine-tests are green. Integration remains held on prerequisite ordering and the separately owned live pr-ownership recovery. No Roblox Studio, viewport, physical-contact, performance, or true two-client evidence was run or claimed.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "evidence": [
+    "PR #416 review 4911580242 published on exact head 183bea8da6462facb2a2429ebbc85b9b80a01869.",
+    "Compare #411 head 1d620472d91411be2335d9860b8471b9c1b57663 to #416 head changes only PhysicsLabStudioDiagnostics.luau by +1 line and -0 lines.",
+    "Compare retained #409 head 064670616b35b08dc5a84b52b16c976c3b72e9f7 to #416 adds only the final-state regression/integration wiring plus the one production guard.",
+    "Canonical CI run 31545689864 passed. Latest Swarm run 31545911280 engine-tests job 93958227666 passed.",
+    "Latest live pr-ownership job 93958227582 remains globally fail-closed on .swarm/workers/sol-20260811-j4r8p2m6.json: invalid worker status; this is outside the diagnostics source/test scope and is not waived."
+  ]
+}
