@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "workerId": "sol-20260811-q8m3v7k2",
+  "claimToken": "5e1a8c3d7b2f9064",
+  "claimedAt": "2026-08-11T11:59:00+00:00",
+  "heartbeatAt": "2026-08-11T11:59:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-q8m3v7k2",
+  "pr": null,
+  "notes": "Mine current authority/multiplayer source, tests, active PRs and durable events for one concrete non-duplicate source-only Hero Gate gap; no Studio evidence and no major-feature work."
+}
