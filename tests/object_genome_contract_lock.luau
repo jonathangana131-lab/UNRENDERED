@@ -43,6 +43,37 @@ local function run(): number
 		hasCode(ObjectGenome.inspect(futureSchema), "genome.schema_version")
 	)
 
+	local maxIdentityFamily = deepCopy(Fixtures.officeChair)
+	maxIdentityFamily.familyId = "a" .. string.rep("b", 511)
+	local maxIdentityOk, maxIdentity = pcall(ObjectGenome.identityKey, maxIdentityFamily)
+	expect(
+		"accepts a 512-byte family identity part within StableId v1 bounds",
+		#maxIdentityFamily.familyId == 512
+			and ObjectGenome.inspect(maxIdentityFamily).ok
+			and maxIdentityOk
+			and type(maxIdentity) == "string"
+	)
+
+	local overlongFamily = deepCopy(Fixtures.officeChair)
+	overlongFamily.familyId = "a" .. string.rep("b", 512)
+	local overlongFamilyIdentityOk = pcall(ObjectGenome.identityKey, overlongFamily)
+	expect(
+		"rejects a family identity part beyond StableId v1 bounds during genome validation",
+		#overlongFamily.familyId == 513
+			and hasCode(ObjectGenome.inspect(overlongFamily), "genome.family_id")
+			and not overlongFamilyIdentityOk
+	)
+
+	local overlongVariant = deepCopy(Fixtures.officeChair)
+	overlongVariant.variantKey = "a" .. string.rep("b", 512)
+	local overlongVariantIdentityOk = pcall(ObjectGenome.identityKey, overlongVariant)
+	expect(
+		"rejects a variant identity part beyond StableId v1 bounds during genome validation",
+		#overlongVariant.variantKey == 513
+			and hasCode(ObjectGenome.inspect(overlongVariant), "genome.variant_key")
+			and not overlongVariantIdentityOk
+	)
+
 	local unknownTopLevelShape = deepCopy(Fixtures.officeChair)
 	unknownTopLevelShape.futureField = true
 	expect(
