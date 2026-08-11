@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-p9w2c7n4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-11T09:01:26+00:00",
+  "lastSeenAt": "2026-08-11T09:01:26+00:00",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-FIDELITY-audit-p9w2c7n4",
+  "notes": "Independent source-only FidelityManager state-machine audit; inspect current primary/test evidence, publish only concrete findings, and do not claim Studio evidence."
+}
