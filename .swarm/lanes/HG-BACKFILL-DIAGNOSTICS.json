@@ -5,7 +5,7 @@
   "title": "Diagnostics source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden the Studio diagnostics code and its pure contracts while the Mac display path is blocked. Work here must improve source/test correctness without pretending to satisfy the missing live viewport evidence row.",
   "priority": 4850,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/**diagnostic*.luau", "tests/hero_gate_contract_integration.luau"],
@@ -16,6 +16,6 @@
     {"slotId":"audit","role":"Diagnostics failure-path and capture-contract auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/**diagnostic*.luau","Docs/PHYSICS_LAB_DIAGNOSTICS.md"]}
   ],
   "acceptance": ["do not queue speculative Studio reruns", "do not convert source confidence into viewport PASS", "find concrete lifecycle/no-drift/failure-path gaps", "behavior changes get tests", "publish anything relevant to HG151-DIAGNOSTICS as a structured finding"],
-  "notes": "Generation-4 PR #392 exact head b21a0ecac4dc67900f004527291ebcb4daeea519 is blocked by follow-up audit review 4910791311 after expected-red PR #396. diagnosticsRoot() uses FindFirstChild for UNRENDERED_PhysicsLabDiagnostics, so duplicate same-named direct roots can leave one stale/owned diagnostics tree invisible to capture/no-drift accounting while directRepresentations excludes all children with that name. Repair must enumerate direct children, reject duplicate root cardinality before returning a root, preserve Folder/owned checks, and absorb equivalent deterministic coverage from #396. #396 remains expected-red/non-integrating. No Studio retry while display preflight is externally blocked. pr-ownership remains a separate global trusted-history gate.",
+  "notes": "Generation-5 successor PR #401 exact head 2f5603210a3d3d6af7db94b43fdfd6707b1f9b4a repairs the generation-4 duplicate same-named diagnostics-root omission by enumerating model:GetChildren(), rejecting a second UNRENDERED_PhysicsLabDiagnostics root fail-closed, and preserving Folder/owned checks. It absorbs PR #396's focused expected-red regression. Canonical CI run 31537175276 is SUCCESS through format/lint/Luau/audits/swarm/Pure Luau/place build/upload; Swarm run 31537175141 engine-tests is SUCCESS. pr-ownership remains separately fail-closed on the globally owned trusted-history recovery. PR #401 is ready for a different independent exact-head reviewer because sol-20260811-zvq321y9 both confirmed the blocker and authored the repair. #392/#396 are superseded and should not merge independently. No Studio retry/viewport PASS while display preflight is externally blocked.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
