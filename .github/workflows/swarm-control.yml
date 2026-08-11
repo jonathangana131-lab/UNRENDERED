@@ -36,14 +36,16 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Fetch trusted base and live control branch
+      - name: Fetch trusted base, live control, and separate trust ledger
         run: |
           git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}"
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
-      - name: Materialize authoritative control state
+          git fetch origin swarm-trust:refs/remotes/origin/swarm-trust
+      - name: Materialize authoritative control state and trust record
         run: |
           mkdir -p "$RUNNER_TEMP/swarm-state"
           git archive origin/swarm-control .swarm | tar -x -C "$RUNNER_TEMP/swarm-state"
+          git show origin/swarm-trust:.swarm/trust.json > "$RUNNER_TEMP/swarm-trust.json"
       - name: Materialize trusted base validator
         id: trusted-validator
         run: |
@@ -58,13 +60,21 @@ jobs:
             PYTHONPATH="$RUNNER_TEMP/trusted-swarm" python3 -c 'import swarmctl_hardening'
             echo "engine=hardening" >> "$GITHUB_OUTPUT"
           else
-            # This one upgrade generation remains policed by the already-trusted
-            # V2 validator. Once merged, all later PRs use hardened base code.
             python3 -m py_compile "$RUNNER_TEMP/trusted-swarm/swarmctl.py"
             echo "engine=bootstrap" >> "$GITHUB_OUTPUT"
           fi
       - name: Collect changed files safely
         run: git diff --name-only "origin/${GITHUB_BASE_REF}...HEAD" > "$RUNNER_TEMP/swarm-changed-files.txt"
+      - name: Require live state to equal separately trusted state
+        if: steps.trusted-validator.outputs.engine == 'hardening'
+        run: |
+          PYTHONPATH="$RUNNER_TEMP/trusted-swarm" python3 - "$RUNNER_TEMP/swarm-state/.swarm" "$RUNNER_TEMP/swarm-trust.json" <<'PY'
+          import sys
+          from pathlib import Path
+          import swarmctl_hardening as hard
+          trust = hard.verify_trusted_state(Path(sys.argv[1]), Path(sys.argv[2]))
+          print(f"trusted control sha={trust['trustedControlSha']} digest={trust['trustedStateDigest']}")
+          PY
       - name: Enforce live ownership with trusted code
         run: |
           if [[ "${{ steps.trusted-validator.outputs.engine }}" == "hardening" ]]; then
@@ -88,36 +98,72 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: Materialize current and previous control snapshots
+      - name: Materialize current control and last separately trusted snapshot
         env:
-          BEFORE_SHA: ${{ github.event.before }}
           AFTER_SHA: ${{ github.sha }}
         run: |
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
+          git fetch origin swarm-trust:refs/remotes/origin/swarm-trust
           git cat-file -e "${AFTER_SHA}^{commit}"
           echo "CONTROL_SHA=$AFTER_SHA" >> "$GITHUB_ENV"
+          TRUST_BRANCH_SHA="$(git rev-parse origin/swarm-trust)"
+          echo "TRUST_BRANCH_SHA=$TRUST_BRANCH_SHA" >> "$GITHUB_ENV"
+          git show origin/swarm-trust:.swarm/trust.json > "$RUNNER_TEMP/swarm-trust.json"
+          TRUSTED_CONTROL_SHA="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["trustedControlSha"])' "$RUNNER_TEMP/swarm-trust.json")"
+          echo "TRUSTED_CONTROL_SHA=$TRUSTED_CONTROL_SHA" >> "$GITHUB_ENV"
+          git cat-file -e "${TRUSTED_CONTROL_SHA}^{commit}"
           mkdir -p "$RUNNER_TEMP/control-after" "$RUNNER_TEMP/control-before"
           git archive "$AFTER_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-after"
-          if [[ -n "${BEFORE_SHA:-}" && "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ]] && git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
-            if git ls-tree -d --name-only "$BEFORE_SHA" .swarm | grep -qx '.swarm'; then
-              git archive "$BEFORE_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-before"
-              echo "before_available=true" >> "$GITHUB_ENV"
-            fi
-          fi
-      - name: Validate state and ownership model
+          git archive "$TRUSTED_CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-before"
+      - name: Validate candidate state and ownership model
         run: |
           python3 tools/swarm/test_swarmctl.py
           python3 tools/swarm/test_swarmctl_hardening.py
           python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/control-after/.swarm"
           python3 tools/swarm/swarmctl_hardening.py simulate --workers 30
-      - name: Validate lease and immutable-event transitions
-        if: env.before_available == 'true'
+      - name: Validate from last trusted history snapshot
         run: |
           python3 tools/swarm/swarmctl_hardening.py transition-check \
             --before-root "$RUNNER_TEMP/control-before/.swarm" \
             --after-root "$RUNNER_TEMP/control-after/.swarm"
       - name: Rebuild board, metrics, and validation fence
         run: python3 tools/swarm/swarmctl_hardening.py render --root "$RUNNER_TEMP/control-after/.swarm"
+      - name: Advance separate trust ledger only for this exact validated control tip
+        env:
+          VALIDATOR_MAIN_SHA: ${{ github.event.repository.default_branch == 'main' && github.event.head_commit.id || github.sha }}
+        run: |
+          EXPECTED_CONTROL="${CONTROL_SHA:?validated control snapshot SHA missing}"
+          EXPECTED_TRUST="${TRUST_BRANCH_SHA:?trust branch snapshot SHA missing}"
+          git fetch origin swarm-control:refs/remotes/origin/swarm-control
+          git fetch origin swarm-trust:refs/remotes/origin/swarm-trust
+          [[ "$(git rev-parse origin/swarm-control)" == "$EXPECTED_CONTROL" ]] || { echo 'Control advanced; refusing stale trust advance.'; exit 1; }
+          [[ "$(git rev-parse origin/swarm-trust)" == "$EXPECTED_TRUST" ]] || { echo 'Trust ledger advanced; refusing stale trust overwrite.'; exit 1; }
+          STATE_DIGEST="$(python3 -c 'import sys; from pathlib import Path; sys.path.insert(0,"tools/swarm"); import swarmctl_hardening as h; print(h.state_digest(Path(sys.argv[1])))' "$RUNNER_TEMP/control-after/.swarm")"
+          VALIDATED_AT="$(date -u +%Y-%m-%dT%H:%M:%S+00:00)"
+          git switch --detach "$EXPECTED_TRUST"
+          mkdir -p .swarm
+          python3 - "$EXPECTED_CONTROL" "$STATE_DIGEST" "$VALIDATED_AT" "$(git rev-parse origin/main)" <<'PY'
+          import json, sys
+          record = {
+              "schemaVersion": 1,
+              "controlBranch": "swarm-control",
+              "trustedControlSha": sys.argv[1],
+              "trustedStateDigest": sys.argv[2],
+              "validatedAt": sys.argv[3],
+              "validatorMainSha": sys.argv[4],
+              "resetId": "reset-20260811-history-continuity",
+              "resetReason": "Reviewed append-only recovery quarantines three exact laundered historical event blobs and anchors all later validation to this separate last-known-good ledger.",
+              "bootstrap": False,
+          }
+          with open('.swarm/trust.json', 'w', encoding='utf-8') as handle:
+              json.dump(record, handle, indent=2, sort_keys=True)
+              handle.write('\n')
+          PY
+          git config user.name unrendered-swarm-trust
+          git config user.email actions@users.noreply.github.com
+          git add .swarm/trust.json
+          git commit -m 'chore(swarm): advance separately trusted control head [swarm-trust]'
+          git push origin HEAD:swarm-trust
       - name: Publish generated projection without overwriting newer state
         run: |
           EXPECTED="${CONTROL_SHA:?validated control snapshot SHA missing}"
@@ -177,7 +223,7 @@ jobs:
           git config user.name unrendered-swarm-health
           git config user.email actions@users.noreply.github.com
           git add .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json .swarm/generated
-          git commit -m 'chore(swarm): sync canonical main CI health and validation fence [swarm-generated]'
+          git commit -m 'chore(swarm): sync canonical main CI health and validation fence [swarm-health]'
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
           [[ "$(git rev-parse origin/swarm-control)" == "$EXPECTED" ]] || { echo 'Control advanced; refusing stale health push.'; exit 1; }
           git push origin HEAD:swarm-control
