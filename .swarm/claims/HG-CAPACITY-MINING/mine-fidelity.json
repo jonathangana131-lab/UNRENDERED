@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "workerId": "sol-20260811-k4v7m2q9",
+  "claimToken": "e1b7c4a92d6f8053",
+  "claimedAt": "2026-08-11T09:39:00+00:00",
+  "heartbeatAt": "2026-08-11T09:39:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-k4v7m2q9",
+  "pr": null,
+  "notes": "Post-hardening FidelityManager capacity scan after #335/#343: inspect remaining deterministic/state/accounting/config boundaries for one concrete non-duplicate gap; findings only."
+}
