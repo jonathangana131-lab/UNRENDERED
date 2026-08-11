@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094700-bbd7b1e6-diagnostics-root-provenance",
+  "timestamp": "2026-08-11T09:47:00+00:00",
+  "fromWorker": "sol-20260811-bbd7b1e6",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "WARN",
+  "summary": "Standalone Physics Lab diagnostics trust mutable root identity/provenance attributes for WorldId, RegionId, resolved fingerprint, and repro key, so enable/capture can publish internally well-formed but non-canonical provenance before the toggle helper's separate full-lab validation runs.",
+  "affects": {
+    "laneIds": [
+      "HG-BACKFILL-DIAGNOSTICS",
+      "HG151-DIAGNOSTICS"
+    ],
+    "resources": [
+      "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
+      "src/server/PhysicsLab/PhysicsLabValidation.luau"
+    ]
+  },
+  "evidence": [
+    "On #327 exact head acb728242741716487a5825542061d20f5c4bde4, enable() reads UNRENDERED_ResolvedRegionFingerprint and UNRENDERED_ResolvedRegionReproKey directly from lab.model through requireStringAttribute() and writes those raw strings into every visible label without checking them against canonical resolved truth.",
+    "capture() likewise publishes worldId, regionId, resolvedRegionFingerprint, and resolvedRegionReproKey directly from mutable model attributes. Its current authority fence validates represented count, unique entity ids, boolean representation membership, and record fidelity, but does not validate root provenance values.",
+    "PhysicsLabValidation already has the canonical comparison needed to detect this drift: assertCanonicalRootIdentity() rebuilds the production recipe and compares WorldId/RegionId/resolved schema/world-seed/fingerprint/repro to canonical values. That helper is private and is not consumed by standalone Diagnostics.enable()/capture().",
+    "runToggleEvidence() is stronger because it forces diagnostics off and then calls Validation.captureFull() before the cycle loop, so root-provenance tampering is caught there. The documented/manual diagnostics-on candidate path, however, calls Diagnostics.enable(lab) directly; a mutated non-empty fingerprint/repro string can therefore be rendered and returned as candidate evidence before any canonical root check.",
+    "This is distinct from evt-20260811-085430-k8v2q6m4-diagnostics-instance-binding (which binds a physical child to the Realizer's private representation map) and evt-20260811-092430-k4v7m2q9-diagnostics-readout-completeness (which binds the diagnostics descendant tree one-to-one to represented entities). This finding binds the identity/provenance content itself to canonical truth."
+  ],
+  "metadata": {
+    "sourcePr": 327,
+    "sourceHead": "acb728242741716487a5825542061d20f5c4bde4",
+    "currentMain": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "reproClass": "source-contract",
+    "studioEvidenceRequired": false,
+    "recommendedAction": "Before standalone diagnostics publish or render provenance, consume a narrow project-owned canonical-root/provenance validator (or immutable RealizedLab provenance accessor) rather than trusting mutable Instance attributes alone. Regression-lock a one-field substituted WorldId/RegionId/fingerprint/repro attribute: enable/capture must fail closed before returning candidate evidence, while canonical attributes continue to pass. Keep this inside the existing diagnostics completion train rather than creating another product Epic."
+  }
+}
