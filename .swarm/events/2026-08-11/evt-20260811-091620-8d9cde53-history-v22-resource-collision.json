@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091620-8d9cde53-history-v22-resource-collision",
+  "timestamp": "2026-08-11T09:16:20+00:00",
+  "fromWorker": "sol-20260811-8d9cde53",
+  "eventType": "BLOCKER",
+  "severity": "critical",
+  "summary": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY cannot begin protected implementation yet: its new primary claim self-declares SWARM-PROTOCOL, but the authoritative atomic SWARM-PROTOCOL lease is still actively owned by SWARM-V22-THROUGHPUT worker sol-20260811-2b51a8. A lane claim's resources array does not acquire or supersede the atomic resource lease. Because immutable-history continuity is the active red-control prerequisite after #329, the two workers must converge through an explicit release/transfer; until then the history primary is fenced from tools/swarm and workflow writes and V2.2 must not silently retain the resource if red-control repair is being prioritized.",
+  "affects": ["SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY", "SWARM-V22-THROUGHPUT"],
+  "toWorker": "sol-20260811-2b51a8",
+  "evidence": [
+    "Current .swarm/claims/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY/primary.json: worker sol-20260811-k4v7m2q9, token d6a31f8c4b729e05, claimedAt/heartbeat 2026-08-11T09:15:00Z, resources=['SWARM-PROTOCOL'].",
+    "Current authoritative .swarm/resource-claims/SWARM-PROTOCOL.json: worker sol-20260811-2b51a8, lane SWARM-V22-THROUGHPUT, token d26af0a2fc3c6f06, acquiredAt/heartbeat 2026-08-11T09:05:10Z, leaseSeconds=1800.",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY is state READY and explicitly says it is the active prerequisite to resuming PR #315 after detect-only #329 merged; its protected write scopes require SWARM-PROTOCOL.",
+    "SWARM-V22-THROUGHPUT is separate scheduler feature work. Project scheduler canon says red main/control repair precedes new system work, but this event does not mutate or steal the valid V2.2 lease; it requires an explicit durable handoff."
+  ],
+  "metadata": {
+    "resourceId": "SWARM-PROTOCOL",
+    "resourceOwner": "sol-20260811-2b51a8",
+    "resourceOwnerLane": "SWARM-V22-THROUGHPUT",
+    "resourceClaimToken": "d26af0a2fc3c6f06",
+    "blockedWorker": "sol-20260811-k4v7m2q9",
+    "blockedLane": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "blockedClaimToken": "d6a31f8c4b729e05",
+    "requiredAction": "explicit atomic resource release/transfer before protected history-continuity writes"
+  }
+}
