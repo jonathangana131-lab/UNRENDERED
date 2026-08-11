@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260811-c96b6721",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-11T11:56:00+00:00",
+  "lastSeenAt": "2026-08-11T11:56:00+00:00",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-MATERIALDNA-COUNTERS-c96b6721",
+  "notes": "Independent review of PR 353."
+}
