@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-t8n3c6v2",
+  "claimToken": "6e2b9d4a1c7f8053",
+  "claimedAt": "2026-08-11T20:45:30+00:00",
+  "heartbeatAt": "2026-08-11T20:45:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-t8n3c6v2",
+  "pr": 394,
+  "notes": "Fresh independent exact-head source/test audit of combined authority stack PR #394. Verify retained generation-5 bootstrap context guards plus accepted teardown evidence compose without weakening server authority, scope ownership, or evidence boundaries. No Studio/two-client evidence claim."
+}
