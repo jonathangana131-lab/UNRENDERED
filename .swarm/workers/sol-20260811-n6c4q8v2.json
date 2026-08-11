@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-n6c4q8v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:38:26Z",
-  "lastSeenAt": "2026-08-11T21:46:01Z",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
-  "slotId": "primary",
-  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-q5x8n3z2",
-  "notes": "Continuing PR #349 generation 2 after independent audit; regression hardening only."
+  "lastSeenAt": "2026-08-11T21:55:09Z",
+  "notes": "PR #349 handed off at exact head ee771bd50db972ad572f5d3cef8463220d69fa06 for fresh independent audit. Product CI and engine tests pass; PR ownership is globally blocked only by the already-owned trusted-history recovery fence."
 }
