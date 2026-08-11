@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q7m4v9s2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T08:57:00+00:00",
-  "lastSeenAt": "2026-08-11T09:01:00+00:00",
+  "lastSeenAt": "2026-08-11T09:11:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-worldentity",
   "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-q7m4v9s2",
-  "notes": "Bounded WorldEntity capacity mining after losing the audit claim race. Inspecting current source/tests/active PRs/events for one non-duplicate concrete invariant/test/integration gap; no production implementation or Studio evidence claimed."
+  "notes": "Completed WorldEntity capacity mining and released the claim after durable handoff. Published evt-20260811-090800-q7m4v9s2-worldentity-duplicate-origin and a non-blocking PR #293 follow-up comment. No production or Studio evidence claimed."
 }
