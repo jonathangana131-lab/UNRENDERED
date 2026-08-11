@@ -147,65 +147,69 @@ function PhysicsLabRuntime.step(
 			toLevel: FidelityLevel,
 			reason: PolicyReason
 		): ()
-			assert(not state.transitionInFlight, "PhysicsLabRuntime transition callback reentered")
-			state.transitionInFlight = true
-			local transitionSucceeded, transitionError = pcall(function(): boolean
-				assert(
-					transitionEntityId == entityId,
-					"FidelityManager transitioned the wrong Physics Lab entity"
-				)
-				assert(fromLevel == current.fidelity, "Physics Lab transition source fidelity drifted")
+			assert(state.transitionInFlight, "PhysicsLabRuntime transition callback escaped step transaction")
+			assert(
+				transitionEntityId == entityId,
+				"FidelityManager transitioned the wrong Physics Lab entity"
+			)
+			assert(fromLevel == current.fidelity, "Physics Lab transition source fidelity drifted")
 
-				local capturedState: PlainData? = nil
-				if WorldEntity.fidelityRank(toLevel) < WorldEntity.fidelityRank(fromLevel) then
-					assert(captureState ~= nil, "Physics Lab demotion requires a state-capture adapter")
-					capturedState = captureState(current)
-				end
-
-				-- Preview first so representation adapters can reject a transition before
-				-- either authoritative store commits it. Demotion state has already been
-				-- captured at this point; promotion receives the incumbent stored state.
-				local preview = WorldEntity.transition(current, toLevel, capturedState)
-				observer(current, preview, reason)
-
-				-- WorldEntity.transition owns a frozen plain-data snapshot. Commit that exact
-				-- snapshot rather than the adapter-owned capture table: an observer may share
-				-- the adapter buffer and mutate it after inspecting the preview, which must not
-				-- make the authoritative commit differ from the representation-approved state.
-				local committedState: PlainData? = nil
-				if capturedState ~= nil then
-					committedState = preview.persistentState
-				end
-
-				local committed = state.registry.transitionRegistered(entityId, toLevel, committedState)
-				assert(
-					committed.fidelity == preview.fidelity,
-					"Physics Lab transition commit fidelity mismatch"
-				)
-				assert(
-					committed.stateRevision == preview.stateRevision,
-					"Physics Lab transition commit state mismatch"
-				)
-				assert(
-					committed.representationRevision == preview.representationRevision,
-					"Physics Lab transition commit representation mismatch"
-				)
-				return true
-			end)
-			state.transitionInFlight = false
-			if not transitionSucceeded then
-				error(transitionError, 0)
+			local capturedState: PlainData? = nil
+			if WorldEntity.fidelityRank(toLevel) < WorldEntity.fidelityRank(fromLevel) then
+				assert(captureState ~= nil, "Physics Lab demotion requires a state-capture adapter")
+				capturedState = captureState(current)
 			end
+
+			-- Preview first so representation adapters can reject a transition before
+			-- either authoritative store commits it. Demotion state has already been
+			-- captured at this point; promotion receives the incumbent stored state.
+			local preview = WorldEntity.transition(current, toLevel, capturedState)
+			observer(current, preview, reason)
+
+			-- WorldEntity.transition owns a frozen plain-data snapshot. Commit that exact
+			-- snapshot rather than the adapter-owned capture table: an observer may share
+			-- the adapter buffer and mutate it after inspecting the preview, which must not
+			-- make the authoritative commit differ from the representation-approved state.
+			local committedState: PlainData? = nil
+			if capturedState ~= nil then
+				committedState = preview.persistentState
+			end
+
+			local committed = state.registry.transitionRegistered(entityId, toLevel, committedState)
+			assert(
+				committed.fidelity == preview.fidelity,
+				"Physics Lab transition commit fidelity mismatch"
+			)
+			assert(
+				committed.stateRevision == preview.stateRevision,
+				"Physics Lab transition commit state mismatch"
+			)
+			assert(
+				committed.representationRevision == preview.representationRevision,
+				"Physics Lab transition commit representation mismatch"
+			)
 		end
 	end
 
-	-- Preserve FidelityManager's production fail-closed contract: when no
-	-- representation observer is supplied, pass no transition hook. Once hold
-	-- and cooldown permit a transition, the manager returns
-	-- blockedReason="transition-required" without committing either fidelity
-	-- authority. Callers with intentionally no physical representation may pass
-	-- an explicit no-op observer instead of silently advancing truth.
-	local result = state.fidelity:step(entityId, current.fidelity, inputs, nowSeconds, transitionHook)
+	-- Fence runtime mutation for the entire manager step, not just the eventual
+	-- representation callback. Policy inputs and time are caller-owned values;
+	-- hostile metatables/operators must not get a pre-hook window in which they
+	-- can dispose or recursively step this runtime before FidelityManager rejects.
+	state.transitionInFlight = true
+	local stepSucceeded, resultOrError = pcall(function(): StepResult
+		-- Preserve FidelityManager's production fail-closed contract: when no
+		-- representation observer is supplied, pass no transition hook. Once hold
+		-- and cooldown permit a transition, the manager returns
+		-- blockedReason="transition-required" without committing either fidelity
+		-- authority. Callers with intentionally no physical representation may pass
+		-- an explicit no-op observer instead of silently advancing truth.
+		return state.fidelity:step(entityId, current.fidelity, inputs, nowSeconds, transitionHook)
+	end)
+	state.transitionInFlight = false
+	if not stepSucceeded then
+		error(resultOrError, 0)
+	end
+	local result = resultOrError :: StepResult
 	local nextRecord = PhysicsLabRuntime.getRecord(self, entityId)
 	assert(
 		state.fidelity:getObservedLevel(entityId) == nextRecord.fidelity,
