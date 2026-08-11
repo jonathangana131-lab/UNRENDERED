@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115830-j4p9x2n6-runtime-transition-prehook-reentrancy",
+  "timestamp": "2026-08-11T11:58:30+00:00",
+  "fromWorker": "sol-20260811-j4p9x2n6",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "PR #366's runtime-local transitionInFlight guard is raised only inside the FidelityManager transition hook. Against current main, FidelityManager.step dereferences caller-owned PolicyInputs and operates on nowSeconds before that hook, so a metatable-backed input can execute arbitrary code and call PhysicsLabRuntime.dispose() while transitionInFlight is still false, removing registry/fidelity authority during the outer runtime step. Active Fidelity hardening PR #335 closes this exact pre-hook executable-data window by rejecting metatable-backed PolicyInputs before field reads and primitive-type-checking nowSeconds before numeric operators. Therefore #366 must either integrate only with #335 in ancestry or independently extend its runtime mutation transaction/preflight across the full FidelityManager.step boundary; its current lane declares no dependency on HG-BACKFILL-FIDELITY.",
+  "affects": [
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+    "HG-BACKFILL-FIDELITY"
+  ],
+  "evidence": [
+    "PR #366 exact head f50067d4dedbe548fc80aed2289b846644dd941c checks assertMutationAllowed(state) at PhysicsLabRuntime.step entry, but sets state.transitionInFlight = true only after FidelityManager invokes transitionHook; dispose() is therefore allowed during all earlier policy-input/timestamp evaluation.",
+    "Current main FidelityManager.step captures its EntityState and then calls evaluatePolicy(inputs, self.config, currentLevel); current-main validateInputs immediately reads inputs.distanceStuds/visible/directlyObserved/etc. without first proving the top-level table metatable-free, so a caller __index can execute before any runtime transition hook begins.",
+    "A hostile PolicyInputs.__index can call runtime:dispose(); #366 dispose sees transitionInFlight == false, unregisters the full fidelity/WorldEntity population, and marks the runtime disposed while the outer FidelityManager.step still holds its detached state reference. The outer runtime step then fails on its post-step authority read, but destructive teardown has already occurred.",
+    "PR #335 exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102 changes validateInputs to reject metatable-backed tables before any input field read and changes FidelityManager.step to require type(nowSeconds) == 'number' before finiteness/ordering operations, eliminating this executable pre-hook path.",
+    "PR #366's current independent review thread covers capture/observer callback mutation and #310 overlap but contains no PolicyInputs/no-execute sequencing condition; HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE currently declares dependencies: []."
+  ]
+}
