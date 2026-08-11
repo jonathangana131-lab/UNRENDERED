@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-101400-bbd7b1e6-objectgenome-g4-review",
+  "timestamp": "2026-08-11T10:14:00+00:00",
+  "fromWorker": "sol-20260811-bbd7b1e6",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-COMPLETION-CONTENT",
+  "severity": "normal",
+  "summary": "BLOCK PR #361 exact head 991ea61277e916b6f454166e7b6ab6096311f9c4 pending canonical Luau-analysis repair. The two-file ObjectGenome generation-4 consolidation is patch-locally narrow and contains the intended decoder no-execute plus deterministic diagnostic-order closures, but canonical CI stops at Luau analysis before Pure Luau or build validation can execute.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #361 exact head 991ea61277e916b6f454166e7b6ab6096311f9c4 is based on current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and changes only src/shared/Objects/ObjectGenome.luau plus tests/object_genome_contract_lock.luau.",
+    "Patch inspection confirms the previously reviewed familyVersion upper bound, 512-byte nested semantic-key bound, and generic mutable ObjectState map-alias rejection remain present; generation-4 adds a pre-field-read mechanism plain-table guard and canonical issue sorting at reportResult().",
+    "The focused hostile decoder and table-history diagnostic-order adversaries from PRs #338 and #357 are absorbed into the canonical contract-lock suite without restoring the stale tests/run.luau or duplicate generation3 test-file edits.",
+    "Canonical CI run 31480474365 job 93744015399 passes tool setup, sourcemap, Roblox typedef download, format, and lint, then fails at Luau analysis; all later audits/tests/build steps are skipped.",
+    "PR conversation comment 5251748513 records the exact-head worker verdict and required rerun. The project-wide pr-ownership failure remains separately owned by SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY."
+  ],
+  "metadata": {
+    "slotId": "review-1",
+    "pr": 361,
+    "headSha": "991ea61277e916b6f454166e7b6ab6096311f9c4",
+    "verdict": "BLOCK"
+  }
+}
