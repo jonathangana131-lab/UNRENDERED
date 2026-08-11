@@ -2,13 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-AUTHORITY",
   "slotId": "primary",
-  "workerId": "sol-20260811-q9x4m2",
-  "claimToken": "4e7c9a12f6d3b805",
-  "claimedAt": "2026-08-11T07:18:01+00:00",
-  "heartbeatAt": "2026-08-11T07:31:14+00:00",
+  "workerId": "sol-20260811-s56r7n2",
+  "claimToken": "c6a1f9e73b4052d8",
+  "claimedAt": "2026-08-11T08:05:31+00:00",
+  "heartbeatAt": "2026-08-11T08:05:31+00:00",
   "leaseSeconds": 1800,
-  "generation": 2,
+  "generation": 3,
   "resources": [],
-  "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-q9x4m2-g2",
-  "pr": 297
+  "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-s56r7n2-g3",
+  "pr": null,
+  "takeoverOf": "sol-20260811-q9x4m2",
+  "notes": "Generation-3 stale takeover. Preserve stale PR #297/head 2a14f54ccecae5ea0e88f288f2c9185dbf885a9e as source history; salvage onto current main, preserve approved fail-closed ownership regressions, incorporate the mined pre-import guard-order invariant if non-conflicting, and require fresh exact-head CI/ownership plus independent audit. No Studio/two-client evidence claim."
 }
