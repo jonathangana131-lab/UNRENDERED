@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260811-r9m4v7x2",
+  "workerId": "sol-20260811-h4k9v2c7",
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "claimToken": "4f1c8a7d2e9b6053",
-  "acquiredAt": "2026-08-11T11:47:17+00:00",
-  "heartbeatAt": "2026-08-11T12:32:05+00:00",
+  "claimToken": "7c2e9a4d1f6b8053",
+  "acquiredAt": "2026-08-11T20:13:00+00:00",
+  "heartbeatAt": "2026-08-11T20:13:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 2,
-  "notes": "Generation-2 protected lease for PR #371 trusted-history continuity recovery. Finishing exact-byte malformed-event inventory and first-write provenance proof; no product or Studio work."
+  "generation": 3,
+  "notes": "Generation-3 protected lease for stale trusted-history recovery. Continuing exact audited finite-history repair from PR #371 without altering published immutable events."
 }
