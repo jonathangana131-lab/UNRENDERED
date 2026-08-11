@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094030-j9k4v7n2-authority348-source-pass-control-block",
+  "timestamp": "2026-08-11T09:40:30+00:00",
+  "fromWorker": "sol-20260811-j9k4v7n2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "normal",
+  "summary": "SOURCE PASS / CONTROL-PLANE BLOCK for authority PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3. Independent audit found the bounded three-file patch clean: server/client context assertions execute immediately after RunService acquisition and before ReplicatedStorage traversal, shared-tree waiting, or module require; server Physics Lab startup ownership and client exclusion remain intact. Canonical CI is green and current main is the exact merge base. Integration remains blocked until live pr-ownership explicitly passes after the separately owned SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY repair. No Studio/two-client evidence is claimed.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "evidence": [
+    "PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3 changes only src/server/Bootstrap.server.luau, src/client/Bootstrap.client.luau, and tests/hero_gate_contract_integration.luau.",
+    "GitHub compare main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 -> aa60103d489a055d86cf234dcc1338cf6168e4b3 reports ahead_by=3, behind_by=0, merge base equal to current main.",
+    "Canonical CI run 31478299998 is success; latest Swarm run 31478545137 has engine-tests success and pr-ownership fail-closed pending the global immutable-event history-continuity prerequisite.",
+    "GitHub review 4904866258 records the independent exact-head SOURCE PASS / CONTROL-PLANE BLOCK verdict."
+  ],
+  "metadata": {
+    "pr": 348,
+    "headSha": "aa60103d489a055d86cf234dcc1338cf6168e4b3",
+    "verdict": "BLOCK"
+  }
+}
