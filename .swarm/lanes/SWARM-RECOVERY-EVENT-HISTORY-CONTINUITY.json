@@ -7,7 +7,9 @@
   "priority": 9999,
   "state": "LOCKED",
   "mode": "exclusive",
-  "dependencies": ["SWARM-RECOVERY-EVENT-COMPAT"],
+  "dependencies": [
+    {"laneId": "SWARM-RECOVERY-EVENT-COMPAT", "acceptableStates": ["DONE"]}
+  ],
   "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR*.md", "Docs/ADRs/**"],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
