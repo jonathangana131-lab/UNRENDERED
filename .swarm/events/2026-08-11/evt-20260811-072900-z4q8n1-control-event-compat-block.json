@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-072900-z4q8n1-control-event-compat-block",
+  "timestamp": "2026-08-11T07:29:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "severity": "critical",
+  "summary": "After the missing SWARM-PROTOCOL lease was activated for the health-validation-fence primary, control validation exposed a separate prerequisite: immutable REVIEW_RESULT event evt-20260811-072455-q9m4r2-authority-review-block.json carries direct structured review fields pr/headSha/verdict that current core.validate_event rejects. Do not rewrite immutable event history. Recovery requires backward-compatible typed event validation or a dedicated prerequisite lane before the health-fence fix can receive authoritative ownership proof.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE", "HG-BACKFILL-AUTHORITY", "HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "Control push run 31469007847 job 93707966668 fails in hardened validate with unknown keys ['headSha', 'pr', 'verdict'] on evt-20260811-072455-q9m4r2-authority-review-block.json.",
+    "The failing event is a REVIEW_RESULT with a positive PR number, 40-hex head SHA, and REQUEST_CHANGES verdict; its core evidence/summary are otherwise valid.",
+    "tools/swarm/swarmctl.py validate_event currently permits only base event fields plus laneId/severity/evidence/toWorker/metadata and therefore cannot replay this immutable structured review event.",
+    "PR #298 lane write scope intentionally excludes tools/swarm/swarmctl.py, so the primary should not silently broaden production validator scope without scheduler-visible prerequisite handling."
+  ]
+}
