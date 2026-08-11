@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "epicId": "HERO-GATE",
+  "title": "Physics completion queue",
+  "objective": "Drain Physics Lab runtime, geometry, validation, diagnostics, and source-only evidence-contract PR backlog into current main before spawning more Physics Lab primaries. Prefer consolidation and integration over additional branches.",
+  "priority": 10000,
+  "state": "REVIEW",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["Docs/**"],
+  "resources": [],
+  "slots": [
+    {"slotId":"review-1","role":"Physics exact-head reviewer","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":1000,"writeScopes":["Docs/**"]},
+    {"slotId":"review-2","role":"Physics adversarial spot-check reviewer","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":950,"writeScopes":["Docs/**"]},
+    {"slotId":"integration","role":"Physics merge-train integrator","exclusive":true,"availableWhen":["REVIEW","INTEGRATION_READY"],"priorityBoost":900,"writeScopes":["Docs/**"]},
+    {"slotId":"reconcile","role":"Physics PR lineage reconciler","exclusive":true,"availableWhen":["REVIEW","NEEDS_CHANGES","INTEGRATION_READY"],"priorityBoost":850,"writeScopes":["Docs/**"]}
+  ],
+  "acceptance": ["self-review by implementer is expected before handoff", "test/docs-only bounded work may integrate after self-review plus exact-head CI/ownership", "runtime/authority/engine-truth changes require independent review", "prefer one coherent retained lane result over several overlapping PRs", "do not queue speculative Studio retries while display remains blocked"],
+  "tags": ["completion", "review", "integration", "physics", "hero-gate"]
+}
