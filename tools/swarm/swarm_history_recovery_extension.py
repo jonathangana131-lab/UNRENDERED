@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exact generation-4/5 additions to the finite 2026-08-11 history reset.
+"""Exact generation-4/5/6 additions to the finite 2026-08-11 history reset.
 
 These rows were measured from live swarm-control by read-only bootstrap inventory
 or exact Git provenance inspection. They are data only: no schema aliasing,
@@ -7,13 +7,17 @@ inference, or payload rewrites are permitted. Immutable events remain
 quarantine-only authority.
 """
 
+import swarm_history_recovery_generation6 as _generation6
+
 # One invalid worker record was first published with the unsupported REVIEWING
 # status and later moved through another unsupported alias before a claim-aware
 # mutable repair returned it to canonical IDLE. Pin the first invalid commit and
-# exact repair commit; all intermediate snapshots remain strict-invalid.
+# exact repair commit; all intermediate snapshots remain strict-invalid. The
+# generation-6 module adds only the three separately measured DONE->STOPPED
+# repairs from the live bootstrap inventory.
 FINITE_WORKER_TRANSITIONS = (
     ("b5bd3a372a4d4f044873c9bedf86d82e7cc92c23", "ef789a2e2e1b56d7a816b8c2be39412f5b6f0ccc"),
-)
+) + _generation6.FINITE_WORKER_TRANSITIONS
 
 # (eventId, exact filename, exact first-write commit, exact quarantine Git blob SHA-1)
 # Every row has exactly one first-add commit and no later byte rewrite in the
@@ -92,7 +96,7 @@ MALFORMED_EVENT_QUARANTINE_ROWS = (
         "5fd3e69bd34f35abd4c03485aed15879163d95e6",
         "6bcb06468953ac55ab2cfec458ecb60b4d98d114",
     ),
-)
+) + _generation6.MALFORMED_EVENT_QUARANTINE_ROWS
 
 
 def quarantine_rules() -> dict[str, dict[str, str]]:
