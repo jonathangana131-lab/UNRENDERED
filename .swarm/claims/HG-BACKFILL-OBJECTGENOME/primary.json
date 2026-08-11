@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-p4x7c2n9",
   "claimToken": "3f8b1d6a9c2e7045",
   "claimedAt": "2026-08-11T20:37:30+00:00",
-  "heartbeatAt": "2026-08-11T20:45:30+00:00",
+  "heartbeatAt": "2026-08-11T20:49:00+00:00",
   "leaseSeconds": 1800,
   "generation": 8,
   "resources": [],
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-p4x7c2n9-g8",
   "pr": 395,
-  "notes": "Generation-8 successor PR #395 from exact generation-7 head 0250b26afa018959f1aec450830680361d1a3dc2 closes review 4910534785 / evt-20260811-202000-r6p3v8n2-objectgenome-decoder-shape without schema or identity rewrite. Awaiting exact-head canonical CI."
+  "notes": "Generation-8 successor PR #395 from exact generation-7 head 0250b26afa018959f1aec450830680361d1a3dc2 closes review 4910534785 / evt-20260811-202000-r6p3v8n2-objectgenome-decoder-shape. Exact head 7611fef2 canonical CI reaches Luau analysis; remaining failures are type narrowing inside new standalone decoder validators, not contract/test failures. Swarm engine-tests pass; pr-ownership is separately fail-closed on malformed swarm-control worker metadata."
 }
