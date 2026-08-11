@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V22-THROUGHPUT",
+  "epicId": "HERO-GATE",
+  "title": "Swarm V2.2 completion-throughput upgrade",
+  "objective": "Make the control plane react to live PR work-in-flight instead of only lane states, apply adaptive review depth, prioritize completion/integration under backlog pressure, and keep new Go workers advancing retained value without branch/PR explosion.",
+  "priority": 10000,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", ".github/pull_request_template.md", "Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md", "Docs/ADR/0004-swarm-control-plane.md"],
+  "resources": ["SWARM-PROTOCOL"],
+  "slots": [
+    {"slotId":"primary","role":"Implement and prove Swarm V2.2 throughput policy","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":1000,"writeScopes":["tools/swarm/**",".github/workflows/swarm-control.yml",".github/pull_request_template.md","Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md","Docs/ADR/0004-swarm-control-plane.md"]},
+    {"slotId":"audit","role":"Adversarial review of V2.2 scheduler and review policy","exclusive":true,"availableWhen":["REVIEW","INTEGRATION_READY"],"requiresIndependentFrom":"primary","priorityBoost":800,"writeScopes":["tools/swarm/test_swarmctl_hardening.py","Docs/**"]},
+    {"slotId":"integration","role":"Integrate V2.2 after exact-head gates","exclusive":true,"availableWhen":["INTEGRATION_READY"],"requiresIndependentFrom":"primary","priorityBoost":700,"writeScopes":["Docs/**"]}
+  ],
+  "acceptance": [
+    "scheduler counts live PR-bearing claims as completion backlog",
+    "soft backlog pressure boosts review/integration roles",
+    "hard backlog pressure suppresses normal new primaries and capacity mining",
+    "every new controlled PR self-reviews before acceptance",
+    "low-risk work can integrate after self-review plus CI/ownership",
+    "standard work requires an independent exact-head spot check",
+    "critical authority/reality/control work requires an independent exact-head full review",
+    "existing pre-V2.2 PRs are grandfathered and do not fail merely for missing new metadata",
+    "30-worker simulation and deterministic/adversarial control tests pass",
+    "real live board exposes completion pressure and useful completion slots"
+  ],
+  "tags": ["control-repair", "completion", "throughput", "risk-review", "v2.2"]
+}
