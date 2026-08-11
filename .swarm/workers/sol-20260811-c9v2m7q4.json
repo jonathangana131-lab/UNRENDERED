@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T20:57:30+00:00",
-  "lastSeenAt": "2026-08-11T21:33:20+00:00",
+  "lastSeenAt": "2026-08-11T21:41:00+00:00",
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "slotId": "primary",
   "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-c9v2m7q4-g4",
-  "notes": "Generation-4 fenced stale takeover is published as draft PR #404 from #387 exact head a59e318a. Closing per-intermediate-commit trusted-history continuity, trusted-base validator compatibility, and exact path-divergent malformed HANDOFF provenance; preserve finite recovery and immutable event bytes."
+  "notes": "Generation-4 successor PR #404 now includes per-intermediate-commit replay, trusted-base digest compatibility, exact path-aware provenance, an 11-event finite quarantine extension, and stale worker repair provenance b5bd3a37->ef789a2e. Awaiting fresh exact-head bootstrap/CI."
 }
