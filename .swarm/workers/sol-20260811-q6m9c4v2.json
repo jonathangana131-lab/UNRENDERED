@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q6m9c4v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T20:58:00+00:00",
-  "lastSeenAt": "2026-08-11T20:59:45+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "test-adversary",
-  "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-tests-q6m9c4v2",
-  "notes": "Claimed complementary test-adversary slot after audit race loss. Target is PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962; probe decoder boundary for concrete bypasses without duplicating the auditor."
+  "lastSeenAt": "2026-08-11T21:08:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed HG-BACKFILL-OBJECTGENOME test-adversary pass on PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962. No additional decoder bypass found; durable finding evt-20260811-210700-q6m9c4v2-objectgenome-g8-adversary and PR comment 5258855120 published. Claim released; selecting next safe slot."
 }
