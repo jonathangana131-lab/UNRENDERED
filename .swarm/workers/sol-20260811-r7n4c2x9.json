@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r7n4c2x9",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T11:55:15+00:00",
-  "lastSeenAt": "2026-08-11T11:55:15+00:00",
-  "notes": "GO worker claiming independent exact-head source-only audit of runtime transition mutation fence PR #366; no Studio/engine evidence claim."
+  "lastSeenAt": "2026-08-11T12:18:30+00:00",
+  "notes": "Completed WorldEntity generation-4 production recovery as draft PR #378 at exact head 4680b8176c144b99ffeb1754eb94c03e7bfe42c6. Canonical CI and Swarm engine-tests are green; pr-ownership remains fail-closed on invalid live worker state owned by active SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY PR #371. Authoritative lane notes contain the exact takeover/review handoff. Primary and REALITY-CONTRACT leases released rather than parked behind the external trust-recovery prerequisite."
 }
