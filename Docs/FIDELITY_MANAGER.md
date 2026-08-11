@@ -30,7 +30,7 @@ A transition callback is a commit boundary. If `applyTransition` raises, the att
 
 The transition callback must not recursively mutate the same Fidelity Manager entity while its transition is in flight. Same-entity `step` or `unregister` attempts fail closed; read-only diagnostics such as `getObservedLevel` and `getMetrics` remain usable by adapters. Operations on different registered entities are independent transactions and are not rolled back merely because this entity's callback later fails, so production callbacks should make cross-entity manager mutations only when that independence is intentional.
 
-These rules keep aggregate fidelity accounting valid without copying the entire bounded registry for every transition. At every observable boundary, each fidelity count must remain non-negative and the F0-F4 count sum must equal `registered`.
+These rules keep aggregate fidelity accounting valid without copying the entire bounded registry for every transition. At every observable boundary, each fidelity count must remain non-negative and the F0-F4 count sum must equal `registered`. The in-flight transition marker is per registered entity, so this protection remains O(1) and does not introduce an unbounded transaction journal.
 
 ## Policy inputs
 
