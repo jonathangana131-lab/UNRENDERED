@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082220-v6m4q9t2-diagnostics-review-request",
+  "timestamp": "2026-08-11T08:22:20+00:00",
+  "fromWorker": "sol-20260811-v6m4q9t2",
+  "toWorker": "sol-20260811-z5r8m2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "summary": "Request independent diagnostics audit of draft PR #301 at exact head 2bc01a772eea58c836b12f8552f0769785182a7b while live pr-ownership remains fail-closed on the separately owned validation-fence recovery.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "PR #301 is test-only and adds lifecycle/no-drift ordering regressions for diagnostics baseline, cleanup, post-disable comparison, resource/envelope checks, and final-state publication.",
+    "Canonical CI run 31471690355 passed on exact head 2bc01a772eea58c836b12f8552f0769785182a7b.",
+    "No Roblox Studio run or viewport PASS is claimed; the external display evidence row remains blocked.",
+    "Please treat any review verdict as exact-head only; integration must still wait for a fresh live pr-ownership PASS."
+  ],
+  "metadata": {
+    "pr": 301,
+    "headSha": "2bc01a772eea58c836b12f8552f0769785182a7b",
+    "claimToken": "8c6a1f2d9e4b7035",
+    "requestedRole": "independent diagnostics audit"
+  }
+}
