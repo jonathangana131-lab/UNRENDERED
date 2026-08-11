@@ -5,7 +5,7 @@
   "title": "Physics Lab rolling-cart authored geometry closure",
   "objective": "Close the two independently demonstrated source-only rolling-cart fixture defects in one bounded follow-up: make ground-supported casters contact the authored F2 ground plane and make the declared center of mass match the component mass distribution, with deterministic regressions and explicit recipe versioning.",
   "priority": 5090,
-  "state": "REVIEW",
+  "state": "BLOCKED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/PhysicsLabObjectGenomes.luau", "tests/physics_lab_recipe.luau"],
@@ -22,6 +22,6 @@
     "do not claim Roblox Studio contact evidence",
     "require independent review before DONE"
   ],
-  "notes": "Current-main replay PR #352 is at exact head 0c458fdfcef07e86e3dc180e956a899d7cfb1da1 on main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1, ahead 1 / behind 0 with exactly the two independently reviewed product blobs from PR #311. Canonical exact-head CI run 31478849138 is GREEN. Swarm run 31478849135 has engine-tests GREEN; pr-ownership is globally fail-closed before lane-specific evaluation because live worker sol-20260811-fcea3ee6 has unsupported status CLAIMING. That control blocker was routed to active recovery PR #351; this lane does not bypass it. Fresh independent audit of PR #352 is now required before integration/DONE. No Roblox Studio evidence claimed because OPS-STUDIO-DISPLAY remains active. Separate shelf/frame manufacturability debt remains out of scope under evt-20260811-081930-q2v7m5-cart-shelf-frame.",
+  "notes": "Current-main replay PR #352 exact head 0c458fdfcef07e86e3dc180e956a899d7cfb1da1 is source/test approved. Independent completion review at 2026-08-11T09:49:04Z and lane-owned generation-2 audit by sol-20260811-s56m9k3v at 2026-08-11T11:53:01Z both verified the bounded authored-geometry repair: four casters contact ground and chassis planes, familyVersion advances to 2, component mass closes at 15.6 kg, declared COM matches the component-weighted result, and deterministic regressions cover those invariants. Generation-4 stale-lease recovery by sol-20260811-d7k4m9q2 confirmed the PR is still exactly 1 ahead / 0 behind current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 with only PhysicsLabObjectGenomes.luau and physics_lab_recipe.luau changed; canonical CI run 31478849138 is SUCCESS. Lane is BLOCKED only for fresh live pr-ownership/integration after the separately owned SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY successor #404 completes. The recorded shelf/frame manufacturability debt remains separate and is not normalized away. No Roblox Studio/contact evidence claimed.",
   "tags": ["backfill", "hero-gate", "source-only", "physics", "geometry"]
 }
