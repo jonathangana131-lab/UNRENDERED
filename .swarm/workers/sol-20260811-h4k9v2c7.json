@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T20:13:00+00:00",
-  "lastSeenAt": "2026-08-11T20:27:00+00:00",
+  "lastSeenAt": "2026-08-11T20:46:00+00:00",
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "slotId": "primary",
   "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-h4k9v2c7-g3",
-  "notes": "Draft PR #387 active. Exact-head adversarial tests and 30-worker simulations pass; read-only provenance audit now gives a finite 61-event malformed-first-write set, all single-revision/unrewritten at measured control SHA. Pinning exact quarantine-only provenance and the additional READY->WAITING repair before bootstrap review."
+  "notes": "Draft PR #387 active. Finite recovery is exact and fail-closed: 63 malformed first-write event tuples, 16 worker invalid->repair pairs, and independent Git first-add/blob proof in bootstrap CI. Corrected the READY repair and WorldEntity first-add transcription defects from canonical history; fresh exact-head bootstrap is queued."
 }
