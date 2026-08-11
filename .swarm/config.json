@@ -11,7 +11,8 @@
   "wip": {
     "maxMajorEpics": 5,
     "maxPrimaryImplementationLanes": 8,
-    "reviewBacklogThrottle": 4
+    "reviewBacklogThrottle": 4,
+    "integrationBacklogThrottle": 3
   },
   "scheduler": {
     "redMainOverride": true,
@@ -22,7 +23,11 @@
     {"pattern": "Docs/SWARM_V2_ACTIVATION.md", "resource": "PROJECT-STATE"},
     {"pattern": "Docs/SWARM_PROTOCOL.md", "resource": "SWARM-PROTOCOL"},
     {"pattern": "Docs/SWARM_CONTROL_PLANE.md", "resource": "SWARM-PROTOCOL"},
+    {"pattern": "Docs/ADR/0004-swarm-control-plane.md", "resource": "SWARM-PROTOCOL"},
     {"pattern": "ProjectSource/UNRENDERED_PROJECT_INSTRUCTIONS.txt", "resource": "SWARM-PROTOCOL"},
+    {"pattern": "tools/swarm/**", "resource": "SWARM-PROTOCOL"},
+    {"pattern": ".github/workflows/swarm-control.yml", "resource": "SWARM-PROTOCOL"},
+    {"pattern": ".github/pull_request_template.md", "resource": "SWARM-PROTOCOL"},
     {"pattern": "src/shared/Reality/**", "resource": "REALITY-CONTRACT"},
     {"pattern": "src/server/Bootstrap.server.luau", "resource": "SERVER-AUTHORITY"}
   ]
