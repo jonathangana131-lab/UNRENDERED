@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-084700-r4k8m2z7-objectstate-alias-closure",
+  "timestamp": "2026-08-11T08:47:00+00:00",
+  "fromWorker": "sol-20260811-r4k8m2z7",
+  "eventType": "FINDING",
+  "summary": "PR #326 proves wear↔damage and wear↔mechanismPosition aliases, but damage↔mechanismPosition is a third currently-valid numeric alias when component/mechanism key sets align. The source repair should enforce a generic pairwise-distinct semantic ObjectState map invariant rather than special-casing only the two tested pairs, and synchronized regression coverage should include damage↔mechanismPosition.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "MEDIUM",
+  "evidence": [
+    "src/shared/Objects/ObjectGenome.luau validates componentWear and componentDamage through the same [0,1] validateUnitMap path, and hinge/tilt/slide/latch mechanism positions overlap that numeric domain.",
+    "PR #326 exact head a44c8c5a2ef93f3556a1ce1189ace0836e0d7d68 already constructs a valid genome with identical component/mechanism key sets, so replacing componentDamage with mechanismPosition yields the same alias class as its wear↔mechanismPosition repro.",
+    "Independent review comment 4904462663 records the closure requirement on PR #326."
+  ]
+}
