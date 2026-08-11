@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-8d5d357a",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "REVIEWING",
   "startedAt": "2026-08-11T23:08:18+00:00",
-  "lastSeenAt": "2026-08-11T23:39:05+00:00",
-  "notes": "Independent geometry audit completed. PR #414 production source passed no-execute/finite-output review, but lane returned to NEEDS_CHANGES until equivalent current PR #418 behavioral reverse-overflow regression is absorbed into the retained primary/successor and rerun/re-reviewed. Durable verdict evt-sol-20260811-8d5d357a-review-result-physics-scale-g6-233820; GitHub review comment 4911684469."
+  "lastSeenAt": "2026-08-11T23:40:24+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-8d5d357a-g1",
+  "notes": "Independent exact-head audit of diagnostics PR #416 at 183bea8da6462facb2a2429ebbc85b9b80a01869, including newer expected-red enabled-window integrity evidence and generation-8 projection finding."
 }
