@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-122944-m7q2v9c4-objectgenome-g6-evidence",
+  "timestamp": "2026-08-11T12:29:44+00:00",
+  "fromWorker": "sol-20260811-m7q2v9c4",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "medium",
+  "summary": "ObjectGenome generation-6 successor PR #380 exact head f528b2187b06f73d97ef14fddba6caf9ca0055a4 passed canonical CI and Swarm engine tests, closing the identityParts metatable/no-execute regression while preserving all generation-5 contract locks. Live pr-ownership remains fail-closed only on the separately owned immutable event-history continuity defect.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "evidence": [
+    "Canonical CI run 31491357531: SUCCESS on exact PR #380 head f528b2187b06f73d97ef14fddba6caf9ca0055a4.",
+    "Swarm Control Plane run 31491357582: engine-tests SUCCESS; pr-ownership FAILURE only at audited immutable event evt-20260811-073500-q9m4r2-authority-rereview-approve.json byte continuity (8f332b... != 2f0b02...).",
+    "Relative to independently reviewed generation-5 head 08ce8d7093ceb36a85af58510f65ef8e9b33c154, generation-6 delta is exactly ObjectGenome.luau +1/-1 and tests/object_genome_contract_lock.luau +24/-0.",
+    "The absorbed regression proves ObjectGenome.identityParts() rejects metatable-backed caller data before caller __index field execution; the StableId namespace/semantic tuple/version remain unchanged.",
+    "No Roblox Studio or engine evidence is applicable or claimed for this source-only contract repair."
+  ]
+}
