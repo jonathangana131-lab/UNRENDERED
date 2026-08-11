@@ -19,10 +19,13 @@ Source-level invariants:
 - clients are independent observers of replicated canonical state, not alternate generators of canonical truth;
 - the server binds each observation to the actual calling player/session and server-established request context rather than trusting client-supplied observer identity or request ownership;
 - a client observation must be comparable using stable domain identity, not Roblox Instance identity alone;
-- client-supplied identity, counts, fingerprints, repro keys, or state are untrusted evidence until checked against server-owned truth;
-- teardown or evidence handoff must fail closed: missing, duplicate, stale, malformed, or cross-request observations cannot be merged into a passing result.
+- canonical comparison includes the lab schema version and resolved-region schema version as truth provenance, not only recipe/world/region IDs and content fingerprints;
+- client-supplied identity, counts, fingerprints, repro keys, schema versions, or state are untrusted evidence until checked against server-owned truth;
+- teardown or evidence handoff must fail closed: missing, duplicate, stale, malformed, unknown-version, or cross-request observations cannot be merged into a passing result.
 
-A true two-client Studio evidence row requires one real multiplayer server session with at least two independently observed clients. Acceptance requires exactly one canonical lab root and agreement across both clients on the server-established WorldId, RegionId, resolved fingerprint/repro identity, canonical entity IDs, and required structure/count facts. A mismatch is evidence of divergence; it is never repaired by choosing one client as canonical.
+A true two-client Studio evidence row requires one real multiplayer server session with at least two independently observed clients. Acceptance requires exactly one canonical lab root and agreement across both clients on the server-established WorldId, RegionId, lab schema version, resolved-region schema version, resolved fingerprint/repro identity, canonical entity IDs, and required structure/count facts. A mismatch is evidence of divergence; it is never repaired by choosing one client as canonical.
+
+The evidence transport/evaluator schema must itself be explicitly versioned. Adding a new canonical truth field to the server or client observation payload is not sufficient if the evaluator does not recognize and require that field; all three sides must advance together and preserve fail-closed handling for unknown/missing fields.
 
 Matching observations prove only the tested shared canonical view. They do not establish a blanket authority claim for future movement, physics ownership, damage, inventory, prediction, persistence, or networking systems.
 
