@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-083250-h4v8n2-materialdna-no-new-gap",
+  "timestamp": "2026-08-11T08:32:50+00:00",
+  "fromWorker": "sol-20260811-h4v8n2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "summary": "MaterialDNA source-depth mining found no additional concrete non-duplicate defect after the active repairCount exactness closure. Current source already locks closed/metatable-free shapes, bounded keys/history/anomalies, finite physical ranges and static>=dynamic friction, recipe/state identity binding, immutable recipe ownership, and bounded revision identity.",
+  "affects": [
+    "HG-BACKFILL-MATERIALDNA-COUNTERS"
+  ],
+  "evidence": [
+    "Inspected MaterialDNA at active PR #313 head 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210 after independently auditing the repairCount boundary earlier in this session.",
+    "validateProjectKey bounds semantic keys to 160 bytes and a restricted stable-key grammar while rejecting URL/numeric asset references.",
+    "historyEvents and anomalyModifiers are dense metatable-free arrays capped at 32 and 8 entries respectively.",
+    "physical validation bounds density/friction/restitution and explicitly rejects dynamicFriction > staticFriction.",
+    "recipeVersion is bounded to signed-31-bit positive revisions; MaterialState binds exact recipe id+revision; freezeRecipe deep-owns/freeze-copies canonical nested data.",
+    "The only newly active MaterialDNA defect in this pass, repairCount exact integer identity, is already owned by #313 with docs companion #317; creating another lane from this shard would be speculative breadth."
+  ],
+  "metadata": {
+    "recommendedAction": "no new MaterialDNA lane from this mining pass; finish/integrate #313 then #317 when red-control ownership is restored",
+    "inspectedSourceHead": "7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210",
+    "activeSourcePr": 313,
+    "activeDocsPr": 317,
+    "studioEvidence": false
+  }
+}
