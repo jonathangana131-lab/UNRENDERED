@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-202653-z8p3n6v4-physics-runtime-no-novel-gap",
+  "timestamp": "2026-08-11T20:26:53+00:00",
+  "fromWorker": "sol-20260811-z8p3n6v4",
+  "eventType": "FINDING",
+  "summary": "Physics runtime capacity mining at main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 found no novel non-duplicate source-only gap worth spawning. Runtime boundary aliasing is closed by WorldEntity frozen ownership; hostile recipe preflight is already owned by PR #310; FidelityManager hostile-input and callback-transaction atomicity is already owned by PR #335; runtime callback step/dispose re-entry fencing is already owned by PR #366; malformed capture rollback is already covered by merged #284; bounded nested persistent-state depth/resource hardening is already owned by PR #293. PhysicsLabRealizer's pre-runtime selectDesiredLevel call was also checked and is covered by #335's hardened FidelityManager policy-input boundary. No Studio evidence was claimed and no new implementation lane was created because doing so would duplicate active Hero-Gate hardening.",
+  "affects": ["HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "src/shared/Physics/PhysicsLabRuntime.luau @ main ae83c0e: step transaction, capture/observer hooks, registry transition, snapshot/dispose lifecycle inspected against tests/active PRs.",
+    "src/shared/Reality/WorldEntity.luau @ main ae83c0e: registry records and persistent state are cloned/frozen, so callback alias mutation through runtime:getRecord() is not a valid new defect.",
+    "src/server/PhysicsLab/PhysicsLabRealizer.luau @ main ae83c0e: lab.step pre-calls FidelityManager.selectDesiredLevel; PR #335 hardens that shared policy-input boundary before hostile field dereference.",
+    "Duplicate ownership checked: #310 recipe fence, #335 FidelityManager boundary/atomicity, #366 runtime transition re-entry fence, #293 WorldEntity plain-data/resource hardening, merged #284 malformed capture rollback tests.",
+    "Existing swarm event evt-20260811-081645-r8v2k6-runtime-callback-dispose-reentrancy confirms callback dispose re-entry was already mined into #366 rather than being a new finding."
+  ],
+  "metadata": {
+    "sourceCommit": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "result": "NO_NOVEL_GAP",
+    "slot": "mine-physics-runtime",
+    "studioEvidenceClaimed": false
+  }
+}
