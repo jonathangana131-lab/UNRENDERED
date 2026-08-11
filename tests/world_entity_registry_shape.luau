@@ -183,6 +183,111 @@ local function run(): number
 		string.find(tostring(wrongWorldIdError), "origin.worldId must be a string", 1, true) ~= nil
 	)
 
+	local exactMaximumId = string.rep("x", 256)
+	expect("stable id accepts exact 256-byte maximum", WorldEntity.isId(exactMaximumId))
+	expect("stable id rejects 257-byte value", not WorldEntity.isId(exactMaximumId .. "x"))
+	expect("stable id rejects empty value", not WorldEntity.isId(""))
+	expect("stable id rejects control characters", not WorldEntity.isId("entity:bad\nline"))
+	expect("stable id rejects non-string values", not WorldEntity.isId(17))
+
+	local idBoundarySpec = makeSpec()
+	idBoundarySpec.id = exactMaximumId
+	local maximumIdAccepted = newResult(idBoundarySpec)
+	expect("new accepts exact stable-id maximum", maximumIdAccepted)
+
+	local overlongIdSpec = makeSpec()
+	overlongIdSpec.id = exactMaximumId .. "x"
+	local overlongIdAccepted = newResult(overlongIdSpec)
+	expect("new rejects overlong stable id", not overlongIdAccepted)
+
+	local controlIdRecord = makeRecord()
+	controlIdRecord.id = "entity:bad\tcontrol"
+	expect("registry rejects stable ids with control characters", not registerAccepts(controlIdRecord))
+
+	local registry = WorldEntity.createRegistry()
+	local authoritative = WorldEntity.new(makeSpec())
+	local firstRegistered = WorldEntity.register(registry, authoritative)
+	expect("diagnostic fixture registers authoritative record", firstRegistered)
+
+	local duplicateSpec = makeSpec()
+	duplicateSpec.kind = "filing-cabinet"
+	duplicateSpec.origin.recipeKey = "cabinet/duplicate"
+	local duplicateRecord = WorldEntity.new(duplicateSpec)
+	local duplicateRegistered, duplicateDiagnostic = WorldEntity.register(registry, duplicateRecord)
+	expect("diagnostic fixture rejects duplicate", not duplicateRegistered)
+	expect("duplicate returns diagnostic", duplicateDiagnostic ~= nil)
+	if duplicateDiagnostic ~= nil then
+		local diagnosticMutationAccepted = pcall(function()
+			(duplicateDiagnostic :: any).incomingRecipeKey = "forged"
+		end)
+		expect("returned duplicate diagnostic is frozen", not diagnosticMutationAccepted)
+		expect(
+			"returned duplicate diagnostic keeps canonical recipe",
+			duplicateDiagnostic.incomingRecipeKey == "cabinet/duplicate"
+		)
+	end
+
+	local retainedDiagnostics = WorldEntity.duplicateDiagnostics(registry)
+	expect("diagnostic history retains duplicate", #retainedDiagnostics == 1)
+	if retainedDiagnostics[1] ~= nil then
+		local retainedMutationAccepted = pcall(function()
+			(retainedDiagnostics[1] :: any).incomingKind = "forged"
+		end)
+		expect("retained duplicate diagnostic entry is frozen", not retainedMutationAccepted)
+	end
+
+	local unknownRemoved = WorldEntity.unregister(registry, "entity:missing")
+	expect("unregister unknown identity returns nil", unknownRemoved == nil)
+	expect("unregister unknown identity preserves registry count", WorldEntity.count(registry) == 1)
+
+	local negativeCapacityAccepted = pcall(function()
+		WorldEntity.createRegistry(-1)
+	end)
+	expect("duplicate diagnostic capacity rejects negatives", not negativeCapacityAccepted)
+
+	local fractionalCapacityAccepted = pcall(function()
+		WorldEntity.createRegistry(1.5)
+	end)
+	expect("duplicate diagnostic capacity rejects fractions", not fractionalCapacityAccepted)
+
+	local nanCapacityAccepted = pcall(function()
+		WorldEntity.createRegistry(0 / 0)
+	end)
+	expect("duplicate diagnostic capacity rejects NaN", not nanCapacityAccepted)
+
+	local deeplyNestedState = {}
+	local depthCursor = deeplyNestedState
+	for _ = 1, 2048 do
+		local child = {}
+		depthCursor.child = child
+		depthCursor = child
+	end
+	local deeplyNestedSpec = makeSpec()
+	deeplyNestedSpec.persistentState = deeplyNestedState
+	local deepStateAccepted, deepStateError = newResult(deeplyNestedSpec)
+	expect("new rejects pathologically deep persistent state", not deepStateAccepted)
+	if not deepStateAccepted then
+		expect(
+			"deep persistent state uses owned structural-limit diagnostic",
+			string.find(tostring(deepStateError), "persistentState exceeds structural limits", 1, true) ~= nil
+		)
+	end
+
+	local excessivelyWideState = {}
+	for index = 1, 65536 do
+		excessivelyWideState[index] = index
+	end
+	local wideStateSpec = makeSpec()
+	wideStateSpec.persistentState = excessivelyWideState
+	local wideStateAccepted, wideStateError = newResult(wideStateSpec)
+	expect("new rejects pathologically wide persistent state", not wideStateAccepted)
+	if not wideStateAccepted then
+		expect(
+			"wide persistent state uses owned structural-limit diagnostic",
+			string.find(tostring(wideStateError), "persistentState exceeds structural limits", 1, true) ~= nil
+		)
+	end
+
 	return failures
 end
 
