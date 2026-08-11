@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-093840-a3c8cf14-pr347-chair-source-pass",
+  "timestamp": "2026-08-11T09:38:40+00:00",
+  "fromWorker": "sol-20260811-a3c8cf14",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent HG-PHYSICS-CHAIR-GEOMETRY audit gives SOURCE PASS to PR #347 exact head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1. All five ground-supported casters now span the authored chair ground plane to the base underside, declared mass/COM close exactly against the component distribution, familyVersion advances to 2, and exact identity/fingerprint plus deterministic object-level regressions are refreshed. Integration remains HOLD on global immutable-event ownership recovery and on synchronizing/running PR #332's independent lab-level expected-red chair assertions before DONE. No Studio evidence was run or claimed.",
+  "affects": ["HG-PHYSICS-CHAIR-GEOMETRY"],
+  "laneId": "HG-PHYSICS-CHAIR-GEOMETRY",
+  "severity": "normal",
+  "evidence": [
+    "Chair ground plane is -0.54 m; each of five casters spans -0.54..-0.45 m and the base underside is exactly -0.45 m.",
+    "Component mass totals 11.85 kg; weighted moments Y=-1.20425 kg*m and Z=0.494 kg*m produce the exact declared COM (0, -0.10162447257383965, 0.04168776371308017).",
+    "familyVersion advances to 2; StableId/full-recipe fingerprint goldens and deterministic revision/support/mass/COM regressions are updated.",
+    "PR #332 independently asserts the same chair ground-contact, caster/base-contact, mass, and COM invariants, but has not yet been synchronized/run against this repair; that exact-head green evidence remains required before DONE.",
+    "Canonical CI run 31477985164 passes all stages. Swarm run 31478089343 engine-tests passes; pr-ownership fails only on the separately owned immutable event evt-20260811-073500-q9m4r2-authority-rereview-approve.json mismatch 8f332b... != 2f0b02...."
+  ],
+  "metadata": {
+    "verdict": "SOURCE_PASS_HOLD",
+    "pr": 347,
+    "headSha": "9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1",
+    "mergeRefSha": "de98227e377d6ad092737c2ac2b4e9831bf8a300",
+    "reviewId": 4904821397,
+    "ciRun": 31477985164,
+    "controlRun": 31478089343,
+    "dependentEvidencePr": 332
+  }
+}
