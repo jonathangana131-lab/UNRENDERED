@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:40:25+00:00",
-  "lastSeenAt": "2026-08-11T09:51:10+00:00",
-  "laneId": "HG-BACKFILL-REALITY",
+  "lastSeenAt": "2026-08-11T10:01:10+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
   "slotId": "primary",
-  "branch": "agent/reality/HG-BACKFILL-REALITY-k8v3p6r1-g2",
-  "notes": "Generation-2 current-main salvage of the already source-approved ResolvedRegionRecipe v2/v1 hostile schema-key no-execute repair. Reuse exact #306 three-file blobs if current-main targets are unchanged, run exact-head gates, then require fresh independent review by another worker. No Studio claim."
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-k8v3p6r1-g3",
+  "notes": "Generation-3 stale takeover of Physics Lab validation-contract primary. Preserve #303 plain-data/no-execute/exact-nil repair; absorb #346 safe-integer and #356 canonical rootName identity blockers into the same two-file boundary on current main. Exact-head gates then independent review by another worker; no Studio claim."
 }
