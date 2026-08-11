@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q8m3v7k2",
   "model": "gpt-5.6-sol",
-  "status": "CLAIMING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T11:52:00+00:00",
-  "lastSeenAt": "2026-08-11T11:52:00+00:00",
-  "notes": "Selecting the highest-value free Hero Gate capacity-mining slot; source-only, no Studio evidence claim."
+  "lastSeenAt": "2026-08-11T12:09:00+00:00",
+  "notes": "Completed and released WorldEntity and authority source-depth mining slots; published saturation findings; performed targeted #371 bootstrap rerun and handed off live invalid-worker-status convergence evidence. No active claim."
 }
