@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-q6x4m9p2",
   "claimToken": "d2a7f5c1e8b40963",
   "claimedAt": "2026-08-11T12:25:00+00:00",
-  "heartbeatAt": "2026-08-11T12:34:00+00:00",
+  "heartbeatAt": "2026-08-11T12:37:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-q6x4m9p2-r2",
-  "pr": null,
-  "notes": "Replayed onto the live generation-6 primary after it advanced to absorb #375. Old q6x4m9p2 test branch is abandoned. Current target is a distinct nested identity-scalar no-execute regression: plain genome + hostile familyVersion __tostring must be rejected by identityParts before coercion; tests-only, canonical wired file."
+  "pr": 381,
+  "notes": "Published stacked test PR #381 at exact head 7ebeb4d2 on live generation-6 primary f528b218. Adds a distinct nested identity-scalar fail-closed regression in the existing ObjectGenome contract test. Exact-head CI and Swarm validation pending; no Studio evidence claimed."
 }
