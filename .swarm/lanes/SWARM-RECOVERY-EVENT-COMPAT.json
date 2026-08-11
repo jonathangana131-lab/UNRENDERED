@@ -3,50 +3,26 @@
   "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
   "epicId": "HERO-GATE",
   "title": "Restore immutable event compatibility",
-  "objective": "Unblock trusted control validation without rewriting immutable historical events by narrowly accepting only audited already-published malformed event identities/classes at the V2.1 compatibility facade, while keeping all newly emitted event writes strict and preserving immutable-byte transition fencing.",
+  "objective": "Fence the trusted validator to exact audited first-write provenance for known malformed immutable events without rewriting historical bytes, while keeping all newly emitted events strict and preserving byte-for-byte transition immutability.",
   "priority": 10000,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
-  "writeScopes": [
-    "tools/swarm/swarmctl_hardening.py",
-    "tools/swarm/test_swarmctl_hardening.py"
-  ],
+  "writeScopes": ["tools/swarm/swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening.py"],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
-    {
-      "slotId": "primary",
-      "role": "Critical immutable-event compatibility repair",
-      "exclusive": true,
-      "availableWhen": ["READY", "NEEDS_CHANGES"],
-      "priorityBoost": 1000,
-      "writeScopes": [
-        "tools/swarm/swarmctl_hardening.py",
-        "tools/swarm/test_swarmctl_hardening.py"
-      ]
-    },
-    {
-      "slotId": "reviewer-1",
-      "role": "Independent compatibility verifier",
-      "exclusive": true,
-      "availableWhen": ["REVIEW", "INTEGRATION_READY"],
-      "priorityBoost": 1000,
-      "requiresIndependentFrom": "primary",
-      "writeScopes": [
-        "tools/swarm/swarmctl_hardening.py",
-        "tools/swarm/test_swarmctl_hardening.py"
-      ]
-    }
+    {"slotId": "primary", "role": "Critical immutable-event compatibility repair", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 1000, "writeScopes": ["tools/swarm/swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening.py"]},
+    {"slotId": "reviewer-1", "role": "Independent compatibility verifier", "exclusive": true, "availableWhen": ["REVIEW", "INTEGRATION_READY"], "priorityBoost": 1000, "requiresIndependentFrom": "primary", "writeScopes": ["tools/swarm/swarmctl_hardening.py", "tools/swarm/test_swarmctl_hardening.py"]}
   ],
   "acceptance": [
-    "trusted V2.1 validation accepts only audited already-published malformed event identities/classes required to preserve immutable historical bytes",
-    "legacy top-level review coordinates are gated by finite historical identity/provenance plus strict key/value shape; a fresh event cannot backdate itself into compatibility",
-    "the immutable historical WorldEntity review with verdict SYNC_REQUIRED validates without rewriting its bytes",
-    "the immutable MaterialDNA FINDING with legacy affects member MaterialDNA validates through an explicit finite compatibility rule, while arbitrary or newly emitted non-lane affects values still fail closed",
-    "metadata conflicts, malformed legacy values, unrelated event types, and unknown event keys remain rejected",
-    "transition-check continues to reject any historical event rewrite or deletion byte-for-byte",
-    "control deterministic/adversarial tests, canonical CI, and the live swarm-control validation path remain green before integration is declared complete"
+    "known malformed historical events are admitted only at exact audited relative paths with exact audited first-write Git blob identities",
+    "strict-valid normalization, byte mutation, path move, cloned historical eventId, duplicate eventId, and fresh backdated legacy events fail closed",
+    "the exact audited WorldEntity and MaterialDNA first-write bytes remain representable without mutation",
+    "all unlisted events remain subject to the strict V2 schema and malformed affects do not generalize beyond exact audited first-write bytes",
+    "transition-check rejects every historical event rewrite or deletion byte-for-byte and additionally rejects eventId replay on newly added events",
+    "deterministic/adversarial control tests and canonical CI pass on the exact reviewed head",
+    "integration sequencing accounts explicitly for already-laundered live Authority, WorldEntity, and cart bytes rather than treating compatibility as a trust reset"
   ],
-  "notes": "Independent exact-head review of PR #329 at 275ba90dfe699e22b495b6f77086e8c6e845fd11 found P0 immutable-history integrity blockers. The facade still calls strict validation before historical provenance checks, so already-laundered strict-valid rewrites can bypass compatibility identity entirely. Its fallback also binds only eventId plus selected fields rather than exact audited relative path/full immutable bytes, leaving historical-ID replay/mutation possible. Required correction: check known historical exceptions before generic strict validation, pin exact audited path+blob/bytes/digest, reject duplicate/replayed event IDs, and add adversarial regressions for strict-valid laundering, one-byte mutations, and cloned IDs under another path. Review 4904461613 and event evt-20260811-084930-r6d1v9-event-compat-review-block record the hold. No historical event should be rewritten to make validation green.",
+  "notes": "Exact head 772416839f4e9a3330c89dc9880e1670b7191824 addresses every prior P0: historical exceptions are checked before strict validation; exact path plus first-write Git blob identity is required; strict-valid laundering and duplicate/replayed IDs are rejected; and the temporary restoration loophole was removed so byte immutability is unchanged. Canonical CI 31475546478 PASS; Swarm engine-tests 93728287438 PASS. Current live Authority/WorldEntity/cart bytes are already laundered, so this patch intentionally detects them as non-canonical. That pre-existing trust-continuity problem is a separate recovery dependency and must not be hidden inside compatibility. Independent exact-head rereview required.",
   "tags": ["control-repair", "red-ci", "pr-ownership", "hero-gate"]
 }
