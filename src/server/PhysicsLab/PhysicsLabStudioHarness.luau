@@ -15,12 +15,28 @@ local function assertStudioServer(): ()
 	assert(RunService:IsServer(), "PhysicsLabStudioHarness must run on the server")
 end
 
+local function bindOwnedHandle(realized: RealizedLab): RealizedLab
+	local owned: RealizedLab = table.clone(realized)
+	owned.destroy = function(): ()
+		assertStudioServer()
+		if current ~= owned then
+			return
+		end
+		realized.destroy()
+		if current == owned then
+			current = nil
+		end
+	end
+	return table.freeze(owned)
+end
+
 function PhysicsLabStudioHarness.start(parent: Instance?): RealizedLab
 	assertStudioServer()
 	assert(current == nil, "Physics Lab Studio harness already owns a realized lab")
 	local realized = PhysicsLabRealizer.realize(parent or workspace)
-	current = realized
-	return realized
+	local owned = bindOwnedHandle(realized)
+	current = owned
+	return owned
 end
 
 function PhysicsLabStudioHarness.get(): RealizedLab?
