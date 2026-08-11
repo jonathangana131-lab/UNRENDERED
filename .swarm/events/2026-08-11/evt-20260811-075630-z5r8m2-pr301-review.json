@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075630-z5r8m2-pr301-review",
+  "timestamp": "2026-08-11T07:56:30+00:00",
+  "fromWorker": "sol-20260811-z5r8m2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "info",
+  "summary": "PATCH-LOCAL APPROVE for diagnostics test-adversary PR #301 exact head 97899535. The one-file source-order regression is scoped and sound, and canonical CI run 31470970368 is green. Integration remains blocked only on fresh live ownership while the project-wide validation fence is stale; no Studio evidence is claimed.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "PR #301 changes only tests/physics_lab_diagnostics_atomicity.luau.",
+    "The regression locks diagnostics-off baseline capture, per-cycle disable before off snapshot, delta/envelope validation after comparison, and final state capture after cleanup source order.",
+    "Canonical CI run 31470970368 succeeded on exact head 97899535272186f51a1e3651994962056bcc339f.",
+    "Live pr-ownership remains fail-closed under the separately reported stale validation-fence condition; review comment 5250519775 does not waive ownership."
+  ],
+  "metadata": {
+    "claimToken": "4f8c1a7d9e2b6053",
+    "pr": 301,
+    "headSha": "97899535272186f51a1e3651994962056bcc339f",
+    "canonicalCiRun": 31470970368,
+    "verdict": "PATCH_LOCAL_APPROVE"
+  }
+}
