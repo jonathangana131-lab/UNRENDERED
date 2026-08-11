@@ -2,12 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-b7n4k2p9",
   "model": "gpt-5.6-sol",
-  "status": "PARKED",
+  "status": "WORKING",
   "startedAt": "2026-08-11T20:19:30+00:00",
-  "lastSeenAt": "2026-08-11T20:29:30+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "lastSeenAt": "2026-08-11T20:32:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-OBJECTGENOME-audit-b7n4k2p9-g1",
-  "notes": "Independent exact-head audit of ObjectGenome generation-7 PR #380 at 0250b26afa018959f1aec450830680361d1a3dc2 completed SOURCE/TEST PASS. Review 4910480010 verifies canonical v1 identity preservation, full validation before identity coercion, nested hostile familyVersion no-execute regression absorption, deterministic diagnostics, state alias fencing, exact two-file scope, canonical CI 31532538759 PASS and latest Swarm engine-tests PASS. Integration remains HOLD until trusted-history recovery restores genuine live pr-ownership. No local/Studio evidence claimed.",
-  "parkedReason": "ObjectGenome audit complete; no patch-local blocker found. Remaining integration prerequisite is externally owned SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY."
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-audit-b7n4k2p9-g1",
+  "notes": "Fidelity generation-4 and ObjectGenome generation-7 audits completed and released. Now independently auditing diagnostics exact-Instance authority prerequisite PR #349 exact head 901c063ff3c1e2584f84a07e1da3a9b1b82d413a."
 }
