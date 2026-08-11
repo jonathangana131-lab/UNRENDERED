@@ -1,21 +1,21 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-11T05:32:22.738557+00:00`
+Generated: `2026-08-11T05:33:00.975532+00:00`
 
 Canonical main: **GREEN** `2ce32576a47e99a1e09e802dc7e76a0bf7bbd283`
 
-State digest: `449f4e983ffa5307bc7e0ec1df9c47f460adc52dabf82ff4606cafbb11e65607`
+State digest: `0086505814d3e9a2f86d3bfc089b89578b4f2f3692f8a49c26fb42032e98f774`
 
 ## Summary
 
-- ready slots: **1**
+- ready slots: **0**
 - active claims: **1**
 - stale claims: **0**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
-- `SWARM-V2-HARDEN/tests-1` — **Adversarial distributed-systems tests** — score 10550 — dependencies satisfied
+_No runnable slot. Idle/review is preferable to duplicate implementation._
 
 ## Active claims
 
