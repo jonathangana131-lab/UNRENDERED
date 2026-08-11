@@ -1,3 +1,4 @@
+local fs = require("@lune/fs")
 local ProductionLoader = require("./support/ProductionLoader")
 local runPhysicsLabDiagnosticsAtomicity = require("./physics_lab_diagnostics_atomicity")
 
@@ -18,6 +19,67 @@ local function run(): number
 		else
 			print(`PASS hero-contract {name}`)
 		end
+	end
+
+	local serverBootstrap = fs.readFile("src/server/Bootstrap.server.luau")
+	local clientBootstrap = fs.readFile("src/client/Bootstrap.client.luau")
+	local serverGuardText = 'assert(RunService:IsServer(), "server bootstrap must run on server")'
+	local clientGuardText = 'assert(RunService:IsClient(), "client bootstrap must run on client")'
+	local runServiceText = 'local RunService = game:GetService("RunService")'
+	local replicatedStorageText = 'local ReplicatedStorage = game:GetService("ReplicatedStorage")'
+	local waitForSharedText = 'ReplicatedStorage:WaitForChild("UNRENDERED")'
+	local serverAuthorityModules = {
+		"PhysicsLabStudioHarness",
+		"PhysicsLabRuntime",
+		"PhysicsLabRealizer",
+	}
+
+	local serverRunServiceStart = serverBootstrap:find(runServiceText, 1, true)
+	local serverGuardStart = serverBootstrap:find(serverGuardText, 1, true)
+	local serverReplicatedStorageStart = serverBootstrap:find(replicatedStorageText, 1, true)
+	local serverWaitStart = serverBootstrap:find(waitForSharedText, 1, true)
+	local serverRequireStart = serverBootstrap:find("require(", 1, true)
+	local clientRunServiceStart = clientBootstrap:find(runServiceText, 1, true)
+	local clientGuardStart = clientBootstrap:find(clientGuardText, 1, true)
+	local clientReplicatedStorageStart = clientBootstrap:find(replicatedStorageText, 1, true)
+	local clientWaitStart = clientBootstrap:find(waitForSharedText, 1, true)
+	local clientRequireStart = clientBootstrap:find("require(", 1, true)
+
+	expect(
+		"server bootstrap owns Physics Lab startup",
+		serverBootstrap:find("PhysicsLabStudioHarness.start(workspace)", 1, true) ~= nil
+	)
+	expect("server bootstrap fails closed outside server context", serverGuardStart ~= nil)
+	expect("client bootstrap fails closed outside client context", clientGuardStart ~= nil)
+	expect(
+		"server bootstrap rejects wrong context before dependency traversal",
+		serverRunServiceStart ~= nil
+			and serverGuardStart ~= nil
+			and serverReplicatedStorageStart ~= nil
+			and serverWaitStart ~= nil
+			and serverRequireStart ~= nil
+			and serverRunServiceStart < serverGuardStart
+			and serverGuardStart < serverReplicatedStorageStart
+			and serverGuardStart < serverWaitStart
+			and serverGuardStart < serverRequireStart
+	)
+	expect(
+		"client bootstrap rejects wrong context before dependency traversal",
+		clientRunServiceStart ~= nil
+			and clientGuardStart ~= nil
+			and clientReplicatedStorageStart ~= nil
+			and clientWaitStart ~= nil
+			and clientRequireStart ~= nil
+			and clientRunServiceStart < clientGuardStart
+			and clientGuardStart < clientReplicatedStorageStart
+			and clientGuardStart < clientWaitStart
+			and clientGuardStart < clientRequireStart
+	)
+	for _, moduleName in ipairs(serverAuthorityModules) do
+		expect(
+			`client bootstrap cannot own server Physics Lab authority via {moduleName}`,
+			clientBootstrap:find(moduleName, 1, true) == nil
+		)
 	end
 
 	local genome = Fixtures.officeTable
