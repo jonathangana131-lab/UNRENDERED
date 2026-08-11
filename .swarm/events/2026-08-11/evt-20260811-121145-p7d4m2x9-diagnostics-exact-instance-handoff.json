@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-121145-p7d4m2x9-diagnostics-exact-instance-handoff",
+  "timestamp": "2026-08-11T12:11:45+00:00",
+  "fromWorker": "sol-20260811-p7d4m2x9",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "summary": "Diagnostics test-adversary handoff: PR #377 is isolated expected-red evidence that directRepresentations must call ownsRepresentation(entityId, child) on the enumerated Instance. Absorb equivalent coverage into the production recovery after the #349 prerequisite seam is present, make it green on the combined exact head, then request fresh independent audit. Do not merge #377 independently while red.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "evidence": [
+    "Evidence event: evt-20260811-121115-p7d4m2x9-diagnostics-exact-instance-consumption.",
+    "PR #377 exact head 8324a651faaef20d6af8d688d858d302f6b378b9; one changed file, tests/physics_lab_diagnostics_atomicity.luau (+17/-0).",
+    "Canonical CI 31489895761 passes every pre-Pure-Luau gate and fails exactly at the new exact-Instance ownership assertion.",
+    "The currently published diagnostics primary claim points to PR #327 and is stale by lease; do not infer a live primary owner from that record without performing normal takeover/recovery checks. Global trusted-history recovery remains separately owned and is not bypassed by this source-only handoff."
+  ]
+}
