@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-075200-v7k3m9-materialdna-repaircount-bound",
+  "timestamp": "2026-08-11T07:52:00+00:00",
+  "fromWorker": "sol-20260811-v7k3m9",
+  "eventType": "FINDING",
+  "summary": "MaterialDNA schema-v2 numeric-bound gap: maintenance.repairCount is validated only as a finite non-negative integer, with no upper bound, while the production contract states numeric plausibility ranges are finite and bounded. This leaves one canonical recipe integer outside the otherwise bounded domain. A narrow source-only closure should cap repairCount at a deterministic 31-bit non-negative maximum and add an oversized-count regression without changing MaterialId, recipeVersion, schemaVersion, state, or fixture identity semantics.",
+  "affects": ["HERO-GATE", "HG-BACKFILL-MATERIALDNA"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "MEDIUM",
+  "evidence": [
+    "src/shared/Materials/MaterialDNA.luau: validateMaintenance calls validateNonNegativeInteger for maintenance.repairCount; validateNonNegativeInteger has no maximum parameter/check.",
+    "src/shared/Materials/MaterialDNA.luau: other canonical numeric plausibility fields use explicit finite ranges/maxima, and recipeVersion is capped at 2147483647.",
+    "Docs/MATERIAL_DNA_CONTRACT.md: validation contract says numeric plausibility ranges are finite and bounded.",
+    "tests/materialdna_contract.luau: recipeVersion has an oversized-value regression, but maintenance.repairCount has no equivalent bound regression."
+  ]
+}
