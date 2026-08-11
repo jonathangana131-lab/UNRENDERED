@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T09:02:12+00:00",
-  "lastSeenAt": "2026-08-11T09:02:12+00:00",
-  "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
-  "slotId": "reviewer-1",
-  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-COMPAT-review-006437b2",
-  "notes": "Independent exact-head review of PR #329 immutable-event compatibility recovery; source/control only, no Studio claim."
+  "lastSeenAt": "2026-08-11T09:08:38+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "branch": "agent/materials/HG-CAPACITY-MINING-materialdna-006437b2",
+  "notes": "Completed exact-head PR #329 compatibility review and recorded durable verdict; now mining current MaterialDNA source/tests/active PRs for one concrete nonduplicate Hero-Gate depth gap."
 }
