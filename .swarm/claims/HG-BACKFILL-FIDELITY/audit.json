@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-q6m2v8k5",
+  "claimToken": "64f3b59a3a398bae",
+  "claimedAt": "2026-08-11T09:01:03+00:00",
+  "heartbeatAt": "2026-08-11T09:01:03+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-FIDELITY-audit-q6m2v8k5",
+  "pr": null
+}
