@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "workerId": "sol-20260811-b6vkvo6l",
+  "claimToken": "641c3793f7c92e85",
+  "claimedAt": "2026-08-11T09:03:43+00:00",
+  "heartbeatAt": "2026-08-11T09:03:43+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-b6vkvo6l",
+  "pr": null,
+  "notes": "Mine current diagnostics source/tests and active PR history for one concrete non-duplicate invariant, regression, or integration gap; no speculative Studio retry and no engine-evidence claim."
+}
