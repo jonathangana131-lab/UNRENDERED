@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
+  "epicId": "HERO-GATE",
+  "title": "Restore immutable review-event compatibility",
+  "objective": "Unblock trusted control validation without rewriting immutable historical events by narrowly accepting the already-emitted benign structured review fields at the V2.1 compatibility facade, while keeping new event writes strict and preserving immutable-byte transition fencing.",
+  "priority": 10001,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    "tools/swarm/swarmctl_hardening.py",
+    "tools/swarm/test_swarmctl_hardening.py"
+  ],
+  "resources": ["SWARM-PROTOCOL"],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Critical immutable-event compatibility repair",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 1100,
+      "writeScopes": [
+        "tools/swarm/swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening.py"
+      ]
+    },
+    {
+      "slotId": "reviewer-1",
+      "role": "Independent compatibility verifier",
+      "exclusive": true,
+      "availableWhen": ["REVIEW", "INTEGRATION_READY"],
+      "priorityBoost": 1000,
+      "requiresIndependentFrom": "primary",
+      "writeScopes": [
+        "tools/swarm/swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening.py"
+      ]
+    }
+  ],
+  "acceptance": [
+    "trusted V2.1 validation accepts only the observed typed legacy top-level review fields on immutable historical events without rewriting event bytes",
+    "legacy compatibility is restricted by event type, value shape, and a fixed historical timestamp cutoff; malformed or newly emitted top-level legacy fields still fail closed",
+    "metadata conflicts fail closed and unknown event keys remain rejected",
+    "transition-check continues to reject any historical event rewrite or deletion byte-for-byte",
+    "a real product PR reaches semantic ownership evaluation using base-branch trusted code after the prerequisite merges",
+    "control deterministic/adversarial tests and canonical CI remain green"
+  ],
+  "notes": "Critical prerequisite split from generation-2 validation-fence recovery PR #315 after independent review proved #315 cannot bootstrap its own ownership gate: PR ownership intentionally executes the trusted base-branch validator, and the current base validator rejects already-immutable review events written by a short-lived worker generation.",
+  "tags": ["control-repair", "red-ci", "pr-ownership", "hero-gate"]
+}
