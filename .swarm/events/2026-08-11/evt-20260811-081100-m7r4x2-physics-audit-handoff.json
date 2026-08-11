@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081100-m7r4x2-physics-audit-handoff",
+  "timestamp": "2026-08-11T08:11:00+00:00",
+  "fromWorker": "sol-20260811-m7r4x2",
+  "eventType": "HANDOFF",
+  "summary": "Physics geometry audit role complete. PR #303 exact head e09c617bac644a5a6a124ae8e22320d39fd59296 passes the independent source review and canonical CI, with the earlier unknown-field provenance blocker resolved. Do not integrate until its Swarm Control check is green; current red reason is global WIP capacity (10 active primaries > limit 8). Duplicate audit PR #305 was closed and must not merge. Separate rolling-cart COM mismatch is preserved in evt-20260811-081030-m7r4x2-rolling-cart-com for a future bounded scope that includes PhysicsLabObjectGenomes.luau.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "MEDIUM",
+  "evidence": [
+    "REVIEW_RESULT evt-20260811-081000-m7r4x2-physics-validation-review",
+    "FINDING evt-20260811-081030-m7r4x2-rolling-cart-com",
+    "PR #303 exact-head CI run 31471707012 SUCCESS; Swarm Control run 31471707030 failed only global primary-WIP capacity validation."
+  ]
+}
