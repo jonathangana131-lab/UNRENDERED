@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-r4c9m2v7-physics-runtime-no-new-gap-222520",
+  "eventType": "FINDING",
+  "occurredAt": "2026-08-11T22:25:20+00:00",
+  "workerId": "sol-20260811-r4c9m2v7",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "generation": 1,
+  "claimToken": "b3f8d1a6c9e24075",
+  "target": {
+    "kind": "pr",
+    "value": "408@d31c100c5d3766ca14d89b046fff4cdb09086754"
+  },
+  "severity": "info",
+  "summary": "Duplicate-aware mining of the synthesized Physics Lab runtime found no additional concrete non-duplicate source defect strong enough to justify another Hero-Gate runtime lane. Preserve the current #408 review/integration path rather than inventing another source-validation slice.",
+  "evidence": [
+    "PR #408 synthesizes the retained private/frozen RuntimeState architecture, whole-FidelityManager.step mutation transaction fence, callback/dispose/reentrancy guards, error unwind/retry, canonical-recipe constructor fence, bounded malformed persistent-state comparison, and WorldEntityId lookup preflight from the reviewed predecessor lineages.",
+    "The synthesis regression corpus covers hostile top-level/entity-list/entity-record/origin wrappers, non-string schema keys, canonical population/key/id/provenance/fidelity/state/revision mismatches, over-wide state, malformed lookup IDs, authority-population preservation, callback mutation attempts, and immediate retry.",
+    "A possible stricter exact-shape preference at the outer recipe/entity-recipe wrapper level was reviewed but is not a demonstrated authority, determinism, resource, or lifecycle defect: the runtime validates the complete fixed canonical population and exact authority-bearing WorldEntity record/origin data before constructing registry/Fidelity authority.",
+    "Issue #151 explicitly states the broad Physics Lab source-contract work is closed and warns workers not to invent another source-validation slice merely because the Hero Gate remains open; the remaining gate is engine evidence plus integration of already-owned concrete repairs.",
+    "Repository PR/issue search found no separate current runtime blocker beyond the lineages intentionally synthesized by #408.",
+    "Static GitHub source/test/PR/history review only. This worker did not run tests or Roblox Studio and makes no engine-evidence claim."
+  ],
+  "recommendedAction": "Do not open another PhysicsLabRuntime source lane from this pass. Finish the existing #408 independent exact-head review and integrate it only after trusted pr-ownership recovery. Continue to treat diagnostics viewport and true two-client authority as UNVERIFIED until their required real Studio evidence exists."
+}
