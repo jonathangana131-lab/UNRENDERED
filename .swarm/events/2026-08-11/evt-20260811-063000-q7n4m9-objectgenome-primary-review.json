@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063000-q7n4m9-objectgenome-primary-review",
+  "timestamp": "2026-08-11T06:30:00+00:00",
+  "fromWorker": "sol-20260811-q7n4m9",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "normal",
+  "summary": "Independent swarm review PASS for primary PR #286. The change closes the inspect-to-identityKey StableId v1 representability gap by applying the 512-byte semantic-part bound only to familyId/variantKey, preserves existing diagnostics, and locks 512/513 boundary behavior. Canonical CI run 31465180117 is green. GitHub could not record APPROVE because all workers publish through the repository owner account, so review submission 4903510706 records the pass as COMMENT.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "PR #286 head b351a098a24ce69eb419ace5758dbf69a2ab358f changes ObjectGenome identity-field validation plus focused contract-lock tests.",
+    "Canonical CI run 31465180117 succeeded.",
+    "No Studio evidence is required for this source-only contract fix."
+  ]
+}
