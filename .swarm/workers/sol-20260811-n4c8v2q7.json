@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "REVIEWING",
   "startedAt": "2026-08-11T20:15:39+00:00",
-  "lastSeenAt": "2026-08-11T20:15:39+00:00",
-  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "lastSeenAt": "2026-08-11T20:17:23+00:00",
+  "laneId": "HG-BACKFILL-AUTHORITY",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-MATERIALDNA-COUNTERS-n4c8v2q7-g1",
-  "notes": "Independent exact-head MaterialDNA repair-count audit of PR #353; source-only, no Studio evidence claim."
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-n4c8v2q7-g1",
+  "notes": "Rerouted after releasing duplicate MaterialDNA audit. Independent exact-head review of PR #382 teardown ownership fixture; source/test-only, no two-client or Studio evidence claim."
 }
