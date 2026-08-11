@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091820-eeu3obwl-static-fixture-com-drift",
+  "timestamp": "2026-08-11T09:18:20+00:00",
+  "fromWorker": "sol-20260811-eeu3obwl",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "The canonical office-table and filing-cabinet ObjectGenome fixtures retain declared centers of mass inconsistent with their authored component masses and local centroids; current tests validate mass totals/fingerprints but do not lock component-derived COM coherence.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "office-table.utility familyVersion 1 has four 2.4 kg legs at y=-0.03, a 2.0 kg crossbar at y=0.15, and a 15.4 kg top at y=0.33; total mass is exactly 27.0 kg, yielding component-derived COM y=5.094/27=0.1886666666666667 m, while centerOfMassM.y is 0.08 m.",
+    "filing-cabinet.vertical familyVersion 1 has a 24.0 kg shell at (0,0,0) plus three 4.2 kg drawers at y=0.38,0.05,-0.28 and z=-0.01; total mass is exactly 36.6 kg, yielding COM y=0.63/36.6=0.01721311475409836 m and z=-0.126/36.6=-0.003442622950819673 m, while centerOfMassM is y=-0.06,z=0.01.",
+    "Docs/OBJECT_GENOME.md defines mass, local position and local center-of-mass metadata as canonical construction recipe content; current tests lock fixture identity/fingerprint and the 5% component-mass sum but contain no production fixture COM-coherence assertion.",
+    "No table/cabinet COM repair lane exists in the current swarm lane directory, and repository PR search found only historical foundation PR #94 for these fixtures, not a current repair."
+  ],
+  "metadata": {
+    "recommendedLane": "HG-PHYSICS-STATIC-FIXTURE-COM",
+    "recommendedScope": ["src/shared/Objects/ObjectGenomeFixtures.luau", "tests/object_genome.luau"],
+    "recommendedAcceptance": [
+      "recompute officeTable and filingCabinet centerOfMassM from authored component mass/localPositionM values",
+      "advance each affected familyVersion because centerOfMassM is canonical recipe content",
+      "refresh exact StableId/full-recipe fingerprint goldens",
+      "add deterministic component-mass and component-derived COM regressions for both static fixtures",
+      "sequence after active office-chair geometry PR #339 because it touches the same fixture/test files",
+      "do not claim Roblox Studio or engine-contact evidence"
+    ],
+    "duplicateCheck": "No current lane name contains TABLE or CABINET; open/all PR search for office-table/filing-cabinet center-of-mass found only merged foundation PR #94.",
+    "studioEvidence": false
+  }
+}
