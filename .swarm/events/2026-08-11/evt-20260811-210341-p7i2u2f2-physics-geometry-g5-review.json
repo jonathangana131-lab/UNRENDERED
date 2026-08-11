@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-210341-p7i2u2f2-physics-geometry-g5-review",
+  "timestamp": "2026-08-11T21:03:41+00:00",
+  "fromWorker": "sol-20260811-p7i2u2f2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "medium",
+  "summary": "SOURCE/TEST PASS on generation-5 PR #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401. The finite derived-output scale fence closes SI-to-stud overflow without hidden predecessor drift or producer/consumer mismatch. Integration remains held solely on the separately owned trusted-history/live pr-ownership recovery; no Studio/contact evidence is claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "Generation-4 6e91faaf87ec2251f0390773061663d0ffa22ccb to generation-5 3c8c041d557a84202b35ff63fd0ec82478836401 is exactly 2 commits ahead / 0 behind and changes only PhysicsLabScale.luau plus tests/physics_lab_scale.luau",
+    "metersToStuds validates both finite input and finite derived studs, preventing finite 1e308 meters from escaping as math.huge; studsToMeters mirrors the derived-output postcondition without changing valid current behavior",
+    "PhysicsLabRealizer and PhysicsLabValidation consume conversion from canonical PhysicsLabRecipe Vec3 geometry at the Roblox representation/validation boundary; no untrusted remote/session payload path was found for this converter",
+    "Inherited PhysicsLabValidationContract remains exact-shape/plain-table/finiteness/safe-integer/identity fail-closed and matches the capture producer contract",
+    "Canonical CI run 31532629852 is SUCCESS on exact head 3c8c041d557a84202b35ff63fd0ec82478836401; exact-head Swarm engine-tests are SUCCESS",
+    "pr-ownership remains fail-closed on the separately owned trusted immutable-event history recovery and is not waived by this review",
+    "GitHub review 4910734864 records the same exact-head SOURCE/TEST PASS and integration hold",
+    "No Roblox Studio, physical-contact, viewport, or two-client evidence was run or claimed"
+  ]
+}
