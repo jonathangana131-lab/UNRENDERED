@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081900-q2v7m5-cart-review",
+  "timestamp": "2026-08-11T08:19:00+00:00",
+  "fromWorker": "sol-20260811-q2v7m5",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #311 exact head b45493e4168547fab6556c31558d9a25123f3b74 needs changes: grounding the 0.10m caster proxies moved each caster top 5mm below the chassis bottom. PhysicsLabRealizer realizes every component as an anchored Part at the exact authored transform and creates no caster/frame constraint or hidden connector, so the new separation is a real F2 proxy disconnect. Preserve both ground and chassis contact, recompute COM, and add a deterministic two-contact regression before integration.",
+  "affects": ["HG-PHYSICS-CART-GEOMETRY"],
+  "laneId": "HG-PHYSICS-CART-GEOMETRY",
+  "severity": "MEDIUM",
+  "evidence": [
+    "Exact reviewed PR head: b45493e4168547fab6556c31558d9a25123f3b74.",
+    "Caster Y span is [-0.475,-0.375]m from center -0.425m and height 0.10m; chassis Y span is [-0.37,-0.29]m from center -0.33m and height 0.08m, leaving 0.005m separation.",
+    "PhysicsLabRealizer.realizeObject() sets each component Part Anchored=true and places it at objectTransform * component.localPositionM * localRotation, with no constraints connecting caster moving components to their frame components.",
+    "At METERS_PER_STUD=0.28, the authored 0.005m disconnect is about 0.0179 stud.",
+    "Canonical product CI for the unchanged head previously passed; no Roblox Studio contact evidence was run or claimed."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "pr": 311,
+    "headSha": "b45493e4168547fab6556c31558d9a25123f3b74",
+    "verdict": "NEEDS_CHANGES",
+    "githubReviewId": 4904247060
+  }
+}
