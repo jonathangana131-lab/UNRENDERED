@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-q7m4v9z2",
+  "claimToken": "6f2c9a8d1b4e7053",
+  "claimedAt": "2026-08-11T11:49:00+00:00",
+  "heartbeatAt": "2026-08-11T11:49:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["SERVER-AUTHORITY"],
+  "branch": "agent/review/HG-BACKFILL-AUTHORITY-q7m4v9z2",
+  "pr": 348,
+  "notes": "Independent exact-head audit of authority PR #348. Verify wrong-context bootstrap guard ordering, server/client trust boundary, teardown-source invariants, and no overclaim of real two-client evidence."
+}
