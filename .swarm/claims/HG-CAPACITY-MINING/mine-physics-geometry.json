@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-geometry",
-  "workerId": "sol-20260811-q3v7n2x8",
-  "claimToken": "9d4f2a7c1b6e8053",
-  "claimedAt": "2026-08-11T20:18:30+00:00",
-  "heartbeatAt": "2026-08-11T20:31:00+00:00",
+  "workerId": "sol-20260811-v2m8q4c7",
+  "claimToken": "4a7d2e9c6b1f8035",
+  "claimedAt": "2026-08-11T21:08:20+00:00",
+  "heartbeatAt": "2026-08-11T21:08:20+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-q3v7n2x8",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-v2m8q4c7-g2",
   "pr": null,
-  "notes": "Mine current Physics geometry/recipe source, tests, active successor PR #376 and cart closure for one concrete non-duplicate source-only depth gap. No Studio retries or Hero feature unlocks."
+  "notes": "Generation-2 stale takeover after prior lease expiry. Prior branch compared identical to current main (ahead 0/behind 0), prior claim had no PR, and no event entry from prior worker was present. Mine one concrete non-duplicate source-only Physics geometry gap; do not duplicate #389/#393/#347 or Studio evidence work."
 }
