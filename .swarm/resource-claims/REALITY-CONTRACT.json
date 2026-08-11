@@ -5,8 +5,8 @@
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "claimToken": "5f7c2a91d4e8b603",
   "acquiredAt": "2026-08-11T20:13:00+00:00",
-  "heartbeatAt": "2026-08-11T20:18:00+00:00",
+  "heartbeatAt": "2026-08-11T20:28:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
-  "notes": "Protected lease for WorldEntity adversarial regression work only; no architecture/version rewrite."
+  "notes": "Protected lease for WorldEntity adversarial regression work only; PR #386 published as expected-red evidence pending primary #378 absorption."
 }
