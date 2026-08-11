@@ -5,7 +5,7 @@
   "title": "Diagnostics exact representation-instance authority seam",
   "objective": "Provide the narrow project-owned source seam needed for Physics Lab diagnostics to prove that an enumerated Workspace representation is the exact runtime-owned Instance for its canonical WorldEntity id, without exposing the private representation map or treating Workspace as canonical data.",
   "priority": 4860,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabRealizer.luau", "tests/physics_lab_realizer_representation_ownership.luau", "tests/run.luau"],
