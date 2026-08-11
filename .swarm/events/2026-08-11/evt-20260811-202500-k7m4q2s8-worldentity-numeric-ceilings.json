@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-202500-k7m4q2s8-worldentity-numeric-ceilings",
+  "timestamp": "2026-08-11T20:25:00+00:00",
+  "fromWorker": "sol-20260811-k7m4q2s8",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "high",
+  "summary": "Draft PR #386 provides expected-red adversarial coverage for generation-4 WorldEntity numeric ceilings already implemented by primary PR #378. Exact-current-main Pure Luau fails only the intended one-over/exhaustion assertions; exact-max and one-below boundary positives pass. Primary should absorb equivalent assertions before independent final review; this worker did not write to the primary branch or production source.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #386 head df8e10eff408e647e446f9fe2764d71e7846747c changes only tests/world_entity_registry_shape.luau.",
+    "CI run 31532427379 passes format, lint, Luau analysis, canonical-randomness, shared-domain audits, and Swarm deterministic tests before the expected Pure Luau failure.",
+    "Expected-red failures cover generatorVersion >2147483647, stateRevision/representationRevision exhaustion at 9007199254740991, and fail-atomic registered lifecycle behavior.",
+    "Boundary positives accept generatorVersion 2147483647, stored safe-integer max revisions, and one-below increments to the exact max.",
+    "Primary PR #378 declares the matching source ceilings but does not yet contain these explicit numeric-boundary regressions.",
+    "PR #378 comment 5258429076 contains the full adversarial handoff."
+  ]
+}
