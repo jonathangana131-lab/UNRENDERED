@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-u6r3k8p1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T21:32:46+00:00",
-  "lastSeenAt": "2026-08-11T21:47:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-diagnostics",
-  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-u6r3k8p1",
-  "notes": "Authority mining completed with strict dependency event evt-20260811t214600z-u6r3k8p1-authority-source-saturated. Continuing into the only unclaimed capacity slot: diagnostics source mining for one concrete non-duplicate source/test/integration gap without Studio evidence."
+  "lastSeenAt": "2026-08-11T21:54:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed two bounded capacity-mining passes. Authority: published evt-20260811t214600z-u6r3k8p1-authority-source-saturated; no non-duplicate public-source authority gap. Diagnostics: published evt-20260811t215200z-u6r3k8p1-diagnostics-instance-binding identifying the unencoded #349 -> #401 integration prerequisite. No Studio/engine PASS claimed and no production branch modified."
 }
