@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T06:16:00+00:00",
-  "lastSeenAt": "2026-08-11T06:41:00+00:00",
+  "lastSeenAt": "2026-08-11T06:50:00+00:00",
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "test-adversary",
   "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-tests-q7n4m9",
-  "notes": "Addressed Codex single-axis coverage finding, synced branch through main, and revalidated live pr-ownership; exact-head CI/re-review in progress."
+  "notes": "Exact-head audit passed; branch is synchronized through current main while preserving PR #286 identity-boundary tests plus adversarial metatable/hostile-key locks. Rerunning exact-head CI/control."
 }
