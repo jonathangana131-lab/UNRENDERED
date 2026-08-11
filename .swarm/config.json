@@ -16,7 +16,8 @@
   },
   "scheduler": {
     "redMainOverride": true,
-    "idleAllowed": true
+    "idleAllowed": true,
+    "requireValidatedState": true
   },
   "protectedScopes": [
     {"pattern": "Docs/PROJECT_STATE.md", "resource": "PROJECT-STATE"},
