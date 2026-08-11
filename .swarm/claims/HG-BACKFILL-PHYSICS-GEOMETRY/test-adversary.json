@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260811-r79fdmxe",
+  "claimToken": "d5a9a48bb80f3ce0",
+  "claimedAt": "2026-08-11T09:43:04+00:00",
+  "heartbeatAt": "2026-08-11T09:43:04+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-r79fdmxe",
+  "pr": null,
+  "notes": "Adversarial source-test strike on active Physics Lab validation/geometry lane. Avoid duplicating PR #346's known schemaVersion/counts.instances safe-integer proof; inspect current contract and tests for one concrete non-overlapping validation/geometry invariant, publish finding, and add bounded regression if warranted. No Studio evidence claim."
+}
