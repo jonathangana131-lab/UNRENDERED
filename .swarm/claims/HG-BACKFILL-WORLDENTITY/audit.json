@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "workerId": "sol-20260811-q5x8n3z2",
+  "claimToken": "7d3a9c2e5b1f8064",
+  "claimedAt": "2026-08-11T09:44:00+00:00",
+  "heartbeatAt": "2026-08-11T09:44:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-q5x8n3z2",
+  "pr": 293,
+  "notes": "Fresh independent source-only exact-head audit of WorldEntity PR #293 against current main and newly published malformed-registry-identity adversary #350. Verify lifecycle/state-budget hardening, fail-closed identity boundaries, no-execute behavior, scope, and synchronization."
+}
