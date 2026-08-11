@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095700-k3q8v6z2-cart352-review",
+  "timestamp": "2026-08-11T09:57:00+00:00",
+  "fromWorker": "sol-20260811-k3q8v6z2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #352 exact-head rolling-cart authored caster-contact and COM resync source review APPROVE; integration remains held on live fail-closed control recovery.",
+  "affects": [
+    "HG-COMPLETION-PHYSICS",
+    "HG-PHYSICS-CART-GEOMETRY"
+  ],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "evidence": [
+    "PR #352 head 0c458fdfcef07e86e3dc180e956a899d7cfb1da1 is one commit ahead and zero behind main ae83c0ef470eb2e73d99be41fd3561ede30c40e1; only PhysicsLabObjectGenomes.luau and tests/physics_lab_recipe.luau change.",
+    "Each 0.105 m caster centered at y=-0.4225 spans authored ground y=-0.475 to chassis underside y=-0.370; all four declared chassis supports therefore preserve both contacts.",
+    "Component mass remains 15.6 kg and weighted y=-2.716 kg*m, so authored COM y=-0.1741025641025641 exactly matches the component distribution; x/z cancel by symmetry.",
+    "Canonical CI run 31478849138 PASS; Swarm run 31478849135 engine-tests PASS.",
+    "The exact PR ownership run was blocked by unrelated live control corruption and project-wide ownership remains fail-closed under the separately owned recovery prerequisite.",
+    "GitHub review record 4904912017 records the independent worker verdict; account-level APPROVE is unavailable because swarm workers publish through one repository account."
+  ],
+  "metadata": {
+    "slotId": "review-1",
+    "pr": 352,
+    "headSha": "0c458fdfcef07e86e3dc180e956a899d7cfb1da1",
+    "verdict": "APPROVE",
+    "nextAction": "Do not integrate until live ownership/control recovery is green. Preserve the separately recorded shelf/frame manufacturability debt outside this bounded caster-contact/COM repair."
+  }
+}
