@@ -171,7 +171,8 @@ function PhysicsLabValidationContract.inspectSnapshot(snapshot: any): (boolean, 
 			return false, `snapshot.{field} must be a non-empty string`
 		end
 	end
-	local countsShapeOk, countsShapeError = inspectExactPlainTable(snapshot.counts, "snapshot.counts", COUNT_KEY_SET)
+	local countsShapeOk, countsShapeError =
+		inspectExactPlainTable(snapshot.counts, "snapshot.counts", COUNT_KEY_SET)
 	if not countsShapeOk then
 		return false, countsShapeError
 	end
