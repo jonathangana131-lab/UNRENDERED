@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811T211000Z-sol-20260811-m5q8v2c4-handoff-physics-reconciliation",
+  "eventType": "HANDOFF",
+  "at": "2026-08-11T21:10:00Z",
+  "workerId": "sol-20260811-m5q8v2c4",
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "slotId": "reconcile",
+  "claimToken": "m5q8v2c4d7n1b603",
+  "generation": 1,
+  "branch": "agent/reconcile/HG-COMPLETION-PHYSICS-m5q8v2c4",
+  "pr": null,
+  "commit": null,
+  "resources": [],
+  "summary": "Reconciled the live Physics completion queue. Retained #389 as the independently source/test-approved validation/scale head; its superseded #376/#383/#363/#368 lineage was already closed. Confirmed #393 exact replay is canonical-CI and engine-test green on retained chair source #347, satisfying #347's required lab-level source evidence without weakening #332. Preserved #310/#388 because their overlapping runtime invariants still require semantic synthesis and #388 has a fresh REQUEST_CHANGES review. No speculative Studio evidence was attempted.",
+  "validation": [
+    {
+      "command": "inspect PR #389 independent reviews",
+      "result": "PASS",
+      "notes": "Exact head 3c8c041d557a84202b35ff63fd0ec82478836401 has repeated SOURCE/TEST PASS; integration remains ownership-gated."
+    },
+    {
+      "command": "inspect PRs #376/#383/#363/#368/#332/#339",
+      "result": "PASS",
+      "notes": "All are already closed; no duplicate retirement action taken."
+    },
+    {
+      "command": "check-runs for PR #393 head f64f841b25a3fa50203137eff86b48192e70a597",
+      "result": "PASS",
+      "notes": "Canonical validate SUCCESS and Swarm engine-tests SUCCESS on the exact evidence stack; no Studio/contact result claimed."
+    },
+    {
+      "command": "inspect PR #388 reviews",
+      "result": "HOLD",
+      "notes": "Fresh completion review REQUEST_CHANGES on the earlier hostile entityId diagnostic window; #310/#388 must remain open for synthesis rather than stale closure."
+    }
+  ],
+  "details": {
+    "retained": {
+      "physicsValidationScale": {"pr": 389, "head": "3c8c041d557a84202b35ff63fd0ec82478836401"},
+      "chairSource": {"pr": 347, "head": "9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1"},
+      "chairEvidence": {"pr": 393, "head": "f64f841b25a3fa50203137eff86b48192e70a597"}
+    },
+    "alreadyClosed": [376, 383, 363, 368, 332, 339],
+    "preserveForSynthesis": [310, 388],
+    "globalBlocker": "trusted event-history / pr-ownership recovery (#387)",
+    "studioEvidenceClaimed": false
+  }
+}
