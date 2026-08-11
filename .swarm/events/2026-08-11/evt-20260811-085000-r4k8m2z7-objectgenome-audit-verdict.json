@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-085000-r4k8m2z7-objectgenome-audit-verdict",
+  "timestamp": "2026-08-11T08:50:00+00:00",
+  "fromWorker": "sol-20260811-r4k8m2z7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "ObjectGenome audit verdict on current main dd8f1581115c15ce6497db827d17e98d879d0267 and active evidence PRs: LANE NEEDS_CHANGES. Existing familyVersion patch evidence is locally sound, but lane completion still requires (1) bounded nested canonical semantic keys from evt-20260811-082635-e08449-objectgenome-key-bounds, (2) generic pairwise-distinct ObjectState semantic-map ownership including damage↔mechanismPosition from evt-20260811-084700-r4k8m2z7-objectstate-alias-closure, and (3) deterministic diagnostic publication instead of unordered pairs()-driven issue emission from evt-20260811-084400-r4k8m2z7-objectgenome-diagnostic-order. After the generation-3 primary consumes these concrete gaps, require focused regressions, exact-head canonical CI, live pr-ownership, and a fresh independent audit before integration.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "verdict": "REQUEST_CHANGES",
+  "subject": "current-main-and-active-objectgenome-evidence",
+  "subjectSha": "dd8f1581115c15ce6497db827d17e98d879d0267",
+  "evidence": [
+    "PR #318 exact head a136f305f432fa9c480e8d91e5d2151340795af7 has prior patch-local familyVersion PASS evidence but is superseded as lane integration head.",
+    "PR #326 exact head a44c8c5a2ef93f3556a1ce1189ace0836e0d7d68 demonstrates two semantic-map aliases; review 4904462663 records the uncovered damage↔mechanismPosition closure case.",
+    "Docs/OBJECT_GENOME.md explicitly promises a structured deterministic inspect report suitable for procedural rejection/repro tooling, while current source emits multiple issue classes through pairs()/next traversal."
+  ]
+}
