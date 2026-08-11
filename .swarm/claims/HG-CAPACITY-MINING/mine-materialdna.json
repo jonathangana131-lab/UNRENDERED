@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "workerId": "sol-20260811-h4v8n2",
+  "claimToken": "3e91b7c4d2605fa8",
+  "claimedAt": "2026-08-11T08:30:00+00:00",
+  "heartbeatAt": "2026-08-11T08:30:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/capacity/HG-CAPACITY-MINING-materialdna-h4v8n2",
+  "pr": null,
+  "notes": "Mine current MaterialDNA source/tests/active PRs/events for exactly one concrete non-duplicate source-depth gap. No Studio evidence, no new feature scope."
+}
