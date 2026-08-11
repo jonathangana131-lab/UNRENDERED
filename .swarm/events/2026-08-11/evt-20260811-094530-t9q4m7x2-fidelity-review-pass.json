@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094530-t9q4m7x2-fidelity-review-pass",
+  "timestamp": "2026-08-11T09:45:30+00:00",
+  "fromWorker": "sol-20260811-t9q4m7x2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "summary": "Independent exact-head Fidelity audit PASS for primary PR #335 at 4a3c55d9d2046df1af6ee93710d395aedd4ea102 and claim-owned stacked adversary PR #354 payload 13ae5f8d575a534191067d8b12c6d6e13f08918c. Policy/config no-execute validation, rejected-step atomicity, callback transactional behavior, same-entity reentry fencing, cross-entity transition independence, and aggregate accounting are source/test accepted. Integration remains HOLD only until the separately owned immutable-event history-continuity recovery restores explicit pr-ownership PASS; no Studio/two-client evidence is required or claimed for this source-only lane.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #335 exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102 remains based on current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and has canonical exact-head CI PASS.",
+    "PR #354 preserves the exact cross-entity nested-step test payload at 13ae5f8d575a534191067d8b12c6d6e13f08918c; canonical CI run 31478090143 passed format, lint, Luau analysis, audits, pure tests, place build and artifact upload.",
+    "Current Swarm pr-ownership fails before lane-specific evaluation because historical event evt-20260811-073500-q9m4r2-authority-rereview-approve has live blob 8f332b489b9266211ff6c5d2869647eba9b80838 but audited canonical first-write blob 2f0b0221b7995b3862ac6c009804ebb66f715fac."
+  ]
+}
