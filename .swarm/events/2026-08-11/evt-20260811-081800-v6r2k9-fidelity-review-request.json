@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081800-v6r2k9-fidelity-review-request",
+  "timestamp": "2026-08-11T08:18:00+00:00",
+  "fromWorker": "sol-20260811-v6r2k9",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-FIDELITY",
+  "severity": "high",
+  "summary": "PR #274 generation-2 stale recovery is source-complete on exact head 5251998df21e8f7f78cae5c046d346496cc65a28. The prior independent hostile-numeric/nowSeconds blocker is closed; canonical exact-head CI run 31471785808 passes. Request an independent exact-head Fidelity audit. Integration must remain fail-closed while global SWARM-RECOVERY-HEALTH-VALIDATION-FENCE PR #315 repairs the live validation-marker publication race that is currently failing pr-ownership with 'live control state changed after its validation marker'.",
+  "affects": ["HG-BACKFILL-FIDELITY", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "evidence": [
+    "PR #274 exact head: 5251998df21e8f7f78cae5c046d346496cc65a28; changed scope remains src/shared/Physics/FidelityManager.luau plus tests/fidelity_manager_rejected_step_atomicity.luau.",
+    "Exact-head canonical CI run 31471785808 passes after applying only the two StyLua changes reported against audited predecessor 6bd6ef9c75f5415c34ea4d93500b86a0028a3f5d.",
+    "Independent audit on predecessor 6bd6ef9c75f5415c34ea4d93500b86a0028a3f5d found the hostile numeric/no-execute source blocker closed and no additional source-level Fidelity blocker; its merge hold was formatter/control-gate only.",
+    "Latest exact-head Swarm pr-ownership run 31472335912 fails solely because the authoritative live control state no longer matches .swarm/generated/validation.json; engine-tests pass.",
+    "The validation-fence repair is separately and actively owned by generation-2 claim sol-20260811-s5q8m4 on PR #315."
+  ]
+}
