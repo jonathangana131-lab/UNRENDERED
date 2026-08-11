@@ -50,6 +50,11 @@ export type Registry = {
 	duplicateDiagnostics: () -> { DuplicateIdentityDiagnostic },
 }
 
+type PersistentStateBudget = {
+	nodes: number,
+	stringBytes: number,
+}
+
 WorldEntity.Fidelity = table.freeze({
 	F0 = "F0",
 	F1 = "F1",
@@ -59,9 +64,13 @@ WorldEntity.Fidelity = table.freeze({
 })
 
 WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY = 64
+WorldEntity.MAX_PERSISTENT_STATE_DEPTH = 64
+WorldEntity.MAX_PERSISTENT_STATE_NODES = 4096
+WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES = 65536
 
 local MAX_SAFE_INTEGER = 9007199254740991
 local MAX_GENERATOR_VERSION = 2147483647
+local STATE_LIMIT_ERROR = "persistentState exceeds structural limits"
 
 local FIDELITY_RANK: { [string]: number } = table.freeze({
 	F0 = 0,
@@ -157,9 +166,42 @@ local function assertExactRecordShape(value: unknown, allowedKeys: { [string]: b
 	return source
 end
 
-local function clonePlainValue(value: unknown, path: string, seen: { [any]: boolean }): unknown
+local function consumePersistentStateNode(budget: PersistentStateBudget, depth: number): ()
+	assert(depth <= WorldEntity.MAX_PERSISTENT_STATE_DEPTH, STATE_LIMIT_ERROR)
+	budget.nodes += 1
+	assert(budget.nodes <= WorldEntity.MAX_PERSISTENT_STATE_NODES, STATE_LIMIT_ERROR)
+end
+
+local function consumePersistentStateString(budget: PersistentStateBudget, value: string): ()
+	budget.stringBytes += #value
+	assert(budget.stringBytes <= WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES, STATE_LIMIT_ERROR)
+end
+
+local function persistentStatePathForKey(path: string, key: string | number): string
+	if type(key) == "number" then
+		return `{path}[{key}]`
+	end
+	local stringKey = key :: string
+	if #stringKey <= 64 and string.find(stringKey, "%c") == nil then
+		return `{path}.{stringKey}`
+	end
+	return `{path}.<string-key>`
+end
+
+local function clonePlainValue(
+	value: unknown,
+	path: string,
+	seen: { [any]: boolean },
+	budget: PersistentStateBudget,
+	depth: number
+): unknown
+	consumePersistentStateNode(budget, depth)
+
 	local valueType = type(value)
-	if valueType == "nil" or valueType == "boolean" or valueType == "string" then
+	if valueType == "nil" or valueType == "boolean" then
+		return value
+	elseif valueType == "string" then
+		consumePersistentStateString(budget, value :: string)
 		return value
 	elseif valueType == "number" then
 		assertFiniteNumber(path, value)
@@ -183,7 +225,9 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 		local keyType = type(key)
 		if keyType == "string" then
 			hasStringKeys = true
-			assert(key ~= "", `{path} contains an empty string key`)
+			local stringKey = key :: string
+			assert(stringKey ~= "", `{path} contains an empty string key`)
+			consumePersistentStateString(budget, stringKey)
 		elseif keyType == "number" then
 			hasNumericKeys = true
 			local numericKey = key :: number
@@ -197,7 +241,8 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 		else
 			error(`{path} keys must be strings or positive integers, got {keyType}`)
 		end
-		copy[key] = clonePlainValue(nested, `{path}.{tostring(key)}`, seen)
+		local nestedPath = persistentStatePathForKey(path, key :: any)
+		copy[key] = clonePlainValue(nested, nestedPath, seen, budget, depth + 1)
 	end
 
 	assert(not (hasStringKeys and hasNumericKeys), `{path} must not mix string and numeric keys`)
@@ -213,13 +258,28 @@ local function cloneState(state: PlainData): PlainData
 	local source: any = state
 	assert(type(source) == "table", "persistentState must be a table")
 	assert(getmetatable(source) == nil, "persistentState must not contain metatables")
+
+	-- Bound the root scan before schema validation. This keeps pathological top-level
+	-- tables inside project-owned work limits instead of allowing a malformed root
+	-- shape to force an unbounded preflight traversal.
+	local rootEntryCount = 0
+	for _ in pairs(source) do
+		rootEntryCount += 1
+		assert(rootEntryCount + 1 <= WorldEntity.MAX_PERSISTENT_STATE_NODES, STATE_LIMIT_ERROR)
+	end
+
 	for key in pairs(source) do
 		assert(
 			type(key) == "string" and key ~= "",
 			"persistentState top-level keys must be non-empty strings"
 		)
 	end
-	return clonePlainValue(source, "persistentState", {}) :: PlainData
+
+	local budget: PersistentStateBudget = {
+		nodes = 0,
+		stringBytes = 0,
+	}
+	return clonePlainValue(source, "persistentState", {}, budget, 0) :: PlainData
 end
 
 local function cloneOptionalState(state: PlainData?): PlainData
