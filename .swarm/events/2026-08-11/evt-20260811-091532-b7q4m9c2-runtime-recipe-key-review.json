@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-091532-b7q4m9c2-runtime-recipe-key-review",
+  "timestamp": "2026-08-11T09:15:32+00:00",
+  "fromWorker": "sol-20260811-b7q4m9c2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "REQUEST_CHANGES on PR #310 exact head 26685a0a479ea890178c8be4ea56e7e2403f011f. The new metatable-free wrapper checks still do not preflight record/origin key shape. A plain candidate WorldEntity record can carry an extra table key with caller-controlled __tostring; assertCanonicalRecipe accepts the canonical named fields, then downstream WorldEntity exact-shape rejection interpolates tostring(key), executing the hostile metamethod before rejection. Preflight record/origin keys to an exact primitive-string schema or use a no-execute exact-shape primitive, and add zero-execution hostile-key regressions. Exact-head canonical CI is also red at Format check. No Studio evidence was run or claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE", "HG-COMPLETION-PHYSICS"],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "medium",
+  "evidence": [
+    "PR #310 head 26685a0a assertCanonicalRecipe calls assertPlainTable(record/origin), which checks only wrapper type/metatable and then validates named canonical fields; it does not reject unknown or non-string record/origin keys.",
+    "WorldEntity.assertExactRecordShape iterates supplied record/origin keys and builds the rejection message with tostring(key). A non-string table key with __tostring can therefore execute after the PR's canonical preflight but before constructor rejection.",
+    "A bounded deterministic regression can clone one canonical entity record, add a table key whose __tostring increments a counter, call PhysicsLabRuntime.new(), and require rejection with the counter still zero. The same applies to origin.",
+    "Canonical CI run 31476238430 fails at Format check on this exact head; the previously published over-wide plainValuesEqual scan finding is separate from this no-execute key-shape blocker."
+  ],
+  "metadata": {
+    "verdict": "REQUEST_CHANGES",
+    "pr": 310,
+    "headSha": "26685a0a479ea890178c8be4ea56e7e2403f011f",
+    "reviewId": 4904657059
+  }
+}
