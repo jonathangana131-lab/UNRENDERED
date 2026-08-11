@@ -20,12 +20,6 @@ local function run(): number
 	end
 
 	local helper = position("local function validateReadoutCompleteness(")
-	local helperEnd = if helper ~= nil
-		then string.find(source, "\nfunction PhysicsLabStudioDiagnostics.capture", helper, true)
-		else nil
-	local helperSource = if helper ~= nil and helperEnd ~= nil
-		then string.sub(source, helper, helperEnd - 1)
-		else nil
 	local function helperPosition(needle: string): number?
 		if helper == nil then
 			return nil
@@ -39,16 +33,12 @@ local function run(): number
 	local readoutIdentity = helperPosition('requireStringAttribute(child, "UNRENDERED_WorldEntityId")')
 	local expectedMembership = helperPosition("expectedEntity ~= nil")
 	local duplicateGuard = helperPosition("seenEntityIds[entityId] == nil")
-	local exactAdorneeProjection = helperSource ~= nil
-			and string.find(helperSource, "child.Adornee == expectedEntity.adornee", 1, true)
-		or nil
+	local exactAdorneeProjection = helperPosition("child.Adornee == expectedEntity.adornee")
 	local seenWrite = helperPosition("seenEntityIds[entityId] = true")
 	local labelLookup = helperPosition('child:FindFirstChild("Readout")')
 	local labelClass = helperPosition('label:IsA("TextLabel")')
 	local exactBillboardShape = helperPosition("#child:GetDescendants() == 1")
-	local exactTextProjection = helperSource ~= nil
-			and string.find(helperSource, "label.Text == expectedEntity.text", 1, true)
-		or nil
+	local exactTextProjection = helperPosition("label.Text == expectedEntity.text")
 	local exactEntityCount = helperPosition("readoutCount == #entities")
 	local exactInstanceCount = helperPosition("return 1 + 2 * readoutCount")
 	local captureProjection =
