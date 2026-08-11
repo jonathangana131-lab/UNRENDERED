@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081015-96d0cf-objectstate-alias",
+  "timestamp": "2026-08-11T08:10:15+00:00",
+  "fromWorker": "sol-20260811-96d0cf",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "high",
+  "summary": "ObjectGenome mutable-state validation accepts identity aliasing between distinct semantic maps. A state with componentDamage = componentWear validates, after which a wear mutation silently mutates damage. This is a pre-existing ownership/lifecycle defect in the active ObjectGenome hardening lane, not introduced by PR #296's familyVersion identity fix.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "On PR #296 exact head a136f305f432fa9c480e8d91e5d2151340795af7, defaultState(genome) followed by state.componentDamage = state.componentWear is accepted by inspectState because both maps independently satisfy the same component-key and [0,1] value constraints.",
+    "After that accepted alias, assigning state.componentWear.shell = 0.5 also changes state.componentDamage.shell to 0.5, coupling two public semantic state channels through table identity.",
+    "Docs/OBJECT_GENOME.md specifies a split mutable ObjectState with distinct wear and damage channels; the active audit role explicitly requires ownership/aliasing and mutable-state binding/lifecycle review.",
+    "GitHub review 4904204205 records the exact repro and minimal hardening recommendation. Exact-head code CI run 31469830377 is green, so this is an independent semantic contract gap rather than a compiler/lint failure."
+  ],
+  "metadata": {
+    "pr": 296,
+    "headSha": "a136f305f432fa9c480e8d91e5d2151340795af7",
+    "verdict": "REQUEST_CHANGES"
+  }
+}
