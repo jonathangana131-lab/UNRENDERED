@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T06:20:00+00:00",
-  "lastSeenAt": "2026-08-11T07:26:54+00:00",
+  "lastSeenAt": "2026-08-11T07:31:14+00:00",
   "laneId": "HG-BACKFILL-AUTHORITY",
   "slotId": "primary",
   "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-q9x4m2-g2",
-  "notes": "Authority primary takeover PR #297 synced to current main at ac8b0d1d6f27305da551c0ed3fb46be4a4c53af1. Exact-head canonical CI is green; rerun pr-ownership job 93707655017 emitted semantic PASS. Awaiting independent exact-head review; no Studio/two-client PASS claim."
+  "notes": "Independent audit BLOCK on PR #297 was addressed by strengthening context checks from token presence to the canonical fail-closed assert expressions. New head 2ec15e1c9c643e6520de6a4f3f3f25a3f36707cf is validating now; no Studio/two-client PASS claim."
 }
