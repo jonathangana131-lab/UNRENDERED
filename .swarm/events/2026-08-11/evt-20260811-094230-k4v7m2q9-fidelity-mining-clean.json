@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094230-k4v7m2q9-fidelity-mining-clean",
+  "timestamp": "2026-08-11T09:42:30+00:00",
+  "fromWorker": "sol-20260811-k4v7m2q9",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "LOW",
+  "summary": "Post-hardening FidelityManager mining found no additional concrete non-duplicate defect after reconciling primary PR #335 exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102 and stacked cross-entity adversary PR #343 exact head 13ae5f8d575a534191067d8b12c6d6e13f08918c. The remaining reviewed surfaces are internally consistent: caller config/input scalars are type/no-execute fenced before operators; manager config is copied/frozen; external authoritative fidelity reconciliation preserves aggregate counts and cooldown semantics; transition-ready state commits only after callback success; same-entity callback mutation is fenced while cross-entity transactions remain intentionally independent; registration is bounded and validation precedes capacity accounting; deterministic reason/hold behavior remains covered. Do not create another Fidelity source lane from this shard without new failing evidence; finish by absorbing #343's now-green nested-step proof into the primary and restoring live pr-ownership after the separately owned immutable-event history recovery.",
+  "affects": ["HG-BACKFILL-FIDELITY"],
+  "evidence": [
+    "PR #335 current exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102 has canonical CI run 31476561095 green and multiple independent source PASS reviews.",
+    "PR #343 exact test-only head 13ae5f8d575a534191067d8b12c6d6e13f08918c has canonical CI run 31478090143 green and directly proves nested cross-entity step independence plus inner-commit/outer-rollback accounting.",
+    "Docs/FIDELITY_MANAGER.md authority/anti-thrashing/bounded-state contract remains compatible with the reviewed implementation; no Studio evidence is required for this source-only shard."
+  ]
+}
