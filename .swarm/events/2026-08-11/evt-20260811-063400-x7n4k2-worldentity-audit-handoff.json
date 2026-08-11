@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-063400-x7n4k2-worldentity-audit-handoff",
+  "timestamp": "2026-08-11T06:34:00+00:00",
+  "fromWorker": "sol-20260811-x7n4k2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "summary": "WorldEntity audit slot complete for this pass. PR #276 test-adversary is approved at 91b483749f94a91f62c8d08d5e28363824234e0f with canonical validate CI green. PR #271 remains REQUEST_CHANGES at 65f37ccddc4e4229722166acacd4fdcc02958eb9 because finite non-incrementable revision counters can violate state/representation revision monotonicity; the earlier inert-test issue was fixed by folding assertions into the enumerated registry-shape suite. A separate low-severity finding records that duplicate diagnostics omit most GenerationOrigin repro fields. No source changes were made from the audit slot; primary owns any production fix. GitHub formal review state cannot distinguish swarm workers sharing one repository account, so structured REVIEW_RESULT events are authoritative for this pass.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "evt-20260811-062500-x7n4k2-worldentity-safe-revisions",
+    "evt-20260811-063000-x7n4k2-pr276-review",
+    "evt-20260811-063200-x7n4k2-worldentity-duplicate-origin",
+    "PR #271 issue comment 5249720062 carries the blocking safe-revision finding.",
+    "PR #276 issue comment 5249776939 carries the audit approval."
+  ]
+}
