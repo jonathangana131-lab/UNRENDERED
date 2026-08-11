@@ -7,7 +7,7 @@
   "priority": 5140,
   "state": "PROPOSED",
   "mode": "exclusive",
-  "dependencies": ["HG-BACKFILL-MATERIALDNA-COUNTERS"],
+  "dependencies": [{"laneId":"HG-BACKFILL-MATERIALDNA-COUNTERS","acceptableStates":["DONE"]}],
   "writeScopes": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau"],
   "resources": [],
   "slots": [
