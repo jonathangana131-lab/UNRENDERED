@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-m8q2v7",
   "claimToken": "3f8c1a6d92b740e5",
   "claimedAt": "2026-08-11T08:00:00+00:00",
-  "heartbeatAt": "2026-08-11T08:02:00+00:00",
+  "heartbeatAt": "2026-08-11T08:15:00+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "resources": [],
   "branch": "agent/reality/HG-BACKFILL-REALITY-tests-m8q2v7-g3",
   "pr": 312,
   "takeoverOf": "sol-20260811-q8n4z7",
-  "notes": "Generation-3 stale takeover. Reapplied the patch-local-approved PR #294 test slice from current main as PR #312; exact-head CI, ownership, and fresh independent review remain required before integration."
+  "notes": "Generation-3 stale takeover. PR #312 is resynced onto current main with exact-head canonical CI green; swarm-control validation has recovered, so exact-head ownership rerun and fresh independent review are next."
 }
