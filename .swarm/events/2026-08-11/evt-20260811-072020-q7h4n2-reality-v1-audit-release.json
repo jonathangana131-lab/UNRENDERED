@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-072020-q7h4n2-reality-v1-audit-release",
+  "timestamp": "2026-08-11T07:20:20+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-REALITY",
+  "severity": "medium",
+  "summary": "Reality v1 replay audit slot complete and released. PR #280 exact head 632e78b3 is independently approved at the test-delta level; it should be synchronized/retriggered against current main before integration because its synthetic merge/control evidence is stale. One distinct source hardening gap was published: v1 exact-shape validation can execute a hostile non-string key's __tostring while formatting rejection. The existing test-adversary worker is WAITING with an explicit handoff instructing that its claim remain attached for review/integration, so no stale takeover was attempted.",
+  "affects": ["HG-BACKFILL-REALITY"],
+  "evidence": [
+    "evt-20260811-071830-q7h4n2-pr280-review.json",
+    "evt-20260811-071900-q7h4n2-v1-hostile-key-format.json",
+    "evt-20260811-063800-r9t4n2-reality-tests-handoff.json"
+  ],
+  "metadata": {
+    "claimToken": "8a5d1c73e4b9206f",
+    "reviewedPr": 280,
+    "reviewedHead": "632e78b3162e34ddd5c17a702ac713fccdaa74ea"
+  }
+}
