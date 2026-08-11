@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-082145-c3b2be-history-continuity-design",
+  "timestamp": "2026-08-11T08:21:45+00:00",
+  "fromWorker": "sol-20260811-c3b2be",
+  "eventType": "FINDING",
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "severity": "normal",
+  "summary": "The confirmed immutable-event laundering incident requires a sticky history-continuity fence, not only parent-vs-tip transition checking. A single comparison from an old trusted snapshot to the current tip is also insufficient: an event first added after that snapshot can be mutated in a later failed commit and will still appear merely 'new' relative to the old anchor. Recovery must preserve every intermediate append-only transition since the trusted point, or maintain an equivalent externally trusted cumulative commitment. The current v1 validation marker cannot serve as the bootstrap trust root because a post-violation descendant was already allowed to republish PASS. Any v2 fence therefore needs an explicitly audited bootstrap/reset point plus a durable rule that failed transitions remain sticky across descendants.",
+  "affects": ["SWARM-RECOVERY-HEALTH-VALIDATION-FENCE", "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "evidence": [
+    "Canonical transition_check compares immutable events only between the supplied before and after snapshots; it has no memory of earlier failed edges.",
+    "Commit ebc699fc416346e5a6dc6cc02f6d992b635f205f modified an existing immutable cart-review event and was rejected, but the modified bytes remained on swarm-control.",
+    "A later descendant was reported PASS and republished a matching v1 validation marker, proving a parent-only baseline can launder the failed edge.",
+    "Comparing only one older anchor to the tip cannot detect mutation of an event that did not exist at the anchor; validating every intervening edge (or an equivalent cumulative append-only commitment) can."
+  ],
+  "metadata": {
+    "implementationConstraint": "Do not trust the latest v1 PASS marker as the initial continuity root after the confirmed laundering incident. Establish an explicitly audited v2 bootstrap and make future validation prove the full append-only chain since the last trusted checkpoint, including intermediate commits that previously failed.",
+    "workflowScopeFit": "The current recovery lane can enforce the sticky chain in .github/workflows/swarm-control.yml and hardening tests; any marker-schema or core semantic change must first be brought inside an authoritative declared scope."
+  }
+}
