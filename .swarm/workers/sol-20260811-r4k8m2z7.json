@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T08:40:48+00:00",
-  "lastSeenAt": "2026-08-11T09:40:20+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-materialdna",
-  "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-r4k8m2z7",
-  "notes": "Completed/released ObjectGenome, MaterialDNA counter, Physics geometry, WorldEntity, and Reality audits with durable verdicts/handoffs. Higher live reviews/control recovery are claimed or resource-blocked, so continuing through the allowed capacity fallback on MaterialDNA to identify one concrete non-duplicate bounded source/test gap; no Studio claim."
+  "lastSeenAt": "2026-08-11T09:48:20+00:00",
+  "laneId": "HG-COMPLETION-REALITY",
+  "slotId": "review-1",
+  "branch": "agent/review/HG-COMPLETION-REALITY-review1-r4k8m2z7",
+  "notes": "MaterialDNA capacity mining published a new bounded-validation finding and released. Switched to higher-priority HG-COMPLETION-REALITY review-1 to drain current Reality/WorldEntity/ResolvedRegionRecipe identity/replay/provenance backlog by exact-head independent review; no Studio evidence claim."
 }
