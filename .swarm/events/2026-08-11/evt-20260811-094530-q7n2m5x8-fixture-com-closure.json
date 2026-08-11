@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-094530-q7n2m5x8-fixture-com-closure",
+  "timestamp": "2026-08-11T09:45:30+00:00",
+  "fromWorker": "sol-20260811-q7n2m5x8",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Current-main production-contract officeTable and filingCabinet ObjectGenome fixtures carry centerOfMassM values that do not match their own component mass-weighted local centroids. Door, office-chair, and rolling-cart Hero-Gate repairs already treat this closure as canonical authored-geometry metadata, but no existing PR found in the current review backlog closes the same invariant for table/cabinet.",
+  "affects": [
+    "HG-BACKFILL-PHYSICS-GEOMETRY",
+    "HG-PHYSICS-CHAIR-GEOMETRY"
+  ],
+  "evidence": [
+    "src/shared/Objects/ObjectGenomeFixtures.luau officeTable: four 2.4 kg legs at y=-0.03, 2.0 kg crossbar at y=0.15, and 15.4 kg top at y=0.33 sum exactly to 27.0 kg; weighted Y moment is 5.094 kg*m, so component-derived COM Y is 0.1886666666666667 m, not declared 0.08 m.",
+    "src/shared/Objects/ObjectGenomeFixtures.luau filingCabinet: 24.0 kg shell at (0,0,0) plus three 4.2 kg drawers at y={0.38,0.05,-0.28}, z=-0.01 sum exactly to 36.6 kg; component-derived COM is (0, 0.017213114754098358, -0.003442622950819672), not declared (0,-0.06,0.01).",
+    "src/shared/Physics/PhysicsLabRecipe.luau includes table-a and cabinet-a as canonical F2 lab objects; src/server/PhysicsLab/PhysicsLabRealizer.luau realizes every ObjectGenome component as a physical Part and retains each component mass as project-owned metadata.",
+    "tests/object_genome.luau validates fixture identity/fingerprint and a 5% component-mass-sum envelope, but current-main fixture coverage does not recompute centerOfMassM for officeTable or filingCabinet.",
+    "Repository PR search found explicit component-derived COM closure for commercial door (#187), office chair (#339/#347), and rolling cart (#311/#352), but no table/cabinet COM repair; this is therefore not a duplicate of the active chair/cart strikes."
+  ],
+  "nextAction": "After the current office-chair ObjectGenomeFixtures.luau repair lane is integrated or otherwise synchronized, schedule one bounded source-only fixture-COM closure that versions officeTable and filingCabinet canonical recipes, updates their declared COMs and identity/fingerprint goldens, and adds deterministic component-mass/COM regressions. Do not widen the active chair lane or claim Studio evidence."
+}
