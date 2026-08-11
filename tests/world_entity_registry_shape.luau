@@ -269,7 +269,10 @@ local function run(): number
 	nearStateRevisionLimit.id = "entity:near-state-revision-limit"
 	nearStateRevisionLimit.stateRevision = MAX_SAFE_INTEGER - 1
 	local finalStateRevision = WorldEntity.captureState(nearStateRevisionLimit :: any, { open = true })
-	expect("capture can advance to maximum safe state revision", finalStateRevision.stateRevision == MAX_SAFE_INTEGER)
+	expect(
+		"capture can advance to maximum safe state revision",
+		finalStateRevision.stateRevision == MAX_SAFE_INTEGER
+	)
 	local exhaustedStateRevision = makeRecord()
 	exhaustedStateRevision.id = "entity:exhausted-state-revision"
 	exhaustedStateRevision.stateRevision = MAX_SAFE_INTEGER
@@ -280,7 +283,10 @@ local function run(): number
 	local unsafeStateRevision = makeRecord()
 	unsafeStateRevision.id = "entity:unsafe-state-revision"
 	unsafeStateRevision.stateRevision = MAX_SAFE_INTEGER + 1
-	expect("registry rejects state revision beyond safe integer range", not registerAccepts(unsafeStateRevision))
+	expect(
+		"registry rejects state revision beyond safe integer range",
+		not registerAccepts(unsafeStateRevision)
+	)
 
 	local nearRepresentationRevisionLimit = makeRecord()
 	nearRepresentationRevisionLimit.id = "entity:near-representation-revision-limit"
@@ -296,7 +302,10 @@ local function run(): number
 	local exhaustedRepresentationRevisionAccepted = pcall(function()
 		WorldEntity.transition(exhaustedRepresentationRevision :: any, "F2")
 	end)
-	expect("transition rejects exhausted safe representation revision", not exhaustedRepresentationRevisionAccepted)
+	expect(
+		"transition rejects exhausted safe representation revision",
+		not exhaustedRepresentationRevisionAccepted
+	)
 	local unsafeRepresentationRevision = makeRecord()
 	unsafeRepresentationRevision.id = "entity:unsafe-representation-revision"
 	unsafeRepresentationRevision.representationRevision = MAX_SAFE_INTEGER + 1
@@ -341,7 +350,7 @@ local function run(): number
 	local hostileCapacity = setmetatable({}, {
 		__lt = function()
 			hostileCapacityCallbacks += 1
-		error("hostile capacity comparison must not execute")
+			error("hostile capacity comparison must not execute")
 		end,
 		__le = function()
 			hostileCapacityCallbacks += 1
