@@ -1443,13 +1443,94 @@ function ObjectGenome.validate(value: ObjectGenome): ()
 	assert(result.ok, formatIssues(result.issues))
 end
 
+local function recordHasExactRequiredFields(value: any, requiredFields: { [string]: boolean }): boolean
+	if type(value) ~= "table" or getmetatable(value) ~= nil then
+		return false
+	end
+	for key in next, value do
+		if type(key) ~= "string" or requiredFields[key] ~= true then
+			return false
+		end
+	end
+	for key in pairs(requiredFields) do
+		if rawget(value, key) == nil then
+			return false
+		end
+	end
+	return true
+end
+
+local function isCanonicalUnitAxis(value: any): boolean
+	if not recordHasExactRequiredFields(value, VEC3_FIELDS) then
+		return false
+	end
+	local x = rawget(value, "x")
+	local y = rawget(value, "y")
+	local z = rawget(value, "z")
+	if not isFinite(x) or not isFinite(y) or not isFinite(z) then
+		return false
+	end
+	local magnitude = math.sqrt(x * x + y * y + z * z)
+	return magnitude > 0.000001 and math.abs(magnitude - 1) <= AXIS_UNIT_TOLERANCE
+end
+
+local function standaloneMechanismIsCanonical(mechanism: any): boolean
+	if type(mechanism) ~= "table" or getmetatable(mechanism) ~= nil then
+		return false
+	end
+	local kind = rawget(mechanism, "kind")
+	local requiredFields = if type(kind) == "string" then MECHANISM_FIELDS_BY_KIND[kind] else nil
+	if requiredFields == nil or not recordHasExactRequiredFields(mechanism, requiredFields) then
+		return false
+	end
+
+	local key = rawget(mechanism, "key")
+	local movingComponentKey = rawget(mechanism, "movingComponentKey")
+	if not isSemanticKey(key) or not isSemanticKey(movingComponentKey) then
+		return false
+	end
+
+	if kind == "latch" then
+		local catchComponentKey = rawget(mechanism, "catchComponentKey")
+		return isSemanticKey(catchComponentKey)
+			and catchComponentKey ~= movingComponentKey
+			and isPositiveFinite(rawget(mechanism, "engagementDistanceM"))
+	end
+
+	local frameComponentKey = rawget(mechanism, "frameComponentKey")
+	if not isSemanticKey(frameComponentKey) or frameComponentKey == movingComponentKey then
+		return false
+	end
+
+	if kind == "hinge" or kind == "tilt" then
+		local minimum = rawget(mechanism, "minDegrees")
+		local maximum = rawget(mechanism, "maxDegrees")
+		return isCanonicalUnitAxis(rawget(mechanism, "axis"))
+			and finiteInterpolationSpan(minimum, maximum) ~= nil
+			and minimum <= 0
+			and maximum >= 0
+	elseif kind == "slide" then
+		local minimum = rawget(mechanism, "minTravelM")
+		local maximum = rawget(mechanism, "maxTravelM")
+		return isCanonicalUnitAxis(rawget(mechanism, "axis"))
+			and finiteInterpolationSpan(minimum, maximum) ~= nil
+			and minimum <= 0
+			and maximum >= 0
+	elseif kind == "caster" then
+		return isPositiveFinite(rawget(mechanism, "wheelRadiusM"))
+			and isCanonicalUnitAxis(rawget(mechanism, "swivelAxis"))
+			and isCanonicalUnitAxis(rawget(mechanism, "rollAxis"))
+	end
+	return false
+end
+
 function ObjectGenome.decodeMechanismPosition(
 	mechanism: MechanismSpec,
 	position: number
 ): DecodedMechanismPosition
 	assert(
-		type(mechanism) == "table" and getmetatable(mechanism :: any) == nil,
-		"mechanism must be a plain ObjectGenome mechanism table"
+		standaloneMechanismIsCanonical(mechanism),
+		"mechanism must satisfy the exact canonical ObjectGenome v1 mechanism contract"
 	)
 	assert(
 		mechanismPositionIsValid(mechanism, position),
