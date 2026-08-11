@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115804-p6m2x8v4-worldentity-review-result",
+  "eventType": "REVIEW_RESULT",
+  "timestamp": "2026-08-11T11:58:04Z",
+  "workerId": "sol-20260811-p6m2x8v4",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "claimToken": "8d2f6a1c9b4e7053",
+  "generation": 1,
+  "summary": "REQUEST_CHANGES on PR #293 exact head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e: registry boundaries lack canonical WorldEntityId preflight; the primary diff touches unauthorized tests/run.luau; reviewed completion regressions from #344 are not absorbed; and the cleaned patch must be replayed onto current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 before exact-head CI/review.",
+  "evidence": [
+    "PR #293 head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e inspected directly",
+    "Expected-red PR #350 isolates malformed identity handling for get/unregister while preserving valid-but-absent get semantics",
+    "Expected-red PR #364 isolates malformed identity handling for captureRegistered/transitionRegistered",
+    "Reviewed stacked PR #344 contains exact depth/node/string-byte boundary and registered fail-atomic regressions not present on #293",
+    "Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1; compare reports #293 14 commits ahead and 4 behind from its merge base"
+  ],
+  "links": [
+    "https://github.com/jonathangana131-lab/UNRENDERED/pull/293"
+  ]
+}
