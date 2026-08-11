@@ -37,6 +37,8 @@ Visual, physical, and acoustic profiles share a `coherenceClass`. They are diffe
 
 `validateRecipe` accepts `unknown` plain data and returns a `ValidationResult`; structurally malformed persisted/generated input must report errors instead of crashing through missing nested fields. Canonical history/anomaly lists must be dense 1-based arrays with no keyed entries. Numeric plausibility ranges are finite and bounded.
 
+`maintenance.repairCount` is a canonical non-negative integer counter in `[0, 9007199254740991]` (`2^53 - 1`). Values at or above `2^53` are rejected so distinct conceptual repair counts cannot alias once represented as IEEE-754 doubles before validation, freezing, or persistence.
+
 The validator also rejects direct URLs/Roblox asset IDs in project-owned semantic keys and checks known semantic compatibility families. Schema-v2 examples include vinyl wallcovering on wall-compatible substrates with pasted-wallpaper installation, low-pile carpet on carpet backing with a supported carpet install method, and baked enamel on sheet metal with factory-coated-panel installation.
 
 Compatibility checks are intentionally conservative. Adding a new material family should add an explicit production rule or remain unconstrained until its construction semantics are defined; do not infer arbitrary compatibility from string similarity.
