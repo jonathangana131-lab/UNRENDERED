@@ -51,7 +51,11 @@ jobs:
           git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl.py"
           if git cat-file -e "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening.py" 2>/dev/null; then
             git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py"
-            python3 -m py_compile "$RUNNER_TEMP/trusted-swarm/swarmctl.py" "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py"
+            if git cat-file -e "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening_base.py" 2>/dev/null; then
+              git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening_base.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening_base.py"
+            fi
+            python3 -m py_compile "$RUNNER_TEMP/trusted-swarm/"*.py
+            PYTHONPATH="$RUNNER_TEMP/trusted-swarm" python3 -c 'import swarmctl_hardening'
             echo "engine=hardening" >> "$GITHUB_OUTPUT"
           else
             # This one upgrade generation remains policed by the already-trusted
