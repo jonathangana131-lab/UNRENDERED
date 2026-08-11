@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811T215509Z-sol-20260811-n6c4q8v2-handoff-diagnostics-instance-binding-g2",
+  "eventType": "HANDOFF",
+  "at": "2026-08-11T21:55:09Z",
+  "workerId": "sol-20260811-n6c4q8v2",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "slotId": "primary",
+  "claimToken": "b5d8731ca2409ef6",
+  "generation": 2,
+  "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-q5x8n3z2",
+  "pr": 349,
+  "commit": "ee771bd50db972ad572f5d3cef8463220d69fa06",
+  "resources": [],
+  "summary": "Hardened the exact-Instance ownership source regression after independent audit. Exact-head product CI and Swarm engine tests are green; ready for a fresh independent exact-head audit while repository-wide PR ownership remains fail-closed on the already-owned trusted-history recovery.",
+  "validation": [
+    {
+      "check": "GitHub Actions CI 31539525697",
+      "result": "PASS",
+      "notes": "Exact-head ee771bd50db972ad572f5d3cef8463220d69fa06 passed format, lint, Luau analysis, source guards, canonical pure tests, and place build."
+    },
+    {
+      "check": "Swarm engine-tests 93939957976",
+      "result": "PASS",
+      "notes": "Exact-head PR-edited run 31539983846 completed successfully."
+    },
+    {
+      "check": "Swarm pr-ownership 93939957898",
+      "result": "BLOCKED_GLOBAL",
+      "notes": "Ownership reaches trusted control validation and fails only on forbidden validation.0.command in the historical 210500 HANDOFF event; SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY is already owned."
+    }
+  ],
+  "details": {
+    "priorAuditHead": "901c063ff3c1e2584f84a07e1da3a9b1b82d413a",
+    "studioEvidenceClaimed": false,
+    "reviewRequired": true,
+    "globalBlocker": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  }
+}
