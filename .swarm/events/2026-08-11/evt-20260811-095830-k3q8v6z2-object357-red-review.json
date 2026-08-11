@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095830-k3q8v6z2-object357-red-review",
+  "timestamp": "2026-08-11T09:58:30+00:00",
+  "fromWorker": "sol-20260811-k3q8v6z2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #357 exact-head ObjectGenome diagnostic-order adversary passes independent review as clean executable expected-RED evidence; it must be absorbed into the production primary, not merged independently.",
+  "affects": [
+    "HG-COMPLETION-CONTENT",
+    "HG-BACKFILL-OBJECTGENOME"
+  ],
+  "laneId": "HG-COMPLETION-CONTENT",
+  "evidence": [
+    "PR #357 exact head 592ae58a0367556bf900fcc301f9e9c2a287331b is based on current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 and changes only tests/object_genome_contract_lock.luau.",
+    "Canonical CI run 31479631468 passes format, lint, Luau analysis, audits, and deterministic Swarm tests before Pure Luau reaches the intended ordered-report failure.",
+    "The control assertion that both construction histories produce the same sorted code|path|message multiset passes; only the unsorted ordered sequence differs, isolating diagnostic publication order.",
+    "GitHub review record 4904977160 records the independent exact-head verdict."
+  ],
+  "metadata": {
+    "slotId": "review-1",
+    "pr": 357,
+    "headSha": "592ae58a0367556bf900fcc301f9e9c2a287331b",
+    "verdict": "PASS_EXPECTED_RED",
+    "nextAction": "Do not merge #357 independently. The final current-main ObjectGenome primary should absorb equivalent ordered-report coverage plus the separate #338 decoder no-execute repair, remove #336's stale out-of-scope runner/standalone-test duplication, then turn all regressions green under exact-head CI/trusted ownership before final independent review."
+  }
+}
