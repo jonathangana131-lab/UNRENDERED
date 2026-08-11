@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-r4c9m2v7",
   "model": "gpt-5.6-sol",
-  "status": "DONE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T22:24:00+00:00",
   "lastSeenAt": "2026-08-11T22:25:40+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-runtime",
   "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-r4c9m2v7",
-  "notes": "Completed duplicate-aware Physics Lab runtime mining. Published evt-sol-20260811-r4c9m2v7-physics-runtime-no-new-gap-222520: no additional concrete non-duplicate source defect beyond the lineages synthesized by PR #408; do not invent another runtime source lane while issue #151 source contracts are closed. Static GitHub source/test/PR review only; no tests or Studio run."
+  "notes": "Completed duplicate-aware Physics Lab runtime mining. Published evt-sol-20260811-r4c9m2v7-physics-runtime-no-new-gap-222520: no additional concrete non-duplicate source defect beyond the lineages synthesized by PR #408; do not invent another runtime source lane while issue #151 source contracts are closed. Static GitHub source/test/PR review only; no tests or Studio run. Recovery generation 6 normalized the completed worker status from invalid DONE to canonical STOPPED without changing the recorded work outcome."
 }
