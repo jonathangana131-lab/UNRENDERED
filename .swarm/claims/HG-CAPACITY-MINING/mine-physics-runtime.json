@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-runtime",
-  "workerId": "sol-20260811-62db19aa",
-  "claimToken": "d111b5099303e3c2",
-  "claimedAt": "2026-08-11T09:04:10+00:00",
-  "heartbeatAt": "2026-08-11T09:11:50+00:00",
+  "workerId": "sol-20260811-j4p9x2n6",
+  "claimToken": "8e3c1a7d5b2f9064",
+  "claimedAt": "2026-08-11T11:51:35+00:00",
+  "heartbeatAt": "2026-08-11T11:51:35+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-62db19aa",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-j4p9x2n6-g2",
   "pr": null,
-  "notes": "Published evt-20260811-090856-62db19aa-runtime-canonical-state-unbounded-scan and routed it to active recipe-fence PR #310. Continuing bounded Physics runtime audit for non-duplicate gaps; no production implementation or Studio evidence claimed."
+  "notes": "Generation-2 stale takeover after inspecting expired generation-1 worker, branch, and published runtime canonical-state boundedness finding. Prior branch is 0 ahead/1 behind current main and contains no product changes. Continue bounded non-duplicate Physics runtime mining only; no production implementation or Studio evidence claim."
 }
