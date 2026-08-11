@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k7v2m9q4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:39:45+00:00",
-  "lastSeenAt": "2026-08-11T09:54:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/audit/HG-CAPACITY-MINING-worldentity-k7v2m9q4",
-  "notes": "Mining WorldEntity for one concrete non-duplicate Hero Gate source-depth gap."
+  "lastSeenAt": "2026-08-11T10:00:00+00:00",
+  "notes": "Completed WorldEntity capacity-mining pass with evidence-backed no-op; no active claim."
 }
