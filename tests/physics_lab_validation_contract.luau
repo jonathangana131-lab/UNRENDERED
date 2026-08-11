@@ -116,7 +116,10 @@ local function run(): number
 
 	local partsWithoutEnvelope = snapshot(counts(46, 0), nil, nil)
 	local partsWithoutEnvelopeOk = ValidationContract.inspectSnapshot(partsWithoutEnvelope)
-	expect("snapshot validation rejects BaseParts without a physical envelope", partsWithoutEnvelopeOk == false)
+	expect(
+		"snapshot validation rejects BaseParts without a physical envelope",
+		partsWithoutEnvelopeOk == false
+	)
 
 	local envelopeWithoutParts = snapshot(rootOnlyCounts(), -1, 1)
 	local envelopeWithoutPartsOk = ValidationContract.inspectSnapshot(envelopeWithoutParts)
