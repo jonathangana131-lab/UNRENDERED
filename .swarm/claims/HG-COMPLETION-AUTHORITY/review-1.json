@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "slotId": "review-1",
+  "workerId": "sol-20260811-5a7d2c9e",
+  "claimToken": "b41e6ac72f930d58",
+  "claimedAt": "2026-08-11T12:12:00+00:00",
+  "heartbeatAt": "2026-08-11T12:12:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-COMPLETION-AUTHORITY-5a7d2c9e-r2",
+  "pr": null,
+  "notes": "Exact-head Authority backlog review; no Studio/two-client evidence claimed."
+}
