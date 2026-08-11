@@ -21,6 +21,8 @@ local function run(): number
 
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
+	local rootName = position('folder.Name = DIAGNOSTICS_ROOT_NAME')
+	local rootOwnership = position('folder:SetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned", true)')
 	local parentMutation = position("folder.Parent = model")
 	local billboardOwnership = position("billboard.Parent = folder")
 	local billboardConfiguration = position("billboard.AlwaysOnTop = true")
@@ -38,6 +40,16 @@ local function run(): number
 	expect(
 		"Instance realization begins inside a protected transaction",
 		transaction ~= nil and parentMutation ~= nil and transaction < parentMutation
+	)
+	expect(
+		"diagnostics root identity is established inside the transaction before parenting",
+		transaction ~= nil
+			and rootName ~= nil
+			and rootOwnership ~= nil
+			and parentMutation ~= nil
+			and transaction < rootName
+			and rootName < rootOwnership
+			and rootOwnership < parentMutation
 	)
 	expect(
 		"BillboardGui is owned before fallible configuration",
