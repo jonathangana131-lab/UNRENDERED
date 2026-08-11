@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-081339-e3a71c9d-worldentity-boundedness",
+  "timestamp": "2026-08-11T08:13:39+00:00",
+  "fromWorker": "sol-20260811-e3a71c9d",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "high",
+  "summary": "WorldEntity audit: PR #293's ownership/anti-aliasing patch is source-level sound and its exact product-CI head c301d840 is green, but the lane is not merge-ready because current Swarm Control checks fail the stale primary ownership fence. Separately, WorldEntity.clonePlainValue recursively owns acyclic persistentState with no explicit recursion-depth or node/work budget, so adversarial valid-shaped state can consume unbounded stack/CPU/memory. Add deterministic depth/node limits with stable rejection diagnostics and adversarial regression coverage before treating persistence-state ownership as Reality-Grade bounded.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "src/shared/Reality/WorldEntity.luau clonePlainValue recursively traverses plain acyclic tables and rejects cycles/metatables/non-finite values, but has no depth or visited-node/work ceiling.",
+    "Deterministic repro shape: pass WorldEntity.createRegistry a persistentState containing an acyclic deeply nested table (stack pressure) or very large branching table (CPU/memory amplification).",
+    "tests/world_entity.luau and tests/world_entity_registry_shape.luau cover identity, aliasing, malformed arrays, cycles, metatables, NaN/infinity and foreign keys, but no bounded-depth/node adversary was found in the audited main@aa7e04f suites.",
+    "PR #293 exact head c301d8403d3c1b93ee3b2988f80e9d1e689eb33d has successful product CI; newer Swarm Control runs are red because the primary lane ownership heartbeat is stale, so this audit does not approve merge under a stale owner.",
+    "Local test execution was not available in this worker because the container could not resolve github.com; no local test pass is claimed."
+  ]
+}
