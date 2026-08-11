@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "primary",
-  "workerId": "sol-20260811-jik0g141",
-  "claimToken": "e72a2f22f55f0d5a",
-  "claimedAt": "2026-08-11T09:42:45+00:00",
-  "heartbeatAt": "2026-08-11T10:10:45+00:00",
+  "workerId": "sol-20260811-m7q2v9c4",
+  "claimToken": "6c4a9f1d8b2e7053",
+  "claimedAt": "2026-08-11T11:53:22+00:00",
+  "heartbeatAt": "2026-08-11T11:53:22+00:00",
   "leaseSeconds": 1800,
-  "generation": 4,
+  "generation": 5,
   "resources": [],
-  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-jik0g141-g4",
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-m7q2v9c4-g5",
   "pr": 361,
-  "takeoverOf": "sol-20260811-v7k3m9",
-  "notes": "Generation-4 primary PR #361 exact head 08ce8d7093ceb36a85af58510f65ef8e9b33c154. Formatting/lint previously repaired; Luau getmetatable union error repaired with type-only any cast while preserving pre-field-read metatable rejection. Canonical CI rerun in progress; independent audit still required."
+  "takeoverOf": "sol-20260811-jik0g141",
+  "notes": "Generation-5 stale-primary salvage after inspecting PR #361 exact head 08ce8d7093ceb36a85af58510f65ef8e9b33c154, current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1, exact-head CI PASS, two-file lane-owned diff, and independent source-contract APPROVE. No source rewrite planned; reconcile stale scheduler/PR state and preserve the global trusted-history ownership blocker."
 }
