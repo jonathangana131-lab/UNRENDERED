@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T07:46:10+00:00",
-  "lastSeenAt": "2026-08-11T08:32:20+00:00",
+  "lastSeenAt": "2026-08-11T08:53:25+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-DIAGNOSTICS-primary-v6m4q9t2-g2",
-  "notes": "Released test-adversary after handing off PR #301 at clean RED represented-count regression head a27b370. Won generation-2 stale-primary takeover to salvage #295 cycle-bound work and implement the production UNRENDERED_RepresentedCount completeness guard. No Studio evidence claimed."
+  "notes": "Recovered diagnostics primary PR #327 is canonical-CI green at exact head acb728242741716487a5825542061d20f5c4bde4. The shared enumeration now proves authoritative representation-set integrity with unique WorldEntityIds, lab.isRepresented membership, and UNRENDERED_RepresentedCount equality. Live ownership remains fail-closed on unrelated malformed control records; no Studio evidence claimed."
 }
