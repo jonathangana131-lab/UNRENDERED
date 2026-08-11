@@ -5,7 +5,7 @@
   "title": "FidelityManager adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete fidelity transition, rejected-step atomicity, finite-state, deterministic ordering, entity-id boundary, or resource-accounting defects without depending on Studio.",
   "priority": 5050,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/FidelityManager.luau", "tests/fidelity_manager*.luau"],
@@ -17,5 +17,5 @@
   ],
   "acceptance": ["target concrete finite-state or atomicity gaps", "preserve deterministic ordering", "new behavior has adversarial regression coverage", "no Studio claim is required", "publish findings that affect other lanes"],
   "tags": ["backfill", "hero-gate", "source-only"],
-  "notes": "PR #335 generation-3 salvage is synchronized to main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 at head 4a3c55d9d2046df1af6ee93710d395aedd4ea102. Exact-head CI run 31476561095 attempt 2 is green. Await fresh independent audit plus live pr-ownership after the separately owned immutable-event control recovery."
+  "notes": "Audit sol-20260811-befff499 found no new production defect on PR #335 exact head 4a3c55d9d2046df1af6ee93710d395aedd4ea102, but completion requires absorbing stacked nested-unwind regression PR #367 at 827ce0cf63ca5f322502de883beb9f43581c69f2 and rerunning combined exact-head canonical CI. Integration must remain fail-closed until the separate trusted-history recovery restores live pr-ownership; recovery PR #371 is currently blocked on preservation-safe handling of noncanonical immutable historical event records."
 }
