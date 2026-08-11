@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T09:40:00+00:00",
-  "lastSeenAt": "2026-08-11T09:44:30+00:00",
-  "laneId": "HG-COMPLETION-PHYSICS",
-  "slotId": "review-2",
-  "branch": "agent/review/HG-COMPLETION-PHYSICS-review2-c6v9n2x4",
-  "notes": "Claimed Physics completion review-2. Reviewing an unclaimed completion candidate while dedicated lane audits and the global history-continuity recovery remain independently owned."
+  "lastSeenAt": "2026-08-11T09:51:30+00:00",
+  "laneId": "HG-COMPLETION-REALITY",
+  "slotId": "review-1",
+  "branch": "agent/review/HG-COMPLETION-REALITY-review1-c6v9n2x4",
+  "notes": "Physics completion spot-check published SYNC_REQUIRED for stale PR #310 and released that claim. Now draining Reality completion exact-head review work without overlapping active lane auditors."
 }
