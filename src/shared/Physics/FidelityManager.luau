@@ -217,6 +217,8 @@ local function validateConfig(config: PolicyConfig): ()
 end
 
 local function validateInputs(inputs: PolicyInputs): ()
+	assert(type(inputs) == "table", "policy inputs must be a plain table")
+	assert(getmetatable(inputs) == nil, "policy inputs must be metatable-free plain data")
 	validateFiniteNonNegative("distanceStuds", inputs.distanceStuds)
 	validateBoolean("visible", inputs.visible)
 	validateBoolean("directlyObserved", inputs.directlyObserved)
@@ -451,11 +453,6 @@ end
 
 function FidelityManager.register(self: Manager, entityId: string, currentLevel: FidelityLevel?): ()
 	entityId = assertEntityId(entityId)
-	assert(self._states[entityId] == nil, `entity already registered: {entityId}`)
-	if self._metrics.registered >= self.config.maxRegisteredEntities then
-		self._metrics.registrationCapacityRejections += 1
-		error(`fidelity registration capacity reached: {self.config.maxRegisteredEntities}`)
-	end
 
 	local level: FidelityLevel
 	if currentLevel == nil then
@@ -464,6 +461,12 @@ function FidelityManager.register(self: Manager, entityId: string, currentLevel:
 		level = currentLevel
 	end
 	assert(isLevel(level), "currentLevel must be F0-F4")
+
+	assert(self._states[entityId] == nil, `entity already registered: {entityId}`)
+	if self._metrics.registered >= self.config.maxRegisteredEntities then
+		self._metrics.registrationCapacityRejections += 1
+		error(`fidelity registration capacity reached: {self.config.maxRegisteredEntities}`)
+	end
 
 	self._states[entityId] = {
 		observedLevel = level,

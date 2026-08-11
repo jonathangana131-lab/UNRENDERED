@@ -62,6 +62,39 @@ local function run(): number
 		true
 	)
 
+	local metatableManager = FidelityManager.new()
+	metatableManager:register("entity:atomic-metatable", "F0")
+	local metatableSource = validInputs()
+	local metatableReads = 0
+	local metatableInputs = setmetatable({}, {
+		__index = function(_, key)
+			metatableReads += 1
+			return metatableSource[key]
+		end,
+	})
+	local metatableFutureAccepted = pcall(function()
+		metatableManager:step("entity:atomic-metatable", "F0", metatableInputs, 100)
+	end)
+	expectEqual("metatable-backed policy input rejected", metatableFutureAccepted, false)
+	expectEqual("policy input metatable callback never executes", metatableReads, 0)
+	local validAfterMetatableRejected = pcall(function()
+		metatableManager:step("entity:atomic-metatable", "F0", validInputs(), 1)
+	end)
+	expectEqual("metatable-backed input cannot poison monotonic clock", validAfterMetatableRejected, true)
+
+	local pureMetatableReads = 0
+	local pureMetatableInputs = setmetatable({}, {
+		__index = function(_, key)
+			pureMetatableReads += 1
+			return metatableSource[key]
+		end,
+	})
+	local pureMetatableAccepted = pcall(function()
+		FidelityManager.evaluatePolicy(pureMetatableInputs)
+	end)
+	expectEqual("pure policy rejects metatable-backed input", pureMetatableAccepted, false)
+	expectEqual("pure policy never executes policy-input metatable", pureMetatableReads, 0)
+
 	local booleanManager = FidelityManager.new()
 	booleanManager:register("entity:atomic-boolean", "F0")
 
@@ -151,6 +184,26 @@ local function run(): number
 		syncManager:getMetrics().externalSynchronizations,
 		beforeMetrics.externalSynchronizations + 1
 	)
+
+	local capacityConfig = table.clone(FidelityManager.defaultConfig())
+	capacityConfig.maxRegisteredEntities = 1
+	local capacityManager = FidelityManager.new(capacityConfig)
+	capacityManager:register("entity:atomic-capacity-existing", "F0")
+	local beforeInvalidCapacityLevel = capacityManager:getMetrics()
+	local invalidCapacityLevelAccepted = pcall(function()
+		capacityManager:register("entity:atomic-capacity-invalid-level", "F9")
+	end)
+	expectEqual("invalid fidelity level is rejected even at capacity", invalidCapacityLevelAccepted, false)
+	local afterInvalidCapacityLevel = capacityManager:getMetrics()
+	expectEqual(
+		"invalid fidelity level does not consume capacity rejection metric",
+		afterInvalidCapacityLevel.registrationCapacityRejections,
+		beforeInvalidCapacityLevel.registrationCapacityRejections
+	)
+	local invalidCapacityRecordExists = pcall(function()
+		capacityManager:getObservedLevel("entity:atomic-capacity-invalid-level")
+	end)
+	expectEqual("invalid fidelity level never creates a registration", invalidCapacityRecordExists, false)
 
 	local hookConfig = table.clone(FidelityManager.defaultConfig())
 	hookConfig.promotionHoldSeconds = 0.1
