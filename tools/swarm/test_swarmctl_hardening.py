@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """V2.1 regression suite layered on the proven hardening tests."""
+from pathlib import Path
 import runpy
 import unittest
 from unittest.mock import patch
@@ -42,6 +43,20 @@ class CliExitPropagationRegressionTests(unittest.TestCase):
                 runpy.run_module("swarmctl_hardening", run_name="__main__")
 
         self.assertEqual(raised.exception.code, 2)
+
+
+class WorkflowSnapshotFenceRegressionTests(unittest.TestCase):
+    def test_control_publishers_reuse_materialized_snapshot_sha(self):
+        workflow_path = Path(__file__).resolve().parents[2] / ".github" / "workflows" / "swarm-control.yml"
+        workflow = workflow_path.read_text(encoding="utf-8")
+
+        self.assertIn("AFTER_SHA: ${{ github.sha }}", workflow)
+        self.assertIn('echo "CONTROL_SHA=$AFTER_SHA" >> "$GITHUB_ENV"', workflow)
+        self.assertIn('git archive "$AFTER_SHA" .swarm', workflow)
+        self.assertIn('CONTROL_SHA="$(git rev-parse origin/swarm-control)"', workflow)
+        self.assertIn('git archive "$CONTROL_SHA" .swarm', workflow)
+        self.assertGreaterEqual(workflow.count('EXPECTED="${CONTROL_SHA:?'), 2)
+        self.assertNotIn('EXPECTED="$(git rev-parse origin/swarm-control)"', workflow)
 
 
 if __name__ == "__main__":
