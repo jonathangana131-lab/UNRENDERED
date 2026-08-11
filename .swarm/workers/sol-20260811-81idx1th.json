@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-81idx1th",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T21:31:03+00:00",
-  "lastSeenAt": "2026-08-11T21:47:40+00:00",
+  "lastSeenAt": "2026-08-11T21:52:37+00:00",
   "laneId": "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
   "slotId": "primary",
   "branch": "agent/authority/HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY-81idx1th-g3",
-  "notes": "Generation-3 NEEDS_CHANGES repair from #403 exact reviewed head. PR #410 exact head f8a8361daad41e5f8b4c83a19ceca72e344d5e6f closes deferred lifecycle callback stale-ownership window with synchronous model-liveness reconciliation; awaiting fresh exact-head CI, source-only."
+  "notes": "Generation-3 implementation complete. PR #410 exact head d217ac07496cfe9021cac4e69fad6768ab83ccfd is ready for independent review; canonical CI 31539618366 PASS and Swarm engine-tests 31539618350 PASS. Lane moved to REVIEW, handoff event evt-20260811-215154-81idx1th-harness-lifecycle-g3-review published, primary claim released. Live pr-ownership remains separately fail-closed on unrelated diagnostics-instance-binding claim schema error. No Studio/two-client evidence claimed."
 }
