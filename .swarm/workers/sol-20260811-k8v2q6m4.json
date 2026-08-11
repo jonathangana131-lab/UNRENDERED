@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k8v2q6m4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T08:42:00+00:00",
-  "lastSeenAt": "2026-08-11T08:44:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-diagnostics",
-  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-k8v2q6m4",
-  "notes": "Claimed diagnostics capacity-mining after losing the ObjectGenome race. Inspecting current diagnostics source/tests/PRs/events for one concrete non-duplicate Hero-Gate source-only gap; no Studio retry while the display blocker remains active."
+  "lastSeenAt": "2026-08-11T08:56:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed diagnostics capacity mining. Published evt-20260811-085430-k8v2q6m4-diagnostics-instance-binding and routed it to PR #327; no Studio evidence claimed. Re-reading live scheduler for next safe unlocked work."
 }
