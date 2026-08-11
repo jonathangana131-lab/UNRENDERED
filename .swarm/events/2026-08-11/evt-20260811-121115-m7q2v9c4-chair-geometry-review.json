@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-121115-m7q2v9c4-chair-geometry-review",
+  "timestamp": "2026-08-11T12:11:15+00:00",
+  "fromWorker": "sol-20260811-m7q2v9c4",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-PHYSICS-CHAIR-GEOMETRY",
+  "severity": "medium",
+  "summary": "Independent exact-head audit of chair-geometry PR #347 at 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1: SOURCE PASS. The family revision, caster ground/base contacts, component mass, mass-weighted COM, identity/fingerprint goldens, deterministic object-level regressions, current-main ancestry, and exact-head CI are coherent. Integration remains gated on live ownership plus green synchronization of PR #332's independent PhysicsLabRecipe-level caster/COM assertions.",
+  "affects": ["HG-PHYSICS-CHAIR-GEOMETRY", "HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "Compare main ae83c0ef470eb2e73d99be41fd3561ede30c40e1...head 9962ba2f8d19f29d2a6bafbb37b62850fdcdf3c1: ahead_by=1, behind_by=0, exactly ObjectGenomeFixtures.luau and tests/object_genome.luau changed.",
+    "All five 0.09 m caster proxies centered at y=-0.495 span exactly [-0.54,-0.45], matching chair ground plane and base underside.",
+    "Component masses sum to 11.85 kg and mass-weighted COM equals (0,-0.10162447257383965,0.04168776371308017), matching the declared genome metadata.",
+    "Canonical CI run 31477985164 is SUCCESS; Swarm run 31477985140 engine-tests are SUCCESS while pr-ownership remains fail-closed at trusted live-ownership enforcement.",
+    "PR #332 preserves independent lab-level assertions over PhysicsLabRecipe.objectGenome(officeChair); those assertions must turn green against the repair without weakening before closure."
+  ]
+}
