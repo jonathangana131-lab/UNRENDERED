@@ -44,6 +44,56 @@ local function run(): number
 		true
 	)
 
+	local booleanManager = FidelityManager.new()
+	booleanManager:register("entity:atomic-boolean", "F0")
+
+	local invalidVisibleInputs = validInputs()
+	invalidVisibleInputs.visible = 0
+	local beforeInvalidVisible = booleanManager:getMetrics()
+	local invalidVisibleAccepted = pcall(function()
+		booleanManager:step("entity:atomic-boolean", "F0", invalidVisibleInputs, 100)
+	end)
+	expectEqual("non-boolean visible flag rejected", invalidVisibleAccepted, false)
+	local afterInvalidVisible = booleanManager:getMetrics()
+	expectEqual(
+		"rejected visible flag leaves hold metric atomic",
+		afterInvalidVisible.blockedByHold,
+		beforeInvalidVisible.blockedByHold
+	)
+	expectEqual(
+		"rejected visible flag leaves observed fidelity atomic",
+		booleanManager:getObservedLevel("entity:atomic-boolean"),
+		"F0"
+	)
+
+	local invalidObservedInputs = validInputs()
+	invalidObservedInputs.directlyObserved = "false"
+	local beforeInvalidObserved = booleanManager:getMetrics()
+	local invalidObservedAccepted = pcall(function()
+		booleanManager:step("entity:atomic-boolean", "F0", invalidObservedInputs, 100)
+	end)
+	expectEqual("non-boolean direct-observation flag rejected", invalidObservedAccepted, false)
+	local afterInvalidObserved = booleanManager:getMetrics()
+	expectEqual(
+		"rejected direct-observation flag leaves hold metric atomic",
+		afterInvalidObserved.blockedByHold,
+		beforeInvalidObserved.blockedByHold
+	)
+	expectEqual(
+		"rejected direct-observation flag leaves observed fidelity atomic",
+		booleanManager:getObservedLevel("entity:atomic-boolean"),
+		"F0"
+	)
+
+	local validAfterRejectedBooleansAccepted = pcall(function()
+		booleanManager:step("entity:atomic-boolean", "F0", validInputs(), 1)
+	end)
+	expectEqual(
+		"rejected boolean policy input does not poison monotonic clock",
+		validAfterRejectedBooleansAccepted,
+		true
+	)
+
 	local syncManager = FidelityManager.new()
 	syncManager:register("entity:atomic-sync", "F3")
 	local beforeMetrics = syncManager:getMetrics()
