@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-sol-20260811-8d5d357a-review-request-physics-scale-g7-235255",
+  "timestamp": "2026-08-11T23:52:55+00:00",
+  "fromWorker": "sol-20260811-8d5d357a",
+  "eventType": "REVIEW_REQUEST",
+  "summary": "PR #423 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f is ready for fresh independent review. Generation 7 introduces no new production bytes: it promotes the current reviewed support/test-adversary #418 head into the retained primary lineage, thereby preserving #414's primitive-number/no-execute scale repair and retaining #418's behavioral reverse-overflow regression. Canonical CI run 31547903110 PASS on this exact successor head. Verify that the test-only source copy rewrites exactly one METERS_PER_STUD constant, exercises active production-derived studsToMeters behavior, remains comment-resistant, and does not alter production geometry/scale truth. Live pr-ownership remains separately blocked by trusted-history bootstrap recovery; no Studio/contact evidence is claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "P1",
+  "evidence": [
+    "PR #423 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f",
+    "Canonical CI run 31547903110 PASS",
+    "Generation-6 review evt-sol-20260811-8d5d357a-review-result-physics-scale-g6-233820 requested retention of current #418 behavioral reverse-overflow coverage",
+    "#423 head is byte-identical to current #418 exact head and contains #414 production repair plus only the reviewed test closure relative to #414"
+  ]
+}
