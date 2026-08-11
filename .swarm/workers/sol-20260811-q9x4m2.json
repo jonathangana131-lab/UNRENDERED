@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q9x4m2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T06:20:00+00:00",
-  "lastSeenAt": "2026-08-11T07:15:47+00:00",
-  "notes": "Authority audit PR #275 merged as 81a13b1138e26e7852c89685de5dbf9bd57753d8 and post-merge canonical CI is green. Audit claim released; selecting the next highest-value safe unlocked review/integration or unclaimed depth slot."
+  "lastSeenAt": "2026-08-11T07:18:01+00:00",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "slotId": "primary",
+  "branch": "agent/authority/HG-BACKFILL-AUTHORITY-primary-q9x4m2-g2",
+  "notes": "Generation-2 takeover of stale authority primary. Salvaging PR #287's reviewed bootstrap ownership regression onto current green main after the authority contract audit merged. No two-client Studio evidence claim."
 }
