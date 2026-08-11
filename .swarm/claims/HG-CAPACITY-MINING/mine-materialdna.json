@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "workerId": "sol-20260811-r4k8m2z7",
+  "claimToken": "5e1c8a3d7b2f9064",
+  "claimedAt": "2026-08-11T09:40:00+00:00",
+  "heartbeatAt": "2026-08-11T09:40:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-r4k8m2z7",
+  "pr": null,
+  "notes": "Inspect current MaterialDNA source/tests/active lanes/recent findings for one concrete non-duplicate bounded depth gap suitable for a source-only Hero-Gate one-shot. Publish structured finding even if no code edit is warranted; no Studio claim."
+}
