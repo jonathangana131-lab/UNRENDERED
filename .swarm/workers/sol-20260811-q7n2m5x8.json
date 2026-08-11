@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q7n2m5x8",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:41:00+00:00",
-  "lastSeenAt": "2026-08-11T09:42:20+00:00",
+  "lastSeenAt": "2026-08-11T09:49:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-geometry",
   "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-q7n2m5x8",
-  "notes": "Claimed bounded Physics Lab geometry capacity-mining role after losing Fidelity audit race. Inspect current source/tests/PRs for one concrete non-duplicate source-only invariant or test gap; no Studio evidence claim."
+  "notes": "Completed bounded Physics Lab geometry mining. Published evt-20260811-094530-q7n2m5x8-fixture-com-closure for non-duplicate office-table/filing-cabinet component-derived COM drift; released claim. No product edit or Studio evidence claim."
 }
