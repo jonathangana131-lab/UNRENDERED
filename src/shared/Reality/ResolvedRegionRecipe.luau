@@ -118,10 +118,8 @@ end
 local function assertExactRecordShape(value: unknown, allowedKeys: { [string]: boolean }, path: string): any
 	local source = assertPlainRecord(value, path)
 	for key in pairs(source) do
-		assert(
-			type(key) == "string" and allowedKeys[key] == true,
-			`{path} contains unknown schema key {tostring(key)}`
-		)
+		assert(type(key) == "string", `{path} contains a non-string schema key`)
+		assert(allowedKeys[key] == true, `{path} contains unknown schema key {key}`)
 	end
 	return source
 end
