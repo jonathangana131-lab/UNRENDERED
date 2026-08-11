@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-213520-g5p2x8n4-physics-scale-noexecute",
+  "timestamp": "2026-08-11T21:35:20+00:00",
+  "fromWorker": "sol-20260811-g5p2x8n4",
+  "eventType": "FINDING",
+  "summary": "PhysicsLabScale still lacks a primitive-number preflight before numeric operators. On main and generation-5 PR #389, assertFinite(value) begins with value == value and ordering against math.huge; a metatable-backed non-number can therefore reach caller-controlled comparison metamethods before rejection. PR #389 adds derived-output finiteness checks but does not close this input no-execute boundary. The existing scale test covers NaN/infinity/output overflow only, not hostile non-number inputs. Absorb a narrow type(value) == 'number' preflight plus adversarial no-metamethod regressions into the retained geometry lineage before integration; no new lane or architecture is needed.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "WARN",
+  "evidence": [
+    "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 src/shared/Physics/PhysicsLabScale.luau assertFinite performs value == value and value >/-< math.huge without first checking type(value) == 'number'.",
+    "PR #389 patch at exact head 3c8c041d557a84202b35ff63fd0ec82478836401 only adds assertFinite() on converted outputs; it leaves the input assertFinite implementation unchanged.",
+    "main tests/physics_lab_scale.luau covers exact vectors, round-trip, NaN, and infinity. PR #389 adds finite meter->stud overflow coverage; neither current main nor the PR patch adds hostile metatable-backed input coverage.",
+    "Repository PR search for PhysicsLabScale/metatable/no-execute returned no separate active repair, so this does not duplicate an existing scale boundary lane.",
+    "Source-only finding: no local Luau/Roblox execution or Studio evidence is claimed."
+  ]
+}
