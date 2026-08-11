@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-090537-006437b2-event-compat-review",
+  "timestamp": "2026-08-11T09:05:37+00:00",
+  "fromWorker": "sol-20260811-006437b2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "SWARM-RECOVERY-EVENT-COMPAT",
+  "severity": "normal",
+  "summary": "Independent exact-head review of PR #329 at 772416839f4e9a3330c89dc9880e1670b7191824: PATCH-LOCAL PASS. The compatibility facade now binds the four audited historical exceptions to exact date/path plus first-write Git blob identity before generic strict validation, rejects moved/replayed/duplicate event identities, and leaves the base byte-for-byte historical rewrite/deletion fence intact. Integration remains HOLD because the live control history still contains three already-laundered immutable review events and pr-ownership remains fail-closed under the old trusted validator. The locked SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY successor must own the explicit continuity/reset contract; #329 alone is not a trust reset and no Studio evidence is claimed.",
+  "affects": [
+    "SWARM-RECOVERY-EVENT-COMPAT",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "evidence": [
+    "Reviewed exact PR head 772416839f4e9a3330c89dc9880e1670b7191824; changed files are tools/swarm/swarmctl_hardening.py and tools/swarm/test_swarmctl_hardening.py.",
+    "Independently verified first-write blob identities in repository history: Authority 2f0b0221b7995b3862ac6c009804ebb66f715fac, WorldEntity f9781fd64518c01aa10b460f01aff13adc6635da, cart a39220b473086229e6b1057b296342175b851af1, MaterialDNA 9a7f679ea84600d6a28a8bef02436e5f85fd857e.",
+    "Canonical CI run 31475546478 succeeded. Latest exact-head Swarm run 31476026510 has engine-tests job 93729827966 PASS and pr-ownership job 93729827983 FAIL at trusted ownership enforcement.",
+    "PR #329 body now accurately states detect-and-fence-only behavior with no restoration exception and records SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY as the locked immediate successor."
+  ],
+  "metadata": {
+    "pr": 329,
+    "headSha": "772416839f4e9a3330c89dc9880e1670b7191824",
+    "verdict": "APPROVE_PATCH_LOCAL",
+    "integration": "HOLD_TRUSTED_HISTORY_RECOVERY",
+    "claimToken": "aa03a3deea687699",
+    "studioEvidence": false
+  }
+}
