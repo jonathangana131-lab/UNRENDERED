@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-a3c8cf14",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-11T09:00:30+00:00",
-  "lastSeenAt": "2026-08-11T09:41:00+00:00",
-  "laneId": "HG-PHYSICS-CART-GEOMETRY",
-  "slotId": "primary",
+  "lastSeenAt": "2026-08-11T09:43:30+00:00",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/physics/HG-PHYSICS-CART-GEOMETRY-resync-a3c8cf14",
-  "notes": "Current-main replay of independently source-approved PR #311 two-file rolling-cart geometry repair; rerun exact-head CI and request fresh audit. No Studio evidence."
+  "notes": "Completed review + resync cycle. PR #334 capability leak found/repaired but validation-HOLD; PR #310 exact-head SOURCE PASS; PR #347 current-main chair SOURCE PASS; published PR #352 current-main rolling-cart replay at 0c458fdf... with exact-head canonical CI 31478849138 GREEN and lane moved to REVIEW for independent audit. PR #352 Swarm engine-tests are green; pr-ownership is globally fail-closed on malformed worker sol-20260811-fcea3ee6 status CLAIMING, routed to active recovery PR #351. No Studio evidence claimed."
 }
