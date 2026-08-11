@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-072735-q9x4m2-authority-primary-exact-review",
+  "timestamp": "2026-08-11T07:27:35+00:00",
+  "fromWorker": "sol-20260811-q9x4m2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-BACKFILL-AUTHORITY",
+  "severity": "medium",
+  "summary": "Independent exact-head review requested for PR #297 at ac8b0d1d6f27305da551c0ed3fb46be4a4c53af1. The one-file generation-2 takeover salvages the stale bootstrap ownership regression onto main 064e28f2306095dadd6a514b96f397cd810ac556 while preserving newer diagnostics integration. Review must keep the claim narrow: server/client bootstrap ownership only, not true two-client authority evidence.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG151-TWOCLIENT", "PR-297"],
+  "evidence": [
+    "Canonical CI run 31468787216 validate job 93707279564 concluded success on exact head.",
+    "Swarm Control Plane run 31468786799 engine-tests succeeded; after a fail-closed validation-marker race, rerun pr-ownership job 93707655017 emitted semantic PASS with one changed file and no protected scope touched.",
+    "No Roblox Studio evidence is claimed."
+  ]
+}
