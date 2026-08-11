@@ -5,12 +5,12 @@
   "workerId": "sol-20260811-8d5d357a",
   "claimToken": "afc07ec87d7b640a",
   "claimedAt": "2026-08-11T23:08:18+00:00",
-  "heartbeatAt": "2026-08-11T23:08:18+00:00",
+  "heartbeatAt": "2026-08-11T23:17:56+00:00",
   "leaseSeconds": 1800,
   "generation": 6,
   "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-8d5d357a-g6",
-  "pr": null,
+  "pr": 420,
   "takeoverOf": "sol-20260811-d7k4m9q2:g5:5e1a9c3d7b4f2068",
-  "notes": "Generation-6 stale takeover after inspecting PR #415 and its failed exact-head Swarm Control Plane run. Preserve #415 head 550bcf348cd49876ae5d30360eb953311900e584; close only the exact finite live-control defects surfaced by the read-only bootstrap inventory, without rewriting immutable event bytes or adding generic schema compatibility."
+  "notes": "Generation-6 stale takeover continues PR #415 from exact head 550bcf348cd49876ae5d30360eb953311900e584 in PR #420. Exact finite live-control defects from the generation-5 read-only bootstrap inventory are pinned without rewriting immutable event bytes or adding generic schema compatibility."
 }
