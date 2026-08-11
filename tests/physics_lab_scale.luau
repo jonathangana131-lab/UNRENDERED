@@ -1,5 +1,4 @@
 local fs = require("@lune/fs")
-
 local ProductionLoader = require("./support/ProductionLoader")
 
 local PhysicsLabScale = ProductionLoader.requireShared("Physics/PhysicsLabScale")
