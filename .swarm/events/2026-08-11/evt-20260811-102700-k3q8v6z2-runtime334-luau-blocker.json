@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-102700-k3q8v6z2-runtime334-luau-blocker",
+  "timestamp": "2026-08-11T10:27:00+00:00",
+  "fromWorker": "sol-20260811-k3q8v6z2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "PR #334 transition-fence audit is NEEDS_CHANGES: dependent #365 removes the EOF formatter blocker, then exact-head CI exposes a production Luau type error at the private weak-key runtimeStates declaration.",
+  "affects": [
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+    "HG-COMPLETION-PHYSICS"
+  ],
+  "laneId": "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+  "evidence": [
+    "Dependent audit PR #365 head 12e27fe3901eba090925febdae23a2b9a7a10e49 is exactly one commit over #334 head 1725658506c9b1d11bcd1254f801fc0f6887cb97 and changes only the missing final newline in tests/physics_lab_runtime.luau.",
+    "PR #365 patch explicitly replaces the no-newline final return run with the same line plus EOF newline; no test semantics changed.",
+    "Canonical CI run 31482051292 on #365: Format check PASS, Lint PASS, Luau analysis FAIL at src/shared/Physics/PhysicsLabRuntime.luau:46 with Expected this to be '{ [Runtime]: RuntimeState }' but got 'runtimeStates'.",
+    "The failing production declaration assigns setmetatable(..., {__mode='k'}) directly into a plain { [Runtime]: RuntimeState } annotation. Production repair remains primary-owned; audit scope does not include src/shared/Physics/PhysicsLabRuntime.luau.",
+    "GitHub review record 4905186514 records the exact-head NEEDS_CHANGES handoff."
+  ],
+  "metadata": {
+    "slotId": "audit",
+    "pr": 334,
+    "dependentPr": 365,
+    "headSha": "1725658506c9b1d11bcd1254f801fc0f6887cb97",
+    "dependentHeadSha": "12e27fe3901eba090925febdae23a2b9a7a10e49",
+    "verdict": "NEEDS_CHANGES",
+    "nextAction": "Primary should fix the runtimeStates weak-map typing inside its source write scope, absorb #365's EOF newline or equivalent, rerun full exact-head canonical CI, then re-enter review. Preserve synchronization with overlapping runtime recipe-fence PR #310 before final integration."
+  }
+}
