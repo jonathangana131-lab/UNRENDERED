@@ -379,15 +379,9 @@ local function run(): number
 			facadeRuntime:getRecord(facadeOtherId)
 		end)
 		expect("facade capability rejection preserves unrelated registry entity", otherRecordOk)
-		local facadeRetry, facadeRetryRecord = facadeRuntime:step(
-			facadeId,
-			noDemand,
-			2,
-			function(record)
-				return record.persistentState
-			end,
-			function() end
-		)
+		local facadeRetry, facadeRetryRecord = facadeRuntime:step(facadeId, noDemand, 2, function(record)
+			return record.persistentState
+		end, function() end)
 		expect(
 			"facade capability rejection remains retryable",
 			facadeRetry.transitioned and facadeRetryRecord.fidelity == "F0"
@@ -421,15 +415,9 @@ local function run(): number
 	end)
 	expect("guard reset rejection leaves runtime active", guardSnapshotOk)
 	local guardRetryOk, guardRetryTransitioned = pcall(function()
-		local retry, retryRecord = guardTamperRuntime:step(
-			guardTamperId,
-			noDemand,
-			2,
-			function(record)
-				return record.persistentState
-			end,
-			function() end
-		)
+		local retry, retryRecord = guardTamperRuntime:step(guardTamperId, noDemand, 2, function(record)
+			return record.persistentState
+		end, function() end)
 		return retry.transitioned and retryRecord.fidelity == "F0"
 	end)
 	expect(
