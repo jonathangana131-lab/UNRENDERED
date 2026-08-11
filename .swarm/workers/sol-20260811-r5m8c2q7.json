@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:03:19+00:00",
-  "lastSeenAt": "2026-08-11T21:07:30+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-r5m8c2q7",
-  "notes": "Independent exact-head source audit of PR #389. Source-only review; no Roblox Studio, viewport, or physical-contact evidence claimed."
+  "lastSeenAt": "2026-08-11T21:11:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-r5m8c2q7",
+  "notes": "Mine current Hero-Gate authority/multiplayer source, tests, active PRs, and prior findings for one concrete non-duplicate source-only depth gap. No Studio/two-client evidence claimed."
 }
