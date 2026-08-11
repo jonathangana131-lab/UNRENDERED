@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "workerId": "sol-20260811-z7p4n6x2",
+  "claimToken": "d4a9f2c7b6e13085",
+  "claimedAt": "2026-08-11T21:16:00+00:00",
+  "heartbeatAt": "2026-08-11T21:16:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/capacity/HG-CAPACITY-MINING-diagnostics-z7p4n6x2",
+  "pr": null,
+  "notes": "Mine diagnostics source/tests for a concrete non-duplicate source-only depth gap; exclude the active duplicate same-named diagnostics-root regression already owned by HG-BACKFILL-DIAGNOSTICS audit."
+}
