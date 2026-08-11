@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-k8v2q6m4",
   "claimToken": "3e8a1c7d5b2f9046",
   "claimedAt": "2026-08-11T08:43:20+00:00",
-  "heartbeatAt": "2026-08-11T08:47:56+00:00",
+  "heartbeatAt": "2026-08-11T08:54:10+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-k8v2q6m4",
   "pr": null,
-  "notes": "Mine current Physics Lab diagnostics source/tests, active PRs, and evidence contracts for one concrete non-duplicate source-only Hero-Gate gap; do not queue Studio while display remains blocked."
+  "notes": "Mined concrete diagnostics authority-binding gap: boolean isRepresented(entityId) membership does not prove an enumerated Workspace child is the actual runtime-owned Instance; preparing structured finding after duplicate check against active diagnostics PRs."
 }
