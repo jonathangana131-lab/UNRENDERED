@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-z3k7m9q2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:33:00+00:00",
-  "lastSeenAt": "2026-08-11T21:33:00+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "test-adversary",
+  "lastSeenAt": "2026-08-11T21:41:30+00:00",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-test-adversary-z3k7m9q2",
-  "notes": "Independent test-adversary pass stacked on PR #389 exact head 3c8c041d557a84202b35ff63fd0ec82478836401; test-only scope, no Studio evidence."
+  "notes": "Completed independent test-adversary pass. Draft PR #406 proves malformed PhysicsLabScale scalar can execute caller __eq before rejection; finding and handoff published, primary #389 notified, claim released."
 }
