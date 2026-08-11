@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-n4c8v2m6",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T21:20:22+00:00",
-  "lastSeenAt": "2026-08-11T21:20:22+00:00",
+  "lastSeenAt": "2026-08-11T21:21:58+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-n4c8v2m6",
-  "notes": "Independent exact-head audit of diagnostics generation-5 PR #401 after green canonical CI; source/test review only, no Studio/viewport evidence claims."
+  "notes": "Completed independent exact-head audit of PR #401 at 2f5603210a3d3d6af7db94b43fdfd6707b1f9b4. Duplicate-root closure is coherent, but REQUEST_CHANGES review 4910865792 and event evt-20260811-212158-n4c8v2m6-diagnostics-g5-review require absorption of PR #400 visual projection integrity: exact authoritative Adornee and displayed label.Text revalidation before capture reports completeness."
 }
