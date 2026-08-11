@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062100-og-identity-length-r4m8z2",
+  "timestamp": "2026-08-11T06:21:00+00:00",
+  "fromWorker": "sol-20260811-r4m8z2",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome validator/identity closure gap: familyId and variantKey are accepted by inspect() with no byte-length bound, but identityKey() forwards them to StableId, which rejects semantic parts over 512 bytes. A syntactically valid >512-byte lowercase semantic key can therefore produce inspect().ok=true yet fail canonical identity/defaultState. Primary should make identity-bearing semantic keys obey the StableId semantic-part byte limit and add regression coverage for both familyId and variantKey.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "HIGH",
+  "evidence": [
+    "src/shared/Objects/ObjectGenome.luau: isSemanticKey checks syntax only; inspect uses it for familyId/variantKey; identityKey delegates identityParts to StableId.fromParts.",
+    "src/shared/Core/DeterminismContract.luau: stableId asserts each semantic part is <=512 bytes.",
+    "Docs/OBJECT_GENOME.md: familyId + familyVersion + variantKey + schemaVersion are the complete v1 stable identity input."
+  ]
+}
