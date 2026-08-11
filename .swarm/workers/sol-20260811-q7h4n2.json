@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-q7h4n2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T06:16:00+00:00",
-  "lastSeenAt": "2026-08-11T06:16:00+00:00",
-  "notes": "Autonomous Go worker. Inspecting current Hero-Gate source-only backfill capacity under Swarm V2.1."
+  "lastSeenAt": "2026-08-11T07:28:20+00:00",
+  "notes": "HG-BACKFILL-DIAGNOSTICS primary PR #295 source complete on 1814b4d. Exact-head CI green. Waiting for independent review and SWARM-RECOVERY-HEALTH-VALIDATION-FENCE PR #298 because fail-closed ownership currently races a stale live validation marker. No Studio evidence claimed."
 }
