@@ -146,6 +146,144 @@ local function run(): number
 	)
 	malformedRuntime:dispose()
 
+	assert(#recipe.entities >= 2, "transition-mutation fence regression requires at least two Physics Lab entities")
+
+	local disposeFenceRuntime = PhysicsLabRuntime.new(recipe)
+	local disposeFenceId = recipe.entities[2].entity.id
+	local disposeFenceBefore = disposeFenceRuntime:snapshot()
+	local disposeFenceRecords = {}
+	for _, entityRecipe in ipairs(recipe.entities) do
+		disposeFenceRecords[entityRecipe.entity.id] = disposeFenceRuntime:getRecord(entityRecipe.entity.id)
+	end
+	disposeFenceRuntime:step(disposeFenceId, noDemand, 0, function(record)
+		return record.persistentState
+	end, function() end)
+
+	local callbackDisposeAccepted = pcall(function()
+		disposeFenceRuntime:step(disposeFenceId, noDemand, 2, function(record)
+			return record.persistentState
+		end, function()
+			disposeFenceRuntime:dispose()
+		end)
+	end)
+	expect("transition observer cannot dispose the runtime", not callbackDisposeAccepted)
+
+	local disposeFenceAfter = disposeFenceRuntime:snapshot()
+	expect(
+		"rejected callback disposal preserves registry population",
+		disposeFenceAfter.registered == disposeFenceBefore.registered
+	)
+	expect(
+		"rejected callback disposal preserves FidelityManager population",
+		disposeFenceAfter.fidelity.registered == disposeFenceBefore.fidelity.registered
+	)
+	local allDisposeFenceRecordsIntact = true
+	for _, entityRecipe in ipairs(recipe.entities) do
+		local id = entityRecipe.entity.id
+		local original = disposeFenceRecords[id]
+		local ok, current = pcall(function()
+			return disposeFenceRuntime:getRecord(id)
+		end)
+		if not ok
+			or current.id ~= original.id
+			or current.fidelity ~= original.fidelity
+			or current.stateRevision ~= original.stateRevision
+			or current.representationRevision ~= original.representationRevision
+		then
+			allDisposeFenceRecordsIntact = false
+			break
+		end
+	end
+	expect("rejected callback disposal leaves every WorldEntity registration intact", allDisposeFenceRecordsIntact)
+
+	local disposeRetry, disposeRetryRecord = disposeFenceRuntime:step(
+		disposeFenceId,
+		noDemand,
+		2,
+		function(record)
+			return record.persistentState
+		end,
+		function() end
+	)
+	expect("transition guard clears after rejected callback disposal", disposeRetry.transitioned)
+	expect("callback-disposal retry commits the intended demotion", disposeRetryRecord.fidelity == "F0")
+	expect(
+		"callback-disposal retry keeps authorities synchronized",
+		disposeFenceRuntime:getFidelity(disposeFenceId) == "F0"
+	)
+	disposeFenceRuntime:dispose()
+
+	local recursiveFenceRuntime = PhysicsLabRuntime.new(recipe)
+	local recursiveTargetId = recipe.entities[1].entity.id
+	local recursiveOtherId = recipe.entities[2].entity.id
+	local recursiveBefore = recursiveFenceRuntime:snapshot()
+	local recursiveTargetBefore = recursiveFenceRuntime:getRecord(recursiveTargetId)
+	local recursiveOtherBefore = recursiveFenceRuntime:getRecord(recursiveOtherId)
+	recursiveFenceRuntime:step(recursiveTargetId, noDemand, 0, function(record)
+		return record.persistentState
+	end, function() end)
+
+	local recursiveCaptureAccepted = pcall(function()
+		recursiveFenceRuntime:step(recursiveTargetId, noDemand, 2, function(record)
+			recursiveFenceRuntime:step(recursiveOtherId, noDemand, 100, function(otherRecord)
+				return otherRecord.persistentState
+			end, function() end)
+			return record.persistentState
+		end, function() end)
+	end)
+	expect("capture callback cannot recursively step another runtime entity", not recursiveCaptureAccepted)
+
+	local recursiveAfter = recursiveFenceRuntime:snapshot()
+	local recursiveTargetAfter = recursiveFenceRuntime:getRecord(recursiveTargetId)
+	local recursiveOtherAfter = recursiveFenceRuntime:getRecord(recursiveOtherId)
+	expect(
+		"rejected recursive capture preserves registry population",
+		recursiveAfter.registered == recursiveBefore.registered
+	)
+	expect(
+		"rejected recursive capture preserves FidelityManager population",
+		recursiveAfter.fidelity.registered == recursiveBefore.fidelity.registered
+	)
+	expect(
+		"rejected recursive capture preserves target authority",
+		recursiveTargetAfter.fidelity == recursiveTargetBefore.fidelity
+			and recursiveTargetAfter.stateRevision == recursiveTargetBefore.stateRevision
+			and recursiveTargetAfter.representationRevision == recursiveTargetBefore.representationRevision
+	)
+	expect(
+		"rejected recursive capture preserves unrelated authority",
+		recursiveOtherAfter.fidelity == recursiveOtherBefore.fidelity
+			and recursiveOtherAfter.stateRevision == recursiveOtherBefore.stateRevision
+			and recursiveOtherAfter.representationRevision == recursiveOtherBefore.representationRevision
+	)
+
+	local nestedClockUntouched, nestedHold = pcall(function()
+		return recursiveFenceRuntime:step(recursiveOtherId, noDemand, 0, function(record)
+			return record.persistentState
+		end, function() end)
+	end)
+	expect(
+		"rejected recursive step does not advance unrelated entity monotonic time",
+		nestedClockUntouched and nestedHold.blockedReason == "hold"
+	)
+
+	local recursiveRetry, recursiveRetryRecord = recursiveFenceRuntime:step(
+		recursiveTargetId,
+		noDemand,
+		2,
+		function(record)
+			return record.persistentState
+		end,
+		function() end
+	)
+	expect("transition guard clears after rejected recursive capture", recursiveRetry.transitioned)
+	expect("recursive-capture retry commits the intended demotion", recursiveRetryRecord.fidelity == "F0")
+	expect(
+		"recursive-capture retry keeps authorities synchronized",
+		recursiveFenceRuntime:getFidelity(recursiveTargetId) == "F0"
+	)
+	recursiveFenceRuntime:dispose()
+
 	local longCycleRuntime = PhysicsLabRuntime.new(recipe)
 	local longCycleId = recipe.entities[1].entity.id
 	local longCycleBefore = longCycleRuntime:getRecord(longCycleId)
