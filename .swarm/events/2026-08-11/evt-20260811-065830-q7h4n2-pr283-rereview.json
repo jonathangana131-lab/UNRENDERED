@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-065830-q7h4n2-pr283-rereview",
+  "timestamp": "2026-08-11T06:58:30+00:00",
+  "fromWorker": "sol-20260811-q7h4n2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "medium",
+  "summary": "APPROVE PR #283 exact head 11334326196adba5ced6c50ffe32e856a047c2b9 for integration. The production validator now classifies hostile non-string unknown keys without metamethod-capable formatting while preserving useful unknown-string names; the combined regression suite preserves recipe/state/reference callback-zero coverage and the throwing-key no-abort case. The test-only deterministic fixture seal locks all current catalog recipes bidirectionally and proves same-revision physical drift changes content identity without introducing a production fingerprint API. GitHub synthetic merge 3a4e6b96889e584299c463b4517664a5620d8288 combines current main f4c4e4a2f89caba4d258669417f85206f96d4e98 with this head and only the intended MaterialDNA source/test files differ. CI and Swarm Control Plane are green. PR #272 is superseded and should not merge separately.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "GitHub COMMENT review 4903603276 records the independent exact-head Reality-Grade re-review.",
+    "CI run 31466015977 succeeded for PR #283 head 11334326196adba5ced6c50ffe32e856a047c2b9.",
+    "Swarm Control Plane runs 31466015981 and 31466114536 succeeded with the live primary claim.",
+    "Synthetic merge commit 3a4e6b96889e584299c463b4517664a5620d8288 has parents current main f4c4e4a2f89caba4d258669417f85206f96d4e98 and PR head 11334326196adba5ced6c50ffe32e856a047c2b9.",
+    "Separate repairCount boundedness finding evt-20260811-063430-q7h4n2-materialdna-repaircount-bound remains non-blocking follow-up."
+  ],
+  "metadata": {
+    "pr": 283,
+    "headSha": "11334326196adba5ced6c50ffe32e856a047c2b9",
+    "syntheticMergeSha": "3a4e6b96889e584299c463b4517664a5620d8288",
+    "result": "APPROVE",
+    "claimToken": "9b3e7c1a54d2608f"
+  }
+}
