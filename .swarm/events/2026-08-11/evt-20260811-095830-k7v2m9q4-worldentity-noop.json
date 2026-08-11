@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-095830-k7v2m9q4-worldentity-noop",
+  "timestamp": "2026-08-11T09:58:30+00:00",
+  "fromWorker": "sol-20260811-k7v2m9q4",
+  "eventType": "FINDING",
+  "summary": "Evidence-backed no-op from WorldEntity capacity mining: no new non-duplicate Hero Gate source gap survived current-head and active-work cross-checking. The candidate non-finite-number persistence hole is already closed by assertFiniteNumber on scalar values and numeric keys; persistent-state depth/node/string-byte limits, safe-integer revision, generatorVersion bound, and failure-atomic lifecycle coverage are present on the active WorldEntity head. Remaining concrete registry-cardinality, retained-diagnostic-byte/capacity, and malformed-registry-identity classes are already durable findings or active work. Do not spawn another WorldEntity child from this pass.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "INFO",
+  "evidence": [
+    "PR #293 head 91b6e273c0c21326dfbfe9c5ee5227e99f26933e: src/shared/Reality/WorldEntity.luau contains assertFiniteNumber plus bounded persistent-state depth/node/string-byte budgets and exact integer/version guards.",
+    "PR #344 already supplies the stacked WorldEntity state-budget/failure-atomic boundary regression coverage; duplicating it would violate swarm dedupe rules.",
+    "Current WorldEntity review/finding set already tracks live-registry cardinality, retained diagnostic metadata/capacity, and malformed registry identity behavior (including PR #350), leaving no distinct source-only gap from this pass.",
+    "Validation performed here was static source/PR/event-ledger review only; no Studio run or local test execution is claimed."
+  ]
+}
