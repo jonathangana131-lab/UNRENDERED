@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-100350-j9k4v7n2-physics-ramp-entry-lip",
+  "timestamp": "2026-08-11T10:03:50+00:00",
+  "fromWorker": "sol-20260811-j9k4v7n2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "summary": "Physics Lab ramp entry has a source-provable ~0.154 m (~0.55 stud) vertical walking lip before the intended 14-degree incline, and the current/proposed geometry property is too weak to reject it. Route this non-duplicate Reality-Grade geometry defect into existing HG-BACKFILL-PHYSICS-GEOMETRY rather than opening another feature lane. No Studio/contact evidence is claimed.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "evidence": [
+    "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 PhysicsLabRecipe ramp is Block at y=0.42 m, rotation z=-14 degrees, dimensions=(3.00,0.20,1.25) m; floor top is y=0.",
+    "For a 3.00 m run and 0.20 m thickness, lowest walking top-surface edge = 0.42 - 1.50*sin(14deg) + 0.10*cos(14deg) = 0.154146729 m above floor. With STUDS_TO_METERS=0.28 this is ~0.5505 studs.",
+    "Lowest block corner = 0.42 - 1.50*sin(14deg) - 0.10*cos(14deg) = -0.039912416 m, so the block penetrates the floor by ~4.0 cm while still exposing a ~15.4 cm walkable entry step.",
+    "PR #302 adds a ramp assertion that the low walking surface is no higher than the first stair top (0.18 m). The current ~0.154 m entry lip therefore passes that proposed property despite remaining almost stair-height.",
+    "Open-PR/code search found no distinct ramp-entry repair; current chair/cart geometry repairs are separate and already owned."
+  ],
+  "metadata": {
+    "sourceMain": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "relatedPr": 302,
+    "recommendedLane": "HG-BACKFILL-PHYSICS-GEOMETRY",
+    "recommendedAction": "Make the ramp walking surface meet the floor continuously or within an explicit measured physical-contact tolerance while preserving a useful deterministic incline; strengthen the property test to calculate the true low walking-surface edge relative to floor rather than comparing it with stair rise. Validate source geometry and exact-head CI, then obtain Roblox Studio Physical Player traversal/contact evidence separately before any engine-quality claim.",
+    "studioEvidence": false
+  }
+}
