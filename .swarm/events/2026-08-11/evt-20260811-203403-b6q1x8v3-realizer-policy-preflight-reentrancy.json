@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-203403-b6q1x8v3-realizer-policy-preflight-reentrancy",
+  "timestamp": "2026-08-11T20:34:03Z",
+  "fromWorker": "sol-20260811-b6q1x8v3",
+  "eventType": "FINDING",
+  "summary": "PhysicsLabRealizer.step evaluates caller-owned PolicyInputs through FidelityManager.selectDesiredLevel before entering PhysicsLabRuntime.step. The generation-3 runtime mutation fence in PR #388 therefore cannot protect this outer preflight: a metatable-backed input can execute during the Realizer's field reads and call RealizedLab.destroy() or recursively call RealizedLab.step() before the runtime transitionInFlight guard is established. A rejected hostile input can thus tear down or reenter the realized lab even though the underlying runtime's direct PolicyInputs path is now fenced.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "warning",
+  "evidence": [
+    "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 PhysicsLabRealizer.step calls FidelityManager.selectDesiredLevel(inputs, nil, current.fidelity) before calling runtime:step(entityId, inputs, nowSeconds, captureState, observeTransition).",
+    "FidelityManager.selectDesiredLevel delegates to evaluatePolicy, whose validation/policy evaluation reads caller-owned fields such as inputs.distanceStuds, inputs.visible, inputs.significance, inputs.networkRelevance, and inputs.entityRelevance; a metatable-backed table can execute caller code during those reads.",
+    "PR #388 exact head 89eb1c890d63de9b4e407caee215b6065b6ddac1 establishes PhysicsLabRuntime transitionInFlight only immediately before state.fidelity:step(... inputs ...). Its hostile-PolicyInputs regression calls preHookRuntime:dispose() on PhysicsLabRuntime directly and therefore does not exercise the earlier PhysicsLabRealizer.selectDesiredLevel preflight.",
+    "Source-level repro: obtain a RealizedLab, pass PolicyInputs whose __index invokes lab.destroy() once and then supplies otherwise valid values, and call lab.step(). The outer selectDesiredLevel read runs while Realizer destroyed=false and before runtime.step establishes its mutation fence, so destroy can complete; the enclosing step then fails against disposed authority after lifecycle mutation has already occurred.",
+    "The active HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE write scope is PhysicsLabRuntime plus runtime tests, not PhysicsLabRealizer. Searches for open PRs/issues covering PhysicsLabRealizer + PolicyInputs/selectDesiredLevel reentrancy returned no matching repair, so this is not a duplicate of #388 or the existing harness teardown-authority work."
+  ],
+  "metadata": {
+    "runtimeTransitionFencePr": 388,
+    "runtimeTransitionFenceHead": "89eb1c890d63de9b4e407caee215b6065b6ddac1",
+    "recommendedLaneId": "HG-PHYSICS-REALIZER-STEP-FENCE",
+    "recommendedClosure": "Add a Realizer-owned step transaction fence that begins before the outer selectDesiredLevel/caller-owned PolicyInputs read and remains active through runtime.step, representation synchronization, and metrics publication; reject destroy/recursive step while the fence is active; clear it on every failure path. Prefer eliminating duplicate caller-owned policy evaluation if the F0/F2 admissibility check can be moved behind a project-owned boundary without weakening fail-closed semantics. Add pure/source regressions proving hostile PolicyInputs cannot destroy or recursively reenter RealizedLab during preflight, authority/representation counts remain intact, and an immediate valid retry succeeds.",
+    "studioEvidence": "none performed or claimed"
+  }
+}
