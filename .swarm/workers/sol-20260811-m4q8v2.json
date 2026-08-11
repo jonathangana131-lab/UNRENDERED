@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-m4q8v2",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "STOPPED",
   "startedAt": "2026-08-11T11:46:03+00:00",
-  "lastSeenAt": "2026-08-11T11:46:03+00:00",
-  "notes": "GO worker evaluating current Hero Gate review/integration backlog; targeting a source-only independent fidelity audit if the slot remains claimable."
+  "lastSeenAt": "2026-08-11T11:56:19+00:00",
+  "notes": "Completed fresh HG-BACKFILL-FIDELITY audit on exact PR #335 head 4a3c55d9d2046df1af6ee93710d395aedd4ea102. Published review 4905920688: source/test PASS; integration remains held only on separately owned SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY/live pr-ownership recovery. No local test run claimed."
 }
