@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-093035-q6m2v8k5-materialdna-validation-budgets",
+  "timestamp": "2026-08-11T09:30:35+00:00",
+  "fromWorker": "sol-20260811-q6m2v8k5",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "WARN",
+  "summary": "MaterialDNA rejection validation is bounded for accepted semantic data but not for inspected keys or diagnostic bytes, allowing oversized malformed tables to force traversal and error allocation proportional to attacker-controlled table cardinality before rejection.",
+  "affects": {
+    "laneIds": [
+      "HG-BACKFILL-MATERIALDNA"
+    ],
+    "resources": [
+      "src/shared/Materials/MaterialDNA.luau"
+    ]
+  },
+  "evidence": [
+    "validateKnownFields traverses every raw key and appends one error for every unknown key; unknown string keys are interpolated verbatim with no diagnostic-count or diagnostic-byte ceiling.",
+    "validateDenseArray enumerates the full candidate table before enforcing MAX_EVENTS=8 or MAX_TAGS=12, so malformed oversized tables can force work proportional to table cardinality even though the supported arrays are tiny.",
+    "Existing semantic key/value length limits and accepted-record aggregate budgets constrain valid MaterialDNA, but they do not constrain rejected-input traversal or diagnostics, leaving the fail-closed path without an explicit runtime/memory budget.",
+    "Open repair-count hardening PR #313 and earlier event evt-20260811-081620-mat8c3r1-materialdna-key-grammar address separate integer-identity and '%' grammar invariants; neither bounds validator traversal or diagnostic allocation."
+  ],
+  "metadata": {
+    "reproClass": "source-contract",
+    "studioEvidenceRequired": false,
+    "recommendedAction": "Add deterministic validation budgets for inspected keys, error count, and error bytes; use bounded/truncated unknown-key diagnostics; early-reject arrays once cardinality/index proves the fixed cap exceeded; add adversarial oversized-table tests that verify deterministic bounded diagnostics and no metatable execution.",
+    "recommendedLane": "HG-ONESHOT-MATERIALDNA-VALIDATION-BUDGETS"
+  }
+}
