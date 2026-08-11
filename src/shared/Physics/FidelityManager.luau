@@ -120,6 +120,12 @@ local LEVEL_INDEX: { [FidelityLevel]: number } = {
 }
 table.freeze(LEVEL_INDEX)
 
+-- This is a defensive source-level envelope, not a device performance target.
+-- Runtime/device profiles are expected to choose lower values unless measurement
+-- proves otherwise, but no caller may remove the project-owned bound entirely.
+local MAX_REGISTERED_ENTITIES = 65536
+FidelityManager.MAX_REGISTERED_ENTITIES = MAX_REGISTERED_ENTITIES
+
 local DEFAULT_CONFIG: PolicyConfig = {
 	maxRegisteredEntities = 4096,
 	structuralDistanceStuds = 512,
@@ -197,9 +203,9 @@ local function validateConfig(config: PolicyConfig): ()
 	local numericMaxRegisteredEntities = maxRegisteredEntities :: number
 	assert(
 		numericMaxRegisteredEntities >= 1
-			and numericMaxRegisteredEntities < math.huge
+			and numericMaxRegisteredEntities <= MAX_REGISTERED_ENTITIES
 			and numericMaxRegisteredEntities == math.floor(numericMaxRegisteredEntities),
-		"maxRegisteredEntities must be a positive finite integer"
+		`maxRegisteredEntities must be a positive finite integer <= {MAX_REGISTERED_ENTITIES}`
 	)
 	validateFiniteNonNegative("heroDistanceStuds", config.heroDistanceStuds)
 	validateFiniteNonNegative("interactiveDistanceStuds", config.interactiveDistanceStuds)
