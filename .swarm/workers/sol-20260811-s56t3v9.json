@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:00:30+00:00",
-  "lastSeenAt": "2026-08-11T21:00:30+00:00",
-  "laneId": "HG-BACKFILL-OBJECTGENOME",
-  "slotId": "test-adversary",
-  "branch": "agent/tests/HG-BACKFILL-OBJECTGENOME-test-s56t3v9",
-  "notes": "Generation-8 ObjectGenome adversarial regression pass stacked on PR #395 exact head; source-only, no Studio evidence."
+  "lastSeenAt": "2026-08-11T21:03:00+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "primary",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-s56t3v9-g5",
+  "notes": "Generation-5 WorldEntity consolidation: salvage PR #378 source via #379 stack and absorb the independent numeric-ceiling regression from #386 without widening architecture."
 }
