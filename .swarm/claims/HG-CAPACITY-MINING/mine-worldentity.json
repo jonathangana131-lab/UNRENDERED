@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "workerId": "sol-20260811-m7q2v9c4",
+  "claimToken": "8d2f6a1c9b4e7053",
+  "claimedAt": "2026-08-11T12:33:20+00:00",
+  "heartbeatAt": "2026-08-11T12:33:20+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-m7q2v9c4",
+  "pr": null,
+  "notes": "Source-only capacity mining after finishing ObjectGenome gen6. Inspect current main plus active WorldEntity successor #378 and existing adversaries/reviews for a concrete non-duplicate post-#378 invariant or integration gap. Publish a structured finding even if no new lane is warranted; do not implement Hero breadth or claim Studio evidence."
+}
