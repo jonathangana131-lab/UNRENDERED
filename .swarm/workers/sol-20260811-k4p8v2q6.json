@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-k4p8v2q6",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-11T09:00:38+00:00",
-  "lastSeenAt": "2026-08-11T09:43:05+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE-audit-k4p8v2q6",
-  "notes": "Completed independent exact-head audit of PR #334 at 1725658506c9b1d11bcd1254f801fc0f6887cb97. Production source PASS; integration HOLD because exact-head canonical CI run 31477745421 fails StyLua solely on missing EOF newline in tests/physics_lab_runtime.luau, so later checks/tests did not execute. Swarm ownership remains separately fail-closed on immutable-event history blocker. Durable REVIEW_RESULT evt-20260811-094230-k4p8v2q6-runtime-transition-audit published. No Studio evidence claimed."
+  "lastSeenAt": "2026-08-11T09:46:10+00:00",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-MATERIALDNA-COUNTERS-audit-k4p8v2q6",
+  "notes": "Independent exact-head source-only audit of MaterialDNA counter salvage PR #353 at 10559afdce1a1854e7932522f6e78561736c8ed3. No Studio evidence claim."
 }
