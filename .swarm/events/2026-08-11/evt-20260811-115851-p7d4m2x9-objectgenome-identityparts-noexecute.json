@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-115851-p7d4m2x9-objectgenome-identityparts-noexecute",
+  "timestamp": "2026-08-11T11:58:51+00:00",
+  "fromWorker": "sol-20260811-p7d4m2x9",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "severity": "high",
+  "summary": "ObjectGenome.identityParts() is a documented stable-identity supplier but reads schemaVersion/familyId/familyVersion/variantKey through normal caller indexing without first enforcing the canonical plain-data boundary. A metatable-backed caller can therefore execute __index and synthesize canonical-looking identity parts even though identityKey()/inspect() otherwise fail closed on that data class.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "evidence": [
+    "Docs/OBJECT_GENOME.md defines familyId + familyVersion + variantKey + schemaVersion as the complete ObjectGenome v1 stable identity input and explicitly states ObjectGenome.identityParts() supplies those semantic parts to the locked StableId contract.",
+    "Active generation-4 primary PR #361 head 08ce8d7093ceb36a85af58510f65ef8e9b33c154 still implements identityParts() with direct field reads and no validation preflight.",
+    "Draft adversarial PR #375 exact head 1065bb0d2ad0f183569f3e160e68189ad24402b1 changes only tests/object_genome_contract_lock.luau (+24/-0) and requires a hostile metatable-backed genome to reject before any __index read.",
+    "Canonical CI run 31488981414 passes format, lint, Luau analysis, canonical-randomness audit, shared-domain audits, and Swarm deterministic tests, then fails Pure Luau tests exactly at 'identityParts rejects metatable-backed genomes before field reads'."
+  ]
+}
