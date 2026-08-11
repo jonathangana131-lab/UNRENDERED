@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-v6r2k9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T07:53:35+00:00",
-  "lastSeenAt": "2026-08-11T08:10:00+00:00",
+  "lastSeenAt": "2026-08-11T08:18:30+00:00",
   "laneId": "HG-BACKFILL-FIDELITY",
   "slotId": "primary",
   "branch": "agent/physics/HG-BACKFILL-FIDELITY-w3n8k2",
-  "notes": "Generation-2 stale recovery of PR #274. Hostile numeric PolicyInputs/nowSeconds no-execute gap closed with adversarial regressions; current exact head 5251998df21e8f7f78cae5c046d346496cc65a28 has CI PASS. Independent audit active; Swarm ownership presently blocked only by global primary-lane overcapacity."
+  "notes": "PR #274 source-complete at exact head 5251998df21e8f7f78cae5c046d346496cc65a28 with canonical CI run 31471785808 PASS. Waiting only for independent exact-head audit and separately owned validation-fence recovery PR #315 to restore pr-ownership validation; review request recorded in evt-20260811-081800-v6r2k9-fidelity-review-request."
 }
