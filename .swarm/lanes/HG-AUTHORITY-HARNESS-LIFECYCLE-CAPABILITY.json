@@ -5,7 +5,7 @@
   "title": "Physics Lab harness lifecycle capability fence",
   "objective": "Close the confirmed source-only ownership hole where PhysicsLabStudioHarness.get() exposes the raw RealizedLab.destroy() capability and can leave the harness bound to a destroyed lab, without broadening into multiplayer transport or Studio evidence work.",
   "priority": 4830,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/hero_gate_authority_teardown.luau", "tests/hero_gate_contract_integration.luau"],
@@ -26,6 +26,6 @@
     "do not claim Roblox Studio, real two-client, replication/session, transport, or HG151-TWOCLIENT evidence from source-only validation",
     "canonical CI, live pr-ownership after the separately owned trusted-history recovery, and fresh independent exact-head review are required before integration"
   ],
-  "notes": "NEEDS_CHANGES after independent generation-2 audit of PR #403 exact head 5f844842b980f7c68cebe0a437cb9b1c8d94947b. REVIEW_RESULT evt-20260811T213800Z-sol-20260811-g7m4q9v2-harness-lifecycle-audit-request-changes found that ownership invalidation still depends on Destroying/AncestryChanged callback scheduling: with deferred signal delivery an external destroy/reparent can mutate the Model while private current remains observable until the queued callback runs, so get/start/restart can still observe stale ownership. Repair must synchronously reconcile model ownership/liveness before get() returns and before start/restart exclusivity decisions, while retaining lifecycle signals as cleanup hooks, and add a regression for the pre-callback window. Canonical CI run 31537665202 PASS; exact-head Swarm engine-tests in run 31537922707 PASS. Live pr-ownership remains separately fail-closed behind trusted event-history recovery; do not waive. No Roblox Studio/two-client evidence is claimed. PR #399 remains superseded by #403.",
+  "notes": "REVIEW on generation-3 PR #410 exact head d217ac07496cfe9021cac4e69fad6768ab83ccfd. The generation-2 deferred-signal stale-ownership finding is repaired by synchronously reconciling the bound Model Parent before get/start/stop/restart ownership decisions while retaining Destroying/AncestryChanged cleanup hooks; teardown remains idempotent/fail-closed and regression coverage locks the pre-callback window. Canonical CI run 31539618366 PASS including Luau analysis, Pure Luau tests, place build, and artifact upload; Swarm engine-tests in run 31539618350 PASS. Live pr-ownership in that run remains separately fail-closed on unrelated malformed .swarm/claims/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING/primary.json key role; do not waive or bypass. Fresh independent exact-head source audit is required before integration. No Roblox Studio/two-client/viewport/physical-contact evidence is claimed. PR #403 is superseded by #410 only after review passes; #399 remains superseded by retained lineage.",
   "tags": ["hero-gate", "source-only", "authority", "lifecycle", "prerequisite"]
 }
