@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-062500-z4q8n1-materialdna-ci-proof",
+  "timestamp": "2026-08-11T06:25:00+00:00",
+  "fromWorker": "sol-20260811-z4q8n1",
+  "eventType": "EVIDENCE_RESULT",
+  "laneId": "HG-BACKFILL-MATERIALDNA",
+  "severity": "high",
+  "summary": "PR #272 CI exercised the adversarial regression through the canonical Pure Luau suite and reproduced the no-execute defect exactly: `FAIL unknown-key __tostring callback never executes: callback executed 1 times`. Format, lint, Luau analysis, canonical randomness, domain-boundary audits, plain-value audit, and swarm deterministic tests all passed before the expected Pure Luau failure.",
+  "affects": ["HG-BACKFILL-MATERIALDNA"],
+  "evidence": [
+    "PR #272 head 1dd682cef5803ec3cb877c6bb159e5db8bba5e9e, CI run 31464715401, validate job 93695113999.",
+    "Pure Luau output: PASS non-string unknown recipe key rejected.",
+    "Pure Luau output: FAIL unknown-key __tostring callback never executes: callback executed 1 times.",
+    "All CI stages preceding Pure Luau tests passed, isolating the regression to the demonstrated MaterialDNA hostile-key behavior."
+  ]
+}
