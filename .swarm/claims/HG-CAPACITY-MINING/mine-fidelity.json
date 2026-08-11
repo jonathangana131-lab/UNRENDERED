@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "workerId": "sol-20260811-s9k4m2",
+  "claimToken": "7c2e91a5d4b8603f",
+  "claimedAt": "2026-08-11T07:48:00+00:00",
+  "heartbeatAt": "2026-08-11T07:48:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-s9k4m2",
+  "pr": null
+}
