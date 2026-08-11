@@ -5,11 +5,11 @@
   "workerId": "sol-20260811-1xe2befc",
   "claimToken": "aef43ccfde1ad75b",
   "claimedAt": "2026-08-11T08:40:18+00:00",
-  "heartbeatAt": "2026-08-11T08:40:18+00:00",
+  "heartbeatAt": "2026-08-11T08:48:20+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-1xe2befc",
-  "pr": null,
-  "notes": "Test-only adversarial WorldEntity regression pass; no REALITY-CONTRACT writer lease required because this slot will not edit canonical source."
+  "pr": 331,
+  "notes": "Published stacked draft PR #331: test-only exact depth/node/string budget boundaries and registered capture/demotion failure atomicity on top of active WorldEntity primary PR #293. Awaiting exact-head CI and independent review; no source writer lease held."
 }
