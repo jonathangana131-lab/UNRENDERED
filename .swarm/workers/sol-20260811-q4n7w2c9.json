@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T09:00:20+00:00",
-  "lastSeenAt": "2026-08-11T09:00:20+00:00",
-  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "lastSeenAt": "2026-08-11T09:06:20+00:00",
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
   "slotId": "audit",
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-audit-q4n7w2c9",
-  "notes": "Independently auditing active WorldEntity source hardening and stacked regression evidence before Reality-Grade completion; source-only, no Studio claim."
+  "branch": "agent/objects/HG-BACKFILL-OBJECTGENOME-audit-q4n7w2c9",
+  "notes": "WorldEntity audit completed. Reviewing ObjectGenome source and tests."
 }
