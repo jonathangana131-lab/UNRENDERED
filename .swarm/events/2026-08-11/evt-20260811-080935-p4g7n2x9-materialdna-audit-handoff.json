@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-080935-p4g7n2x9-materialdna-audit-handoff",
+  "timestamp": "2026-08-11T08:09:35+00:00",
+  "fromWorker": "sol-20260811-p4g7n2x9",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
+  "severity": "info",
+  "summary": "Audit handoff for PR #313: source semantics and exact-boundary regressions pass independent review, and canonical CI is green on head 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210. Integration remains fail-closed only because Swarm pr-ownership is blocked by the already-owned SWARM-RECOVERY-HEALTH-VALIDATION-FENCE control regression; do not merge until ownership is green on an exact head after that recovery.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS", "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE"],
+  "evidence": [
+    "PR #313 bounds maintenance.repairCount to [0, 9007199254740991] and explicitly rejects 9007199254740992.",
+    "The bounded integer helper is currently used only by maintenance.repairCount, avoiding collateral domain tightening.",
+    "CI run 805 completed successfully on exact head 7cd9498fd6badf7eb6ee8d654d3198ba0e4ed210.",
+    "Swarm Control Plane run 1255 failed only at pr-ownership; its engine-tests job succeeded.",
+    "Dedicated recovery lane SWARM-RECOVERY-HEALTH-VALIDATION-FENCE is READY and already has a generation-2 primary owner, so this audit does not duplicate that control repair."
+  ]
+}
