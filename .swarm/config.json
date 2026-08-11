@@ -19,6 +19,7 @@
   },
   "protectedScopes": [
     {"pattern": "Docs/PROJECT_STATE.md", "resource": "PROJECT-STATE"},
+    {"pattern": "Docs/SWARM_V2_ACTIVATION.md", "resource": "PROJECT-STATE"},
     {"pattern": "Docs/SWARM_PROTOCOL.md", "resource": "SWARM-PROTOCOL"},
     {"pattern": "Docs/SWARM_CONTROL_PLANE.md", "resource": "SWARM-PROTOCOL"},
     {"pattern": "ProjectSource/UNRENDERED_PROJECT_INSTRUCTIONS.txt", "resource": "SWARM-PROTOCOL"},
