@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime invariant synthesis",
   "objective": "Finish the active Physics Lab runtime lineages by synthesizing the independently reviewed canonical-recipe fence, transition/frozen-facade mutation fence, and entity-ID lookup fence into one current-main source/test head without weakening any accepted invariant.",
   "priority": 9975,
-  "state": "REVIEW",
+  "state": "BLOCKED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -50,5 +50,5 @@
     "source-only lane: no Roblox Studio, viewport, physical-contact, or two-client evidence claim"
   ],
   "pr": 408,
-  "notes": "PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754 is ready for independent source audit. Canonical CI run 31539261229 / #1030 is SUCCESS across format, lint, Luau analysis, deterministic/domain audits, Pure Luau tests, Rojo build, and artifact upload. Swarm Control Plane run 31539261221 engine-tests is SUCCESS; pr-ownership remains fail-closed in the separately owned global trusted-history recovery and is not waived. Exact compare from retained #388 head changes only PhysicsLabRuntime, adds the synthesis regression file, and adds two test-runner wiring lines; #388's primary runtime regression file remains unchanged. No Studio, viewport, physical-contact, or two-client evidence claimed."
+  "notes": "BLOCKED only on the separately owned trusted-history/live pr-ownership recovery. PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754 already received an independent exact-head SOURCE PASS in the generation-2 audit review submitted 2026-08-11T23:11:43Z. That review independently compared the synthesis against retained #388, #310, and #402; confirmed closure-private weak-key runtime state, frozen facade, guarded disposal, whole-step transaction fencing, canonical-recipe no-execute/bounded validation, WorldEntity.isId lookup fencing, retry/atomicity regressions, and the full synthesis corpus; and found no source blocker. Canonical CI run 31539261229 PASS; Swarm run 31539261221 engine-tests PASS. Normal integration remains fail-closed until SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY restores non-bootstrap trusted ownership and live pr-ownership reruns green in the intended merge context. No Roblox Studio, viewport, physical-contact, or two-client evidence is claimed."
 }
