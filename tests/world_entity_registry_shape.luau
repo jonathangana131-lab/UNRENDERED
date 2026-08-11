@@ -136,6 +136,41 @@ local function run(): number
 		WorldEntity.get(identityRegistry, identityRecord.id) ~= nil
 	)
 
+	local hostileFidelityCallbacks = 0
+	local hostileFidelity = setmetatable({}, {
+		__tostring = function()
+			hostileFidelityCallbacks += 1
+			error("hostile fidelity __tostring must not execute")
+		end,
+	})
+	local hostileFidelityRecord = makeRecord()
+	hostileFidelityRecord.fidelity = hostileFidelity
+	expect("registry rejects hostile non-string fidelity", not registerAccepts(hostileFidelityRecord))
+	expect("registry rejects hostile fidelity before __tostring", hostileFidelityCallbacks == 0)
+
+	local beforeHostileTarget = WorldEntity.get(identityRegistry, identityRecord.id)
+	local hostileTargetAccepted = pcall(function()
+		WorldEntity.transitionRegistered(identityRegistry, identityRecord.id, hostileFidelity :: any, nil)
+	end)
+	expect("transitionRegistered rejects hostile non-string target fidelity", not hostileTargetAccepted)
+	expect("transition target rejection executes no hostile __tostring", hostileFidelityCallbacks == 0)
+	expect(
+		"rejected hostile target preserves registered record atomically",
+		WorldEntity.get(identityRegistry, identityRecord.id) == beforeHostileTarget
+	)
+
+	local hostileSchemaKeyCallbacks = 0
+	local hostileSchemaKey = setmetatable({}, {
+		__tostring = function()
+			hostileSchemaKeyCallbacks += 1
+			error("hostile schema key __tostring must not execute")
+		end,
+	})
+	local hostileSchemaKeyRecord = makeRecord()
+	hostileSchemaKeyRecord[hostileSchemaKey] = true
+	expect("registry rejects non-string schema key", not registerAccepts(hostileSchemaKeyRecord))
+	expect("schema-shape rejection executes no hostile key __tostring", hostileSchemaKeyCallbacks == 0)
+
 	local extraRecord = makeRecord()
 	extraRecord.authorityLease = "future-field"
 	expect("registry rejects unknown record field", not registerAccepts(extraRecord))
