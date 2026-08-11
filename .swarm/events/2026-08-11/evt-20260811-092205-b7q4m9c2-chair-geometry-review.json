@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-092205-b7q4m9c2-chair-geometry-review",
+  "timestamp": "2026-08-11T09:22:05+00:00",
+  "fromWorker": "sol-20260811-b7q4m9c2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "APPROVE at the source-review layer for PR #339 exact head 1f125129daa6a29069bec85a35ec51e0dd64eefe. The office-chair v2 caster proxies span exactly from authored local ground (-0.54 m) to the unchanged base underside (-0.45 m), component mass remains 11.85 kg, and centerOfMassM exactly matches the component-weighted distribution. Exact-head canonical CI and control engine-tests are green. Integration remains held on the separately owned immutable-event pr-ownership prerequisite; dependent test-only PR #332 must be synchronized and turned exact-head green before being closed as consumed evidence. No Studio or engine-contact evidence was run or claimed.",
+  "affects": ["HG-PHYSICS-CHAIR-GEOMETRY", "HG-BACKFILL-PHYSICS-GEOMETRY", "HG-COMPLETION-PHYSICS"],
+  "laneId": "HG-COMPLETION-PHYSICS",
+  "severity": "low",
+  "evidence": [
+    "PR #339 exact head 1f125129daa6a29069bec85a35ec51e0dd64eefe changes only src/shared/Objects/ObjectGenomeFixtures.luau and tests/object_genome.luau against main ae83c0ef470eb2e73d99be41fd3561ede30c40e1.",
+    "Chair envelope local ground is -1.08/2 = -0.54 m; revised caster bottom is -0.495 - 0.09/2 = -0.54 m; revised caster top is -0.495 + 0.09/2 = -0.45 m; base underside is -0.42 - 0.06/2 = -0.45 m. All five caster supports use the same Y/dimension construction.",
+    "Component mass sums to 11.85 kg and the weighted component positions yield COM (0, -0.10162447257383965, 0.04168776371308017), exactly matching the revised fixture declaration.",
+    "Canonical CI run 31476886262 passed. Swarm Control Plane run 31477153089 engine-tests passed while pr-ownership failed separately on immutable-event history continuity. PR #332 remains the dependent lab-level expected-red evidence and must be synchronized/rerun before closure."
+  ],
+  "metadata": {
+    "verdict": "APPROVE",
+    "pr": 339,
+    "headSha": "1f125129daa6a29069bec85a35ec51e0dd64eefe",
+    "reviewId": 4904702955
+  }
+}
