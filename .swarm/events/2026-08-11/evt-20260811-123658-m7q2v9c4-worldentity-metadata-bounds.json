@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260811-123658-m7q2v9c4-worldentity-metadata-bounds",
+  "timestamp": "2026-08-11T12:36:58+00:00",
+  "fromWorker": "sol-20260811-m7q2v9c4",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Post-#378 WorldEntity capacity mining found a distinct canonical metadata boundedness gap: entity ids and persistentState are explicitly byte/shape bounded, and ResolvedRegionRecipe caps canonical world/region/key fields at 256 bytes, but WorldEntity kind plus GenerationOrigin worldId/regionId/generator/recipeKey currently use only non-empty/control-character validation. Canonical WorldEntity records can therefore retain arbitrarily large metadata strings outside the persistent-state byte budget.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #378 exact source retains WorldEntity.isId() at <=256 bytes and persistentState at MAX_PERSISTENT_STATE_STRING_BYTES=65536, while checkedNonEmpty() imposes no byte maximum and cloneOrigin() uses it for worldId, regionId, generator and recipeKey; WorldEntity.new()/ownRecord() also use it for kind.",
+    "ResolvedRegionRecipe v2 defines MAX_KEY_BYTES=256, checks worldId as a world StableId, checks regionId as a region StableId during recipe ownership, and caps semantic/canonical keys at 256 bytes, demonstrating an existing adjacent canonical metadata budget rather than a new broad architecture.",
+    "No existing WorldEntity lane event/test/PR was found for oversized kind/origin metadata; #378's reviewed scope is registry identity, lifecycle revisions, and persistentState structural budgets, so this is non-duplicate post-#378 depth.",
+    "Recommended one-shot source lane after the current WorldEntity successor/recovery sequencing: define explicit byte maxima for immutable WorldEntity metadata and exact-limit/one-over regressions. Reuse stable world/region namespace validation only where the existing domain contract explicitly requires it; do not change StableId algorithms or schema versions speculatively."
+  ]
+}
