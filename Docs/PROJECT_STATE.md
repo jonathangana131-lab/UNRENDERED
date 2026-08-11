@@ -103,7 +103,8 @@ The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational; 
 - Request `20260810-027-physical-sanity-warmup-face-sol56k8` on exact UNRENDERED SHA `face848a32ce626796d1263bed4150142ff170f2` is durable `physics-lab-physical-sanity` `PASS` / `evidence accepted`: real server RunMode, exactly one canonical lab root, canonical baseline validation, engine contact on floor + stairs 1–4 + ramp + ledge, monotonic stair order, five ObjectGenome F2 proxies, and clean temporary-probe cleanup/resource/envelope checks with exact WorldId/RegionId/fingerprint/repro identity. This accepts the current F2 shell's canonical Studio bootstrap/physical-sanity slice without claiming articulated hinge/caster/drawer behavior.
 - Request `20260810-029-two-client-ce56-n7` on exact UNRENDERED SHA `3332ae1d3e35bfcc844483b16ad9ad4ce1f7081a` is durable `physics-lab-two-client` `FAIL` with `transport status was not PASS` and no accepted evidence payload. It provides no two-client authority evidence; that row remains open.
 - Request `20260810-031-diagnostics-capture-090e-sol56k8` on exact UNRENDERED SHA `090e112c83126ebe8e6f9ba75f27b7bcc31dc3af` has raw transport `PASS` and proves the source-owned diagnostics behavior itself reached visible ON, completed all 20 bounded toggle cycles with checkpoints 1/5/10/20, preserved zero tracked resource deltas and zero envelope drift, emitted each request-bound runtime marker exactly once, and finished OFF. Its durable semantic status remains `FAIL` solely because the required live diagnostics-on viewport capture was missing (`NO_CAPTURE`). This is useful failure evidence, not an accepted diagnostics row.
-- Request `20260810-032-performance-observation-090e-sol56s9` on exact UNRENDERED SHA `090e112c83126ebe8e6f9ba75f27b7bcc31dc3af` was published as `physics-lab-performance-observation` `PASS` / `performance observations recorded; no budget asserted` and records real Studio server RunMode on Roblox engine `0.733.0.7330989`, 30 warmup + 120 measured Heartbeats (mean 17.785 ms, median 16.692 ms, p95 18.304 ms, max 93.643 ms), full-capture/restart observations, exact canonical WorldId/RegionId/fingerprint/repro identity, zero tracked restart resource deltas, and the documented 0.001-stud envelope preserved. **Do not count this as accepted #151 gate evidence yet.** Post-merge review found the then-current aggregate evaluator could still accept mathematically impossible nearest-rank percentile/extrema summaries, so the performance row remains UNVERIFIED until that rank/extrema feasibility boundary is corrected and the captured/fresh exact-SHA evidence is consumed under the corrected evaluator. Request `20260810-033-performance-post65-090e-sol56h3` was queued after the first evaluator repair, but it does not bypass this stronger guardrail. No permanent frame-time/startup/device-suitability budget is asserted.
+- Request `20260810-032-performance-observation-090e-sol56s9` on exact UNRENDERED SHA `090e112c83126ebe8e6f9ba75f27b7bcc31dc3af` is accepted **measurement-only performance evidence**. The durable result records real Studio server RunMode on Roblox engine `0.733.0.7330989`, 30 warmup + 120 measured Heartbeats (mean 17.785 ms, median 16.692 ms, p95 18.304 ms, max 93.643 ms), full-capture/restart observations, exact canonical WorldId/RegionId/fingerprint/repro identity, zero tracked restart resource deltas, and the documented 0.001-stud envelope preserved. The original publication predated the final aggregate guardrail, so bridge #65 and #75 tightened fail-closed total/mean/type and exact nearest-rank p50/p95 feasibility checks; merged bridge #78 (`d9805bbf24d865dc6286d70a813a936b7ff0d123`) then loaded the **complete stored request-032 payload** and required the current hardened evaluator to accept it. Exact-head Bridge CI run `31450117146` passed. This closes the current device/Studio observation row only under explicit `OBSERVED_NO_BUDGET` semantics: it does **not** establish a permanent frame-time/startup/device-suitability budget, diagnostics, two-client authority, articulated mechanisms, or the composite Hero Gate.
+- Request `20260810-033-performance-post65-090e-sol56h3` on exact UNRENDERED SHA `090e112c83126ebe8e6f9ba75f27b7bcc31dc3af` ended `TIMEOUT` with no evidence payload. It is not evidence and is not needed to substitute for the separately hardened full-payload re-evaluation above.
 - Future engine evidence requests must pin an exact canonical SHA that is reachable from the named canonical ref and satisfy the job-specific evaluator. No lifecycle, single-server, physical-sanity, or measurement-only performance result may unlock the Hero Gate by itself.
 
 ## Current unlock status
@@ -121,7 +122,7 @@ Do not start a Reality-Grade door, chair, physical-player controller, world gene
 
 ## Hero Gate exit direction
 
-The source-contract portion of the Physics Lab gate is established. Accepted engine evidence now covers the source-owned lifecycle/rebuild/resource-envelope slice, single-server bootstrap/baseline smoke, and the current F2 shell's canonical Studio physical-sanity/contact slice. Remaining engine-facing work includes accepted diagnostics capture/behavior evidence, true two-client canonical authority, and performance observations consumed under the corrected rank/extrema-feasibility evaluator; articulated mechanisms remain UNVERIFIED where the current shell intentionally provides only anchored F2 proxies.
+The source-contract portion of the Physics Lab gate is established. Accepted engine evidence now covers the source-owned lifecycle/rebuild/resource-envelope slice, single-server bootstrap/baseline smoke, the current F2 shell's canonical Studio physical-sanity/contact slice, and measurement-only device/Studio performance observations consumed under the corrected rank/extrema-feasibility evaluator. Remaining engine-facing work includes accepted diagnostics capture/behavior evidence and true two-client canonical authority; articulated mechanisms remain UNVERIFIED where the current shell intentionally provides only anchored F2 proxies.
 
 After that evidence is gathered and reviewed, update this file to explicitly unlock the next narrow Hero Feature. The intended order remains **door, chair, then physical player movement**, not a giant procedural map.
 
@@ -129,12 +130,12 @@ After that evidence is gathered and reviewed, update this file to explicitly unl
 
 Issues #11–#25 are planned future work. They are **not automatically implementation-ready** until this file unlocks them or they become an explicit prerequisite for an unlocked Epic.
 
-Workers may inspect/review/decompose them, but should not build those major systems yet merely because worker capacity exists.
+Workers may inspect/review/decompose them, but should not build those major systems yet merely because worker capacity is available.
 
 ## Known external setup gaps
 
 - No published Roblox universe/place is connected to automated publishing yet.
-- The bridge now has accepted lifecycle/rebuild, single-server bootstrap/baseline, and canonical F2-shell physical-sanity/contact evidence, but #151 still lacks accepted diagnostics, true two-client authority, and performance evidence consumed under the corrected rank/extrema-feasibility evaluator.
+- The bridge now has accepted lifecycle/rebuild, single-server bootstrap/baseline, canonical F2-shell physical-sanity/contact, and corrected-evaluator measurement-only performance evidence, but #151 still lacks accepted diagnostics and true two-client authority.
 - Approved production PBR, audio and model libraries do not exist yet. Use project-owned fallbacks and do not add unlicensed content.
 
 ## Architecture migrations
@@ -154,8 +155,8 @@ Compatibility note: historical `ResolvedRegionRecipe` schema v1 remains replay-o
 
 ## Next critical outcomes
 
-1. gather the remaining accepted diagnostics, true two-client canonical-authority, and corrected-evaluator performance evidence without weakening source truth,
-2. keep source-owned lifecycle/repro/ownership and accepted physical-sanity evidence green, and keep every remaining evidence path fail closed on regressions,
+1. gather the remaining accepted diagnostics and true two-client canonical-authority evidence without weakening source truth,
+2. keep source-owned lifecycle/repro/ownership, accepted physical-sanity, and accepted measurement-only performance evidence green, and keep every remaining evidence path fail closed on regressions,
 3. explicitly update this scheduler before opening the next major Hero Feature,
 4. when unlocked, deepen door/chair/physical-player work on these foundations rather than replacing them,
 5. improve the first five-minute experience only after the relevant foundations are actually unlocked and proven.
