@@ -140,7 +140,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-11T07:29:50.631593+00:00",
+  "generatedAt": "2026-08-11T07:30:19.522150+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "064e28f2306095dadd6a514b96f397cd810ac556",
@@ -160,13 +160,13 @@
       "EVIDENCE_RESULT": 5,
       "EXTERNAL_BLOCKER": 1,
       "FINDING": 40,
-      "HANDOFF": 20,
+      "HANDOFF": 21,
       "INTEGRATION_RESULT": 7,
       "RECOVERY": 3,
       "REVIEW_REQUEST": 33,
       "REVIEW_RESULT": 31
     },
-    "generatedAt": "2026-08-11T07:29:50.631593+00:00",
+    "generatedAt": "2026-08-11T07:30:19.522150+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED_EXTERNAL": 1,
@@ -391,27 +391,6 @@
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "HG-BACKFILL-AUTHORITY",
-        "HG151-TWOCLIENT",
-        "PR-275"
-      ],
-      "eventId": "evt-20260811-071547-q9x4m2-authority-merged",
-      "eventType": "INTEGRATION_RESULT",
-      "evidence": [
-        "PR #275 exact-head ownership job 93704985083 emitted JSON status PASS for HG-BACKFILL-AUTHORITY/audit with one changed file and no protected scope touched.",
-        "Squash merge produced main commit 81a13b1138e26e7852c89685de5dbf9bd57753d8.",
-        "Post-merge canonical CI run 31468113697 concluded success.",
-        "Docs/MULTIPLAYER_PERSISTENCE.md now locks server-known caller binding, canonical schema provenance, fail-closed evaluator versioning, and full-F2 count/structure consistency without substituting source checks for Studio evidence."
-      ],
-      "fromWorker": "sol-20260811-q9x4m2",
-      "laneId": "HG-BACKFILL-AUTHORITY",
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "Authority audit PR #275 merged to canonical main as 81a13b1138e26e7852c89685de5dbf9bd57753d8. The exact product PR passed canonical CI and fail-closed semantic ownership validation before integration, and post-merge main CI run 31468113697 completed successfully. This remains source/documentation authority hardening only; no real two-client Studio PASS is claimed.",
-      "timestamp": "2026-08-11T07:15:47+00:00"
-    },
     {
       "affects": [
         "HG-BACKFILL-OBJECTGENOME"
@@ -827,6 +806,31 @@
       "severity": "medium",
       "summary": "PR #295 source slice is complete on exact head 1814b4d08a02c9d650dea6288af9a8264e58d3c9, synchronized onto main 064e28f2306095dadd6a514b96f397cd810ac556. It consumes the bounded diagnostics workload finding by capping runToggleEvidence overrides at the documented 20-cycle proof before any iteration and adds an always-run source-contract regression. Exact-head canonical CI run 31468750759 is green. Swarm Control Plane run 31468764335 has engine-tests green, but ownership reached the hardened validator and failed only because live control state changed after its validation marker; a direct job rerun reproduced the same fence race. Dedicated recovery PR #298 / lane SWARM-RECOVERY-HEALTH-VALIDATION-FENCE is active for this exact control defect, so do not merge #295 until that repair lands and a fresh fail-closed ownership run explicitly passes. Independent exact-head Reality-Grade review is still required. No Roblox Studio run or engine evidence is claimed.",
       "timestamp": "2026-08-11T07:28:20+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-OBJECTGENOME"
+      ],
+      "eventId": "evt-20260811-073100-went7k3-objectgenome-audit-handoff",
+      "eventType": "HANDOFF",
+      "evidence": [
+        "PR #296 exact head 0a01b95fa9dd5d39de9b2e86e53cbafd576a52d7 passed canonical CI 31468524030 and ownership retry job 93707416258; current main advanced afterward, so integration still requires synchronization and fresh exact-head evidence.",
+        "Audit companion PR #299 changes only Docs/OBJECT_GENOME.md and has green CI/control on head d6f19e760e3073ed0bc90ebec5c346f11c046cba, but Codex correctly requires #296 to be present in ancestry before the documentation can merge.",
+        "PR #299 title/body now explicitly block merge before #296 and the Codex prerequisite thread remains intentionally unresolved until post-#296 synchronization.",
+        "Test-adversary claim generation 1 last heartbeat was 2026-08-11T06:50:00Z with a 1800-second lease; its PR #277 is stale/non-mergeable and is a higher-value finishable recovery target."
+      ],
+      "fromWorker": "sol-20260811-went7k3",
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "metadata": {
+        "auditHeadSha": "d6f19e760e3073ed0bc90ebec5c346f11c046cba",
+        "auditPr": 299,
+        "primaryPr": 296,
+        "testAdversaryPr": 277
+      },
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "ObjectGenome audit pass is parked at a clean prerequisite boundary so capacity can salvage the stale test-adversary slice. Primary #296 has patch-local audit PASS but must sync current main before exact-head approval; docs companion #299 records the new familyVersion domain and must be synchronized only after #296 is in main ancestry.",
+      "timestamp": "2026-08-11T07:31:00+00:00"
     }
   ],
   "resources": [
@@ -887,7 +891,7 @@
       "workerId": "sol-20260811-j6r2v8"
     }
   ],
-  "stateDigest": "6abf97bd07f30f84c714d51332a8d978f687f8b68d406d59d0d4fa1a84b8e4f5",
+  "stateDigest": "a6c991e81f95e3da629ec2b3975857126bb6c5691a23e6901f877eddc8127247",
   "summary": {
     "activeClaims": 14,
     "activeResourceClaims": 2,
