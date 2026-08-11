@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-j4m8q2v7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-11T11:51:00+00:00",
-  "lastSeenAt": "2026-08-11T12:46:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-j4m8q2v7",
-  "notes": "Final distinct source-depth pass for Physics geometry on exact main ae83c0e. Excludes the envelope subtraction overflow already isolated in PR #368/absorbed by successor repair. Inspecting remaining geometry realization, dimension/transform, envelope, validation, and teardown invariants only; no Studio evidence claims."
+  "lastSeenAt": "2026-08-11T12:49:00+00:00",
+  "notes": "Completed final unclaimed source-depth shard mine-physics-geometry after authority teardown recovery. Published evt-20260811-124820-j4m8q2v7-physics-geometry-mining-no-new-lane: full canonical geometry validation already checks primitive/object dimensions, transforms, materials, membership, and completeness before envelope publication; no additional nonduplicate lane beyond the finite derived-envelope overflow already owned by PR #376. All this worker's claims/resources are released. PR #382 remains draft with exact-head canonical CI green and project-wide trusted-history pr-ownership block. No Studio/two-client evidence performed or claimed."
 }
