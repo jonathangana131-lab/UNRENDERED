@@ -5,7 +5,7 @@
   "title": "ObjectGenome adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete ObjectGenome shape, component, ownership, fingerprint, transform, material-reference, state-binding, immutability, or malformed-input defects without depending on Studio.",
   "priority": 5150,
-  "state": "READY",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Objects/ObjectGenome*.luau", "tests/object_genome*.luau"],
@@ -16,5 +16,6 @@
     {"slotId":"audit","role":"ObjectGenome contract and ownership auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/object_genome*.luau","Docs/OBJECT_GENOME.md"]}
   ],
   "acceptance": ["inspect current main and existing contract-lock tests", "prefer a concrete defect or missing invariant over speculative redesign", "new behavior is covered by deterministic regression tests", "preserve canonical identity and plain-data boundaries", "publish cross-lane findings as structured events"],
+  "notes": "PR #336 exact head 8ed54d2d965334d5a74fc9cd9b454d358da6f01f has green canonical product CI (31476917089) but remains NEEDS_CHANGES. Existing exact-head audit requires closure of evt-20260811-090800-k8v2q6m4-objectgenome-decoder-metatable and evt-20260811-084400-r4k8m2z7-objectgenome-diagnostic-order. Fresh audit also found evt-20260811-095000-5c8e2a7d-objectgenome-runner-scope: despite the PR body claiming the standalone generation-3 test and runner registration were removed, the exact tree still adds tests/object_genome_generation3_boundaries.luau and edits tests/run.luau to execute it, while equivalent generation-3 assertions already live in tests/object_genome_contract_lock.luau. tests/run.luau is outside this lane's declared write scope, so remove the duplicate standalone test/runner edit, keep equivalent in-scope contract-lock coverage, close the two semantic blockers, sync current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 (current head behind_by=1), rerun exact-head canonical CI/live ownership, then request fresh independent audit. No Studio evidence required or claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
