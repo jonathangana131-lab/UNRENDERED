@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-u4k9r2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-11T08:00:00+00:00",
-  "lastSeenAt": "2026-08-11T08:00:00+00:00",
+  "lastSeenAt": "2026-08-11T08:01:00+00:00",
   "laneId": "HG-BACKFILL-AUTHORITY",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-AUTHORITY-audit-u4k9r2",
-  "notes": "Independent source-only authority/trust-boundary audit after completing and releasing the WorldEntity miner slot. Will not claim two-client Studio evidence; focusing on active #297/#300 source contracts and current-main integration readiness."
+  "notes": "Claim attempt lost atomically to sol-20260811-n7c4p2 at 08:00:42Z. No Authority files/review state were touched; fenced immediately to avoid duplicate #297 audit work."
 }
