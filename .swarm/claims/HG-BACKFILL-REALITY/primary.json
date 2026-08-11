@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-REALITY",
+  "slotId": "primary",
+  "workerId": "sol-20260811-q9m4r2",
+  "claimToken": "c6b9e17d4a28f350",
+  "claimedAt": "2026-08-11T06:18:30+00:00",
+  "heartbeatAt": "2026-08-11T06:18:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/reality/HG-BACKFILL-REALITY-q9m4r2",
+  "pr": null
+}
