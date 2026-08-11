@@ -5,9 +5,10 @@
   "workerId": "sol-20260811-2b51a8",
   "claimToken": "71a3c9d5e2f6084b",
   "claimedAt": "2026-08-11T09:29:30+00:00",
-  "heartbeatAt": "2026-08-11T09:29:30+00:00",
+  "heartbeatAt": "2026-08-11T09:31:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": ["SWARM-PROTOCOL"],
-  "notes": "Finite prerequisite recovery claimed before branch creation. Goal: quarantine exact already-laundered immutable blobs without editing/deleting them, preserve audited first-write identities, and establish a reviewed reset boundary so descendants cannot launder failed transitions."
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-2b51a8-g1",
+  "notes": "Explicit append-only trusted-history recovery branch created only after claim/resource acquisition. V2.2 remains paused until this prerequisite is independently reviewed and merged."
 }
