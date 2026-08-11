@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260811-s5r8q2n4",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "ACTIVE",
   "startedAt": "2026-08-11T11:53:00+00:00",
-  "lastSeenAt": "2026-08-11T11:53:00+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "GO worker: main green; Hero Gate-only. Selected unclaimed HG-BACKFILL-REALITY/test-adversary to recover stale v1 replay adversarial coverage onto current main while primary #359 is independently reviewed."
+  "lastSeenAt": "2026-08-11T11:53:30+00:00",
+  "laneId": "HG-BACKFILL-REALITY",
+  "slotId": "test-adversary",
+  "branch": "agent/reality/HG-BACKFILL-REALITY-tests-s5r8q2n4",
+  "notes": "Generation-4 test-adversary recovery of stale PR #312 v1 replay coverage onto current main; preserve exact source-only replay invariants, no production/schema changes, no Studio evidence claim."
 }
