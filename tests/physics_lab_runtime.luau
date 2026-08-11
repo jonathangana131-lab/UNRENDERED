@@ -360,8 +360,7 @@ local function run(): number
 	expect("hostile policy inputs exercised the pre-hook evaluation window", policyReads > 0)
 	expect(
 		"pre-hook mutation rejection preserves both authority populations",
-		afterPreHook.registered == #recipe.entities
-			and afterPreHook.fidelity.registered == #recipe.entities
+		afterPreHook.registered == #recipe.entities and afterPreHook.fidelity.registered == #recipe.entities
 	)
 	expect(
 		"pre-hook mutation rejection preserves fidelity authority",
