@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-11T21:32:00+00:00",
-  "lastSeenAt": "2026-08-11T21:32:00+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "lastSeenAt": "2026-08-11T21:37:25+00:00",
+  "laneId": "HG-BACKFILL-MATERIALDNA-COUNTERS",
   "slotId": "audit",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-d7k4m9q2-audit",
-  "notes": "Independent generation-6 diagnostics exact-head audit of PR #401; source/test review only, no Studio retry or viewport PASS while display preflight is blocked."
+  "branch": "agent/review/HG-BACKFILL-MATERIALDNA-COUNTERS-audit-d7k4m9q2-g2",
+  "notes": "Generation-2 stale takeover of expired independent audit slot for PR #353 exact head 10559afdce1a1854e7932522f6e78561736c8ed3. Source/test review only; no Studio evidence."
 }
