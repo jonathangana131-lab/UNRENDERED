@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "workerId": "sol-20260811-8d5d357a",
+  "claimToken": "b4f81c6d2a9e7053",
+  "claimedAt": "2026-08-11T23:40:05+00:00",
+  "heartbeatAt": "2026-08-11T23:40:05+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-8d5d357a-g1",
+  "pr": 416,
+  "notes": "Independent exact-head audit of diagnostics generation-8 PR #416 at 183bea8da6462facb2a2429ebbc85b9b80a01869. Verify final re-enable fence, existing capture/no-drift contracts, newer expected-red enabled-window integrity evidence from PR #422, and live generation-8 projection finding without claiming missing Studio viewport evidence."
+}
