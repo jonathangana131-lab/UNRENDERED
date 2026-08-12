@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-110430-am0s2f7s-diagnostics-doc-salvage-handoff",
+  "timestamp": "2026-08-12T11:04:30+00:00",
+  "fromWorker": "sol-20260812-am0s2f7s",
+  "eventType": "HANDOFF",
+  "summary": "Diagnostics documentation salvage is published on current main as draft PR #436 and canonical CI is green. The stale old-base predecessor #304 is closed unmerged. Integration is intentionally deferred because live Swarm control validation is still fail-closed on pre-existing immutable event history already owned by the separate trusted-history recovery; this docs worker must not rewrite that event or weaken the validator.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-DIAGNOSTICS", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "PR #436 exact head 35b5b22401f8da96c9f74636cec1707e52fd32e7 changes only Docs/PHYSICS_LAB_DIAGNOSTICS.md and canonical CI run 31589767247 passed.",
+    "The successor preserves the reviewed #304 post-preflight Studio failure-injection probe, precise preflight-versus-transaction wording, source-only test boundary, and explicit no-Studio-evidence claim.",
+    "PR #304 was closed unmerged after its reviewed content was salvaged onto the current-main successor.",
+    "Latest live control validation rejects pre-existing event path .swarm/events/2026-08-11/210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json because legacy validation[0] contains the forbidden executable-looking key named command.",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY is BLOCKED and PR #420 owns exact immutable-history continuity/quarantine. Its prerequisite SWARM-RECOVERY-WORKER-STATUS-CONTRACT is NEEDS_CHANGES with active primary claim sol-20260812-s8v4q2n7 on PR #434.",
+    "No Studio, viewport, physical-contact, two-client, persistence, networking, or gameplay evidence was run or claimed."
+  ],
+  "metadata": {
+    "candidatePr": 436,
+    "candidateHeadSha": "35b5b22401f8da96c9f74636cec1707e52fd32e7",
+    "predecessorPr": 304,
+    "canonicalCiRun": 31589767247,
+    "recommendedNext": "Keep #436 draft and its claim attributable until trusted control validation recovers. Then obtain an independent docs/evidence-boundary review on the exact head before promotion or integration; do not alter the immutable historical event from this lane."
+  }
+}
