@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-r420h9k2",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T07:57:26+00:00",
-  "lastSeenAt": "2026-08-12T07:57:26+00:00",
+  "lastSeenAt": "2026-08-12T08:00:30+00:00",
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "slotId": "reviewer-1",
   "branch": "agent/review/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-r420h9k2",
-  "notes": "Independent history-integrity review of retained recovery PR #420; no product/Studio evidence claims."
+  "notes": "Completed independent history-integrity review of PR #420 exact head 67e89918af03e85863c6eda89fad62a98e314237. Verdict REQUEST_CHANGES: ADR-0005's complete reset inventory/source is stale relative to the composed foundational + extension manifests. Durable REVIEW_RESULT published and lane returned to NEEDS_CHANGES; claim/resource released."
 }
