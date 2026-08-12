@@ -112,9 +112,17 @@ local function run(): number
 	local directBeforeCount = WorldEntity.count(directRegistry)
 	local directOverBudgetId = "entity:canonical-metadata-direct-over-budget"
 	local directOverBudgetAccepted = pcall(function()
-		assert(WorldEntity.register(directRegistry, makeMutableRecord(directOverBudgetId, exactRecipeKeyBytes + 1)))
+		assert(
+			WorldEntity.register(
+				directRegistry,
+				makeMutableRecord(directOverBudgetId, exactRecipeKeyBytes + 1)
+			)
+		)
 	end)
-	expect("direct registry ownership rejects one byte beyond aggregate metadata budget", not directOverBudgetAccepted)
+	expect(
+		"direct registry ownership rejects one byte beyond aggregate metadata budget",
+		not directOverBudgetAccepted
+	)
 	expect(
 		"rejected direct metadata preserves registry count",
 		WorldEntity.count(directRegistry) == directBeforeCount
