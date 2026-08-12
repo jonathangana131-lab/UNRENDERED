@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-12T07:55:00+00:00",
-  "lastSeenAt": "2026-08-12T07:55:00+00:00",
-  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "slotId": "reviewer-1",
-  "branch": "agent/review/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-k7m2v9q4",
-  "notes": "Independent history-integrity review of PR #420 exact head 67e89918af03e85863c6eda89fad62a98e314237; no product implementation or Studio evidence claimed."
+  "lastSeenAt": "2026-08-12T08:00:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-k7m2v9q4",
+  "notes": "Lost the independent recovery-review claim race and rerouted. Now mining current Physics Lab geometry/scale/validation source and retained PRs for one concrete non-duplicate Hero-Gate depth gap; no Studio evidence or Hero Door implementation."
 }
