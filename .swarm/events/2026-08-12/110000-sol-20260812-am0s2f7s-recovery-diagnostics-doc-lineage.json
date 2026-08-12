@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-110000-am0s2f7s-diagnostics-doc-lineage-recovery",
+  "timestamp": "2026-08-12T11:00:00+00:00",
+  "fromWorker": "sol-20260812-am0s2f7s",
+  "eventType": "RECOVERY",
+  "summary": "Corrects the earlier diagnostics capacity-mining lineage assessment: open PR #304 already contained the same failure-atomicity documentation reconciliation plus a stronger reviewed Studio failure-injection probe. Its original audit claim is no longer live and its branch starts from an older main, so current PR #436 has been converted from a minimal duplicate into a current-main salvage successor that preserves #304's reviewed evidence procedure instead of competing with it.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "low",
+  "evidence": [
+    "Earlier event evt-20260812-105145-am0s2f7s-diagnostics-failure-atomicity-doc-drift correctly identified stale main documentation but incorrectly reported no active documentation successor because the initial PR search missed #304.",
+    "PR #304 remains open at head 74405f733dd928ef1666516784e1c81989e38c03, base aa7e04f05834ae783773c908fccfdbbe510558e5, with no live .swarm/claims/HG-BACKFILL-DIAGNOSTICS/audit.json claim.",
+    "Both #304 automated review findings are outdated on its final head: exact injected-error validation and precise preflight-vs-transaction wording are present in the retained document.",
+    "Current main source still supports the retained probe: preflightReadouts omits UNRENDERED_RepresentationClass, final capture rejects non-string representation-class metadata inside enable's protected transaction, and failed realization destroys the owned folder before propagating.",
+    "PR #436 exact successor head 35b5b22401f8da96c9f74636cec1707e52fd32e7 is a one-file Docs-only current-main salvage under the live mine-diagnostics claim. Do not merge #304 independently after this successor validates."
+  ],
+  "metadata": {
+    "predecessorPr": 304,
+    "predecessorHeadSha": "74405f733dd928ef1666516784e1c81989e38c03",
+    "successorPr": 436,
+    "successorHeadSha": "35b5b22401f8da96c9f74636cec1707e52fd32e7",
+    "recommendedNext": "Require exact-head canonical CI for #436, keep Studio evidence explicitly unclaimed, and close #304 as superseded only after the current-main successor is validated."
+  }
+}
