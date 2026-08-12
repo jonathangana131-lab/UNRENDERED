@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-p423v7r4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T07:59:21+00:00",
-  "lastSeenAt": "2026-08-12T08:09:41+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-runtime",
-  "branch": "agent/mining/HG-CAPACITY-MINING-mine-physics-runtime-p423v7r4",
-  "notes": "Lost the #423 audit claim race and rerouted without touching that PR. Mining current Physics Lab runtime source/tests/retained PRs for one concrete non-duplicate source-only invariant, test, or integration gap. Normalized legacy ACTIVE status to V2 WORKING while its live claim remains owned."
+  "lastSeenAt": "2026-08-12T08:12:30+00:00",
+  "notes": "Completed the claimed Physics Lab runtime capacity-mining pass, published evt-20260812-081130-p423v7r4-runtime-entity-key-budget, and released the claim. Lost the earlier #423 audit claim race and did not touch that PR. No production code or executable tests were changed/run by this worker."
 }
