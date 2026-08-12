@@ -15,79 +15,74 @@ local function run(): number
 	end
 
 	local rawSource = fs.readFile(DIAGNOSTICS_SOURCE)
+	-- Ignore inactive line comments, and anchor checks on semantic tokens instead
+	-- of one-line function signatures so StyLua wrapping cannot change the result.
 	local source = string.gsub(rawSource, "%-%-[^\n]*", "")
 
-	local helperStart = string.find(
-		source,
-		"local function captureCanonicalWhileDiagnosticsEnabled(lab: PhysicsLabRealizer.RealizedLab): Validation.Snapshot",
-		1,
-		true
-	)
+	local helperStart = string.find(source, "local function captureCanonicalWhileDiagnosticsEnabled(", 1, true)
 	local helperEnd = helperStart
-		and string.find(source, "\nfunction PhysicsLabStudioDiagnostics.capture", helperStart, true)
-	local helperSource = if helperStart ~= nil and helperEnd ~= nil
-		then string.sub(source, helperStart, helperEnd - 1)
-		else ""
-
-	local cloneLab = string.find(helperSource, "local cloneInstance = lab.model:Clone()", 1, true)
-	local proveCloneModel = string.find(helperSource, 'assert(cloneInstance:IsA("Model")', 1, true)
-	local locateOwnedOverlay = string.find(helperSource, "local clonedRoot = diagnosticsRoot(clone)", 1, true)
-	local removeOwnedOverlay = string.find(helperSource, "clonedRoot:Destroy()", 1, true)
-	local canonicalCapture = string.find(helperSource, "return Validation.captureFull(clone)", 1, true)
-	local destroyClone = string.find(helperSource, "clone:Destroy()", 1, true)
-	local propagate = string.find(helperSource, "error(result, 0)", 1, true)
+		and string.find(source, "function PhysicsLabStudioDiagnostics.capture(", helperStart, true)
+	local cloneLab = helperStart and string.find(source, "local cloneInstance = lab.model:Clone()", helperStart, true)
+	local proveCloneModel = helperStart
+		and string.find(source, 'assert(cloneInstance:IsA("Model")', helperStart, true)
+	local locateOwnedOverlay = helperStart
+		and string.find(source, "local clonedRoot = diagnosticsRoot(clone)", helperStart, true)
+	local removeOwnedOverlay = helperStart and string.find(source, "clonedRoot:Destroy()", helperStart, true)
+	local canonicalCapture = helperStart
+		and string.find(source, "return Validation.captureFull(clone)", helperStart, true)
+	local destroyClone = helperStart and string.find(source, "clone:Destroy()", helperStart, true)
+	local propagate = helperStart and string.find(source, "error(result, 0)", helperStart, true)
 
 	expect(
 		"enabled canonical integrity is checked on a disposable clone",
-		cloneLab ~= nil and proveCloneModel ~= nil and cloneLab < proveCloneModel
+		helperStart ~= nil
+			and helperEnd ~= nil
+			and cloneLab ~= nil
+			and proveCloneModel ~= nil
+			and helperStart < cloneLab
+			and cloneLab < proveCloneModel
+			and proveCloneModel < helperEnd
 	)
 	expect(
 		"only the exact owned diagnostics overlay is removed before strict canonical validation",
 		locateOwnedOverlay ~= nil
 			and removeOwnedOverlay ~= nil
 			and canonicalCapture ~= nil
+			and helperEnd ~= nil
 			and locateOwnedOverlay < removeOwnedOverlay
 			and removeOwnedOverlay < canonicalCapture
+			and canonicalCapture < helperEnd
 	)
 	expect(
 		"disposable canonical clone is destroyed before either success or propagated failure returns",
 		canonicalCapture ~= nil
 			and destroyClone ~= nil
 			and propagate ~= nil
+			and helperEnd ~= nil
 			and canonicalCapture < destroyClone
 			and destroyClone < propagate
+			and propagate < helperEnd
 	)
 
-	local evidenceStart =
-		string.find(source, "function PhysicsLabStudioDiagnostics.runToggleEvidence(", 1, true)
-	local evidenceEnd = evidenceStart and string.find(source, "\nreturn table.freeze", evidenceStart, true)
-	local evidenceSource = if evidenceStart ~= nil and evidenceEnd ~= nil
-		then string.sub(source, evidenceStart, evidenceEnd - 1)
-		else ""
-
-	local enable =
-		string.find(evidenceSource, "local enabled = PhysicsLabStudioDiagnostics.enable(lab)", 1, true)
-	local onSnapshot = string.find(
-		evidenceSource,
-		"local onSnapshot = captureCanonicalWhileDiagnosticsEnabled(lab)",
-		1,
-		true
-	)
-	local onCompare = string.find(
-		evidenceSource,
-		"local onComparison = Validation.compare(baseline, onSnapshot, 0.001)",
-		1,
-		true
-	)
-	local onDelta =
-		string.find(evidenceSource, "for countName, delta in pairs(onComparison.delta) do", 1, true)
-	local onEnvelope = string.find(evidenceSource, "assert(onComparison.envelope.ok", 1, true)
-	local disable =
-		string.find(evidenceSource, "local disabled = PhysicsLabStudioDiagnostics.disable(lab)", 1, true)
+	local evidenceStart = string.find(source, "function PhysicsLabStudioDiagnostics.runToggleEvidence(", 1, true)
+	local evidenceReturn = evidenceStart and string.find(source, "return evidence", evidenceStart, true)
+	local enable = evidenceStart
+		and string.find(source, "local enabled = PhysicsLabStudioDiagnostics.enable(lab)", evidenceStart, true)
+	local onSnapshot = evidenceStart
+		and string.find(source, "local onSnapshot = captureCanonicalWhileDiagnosticsEnabled(lab)", evidenceStart, true)
+	local onCompare = evidenceStart
+		and string.find(source, "local onComparison = Validation.compare(baseline, onSnapshot, 0.001)", evidenceStart, true)
+	local onDelta = evidenceStart
+		and string.find(source, "for countName, delta in pairs(onComparison.delta) do", evidenceStart, true)
+	local onEnvelope = evidenceStart and string.find(source, "assert(", onDelta or evidenceStart, true)
+	local disable = evidenceStart
+		and string.find(source, "local disabled = PhysicsLabStudioDiagnostics.disable(lab)", evidenceStart, true)
 
 	expect(
 		"each enabled evidence window validates canonical truth before diagnostics are disabled",
-		enable ~= nil
+		evidenceStart ~= nil
+			and evidenceReturn ~= nil
+			and enable ~= nil
 			and onSnapshot ~= nil
 			and onCompare ~= nil
 			and onDelta ~= nil
@@ -98,6 +93,7 @@ local function run(): number
 			and onCompare < onDelta
 			and onDelta < onEnvelope
 			and onEnvelope < disable
+			and disable < evidenceReturn
 	)
 
 	return failures
