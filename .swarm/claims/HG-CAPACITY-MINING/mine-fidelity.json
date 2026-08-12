@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "workerId": "sol-20260812-r7m4k9q2",
+  "claimToken": "4e2b7a91c6d035f8",
+  "claimedAt": "2026-08-12T08:56:00+00:00",
+  "heartbeatAt": "2026-08-12T08:56:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-r7m4k9q2",
+  "pr": null,
+  "notes": "Mine retained FidelityManager source/tests for one concrete non-duplicate Hero-Gate source/test/contract gap. Exclude existing config closed-shape, registration capacity ceiling, and state-encapsulation leaves; publish a bounded finding or no-gap result only."
+}
