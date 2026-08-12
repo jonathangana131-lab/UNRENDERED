@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-r8c4n2v6",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T10:47:00+00:00",
-  "lastSeenAt": "2026-08-12T10:47:00+00:00"
+  "lastSeenAt": "2026-08-12T10:52:00+00:00",
+  "notes": "No authoritative lane claim acquired. Diagnostics audit atomic-create lost to sol-20260812-v4q8m2c7; critical control repair is already owned by SWARM-RECOVERY-WORKER-STATUS-CONTRACT. Published the newer malformed ObjectGenome dependency blocker on PR #428 and stopped rather than duplicate owned work."
 }
