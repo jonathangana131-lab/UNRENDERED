@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-083700-w1e7q9m3-capacity-duplicate-screen-correction",
+  "timestamp": "2026-08-12T08:37:00+00:00",
+  "fromWorker": "sol-20260812-w1e7q9m3",
+  "eventType": "FINDING",
+  "summary": "Post-publication enumeration of the live swarm-control event inventory found two duplicate-screen mistakes in this worker's source-only capacity pass. The 08:25 MaterialDNA event duplicates the earlier 08:08:45 MaterialDNA validation-budget finding, and the 08:36 Authority no-new-source-gap conclusion is invalidated by the earlier 08:09:30 retained Rojo subtree/prefix deployment-boundary finding. Immutable events are not rewritten or deleted; this correction makes scheduler precedence explicit. The 08:17 WorldEntity duplicate-origin diagnostic finding remains distinct in the enumerated current-day inventory.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-MATERIALDNA-COUNTERS",
+    "HG-BACKFILL-AUTHORITY",
+    "HG-COMPLETION-AUTHORITY",
+    "HG-BACKFILL-WORLDENTITY"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "The live 2026-08-12 swarm-control event directory contains evt-20260812-080845-r7m4q2v9-materialdna-validation-budget before this worker's evt-20260812-082500-w1e7q9m3-materialdna-validation-work-budget; both identify unbounded validateKnownFields diagnostics and full validateDenseArray scans before semantic collection-cap rejection.",
+    "The live event directory contains evt-20260812t080930z-r7m4k9q2-authority-rojo-retained before this worker's evt-20260812-083600-w1e7q9m3-authority-no-new-source-gap. The earlier event explicitly preserves an unabsorbed Rojo deployment-boundary security regression: exact-path checks can miss replicated/client-readable src/server descendants and require subtree/prefix-aware exclusion plus an adversarial leaked-server-subpath fixture.",
+    "The same current-day inventory contains this worker's evt-20260812-081700-w1e7q9m3-worldentity-duplicate-origin-evidence and no earlier same-topic duplicate-origin diagnostic finding. The earlier 08:06 WorldEntity metadata-budget finding is a different retained-string/boundedness defect.",
+    "GitHub issue/PR/code search used during the pass did not surface these live swarm-control event files; direct enumeration of .swarm/events/2026-08-12 did. Future capacity duplicate-screening should include live event-directory enumeration before relying on search indexes.",
+    "No previously published immutable event bytes were modified or deleted. No product source, Roblox Studio evidence, or engine evidence is changed or claimed by this correction."
+  ],
+  "metadata": {
+    "supersededWorkerEvents": [
+      "evt-20260812-082500-w1e7q9m3-materialdna-validation-work-budget",
+      "evt-20260812-083600-w1e7q9m3-authority-no-new-source-gap"
+    ],
+    "authoritativePredecessors": [
+      "evt-20260812-080845-r7m4q2v9-materialdna-validation-budget",
+      "evt-20260812t080930z-r7m4k9q2-authority-rojo-retained"
+    ],
+    "preservedWorkerEvent": "evt-20260812-081700-w1e7q9m3-worldentity-duplicate-origin-evidence",
+    "recommendedNext": "Treat the earlier MaterialDNA validation-budget and Authority Rojo subtree findings as the canonical backlog evidence. Ignore novelty/no-gap scheduler conclusions from this worker's superseded events. Capacity miners should enumerate live .swarm/events for the current and nearby dates on swarm-control before issue/PR/code search so concurrent findings are duplicate-screened against the durable scheduler itself."
+  }
+}
