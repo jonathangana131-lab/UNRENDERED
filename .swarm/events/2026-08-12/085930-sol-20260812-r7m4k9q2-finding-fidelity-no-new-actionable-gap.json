@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t085930z-r7m4k9q2-fidelity-no-new-actionable-gap",
+  "timestamp": "2026-08-12T08:59:30Z",
+  "fromWorker": "sol-20260812-r7m4k9q2",
+  "eventType": "FINDING",
+  "summary": "Fidelity capacity-mining found no additional actionable Hero-Gate source/test gap beyond the already tracked config closed-shape, registration-capacity, and manager-state-encapsulation leaves. Retained #419 keeps registered state bounded by MAX_REGISTERED_ENTITIES=65536 and current source/tests cover transition/accounting/callback/capacity behavior. The only distinct residual concern found was lifetime diagnostic counters (transitions/promotions/demotions/hook/block/external-sync/capacity-rejection counters) monotonically incrementing as Luau numbers without an explicit safe-integer saturation policy. Exact integer precision would eventually be lost past IEEE-754's 2^53-1 safe-integer range, but reaching that boundary requires an astronomically large number of events and no current operational decision depends on those counters. Per Depth Before Breadth / Measure Before Optimize, do not open another Fidelity lane for this theoretical boundary unless profiling/soak evidence establishes a realistic lifetime counter-risk or those metrics become persistence/protocol truth. Existing proposed/blocked Fidelity leaves remain the correct next work after retained #419 can integrate.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-BACKFILL-FIDELITY",
+    "HG-FIDELITY-CONFIG-CLOSED-SHAPE",
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+    "HG-FIDELITY-MANAGER-STATE-ENCAPSULATION",
+    "HG-COMPLETION-CONTENT"
+  ],
+  "evidence": [
+    "Retained Fidelity PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 exports MAX_REGISTERED_ENTITIES=65536 and bounds live registration state; its canonical CI and engine-test evidence are already green while integration remains trust-blocked.",
+    "Current Fidelity leaves already own the actionable uncovered contract classes: PolicyConfig closed/plain shape, registration ceiling/capacity behavior, and caller-inaccessible internal state/counters.",
+    "FidelityManager event metrics such as transitions, promotions, demotions, transitionHookCalls, blocked counters, externalSynchronizations, and registrationCapacityRejections use monotonic +=1 updates; Luau numbers are IEEE-754 doubles, so exact +1 accounting is not representable forever past 2^53-1.",
+    "Current tests exercise ordinary exact metric accounting and capacity rejection, but no safe-integer/saturation contract exists; open-PR searches for Fidelity counter/metrics/saturation work found no dedicated retained lane.",
+    "No measured soak, persistence, protocol, or operational dependency makes 2^53 lifetime metric events a present project risk. Creating a lane now would be speculative overengineering rather than a Reality-Grade closure item."
+  ]
+}
