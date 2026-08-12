@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-q8n5v2c7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T10:42:49+00:00",
-  "lastSeenAt": "2026-08-12T10:56:30+00:00",
+  "lastSeenAt": "2026-08-12T11:02:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-worldentity",
   "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-q8n5v2c7-g2",
-  "notes": "Authority finding published and slot released. Mining WorldEntity next for one concrete non-duplicate identity/persistence-boundary depth gap while feature epics remain locked."
+  "notes": "Completed two source-only capacity-mining passes. Published authority descendant-liveness finding evt-20260812t105400z-q8n5v2c7-authority-descendant-liveness and WorldEntity metadata bounded-preflight finding evt-20260812t110100z-q8n5v2c7-worldentity-metadata-preflight. Both claims released; no product branch/PR opened, no Studio/two-client evidence claimed. Direct implementation remains fenced behind active retained lineages and trusted ownership recovery."
 }
