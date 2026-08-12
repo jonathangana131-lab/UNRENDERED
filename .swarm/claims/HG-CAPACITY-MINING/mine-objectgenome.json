@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "workerId": "sol-20260812-p7m4k9q2",
+  "claimToken": "f2c8a4d1e7b90563",
+  "claimedAt": "2026-08-12T08:23:00+00:00",
+  "heartbeatAt": "2026-08-12T08:23:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-p7m4k9q2",
+  "pr": null,
+  "notes": "Mine current-main plus retained ObjectGenome generation-8 lineage for one concrete non-duplicate source/test/contract depth gap. No feature implementation or Studio evidence."
+}
