@@ -5,11 +5,11 @@
   "workerId": "sol-20260812-m8q4v2c7",
   "claimToken": "f2c6a91d47b8053e",
   "claimedAt": "2026-08-12T08:58:10+00:00",
-  "heartbeatAt": "2026-08-12T08:58:10+00:00",
+  "heartbeatAt": "2026-08-12T08:59:00+00:00",
   "leaseSeconds": 1800,
   "generation": 12,
   "resources": [],
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-m8q4v2c7-g12",
-  "pr": null,
-  "notes": "Generation-12 primary successor absorbs test-adversary PR #430 exact head 7716eba2ace4be9dc04df7264a1003de5dc0df55 on top of generation-11 production. No production behavior change beyond #427; strengthened helper-local clone-completeness regression must remain exact-head green, then independent source audit is required. No Studio evidence claims."
+  "pr": 431,
+  "notes": "Published generation-12 successor PR #431 exact head 7716eba2ace4be9dc04df7264a1003de5dc0df55 from the green #430 test head. Production source remains generation-11 behavior; full successor diff now includes the hardened clone-completeness regression. Awaiting fresh PR CI, then independent source/test audit. No Studio evidence claims."
 }
