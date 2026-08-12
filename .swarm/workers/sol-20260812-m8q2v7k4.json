@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-m8q2v7k4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T08:12:00+00:00",
+  "lastSeenAt": "2026-08-12T08:13:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-m8q2v7k4-g2",
+  "notes": "Review-only generation-2 stale takeover. Mine one diagnostics source/invariant/test/integration gap distinct from active #424/#425 or publish no-gap evidence. No product edits or Studio claims."
+}
