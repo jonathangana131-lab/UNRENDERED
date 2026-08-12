@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:42:49+00:00",
-  "lastSeenAt": "2026-08-12T10:45:49+00:00",
+  "lastSeenAt": "2026-08-12T10:56:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-authority",
-  "branch": "agent/mining/HG-CAPACITY-MINING-authority-q8n5v2c7",
-  "notes": "Authority/multiplayer capacity miner claimed after higher-priority recovery and diagnostics primary races were lost. Mining current source/tests/PR lineage for one concrete non-duplicate Hero-Gate gap without Studio evidence claims."
+  "slotId": "mine-worldentity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-q8n5v2c7-g2",
+  "notes": "Authority finding published and slot released. Mining WorldEntity next for one concrete non-duplicate identity/persistence-boundary depth gap while feature epics remain locked."
 }
