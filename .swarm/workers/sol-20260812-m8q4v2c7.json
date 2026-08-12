@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-m8q4v2c7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T08:00:15+00:00",
-  "lastSeenAt": "2026-08-12T08:58:35+00:00",
+  "lastSeenAt": "2026-08-12T09:00:35+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-m8q4v2c7-g12",
-  "notes": "Generation-12 primary successor absorbs green test-adversary PR #430 on top of generation-11 production. Goal is a full successor candidate with hardened clone-completeness regression; no new production behavior and no Studio evidence claims."
+  "notes": "Generation-12 primary PR #431 exact head 7716eba2ace4be9dc04df7264a1003de5dc0df55 is exact-head CI green and handed off for required independent source/test audit. Superseded #427/#430 closed; primary claim released. No Studio evidence claims."
 }
