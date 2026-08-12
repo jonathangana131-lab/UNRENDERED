@@ -176,25 +176,17 @@ local function run(): number
 
 	-- Detached lifecycle helpers are public ownership boundaries too. They must not let callers bypass
 	-- canonical metadata validation by constructing a mutable record without WorldEntity.new/register.
-	local detachedOverBudgetRecord = makeMutableRecord(
-		"entity:canonical-metadata-detached-over-budget",
-		exactRecipeKeyBytes + 1
-	)
+	local detachedOverBudgetRecord =
+		makeMutableRecord("entity:canonical-metadata-detached-over-budget", exactRecipeKeyBytes + 1)
 	local detachedCaptureAccepted = pcall(function()
 		WorldEntity.captureState(detachedOverBudgetRecord, { captured = true })
 	end)
-	expect(
-		"detached capture revalidates canonical metadata budget",
-		not detachedCaptureAccepted
-	)
+	expect("detached capture revalidates canonical metadata budget", not detachedCaptureAccepted)
 
 	local detachedTransitionAccepted = pcall(function()
 		WorldEntity.transition(detachedOverBudgetRecord, "F1")
 	end)
-	expect(
-		"detached transition revalidates canonical metadata budget",
-		not detachedTransitionAccepted
-	)
+	expect("detached transition revalidates canonical metadata budget", not detachedTransitionAccepted)
 
 	return failures
 end
