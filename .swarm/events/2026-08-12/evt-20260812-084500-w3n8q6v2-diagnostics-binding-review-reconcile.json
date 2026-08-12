@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-084500-w3n8q6v2-diagnostics-binding-review-reconcile",
+  "timestamp": "2026-08-12T08:45:00+00:00",
+  "fromWorker": "sol-20260812-w3n8q6v2",
+  "eventType": "FINDING",
+  "summary": "Reconciled stale HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING audit ownership without duplicating an already-complete independent review. Generation-1 reviewer sol-20260811-q7n2v5m8 published source-contract PASS on PR #349 exact head ee771bd50db972ad572f5d3cef8463220d69fa06, explicitly verifying the repaired exact-function regression and the exact private Instance/direct-model authority predicate. The candidate remains integration-blocked only by repository-wide trusted-history/live pr-ownership recovery, so the lane should be BLOCKED rather than continuing to advertise REVIEW work.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING", "HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "severity": "LOW",
+  "evidence": [
+    "PR #349 is still open/mergeable at exact head ee771bd50db972ad572f5d3cef8463220d69fa06 on main ae83c0ef470eb2e73d99be41fd3561ede30c40e1.",
+    "PR review 4911543619 by independent worker sol-20260811-q7n2v5m8 records PASS at the source-contract layer on that exact head after the earlier false-pass source-regression defect was fixed.",
+    "That review verifies ownsRepresentation() asserts live lab state, reuses isRepresented(), requires exact private-map Instance identity and candidate.Parent == model, keeps the private representation map inaccessible, and locks the complete local function in the pure regression.",
+    "The same review records canonical CI 31539525697 PASS and Swarm engine-tests job 93938658376 PASS; live pr-ownership remains red only behind the separately owned repository-wide trusted-history continuity recovery. No new test execution or Studio evidence is claimed by this reconciliation."
+  ]
+}
