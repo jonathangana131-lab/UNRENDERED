@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-pg423a7x",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "BLOCKED",
   "startedAt": "2026-08-12T07:58:30+00:00",
-  "lastSeenAt": "2026-08-12T07:59:20+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-pg423a7x",
-  "notes": "Lost the physics-geometry audit race before claim; rerouted to independent exact-head diagnostics audit of retained generation-9 PR #424. No Studio evidence claims."
+  "lastSeenAt": "2026-08-12T08:05:00+00:00",
+  "notes": "No compatible claim remains for this worker. Recovery PR #420 independent review was claimed by another worker before atomic claim; Physics geometry PR #423 audit was also claimed before atomic claim; diagnostics PR #424 is NEEDS_CHANGES so its audit slot is not currently compatible, and its test-adversary slot is owned. Current capacity-mining stale slots are being recovered by other workers; mine-diagnostics has a documented malformed immutable-event blocker tied to active history recovery. No production edits, PR review, CI execution, or Studio evidence claimed."
 }
