@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-s6v3n8q2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T10:44:30+00:00",
-  "lastSeenAt": "2026-08-12T10:44:30+00:00",
-  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-  "slotId": "primary",
-  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-s6v3n8q2-g2",
-  "notes": "Generation-2 stale takeover after inspecting PR #428 exact head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae, independent REQUEST_CHANGES event evt-20260812-090620-m8q4v2c7-worker-status-review-result, prior worker record, lane state, claim, and SWARM-PROTOCOL lease. Repair is limited to explicit REVIEW_RESULT verdict string validation plus unhashable JSON hardening coverage."
+  "lastSeenAt": "2026-08-12T10:45:20+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Atomic stale-takeover attempt for SWARM-RECOVERY-WORKER-STATUS-CONTRACT lost a CAS race to generation-2 worker sol-20260812-s8v4q2n7. The claim update returned HTTP 409; no product branch was created and no lane/resource ownership was acquired. Parked immediately to avoid duplicate work."
 }
