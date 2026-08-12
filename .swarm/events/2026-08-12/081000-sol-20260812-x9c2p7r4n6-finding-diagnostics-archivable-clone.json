@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-081000-x9c2p7r4n6-diagnostics-archivable-clone",
+  "timestamp": "2026-08-12T08:10:00+00:00",
+  "fromWorker": "sol-20260812-x9c2p7r4n6",
+  "eventType": "FINDING",
+  "summary": "Diagnostics generation-9 enabled-state canonical evidence validates a disposable lab.model:Clone(), but Roblox Clone omits Archivable=false descendants. Because the helper does not prove clone completeness or fail closed on non-Archivable live truth before cloning, an unexpected live non-Archivable child can disappear before strict Validation.captureFull(clone) and evade the diagnostics-on evidence pass.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "Inspected retained primary PR #424 exact head f89ce88ea7791e29d22a0e2ca76b22f2d7b63699 after its generation-9 enabled-integrity and authoritative-projection updates.",
+    "PhysicsLabStudioDiagnostics.captureCanonicalWhileDiagnosticsEnabled() proves the live owned diagnostics root exists, then immediately clones lab.model; it removes the cloned diagnostics root and runs unchanged strict Validation.captureFull(clone), but has no Archivable/clone-completeness guard before Clone().",
+    "Roblox Creator Hub Instance documentation states Archivable controls inclusion when Clone() is called on an ancestor and Clone() ignores descendants that are not Archivable.",
+    "Strict PhysicsLabValidation would reject an unexpected direct live child if it saw it, but a child with Archivable=false can be omitted by the disposable clone before that representation-set validation runs.",
+    "Draft stacked expected-red PR #425 exact head 73a32bba954775e89bcaeaee7ec6212334688ef9 changes only tests/physics_lab_diagnostics_enabled_integrity.luau (+25/-0) and requires fail-closed clone completeness before lab.model:Clone().",
+    "PR #424 exact base head f89ce88ea7791e29d22a0e2ca76b22f2d7b63699 has canonical CI run 31576692805 SUCCESS. PR #425 exact-head CI run 31576910593 passes tool install, sourcemap, format, lint, Luau analysis, randomness/domain audits, and Swarm deterministic tests, then fails at Pure Luau as expected. Swarm engine-tests in run 31576911749 pass; pr-ownership remains separately fail-closed behind trusted-history recovery.",
+    "No Roblox Studio, viewport, physical-contact, or two-client evidence was run or claimed."
+  ],
+  "metadata": {
+    "candidatePr": 424,
+    "candidateHeadSha": "f89ce88ea7791e29d22a0e2ca76b22f2d7b63699",
+    "adversaryPr": 425,
+    "adversaryHeadSha": "73a32bba954775e89bcaeaee7ec6212334688ef9",
+    "baseCiRun": 31576692805,
+    "expectedRedCiRun": 31576910593,
+    "recommendedNext": "Absorb the expected-red regression into the active diagnostics primary/successor and make the enabled canonical-clone seam fail closed before Clone() whenever live truth could be omitted (or otherwise prove clone completeness), without weakening strict Validation.captureFull and without converting source confidence into Studio evidence."
+  }
+}
