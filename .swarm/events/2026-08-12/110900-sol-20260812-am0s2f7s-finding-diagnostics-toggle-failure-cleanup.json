@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-110900-am0s2f7s-diagnostics-toggle-failure-cleanup",
+  "timestamp": "2026-08-12T11:09:00+00:00",
+  "fromWorker": "sol-20260812-am0s2f7s",
+  "eventType": "FINDING",
+  "summary": "The retained diagnostics toggle-evidence helper is off-to-off only on its success path. After enable(lab), enabled-window canonical capture/comparison assertions execute before disable(lab); any error in that interval exits runToggleEvidence() with the owned diagnostics overlay still live until an explicit cleanup or a later helper start. This is distinct from enable() transaction rollback and from the generation-13 clone-completeness repair.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected integration-ready diagnostics PR #432 exact head 7716eba2ace4be9dc04df7264a1003de5dc0df55 after checking existing diagnostics PR/issue lineage for a duplicate cleanup repair.",
+    "runToggleEvidence() calls PhysicsLabStudioDiagnostics.enable(lab), then captureCanonicalWhileDiagnosticsEnabled(lab), Validation.compare(), zero-delta assertions, and the enabled-envelope assertion before its first PhysicsLabStudioDiagnostics.disable(lab) for that cycle.",
+    "Those enabled-window operations are not inside an outer protected cleanup boundary. A thrown capture/comparison/assertion therefore bypasses the later disable call and leaves the diagnostics Folder created by successful enable() parented under the live lab model.",
+    "tests/physics_lab_diagnostics_enabled_integrity.luau explicitly locks enable -> enabled canonical capture -> compare -> delta/envelope checks -> disable ordering, but it does not require a failure-path cleanup/finalizer around that interval.",
+    "The next runToggleEvidence() invocation starts with disable(lab), so the defect is bounded and recoverable; the issue is that the failed invocation itself does not satisfy final-OFF/fail-closed cleanup and can leave operator-visible diagnostic state after an evidence failure.",
+    "Search of diagnostics PRs/issues found enabled-canonical clone cleanup, enable() rollback, represented-set integrity, and bounded-cycle work, but no separate runToggleEvidence enabled-window failure-cleanup repair."
+  ],
+  "metadata": {
+    "candidatePr": 432,
+    "candidateHeadSha": "7716eba2ace4be9dc04df7264a1003de5dc0df55",
+    "recommendedNext": "After current diagnostics integration sequencing is safe, add one bounded diagnostics leaf that preserves enabled-window validation-before-disable semantics but guarantees owned-overlay cleanup on every post-enable error path, preserves the original evidence failure when cleanup succeeds, reports cleanup failure without masking ownership state, and adds a regression that rejects success-path-only cleanup. Do not claim Studio PASS from the source repair."
+  }
+}
