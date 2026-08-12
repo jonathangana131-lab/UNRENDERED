@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-q8m5v2k7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T08:05:45+00:00",
-  "lastSeenAt": "2026-08-12T08:05:45+00:00",
+  "lastSeenAt": "2026-08-12T08:06:35+00:00",
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "slotId": "primary",
   "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-q8m5v2k7-g7",
-  "notes": "Generation-7 recovery responder after independent PR #420 exact-head REQUEST_CHANGES. Narrow target: reconcile ADR-0005's declared complete finite reset inventory/source with the exact composed foundational + extension manifests; preserve immutable-event bytes and fail-closed recovery semantics."
+  "notes": "Attempted generation-7 recovery takeover after independent REQUEST_CHANGES, but another worker atomically acquired SWARM-PROTOCOL first. The incomplete primary claim was immediately released; no branch/product/control implementation was started and no ownership fence was bypassed."
 }
