@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-p6v3k8n2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-12T10:43:05+00:00",
-  "lastSeenAt": "2026-08-12T10:57:00+00:00",
+  "lastSeenAt": "2026-08-12T11:02:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-materialdna",
-  "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-p6v3k8n2",
-  "notes": "MaterialDNA mining complete. Reconfirmed historical percent-key grammar defect without duplicating the finding, materialized PROPOSED lane HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR behind higher-priority DENSE-BOUNDS to serialize MaterialDNA.luau edits, published dependency event evt-20260812-105600-p6v3k8n2-materialdna-key-grammar-sequencing, and released claim. No source/test/Studio evidence claimed."
+  "slotId": "mine-worldentity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-p6v3k8n2-g2",
+  "notes": "Second safe source-only capacity pass after MaterialDNA mining and control-state cleanup. Mining WorldEntity for a concrete non-duplicate Reality-Grade contract/test/integration gap while the higher-priority worker-status recovery primary remains independently owned."
 }
