@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-110846-q6n9v2m4-worldentity-g9-handoff",
+  "timestamp": "2026-08-12T11:08:46+00:00",
+  "fromWorker": "sol-20260812-q6n9v2m4",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "summary": "Generation-9 WorldEntity source repair is complete on draft PR #437 exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3. Canonical CI and Swarm engine-tests pass. Independent exact-head review is requested via evt-20260812-110510-q6n9v2m4-worldentity-g9-review-request. Keep the lane NEEDS_CHANGES and integration fail-closed until that review passes and repository-wide trusted ownership validation recovers.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "Primary claim generation 9 token e5c27a914bd3608f remains fenced to sol-20260812-q6n9v2m4 while waiting for independent review",
+    "PR #437 draft exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3 supersedes #429 and earlier WorldEntity predecessors",
+    "Canonical CI run 31589487364 PASS",
+    "Swarm run 31589487351 engine-tests PASS",
+    "Current repository-wide control validation remains red on unrelated live control-state recovery; do not merge or bypass the ownership gate",
+    "No Studio evidence is applicable or claimed"
+  ]
+}
