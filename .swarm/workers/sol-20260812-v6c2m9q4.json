@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-v6c2m9q4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T10:46:22+00:00",
-  "lastSeenAt": "2026-08-12T10:46:22+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-objectgenome",
-  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-v6c2m9q4",
-  "notes": "Rerouted after losing the critical control-repair takeover race. Mining retained ObjectGenome source/tests/PR history for one concrete non-duplicate Reality-Grade depth gap without unlocking new feature work or claiming Studio evidence."
+  "lastSeenAt": "2026-08-12T10:48:28+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "No ownership acquired. Lost the SWARM-RECOVERY-WORKER-STATUS-CONTRACT stale-primary race to generation 2, then lost HG-CAPACITY-MINING mine-objectgenome to an earlier atomic claim; all standing capacity-mining slots were occupied in the same burst. Main is green; Studio display remains externally blocked; integration candidates and stale lineages inspected are blocked on the active trusted-control recovery. Stopped cleanly rather than duplicate or bypass claims."
 }
