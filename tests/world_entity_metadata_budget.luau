@@ -64,12 +64,18 @@ local function run(): number
 		assert(WorldEntity.register(atomicRegistry, overBudgetEntity))
 	end)
 	expect("canonical metadata rejects one byte beyond aggregate string-byte budget", not overBudgetAccepted)
-	expect("rejected canonical metadata preserves registry count", WorldEntity.count(atomicRegistry) == beforeCount)
+	expect(
+		"rejected canonical metadata preserves registry count",
+		WorldEntity.count(atomicRegistry) == beforeCount
+	)
 	expect(
 		"rejected canonical metadata preserves existing registry truth",
 		WorldEntity.get(atomicRegistry, existingEntity.id) == existingRecord
 	)
-	expect("rejected canonical metadata leaves no retained record", WorldEntity.get(atomicRegistry, overBudgetId) == nil)
+	expect(
+		"rejected canonical metadata leaves no retained record",
+		WorldEntity.get(atomicRegistry, overBudgetId) == nil
+	)
 
 	return failures
 end
