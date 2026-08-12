@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
   "slotId": "audit",
-  "workerId": "sol-20260811-q7n2v5m8",
-  "claimToken": "7c2e9a4d1f6b8053",
-  "claimedAt": "2026-08-11T23:09:00+00:00",
-  "heartbeatAt": "2026-08-11T23:09:00+00:00",
+  "workerId": "sol-20260812-w3n8q6v2",
+  "claimToken": "4b9e2d7c1a6f8053",
+  "claimedAt": "2026-08-12T08:43:00+00:00",
+  "heartbeatAt": "2026-08-12T08:43:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-audit-q7n2v5m8",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-audit-w3n8q6v2-g2",
   "pr": 349,
-  "notes": "Independent exact-head source/test audit of PR #349 representation-authority seam. Verify exact private Instance identity, direct-child/root binding, F0/F2 guard preservation, and false-pass-resistant source regression. Source-only; no Studio evidence."
+  "notes": "Generation-2 stale-review reconciliation only. Generation-1 reviewer sol-20260811-q7n2v5m8 already published exact-head source-contract PASS on PR #349 head ee771bd50db972ad572f5d3cef8463220d69fa06; reconcile lane/claim state without duplicating that independent review."
 }
