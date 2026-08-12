@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-s6v3k8r1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T10:44:30+00:00",
-  "lastSeenAt": "2026-08-12T10:45:40+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-runtime",
+  "lastSeenAt": "2026-08-12T11:00:10+00:00",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-s6v3k8r1",
-  "notes": "Lost the higher-priority worldentity mining claim race and rerouted immediately. Mining Physics runtime for a concrete non-duplicate Hero-Gate source/test gap while control recovery remains independently owned."
+  "notes": "Completed Physics-runtime capacity mining. Published evt-20260812t105930z-s6v3k8r1-physics-runtime-no-new-gap after exact-head source/review/duplicate audit: no distinct actionable runtime gap beyond existing entity-key byte-budget and outer recipe-shape findings. No production code changed; no executable or Studio evidence claimed."
 }
