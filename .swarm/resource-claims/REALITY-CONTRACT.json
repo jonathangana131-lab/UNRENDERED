@@ -3,9 +3,8 @@
   "resourceId": "REALITY-CONTRACT",
   "workerId": "sol-20260812-m8q4v2c7",
   "laneId": "HG-BACKFILL-WORLDENTITY",
-  "slotId": "test-adversary",
   "claimToken": "e4b9c2a7d1f68035",
-  "claimedAt": "2026-08-12T08:00:29+00:00",
+  "acquiredAt": "2026-08-12T08:00:29+00:00",
   "heartbeatAt": "2026-08-12T08:00:29+00:00",
   "leaseSeconds": 1800,
   "generation": 1
