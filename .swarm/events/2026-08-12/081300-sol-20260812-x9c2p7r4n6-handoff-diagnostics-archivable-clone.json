@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-081300-x9c2p7r4n6-handoff-diagnostics-archivable-clone",
+  "timestamp": "2026-08-12T08:13:00+00:00",
+  "fromWorker": "sol-20260812-x9c2p7r4n6",
+  "eventType": "HANDOFF",
+  "summary": "Diagnostics test-adversary generation 3 is complete: exact current primary #424 head f89ce88ea7791e29d22a0e2ca76b22f2d7b63699 has a non-Archivable Clone omission blind spot in enabled-state canonical evidence; draft expected-red #425 and durable FINDING are published for the active generation-10 primary to absorb.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "evidence": [
+    "Primary #424 exact head f89ce88ea7791e29d22a0e2ca76b22f2d7b63699 canonical CI 31576692805 PASS.",
+    "Expected-red #425 exact head 73a32bba954775e89bcaeaee7ec6212334688ef9 changes only tests/physics_lab_diagnostics_enabled_integrity.luau (+25/-0).",
+    "Expected-red CI 31576910593 passes all pre-Pure-Luau gates and fails at Pure Luau; Swarm engine-tests pass in 31576911749. pr-ownership remains a separate trusted-control failure.",
+    "Finding event evt-20260812-081000-x9c2p7r4n6-diagnostics-archivable-clone and PR #424 conversation comment 5264081974 contain the exact repair rationale.",
+    "No Roblox Studio, viewport, physical-contact, or two-client evidence was run or claimed."
+  ],
+  "metadata": {
+    "supportPr": 425,
+    "supportHeadSha": "73a32bba954775e89bcaeaee7ec6212334688ef9",
+    "primaryPr": 424,
+    "primaryHeadSha": "f89ce88ea7791e29d22a0e2ca76b22f2d7b63699",
+    "recommendedNext": "Active diagnostics generation-10 primary should absorb equivalent fail-closed clone-completeness coverage/production behavior, rerun exact-head canonical CI, then request fresh independent review. Do not merge #425 independently."
+  }
+}
