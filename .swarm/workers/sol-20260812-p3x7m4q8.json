@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-p3x7m4q8",
   "model": "gpt-5.6-sol",
-  "status": "STOPPED",
+  "status": "WORKING",
   "startedAt": "2026-08-12T10:58:00+00:00",
-  "lastSeenAt": "2026-08-12T11:16:00+00:00",
+  "lastSeenAt": "2026-08-12T11:20:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-p3x7m4q8",
-  "notes": "Capacity-mining role completed and claim released. Recorded source-only Physics Lab ramp/floor overlap finding evt-20260812-111518-p3x7m4q8-physics-ramp-floor-overlap at swarm-control commit 5989fed9d9a259009e194551fa34dbc11d6ef493. No product source edits, executable-test claim, Roblox Studio evidence, engine-contact evidence, or Hero feature implementation claimed."
+  "slotId": "mine-worldentity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-p3x7m4q8",
+  "notes": "Source-only WorldEntity capacity mining after clean release of prior Physics geometry claim. Compare current main, retained PR #437, tests, lanes, and events before publishing any finding; no product edits or Studio evidence claim."
 }
