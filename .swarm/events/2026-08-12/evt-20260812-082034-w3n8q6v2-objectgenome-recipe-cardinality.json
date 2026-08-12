@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-082034-w3n8q6v2-objectgenome-recipe-cardinality",
+  "timestamp": "2026-08-12T08:20:34+00:00",
+  "fromWorker": "sol-20260812-w3n8q6v2",
+  "eventType": "FINDING",
+  "summary": "Retained ObjectGenome generation-8 still has no project-owned cardinality ceiling for immutable recipe collections. components, each component.supportKeys, mechanisms, and affordances are validated as dense arrays but validateDenseArray only proves shape and returns the observed size. More importantly, inspect() traverses top-level recipe collections in validatePlainGenomeTables() and validateGenomeShape() before reaching validateDenseArray, so adding a late cap alone would not bound malformed-input work. Component support reachability can also perform componentCount passes across all components. Fold this into the already-proposed HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS leaf rather than creating overlapping ObjectGenome WIP: introduce named recipe collection maxima and enforce them at bounded preflight points before nested shape/graph/fingerprint/ownership traversal, with exact-cap/cap+1 regressions and unchanged under-cap canonical identity.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "MEDIUM",
+  "evidence": [
+    "Retained ObjectGenome PR #395 source head 9446081669aea7087dfe7ea0a0722d9359f07b15 defines validateDenseArray(issues, path, value) with no maxCount parameter or fixed cardinality ceiling; it scans every supplied key to establish density and returns maxIndex.",
+    "ObjectGenome.inspect() invokes validatePlainGenomeTables() and validateGenomeShape() before validateDenseArray(components). Both helpers enumerate caller-supplied components/mechanisms/affordances, so a cardinality check added only at the existing dense-array call would be too late to bound hostile oversized input.",
+    "Each component.supportKeys uses the same uncapped dense-array helper; later support validation walks those arrays, cycle detection walks support edges, and external-support reachability can make up to componentCount full passes over components. A project-owned component/support ceiling therefore bounds both malformed-input validation and valid canonical graph work.",
+    "recipeFingerprint() recursively collects and sorts every validated table key, and ObjectGenomeOwnership owns/clones validated recipe collections. An early recipe cardinality fence bounds these downstream identity/ownership paths without changing the fingerprint algorithm for previously valid under-cap genomes.",
+    "Retained PR #395 already closes familyVersion bounds, semantic-key byte limits, deterministic issue ordering, ObjectState alias rejection, and strict mechanism decode shape. Existing HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS separately covers mutable ObjectState map cardinality; repository PR/lane search found no recipe-array cardinality repair, so this finding extends that proposed bounded-work leaf rather than duplicating it.",
+    "No numeric cap is invented by this mining result: implementation should choose named project-owned maxima from existing canonical fixtures/resource budgets and prove exact-cap acceptance plus cap+1 rejection. No local Luau/Lune execution, Roblox Studio, timing benchmark, physical-contact, or two-client evidence is claimed."
+  ]
+}
