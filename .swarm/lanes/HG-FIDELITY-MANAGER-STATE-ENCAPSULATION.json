@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-FIDELITY-MANAGER-STATE-ENCAPSULATION",
+  "epicId": "HERO-GATE",
+  "title": "Encapsulate FidelityManager mutable state",
+  "objective": "Close the source-only capability gap where FidelityManager exposes replaceable config and mutable _states/_metrics on its public manager table, allowing callers to bypass validated transition/accounting boundaries, while preserving the existing F0-F4 API and policy semantics.",
+  "priority": 5070,
+  "state": "PROPOSED",
+  "mode": "exclusive",
+  "dependencies": [
+    {"laneId": "HG-BACKFILL-FIDELITY", "acceptableStates": ["DONE"]},
+    {"laneId": "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING", "acceptableStates": ["DONE"]}
+  ],
+  "writeScopes": ["src/shared/Physics/FidelityManager.luau", "tests/fidelity_manager*.luau", "Docs/FIDELITY_MANAGER.md"],
+  "resources": [],
+  "slots": [
+    {"slotId": "primary", "role": "Fidelity manager state-encapsulation repair", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 300, "writeScopes": ["src/shared/Physics/FidelityManager.luau", "tests/fidelity_manager*.luau", "Docs/FIDELITY_MANAGER.md"]},
+    {"slotId": "audit", "role": "Independent Fidelity capability-boundary auditor", "exclusive": true, "availableWhen": ["REVIEW"], "priorityBoost": 140, "requiresIndependentFrom": "primary", "writeScopes": ["tests/fidelity_manager*.luau", "Docs/FIDELITY_MANAGER.md"]}
+  ],
+  "acceptance": [
+    "the public Manager facade does not expose mutable manager-owned config, entity-state storage, aggregate counters, or transition-fence state as caller-writable authority",
+    "preserve the existing public FidelityManager methods, F0-F4 policy outputs, reasons, hysteresis, hold/cooldown behavior, registration semantics, and metrics snapshot shape",
+    "caller-provided PolicyConfig remains validated, copied, and frozen, and the effective manager-owned config cannot be replaced after construction through the returned facade",
+    "direct caller writes attempted through any/dynamic access cannot forge observed fidelity, registered/count metrics, capacity state, pending state, clocks, or transitioning state",
+    "use a bounded production-worthy encapsulation seam such as closure-private weak-key manager state plus a frozen public facade; do not introduce a competing manager framework",
+    "state lifetime remains bounded by the existing registration ceiling and does not gain an unbounded strong-reference cache; if weak-key backing is used, add lifecycle coverage for released facades",
+    "retain all accepted regressions from #385, #398, and #419 including malformed-input no-execute behavior, rejected-step atomicity, per-entity reentrancy, cross-entity commit isolation, and the project-owned registration ceiling",
+    "add adversarial source/runtime regressions for facade mutation attempts and immediate valid operation afterward",
+    "canonical CI, live pr-ownership, and fresh independent exact-head review are required before integration",
+    "source-only lane: no Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence claim"
+  ],
+  "notes": "Capacity-mined against retained Fidelity source PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3. ManagerImpl still stores config/_states/_metrics directly on the returned mutable manager table and new() returns setmetatable(self, FidelityManager) without a frozen facade or closure-private backing. Existing PhysicsLabRuntime synthesis PR #408 demonstrates a compatible weak-key closure-private state + frozen-facade pattern. This leaf is intentionally PROPOSED and depends on both retained Fidelity transition work and the capacity-ceiling lineage reaching DONE. Finding: evt-20260812-080600-r7m2v9c4-fidelity-manager-state-encapsulation.",
+  "tags": ["backfill", "hero-gate", "source-only", "fidelity", "capability", "encapsulation"]
+}
