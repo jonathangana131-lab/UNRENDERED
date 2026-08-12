@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-v6p4q8n3",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-12T10:43:14+00:00",
-  "lastSeenAt": "2026-08-12T10:43:14+00:00",
+  "lastSeenAt": "2026-08-12T10:50:31+00:00",
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "slotId": "primary",
   "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-v6p4q8n3-g2",
-  "notes": "Recovering stale generation-1 PR #428 after independent REQUEST_CHANGES on verdict type validation; will preserve prior reviewed lineage and repair only the blocking fail-closed defect."
+  "notes": "Atomic takeover of PR #428 was fenced by the generation-2 owner; diagnostics and fallback mining were concurrently claimed. No authoritative implementation claim or resource lock was acquired; waiting to avoid duplicate work."
 }
