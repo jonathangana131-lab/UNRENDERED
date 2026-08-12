@@ -8,6 +8,7 @@ ownership, fencing, scheduling, or transition invariants.
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 
 import swarmctl_hardening_base as _base
@@ -18,12 +19,14 @@ _STRICT_VALIDATE_EVENT = _base.core.validate_event
 _STRICT_READ_TREE = _base.read_tree
 _STRICT_TRANSITION_CHECK = _base.transition_check
 
-# Four immutable events were emitted before every writer converged on the strict
+# Five immutable events were emitted before every writer converged on the strict
 # V2 event shape. Three were later rewritten after their first transition failure,
 # and a later projection incorrectly blessed those rewritten bytes. Compatibility
-# must therefore identify only the audited first-write bytes; it must NOT rewrite,
-# normalize, quarantine, or bless the already-laundered live variants. Those live
-# bytes intentionally remain a separate trusted-history recovery blocker.
+# must therefore identify only audited first-write bytes; it must NOT rewrite,
+# normalize, quarantine, or bless already-laundered live variants. The fifth event
+# is an unchanged first-write HANDOFF whose validation evidence used the legacy
+# nested `command` key; only its exact audited blob may cross the executable-key
+# fence. All other control JSON remains subject to the strict loader.
 _CANONICAL_IMMUTABLE_EVENTS = {
     "evt-20260811-073500-q9m4r2-authority-rereview-approve": {
         "date": "2026-08-11",
@@ -44,6 +47,11 @@ _CANONICAL_IMMUTABLE_EVENTS = {
         "date": "2026-08-11",
         "filename": "evt-20260811-081620-mat8c3r1-materialdna-key-grammar.json",
         "canonicalGitBlobSha1": "9a7f679ea84600d6a28a8bef02436e5f85fd857e",
+    },
+    "evt-20260811T210500Z-sol-20260811-c7p4m8v2-handoff-content-reconciliation": {
+        "date": "2026-08-11",
+        "filename": "210500-sol-20260811-c7p4m8v2-handoff-content-reconciliation.json",
+        "canonicalGitBlobSha1": "713d54c453faa65e89875e69499444d5a7644d3f",
     },
 }
 
@@ -76,8 +84,41 @@ def _canonical_rule(path: Path, obj: dict) -> dict | None:
     return None
 
 
+def _load_exact_immutable_event(path: Path) -> dict | None:
+    """Load only an exact audited historical blob before strict key inspection.
+
+    Legacy immutable evidence can contain keys the current control-data schema now
+    forbids. The path and Git blob hash are authenticated before JSON decoding, so
+    arbitrary control data cannot opt into this compatibility path.
+    """
+    for expected_id, rule in _CANONICAL_IMMUTABLE_EVENTS.items():
+        if path.name != rule["filename"] or path.parent.name != rule["date"]:
+            continue
+        actual = _git_blob_sha1(path)
+        expected = rule["canonicalGitBlobSha1"]
+        if actual != expected:
+            raise _base.core.ControlError(
+                f"{path}: audited immutable event bytes are non-canonical: {actual} != {expected}"
+            )
+        try:
+            obj = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise _base.core.ControlError(f"invalid audited immutable JSON {path}: {exc}") from exc
+        if not isinstance(obj, dict):
+            raise _base.core.ControlError(f"top-level JSON object required: {path}")
+        if obj.get("eventId") != expected_id:
+            raise _base.core.ControlError(
+                f"{path}: audited immutable event path contains unexpected eventId {obj.get('eventId')!r}"
+            )
+        return obj
+    return None
+
+
 def _validate_event_with_immutable_compat(path):
     path = Path(path)
+    exact = _load_exact_immutable_event(path)
+    if exact is not None:
+        return exact
     obj = _base.core.load_json(path, max_bytes=48_000)
     rule = _canonical_rule(path, obj)
     if rule is not None:
@@ -127,7 +168,7 @@ def transition_check(before: Path, after: Path) -> dict:
 
     seen: set[str] = set()
     for path in before_paths.values():
-        obj = _base.core.load_json(path, max_bytes=48_000)
+        obj = _validate_event_with_immutable_compat(path)
         event_id = obj.get("eventId")
         if not isinstance(event_id, str):
             raise _base.core.ControlError(f"{path}: eventId required during transition replay check")
@@ -139,7 +180,7 @@ def transition_check(before: Path, after: Path) -> dict:
         if relative in canonical_paths:
             raise _base.core.ControlError(f"historical immutable event path cannot be re-added: {relative}")
         path = after_paths[relative]
-        obj = _base.core.load_json(path, max_bytes=48_000)
+        obj = _validate_event_with_immutable_compat(path)
         event_id = obj.get("eventId")
         if not isinstance(event_id, str):
             raise _base.core.ControlError(f"{path}: eventId required during transition replay check")
