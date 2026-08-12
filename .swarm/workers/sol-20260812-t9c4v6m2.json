@@ -2,11 +2,10 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-t9c4v6m2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T10:46:00+00:00",
-  "lastSeenAt": "2026-08-12T10:46:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-t9c4v6m2",
-  "notes": "Mining Physics geometry for the next concrete non-duplicate Hero-Gate source/test gap while higher-priority recovery and diagnostics work remain independently owned."
+  "lastSeenAt": "2026-08-12T11:03:00+00:00",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "reviewer-1",
+  "notes": "Atomic Physics-geometry mining and worker-status reviewer claims both lost to live owners. Shared malformed ObjectGenome dependency was independently normalized before takeover. No product branch, product source change, review, or unclaimed control mutation was performed under this worker."
 }
