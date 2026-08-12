@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-g43k9m2v",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "WORKING",
   "startedAt": "2026-08-12T10:43:23+00:00",
-  "lastSeenAt": "2026-08-12T11:19:30+00:00",
+  "lastSeenAt": "2026-08-12T11:21:00+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-g43k9m2v-g15",
-  "notes": "Generation-15 successor PR #440 exact head 34fde53ba6ab74c4fd1c88da9de98e3ed704336b is canonical-CI green and handed to REVIEW after closing inert long-comment/string source-contract false passes. Primary claim released; fresh independent exact-head review required. Global pr-ownership remains separately owned."
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-g43k9m2v-g16",
+  "notes": "Generation-16 primary is absorbing support PR #439's conditional pre-proof return bypass on top of generation-15 inert-source masking. Production diagnostics remains unchanged; fresh exact-head CI and independent review required."
 }
