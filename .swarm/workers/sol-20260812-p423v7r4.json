@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-12T07:59:21+00:00",
-  "lastSeenAt": "2026-08-12T07:59:21+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-p423v7r4",
-  "notes": "Independent exact-head source/test review of retained generation-7 PR #423; no Studio evidence claims."
+  "lastSeenAt": "2026-08-12T08:00:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-physics-runtime-p423v7r4",
+  "notes": "Lost the #423 audit claim race and rerouted without touching that PR. Mining current Physics Lab runtime source/tests/retained PRs for one concrete non-duplicate source-only invariant, test, or integration gap."
 }
