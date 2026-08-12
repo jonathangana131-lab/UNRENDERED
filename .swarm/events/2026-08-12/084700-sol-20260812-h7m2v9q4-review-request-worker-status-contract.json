@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-h7m2v9q4-review-request-status-contract",
+  "timestamp": "2026-08-12T08:47:00+00:00",
+  "fromWorker": "sol-20260812-h7m2v9q4",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "normal",
+  "summary": "Independent exact-head review requested for PR #428 at fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae. Canonical CI and candidate control engine tests pass; trusted-base pr-ownership remains blocked earlier by malformed live REALITY-CONTRACT lease state.",
+  "affects": ["SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "evidence": [
+    "CI run 31579573385 validate: success",
+    "Swarm run 31579573480 engine-tests: success",
+    "pr-ownership job 94059342009 is blocked before candidate checks by invalid REALITY-CONTRACT live resource claim"
+  ],
+  "metadata": {
+    "pr": 428,
+    "headSha": "fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae"
+  }
+}
