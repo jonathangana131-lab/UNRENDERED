@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-083600-w1e7q9m3-authority-no-new-source-gap",
+  "timestamp": "2026-08-12T08:36:00+00:00",
+  "fromWorker": "sol-20260812-w1e7q9m3",
+  "eventType": "FINDING",
+  "summary": "Fresh source-only authority capacity mining found no new non-duplicate currently unlocked Authority defect beyond the retained lineages. HG-BACKFILL-AUTHORITY already covers server/client bootstrap context and teardown evidence, while HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY #412 closes the raw RealizedLab.destroy lifecycle ownership hole and is independently source/test approved. The remaining Hero Gate two-client requirements are explicitly real multiplayer/transport/evaluator evidence and remain UNVERIFIED/locked rather than a safe source-only gap to manufacture now.",
+  "affects": ["HG-BACKFILL-AUTHORITY", "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "low",
+  "evidence": [
+    "Inspected current HG-BACKFILL-AUTHORITY lane: retained primary #348 owns wrong-context server/client bootstrap guards; stacked #394 adds accepted teardown evidence; both remain blocked on trusted live ownership recovery.",
+    "Inspected HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY retained PR #412 exact head 807fb042b2fe96db32bda7a5c3346788e828a758: the harness wraps destroy authority, reconciles external model lifecycle synchronously before public operations, generation-fences token retirement, and is independently source/test approved with green canonical CI/engine tests.",
+    "Inspected PhysicsLabRealizer.RealizedLab and current Studio evidence consumers. The operational step/getRecord/isRepresented surface is required by the existing lifecycle evidence helper; no separate raw runtime/dispose capability is exposed by RealizedLab.",
+    "Docs/MULTIPLAYER_PERSISTENCE.md explicitly marks true two-client canonical authority UNVERIFIED until one real multiplayer server session with two independent clients; offline/source tests cannot satisfy that evidence row.",
+    "No Roblox Studio, real two-client, replication/session, transport, or HG151-TWOCLIENT PASS is claimed by this audit. Local clone/test execution was unavailable because github.com DNS resolution failed in this worker environment."
+  ],
+  "metadata": {
+    "outcome": "NO_NEW_NON_DUPLICATE_SOURCE_GAP",
+    "retainedAuthorityPrimaryPr": 348,
+    "retainedAuthorityTeardownPr": 394,
+    "retainedHarnessPr": 412,
+    "retainedHarnessHeadSha": "807fb042b2fe96db32bda7a5c3346788e828a758",
+    "recommendedNext": "Do not open another Authority source lane from this pass. First clear SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY so retained source PR ownership can integrate; then pursue the already-defined real two-client Studio evidence/transport work only when PROJECT_STATE explicitly unlocks that engine path and the external Studio preflight is available."
+  }
+}
