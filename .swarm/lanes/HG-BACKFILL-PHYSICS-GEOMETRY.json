@@ -5,7 +5,7 @@
   "title": "Physics Lab geometry and recipe depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete recipe geometry, scale, support reachability, door-proxy manufacturability, COM, clearance, component, or validation-contract defects without requiring Studio.",
   "priority": 4900,
-  "state": "REVIEW",
+  "state": "BLOCKED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Physics/PhysicsLabRecipe.luau", "src/shared/Physics/PhysicsLabScale.luau", "src/shared/Physics/PhysicsLabValidationContract.luau", "tests/physics_lab_recipe.luau", "tests/physics_lab_scale.luau", "tests/physics_lab_validation_contract.luau"],
@@ -16,5 +16,5 @@
     {"slotId":"audit","role":"Physics recipe realism and validation auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"requiresIndependentFrom":"primary","writeScopes":["tests/physics_lab_recipe.luau","tests/physics_lab_validation_contract.luau","Docs/PHYSICS_LAB_VALIDATION.md"]}
   ],
   "acceptance": ["target measurable geometry/contract gaps", "do not turn the lab proxy into the locked Hero Door feature", "all geometry changes preserve deterministic recipes", "new invariants get tests", "do not claim engine contact proof from source-only work"],
-  "notes": "REVIEW for generation-7 retained primary PR #423 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f. Generation 7 starts exactly from current support/test-adversary #418 and introduces no new production bytes: PR #414's primitive-number/no-execute scale repair is preserved while #418's reviewed behavioral reverse-overflow regression is now part of the retained primary lineage. Canonical CI run 31547903110 PASS on #423 exact head. Fresh independent review is required by REVIEW_REQUEST evt-sol-20260811-8d5d357a-review-request-physics-scale-g7-235255. Live pr-ownership remains separately fail-closed on the trusted-history bootstrap recovery. PRs #414 and #418 are predecessor/support lineages and must not merge independently. No Studio, viewport, physical-contact, or two-client evidence is claimed."
+  "notes": "BLOCKED only on trusted live ownership after independent exact-head SOURCE/TEST PASS for retained generation-7 PR #423 head aad25ec8aeef7437ad0938ead2259a6e39f3670f by sol-20260812-7k3m9q2v. Review confirmed primitive-number no-execute fencing precedes equality/order/arithmetic, both scale directions retain finite derived-output postconditions, the reverse-overflow test is behavioral via an amplified production-module copy rather than source-token matching, and retained validation-contract hardening remains fail-closed. Canonical CI remains green; Swarm engine-tests are green. Completion reconciliation closed fully absorbed #389, expected-red #406, production successor #414, and stacked support #418; #423 is the sole retained scale/validation integration candidate. Live pr-ownership remains fail-closed behind the separately owned trusted-history/control recovery. No Studio, viewport, physical-contact, or two-client evidence is claimed."
 }
