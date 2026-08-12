@@ -1,6 +1,18 @@
 local fs = require("@lune/fs")
 
 local DIAGNOSTICS_SOURCE = "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau"
+local DESCENDANT_FENCE = "for _, liveInstance in ipairs(lab.model:GetDescendants()) do local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot) if not isDiagnosticsOverlay then assert( liveInstance.Archivable,"
+
+local function hasCompleteCloneProof(compactHelper: string): boolean
+	local modelArchivable = string.find(compactHelper, "assert(lab.model.Archivable,", 1, true)
+	local descendantFence = string.find(compactHelper, DESCENDANT_FENCE, 1, true)
+	local cloneLab = string.find(compactHelper, "local cloneInstance = lab.model:Clone()", 1, true)
+	return modelArchivable ~= nil
+		and descendantFence ~= nil
+		and cloneLab ~= nil
+		and modelArchivable < descendantFence
+		and descendantFence < cloneLab
+end
 
 local function run(): number
 	local failures = 0
@@ -28,15 +40,6 @@ local function run(): number
 		else nil
 	local compactHelper = if helperSource ~= nil then string.gsub(helperSource, "%s+", " ") else nil
 
-	local modelArchivable = compactHelper
-		and string.find(compactHelper, "assert(lab.model.Archivable,", 1, true)
-	local descendantFence = compactHelper
-		and string.find(
-			compactHelper,
-			"for _, liveInstance in ipairs(lab.model:GetDescendants()) do local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot) if not isDiagnosticsOverlay then assert( liveInstance.Archivable,",
-			1,
-			true
-		)
 	local cloneLab = compactHelper
 		and string.find(compactHelper, "local cloneInstance = lab.model:Clone()", 1, true)
 	local proveCloneModel = compactHelper
@@ -64,11 +67,29 @@ local function run(): number
 	-- descendants before the disposable clone is created.
 	expect(
 		"enabled canonical clone proves every non-overlay live descendant is Archivable before cloning",
-		modelArchivable ~= nil
-			and descendantFence ~= nil
-			and cloneLab ~= nil
-			and modelArchivable < descendantFence
-			and descendantFence < cloneLab
+		compactHelper ~= nil and hasCompleteCloneProof(compactHelper)
+	)
+
+	local modelOnlyMutant =
+		"assert(lab.model.Archivable, \"model must be cloneable\") local cloneInstance = lab.model:Clone()"
+	expect(
+		"clone-completeness matcher rejects the prior model-only false-pass mutant",
+		not hasCompleteCloneProof(modelOnlyMutant)
+	)
+
+	local broadOverlayMutant = string.gsub(
+		DESCENDANT_FENCE,
+		"liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot)",
+		"liveInstance.Name == liveRoot.Name",
+		1
+	)
+	expect(
+		"clone-completeness matcher rejects a broadened overlay exemption mutant",
+		not hasCompleteCloneProof(
+			"assert(lab.model.Archivable, \"model\") "
+				.. broadOverlayMutant
+				.. " local cloneInstance = lab.model:Clone()"
+		)
 	)
 
 	expect(
