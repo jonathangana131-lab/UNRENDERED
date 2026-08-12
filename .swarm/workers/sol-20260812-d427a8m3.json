@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-d427a8m3",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-12T08:42:00+00:00",
+  "lastSeenAt": "2026-08-12T08:42:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-427-d427a8m3",
+  "notes": "Independent exact-head source/test audit of diagnostics generation-11 PR #427; verify non-Archivable clone-completeness closure and retained diagnostics invariants. No Studio/viewport/contact/two-client evidence claims."
+}
