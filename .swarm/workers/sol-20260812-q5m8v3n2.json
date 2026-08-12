@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:41:30+00:00",
-  "lastSeenAt": "2026-08-12T10:54:00+00:00",
+  "lastSeenAt": "2026-08-12T11:04:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-q5m8v3n2-g2",
-  "notes": "Fidelity mining released after publishing a stale-lane dependency conflict. Continuing with the unclaimed Physics geometry mining slot; auditing current and retained geometry lanes/source/tests for a concrete non-duplicate source-only gap."
+  "slotId": "mine-authority",
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-q5m8v3n2-g3",
+  "notes": "Fidelity and Physics geometry mining each published durable findings and released cleanly. Diagnostics is owned by another worker, so this final unclaimed capacity pass audits Authority/multiplayer source/tests/lanes for one concrete non-duplicate source-only gap; no Studio/two-client claim."
 }
