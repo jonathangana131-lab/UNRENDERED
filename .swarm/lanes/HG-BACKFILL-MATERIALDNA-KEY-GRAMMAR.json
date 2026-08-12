@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR",
+  "epicId": "HERO-GATE",
+  "title": "MaterialDNA canonical semantic-key grammar",
+  "objective": "Close the already-demonstrated MaterialDNA canonical-key alias where validateProjectKey accepts '%' even though the declared stable semantic-key alphabet is [a-z0-9._/-], without changing material identity, schema versions, fixtures, or Roblox-facing architecture.",
+  "priority": 5130,
+  "state": "PROPOSED",
+  "mode": "exclusive",
+  "dependencies": [
+    {"laneId":"HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS","acceptableStates":["DONE"]}
+  ],
+  "writeScopes": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau", "Docs/MATERIAL_DNA_CONTRACT.md"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"MaterialDNA semantic-key grammar hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Materials/MaterialDNA.luau","tests/materialdna_contract.luau"]},
+    {"slotId":"audit","role":"MaterialDNA canonical-key compatibility auditor","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":120,"requiresIndependentFrom":"primary","writeScopes":["tests/materialdna_contract.luau","Docs/MATERIAL_DNA_CONTRACT.md"]}
+  ],
+  "acceptance": [
+    "validateProjectKey rejects '%' so the accepted implementation matches the documented lowercase stable-key alphabet [a-z0-9._/-]",
+    "the rejection applies through every MaterialDNA field that delegates to validateProjectKey, including recipe IDs, coherence classes, nested semantic keys, state recipeId, and MaterialRef id",
+    "add deterministic regression coverage using at least one URI-percent-style key such as materials%2fcarpet and preserve ordinary slash-containing project keys",
+    "preserve all shipped MaterialFixtureCatalog IDs, recipeVersion values, exact fixture content seals, and MaterialDNA.SchemaVersion",
+    "do not introduce a second material identity, migration framework, renderer/asset adapter, or Studio dependency",
+    "inherit the accepted repairCount exactness and bounded-validator behavior from predecessor MaterialDNA lanes rather than reconstructing them",
+    "canonical CI, live ownership after control recovery, and fresh independent exact-head review are required before integration"
+  ],
+  "notes": "Operationalizes historical finding evt-20260811-081620-mat8c3r1-materialdna-key-grammar, whose audited immutable blob already demonstrated that validateProjectKey uses ^[a-z0-9][a-z0-9._/%-]*$ while its diagnostic/documented alphabet excludes '%'. That event could not safely be generalized by the control validator because its legacy affects payload included a non-lane descriptor, but its exact audited evidence remains useful. This lane is deliberately PROPOSED and sequenced after HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS so the two leaves cannot overlap edits to MaterialDNA.luau; the bounded-validation leaf is higher priority. Capacity-mining recheck on main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 confirmed the percent acceptance remains present and no current PR/lane owns this semantic-key repair.",
+  "tags": ["backfill", "hero-gate", "source-only", "materialdna", "canonical-key", "identity-hygiene"]
+}
