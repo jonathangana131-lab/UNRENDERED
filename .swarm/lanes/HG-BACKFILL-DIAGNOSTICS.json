@@ -5,7 +5,7 @@
   "title": "Diagnostics source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden the Studio diagnostics code and its pure contracts while the Mac display path is blocked. Work here must improve source/test correctness without pretending to satisfy the missing live viewport evidence row.",
   "priority": 4850,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/**diagnostic*.luau", "tests/hero_gate_contract_integration.luau"],
@@ -16,7 +16,7 @@
     {"slotId":"audit","role":"Diagnostics failure-path and capture-contract auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/**diagnostic*.luau","Docs/PHYSICS_LAB_DIAGNOSTICS.md"]}
   ],
   "acceptance": ["do not queue speculative Studio reruns", "do not convert source confidence into viewport PASS", "find concrete lifecycle/no-drift/failure-path gaps", "behavior changes get tests", "publish anything relevant to HG151-DIAGNOSTICS as a structured finding"],
-  "pr": 438,
-  "notes": "NEEDS_CHANGES after fresh independent generation-14 review event evt-20260812-111100-a8v5r2n9-diagnostics-g14-review-result. PR #438 exact head 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c remains production-coherent and canonical-CI green, but the helper-local hasCompleteCloneProof matcher still scans raw source text. The exact DESCENDANT_BLOCK can survive inside an inert --[[ long comment ]] or [[ long string ]] after deleting the executable descendant loop, so the matcher can falsely certify inert bytes. Generation 15 must add explicit long-comment/long-string mutants and harden or replace the matcher so inert text cannot satisfy the executable clone-completeness proof. Preserve the production Archivable fence unchanged unless a separate production defect is found. Rerun fresh exact-head canonical CI and obtain fresh independent review. Do not merge #438 or its predecessors/support branches independently. Global pr-ownership/trusted-history recovery remains separate. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
+  "pr": 440,
+  "notes": "REVIEW on generation-15 primary PR #440 exact head 34fde53ba6ab74c4fd1c88da9de98e3ed704336b. Production diagnostics remains byte-identical to the independently judged coherent generation-14 Archivable clone-completeness fence. Generation 15 hardens only tests: source-contract matching now masks Luau line comments, long comments, and long-bracket strings while preserving positions/newlines, so inert text cannot satisfy the executable descendant proof. New explicit --[[...]] and [=[...]=] mutants are rejected alongside the retained model-only, broadened-overlay, early-exit, and dead-wrapper mutants. Fresh PR-specific canonical CI run 31591148254 PASS on the exact head, including format, lint, Luau analysis, architecture audits, deterministic Swarm tests, all Pure Luau tests with both inert-text regressions, place build, and artifact upload. Swarm Control run 31591148251 has engine-tests PASS; only pr-ownership remains red behind the separately owned trusted-history/global control recovery and is not treated as a diagnostics product/test failure. Fresh independent exact-head source/test review is required before INTEGRATION_READY; generation-15 primary must not self-approve. Do not merge predecessor #438 or older support/predecessor branches independently. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
