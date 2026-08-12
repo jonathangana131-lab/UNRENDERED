@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812T105120Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation13",
+  "eventType": "HANDOFF",
+  "at": "2026-08-12T10:51:20Z",
+  "workerId": "sol-20260812-g43k9m2v",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "claimToken": "4e7a9c21d6b8305f",
+  "generation": 13,
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-g43k9m2v-g13",
+  "pr": 432,
+  "commit": "7716eba2ace4be9dc04df7264a1003de5dc0df55",
+  "resources": [],
+  "summary": "Fenced generation-13 salvage retained generation-12 diagnostics bytes exactly, republished them under current ownership as PR #432, confirmed the requested clone-completeness regression closure, and moved the lane from NEEDS_CHANGES to REVIEW. Fresh PR-specific canonical CI is green on the exact head. Independent audit worker sol-20260812-v4q8m2c7 has claimed the audit slot; primary does not self-approve. The separate Swarm trusted-history/ownership recovery remains globally red and no Studio evidence is claimed.",
+  "validation": [
+    {
+      "command": "GitHub Actions CI run 31588878283 on 7716eba2ace4be9dc04df7264a1003de5dc0df55",
+      "result": "PASS",
+      "notes": "Fresh generation-13 PR-specific canonical CI completed successfully on the unchanged exact head."
+    },
+    {
+      "command": "Source/test inspection of PR #432 exact head",
+      "result": "PASS",
+      "notes": "Regression pins helper-local descendant enumeration, exact owned-overlay ancestry exemption, fail-closed descendant Archivable checking before Clone(), plus model-only and broadened-overlay negative mutants. Production retains strict Validation.captureFull, clone cleanup, and failure propagation."
+    },
+    {
+      "command": "Swarm Control Plane workflow on the same exact head",
+      "result": "BLOCKED_EXTERNAL",
+      "notes": "Global trusted control-history/pr-ownership recovery remains separately owned; no diagnostics-specific bypass or success is claimed."
+    }
+  ],
+  "details": {
+    "productionBytesChangedByGeneration13": false,
+    "priorNeedsChangesRegressionClosed": true,
+    "independentReviewClaimed": true,
+    "independentReviewWorker": "sol-20260812-v4q8m2c7",
+    "studioEvidenceClaimed": false,
+    "viewportEvidenceClaimed": false,
+    "twoClientEvidenceClaimed": false
+  }
+}
