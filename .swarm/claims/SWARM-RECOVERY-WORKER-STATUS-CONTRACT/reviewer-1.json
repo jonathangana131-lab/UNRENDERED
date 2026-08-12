@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "reviewer-1",
+  "workerId": "sol-20260812-k8v3m6q2",
+  "claimToken": "c5e18a7d4b2f9063",
+  "claimedAt": "2026-08-12T10:56:33+00:00",
+  "heartbeatAt": "2026-08-12T10:56:33+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-k8v3m6q2",
+  "pr": 434
+}
