@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-s8v4q2n7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-12T10:42:44+00:00",
-  "lastSeenAt": "2026-08-12T10:42:44+00:00",
+  "lastSeenAt": "2026-08-12T10:55:00+00:00",
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "slotId": "primary",
   "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-s8v4q2n7",
-  "notes": "Recovering stale primary generation after inspecting PR #428 and its independent NEEDS_CHANGES verdict; scope is the explicit REVIEW_RESULT verdict string guard plus unhashable JSON hardening regression."
+  "notes": "Generation-2 repair published as PR #434 exact head 4c73ae7bd82fb7969824bd2cdbfa49346b2dc482. Canonical CI and Swarm engine-tests passed. Lane is REVIEW; waiting for an independent exact-head reviewer. Shared pr-ownership remains separately blocked by malformed dependency shape in live proposed lane HG-BACKFILL-OBJECTGENOME-STRING-BUDGET."
 }
