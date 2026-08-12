@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-080600-p423r7x9-worldentity-metadata-budget",
+  "timestamp": "2026-08-12T08:06:00+00:00",
+  "fromWorker": "sol-20260812-p423r7x9",
+  "eventType": "FINDING",
+  "summary": "WorldEntity generation-7 candidate #421 bounds persistent-state bytes and retained duplicate-diagnostic metadata, but canonical record metadata remains caller-sized: kind plus origin.worldId/regionId/generator/recipeKey use checkedNonEmpty() with no byte ceiling and the registry retains the owned record. A unique valid registration can therefore retain arbitrarily large metadata even when persistentState is tiny, so the new diagnostic-retention bound does not close the canonical-record memory envelope.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected retained WorldEntity PR #421 exact head 863fd843b477d0b3761f31556183a641fbc6b7f3 after checking current main and the existing generation-4 through generation-7 lineage.",
+    "WorldEntity.isId() alone has an explicit 256-byte-ish Lua string length ceiling; checkedNonEmpty() only enforces string type, non-empty, and no control characters.",
+    "cloneOrigin() routes worldId, optional regionId, generator, and recipeKey through checkedNonEmpty(); ownRecord()/new() route kind through checkedNonEmpty(). None of those canonical retained metadata fields has a size or aggregate-byte fence.",
+    "createRegistry().register() stores the fully owned record in the closure-private records table for a unique id. PR #421 only sums entityId/kind/recipeKey bytes when deciding whether to retain a duplicate diagnostic; it intentionally does not bound or truncate the canonical record itself.",
+    "Search of open issues and current/retained WorldEntity PR lineage found no separate record-metadata byte-bound lane; existing #293/#378/#397 bound persistentState and #417/#421 bound duplicate-diagnostic retention, which is a distinct surface.",
+    "No Roblox Studio or engine evidence is implicated; this is a source-only retained-memory/domain-boundary finding."
+  ],
+  "metadata": {
+    "candidatePr": 421,
+    "candidateHeadSha": "863fd843b477d0b3761f31556183a641fbc6b7f3",
+    "recommendedNext": "Have the active WorldEntity test-adversary/primary lineage add a bounded canonical-record metadata contract (prefer aggregate bytes over per-field arbitrary limits), reject over-budget metadata before registry retention, and prove exact-boundary acceptance plus registered fail-atomicity without truncating canonical truth."
+  }
+}
