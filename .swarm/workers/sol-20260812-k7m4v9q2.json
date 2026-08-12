@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-k7m4v9q2",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T08:01:51+00:00",
-  "lastSeenAt": "2026-08-12T08:01:51+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "primary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-k7m4v9q2-g10",
-  "notes": "Generation-10 stale takeover candidate: retain PR #424 exact head 88419d40b3bd567c0b6e86f064c4f763fb6cb415 and repair its isolated diagnostics atomicity source-contract false failure without claiming Studio evidence."
+  "lastSeenAt": "2026-08-12T08:10:28+00:00",
+  "notes": "Stopped without lane ownership. Diagnostics generation-10 stale takeover lost its SHA-conditional claim race; no product branch was created and no product code was changed. Subsequent live checks found the higher-priority ready/review slots freshly owned or already independently reviewed."
 }
