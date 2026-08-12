@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-105730-q5m8v2c7-objectgenome-affordance-radius",
+  "timestamp": "2026-08-12T10:57:30+00:00",
+  "fromWorker": "sol-20260812-q5m8v2c7",
+  "eventType": "FINDING",
+  "summary": "Retained ObjectGenome generation-8 validates an affordance center against its referenced component bounds but accepts any positive finite affordance.radiusM, with no relationship to the component or object envelope. A normal one-meter object can therefore carry a canonical grip/push/pull/sit/open/close interaction region with an astronomically large finite radius. This is distinct from the already-owned recipe cardinality/text-budget work because one constant-size numeric scalar is sufficient to create the malformed physical interaction envelope.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected retained, independently source/test-approved ObjectGenome PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 and its contract documentation.",
+    "ObjectGenome.inspect() proves affordance.localPointM is a finite Vec3 and, when the referenced component is valid, rejects a point outside half component dimensions plus BOUNDS_TOLERANCE_M. Immediately afterward radiusM is checked only by isPositiveFinite(); there is no component-relative or object-relative upper envelope.",
+    "Docs/OBJECT_GENOME.md defines affordances as stable physical interaction/grip regions on components using a local point and radius, so radius is physical-domain semantics rather than opaque metadata.",
+    "An oversized radius does not require an oversized collection, deep graph, long string, or large retained text payload. The existing proposed HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS lane and today's recipe-cardinality/recipe-text findings therefore do not close this numeric physical-scale hole.",
+    "Repository PR/issue screening for ObjectGenome affordance-radius/numeric-bound work found no current or historical repair owner for this exact surface. Existing #395 work targets decoder exact shape/no-execute and the blocked state-bounds leaf targets traversal/cardinality.",
+    "This is source-only contract analysis; no Roblox Studio interaction-distance test, engine timing, viewport, physical-contact, or two-client evidence is claimed."
+  ],
+  "metadata": {
+    "retainedPr": 395,
+    "retainedHeadSha": "ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962",
+    "recommendedNext": "After retained #395 and trusted ownership unblock ObjectGenome source work, add a narrow physical-affordance invariant (or fold it into the next ObjectGenome physical-scale leaf): define a documented project-owned maximum interaction radius relative to the referenced component/object envelope, reject finite over-envelope radii before ownership/fingerprint retention, and add exact-bound/+epsilon or representative over-bound regressions. Preserve normal fixture radii and v1 stable identity inputs; if existing published v1 content relies on radii outside the chosen relationship, make that compatibility/versioning decision explicit rather than silently clamping.",
+    "duplicateScreen": "Distinct from evt-20260812-083000-p7m4k9q2-objectgenome-recipe-budget, evt-20260812t084600z-r7m4k9q2-objectgenome-string-bounds, and evt-20260812-082034-w3n8q6v2-objectgenome-recipe-cardinality."
+  }
+}
