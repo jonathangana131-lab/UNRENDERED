@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-h7m2v9q4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-12T07:59:11+00:00",
-  "lastSeenAt": "2026-08-12T08:21:30+00:00",
+  "lastSeenAt": "2026-08-12T08:47:30+00:00",
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "slotId": "primary",
   "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-h7m2v9q4",
-  "notes": "Owns critical worker/event schema contract recovery under live SWARM-PROTOCOL lease."
+  "notes": "PR #428 exact head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae is in independent REVIEW. Canonical CI and candidate engine-tests pass; trusted-base pr-ownership is blocked earlier by malformed REALITY-CONTRACT live resource state."
 }
