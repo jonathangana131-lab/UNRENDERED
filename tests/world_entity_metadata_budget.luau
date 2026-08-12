@@ -13,22 +13,22 @@ local function run(): number
 	end
 
 	local metadataBudget = WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES
-	local kind = "office-chair"
-	local worldId = "world:0000000000000001"
-	local regionId = "region:office-a"
-	local generator = "objects.office"
-	local fixedMetadataBytes = #kind + #worldId + #regionId + #generator
+	local entityKind = "office-chair"
+	local worldIdValue = "world:0000000000000001"
+	local regionIdValue = "region:office-a"
+	local generatorName = "objects.office"
+	local fixedMetadataBytes = #entityKind + #worldIdValue + #regionIdValue + #generatorName
 	local exactRecipeKeyBytes = metadataBudget - fixedMetadataBytes
 	assert(exactRecipeKeyBytes > 0)
 
-	local function makeEntity(id: string, recipeKeyBytes: number)
+	local function makeEntity(entityId: string, recipeKeyBytes: number)
 		return WorldEntity.new({
-			id = id,
-			kind = kind,
+			id = entityId,
+			kind = entityKind,
 			origin = {
-				worldId = worldId,
-				regionId = regionId,
-				generator = generator,
+				worldId = worldIdValue,
+				regionId = regionIdValue,
+				generator = generatorName,
 				generatorVersion = 1,
 				recipeKey = string.rep("r", recipeKeyBytes),
 			},
@@ -45,11 +45,11 @@ local function run(): number
 	local atomicRegistry = WorldEntity.createRegistry()
 	local existingEntity = WorldEntity.new({
 		id = "entity:canonical-metadata-existing",
-		kind = "office-chair",
+		kind = entityKind,
 		origin = {
-			worldId = worldId,
-			regionId = regionId,
-			generator = generator,
+			worldId = worldIdValue,
+			regionId = regionIdValue,
+			generator = generatorName,
 			generatorVersion = 1,
 			recipeKey = "chair/canonical-metadata-existing",
 		},
