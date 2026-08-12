@@ -405,6 +405,15 @@ class WorkerAndReviewSchemaCompatibilityTests(unittest.TestCase):
             with self.assertRaises(swarmctl.ControlError):
                 swarmctl.validate_worker(path)
 
+    def test_unhashable_worker_status_shapes_fail_with_control_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "sol-20260812-abcd.json"
+            for status in ([], {}):
+                with self.subTest(status=status):
+                    write_json(path, self.worker(status))
+                    with self.assertRaises(swarmctl.ControlError):
+                        swarmctl.validate_worker(path)
+
     def test_typed_review_result_validates_exact_domains(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "review.json"
