@@ -306,7 +306,6 @@ local function run(): number
 			and onSnapshot < onCompare
 			and onCompare < onDelta
 			and onDelta < onEnvelope
-			and onEnvelope < disable
 			and disable < evidenceReturn
 	)
 
