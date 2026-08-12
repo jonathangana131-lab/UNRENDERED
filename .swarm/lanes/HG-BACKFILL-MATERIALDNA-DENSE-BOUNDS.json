@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS",
   "epicId": "HERO-GATE",
-  "title": "MaterialDNA bounded dense-array validation work",
-  "objective": "Close the demonstrated MaterialDNA capped-array scan-order gap so history/anomaly cardinality limits bound validation work for oversized plain-data tables, without broadening material architecture or depending on Studio.",
+  "title": "MaterialDNA bounded validation work",
+  "objective": "Close the demonstrated MaterialDNA oversized-input work/allocation gaps so dense history/anomaly caps and finite closed-record schemas bound validation work and diagnostic growth for malformed plain-data tables, without broadening material architecture or depending on Studio.",
   "priority": 5140,
   "state": "PROPOSED",
   "mode": "exclusive",
@@ -11,16 +11,19 @@
   "writeScopes": ["src/shared/Materials/MaterialDNA.luau", "tests/materialdna_contract.luau"],
   "resources": [],
   "slots": [
-    {"slotId":"primary","role":"Bounded dense-array validator hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Materials/MaterialDNA.luau","tests/materialdna_contract.luau"]},
+    {"slotId":"primary","role":"Bounded MaterialDNA validator hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Materials/MaterialDNA.luau","tests/materialdna_contract.luau"]},
     {"slotId":"audit","role":"MaterialDNA cardinality/work-bound auditor","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":120,"writeScopes":["tests/materialdna_contract.luau"]}
   ],
   "acceptance": [
     "validateDenseArray returns false as soon as more than maxCount valid positive-integer keys have been observed instead of scanning the remaining oversized table",
-    "existing dense-array/hole/invalid-key behavior remains fail-closed and deterministic",
-    "history and anomaly caps remain 32 and canonical fixture identity/schema versions remain unchanged",
-    "add or preserve deterministic regressions for over-cap history/anomaly rejection without claiming a timing result that was not measured",
+    "validateKnownFields rejects an invalid closed-record key without scanning or allocating diagnostics proportional to arbitrarily many extra caller-supplied keys; work remains bounded by the finite allowed schema size rather than malformed input cardinality",
+    "ValidationResult.errors remains deterministically bounded for a valid MaterialRecipe/MaterialState/MaterialRef shape plus arbitrarily many unknown closed-record keys; do not require enumerating every unknown key to decide invalidity",
+    "existing dense-array/hole/invalid-key and single unknown-field behavior remains fail-closed; diagnostics may become intentionally summarized/bounded but must still identify the affected record/path",
+    "history and anomaly caps remain 32 and 8 respectively, and canonical fixture identity/schema/recipe versions remain unchanged",
+    "add deterministic regressions for over-cap history/anomaly rejection and many-unknown-key closed records without claiming a timing result that was not measured",
+    "preserve metatable/no-execute rejection, compatibility rules, immutable freeze ownership, and retained repairCount exactness from the accepted MaterialDNA lineages",
     "no Studio or engine-evidence claim"
   ],
-  "notes": "Capacity-mined from current main after confirming merged PR #50 intended strict MaterialDNA bounds to prevent pathological oversized payload cost. Current validateDenseArray checks entryCount > maxCount only after the pairs loop, so rejection is cardinality-bounded but scan work remains O(N) in supplied key count. Dependency avoids overlapping the active HG-BACKFILL-MATERIALDNA-COUNTERS exact-head salvage on the same production file.",
-  "tags": ["backfill", "hero-gate", "source-only", "materialdna", "performance-boundary"]
+  "notes": "Initial capacity finding observed that current validateDenseArray checks entryCount > maxCount only after the pairs loop, so rejection is cardinality-bounded but scan work remains O(N) in supplied key count. Follow-up capacity mining against retained counter PR #353 exact head 10559afdce1a1854e7932522f6e78561736c8ed3 found the same bounded-work defect class in validateKnownFields: it scans every supplied closed-record key and appends one error per invalid key even though valid schemas are tiny finite field sets. The leaf now absorbs both defects rather than spawning duplicate MaterialDNA WIP. Dependency still avoids overlapping HG-BACKFILL-MATERIALDNA-COUNTERS on the same production file. Follow-up finding: evt-20260812-081430-m4d7n2q9-materialdna-closed-record-bounds.",
+  "tags": ["backfill", "hero-gate", "source-only", "materialdna", "performance-boundary", "bounded-diagnostics"]
 }
