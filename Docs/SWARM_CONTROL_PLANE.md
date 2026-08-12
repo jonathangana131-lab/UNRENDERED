@@ -35,6 +35,10 @@ Each Sol session creates a collision-resistant ID:
 
 A worker record is presence/observability. It does not grant ownership.
 
+New worker records use exactly one canonical status: `WORKING`, `WAITING`, `REVIEWING`, `INTEGRATING`, `BLOCKED`, `IDLE`, or `STOPPED`.
+
+The validator also accepts the finite historical aliases `ACTIVE`, `CLAIMING`, and `DONE` because those values already exist in audited control history. They are compatibility-only and must not be emitted by new producers. Unknown statuses remain invalid. Status compatibility never grants or extends lane/resource ownership.
+
 ## Lane claims
 
 Before creating an implementation branch, atomically create:
@@ -93,6 +97,26 @@ Events are immutable and collision-resistant:
 Publish an event when another worker would act differently after reading it.
 
 Supported event families include FINDING, BLOCKER, EXTERNAL_BLOCKER, DEPENDENCY_DISCOVERED, QUESTION, ANSWER, DECISION, REVIEW_REQUEST, REVIEW_RESULT, HANDOFF, SCOPE_CHANGE, EVIDENCE_RESULT, SUPERSEDED, INTEGRATION_RESULT and RECOVERY.
+
+New typed `REVIEW_RESULT` producers use the ordinary strict event envelope plus the top-level trio `pr`, `headSha`, and `verdict`:
+
+```json
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-example-review-result",
+  "timestamp": "2026-08-12T08:30:00+00:00",
+  "fromWorker": "sol-20260812-abcd",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "LANE-A",
+  "summary": "Independent exact-head review result.",
+  "affects": ["LANE-A"],
+  "pr": 423,
+  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "verdict": "APPROVE"
+}
+```
+
+The trio is atomic when used: `pr` is a positive integer, `headSha` is exactly 40 lowercase hexadecimal characters, and `verdict` is `APPROVE`, `REQUEST_CHANGES`, `BLOCK`, or `SUPERSEDE`. These top-level fields are event-specific and remain unknown/rejected on other event types. Older immutable review events are not rewritten merely to adopt the current producer shape.
 
 Do not publish private chain-of-thought. Publish concise conclusions, evidence, blockers and next actions.
 
