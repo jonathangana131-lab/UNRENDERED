@@ -45,34 +45,90 @@ local function run(): number
 	expectEqual("first origin owns the identity", firstRegistered, true)
 	expectEqual("conflicting origin is rejected", duplicateRegistered, false)
 	expectEqual("duplicate diagnostic is returned", diagnostic ~= nil, true)
-	expectEqual("legacy existing recipe key remains stable", duplicateDiagnostic.existingRecipeKey, sharedRecipeKey)
-	expectEqual("legacy incoming recipe key remains stable", duplicateDiagnostic.incomingRecipeKey, sharedRecipeKey)
-	expectEqual("existing origin worldId is preserved", duplicateDiagnostic.existingOrigin.worldId, "world:alpha")
-	expectEqual("incoming origin worldId is preserved", duplicateDiagnostic.incomingOrigin.worldId, "world:beta")
-	expectEqual("existing origin regionId is preserved", duplicateDiagnostic.existingOrigin.regionId, "region:alpha")
-	expectEqual("incoming origin regionId is preserved", duplicateDiagnostic.incomingOrigin.regionId, "region:beta")
-	expectEqual("existing origin generator is preserved", duplicateDiagnostic.existingOrigin.generator, "objects.office")
+	expectEqual(
+		"legacy existing recipe key remains stable",
+		duplicateDiagnostic.existingRecipeKey,
+		sharedRecipeKey
+	)
+	expectEqual(
+		"legacy incoming recipe key remains stable",
+		duplicateDiagnostic.incomingRecipeKey,
+		sharedRecipeKey
+	)
+	expectEqual(
+		"existing origin worldId is preserved",
+		duplicateDiagnostic.existingOrigin.worldId,
+		"world:alpha"
+	)
+	expectEqual(
+		"incoming origin worldId is preserved",
+		duplicateDiagnostic.incomingOrigin.worldId,
+		"world:beta"
+	)
+	expectEqual(
+		"existing origin regionId is preserved",
+		duplicateDiagnostic.existingOrigin.regionId,
+		"region:alpha"
+	)
+	expectEqual(
+		"incoming origin regionId is preserved",
+		duplicateDiagnostic.incomingOrigin.regionId,
+		"region:beta"
+	)
+	expectEqual(
+		"existing origin generator is preserved",
+		duplicateDiagnostic.existingOrigin.generator,
+		"objects.office"
+	)
 	expectEqual(
 		"incoming origin generator is preserved",
 		duplicateDiagnostic.incomingOrigin.generator,
 		"objects.reconstruction"
 	)
-	expectEqual("existing generator version is preserved", duplicateDiagnostic.existingOrigin.generatorVersion, 1)
-	expectEqual("incoming generator version is preserved", duplicateDiagnostic.incomingOrigin.generatorVersion, 2)
-	expectEqual("existing origin recipe key is preserved", duplicateDiagnostic.existingOrigin.recipeKey, sharedRecipeKey)
-	expectEqual("incoming origin recipe key is preserved", duplicateDiagnostic.incomingOrigin.recipeKey, sharedRecipeKey)
+	expectEqual(
+		"existing generator version is preserved",
+		duplicateDiagnostic.existingOrigin.generatorVersion,
+		1
+	)
+	expectEqual(
+		"incoming generator version is preserved",
+		duplicateDiagnostic.incomingOrigin.generatorVersion,
+		2
+	)
+	expectEqual(
+		"existing origin recipe key is preserved",
+		duplicateDiagnostic.existingOrigin.recipeKey,
+		sharedRecipeKey
+	)
+	expectEqual(
+		"incoming origin recipe key is preserved",
+		duplicateDiagnostic.incomingOrigin.recipeKey,
+		sharedRecipeKey
+	)
 
 	local retained = WorldEntity.duplicateDiagnostics(registry)[1] :: any
 	expectEqual("complete diagnostic is retained", retained ~= nil, true)
-	expectEqual("retained existing origin stays distinguishable", retained.existingOrigin.worldId, "world:alpha")
-	expectEqual("retained incoming origin stays distinguishable", retained.incomingOrigin.worldId, "world:beta")
+	expectEqual(
+		"retained existing origin stays distinguishable",
+		retained.existingOrigin.worldId,
+		"world:alpha"
+	)
+	expectEqual(
+		"retained incoming origin stays distinguishable",
+		retained.incomingOrigin.worldId,
+		"world:beta"
+	)
 	local retainedOriginMutationAccepted = pcall(function()
 		retained.incomingOrigin.worldId = "world:mutated"
 	end)
 	expectEqual("retained incoming origin snapshot rejects mutation", retainedOriginMutationAccepted, false)
 
 	local authoritative = WorldEntity.get(registry, entityId) :: any
-	expectEqual("duplicate origin cannot replace first registration", authoritative.origin.worldId, "world:alpha")
+	expectEqual(
+		"duplicate origin cannot replace first registration",
+		authoritative.origin.worldId,
+		"world:alpha"
+	)
 
 	return failures
 end
