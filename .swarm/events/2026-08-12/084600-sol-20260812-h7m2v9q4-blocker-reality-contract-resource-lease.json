@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-h7m2v9q4-reality-contract-lease-blocker",
+  "timestamp": "2026-08-12T08:46:00+00:00",
+  "fromWorker": "sol-20260812-h7m2v9q4",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "high",
+  "summary": "PR #428 exact-head canonical CI and candidate control engine tests pass, but trusted-base pr-ownership cannot reach candidate ownership checks because the live REALITY-CONTRACT resource claim is schema-invalid: acquiredAt is missing and acquiredAtGeneration is unknown.",
+  "affects": ["SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "evidence": [
+    "PR #428 head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae",
+    "CI run 31579573385 validate: success",
+    "Swarm run 31579573480 engine-tests: success",
+    "pr-ownership job 94059342009: trusted-base validation fails at .swarm/resource-claims/REALITY-CONTRACT.json before PR ownership checks"
+  ],
+  "metadata": {
+    "pr": 428,
+    "headSha": "fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae",
+    "blockedJob": 94059342009
+  }
+}
