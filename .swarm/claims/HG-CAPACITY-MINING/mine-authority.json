@@ -6,7 +6,7 @@
   "claimToken": "f4a9c2d71e6b8053",
   "claimedAt": "2026-08-12T11:03:00+00:00",
   "heartbeatAt": "2026-08-12T11:03:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 1,
   "generation": 1,
   "resources": [],
   "branch": "agent/mining/HG-CAPACITY-MINING-authority-q5m8v3n2-g3",
