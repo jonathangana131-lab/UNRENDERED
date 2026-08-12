@@ -38,6 +38,8 @@ export type DuplicateIdentityDiagnostic = {
 	incomingKind: string,
 	existingRecipeKey: string,
 	incomingRecipeKey: string,
+	existingOrigin: GenerationOrigin,
+	incomingOrigin: GenerationOrigin,
 }
 
 export type Registry = {
@@ -316,11 +318,16 @@ local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
 	})
 end
 
-local function assertCanonicalMetadataBudget(kind: string, origin: GenerationOrigin): ()
-	local stringBytes = #kind + #origin.worldId + #origin.generator + #origin.recipeKey
+local function generationOriginStringBytes(origin: GenerationOrigin): number
+	local stringBytes = #origin.worldId + #origin.generator + #origin.recipeKey
 	if origin.regionId ~= nil then
 		stringBytes += #origin.regionId
 	end
+	return stringBytes
+end
+
+local function assertCanonicalMetadataBudget(kind: string, origin: GenerationOrigin): ()
+	local stringBytes = #kind + generationOriginStringBytes(origin)
 	assert(stringBytes <= WorldEntity.MAX_CANONICAL_METADATA_STRING_BYTES, CANONICAL_METADATA_LIMIT_ERROR)
 end
 
@@ -510,12 +517,16 @@ function WorldEntity.createRegistry(duplicateDiagnosticCapacity: number?): Regis
 				incomingKind = ownedRecord.kind,
 				existingRecipeKey = existing.origin.recipeKey,
 				incomingRecipeKey = ownedRecord.origin.recipeKey,
+				existingOrigin = existing.origin,
+				incomingOrigin = ownedRecord.origin,
 			})
 			local retainedStringBytes = #diagnostic.entityId
 				+ #diagnostic.existingKind
 				+ #diagnostic.incomingKind
 				+ #diagnostic.existingRecipeKey
 				+ #diagnostic.incomingRecipeKey
+				+ generationOriginStringBytes(diagnostic.existingOrigin)
+				+ generationOriginStringBytes(diagnostic.incomingOrigin)
 			if capacity > 0 and retainedStringBytes <= WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES then
 				if #duplicates >= capacity then
 					table.remove(duplicates, 1)
