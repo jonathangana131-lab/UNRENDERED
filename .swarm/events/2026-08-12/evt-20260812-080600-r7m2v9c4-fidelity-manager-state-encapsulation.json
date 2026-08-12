@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-080600-r7m2v9c4-fidelity-manager-state-encapsulation",
+  "timestamp": "2026-08-12T08:06:00+00:00",
+  "fromWorker": "sol-20260812-r7m2v9c4",
+  "eventType": "FINDING",
+  "summary": "Retained FidelityManager source still exposes its mutable ManagerImpl as the public runtime object. FidelityManager.new() returns setmetatable(self, FidelityManager) without freezing the facade or moving config/_states/_metrics behind closure-private storage. A holder can therefore replace manager.config after construction or mutate manager._states / manager._metrics directly, bypassing the copied/frozen config ownership, F0-F4 accounting, registration bound, transition fence, and rejected-step atomicity contracts without going through a validated manager method. Recommend a bounded follow-on leaf after the retained Fidelity/capacity lineages integrate: keep the current public methods/API, move mutable ManagerState behind a weak-key closure-private map (or equivalent non-exposed capability), freeze the public facade, and add adversarial regressions proving direct facade writes cannot alter config, observed fidelity, registration/count metrics, or transition fencing.",
+  "affects": [
+    "HG-BACKFILL-FIDELITY",
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "MEDIUM",
+  "evidence": [
+    "PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 retains ManagerImpl fields config, _states, and _metrics directly on the manager table; FidelityManager.new() constructs that table and returns setmetatable(self, FidelityManager) without table.freeze on the facade or closure-private state storage.",
+    "On the same retained head, step() reads self.config, register/get/unregister/step read or mutate self._states, and getMetrics()/transition paths trust self._metrics. Direct table mutation can therefore change effective policy/state/accounting outside validation and transaction boundaries.",
+    "The retained Fidelity lanes already cover malformed PolicyConfig/PolicyInputs/time no-execute behavior, callback atomicity/reentrancy, cross-entity isolation, and the 65,536 registration ceiling; repository PR/issue searches found no existing FidelityManager facade/state-encapsulation repair, so this is not a duplicate of #385, #398, or #419.",
+    "PhysicsLabRuntime retained synthesis PR #408 already uses the desired project pattern for mutable authority-adjacent state: closure-private weak-key runtimeStates plus a frozen public Runtime facade, while consuming FidelityManager only through public methods. That provides a compatible architectural precedent rather than a new framework.",
+    "No local Luau/Lune execution, Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence is claimed; this is a source-contract capacity-mining finding only."
+  ]
+}
