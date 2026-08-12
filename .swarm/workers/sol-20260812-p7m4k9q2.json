@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-p7m4k9q2",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "WORKING",
   "startedAt": "2026-08-12T07:59:30+00:00",
-  "lastSeenAt": "2026-08-12T08:21:00+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-p7m4k9q2-g1",
-  "notes": "Generation-10 PR #424 audit completed and released. REQUEST_CHANGES recorded in GitHub review 4914402557 and REVIEW_RESULT evt-20260812-081900-p7m4k9q2-diagnostics-g10-review-result: clone-based enabled canonical-integrity proof can omit live Archivable=false drift. Lane is now NEEDS_CHANGES with the blocker preserved. Earlier authority-capacity FINDING also published. No product bytes, Studio, viewport, physical-contact, or two-client evidence changed. Re-reading scheduler for another safe non-conflicting task."
+  "lastSeenAt": "2026-08-12T08:24:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-p7m4k9q2",
+  "notes": "Owns ObjectGenome source-depth capacity mining. Comparing exact main, retained generation-8 PR #395, tests, and current findings for one concrete non-duplicate gap. No feature implementation or Studio evidence."
 }
