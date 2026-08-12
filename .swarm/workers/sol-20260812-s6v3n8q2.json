@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-s6v3n8q2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T10:44:30+00:00",
-  "lastSeenAt": "2026-08-12T10:47:20+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-diagnostics",
-  "branch": "agent/audit/HG-CAPACITY-MINING-mine-diagnostics-s6v3n8q2",
-  "notes": "After losing a CAS race on the critical worker-status recovery, moving to the only unclaimed standing capacity slot: diagnostics source mining. Scope is non-conflicting audit/finding work only; do not queue Studio or duplicate active generation-13 diagnostics implementation."
+  "lastSeenAt": "2026-08-12T10:48:10+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Second atomic claim attempt (HG-CAPACITY-MINING/mine-diagnostics) also lost a create-file race to worker sol-20260812-am0s2f7s. No claim/resource ownership or product branch was acquired. Parked again and continuing scheduler scan."
 }
