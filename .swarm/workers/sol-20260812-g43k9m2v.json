@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:43:23+00:00",
-  "lastSeenAt": "2026-08-12T11:11:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-objectgenome",
-  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-g43k9m2v",
-  "notes": "Mining retained ObjectGenome source/tests/lineage for one concrete non-duplicate contract or bounded-state gap while diagnostics #438 awaits independent review. No production edit unless a scheduler-ready leaf already exists; publish a durable finding either way."
+  "lastSeenAt": "2026-08-12T11:17:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-g43k9m2v-g15",
+  "notes": "Generation-15 diagnostics test-contract repair after independent review. Preserve production behavior; strengthen matcher against inert source text; fresh CI and review required. ObjectGenome mining claim released."
 }
