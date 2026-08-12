@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-105900-q5m8v3n2-physics-lab-cabinet-ledge-overlap",
+  "timestamp": "2026-08-12T10:59:00+00:00",
+  "fromWorker": "sol-20260812-q5m8v3n2",
+  "eventType": "FINDING",
+  "summary": "The permanent Physics Lab authors cabinet-a and the collidable ledge with a deterministic physical interpenetration. The axis-aligned ledge spans x=[2.50,4.70], y=[0,0.65], z=[1.90,3.70] meters; the 180-degree filing-cabinet shell spans x=[4.61,5.09], y=[0,1.32], z=[3.59,4.21]. Their overlap is therefore 0.09 m by 0.11 m in plan through the ledge's full 0.65 m height. The F2 adapter realizes every ObjectGenome component as anchored CanCollide=true, so this is source-authored collidable geometry overlap rather than envelope-only metadata noise.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-PHYSICS-GEOMETRY"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 authors ledge sizeM={2.2,0.65,1.8} at positionM={3.6,0.325,2.8} with zero rotation and collidable=true, yielding x=[2.50,4.70], y=[0,0.65], z=[1.90,3.70].",
+    "The same main recipe places cabinet-a at {4.85,0.66,3.90} with yaw 180 degrees. The filing-cabinet shell is centered locally with dimensionsM={0.48,1.32,0.62}, so 180-degree yaw leaves its axis-aligned extents x=[4.61,5.09], y=[0,1.32], z=[3.59,4.21].",
+    "Those extents intersect by 0.09 m on x and 0.11 m on z while sharing y=[0,0.65], a deterministic 90 mm x 110 mm collidable penetration through the complete ledge height.",
+    "PhysicsLabRealizer realizes every ObjectGenome component as an anchored Part with CanCollide=true, CanQuery=true, and CanTouch=true; cabinet shell overlap is therefore present in the disposable F2 physical representation.",
+    "The accepted source-only geometry/property lineage checks finite placement, shell alignment, door aperture fit, ObjectGenome grounding, stair continuity, ramp entry/incline, and spawn placement, but does not assert inter-entity primitive/ObjectGenome separation. Repository PR/issue search found no existing cabinet/ledge overlap repair lane.",
+    "Retained geometry PR #423 does not move the ledge or cabinet, and retained office-chair PR #347 does not change filing-cabinet dimensions, so the overlap remains relevant to the queued geometry stack rather than being repaired by current retained successors.",
+    "No Roblox Studio, viewport, dynamic contact, or performance evidence is claimed; this finding is derived from deterministic authored meter geometry and the existing F2 realization contract."
+  ],
+  "metadata": {
+    "candidateBaseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "recommendedLaneId": "HG-PHYSICS-LAB-PLACEMENT-SEPARATION",
+    "reproKey": "physics-lab.hero-gate.v1/cabinet-a-vs-ledge",
+    "recommendedNext": "After the retained Physics geometry lineage is integration-safe, move cabinet-a or the ledge by the smallest deterministic authored-layout adjustment that restores positive physical clearance while preserving room bounds and existing grounded/contact targets. Add a source regression that computes oriented footprint/vertical interval separation for collidable primitive versus placed ObjectGenome component geometry, at minimum locking cabinet-a versus ledge and preventing equivalent future static interpenetrations. Do not broaden this into Hero Door/Chair/Player work or claim engine contact proof."
+  }
+}
