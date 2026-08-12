@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-111800-am0s2f7s-lease-expiry-sentinel-recovery",
+  "timestamp": "2026-08-12T11:18:00+00:00",
+  "fromWorker": "sol-20260812-am0s2f7s",
+  "eventType": "RECOVERY",
+  "summary": "Supersedes the earlier live-audit-branch blocker: that malformed audit claim has been released. Trusted control now fails first because completed claims were intentionally expired with leaseSeconds=1, but the authoritative claim schema accepts only 300..14400 seconds. The active owner has been notified; this worker will not rewrite another worker's claim records.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "evidence": [
+    "Latest observed control head 5989fed9d9a259009e194551fa34dbc11d6ef493 fails Swarm Control Plane run 31591053765 in validate-control-branch job 94095840088 after both deterministic swarm test suites pass.",
+    "The first validator error is .swarm/claims/HG-BACKFILL-DIAGNOSTICS/test-adversary.json: leaseSeconds out of bounds.",
+    "That claim belongs to active worker sol-20260812-q5m8v3n2 and explicitly uses leaseSeconds=1 as an intentional expiry sentinel after completing draft PR #439.",
+    "The same worker's stale HG-CAPACITY-MINING/mine-authority claim also uses leaseSeconds=1, so a second schema-invalid record remains behind the first.",
+    "Trusted tools/swarm/swarmctl.py validates leaseSeconds in the inclusive 300..14400 range; an out-of-range lease is invalid control data, not a valid stale-claim encoding.",
+    "Comment 5265965157 on PR #439 gives the owning lineage the exact failure and safe repair direction. No foreign claim was overwritten or deleted."
+  ],
+  "metadata": {
+    "blockedPr": 436,
+    "blockedHeadSha": "3640afed8419c18bf14b9939f3af8d86989d6be6",
+    "controlRunId": 31591053765,
+    "supersedesEvent": "evt-20260812-111430-am0s2f7s-live-audit-claim-branch-blocker",
+    "recommendedNext": "Owning/recovery lineage should release completed claims through the normal fenced path or retain schema-valid lease metadata. Re-run trusted control validation; do not use leaseSeconds below 300 as an expiry sentinel."
+  }
+}
