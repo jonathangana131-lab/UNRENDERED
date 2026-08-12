@@ -40,6 +40,7 @@ class CliExitPropagationRegressionTests(unittest.TestCase):
 
 class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
     EVENT_ID = "evt-20260811-080520-test-legacy-review"
+    COMMAND_EVENT_ID = "evt-20260811T210500Z-test-legacy-command"
 
     def setUp(self):
         self.fx = Fx()
@@ -62,6 +63,17 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
             "affects": ["LANE-A"],
             "evidence": ["Historical bytes are canonical."],
             "metadata": {"pr": 315, "headSha": "a" * 40, "verdict": "APPROVE"},
+        }
+
+    def command_legacy_event(self):
+        return {
+            "schemaVersion": 1,
+            "eventId": self.COMMAND_EVENT_ID,
+            "eventType": "HANDOFF",
+            "summary": "Immutable first-write handoff fixture.",
+            "validation": [
+                {"command": "compare_commits audited-a -> audited-b", "result": "PASS"},
+            ],
         }
 
     def strict_laundered_event(self):
@@ -88,6 +100,10 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
         root = self.fx.root if root is None else root
         return root / "events" / date / f"{self.EVENT_ID}.json"
 
+    def command_event_path(self, root=None):
+        root = self.fx.root if root is None else root
+        return root / "events" / "2026-08-11" / "210500-test-legacy-command.json"
+
     def rule_for(self, canonical_path):
         return {
             "date": "2026-08-11",
@@ -101,6 +117,7 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
         self.assertEqual(rules["evt-20260811-073650-q9m4r2-worldentity-sync-hold"]["canonicalGitBlobSha1"], "f9781fd64518c01aa10b460f01aff13adc6635da")
         self.assertEqual(rules["evt-20260811-080520-h4v8n2-cart-geometry-review"]["canonicalGitBlobSha1"], "a39220b473086229e6b1057b296342175b851af1")
         self.assertEqual(rules["evt-20260811-081620-mat8c3r1-materialdna-key-grammar"]["canonicalGitBlobSha1"], "9a7f679ea84600d6a28a8bef02436e5f85fd857e")
+        self.assertEqual(rules["evt-20260811T210500Z-sol-20260811-c7p4m8v2-handoff-content-reconciliation"]["canonicalGitBlobSha1"], "713d54c453faa65e89875e69499444d5a7644d3f")
 
     def test_exact_canonical_blob_accepts_malformed_historical_event_without_mutation(self):
         path = self.event_path()
@@ -111,6 +128,22 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
             result = hard.validate_all(self.fx.root, self.now)
         self.assertEqual(result["events"], 1)
         self.assertEqual(path.read_bytes(), before)
+
+    def test_exact_audited_blob_may_retain_legacy_forbidden_evidence_key(self):
+        path = self.command_event_path()
+        write(path, self.command_legacy_event())
+        before = path.read_bytes()
+        rule = self.rule_for(path)
+        with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.COMMAND_EVENT_ID: rule}, clear=False):
+            result = hard.validate_all(self.fx.root, self.now)
+        self.assertEqual(result["events"], 1)
+        self.assertEqual(path.read_bytes(), before)
+
+    def test_unlisted_legacy_forbidden_evidence_key_still_fails_closed(self):
+        path = self.fx.root / "events" / "2026-08-11" / "210501-unlisted-legacy-command.json"
+        write(path, self.command_legacy_event())
+        with self.assertRaises(core.ControlError):
+            hard.validate_all(self.fx.root, self.now)
 
     def test_known_event_strict_normalization_is_rejected_as_laundered_history(self):
         path = self.event_path()
@@ -219,6 +252,19 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
             with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.EVENT_ID: rule}, clear=False):
                 with self.assertRaises(core.ControlError):
                     hard.transition_check(before, after)
+
+    def test_transition_accepts_unchanged_exact_legacy_forbidden_blob(self):
+        with tempfile.TemporaryDirectory() as before_dir, tempfile.TemporaryDirectory() as after_dir:
+            before = Path(before_dir)
+            after = Path(after_dir)
+            before_path = self.command_event_path(before)
+            after_path = self.command_event_path(after)
+            write(before_path, self.command_legacy_event())
+            write(after_path, self.command_legacy_event())
+            rule = self.rule_for(before_path)
+            with patch.dict(hard._CANONICAL_IMMUTABLE_EVENTS, {self.COMMAND_EVENT_ID: rule}, clear=False):
+                result = hard.transition_check(before, after)
+            self.assertEqual(result["status"], "PASS")
 
 
 class WorkerReviewContractHardeningRegressionTests(unittest.TestCase):
