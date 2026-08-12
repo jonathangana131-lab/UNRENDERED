@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-PHYSICS-CART-SHELF-FRAME",
+  "epicId": "HERO-GATE",
+  "title": "Physics Lab rolling-cart shelf/frame manufacturability closure",
+  "objective": "Close the independently recorded rolling-cart shelf/frame manufacturability debt after the caster/contact repair integrates: give both utility shelves a physically coherent load path to the grounded chassis using the existing ObjectGenome construction grammar, with explicit family versioning and deterministic source regressions.",
+  "priority": 5085,
+  "state": "BLOCKED",
+  "mode": "exclusive",
+  "dependencies": ["HG-PHYSICS-CART-GEOMETRY"],
+  "writeScopes": ["src/shared/Physics/PhysicsLabObjectGenomes.luau", "tests/physics_lab_recipe.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"Rolling-cart shelf/frame manufacturability repair","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":260,"writeScopes":["src/shared/Physics/PhysicsLabObjectGenomes.luau","tests/physics_lab_recipe.luau"]},
+    {"slotId":"audit","role":"Independent rolling-cart shelf/frame audit","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":120,"requiresIndependentFrom":"primary","writeScopes":["tests/physics_lab_recipe.luau"]}
+  ],
+  "acceptance": [
+    "start from the integrated HG-PHYSICS-CART-GEOMETRY result and preserve its four caster ground/chassis contacts plus corrected mass/center-of-mass invariants",
+    "author a manufacturable frame/upright load path that physically connects the grounded chassis to the lower and upper shelves without floating components or decorative disconnected supports",
+    "make shelf supportKeys describe actual contacting load-bearing components rather than a non-contacting chassis shortcut",
+    "advance lab-cart.utility familyVersion for the canonical construction revision and recompute declared mass and centerOfMassM from the final component distribution",
+    "add deterministic source regressions for frame/shelf contact continuity, support-graph coherence, component-mass closure, and component-derived center of mass",
+    "preserve existing ObjectGenome architecture; do not introduce articulated cart behavior, a second physics framework, or Hero Door/Chair/Player work",
+    "do not claim Roblox Studio or engine-contact evidence",
+    "require independent source review before DONE"
+  ],
+  "notes": "Materialized from capacity-mining FINDING evt-20260812-081400-k7m2v9q4-cart-shelf-frame. PR #352 reviews explicitly preserve this shelf/frame debt as separate from the approved caster/contact and COM repair. The lane is intentionally BLOCKED on HG-PHYSICS-CART-GEOMETRY to avoid overlapping writes or rebuilding the upstream repair before trusted-history/pr-ownership recovery allows integration.",
+  "tags": ["backfill", "hero-gate", "source-only", "physics", "geometry", "objectgenome", "manufacturability"]
+}
