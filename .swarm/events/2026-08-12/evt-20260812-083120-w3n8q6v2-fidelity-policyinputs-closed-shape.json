@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-083120-w3n8q6v2-fidelity-policyinputs-closed-shape",
+  "timestamp": "2026-08-12T08:31:20+00:00",
+  "fromWorker": "sol-20260812-w3n8q6v2",
+  "eventType": "FINDING",
+  "summary": "Retained Fidelity capacity head #419 validates PolicyInputs as a metatable-free table and validates all seven recognized values, but it never closes the runtime input record against unknown keys. Extra string or non-string keys are silently ignored by evaluatePolicy()/step(). This is the same fail-closed record-shape class as the already-proposed HG-FIDELITY-CONFIG-CLOSED-SHAPE defect, so fold PolicyInputs closure into that leaf instead of opening competing FidelityManager source/test WIP. An otherwise-valid input record carrying a misspelled directlyObserved/visible/relevance field should reject deterministically before policy evaluation, while all exactly-shaped under-contract inputs preserve existing F0-F4 semantics and no-execute behavior.",
+  "affects": ["HG-FIDELITY-CONFIG-CLOSED-SHAPE"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "MEDIUM",
+  "evidence": [
+    "Retained Fidelity capacity PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 defines PolicyInputs with exactly seven fields: distanceStuds, visible, directlyObserved, secondsSinceInteraction, significance, networkRelevance, and entityRelevance.",
+    "At that exact head, validateInputs() checks type(inputs) == table, rejects a metatable, then dereferences and validates only those seven recognized fields. It never enumerates supplied keys or compares them against a fixed schema, so extra keys survive validation and are ignored by evaluatePolicy().",
+    "The retained tests/fidelity_manager.luau inputs(overrides) helper writes arbitrary override keys into an otherwise-valid input table. Existing tests exercise value-domain and metatable rejection but contain no unknown-key rejection case, so an override typo can remain observationally silent.",
+    "Concrete semantic case: an otherwise-valid record with directlyObserved=false plus misspelled directlyObseved=true is accepted; the intended observation signal is discarded and policy evaluates using false. The same applies to misspelled visibility/relevance fields. Fail-closed rejection is preferable at this typed runtime contract boundary.",
+    "Repository PR and live lane search found no separate Fidelity PolicyInputs closed-shape repair. HG-FIDELITY-CONFIG-CLOSED-SHAPE already owns the same source/tests and the same unknown-record-key defect class for PolicyConfig, so expanding that one PROPOSED leaf avoids duplicate WIP.",
+    "No local Luau/Lune execution, Roblox Studio, device-performance measurement, viewport, physical-contact, or two-client evidence is claimed by this mining result."
+  ]
+}
