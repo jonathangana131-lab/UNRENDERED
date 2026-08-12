@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-081130-p423v7r4-runtime-entity-key-budget",
+  "timestamp": "2026-08-12T08:11:30+00:00",
+  "fromWorker": "sol-20260812-p423v7r4",
+  "eventType": "FINDING",
+  "summary": "Capacity mining of retained Physics Lab runtime synthesis PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754 found an unbounded malformed entity-recipe key boundary: assertCanonicalRecipe checks only that entityRecipe.key is a string before using the caller-sized string as a canonical-map lookup key and, on miss, interpolating the complete value into the unknown-key assertion diagnostic. PhysicsLabRecipe has no upstream entity-key byte ceiling. An arbitrarily large forged string therefore forces hash/compare work proportional to malformed input and can make the failure diagnostic/temporary allocation scale with that input even though no canonical key can be that large. This is distinct from the already-recorded outer recipe-shape finding and from WorldEntity canonical-record metadata budgeting.",
+  "affects": ["HG-PHYSICS-RUNTIME-SYNTHESIS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "MEDIUM",
+  "evidence": [
+    "Inspected PR #408 exact source head d31c100c5d3766ca14d89b046fff4cdb09086754. assertCanonicalRecipe reads entityRecipe.key, asserts only type(entityKey) == 'string', then performs CANONICAL_ENTITIES_BY_KEY[entityKey] and asserts canonical ~= nil with a diagnostic containing the full entityKey.",
+    "Inspected PhysicsLabRecipe at the same exact head. Entity recipe keys are typed as string and generated from a fixed canonical set, but the recipe contract exposes no maximum byte length or validator that would reject oversized candidate keys before PhysicsLabRuntime receives them.",
+    "The canonical entity key set is finite and trusted, so a candidate longer than the longest canonical key is provably unable to match; preflighting against a ceiling derived from the canonical keys can reject impossible oversized input before hash lookup without inventing a new external protocol limit.",
+    "The existing runtime-recipe-shape finding evt-20260811-231200-s6r4n8q2-runtime-recipe-shape concerns unknown outer/table fields and ignored map entries, not entity-key byte cost. The 2026-08-12 WorldEntity metadata-budget finding concerns retained record metadata, not this runtime recipe-key failure path.",
+    "Current PhysicsLabRealizer constructs the canonical recipe internally, so this mining result does not claim a demonstrated current remote exploit, Workspace divergence, or engine failure. It hardens the public runtime constructor boundary for malformed/future-adapter input.",
+    "No production code was changed, no executable test was run by this worker, and no Roblox Studio, viewport, contact, diagnostics-capture, or two-client authority evidence is claimed."
+  ],
+  "metadata": {
+    "candidatePr": 408,
+    "candidateHeadSha": "d31c100c5d3766ca14d89b046fff4cdb09086754",
+    "recommendedNext": "When the runtime-synthesis lineage is writable again, derive a trusted maximum canonical entity-key byte length from the canonical key set, reject candidates beyond it before table lookup, keep the rejection diagnostic bounded/content-independent, and add an adversarial Lune regression proving oversized rejection is fail-atomic before registry/fidelity authority registration. Preserve normal canonical and bounded unknown-key behavior."
+  }
+}
