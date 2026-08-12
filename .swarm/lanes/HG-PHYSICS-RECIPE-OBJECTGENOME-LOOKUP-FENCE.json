@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-PHYSICS-RECIPE-OBJECTGENOME-LOOKUP-FENCE",
+  "epicId": "HERO-GATE",
+  "title": "Fence Physics Lab ObjectGenome lookup keys",
+  "objective": "Close the source-only no-execute defect where PhysicsLabRecipe.objectGenome can interpolate a malformed dynamic caller key before proving it is a primitive canonical ObjectGenomeKey, without changing canonical lab geometry, ObjectGenome content, or Studio behavior.",
+  "priority": 4905,
+  "state": "PROPOSED",
+  "mode": "exclusive",
+  "dependencies": [{"laneId":"HG-BACKFILL-PHYSICS-GEOMETRY","acceptableStates":["DONE"]}],
+  "writeScopes": ["src/shared/Physics/PhysicsLabRecipe.luau", "tests/physics_lab_recipe.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"Physics Lab ObjectGenome lookup boundary hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Physics/PhysicsLabRecipe.luau","tests/physics_lab_recipe.luau"]},
+    {"slotId":"audit","role":"Independent Physics Lab lookup no-execute auditor","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":140,"requiresIndependentFrom":"primary","writeScopes":["tests/physics_lab_recipe.luau"]}
+  ],
+  "acceptance": [
+    "PhysicsLabRecipe.objectGenome runtime-proves the supplied key is a primitive string before table lookup or any diagnostic formatting that could invoke caller metamethods",
+    "metatable-backed/non-string malformed keys supplied through any/dynamic code reject with zero caller __tostring or other metamethod execution",
+    "unknown primitive strings still reject deterministically without exposing a broader dynamic lookup surface",
+    "all five canonical ObjectGenomeKey mappings and returned immutable genome identities/fingerprints remain unchanged",
+    "PhysicsLabRecipe schema/generator versions, WorldId/RegionId, entity ids/order, placements, geometry, material references, and initial fidelity remain unchanged",
+    "add a pure deterministic regression for hostile-key rejection plus immediate valid canonical lookup afterward",
+    "canonical CI, live pr-ownership, and fresh independent exact-head review are required before integration",
+    "source-only lane: no Roblox Studio, viewport, physical-contact, timing, or two-client evidence claim"
+  ],
+  "notes": "Capacity-mined against retained physics-geometry PR #423 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f. Existing Physics Lab runtime PR #310 already treats non-string caller-key __tostring execution during diagnostics as a fail-closed defect, but exported PhysicsLabRecipe.objectGenome still interpolates the unproven caller key in its unknown-key assert. This leaf is intentionally PROPOSED and depends on HG-BACKFILL-PHYSICS-GEOMETRY DONE so the active #423 REVIEW is not widened. Finding: evt-20260812-082430-g6p2v8n4-physics-recipe-genome-key-noexecute.",
+  "tags": ["backfill", "hero-gate", "source-only", "physics-lab", "no-execute", "recipe-boundary"]
+}
