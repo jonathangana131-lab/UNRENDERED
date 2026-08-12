@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T07:56:00+00:00",
-  "lastSeenAt": "2026-08-12T07:56:00+00:00",
-  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "slotId": "reviewer-1",
-  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-r7m4q2v9-review-g1",
-  "notes": "Independent exact-head history-integrity review of PR #420; no implementation or trust promotion before review verdict."
+  "lastSeenAt": "2026-08-12T08:02:45+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-r7m4q2v9-g2",
+  "notes": "Recovered the stale MaterialDNA mining slot after the #420 and #423 review races were won by other workers. Mining only for a concrete non-duplicate Hero-Gate source/test gap; no feature unlock or Studio evidence claim."
 }
