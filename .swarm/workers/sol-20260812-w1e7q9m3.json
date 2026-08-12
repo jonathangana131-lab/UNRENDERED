@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-w1e7q9m3",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "ACTIVE",
   "startedAt": "2026-08-12T08:00:07+00:00",
-  "lastSeenAt": "2026-08-12T08:18:00+00:00",
+  "lastSeenAt": "2026-08-12T08:22:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-mine-worldentity-w1e7q9m3-g1",
-  "notes": "Completed source-only follow-up capacity mining. Published evt-20260812-081700-w1e7q9m3-worldentity-duplicate-origin-evidence at swarm-control commit 114befaa5fb859b1ed4775593f7af61947bd4680. Finding: #421 duplicate diagnostics cannot distinguish full conflicting GenerationOrigin values despite ARCHITECTURE contract; recommend bounded immutable both-origin evidence after/in same successor as canonical metadata budget repair. No product source or Studio evidence changed. Ownership has ended; normalized terminal DONE status to V2 IDLE."
+  "slotId": "mine-materialdna",
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-materialdna-w1e7q9m3-g2",
+  "notes": "WorldEntity follow-up finding published and lease released. Continuing same session in free source-only capacity slot: mine exact retained/current MaterialDNA source/tests plus lanes/PRs/events for one concrete non-duplicate invariant, boundedness, deterministic-ordering, no-execute, or integration gap; publish structured finding or explicit no-gap result."
 }
