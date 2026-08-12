@@ -82,8 +82,12 @@ local function run(): number
 	local enableTransaction =
 		string.find(enableSource, "local ok, result = pcall(function(): Snapshot", 1, true)
 	local enableRootName = string.find(enableSource, "folder.Name = DIAGNOSTICS_ROOT_NAME", 1, true)
-	local enableRootOwnership =
-		string.find(enableSource, 'folder:SetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned", true)', 1, true)
+	local enableRootOwnership = string.find(
+		enableSource,
+		'folder:SetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned", true)',
+		1,
+		true
+	)
 	local enableParentMutation = string.find(enableSource, "folder.Parent = model", 1, true)
 	local enableBillboardOwnership = string.find(enableSource, "billboard.Parent = folder", 1, true)
 	local enableBillboardConfiguration = string.find(enableSource, "billboard.AlwaysOnTop = true", 1, true)
