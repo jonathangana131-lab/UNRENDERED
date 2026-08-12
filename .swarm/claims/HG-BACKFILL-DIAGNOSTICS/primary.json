@@ -5,11 +5,11 @@
   "workerId": "sol-20260812-k7m4q9v2",
   "claimToken": "6d2a9c4e1f7b8053",
   "claimedAt": "2026-08-12T07:59:30+00:00",
-  "heartbeatAt": "2026-08-12T07:59:30+00:00",
+  "heartbeatAt": "2026-08-12T08:05:30+00:00",
   "leaseSeconds": 1800,
   "generation": 10,
   "resources": [],
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-8d5d357a-g9",
   "pr": 424,
-  "notes": "Generation-10 stale recovery of PR #424 after generation-9 exact-head CI failed one diagnostics-atomicity cleanup regression. Retain the existing branch/PR and repair that isolated regression without weakening enabled canonical-integrity or authoritative readout coverage."
+  "notes": "Generation-10 stale recovery repaired the source-contract false binding by scoping enable atomicity sentinels to the enable() body. Exact head f89ce88ea7791e29d22a0e2ca76b22f2d7b63699 passes canonical CI run 31576692805; no Studio evidence is claimed."
 }
