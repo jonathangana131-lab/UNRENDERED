@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-085630-m8q4v2c7-diagnostics-clone-fence",
+  "timestamp": "2026-08-12T08:56:30+00:00",
+  "fromWorker": "sol-20260812-m8q4v2c7",
+  "eventType": "HANDOFF",
+  "summary": "Diagnostics test-adversary PR #430 closes the generation-11 clone-completeness regression false-pass. The source matcher now pins live descendant enumeration, the exact owned-overlay ancestry exemption, descendant Archivable fail-closed checking before Clone(), and self-tests against both the prior model-only mutant and a broadened name-based overlay exemption.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "PR #430 exact head 7716eba2ace4be9dc04df7264a1003de5dc0df55",
+    "Canonical CI run 31580522518 job 94062268555 PASS through format, lint, Luau analysis, architecture audits, Swarm deterministic tests, Pure Luau, place build, and artifact upload",
+    "Pure Luau includes the actual helper-local descendant fence plus a model-only false-pass mutant and a broadened overlay-exemption mutant; all pass the expected fail-closed assertions",
+    "Production source is unchanged from generation-11 PR #427 exact head 679d4c6ccb54aa48827154a46e63950f8a6f8a70"
+  ],
+  "metadata": {
+    "testPr": 430,
+    "testHead": "7716eba2ace4be9dc04df7264a1003de5dc0df55",
+    "basePr": 427,
+    "baseHead": "679d4c6ccb54aa48827154a46e63950f8a6f8a70",
+    "ciRun": 31580522518,
+    "ciJob": 94062268555,
+    "recommendedNextStep": "Absorb this strengthened regression into the next diagnostics primary successor, rerun exact-head CI, then require a fresh independent source audit before any REVIEW transition.",
+    "studioEvidenceRequired": false,
+    "externalEvidenceStillBlocked": true
+  }
+}
