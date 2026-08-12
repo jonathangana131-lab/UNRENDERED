@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "reviewer-1",
+  "workerId": "sol-20260812-m8q4v2c7",
+  "claimToken": "c5f1a8732d9e640b",
+  "claimedAt": "2026-08-12T09:02:05+00:00",
+  "heartbeatAt": "2026-08-12T09:02:05+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "review/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-m8q4v2c7-r1",
+  "pr": 428,
+  "notes": "Independent exact-head review of primary PR #428 head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae. Review only; do not edit primary branch or self-integrate. Verify evidence-backed worker aliases, typed REVIEW_RESULT strictness, unrelated unknown-field rejection, unchanged claim/resource fencing, docs/producer vocabulary, and current live validation implications."
+}
