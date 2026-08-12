@@ -5,8 +5,8 @@
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "claimToken": "b93d7a2e51c684f0",
   "acquiredAt": "2026-08-12T08:21:30+00:00",
-  "heartbeatAt": "2026-08-12T08:40:20+00:00",
+  "heartbeatAt": "2026-08-12T08:49:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
-  "notes": "Exclusive SWARM-PROTOCOL lease for worker/event schema contract recovery; PR #428 published for exact-head CI and independent review."
+  "notes": "Exclusive SWARM-PROTOCOL lease retained while PR #428 awaits independent exact-head review; canonical CI and candidate engine tests pass."
 }
