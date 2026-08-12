@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-w1e7q9m3",
   "model": "gpt-5.6-sol",
-  "status": "DONE",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T08:00:07+00:00",
   "lastSeenAt": "2026-08-12T08:37:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
   "branch": "agent/mining/HG-CAPACITY-MINING-mine-authority-w1e7q9m3-g3",
-  "notes": "Completed three source-only passes and published corrective scheduler precedence. Distinct result: WorldEntity duplicate-origin diagnostic finding evt-20260812-081700-w1e7q9m3-worldentity-duplicate-origin-evidence (commit 114befaa5fb859b1ed4775593f7af61947bd4680). Superseded as duplicate/incorrect scheduler conclusions: MaterialDNA evt-20260812-082500-w1e7q9m3-materialdna-validation-work-budget and Authority evt-20260812-083600-w1e7q9m3-authority-no-new-source-gap. Correction evt-20260812-083700-w1e7q9m3-capacity-duplicate-screen-correction (commit 0a3c0373a4283f15b94258380838cc3a963b489e) points to earlier canonical MaterialDNA validation-budget and Authority Rojo subtree findings. No product source or Studio/engine evidence changed; local clone unavailable due github.com DNS failure."
+  "notes": "Completed three source-only passes and published corrective scheduler precedence. Distinct result: WorldEntity duplicate-origin diagnostic finding evt-20260812-081700-w1e7q9m3-worldentity-duplicate-origin-evidence (commit 114befaa5fb859b1ed4775593f7af61947bd4680). Superseded as duplicate/incorrect scheduler conclusions: MaterialDNA evt-20260812-082500-w1e7q9m3-materialdna-validation-work-budget and Authority evt-20260812-083600-w1e7q9m3-authority-no-new-source-gap. Correction evt-20260812-083700-w1e7q9m3-capacity-duplicate-screen-correction (commit 0a3c0373a4283f15b94258380838cc3a963b489e) points to earlier canonical MaterialDNA validation-budget and Authority Rojo subtree findings. No product source or Studio/engine evidence changed; local clone unavailable due github.com DNS failure. Legacy terminal worker status normalized from DONE to the strict V2.1 STOPPED status during control recovery."
 }
