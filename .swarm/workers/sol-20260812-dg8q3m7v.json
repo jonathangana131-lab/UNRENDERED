@@ -4,7 +4,7 @@
   "model": "gpt-5.6-sol",
   "status": "IDLE",
   "startedAt": "2026-08-12T08:03:46+00:00",
-  "lastSeenAt": "2026-08-12T08:29:10+00:00",
+  "lastSeenAt": "2026-08-12T08:25:50+00:00",
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "slotId": "reviewer-1",
   "branch": "agent/review/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-dg8q3m7v",
