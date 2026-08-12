@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-082500-w1e7q9m3-materialdna-validation-work-budget",
+  "timestamp": "2026-08-12T08:25:00+00:00",
+  "fromWorker": "sol-20260812-w1e7q9m3",
+  "eventType": "FINDING",
+  "summary": "MaterialDNA generation-13 retained candidate #353 enforces semantic collection caps but does not bound validation work or diagnostic growth on hostile oversized tables. validateDenseArray() traverses every supplied entry before checking count > maximum, while validateKnownFields() traverses every field and appends one diagnostic per unknown key with no error-count or output-byte budget. A malformed plain table can therefore force validation CPU and retained error memory proportional to attacker-controlled key count before rejection, despite small documented canonical collection limits.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected retained MaterialDNA PR #353 exact head 10559afdce1a1854e7932522f6e78561736c8ed3 and its contract tests.",
+    "At #353, validateDenseArray() enumerates the complete plain table with pairs(), computes count/highest, and only after enumeration rejects count > maximum; historyEvents and anomalyModifiers therefore have semantic caps but no corresponding traversal cap.",
+    "At #353, validateKnownFields() enumerates every field and appendError() emits one string for every unknown key. No validation-error count or diagnostic-byte budget is present, so a top-level or nested record with many unknown fields can grow ValidationResult.errors proportionally before rejection.",
+    "The retained #353 diff and tests address safe-integer counters and previously composed hostile-shape/key-safety work; duplicate-screen searches found no issue/PR for bounded validation work or bounded diagnostic output.",
+    "This is source-only boundary/DoS evidence. No Roblox Studio, engine-runtime, or production exploitability claim is made."
+  ],
+  "metadata": {
+    "candidatePr": 353,
+    "candidateHeadSha": "10559afdce1a1854e7932522f6e78561736c8ed3",
+    "dependency": "HG-BACKFILL-MATERIALDNA-COUNTERS is currently BLOCKED by SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY; integrate this only through the retained MaterialDNA successor once the fail-closed control-plane blocker clears.",
+    "recommendedNext": "Add a deterministic validation work/error budget independent of semantic recipe limits. Reject oversized dense arrays as soon as the observed entry count exceeds the configured maximum instead of continuing enumeration; bound unknown-field diagnostics (for example, a fixed small diagnostic cap plus one overflow marker) so ValidationResult.errors and any concatenated assertion text remain bounded. Add adversarial pure-Luau regressions with far-over-cap arrays and records containing many unknown fields, preserving no-execute/plain-table behavior, accepted canonical recipes, and deterministic diagnostics."
+  }
+}
