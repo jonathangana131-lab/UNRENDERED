@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-083300-x9c2p7r4n6-handoff-fidelity-config-shape",
+  "timestamp": "2026-08-12T08:33:00+00:00",
+  "fromWorker": "sol-20260812-x9c2p7r4n6",
+  "eventType": "HANDOFF",
+  "summary": "Fidelity capacity mining is complete. Published the non-duplicate PolicyConfig closed-shape finding and proposed deferred leaf HG-FIDELITY-CONFIG-CLOSED-SHAPE; no production code was changed and the mining slot is released.",
+  "affects": ["HG-CAPACITY-MINING", "HG-FIDELITY-CONFIG-CLOSED-SHAPE"],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "Finding evt-20260812-083100-x9c2p7r4n6-fidelity-config-closed-shape records retained #419 exact source head 1f017628bf49365663dfc2db3a30b81ba477a0a3 and the silent unknown-key discard mechanism.",
+    "Proposed lane HG-FIDELITY-CONFIG-CLOSED-SHAPE is sequenced after HG-FIDELITY-MANAGER-STATE-ENCAPSULATION to avoid competing FidelityManager edits.",
+    "No code execution or Studio/performance-device evidence was run or claimed."
+  ]
+}
