@@ -35,6 +35,7 @@ local function run(): number
 		})
 	end
 
+	-- Direct mutable records are also a supported registry ownership boundary and must share the same budget.
 	local function makeMutableRecord(entityId: string, recipeKeyBytes: number)
 		return {
 			id = entityId,
