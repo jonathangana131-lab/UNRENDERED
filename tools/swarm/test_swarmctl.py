@@ -366,5 +366,84 @@ Control-Schema: 1
             swarmctl.pr_check(self.fx.root, event_path, changed, self.now())
 
 
+class WorkerAndReviewSchemaCompatibilityTests(unittest.TestCase):
+    def worker(self, status):
+        return {
+            "schemaVersion": 1,
+            "workerId": "sol-20260812-abcd",
+            "model": "gpt-5.6-sol",
+            "status": status,
+            "startedAt": "2026-08-12T08:00:00+00:00",
+            "lastSeenAt": "2026-08-12T08:01:00+00:00",
+        }
+
+    def review_event(self, **extra):
+        event = {
+            "schemaVersion": 1,
+            "eventId": "evt-20260812-status-review-contract",
+            "timestamp": "2026-08-12T08:00:00+00:00",
+            "fromWorker": "sol-20260812-abcd",
+            "eventType": "REVIEW_RESULT",
+            "summary": "Exact-head independent review result.",
+            "affects": ["LANE-A"],
+        }
+        event.update(extra)
+        return event
+
+    def test_evidence_backed_worker_status_aliases_validate(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "sol-20260812-abcd.json"
+            for status in ("ACTIVE", "CLAIMING", "DONE"):
+                with self.subTest(status=status):
+                    write_json(path, self.worker(status))
+                    self.assertEqual(swarmctl.validate_worker(path)["status"], status)
+
+    def test_unknown_worker_status_still_fails_closed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "sol-20260812-abcd.json"
+            write_json(path, self.worker("FINISHED"))
+            with self.assertRaises(swarmctl.ControlError):
+                swarmctl.validate_worker(path)
+
+    def test_typed_review_result_validates_exact_domains(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "review.json"
+            event = self.review_event(pr=423, headSha="a" * 40, verdict="APPROVE")
+            write_json(path, event)
+            validated = swarmctl.validate_event(path)
+            self.assertEqual(validated["pr"], 423)
+            self.assertEqual(validated["verdict"], "APPROVE")
+
+    def test_typed_review_result_requires_complete_trio(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "review.json"
+            write_json(path, self.review_event(pr=423))
+            with self.assertRaises(swarmctl.ControlError):
+                swarmctl.validate_event(path)
+
+    def test_typed_review_result_rejects_invalid_domains(self):
+        invalid = [
+            {"pr": True, "headSha": "a" * 40, "verdict": "APPROVE"},
+            {"pr": 423, "headSha": "A" * 40, "verdict": "APPROVE"},
+            {"pr": 423, "headSha": "a" * 40, "verdict": "MAYBE"},
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "review.json"
+            for fields in invalid:
+                with self.subTest(fields=fields):
+                    write_json(path, self.review_event(**fields))
+                    with self.assertRaises(swarmctl.ControlError):
+                        swarmctl.validate_event(path)
+
+    def test_review_fields_do_not_generalize_to_other_events(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "finding.json"
+            event = self.review_event(pr=423, headSha="a" * 40, verdict="APPROVE")
+            event["eventType"] = "FINDING"
+            write_json(path, event)
+            with self.assertRaises(swarmctl.ControlError):
+                swarmctl.validate_event(path)
+
+
 if __name__ == "__main__":
     unittest.main()
