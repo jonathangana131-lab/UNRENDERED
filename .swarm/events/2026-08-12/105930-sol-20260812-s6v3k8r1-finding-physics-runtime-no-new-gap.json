@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t105930z-s6v3k8r1-physics-runtime-no-new-gap",
+  "timestamp": "2026-08-12T10:59:30Z",
+  "fromWorker": "sol-20260812-s6v3k8r1",
+  "eventType": "FINDING",
+  "summary": "Physics-runtime capacity mining found no additional distinct actionable Hero-Gate source/test gap beyond the already durable runtime entity-key byte-budget and outer canonical-recipe shape findings. Retained synthesis PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754 keeps runtime authority in closure-private state, validates the canonical recipe before authority construction, bounds accepted public WorldEntityIds through WorldEntity.isId, fences the entire FidelityManager.step transaction against mutation reentrancy, unwinds the transaction flag on callback failure, and uses an idempotent dispose over a fixed canonical entity population. I specifically audited constructor population establishment, getRecord/getFidelity/step input boundaries, transition commit ordering, snapshot cardinality, and dispose unregister ordering. I found no independently reproducible public-API path that can partially tear down or diverge the private registry/Fidelity authorities under the retained invariants. Do not open a speculative runtime teardown lane without a concrete repro. The two existing constructor-hardening findings remain the correct source follow-ups once trusted integration ownership permits a successor.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-PHYSICS-RUNTIME-SYNTHESIS",
+    "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+    "HG-COMPLETION-PHYSICS"
+  ],
+  "evidence": [
+    "Inspected retained #408 exact source head d31c100c5d3766ca14d89b046fff4cdb09086754. PhysicsLabRuntime.new() calls assertCanonicalRecipe() before creating registry/Fidelity authorities, then registers exactly the canonical recipe population into private authorities.",
+    "Inspected runtime step/dispose paths on the same exact head. step sets transitionInFlight before FidelityManager.step, clears it after pcall, and rethrows callback/policy failures only after clearing the fence; dispose is idempotent and mutation-guarded and unregisters the fixed private entityIds population from both authorities.",
+    "Independent exact-head review on PR #408 already SOURCE PASSed closure-private weak-key state, guarded/idempotent dispose, whole-step transaction fencing, callback reentrancy rejection, pcall unwind, immediate retry semantics, canonical recipe validation before authority construction, and bounded public WorldEntityId validation. That review checked canonical CI green and engine-tests green while holding integration only on the separately owned trusted-history/pr-ownership recovery.",
+    "Existing durable finding evt-20260812-081130-p423v7r4-runtime-entity-key-budget already owns the malformed oversized entity-recipe key/hash/diagnostic work boundary.",
+    "Existing durable findings evt-20260812t090530z-r7m4k9q2-physics-runtime-recipe-shape and the earlier wrapper-shape event already own exact top-level recipe, entities collection, and entity-wrapper closed-shape hardening.",
+    "Open-PR search for PhysicsLabRuntime dispose/runtime teardown/unregister work found no distinct current successor or concrete teardown repro; the returned authority-harness work concerns a separate Studio harness lifecycle rather than PhysicsLabRuntime private authority teardown.",
+    "No production code was changed. No executable test, Roblox Studio, viewport, physical-contact, diagnostics-capture, or two-client evidence was run or claimed by this worker."
+  ]
+}
