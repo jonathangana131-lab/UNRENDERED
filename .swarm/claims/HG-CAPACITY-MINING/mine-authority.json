@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
-  "workerId": "sol-20260811-p7m3x6q9",
-  "claimToken": "d3a7f1c9e5b26048",
-  "claimedAt": "2026-08-11T23:15:10+00:00",
-  "heartbeatAt": "2026-08-11T23:15:10+00:00",
+  "workerId": "sol-20260812-p7m4k9q2",
+  "claimToken": "a6d2f8c4b1e90753",
+  "claimedAt": "2026-08-12T08:02:00+00:00",
+  "heartbeatAt": "2026-08-12T08:02:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/mining/HG-CAPACITY-MINING-mine-authority-p7m3x6q9-g1",
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-authority-p7m4k9q2-g2",
   "pr": null,
-  "notes": "Mine exact-main authority/multiplayer source, tests, retained PRs, and recent structured findings for one concrete non-duplicate validation, deterministic-ownership, bounded-work, or integration gap; publish a bounded finding or explicit no-gap result."
+  "takeoverOf": "sol-20260811-p7m3x6q9:g1:d3a7f1c9e5b26048",
+  "notes": "Fenced stale takeover after inspecting prior claim, worker record, branch search, PR=null, and finding no worker event/handoff. Mine exact-main authority/multiplayer source/tests/retained PRs for one concrete non-duplicate source-only gap."
 }
