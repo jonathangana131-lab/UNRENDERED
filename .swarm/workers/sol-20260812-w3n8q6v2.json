@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-w3n8q6v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T08:00:30+00:00",
-  "lastSeenAt": "2026-08-12T08:34:00+00:00",
+  "lastSeenAt": "2026-08-12T08:38:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
   "branch": "agent/mining/HG-CAPACITY-MINING-mine-authority-w3n8q6v2",
-  "notes": "Third capacity role this session after ObjectGenome and Fidelity mining. Mine retained/current Authority source/tests/live lineages for one concrete non-duplicate Hero-Gate source-depth gap; no Studio or feature-unlock claims."
+  "notes": "Authority capacity mining complete. Published explicit no-new-nonduplicate-gap FINDING evt-20260812-083700-w3n8q6v2-authority-no-new-gap after verifying retained #348/#394/#412 closure and the separately recorded future Rojo subtree-exclusion finding. No product bytes, local tests, Studio, two-client, replication/session, transport, viewport, contact, or engine evidence claimed. Ownership released."
 }
