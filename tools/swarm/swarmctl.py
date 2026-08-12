@@ -477,7 +477,7 @@ def read_tree(root: Path) -> tuple[
 
 
 def dependency_cycles(lanes: dict[str, dict]) -> list[list[str]]:
-    graph = {lane_id: [d["laneId"] for d in lane["dependencies"] if d["laneId"] in lanes] for lane_id in lanes}
+    graph = {lane_id: [d["laneId"] for d in lane["dependencies"] if d["laneId"] in lanes] for lane_id, lane in lanes.items()}
     visiting: set[str] = set()
     visited: set[str] = set()
     stack: list[str] = []
