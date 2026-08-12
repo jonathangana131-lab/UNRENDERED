@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-110700-p6v3k8n2-worldentity-stableid-boundary",
+  "timestamp": "2026-08-12T11:07:00+00:00",
+  "fromWorker": "sol-20260812-p6v3k8n2",
+  "eventType": "FINDING",
+  "summary": "WorldEntity's canonical ownership boundary does not currently enforce the project's StableId contract for entity/world/region identity. WorldEntity.isId accepts any non-empty control-free string up to 256 bytes, and origin.worldId/origin.regionId are only non-empty-string checked, so structurally valid records can be canonically owned with identities that ResolvedRegionRecipe and production PhysicsLab generation would reject or never emit.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1: WorldEntity.isId accepts any non-empty string <=256 bytes without control characters, while cloneOrigin applies only non-empty/control-character checks to worldId and optional regionId.",
+    "Docs/ARCHITECTURE.md states that WorldEntityId is supplied by the project StableId contract and that stable project-owned identity survives representation changes; the current WorldEntity boundary does not verify that invariant.",
+    "Core DeterminismContract.isStableId defines the canonical namespace:v<version>:<32-lowercase-hex> StableId shape. ResolvedRegionRecipe explicitly requires worldId to be a world StableId, derives regionId as a region StableId, and validates both on owned recipes.",
+    "Production PhysicsLabRecipe already constructs WORLD_ID with StableId.fromParts(\"world\", ...), derives REGION_ID from ResolvedRegionRecipe, and constructs every entity id with StableId.fromParts(\"entity\", ...), so current production generation follows the stricter identity model even though WorldEntity itself does not enforce it.",
+    "Retained WorldEntity generation-8 PR #429 closes aggregate canonical metadata string retention but explicitly leaves StableId/entity-id rules unchanged; this finding is therefore distinct from the metadata/count/diagnostic-budget repair lineage.",
+    "Existing WorldEntity tests deliberately use legacy human-readable pseudo IDs such as entity:0000000000000001 and world:0000000000000001. Tightening the boundary directly would therefore be a compatibility/test-contract migration, not a safe opportunistic source edit from capacity mining.",
+    "Repository PR/issue search found no active WorldEntity StableId-boundary repair. No source code, tests, Studio run, engine evidence, or schema migration was produced by this capacity-mining slot."
+  ],
+  "metadata": {
+    "candidateBaseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "retainedWorldEntityPr": 429,
+    "recommendedNext": "After HG-BACKFILL-WORLDENTITY generation-8 ownership/review is resolved, make an explicit compatibility/versioning decision: either enforce canonical entity/world/region StableIds at WorldEntity ownership boundaries (with intentional migration of legacy tests/fixtures) or formally document which upstream boundary owns StableId verification and add integration regressions proving noncanonical IDs cannot become resolved/persistent truth. Do not change StableId v1 or add a second identity scheme."
+  }
+}
