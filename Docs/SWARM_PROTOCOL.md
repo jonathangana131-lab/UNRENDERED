@@ -130,6 +130,18 @@ A stale claim may be taken over only after inspecting existing branch/PR/events/
 
 An old worker returning after takeover must re-read ownership before any push. Changed token/generation/owner means the old worker is fenced.
 
+## Worker lifecycle records
+
+Worker records are presence/observability only; they never replace lane claims or scarce-resource leases as authority.
+
+New worker records **must** emit one of these canonical statuses:
+
+`WORKING`, `WAITING`, `REVIEWING`, `INTEGRATING`, `BLOCKED`, `IDLE`, `STOPPED`.
+
+`ACTIVE`, `CLAIMING`, and `DONE` are finite compatibility aliases accepted only because those values already exist in audited control history. They are not canonical producer vocabulary and new workers must not emit them. No other alias is implied: unknown worker statuses fail closed.
+
+Compatibility status acceptance does not change claim freshness, generation/token fencing, resource ownership, protected-scope enforcement, or independent-review rules.
+
 ## Worker communication
 
 Publish concise structured events when another worker's action should change:
@@ -169,6 +181,28 @@ Review is first-class work.
 If a lane requires independent review, reviewer worker ID must differ from primary worker ID.
 
 Review verdicts are durable events: APPROVE, REQUEST_CHANGES, BLOCK or SUPERSEDE.
+
+New structured `REVIEW_RESULT` producers use this canonical payload shape:
+
+```json
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-example-review-result",
+  "timestamp": "2026-08-12T08:30:00+00:00",
+  "fromWorker": "sol-20260812-abcd",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "LANE-A",
+  "summary": "Independent exact-head review result.",
+  "affects": ["LANE-A"],
+  "pr": 423,
+  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "verdict": "APPROVE"
+}
+```
+
+For this typed shape, `pr`, `headSha`, and `verdict` are one atomic trio: `pr` is a positive integer, `headSha` is exactly 40 lowercase hexadecimal characters, and `verdict` is one of the four review verdicts above. These top-level fields are valid only on `REVIEW_RESULT`; unrelated events retain strict unknown-field rejection. `affects` remains a list of lane IDs, not a review metadata object.
+
+Older immutable `REVIEW_RESULT` history that predates the typed trio remains readable under its existing strict/history rules. Do not rewrite old events merely to adopt the new producer shape.
 
 ## Integration
 
