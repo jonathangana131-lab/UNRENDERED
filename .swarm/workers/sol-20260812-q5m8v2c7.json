@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-q5m8v2c7",
+  "model": "gpt-5.6-sol",
+  "status": "CLAIMING",
+  "startedAt": "2026-08-12T10:40:30+00:00",
+  "lastSeenAt": "2026-08-12T10:40:30+00:00",
+  "notes": "Recovering highest-priority stale SWARM-RECOVERY-WORKER-STATUS-CONTRACT primary after inspecting PR #428, lane review blocker, stale claim, and stale SWARM-PROTOCOL lease."
+}
