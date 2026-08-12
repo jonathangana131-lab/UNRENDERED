@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "workerId": "sol-20260812-w1e7q9m3",
+  "claimToken": "9a7d3c5e1f8246b0",
+  "claimedAt": "2026-08-12T08:22:30+00:00",
+  "heartbeatAt": "2026-08-12T08:22:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-materialdna-w1e7q9m3-g2",
+  "pr": null,
+  "notes": "Mine exact retained/current MaterialDNA source/tests plus lanes/PRs/events for one concrete non-duplicate invariant, boundedness, deterministic-ordering, no-execute, or integration gap; publish structured finding or explicit no-gap result."
+}
