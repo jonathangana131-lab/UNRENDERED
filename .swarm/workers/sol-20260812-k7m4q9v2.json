@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T07:55:00+00:00",
-  "lastSeenAt": "2026-08-12T07:55:00+00:00",
-  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "slotId": "reviewer-1",
-  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-k7m4q9v2-review",
-  "notes": "Independent history-integrity review of retained recovery PR #420 and ADR-0005 finite trust-recovery contract."
+  "lastSeenAt": "2026-08-12T08:00:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-8d5d357a-g9",
+  "notes": "Generation-10 stale recovery of PR #424. Exact-head CI isolated one diagnostics atomicity cleanup regression; preserve passing enabled-integrity/readout hardening and repair only the retained failure."
 }
