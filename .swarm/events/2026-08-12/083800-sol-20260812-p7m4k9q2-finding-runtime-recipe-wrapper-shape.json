@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-083800-p7m4k9q2-runtime-recipe-wrapper-shape",
+  "timestamp": "2026-08-12T08:38:00+00:00",
+  "fromWorker": "sol-20260812-p7m4k9q2",
+  "eventType": "FINDING",
+  "summary": "Retained Physics runtime synthesis PR #408 hardens canonical recipe values, metatable/no-execute boundaries, WorldEntity record/origin exact schemas, and bounded persistent-state comparison, but three outer recipe layers still accept undeclared side fields: the top-level recipe, the entities collection, and each entity-recipe wrapper. A canonical-size entities table can carry arbitrary non-array side keys because the constructor checks #entities then iterates ipairs; entity-recipe wrappers are only proven plain before reading key/entity; the root is only proven plain before known-field value checks. Those ignored fields are discarded rather than retained, but accepting them weakens the exact canonical recipe/version boundary and leaves an unbounded caller-owned schema extension surface at construction.",
+  "affects": [
+    "HG-PHYSICS-RUNTIME-SYNTHESIS",
+    "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE",
+    "HG-CAPACITY-MINING"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected retained synthesis PR #408 exact product head d31c100c5d3766ca14d89b046fff4cdb09086754. assertCanonicalRecipe() uses assertPlainTable() on the recipe root and entity list, then validates known root values, but it has no fixed RECIPE_KEYS preflight.",
+    "The entities collection is checked with #entities == #CANONICAL_RECIPE.entities and then traversed with ipairs(). A string/non-array side key does not affect either check and is therefore accepted and ignored.",
+    "Each entity-recipe wrapper is checked only with assertPlainTable(rawEntityRecipe, ...), then entityRecipe.key and entityRecipe.entity are consumed. There is no exact {key, entity} wrapper schema check, so undeclared wrapper fields are accepted and ignored.",
+    "The same constructor does define RECORD_KEYS and ORIGIN_KEYS and calls assertExactStringKeys() on both records and origins, demonstrating that exact schema fencing already exists at inner canonical layers but not these three outer layers.",
+    "PR #408 synthesis tests cover top-level/entity-list/entity-wrapper metatable rejection and hostile record/origin schema keys, but contain no adversaries for extra plain root fields, entity-list side keys, or extra plain entity-wrapper fields.",
+    "Repository PR/issue/code searches found retained PR #310/#408 ownership of canonical recipe value/no-execute fencing but no separate PR, issue, or exact-key constants covering the three outer-layer unknown-field surface."
+  ],
+  "metadata": {
+    "mainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "retainedPr": 408,
+    "retainedHeadSha": "d31c100c5d3766ca14d89b046fff4cdb09086754",
+    "recommendedNext": "After trusted live ownership allows a successor, close the outer canonical-recipe shape boundary with fixed root and entity-wrapper key sets plus a dense numeric-only entities collection preflight. Reject extra string or hostile non-string side keys before construction/registry ownership, with no caller __tostring execution. Add focused adversarial tests for extra root fields, entity-list side keys, and entity-wrapper fields. Preserve the accepted canonical 20-entity recipe bytes, WorldEntity record/origin checks, private runtime state, and transition transaction architecture; do not widen reviewed #408 while it is blocked on trust."
+  }
+}
