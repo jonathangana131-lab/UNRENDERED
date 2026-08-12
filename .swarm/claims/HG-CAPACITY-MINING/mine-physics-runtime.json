@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "workerId": "sol-20260812-p423v7r4",
+  "claimToken": "3e7a1c9f5b2d8046",
+  "claimedAt": "2026-08-12T08:00:30+00:00",
+  "heartbeatAt": "2026-08-12T08:00:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-physics-runtime-p423v7r4",
+  "pr": null,
+  "notes": "Mine current Physics Lab runtime source/tests/retained PRs for one concrete non-duplicate source-only invariant, test, or integration gap; otherwise publish no-gap evidence."
+}
