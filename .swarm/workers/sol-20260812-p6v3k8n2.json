@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-p6v3k8n2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T10:43:05+00:00",
-  "lastSeenAt": "2026-08-12T11:12:00+00:00",
+  "lastSeenAt": "2026-08-12T11:19:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-runtime",
   "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-p6v3k8n2-g3",
-  "notes": "Third safe source-only capacity pass. Mining retained PhysicsLabRuntime synthesis and its already-proposed closed-shape follow-up for a concrete non-duplicate correctness/resource/integration gap while trusted ownership recovery remains independently owned."
+  "notes": "Physics-runtime/Realizer source-only capacity pass complete. Published distinct adapter pre-fence mutation finding evt-20260812-111800-p6v3k8n2-realizer-step-prefence-mutation at control commit 372c7e536341ad8619530c793213ff5c3a1b7d84 after screening #408/#388 and the proposed runtime recipe closed-shape leaf. Realizer currently dereferences caller-owned PolicyInputs through selectDesiredLevel before #408's runtime mutation fence, allowing hostile input access to destroy/reenter the lab before guarded runtime:step. Released mine-physics-runtime claim at 19f377d40a992c1868ed04531961a08247fdf9aa. No product source/test/Studio evidence changed."
 }
