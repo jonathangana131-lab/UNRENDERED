@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T08:00:30+00:00",
-  "lastSeenAt": "2026-08-12T08:07:30+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/tests/HG-BACKFILL-DIAGNOSTICS-x9c2p7r4n6-g3",
-  "notes": "Draft PR #425 on current diagnostics generation-9 head exposes a clone-evidence blind spot: Instance:Clone omits Archivable=false descendants, so enabled canonical evidence must prove clone completeness or fail closed before cloning. Awaiting exact-head expected-red CI; no Studio evidence claimed."
+  "lastSeenAt": "2026-08-12T08:13:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "branch": "agent/capacity/HG-CAPACITY-MINING-x9c2p7r4n6-fidelity-g1",
+  "notes": "Diagnostics adversary was handed off as #425 + durable finding. Now mining the current retained FidelityManager source/tests/PR lineage for one concrete non-duplicate bounded-state, atomicity, no-execute, or integration gap; source-only, no Studio/performance-device evidence claims."
 }
