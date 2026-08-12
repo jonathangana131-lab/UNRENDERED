@@ -70,17 +70,23 @@ The separate historical event `evt-20260811-081620-mat8c3r1-materialdna-key-gram
 
 Malformed first writes have **no canonical authoritative payload to recover**. Their exact bytes are therefore quarantine-only: the path and event ID remain reserved, but the payload can never become review/finding authority.
 
-The complete reviewed machine-readable source is `tools/swarm/swarm_history_recovery_manifest.py`. Generation 3 pins **63** exact malformed event tuples as:
+The complete reviewed machine-readable source is the **composed finite inventory** consumed by `tools/swarm/swarmctl_hardening.py` and bootstrap CI:
 
-`eventId + exact first-write commit + exact quarantine-only Git blob SHA-1`
+- `tools/swarm/swarm_history_recovery_manifest.py` contains 65 canonical-filename malformed-event tuples plus 2 path-divergent tuples returned by `malformed_event_quarantine_rows()`, for 67 foundational normalized rows;
+- `tools/swarm/swarm_history_recovery_extension.py` contains 47 additional exact normalized rows;
+- `swarmctl_hardening.py` composes both quarantine-rule maps, and the bootstrap workflow audits `recovery.malformed_event_quarantine_rows() + extension.MALFORMED_EVENT_QUARANTINE_ROWS`.
 
-The sorted tuple inventory is regression-locked by SHA-256:
+The exact current recovery boundary therefore pins **114 malformed first-write rows** as:
 
-`2da95a4afca74ac17bb63e859f4f9870027210ffb524e39196d244666fe055c1`
+`eventId + exact filename + exact first-write commit + exact quarantine-only Git blob SHA-1`
 
-This includes the two previously identified `a05c9683` artifacts and the additional 61 defects discovered by the read-only provenance inventory. At the measured discovery snapshot, every additional defect was a single-revision first write whose current Git blob exactly equaled its first-write blob; none was silently rewritten to manufacture a valid payload.
+The 65 canonical-filename foundational tuples are independently regression-locked by SHA-256:
 
-Bootstrap CI does not trust the manifest merely because it is source code. For every row it independently proves from Git history that:
+`8c8c77f85c8210cfbca5a804364e3792bec347f7d62b994dee83a6870181bdfe`
+
+The two path-divergent foundational rows remain explicit machine-readable path identities, and the 47-row extension is separately count/identity/uniqueness regression-tested. This split preserves reviewable provenance without pretending the older foundational digest covers later extensions.
+
+Bootstrap CI does not trust either manifest merely because it is source code. For every composed normalized row it independently proves from Git history that:
 
 1. the event path has exactly one first-add commit;
 2. that commit equals the pinned `firstWriteCommit`;
@@ -96,40 +102,27 @@ For every quarantined event:
 - replay at another path fails closed;
 - fresh authority must be expressed through a new strict append-only event.
 
-No rule is derived dynamically from a live validation failure. Any newly discovered malformed pre-anchor event remains a bootstrap blocker until its exact provenance is independently inventoried and explicitly added to the finite manifest.
+No rule is derived dynamically from a live validation failure. Any newly discovered malformed pre-anchor event remains a bootstrap blocker until its exact provenance is independently inventoried and explicitly added to the finite composed inventory.
 
 ## Finite mutable-history reset incidents
 
 Invalid worker statuses remain invalid everywhere. The one-time reset only proves that each exact malformed transition is followed by its exact schema-valid owner-side repair before the bootstrap candidate.
 
-The executable source of truth is `FINITE_WORKER_TRANSITIONS` in `tools/swarm/swarm_history_recovery_manifest.py`; `swarmctl_hardening.py` consumes it directly. The read-only bootstrap workflow emits no trust pair if the manifest is empty and proves for **every** row:
+The executable source of truth is the composed `FINITE_WORKER_TRANSITIONS` value in `tools/swarm/swarmctl_hardening.py`:
+
+`swarm_history_recovery_manifest.FINITE_WORKER_TRANSITIONS + swarm_history_recovery_extension.FINITE_WORKER_TRANSITIONS`
+
+The foundational manifest contains 21 exact invalid-worker -> repair pairs and is regression-locked by SHA-256:
+
+`165419f1d0e6308a4f55d8c5f87b79fd03d508f477bcbfaaf7622f026e1ceafe`
+
+The extension contains 6 further exact pairs, each pinned verbatim by `tools/swarm/test_swarm_history_recovery_extension.py`. The exact current reset boundary therefore contains **27 exact invalid-worker -> repair transitions**. The read-only bootstrap workflow consumes the composed value, emits no trust pair if it is empty, and proves for every row:
 
 `invalid commit -> exact repair commit -> BOOTSTRAP_CONTROL_SHA`
 
-The reviewed generation-3 manifest is:
+Invalid vocabulary such as historical `ACTIVE`, `CLAIMING`, `DONE`, or `READY` remains rejected by the current validator; the finite transition inventory proves only the exact pre-anchor defect followed by its exact owner-side repair.
 
-| Invalid commit | Exact repair commit |
-| --- | --- |
-| `fa5b8f163603fa918c21b28c63bd20e6c25a2add` | `7c62ff9a7b92c4ebe43c38323a5946e04881d3b7` |
-| `a99ff757b842fa91ddd893d19fd1d826890ce306` | `a193dd686323c27a7191d525b064c4257120de21` |
-| `57245c334fdc19cae855796066f783fb64492c51` | `db830924aa0b65a74c60ee345448f57381bbe137` |
-| `8e631ba0da787af6c1c63f6a6dd96920ea7941f2` | `bf852363faa7328d6707233b72909f6c4958d910` |
-| `3c54f6ab741ba91d4fdf617cd24713b51ccd2950` | `d0f00752e9b467d71d6875d3d1008c08f134992e` |
-| `448cdc5a955192bb88120f22fb9152c43ca7c854` | `67a12da7ece512c0467be3cdd78b3fcd896c9835` |
-| `422ec28fbdffee92bbdceb7c111e46c8c23f234b` | `4255e780384b5f5641e53900f201df03506035fa` |
-| `55845e836fdaca1a5b9b89f7af7e8a0a5d2b14f8` | `3ca920ee3e7516f141a7c04cf51a67fc545783c8` |
-| `b0732a815ff12f099a9ca88363ffadeddec13172` | `a10bae4a46560dcb707c1eefa1888467816a055b` |
-| `504d5e72302c5c814961a4de3fa4aadd458887df` | `b99b1715bc3eec419d2c2db9dc6c31d3e7b7b9fd` |
-| `2dead634e81fa77f4c4cf9fc52924daa94e1e10c` | `8a8963f14dbeafc14dbe3153a049226ebbaf5dfb` |
-| `849a5c07efb10f7070c8e2e803a64216b26a3486` | `70c7cbaddb31e34e50ec5d0e1a4bea965fc7db67` |
-| `fecdd4109e7c0b93dae75ea69c8070c7ce0b7b70` | `430362399ed3e2fa8eedbad63ac0842b75fac4db` |
-| `d1aa5e7b12b4d8e9917bb77dab3225e4dee4deb8` | `a888f8d1c25050e26427fb40945002585741d618` |
-| `8bca8ca61902faf25efe9ef3a004ec032f132c5d` | `5f0cb1f3d5618c3816e008adb6951b83de5c861e` |
-| `66e482d3b424c63c4bed277aafa897f0fa051bbc` | `96f1bce1e17b085d4f29b444036c498bcfefe45a` |
-
-The final row is the newly audited unsupported `READY` worker state followed by its exact owner-side `WAITING` repair. Earlier rows cover unsupported `ACTIVE`, repeated `CLAIMING`, and one unsupported terminal `DONE`; none of those vocabulary values is accepted by the current validator.
-
-This finite list is not a generic “ignore old failures” mechanism. Any newly discovered invalid pre-anchor transition blocks bootstrap until its exact provenance and repair are reviewed and added to the manifest.
+This finite list is not a generic “ignore old failures” mechanism. Any newly discovered invalid pre-anchor transition blocks bootstrap until its exact provenance and repair are reviewed and added to the composed manifest.
 
 ## One-time bootstrap/reset
 
@@ -184,9 +177,9 @@ Recovery acceptance requires:
 
 - all prior V2/V2.1 hardening tests remain green;
 - exact rewritten quarantine blobs remain inert and unchanged;
-- all 63 malformed-first-write artifacts remain exact quarantine-only and cannot acquire authority;
-- regression tests pin the malformed-event inventory count and exact sorted-inventory SHA-256;
-- CI independently proves every malformed-event first-add commit and first-write blob;
+- all **114** composed malformed-first-write rows remain exact quarantine-only and cannot acquire authority;
+- regression tests pin the 65-row foundational canonical inventory digest, the 2 path-divergent foundational identities, the 47-row extension count/identities, and their uniqueness;
+- CI independently proves every composed malformed-event first-add commit and first-write blob;
 - one-byte quarantine mutation fails;
 - quarantined event IDs remain replay-protected;
 - strict new events can append after reset;
@@ -195,8 +188,8 @@ Recovery acceptance requires:
 - separate trust digest authorizes only when `bootstrap` is false;
 - any authoritative state mutation after trust publication fails the trust check;
 - bootstrap records cannot authorize PR state;
-- regression tests pin all 16 exact invalid->repair worker pairs;
-- read-only bootstrap CI consumes the executable finite manifests rather than maintaining duplicate hard-coded subsets;
+- regression tests pin all **27** exact invalid->repair worker pairs across the foundational and extension manifests;
+- read-only bootstrap CI consumes the executable composed finite manifests rather than maintaining duplicate hard-coded subsets;
 - workflow transition validation uses `TRUSTED_CONTROL_SHA`, not `github.event.before`;
 - workflow health mutations are not skipped as generated-only state;
 - canonical full CI is green on the exact recovery head;
