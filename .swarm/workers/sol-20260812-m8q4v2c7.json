@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-m8q4v2c7",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T08:00:15+00:00",
-  "lastSeenAt": "2026-08-12T09:02:30+00:00",
+  "lastSeenAt": "2026-08-12T09:07:25+00:00",
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "slotId": "reviewer-1",
   "branch": "review/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-m8q4v2c7-r1",
-  "notes": "Independent exact-head review of PR #428 at fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae. No primary edits; verify worker-status aliases, typed REVIEW_RESULT strictness, unchanged ownership fencing, docs, and tests."
+  "notes": "Independent review of PR #428 exact head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae completed with REQUEST_CHANGES. Durable event and PR comment 5264674624 record the typed REVIEW_RESULT verdict string-guard defect; lane moved to NEEDS_CHANGES and reviewer claim released."
 }
