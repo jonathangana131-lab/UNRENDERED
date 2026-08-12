@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-111800-p6v3k8n2-realizer-step-prefence-mutation",
+  "timestamp": "2026-08-12T11:18:00+00:00",
+  "fromWorker": "sol-20260812-p6v3k8n2",
+  "eventType": "FINDING",
+  "summary": "PhysicsLabRealizer.step inspects caller-owned FidelityManager PolicyInputs through selectDesiredLevel before entering PhysicsLabRuntime's retained whole-step mutation fence. A metatable-backed input can therefore execute RealizedLab.destroy (or another Realizer mutation) during this preflight, destructively tearing down the model/runtime before the guarded runtime:step begins. The outer step then fails, but the caller-controlled rejected input has already caused authoritative/representation lifecycle mutation.",
+  "affects": ["HG-CAPACITY-MINING", "HG-PHYSICS-RUNTIME-SYNTHESIS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 PhysicsLabRealizer: step first checks destroyed, reads the current record, then calls FidelityManager.selectDesiredLevel(inputs, nil, current.fidelity); only afterward does it call runtime:step(...).",
+    "The same Realizer exposes destroy(), which sets destroyed=true, destroys the model, clears the representation map, and calls runtime:dispose(). There is no Realizer-local step transaction flag guarding destroy or recursive step during the preflight call.",
+    "Inspected retained runtime synthesis PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754: PhysicsLabRuntime raises transitionInFlight around the entire FidelityManager.step specifically so caller-owned PolicyInputs cannot mutate/dispose runtime authority through policy metamethods before the transition hook. That fence starts only inside runtime:step and therefore cannot cover the Realizer's earlier selectDesiredLevel call.",
+    "FidelityManager at the retained #408 head validates/evaluates PolicyInputs by direct field reads such as inputs.distanceStuds, inputs.significance, inputs.visible, and inputs.directlyObserved without a plain-table/no-metatable preflight. A caller-controlled __index can therefore execute while Realizer is still outside the runtime fence.",
+    "Concrete source-level sequence: an inputs __index invokes realized.destroy() on its first field read and returns otherwise-valid values; destroy succeeds because runtime transitionInFlight is still false; selectDesiredLevel may continue; the subsequent runtime:step then rejects because runtime is disposed. The rejected outer step is therefore not lifecycle-fail-atomic.",
+    "Repository PR/issue search found no PhysicsLabRealizer pre-fence policy-input mutation/reentrancy repair. Existing #388/#408 fixes are runtime-local, and the already-proposed runtime recipe closed-shape leaf concerns constructor container validation rather than representation-adapter step mutation.",
+    "No product source, tests, Roblox Studio run, viewport/contact/two-client evidence, or runtime performance claim was produced by this capacity-mining slot."
+  ],
+  "metadata": {
+    "candidateBaseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "retainedRuntimePr": 408,
+    "recommendedLaneId": "HG-PHYSICS-REALIZER-STEP-MUTATION-FENCE",
+    "recommendedNext": "After HG-PHYSICS-RUNTIME-SYNTHESIS is integrated or its invariant is otherwise retained, close the adapter gap without weakening the runtime fence: ensure no caller-owned PolicyInputs are dereferenced before a Realizer-level lifecycle/mutation transaction is active (or remove the duplicate pre-evaluation and fail closed inside the guarded transition path), reject destroy/step reentry while that transaction is active, and add a deterministic adversary proving hostile policy access cannot destroy or transition the lab and that an immediate valid retry remains possible. Keep the repair source-only unless genuine engine evidence is actually run."
+  }
+}
