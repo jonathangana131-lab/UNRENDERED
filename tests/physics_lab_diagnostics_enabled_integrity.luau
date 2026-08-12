@@ -3,6 +3,8 @@ local fs = require("@lune/fs")
 local DIAGNOSTICS_SOURCE = "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau"
 local DESCENDANT_FENCE =
 	"for _, liveInstance in ipairs(lab.model:GetDescendants()) do local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot) if not isDiagnosticsOverlay then assert( liveInstance.Archivable,"
+local BROAD_OVERLAY_FENCE =
+	"for _, liveInstance in ipairs(lab.model:GetDescendants()) do local isDiagnosticsOverlay = liveInstance.Name == liveRoot.Name if not isDiagnosticsOverlay then assert( liveInstance.Archivable,"
 
 local function hasCompleteCloneProof(compactHelper: string): boolean
 	local modelArchivable = string.find(compactHelper, "assert(lab.model.Archivable,", 1, true)
@@ -78,17 +80,11 @@ local function run(): number
 		not hasCompleteCloneProof(modelOnlyMutant)
 	)
 
-	local broadOverlayMutant = string.gsub(
-		DESCENDANT_FENCE,
-		"liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot)",
-		"liveInstance.Name == liveRoot.Name",
-		1
-	)
 	expect(
 		"clone-completeness matcher rejects a broadened overlay exemption mutant",
 		not hasCompleteCloneProof(
 			'assert(lab.model.Archivable, "model") '
-				.. broadOverlayMutant
+				.. BROAD_OVERLAY_FENCE
 				.. " local cloneInstance = lab.model:Clone()"
 		)
 	)
