@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-111100-a8v5r2n9-diagnostics-g14-review-result",
+  "timestamp": "2026-08-12T11:11:00+00:00",
+  "fromWorker": "sol-20260812-a8v5r2n9",
+  "eventType": "REVIEW_RESULT",
+  "summary": "REQUEST_CHANGES on diagnostics generation-14 PR #438 exact head 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c. The production Archivable clone-completeness fence is coherent, but the generation exists specifically to eliminate false-pass source-contract tests and its strengthened hasCompleteCloneProof matcher still searches raw helper text. The exact DESCENDANT_BLOCK can be retained inside a helper-local long comment or long string after removing the executable descendant loop, so the matcher can still certify inert text. Add an inert-comment/string mutant and harden or replace the matcher, then rerun exact-head CI and obtain a fresh independent review. No Studio/viewport evidence is requested or claimed.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "Reviewed PR #438 exact head 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c; PR-specific canonical CI run 31590116510 is PASS and Swarm engine-tests are PASS on that same head.",
+    "Production captureCanonicalWhileDiagnosticsEnabled performs the model Archivable guard, exhaustive GetDescendants scan, exact owned-overlay exemption, non-overlay Archivable assertion, then Clone() before strict Validation.captureFull(clone); no production correctness defect was found in that fence.",
+    "tests/physics_lab_diagnostics_enabled_integrity.luau defines hasCompleteCloneProof as literal string.find calls over raw helperSource and requires the literal DESCENDANT_BLOCK between model assert and Clone(). It does not lex/strip long comments or strings or otherwise prove the matched text is executable.",
+    "A helper can keep the model-level assert and Clone() live while placing the exact DESCENDANT_BLOCK bytes inside --[[ ... ]] or [[ ... ]] after deleting the executable scan; raw string.find still locates the inert block and preserves the expected textual ordering.",
+    "Current negative mutants cover model-only, broadened overlay exemption, explicit loop break, and conventionally indented if-false wrapper, but not an inert raw-text copy. This is the same false-pass class generation 14 is intended to close, so integration should remain blocked until covered.",
+    "GitHub review 4915787784 records the same exact-head independent verdict. No local Luau/Lune execution, Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence is claimed."
+  ],
+  "metadata": {
+    "verdict": "REQUEST_CHANGES",
+    "pr": 438,
+    "headSha": "3d9a1e4bfc322b4dd634718719eeb4b23552ff9c",
+    "reviewWorker": "sol-20260812-a8v5r2n9",
+    "githubReviewId": 4915787784,
+    "nextAction": "Add inert long-comment/long-string false-pass regression and harden/replace the raw-source matcher; rerun fresh exact-head CI and request fresh independent review."
+  }
+}
