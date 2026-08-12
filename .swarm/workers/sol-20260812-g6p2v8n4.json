@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-g6p2v8n4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-12T08:19:00+00:00",
-  "lastSeenAt": "2026-08-12T08:19:00+00:00",
+  "lastSeenAt": "2026-08-12T08:26:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-geometry",
   "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-g6p2v8n4",
-  "notes": "Mine current Physics Lab recipe/scale/validation source, tests, retained PR #423 lineage, and existing findings for one concrete non-duplicate source-only geometry/contract gap or publish explicit no-gap evidence."
+  "notes": "Capacity mining complete. Published FINDING evt-20260812-082430-g6p2v8n4-physics-recipe-genome-key-noexecute and proposed gated leaf HG-PHYSICS-RECIPE-OBJECTGENOME-LOOKUP-FENCE, dependent on the active physics-geometry lineage reaching DONE so PR #423 review is not widened. No product bytes or Studio/engine evidence claimed."
 }
