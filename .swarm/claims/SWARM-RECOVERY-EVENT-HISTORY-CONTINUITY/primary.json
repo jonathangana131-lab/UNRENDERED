@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "slotId": "primary",
+  "workerId": "sol-20260812-q8m5v2k7",
+  "claimToken": "c9a2f7d1b5e84063",
+  "claimedAt": "2026-08-12T08:05:47+00:00",
+  "heartbeatAt": "2026-08-12T08:05:47+00:00",
+  "leaseSeconds": 1800,
+  "generation": 7,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-q8m5v2k7-g7",
+  "pr": 420,
+  "notes": "Generation-7 response to independent REQUEST_CHANGES on PR #420 exact head 67e89918af03e85863c6eda89fad62a98e314237. Preserve the reviewed recovery implementation; make ADR-0005's complete finite reset inventory/source match the exact composed foundational + extension manifests, then rerun exact-head validation and independent review."
+}
