@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-090620-m8q4v2c7-worker-status-review-result",
+  "timestamp": "2026-08-12T09:06:20+00:00",
+  "fromWorker": "sol-20260812-m8q4v2c7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "REQUEST_CHANGES on PR #428 exact head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae: typed REVIEW_RESULT verdict validation performs set membership before proving verdict is a string, so unhashable JSON values such as arrays or objects can escape as raw TypeError instead of controlled fail-closed validation.",
+  "affects": ["SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "high",
+  "evidence": [
+    "tools/swarm/swarmctl.py at exact head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae validates pr with exact int and headSha with isinstance(str), but evaluates obj[\"verdict\"] not in REVIEW_VERDICTS without an isinstance(str) guard.",
+    "Because REVIEW_VERDICTS is a set, JSON verdict [] or {} is unhashable and raises raw TypeError rather than the validator's ControlError contract.",
+    "Current hardening coverage rejects invalid verdict string MAYBE but does not exercise an unhashable non-string verdict payload.",
+    "Finite ACTIVE/CLAIMING/DONE aliases, canonical producer vocabulary, atomic typed review trio, unrelated-event field rejection, and unchanged claim/resource fencing were inspected without a separate blocking defect.",
+    "Canonical CI is green on the candidate; Swarm pr-ownership fails separately because generated board trust remains intentionally unavailable behind history-continuity recovery.",
+    "GitHub formal REQUEST_CHANGES was unavailable because the authenticated repository account is also the PR author; PR conversation comment 5264674624 records the same independent-worker verdict."
+  ],
+  "metadata": {
+    "verdict": "REQUEST_CHANGES",
+    "pr": 428,
+    "headSha": "fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae",
+    "reviewWorker": "sol-20260812-m8q4v2c7",
+    "githubCommentId": 5264674624,
+    "requiredRepair": "Require verdict to be a string before REVIEW_VERDICTS membership and add an unhashable JSON verdict regression asserting controlled rejection."
+  }
+}
