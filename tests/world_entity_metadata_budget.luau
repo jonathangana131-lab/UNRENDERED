@@ -138,6 +138,64 @@ local function run(): number
 		WorldEntity.get(directRegistry, directOverBudgetId) == nil
 	)
 
+	-- Duplicate handling must not become a validation shortcut. An invalid incoming record must be
+	-- rejected before it can be converted into a duplicate diagnostic, even though the first ID wins.
+	local duplicateRegistry = WorldEntity.createRegistry()
+	local duplicateExistingEntity = WorldEntity.new({
+		id = "entity:canonical-metadata-duplicate-existing",
+		kind = entityKind,
+		origin = {
+			worldId = worldIdValue,
+			regionId = regionIdValue,
+			generator = generatorName,
+			generatorVersion = 1,
+			recipeKey = "chair/canonical-metadata-duplicate-existing",
+		},
+	})
+	assert(WorldEntity.register(duplicateRegistry, duplicateExistingEntity))
+	local duplicateExistingRecord = WorldEntity.get(duplicateRegistry, duplicateExistingEntity.id)
+	local duplicateDiagnosticsBefore = #WorldEntity.duplicateDiagnostics(duplicateRegistry)
+	local invalidDuplicateAccepted = pcall(function()
+		WorldEntity.register(
+			duplicateRegistry,
+			makeMutableRecord(duplicateExistingEntity.id, exactRecipeKeyBytes + 1)
+		)
+	end)
+	expect(
+		"duplicate registration validates canonical metadata before duplicate handling",
+		not invalidDuplicateAccepted
+	)
+	expect(
+		"rejected over-budget duplicate does not append diagnostic history",
+		#WorldEntity.duplicateDiagnostics(duplicateRegistry) == duplicateDiagnosticsBefore
+	)
+	expect(
+		"rejected over-budget duplicate preserves first registration truth",
+		WorldEntity.get(duplicateRegistry, duplicateExistingEntity.id) == duplicateExistingRecord
+	)
+
+	-- Detached lifecycle helpers are public ownership boundaries too. They must not let callers bypass
+	-- canonical metadata validation by constructing a mutable record without WorldEntity.new/register.
+	local detachedOverBudgetRecord = makeMutableRecord(
+		"entity:canonical-metadata-detached-over-budget",
+		exactRecipeKeyBytes + 1
+	)
+	local detachedCaptureAccepted = pcall(function()
+		WorldEntity.captureState(detachedOverBudgetRecord, { captured = true })
+	end)
+	expect(
+		"detached capture revalidates canonical metadata budget",
+		not detachedCaptureAccepted
+	)
+
+	local detachedTransitionAccepted = pcall(function()
+		WorldEntity.transition(detachedOverBudgetRecord, "F1")
+	end)
+	expect(
+		"detached transition revalidates canonical metadata budget",
+		not detachedTransitionAccepted
+	)
+
 	return failures
 end
 
