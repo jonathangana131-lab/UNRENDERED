@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-w3n8q6v2",
+  "model": "gpt-5.6-sol",
+  "status": "ACTIVE",
+  "startedAt": "2026-08-12T08:00:30+00:00",
+  "lastSeenAt": "2026-08-12T08:00:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "branch": "agent/audit/HG-CAPACITY-MINING-worldentity-w3n8q6v2",
+  "notes": "Hero-Gate source-depth mining of WorldEntity only; no Studio or feature-unlock claims."
+}
