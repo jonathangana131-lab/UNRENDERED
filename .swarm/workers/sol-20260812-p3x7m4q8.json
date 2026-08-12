@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:58:00+00:00",
-  "lastSeenAt": "2026-08-12T10:58:00+00:00",
+  "lastSeenAt": "2026-08-12T11:00:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-runtime",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-p3x7m4q8",
-  "notes": "Source-only Physics runtime capacity mining; no product edits before claim."
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-p3x7m4q8",
+  "notes": "Source-only Physics geometry capacity mining; compare current main/tests/retained PRs and existing lanes before publishing any finding. No product edits or Studio evidence claim."
 }
