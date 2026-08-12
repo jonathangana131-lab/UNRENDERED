@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "workerId": "sol-20260812-f6r3m8v2",
+  "claimToken": "4a9d62c1e7b3058f",
+  "claimedAt": "2026-08-12T11:19:00+00:00",
+  "heartbeatAt": "2026-08-12T11:19:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "notes": "Source-only FidelityManager capacity mining; no feature unlock or Studio evidence claim."
+}
