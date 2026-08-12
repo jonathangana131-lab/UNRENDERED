@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-dg8q3m7v",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T08:03:46+00:00",
+  "lastSeenAt": "2026-08-12T08:03:46+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-dg8q3m7v-g3",
+  "notes": "Recover the stale diagnostics test-adversary slot to inspect the active generation-10 PR #424 repair for a concrete exact-head regression or false-pass gap without duplicating primary implementation or claiming Studio evidence."
+}
