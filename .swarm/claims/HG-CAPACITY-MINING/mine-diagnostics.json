@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "workerId": "sol-20260812-am0s2f7s",
+  "claimToken": "847a39b515e214ac",
+  "claimedAt": "2026-08-12T10:44:29+00:00",
+  "heartbeatAt": "2026-08-12T10:44:29+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-am0s2f7s",
+  "pr": null
+}
