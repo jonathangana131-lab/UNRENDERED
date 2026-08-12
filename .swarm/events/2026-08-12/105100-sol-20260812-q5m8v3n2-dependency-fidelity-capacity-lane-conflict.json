@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-105100-q5m8v3n2-fidelity-capacity-lane-conflict",
+  "timestamp": "2026-08-12T10:51:00+00:00",
+  "fromWorker": "sol-20260812-q5m8v3n2",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "summary": "The proposed HG-BACKFILL-FIDELITY-CAPACITY-EXACTNESS leaf is stale against the newer reviewed HG-FIDELITY-REGISTRATION-CAPACITY-CEILING lineage: the former requires maxRegisteredEntities=9007199254740991 to be accepted, while the latter intentionally establishes a project-owned maximum of 65536. Activating both as written would force a future worker either to violate the exactness leaf acceptance or regress the reviewed safety ceiling.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-FIDELITY-CAPACITY-EXACTNESS",
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "HG-BACKFILL-FIDELITY-CAPACITY-EXACTNESS remains PROPOSED and explicitly requires accepting the IEEE-754 safe-integer boundary 9007199254740991 and rejecting only one-over; its notes were mined against pre-ceiling Fidelity PR #385.",
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING is the newer retained lineage and explicitly requires a project-owned finite upper ceiling; its reviewed PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 sets FidelityManager.MAX_REGISTERED_ENTITIES to 65536 and has canonical CI plus independent source review PASS, with integration blocked only by shared trusted-history ownership recovery.",
+    "The retained #419 source validator rejects any maxRegisteredEntities above MAX_REGISTERED_ENTITIES before manager construction or pure-policy evaluation, so the older exactness leaf's required acceptance at 9007199254740991 is no longer satisfiable by design.",
+    "The newer queued Fidelity leaves HG-FIDELITY-MANAGER-STATE-ENCAPSULATION and HG-FIDELITY-CONFIG-CLOSED-SHAPE already depend on the capacity-ceiling lineage and should retain that 65536 contract; no runtime/product edit is warranted from this mining slot.",
+    "No Door/Chair/Player unlock, Studio evidence, fidelity-policy semantic change, or new major feature is implicated."
+  ],
+  "metadata": {
+    "candidateBaseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "retainedCapacityHead": "1f017628bf49365663dfc2db3a30b81ba477a0a3",
+    "recommendedNext": "Retire or rewrite HG-BACKFILL-FIDELITY-CAPACITY-EXACTNESS before it becomes READY. If any numeric-exactness regression remains useful, restate it only inside the already stricter <=65536 domain; do not require acceptance above the project-owned ceiling. Preserve #419, then sequence state encapsulation and closed-shape work after their declared dependencies."
+  }
+}
