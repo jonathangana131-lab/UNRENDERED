@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-p6v3k8n2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T10:43:05+00:00",
+  "lastSeenAt": "2026-08-12T10:43:05+00:00",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "primary",
+  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-p6v3k8n2-g2",
+  "notes": "Stale-primary recovery after independent REQUEST_CHANGES on PR #428. Inspecting exact reviewed head and repairing typed REVIEW_RESULT verdict string fail-closed guard plus unhashable JSON hardening regression."
+}
