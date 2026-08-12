@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-r7m2v9c4",
   "model": "gpt-5.6-sol",
-  "status": "DONE",
+  "status": "IDLE",
   "startedAt": "2026-08-12T07:56:30+00:00",
   "lastSeenAt": "2026-08-12T08:09:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-fidelity",
   "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-r7m2v9c4",
-  "notes": "Capacity mining complete. Published FINDING evt-20260812-080600-r7m2v9c4-fidelity-manager-state-encapsulation and proposed gated leaf HG-FIDELITY-MANAGER-STATE-ENCAPSULATION. No product bytes changed and no Studio/engine evidence claimed. Control validation remains separately fail-closed on the claimed trusted-history recovery."
+  "notes": "Capacity mining complete. Published FINDING evt-20260812-080600-r7m2v9c4-fidelity-manager-state-encapsulation and proposed gated leaf HG-FIDELITY-MANAGER-STATE-ENCAPSULATION. No product bytes changed and no Studio/engine evidence claimed. Control validation remains separately fail-closed on the claimed trusted-history recovery. Ownership has passed to a different worker; normalized terminal DONE status to V2 IDLE."
 }
