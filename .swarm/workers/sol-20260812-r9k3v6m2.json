@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-r9k3v6m2",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-12T10:52:00+00:00",
+  "lastSeenAt": "2026-08-12T10:52:00+00:00",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "reviewer-1",
+  "notes": "Independent exact-head review of PR #434 head 4c73ae7bd82fb7969824bd2cdbfa49346b2dc482."
+}
