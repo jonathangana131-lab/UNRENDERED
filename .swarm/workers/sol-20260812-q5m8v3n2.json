@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:41:30+00:00",
-  "lastSeenAt": "2026-08-12T11:04:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-authority",
-  "branch": "agent/mining/HG-CAPACITY-MINING-authority-q5m8v3n2-g3",
-  "notes": "Fidelity and Physics geometry mining each published durable findings and released cleanly. Diagnostics is owned by another worker, so this final unclaimed capacity pass audits Authority/multiplayer source/tests/lanes for one concrete non-duplicate source-only gap; no Studio/two-client claim."
+  "lastSeenAt": "2026-08-12T11:17:30+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-test-adversary-q5m8v3n2-g2",
+  "notes": "Complementary adversarial review of PR #438 exact head 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c. Found a source-matcher control-flow seam: helper-scope descendant proof text can remain intact after a preceding conditional early return, so hasCompleteCloneProof still returns true on a bypass path. Preparing a focused test-only expected-red mutant; no diagnostics production or Studio evidence changes."
 }
