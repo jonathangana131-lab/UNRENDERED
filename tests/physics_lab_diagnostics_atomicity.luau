@@ -81,8 +81,19 @@ local function run(): number
 	local enablePreflight = string.find(enableSource, "local plans = preflightReadouts(lab, model)", 1, true)
 	local enableTransaction =
 		string.find(enableSource, "local ok, result = pcall(function(): Snapshot", 1, true)
+	local enableRootName = string.find(enableSource, "folder.Name = DIAGNOSTICS_ROOT_NAME", 1, true)
+	local enableRootOwnership =
+		string.find(enableSource, 'folder:SetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned", true)', 1, true)
+	local enableParentMutation = string.find(enableSource, "folder.Parent = model", 1, true)
+	local enableBillboardOwnership = string.find(enableSource, "billboard.Parent = folder", 1, true)
+	local enableBillboardConfiguration = string.find(enableSource, "billboard.AlwaysOnTop = true", 1, true)
+	local enableLabelOwnership = string.find(enableSource, "label.Parent = billboard", 1, true)
+	local enableLabelConfiguration = string.find(enableSource, "label.BackgroundTransparency = 0.2", 1, true)
 	local enableCapture =
 		string.find(enableSource, "return PhysicsLabStudioDiagnostics.capture(lab)", 1, true)
+	local enableTransactionEnd = string.find(enableSource, "\tend)\n\n\tif not ok then", 1, true)
+	local enableRollback = string.find(enableSource, "\t\tfolder:Destroy()", 1, true)
+	local enablePropagate = string.find(enableSource, "\t\terror(result, 0)", 1, true)
 	local yieldAfterPreflight = if enablePreflight ~= nil
 		then string.find(enableSource, ":Wait(", enablePreflight, true)
 		else nil
@@ -106,19 +117,6 @@ local function run(): number
 	local disablePostcondition =
 		string.find(disableSource, "not snapshot.enabled and snapshot.diagnosticInstanceCount == 0", 1, true)
 
-	local preflight = position("local plans = preflightReadouts(lab, model)")
-	local transaction = position("local ok, result = pcall(function(): Snapshot")
-	local rootName = position("folder.Name = DIAGNOSTICS_ROOT_NAME")
-	local rootOwnership = position('folder:SetAttribute("UNRENDERED_PhysicsLabDiagnosticsOwned", true)')
-	local parentMutation = position("folder.Parent = model")
-	local billboardOwnership = position("billboard.Parent = folder")
-	local billboardConfiguration = position("billboard.AlwaysOnTop = true")
-	local labelOwnership = position("label.Parent = billboard")
-	local labelConfiguration = position("label.BackgroundTransparency = 0.2")
-	local capture = position("return PhysicsLabStudioDiagnostics.capture(lab)")
-	local transactionEnd = position("\tend)\n\n\tif not ok then")
-	local rollback = position("folder:Destroy()")
-	local propagate = position("error(result, 0)")
 	local evidenceDisable = position("\tPhysicsLabStudioDiagnostics.disable(lab)")
 	local evidenceBaseline = position("\tlocal baseline = Validation.captureFull(lab.model)")
 	local evidenceInitial = position("\tlocal initial = PhysicsLabStudioDiagnostics.capture(lab)")
@@ -161,11 +159,11 @@ local function run(): number
 	)
 	expect(
 		"all readout dependencies are preflighted before the owned root is parented",
-		preflight ~= nil and parentMutation ~= nil and preflight < parentMutation
+		enablePreflight ~= nil and enableParentMutation ~= nil and enablePreflight < enableParentMutation
 	)
 	expect(
 		"Instance realization begins inside a protected transaction",
-		transaction ~= nil and parentMutation ~= nil and transaction < parentMutation
+		enableTransaction ~= nil and enableParentMutation ~= nil and enableTransaction < enableParentMutation
 	)
 	expect(
 		"authority preflight reaches protected capture without yielding",
@@ -179,39 +177,41 @@ local function run(): number
 	)
 	expect(
 		"diagnostics root identity is established inside the transaction before parenting",
-		transaction ~= nil
-			and rootName ~= nil
-			and rootOwnership ~= nil
-			and parentMutation ~= nil
-			and transaction < rootName
-			and rootName < rootOwnership
-			and rootOwnership < parentMutation
+		enableTransaction ~= nil
+			and enableRootName ~= nil
+			and enableRootOwnership ~= nil
+			and enableParentMutation ~= nil
+			and enableTransaction < enableRootName
+			and enableRootName < enableRootOwnership
+			and enableRootOwnership < enableParentMutation
 	)
 	expect(
 		"BillboardGui is owned before fallible configuration",
-		billboardOwnership ~= nil
-			and billboardConfiguration ~= nil
-			and billboardOwnership < billboardConfiguration
+		enableBillboardOwnership ~= nil
+			and enableBillboardConfiguration ~= nil
+			and enableBillboardOwnership < enableBillboardConfiguration
 	)
 	expect(
 		"TextLabel is owned before fallible configuration",
-		labelOwnership ~= nil and labelConfiguration ~= nil and labelOwnership < labelConfiguration
+		enableLabelOwnership ~= nil
+			and enableLabelConfiguration ~= nil
+			and enableLabelOwnership < enableLabelConfiguration
 	)
 	expect(
 		"post-realization capture remains inside the protected transaction",
-		capture ~= nil
-			and transaction ~= nil
-			and transactionEnd ~= nil
-			and transaction < capture
-			and capture < transactionEnd
+		enableCapture ~= nil
+			and enableTransaction ~= nil
+			and enableTransactionEnd ~= nil
+			and enableTransaction < enableCapture
+			and enableCapture < enableTransactionEnd
 	)
 	expect(
 		"failed realization destroys the owned diagnostics tree before propagating",
-		rollback ~= nil
-			and propagate ~= nil
-			and transactionEnd ~= nil
-			and transactionEnd < rollback
-			and rollback < propagate
+		enableRollback ~= nil
+			and enablePropagate ~= nil
+			and enableTransactionEnd ~= nil
+			and enableTransactionEnd < enableRollback
+			and enableRollback < enablePropagate
 	)
 	expect(
 		"force-off cleanup remains idempotent and verifies the disabled baseline",
