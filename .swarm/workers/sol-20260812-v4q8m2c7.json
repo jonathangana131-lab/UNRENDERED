@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-v4q8m2c7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T10:40:00+00:00",
+  "lastSeenAt": "2026-08-12T10:40:00+00:00",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "primary",
+  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-v4q8m2c7-g2",
+  "notes": "Generation-2 stale-primary recovery of PR #428 after inspecting the expired claim/resource lease and independent REQUEST_CHANGES event; repairing the typed REVIEW_RESULT verdict fail-closed boundary."
+}
