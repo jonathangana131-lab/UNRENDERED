@@ -146,6 +146,26 @@ local function run(): number
 		not hasCompleteCloneProof(deadWrapperMutant)
 	)
 
+	local conditionalBypassMutant = [[
+	if reuseUnsafeSnapshot then
+		return unsafeSnapshot
+	end
+	assert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")
+	for _, liveInstance in ipairs(lab.model:GetDescendants()) do
+		local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot)
+		if not isDiagnosticsOverlay then
+			assert(
+				liveInstance.Archivable,
+				`enabled canonical validation cannot clone non-Archivable live truth: {liveInstance:GetFullName()}`
+			)
+		end
+	end
+	local cloneInstance = lab.model:Clone()]]
+	expect(
+		"clone-completeness matcher rejects a conditional helper return that bypasses the proof",
+		not hasCompleteCloneProof(conditionalBypassMutant)
+	)
+
 	expect(
 		"only the exact owned diagnostics overlay is removed before strict canonical validation",
 		locateOwnedOverlay ~= nil
