@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260812-m8q4v2c7",
+  "claimToken": "d4a82f6c1b9e7305",
+  "claimedAt": "2026-08-12T08:47:10+00:00",
+  "heartbeatAt": "2026-08-12T08:47:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 4,
+  "resources": [],
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-m8q4v2c7-g4",
+  "pr": null,
+  "notes": "Strengthen generation-11 Archivable clone-completeness regression after independent review found a helper-local false-pass seam. Pin live descendant enumeration, exact owned-overlay ancestry exemption, and descendant Archivable fail-closed checking before Clone(); source-only, no Studio evidence claims."
+}
