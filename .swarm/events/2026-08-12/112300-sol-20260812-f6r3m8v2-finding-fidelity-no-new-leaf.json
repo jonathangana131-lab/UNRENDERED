@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-112300-f6r3m8v2-fidelity-no-new-leaf",
+  "timestamp": "2026-08-12T11:23:00+00:00",
+  "fromWorker": "sol-20260812-f6r3m8v2",
+  "eventType": "FINDING",
+  "summary": "Fidelity capacity recheck found no additional non-duplicate source leaf worth opening. The retained lineage through PR #419 already covers malformed PolicyConfig/PolicyInputs/time no-execute boundaries, rejected-step and transition-callback atomicity/retry, same-entity transition fencing, cross-entity isolation, deterministic F0-F4 accounting, and a project-owned registration ceiling. The two remaining concrete manager-local gaps found in current source are already represented by proposed HG-FIDELITY-MANAGER-STATE-ENCAPSULATION and HG-FIDELITY-CONFIG-CLOSED-SHAPE; do not create a third overlapping FidelityManager hardening lane from this pass.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-FIDELITY",
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+    "HG-FIDELITY-MANAGER-STATE-ENCAPSULATION",
+    "HG-FIDELITY-CONFIG-CLOSED-SHAPE"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "evidence": [
+    "Retained Fidelity primary PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 documents and tests fail-closed PolicyConfig/PolicyInputs/timestamp validation, rejected-step atomicity, transactional transition hooks, same-entity reentrancy fencing, retry after callback failure, cross-entity isolation, and bounded aggregate accounting; canonical CI and Swarm engine-tests are retained green per lane state.",
+    "Retained capacity PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 adds the explicit project-owned MAX_REGISTERED_ENTITIES=65536 ceiling while retaining the 4096 default; canonical CI run 31545808224 and Swarm engine-tests were green on that exact head. Integration remains separately blocked by trusted-control ownership recovery.",
+    "Inspection of FidelityManager.luau at #419 head confirms the remaining direct caller-mutability of config/_states/_metrics described by proposed HG-FIDELITY-MANAGER-STATE-ENCAPSULATION; this pass found no distinct state-capability defect outside that planned repair.",
+    "Inspection of validateConfig()/copyConfig() and validateInputs() at #419 head confirms unknown keys are not enumerated/rejected, matching proposed HG-FIDELITY-CONFIG-CLOSED-SHAPE. That proposed leaf already covers both config and runtime input extras, including hostile/non-string keys and bounded exact-shape validation.",
+    "The manager's bounded string entityId check was not promoted as a new independent leaf in this pass: the documented production integration flow treats WorldEntity as authoritative, and the PhysicsLabRuntime identity boundary already has a retained WorldEntity.isId hardening lineage (#402). Any future direct-production FidelityManager caller should reuse the stable-ID boundary rather than justify a competing identity framework.",
+    "No source/test edits, local Luau/Lune execution, Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence are claimed by this mining pass."
+  ],
+  "metadata": {
+    "result": "NO_NEW_NON_DUPLICATE_LEAF",
+    "retainedFidelityPr": 385,
+    "retainedCapacityPr": 419,
+    "recommendedAction": "Finish/integrate retained Fidelity lineages after trusted ownership recovery, then sequence existing state-encapsulation and closed-shape leaves; do not add another overlapping FidelityManager lane from this audit."
+  }
+}
