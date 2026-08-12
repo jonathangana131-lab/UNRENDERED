@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-g6p2v8n4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T08:19:00+00:00",
+  "lastSeenAt": "2026-08-12T08:19:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-g6p2v8n4",
+  "notes": "Mine current Physics Lab recipe/scale/validation source, tests, retained PR #423 lineage, and existing findings for one concrete non-duplicate source-only geometry/contract gap or publish explicit no-gap evidence."
+}
