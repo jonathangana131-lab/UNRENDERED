@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-111200-q5m8v3n2-authority-no-new-source-gap",
+  "timestamp": "2026-08-12T11:12:00+00:00",
+  "fromWorker": "sol-20260812-q5m8v3n2",
+  "eventType": "FINDING",
+  "summary": "Authority capacity mining found no additional non-duplicate source-only defect worth spawning while the retained authority stack is blocked on trusted ownership and real two-client evidence remains gated on OPS-STUDIO-DISPLAY. Keep depth-before-breadth: finish the retained #348/#394/#412 lineage and the already-recorded Rojo subtree exclusion follow-up before opening another authority primary.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-AUTHORITY",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "HG-COMPLETION-AUTHORITY",
+    "HG151-TWOCLIENT"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "evidence": [
+    "Retained authority primary #348 already fails closed on server/client execution context before ReplicatedStorage traversal or module require; retained teardown stack #394 adds source-contract coverage for Studio/server authority, duplicate-start rejection, destroy-before-release, and restart-before-reacquire ordering.",
+    "Retained harness successor #412 already wraps the RealizedLab destroy capability, reconciles external model Destroying/AncestryChanged invalidation, identity-fences reconciliation tokens across generations, and has independent exact-head source/test approval recorded by the authority lane.",
+    "PhysicsLabRealizer publishes server-authored WorldId, RegionId, resolved-region fingerprint/repro key, entity count, and per-entity WorldEntityId/fidelity/recipe/revision attributes on the physical representation; those are sufficient source surfaces for a future real two-client observer/evaluator without inventing a second authority framework.",
+    "HG151-TWOCLIENT explicitly requires a real server plus two distinct clients and depends on OPS-STUDIO-DISPLAY being DONE. No source-only fixture or static audit can satisfy that evidence gate, so implementing a substitute observer transport from this mining slot would violate the scheduler and the evidence boundary.",
+    "HG-COMPLETION-AUTHORITY already retains a separate concrete Rojo deployment-boundary finding: future exclusion coverage must be subtree/prefix-aware rather than replaying PR #300's exact-path count. This audit did not duplicate that finding.",
+    "No local Lune/Luau/Studio/two-client execution was run or claimed by this worker; this is a connector/source audit only."
+  ],
+  "metadata": {
+    "candidateBaseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "retainedPrimaryHead": "aa60103d489a055d86cf234dcc1338cf6168e4b3",
+    "retainedTeardownHead": "b38de16ade487ff8ceb48ed3596ebfe33be5fa1f",
+    "retainedHarnessHead": "807fb042b2fe96db32bda7a5c3346788e828a758",
+    "recommendedNext": "Do not open another source-only authority primary. Recover trusted pr-ownership/event history, integrate retained #348 then #394 and #412 in their declared order, preserve the existing Rojo subtree-exclusion finding, and wait for OPS-STUDIO-DISPLAY before attempting HG151-TWOCLIENT evidence."
+  }
+}
