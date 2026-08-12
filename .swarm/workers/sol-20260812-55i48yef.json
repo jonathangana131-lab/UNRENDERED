@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-55i48yef",
+  "model": "gpt-5.6-sol",
+  "status": "IDLE",
+  "startedAt": "2026-08-12T10:49:14+00:00",
+  "lastSeenAt": "2026-08-12T10:49:14+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-55i48yef",
+  "notes": "No claim was acquired. Canonical main push CI is green. The highest-priority worker-status control repair is owned with SWARM-PROTOCOL leased; trusted-history continuity is dependency-blocked; diagnostics primary/test/audit roles were claimed concurrently and moved to independent review; REALITY-CONTRACT is leased by the active WorldEntity repair; standing capacity-mining roles are already occupied. No gated feature, duplicate implementation, speculative Studio retry, branch, or PR was created."
+}
