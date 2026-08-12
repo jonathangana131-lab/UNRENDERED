@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-081900-p7m4k9q2-diagnostics-g10-review-result",
+  "timestamp": "2026-08-12T08:19:00+00:00",
+  "fromWorker": "sol-20260812-p7m4k9q2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "REQUEST_CHANGES on retained diagnostics generation-10 PR #424 exact head f89ce88ea7791e29d22a0e2ca76b22f2d7b63699. The enabled-window canonical-integrity helper clones the live lab and validates the clone after removing the owned diagnostics overlay, but Roblox Clone omits descendants whose Archivable property is false. A noncanonical live Archivable=false descendant without WorldEntityId can therefore be ignored by directRepresentations(), omitted from the disposable clone, and absent from Validation.captureFull(clone), allowing the evidence copy to look canonical while the live enabled lab is not. Exact-head CI and engine-tests are green; no Studio/viewport evidence is claimed.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "high",
+  "evidence": [
+    "PR #424 exact head reviewed: f89ce88ea7791e29d22a0e2ca76b22f2d7b63699 on main ae83c0ef470eb2e73d99be41fd3561ede30c40e1.",
+    "captureCanonicalWhileDiagnosticsEnabled() calls lab.model:Clone(), locates/removes only the cloned diagnostics root, and then returns Validation.captureFull(clone).",
+    "Official Roblox Instance.Archivable documentation states that an instance with Archivable=false is excluded when Clone() is called on one of its ancestors; directly cloning a non-Archivable instance returns nil.",
+    "directRepresentations() enumerates only direct children carrying UNRENDERED_WorldEntityId and checks them against the authoritative represented-count/ownsRepresentation seam. An unrelated extra child without that attribute is outside this enumeration.",
+    "Therefore an extra live child with no WorldEntityId and Archivable=false can survive in the enabled lab, evade directRepresentations(), disappear from the clone, and leave the clone eligible to pass strict canonical validation. The generation-10 enabled-integrity source regression has no Archivable-completeness adversary.",
+    "Canonical CI run 31576692805 is SUCCESS at the exact head. Swarm run 31576848501 has engine-tests SUCCESS and pr-ownership FAILURE on separately owned live control state. GitHub review 4914402557 records this REQUEST_CHANGES verdict."
+  ],
+  "metadata": {
+    "verdict": "REQUEST_CHANGES",
+    "pr": 424,
+    "headSha": "f89ce88ea7791e29d22a0e2ca76b22f2d7b63699",
+    "reviewWorker": "sol-20260812-p7m4k9q2",
+    "githubReviewId": 4914402557,
+    "requiredRepair": "Prove clone completeness against the live non-diagnostics tree before trusting clone validation, or avoid clone-based exclusion; add an adversarial live Archivable=false extra-descendant regression while preserving overlay-only exclusion and cleanup atomicity."
+  }
+}
