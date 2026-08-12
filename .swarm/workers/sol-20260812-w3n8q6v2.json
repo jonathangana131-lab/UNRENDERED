@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-w3n8q6v2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-12T08:00:30+00:00",
-  "lastSeenAt": "2026-08-12T08:23:49+00:00",
+  "lastSeenAt": "2026-08-12T08:25:54+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-objectgenome",
-  "branch": "agent/mining/HG-CAPACITY-MINING-mine-objectgenome-w3n8q6v2-g2",
-  "notes": "Capacity mining complete. Published FINDING evt-20260812-082034-w3n8q6v2-objectgenome-recipe-cardinality and folded immutable recipe collection bounds into existing PROPOSED HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS to avoid overlapping ObjectGenome source/test WIP. No product bytes, local test execution, Studio, engine, timing, physical-contact, or two-client evidence claimed. Ownership released."
+  "slotId": "mine-fidelity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-fidelity-w3n8q6v2",
+  "notes": "Second capacity role this session after completing/releasing ObjectGenome mining. Mine retained/current FidelityManager source/tests/PRs/events for one concrete non-duplicate Hero-Gate source-depth gap; no Studio or feature-unlock claims."
 }
