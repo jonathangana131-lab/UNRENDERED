@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T08:03:46+00:00",
-  "lastSeenAt": "2026-08-12T08:03:46+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-dg8q3m7v-g3",
-  "notes": "Recover the stale diagnostics test-adversary slot to inspect the active generation-10 PR #424 repair for a concrete exact-head regression or false-pass gap without duplicating primary implementation or claiming Studio evidence."
+  "lastSeenAt": "2026-08-12T08:06:35+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "slotId": "reviewer-1",
+  "branch": "agent/review/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-dg8q3m7v",
+  "notes": "Independent history-integrity review of retained recovery PR #420 generation 6. Verify finite exact provenance, inert quarantine/no-execute behavior, first-parent continuity, bootstrap/CAS fencing, and fail-closed behavior outside the audited legacy set."
 }
