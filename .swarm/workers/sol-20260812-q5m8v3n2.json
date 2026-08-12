@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:41:30+00:00",
-  "lastSeenAt": "2026-08-12T10:41:30+00:00",
-  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-  "slotId": "primary",
-  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-q5m8v3n2-g2",
-  "notes": "Stale-primary recovery of PR #428 after independent REQUEST_CHANGES. Repair only the typed REVIEW_RESULT verdict string guard and add the requested unhashable-JSON regression; preserve the existing finite status aliases, event-specific typed trio, and ownership fencing."
+  "lastSeenAt": "2026-08-12T10:49:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-q5m8v3n2",
+  "notes": "Claimed FidelityManager capacity mining after losing the higher-priority worker-status recovery race. Auditing retained Fidelity candidate/source/tests for a concrete non-duplicate invariant or test gap; no Studio evidence or new Hero feature work."
 }
