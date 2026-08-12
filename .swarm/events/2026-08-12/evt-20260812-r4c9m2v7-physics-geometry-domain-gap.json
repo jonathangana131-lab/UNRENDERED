@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-r4c9m2v7-physics-geometry-domain-gap",
+  "timestamp": "2026-08-12T10:49:21+00:00",
+  "fromWorker": "sol-20260812-r4c9m2v7",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "summary": "PhysicsLabRecipe lacks an explicit canonical geometry scalar-domain contract before Roblox realization.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-PHYSICS-GEOMETRY"
+  ],
+  "evidence": [
+    "PhysicsLabRecipe primitive construction validates MaterialDNA and transparency range but does not require finite positive size axes or finite position/rotation axes; object placement likewise lacks finite position/rotation validation.",
+    "Current physics_lab_recipe coverage checks identity, materials, ObjectGenome bindings and selected door geometry, but does not assert finite/positive geometry domains across every primitive and object placement.",
+    "Retained PR #423 hardens PhysicsLabScale conversion inputs/derived outputs and validation snapshots; it does not establish the upstream canonical recipe geometry-domain invariant.",
+    "Recommended bounded successor after the retained geometry stack is safe to schedule: validate canonical recipe geometry scalars at authoring/build time and add pure regressions covering non-finite placement/rotation, non-positive primitive dimensions, and finite transparency. No Studio evidence is required."
+  ]
+}
