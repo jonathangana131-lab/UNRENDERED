@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:44:30+00:00",
-  "lastSeenAt": "2026-08-12T10:44:30+00:00",
+  "lastSeenAt": "2026-08-12T10:45:40+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-mine-worldentity-s6v3k8r1",
-  "notes": "Rerouted after losing the stale worker-status recovery takeover race. Mining WorldEntity for a concrete non-duplicate Hero-Gate depth gap while trusted-history/control repair is independently owned."
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-s6v3k8r1",
+  "notes": "Lost the higher-priority worldentity mining claim race and rerouted immediately. Mining Physics runtime for a concrete non-duplicate Hero-Gate source/test gap while control recovery remains independently owned."
 }
