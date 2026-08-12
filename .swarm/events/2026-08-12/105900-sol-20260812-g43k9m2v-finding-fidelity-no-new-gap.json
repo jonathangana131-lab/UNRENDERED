@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-105900-g43k9m2v-fidelity-no-new-gap",
+  "timestamp": "2026-08-12T10:59:00Z",
+  "fromWorker": "sol-20260812-g43k9m2v",
+  "eventType": "FINDING",
+  "summary": "Fidelity capacity mining found no new non-duplicate source/test defect that justifies another lane. The retained Fidelity lineage already covers malformed/plain-data policy boundaries, rejected-step temporal atomicity, per-entity transition fencing and unwind/retry, cross-entity commit isolation, deterministic target holds/reasons, aggregate accounting, entity-id validation, and the separately reviewed project-owned registration ceiling. The production PhysicsLabRuntime adapter also closes the apparent no-op transition-hook concern by committing WorldEntity registry truth inside the callback and asserting manager/registry fidelity agreement after every step. Do not open another Fidelity primary from this mining pass; preserve the existing retained integration order after trusted ownership recovers.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-FIDELITY",
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "Retained production PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 validates caller PolicyConfig/PolicyInputs/time before unsafe operators or accepted mutation, stages accepted temporal state transactionally, fences same-entity step/unregister during transition callbacks, clears fences on failure, and preserves bounded F0-F4 accounting.",
+    "Retained test-only PR #398 exact head 2c473887dc6c0b5e81c0e502d4ccfe90be0c2d85 complements #385 with cross-entity commit-isolation coverage: an inner entity may commit while an outer callback later fails, and only the outer transition rolls back before retry.",
+    "Existing one-shot PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 already closes the remaining practical bounded-state configuration gap by enforcing a frozen project-owned MAX_REGISTERED_ENTITIES=65536 ceiling while keeping the 4096 default and exact-boundary regressions.",
+    "Fidelity deterministic coverage locks target-level hold continuity when policy reasons change and identical input/state/time sequences produce identical results.",
+    "PhysicsLabRuntime retained synthesis head d31c100c5d3766ca14d89b046fff4cdb09086754 wraps FidelityManager transitions with WorldEntity preview/registry commit and asserts manager/registry fidelity agreement both before and after step; an explicit no-op representation observer therefore does not become a no-op authoritative transition.",
+    "Current Fidelity lanes are already blocked only on the separately owned trusted-history/live pr-ownership recovery; creating another source lane now would duplicate reviewed work rather than deepen an uncovered invariant. No Roblox Studio, viewport, contact, performance-device, or two-client evidence is claimed by this mining result."
+  ],
+  "metadata": {
+    "candidateBaseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "retainedPrimaryPr": 385,
+    "retainedPrimarySha": "827ce0cf63ca5f322502de883beb9f43581c69f2",
+    "retainedIsolationPr": 398,
+    "retainedIsolationSha": "2c473887dc6c0b5e81c0e502d4ccfe90be0c2d85",
+    "retainedCapacityPr": 419,
+    "retainedCapacitySha": "1f017628bf49365663dfc2db3a30b81ba477a0a3",
+    "recommendedNext": "No new Fidelity lane. After trusted ownership recovery, integrate the already-reviewed retained stack in its documented order and replay/retarget sibling test-only deltas only as needed."
+  }
+}
