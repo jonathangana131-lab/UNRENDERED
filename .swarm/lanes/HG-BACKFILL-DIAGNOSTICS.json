@@ -5,7 +5,7 @@
   "title": "Diagnostics source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden the Studio diagnostics code and its pure contracts while the Mac display path is blocked. Work here must improve source/test correctness without pretending to satisfy the missing live viewport evidence row.",
   "priority": 4850,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/**diagnostic*.luau", "tests/hero_gate_contract_integration.luau"],
@@ -16,7 +16,7 @@
     {"slotId":"audit","role":"Diagnostics failure-path and capture-contract auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/**diagnostic*.luau","Docs/PHYSICS_LAB_DIAGNOSTICS.md"]}
   ],
   "acceptance": ["do not queue speculative Studio reruns", "do not convert source confidence into viewport PASS", "find concrete lifecycle/no-drift/failure-path gaps", "behavior changes get tests", "publish anything relevant to HG151-DIAGNOSTICS as a structured finding"],
-  "pr": 432,
-  "notes": "NEEDS_CHANGES after reconciling exact-head lineage evidence. Generation-13 PR #432 at 7716eba2ace4be9dc04df7264a1003de5dc0df55 retained the coherent production Archivable fence and initially received an independent source audit PASS, but independent test-adversary REVIEW_RESULT evt-20260812-105025-dc54a6ee-diagnostics-g12-review-result applies to the same exact bytes and demonstrates the helper-local matcher can false-pass token-preserving non-exhaustive/dead descendant scans. Support PR #433 exact head 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c hardens only tests by pinning the full StyLua-formatted descendant block at helper scope and adds explicit early-exit and dead-wrapper negative mutants in addition to model-only and broadened-overlay mutants; canonical CI 31589111582 PASS. Absorb #433 into a fresh primary successor, rerun fresh exact-head canonical CI, then request a new independent review. Do not merge #432 or #433 independently. Global trusted-control/pr-ownership recovery remains a separate integration gate. No Studio/viewport/contact/two-client evidence is claimed. Separate non-blocking docs drift remains tracked by the 105145 diagnostics failure-atomicity finding.",
+  "pr": 438,
+  "notes": "REVIEW on generation-14 primary PR #438 exact head 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c. This successor absorbs support/test-adversary PR #433 exactly on top of the coherent generation-13 production Archivable fence, so production diagnostics behavior is unchanged while the helper-local clone-completeness regression is strengthened. The matcher now pins the full StyLua-formatted descendant proof block at helper scope before lab.model:Clone() and explicitly rejects model-only, broadened-overlay, unconditional early-exit, and dead-wrapper false-pass mutants. Fresh PR-specific canonical CI run 31590116510 PASS on the exact head. Swarm Control run 31590116533 has engine-tests PASS; only pr-ownership remains red behind the separately owned trusted-history/global control recovery and is not treated as a product/test failure. Fresh independent exact-head source/test review is required before INTEGRATION_READY; generation-14 primary must not self-approve. Do not merge predecessor PR #432 or support PR #433 independently. No Studio/viewport/contact/performance-device/two-client evidence is claimed. Separate non-blocking diagnostics docs drift remains outside this repair.",
   "tags": ["backfill", "hero-gate", "source-only"]
 }
