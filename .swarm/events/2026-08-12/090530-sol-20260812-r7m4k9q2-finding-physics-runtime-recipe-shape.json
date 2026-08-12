@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t090530z-r7m4k9q2-physics-runtime-recipe-shape",
+  "timestamp": "2026-08-12T09:05:30Z",
+  "fromWorker": "sol-20260812-r7m4k9q2",
+  "eventType": "FINDING",
+  "summary": "PhysicsLabRuntime retained synthesis #408 validates canonical values but does not close every enclosing plain-table shape. assertCanonicalRecipe() reads the top-level schemaVersion/recipeKey/worldId/regionId/entities fields without rejecting extra top-level keys; the entities table is checked with # plus ipairs but never rejects extra non-array/string/sparse keys outside the dense canonical prefix; and each entity-recipe wrapper is read for key/entity without exact-key validation. Therefore caller-supplied extra data can be silently accepted by PhysicsLabRuntime.new() while the runtime reports a canonical recipeKey. This is distinct from #408's already-reviewed record/origin closed-shape and persistent-state equality fences. A downstream post-#408 source/test leaf should enforce exact bounded shapes for all three containers without introducing attacker-cardinality scans: enumerate at most allowedCount+1 keys, reject immediately on wrong key/index, and add top-level, wrapper, string-key, sparse/high-index, zero/negative/noninteger and many-extra-key adversaries. Do not reopen or weaken #408; retain its accepted runtime transaction/identity invariants and integrate this only after trusted ownership permits the retained synthesis to land.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-PHYSICS-RUNTIME-SYNTHESIS",
+    "HG-COMPLETION-PHYSICS",
+    "HERO-GATE"
+  ],
+  "evidence": [
+    "Retained #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754 calls assertPlainTable(recipe) but has no top-level exact-key whitelist before reading the five canonical recipe fields.",
+    "The same function calls assertPlainTable(recipeTable.entities), asserts #entities equals the canonical entity count, and iterates ipairs(entities), but never validates that every table key is an integer index in the exact 1..N range. Extra string/non-prefix keys are therefore outside both # and ipairs and can be ignored.",
+    "Each raw entity recipe is checked only by assertPlainTable() before reading entityRecipe.key and entityRecipe.entity; unlike the nested WorldEntity record and origin, the wrapper has no exact-key whitelist.",
+    "The retained synthesis tests cover metatable rejection, strict subset/full-size unknown/duplicate canonical entity keys, record/origin schema keys, provenance/state/revision equality, and bounded malformed persistent state, but do not exercise extra top-level recipe keys, extra entity-wrapper keys, or out-of-array keys on recipe.entities.",
+    "Open-PR searches for PhysicsLabRuntime extra-key/dense-entities canonical-shape work found no dedicated current successor."
+  ]
+}
