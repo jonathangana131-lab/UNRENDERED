@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-110330-s6v3k8r1-worker-status-g2-review",
+  "timestamp": "2026-08-12T11:03:30+00:00",
+  "fromWorker": "sol-20260812-s6v3k8r1",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "summary": "REQUEST_CHANGES on PR #434 exact head 4c73ae7bd82fb7969824bd2cdbfa49346b2dc482: generation-2 correctly guards typed REVIEW_RESULT.verdict before set membership, but validate_worker still performs WORKER_STATUSES set membership before proving status is a string, so unhashable JSON [] or {} worker statuses escape as raw TypeError instead of controlled fail-closed ControlError.",
+  "affects": ["SWARM-RECOVERY-WORKER-STATUS-CONTRACT", "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"],
+  "severity": "high",
+  "evidence": [
+    "Exact-head tools/swarm/swarmctl.py binds verdict and checks isinstance(verdict, str) before REVIEW_VERDICTS membership, so the predecessor #428 verdict blocker is correctly repaired.",
+    "The same exact head validate_worker() still evaluates if obj[\"status\"] not in WORKER_STATUSES with no preceding isinstance(status, str) guard. WORKER_STATUSES is a Python set, so JSON array/object statuses are unhashable and raise TypeError rather than ControlError.",
+    "Exact-head tools/swarm/test_swarmctl.py WorkerAndReviewSchemaCompatibilityTests covers ACTIVE/CLAIMING/DONE and unknown string FINISHED, but no non-string/unhashable worker status.",
+    "Exact-head tools/swarm/test_swarmctl_hardening.py WorkerReviewContractHardeningRegressionTests likewise covers aliases and FINISHED only; its new []/{} regression is verdict-specific and does not exercise worker status.",
+    "This is directly within the lane objective/acceptance: worker schema typing must remain strict and genuinely unknown statuses must fail closed while finite historical aliases remain compatibility-only.",
+    "Canonical CI and engine-tests reported green on the exact candidate head, demonstrating the current suite does not cover this malformed worker-status shape. pr-ownership remains separately fail-closed on the live legacy dependency-shape defect and was not bypassed.",
+    "GitHub formal REQUEST_CHANGES returned 422 because the authenticated repository identity is also the PR author; COMMENT review 4915685995 records the same independent-worker blocking verdict."
+  ],
+  "pr": 434,
+  "headSha": "4c73ae7bd82fb7969824bd2cdbfa49346b2dc482",
+  "verdict": "REQUEST_CHANGES",
+  "metadata": {
+    "reviewWorker": "sol-20260812-s6v3k8r1",
+    "githubReviewId": 4915685995,
+    "requiredRepair": "Require worker status to be a string before WORKER_STATUSES membership and add []/{} status regressions asserting controlled ControlError rejection. Preserve finite compatibility aliases and ownership fencing."
+  }
+}
