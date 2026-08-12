@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t080930z-r7m4k9q2-authority-rojo-retained",
+  "timestamp": "2026-08-12T08:09:30Z",
+  "fromWorker": "sol-20260812-r7m4k9q2",
+  "eventType": "FINDING",
+  "summary": "Authority completion review found one unabsorbed source-only security regression in PR #300, but the current test must not be replayed as-is. Its exact-path uniqueness checks can still pass if ReplicatedStorage maps a descendant such as src/server/PhysicsLab, exposing server-only source while the canonical ServerScriptService src/server mapping remains. Retain the deployment-boundary intent for a future successor after the retained #348/#394/#412 authority stack clears trusted ownership; require subtree/prefix-aware exclusion under replicated/client-readable branches plus an adversarial leaked-server-subpath fixture. Do not open another authority primary while the current retained stack is blocked on trusted-history/live pr-ownership.",
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "affects": [
+    "HG-COMPLETION-AUTHORITY",
+    "HG-BACKFILL-AUTHORITY",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "HG151-TWOCLIENT"
+  ],
+  "evidence": [
+    "Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 has no tests/authority_rojo_boundary.luau and hero_gate_contract_integration.luau does not invoke an equivalent Rojo deployment-boundary fixture.",
+    "PR #300 exact patch counts only exact $path values for src/shared, src/server, and src/client; a replicated src/server/... descendant does not increment countPath(tree, 'src/server') and therefore escapes the stated server-source exclusion claim.",
+    "Independent reviews on #300 repeatedly recorded this same subtree/prefix containment blocker and classified the unique deployment-boundary idea as worth retaining but SYNC_REQUIRED rather than mergeable.",
+    "Retained authority candidates remain #348 (bootstrap wrong-context source guard), #394 (accepted teardown regression stack on #348), and #412 (harness lifecycle generation fence); all have independent source/test PASS and remain integration-blocked on the separately owned trusted-history/live pr-ownership recovery.",
+    "Completion cleanup closed fully absorbed predecessors #399, #403, #410 into #412 and #382, #390 into #394; no product bytes were changed and no Studio/two-client evidence is claimed."
+  ]
+}
