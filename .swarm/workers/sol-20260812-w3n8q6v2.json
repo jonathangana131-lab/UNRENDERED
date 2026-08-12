@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T08:00:30+00:00",
-  "lastSeenAt": "2026-08-12T08:40:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-diagnostics",
-  "branch": "agent/mining/HG-CAPACITY-MINING-mine-diagnostics-w3n8q6v2",
-  "notes": "Fourth capacity role this session after ObjectGenome, Fidelity, and Authority mining. Mine retained/current diagnostics source/tests/live lineages for one concrete non-duplicate Hero-Gate source-depth gap; no Studio or feature-unlock claims."
+  "lastSeenAt": "2026-08-12T08:43:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-audit-w3n8q6v2-g2",
+  "notes": "Higher-priority generation-2 stale-review reconciliation after yielding Diagnostics capacity mining. Prior independent reviewer already published exact-head source-contract PASS on PR #349 head ee771bd50db972ad572f5d3cef8463220d69fa06; reconcile stale lane/claim state without duplicating review."
 }
