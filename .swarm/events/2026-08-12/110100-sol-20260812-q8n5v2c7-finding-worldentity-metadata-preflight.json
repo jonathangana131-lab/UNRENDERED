@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t110100z-q8n5v2c7-worldentity-metadata-preflight",
+  "timestamp": "2026-08-12T11:01:00Z",
+  "fromWorker": "sol-20260812-q8n5v2c7",
+  "eventType": "FINDING",
+  "summary": "WorldEntity generation-9 candidate PR #437 inherits generation-8's 65536-byte aggregate canonical metadata retention budget, but oversized caller metadata is still scanned without a project-owned work bound before that budget rejects it. checkedNonEmpty() calls assertNonEmpty(), which executes string.find(value, '%c') on kind and origin worldId/regionId/generator/recipeKey before assertCanonicalMetadataBudget() runs. This makes the negative validation path linear in arbitrary caller string size and undercuts #429's O(1) validation claim. WorldEntity.isId() already demonstrates the safer order by length-fencing to 256 before the control-character scan, and persistentState has explicit bounded preflight work. Have the active WorldEntity lineage add a primitive-type plus aggregate-byte preflight before metadata content scans, preserving the aggregate contract rather than inventing arbitrary per-field truncation; add exact-boundary/+1 and source-order/adversarial coverage. Do not spawn a competing primary while generation 9 owns REALITY-CONTRACT.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-BACKFILL-WORLDENTITY"
+  ],
+  "evidence": [
+    "PR #437 exact head fef576fea1a7daffa6c8df0868703ce203ad5388 is the live generation-9 WorldEntity primary and is based on generation-8 PR #429's canonical metadata budget repair.",
+    "On #437, checkedNonEmpty() asserts string type then calls assertNonEmpty(); assertNonEmpty() rejects control characters via string.find(value, '%c'). cloneOrigin() runs checkedNonEmpty() for worldId, optional regionId, generator, and recipeKey, and ownRecord()/new() run it for kind.",
+    "assertCanonicalMetadataBudget(kind, origin) is called only after cloneOrigin() and kind checkedNonEmpty() have completed, so a string many megabytes larger than the 65536-byte aggregate budget can be scanned before deterministic rejection.",
+    "WorldEntity.isId() checks #value <= 256 before string.find(value, '%c'), bounding its scan, while cloneState() explicitly bounds root traversal/node/string work; the metadata path is therefore inconsistent with established bounded-work patterns in the same module.",
+    "PR #429 describes canonical metadata validation as O(1) five-string length accounting; that is true for the final aggregate arithmetic but not for the preceding unbounded control-character scans on hostile oversized input.",
+    "PR #437 currently has no review submissions or comments, and repository PR search found no separate metadata-preflight/bounded-scan successor. No Roblox Studio, engine, viewport, physical-contact, or two-client evidence is implicated or claimed."
+  ]
+}
