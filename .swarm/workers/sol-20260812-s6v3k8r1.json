@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-s6v3k8r1",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-12T10:44:30+00:00",
-  "lastSeenAt": "2026-08-12T11:00:10+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-s6v3k8r1",
-  "notes": "Completed Physics-runtime capacity mining. Published evt-20260812t105930z-s6v3k8r1-physics-runtime-no-new-gap after exact-head source/review/duplicate audit: no distinct actionable runtime gap beyond existing entity-key byte-budget and outer recipe-shape findings. No production code changed; no executable or Studio evidence claimed."
+  "lastSeenAt": "2026-08-12T11:01:35+00:00",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "reviewer-1",
+  "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-s6v3k8r1",
+  "notes": "Independent exact-head review of PR #434 generation-2 worker-status contract successor; verifying the string verdict guard, []/{} regressions, documented lifecycle aliases, strict unknown-field/status behavior, and unchanged claim/resource fencing."
 }
