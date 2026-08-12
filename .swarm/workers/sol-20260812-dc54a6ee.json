@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-dc54a6ee",
+  "model": "gpt-5.6-sol",
+  "status": "ACTIVE",
+  "startedAt": "2026-08-12T10:44:06+00:00",
+  "lastSeenAt": "2026-08-12T10:44:06+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-test-dc54a6ee",
+  "notes": "Independent exact-head source/test adversarial audit requested for diagnostics generation 12 PR #431. No Studio evidence claim."
+}
