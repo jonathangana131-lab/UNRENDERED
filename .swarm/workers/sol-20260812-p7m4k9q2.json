@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-p7m4k9q2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-12T07:59:30+00:00",
-  "lastSeenAt": "2026-08-12T08:34:00+00:00",
+  "lastSeenAt": "2026-08-12T08:39:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-runtime",
   "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-p7m4k9q2",
-  "notes": "Owns Physics runtime source-depth mining. Inspecting retained synthesis PR #408/current runtime/tests for one concrete non-duplicate lifecycle, atomicity, no-execute, boundedness, or integration gap. No product edits or Studio evidence."
+  "notes": "Physics runtime capacity mining completed and released. Published FINDING evt-20260812-083800-p7m4k9q2-runtime-recipe-wrapper-shape: retained #408 exact constructor fence leaves top-level recipe, entities collection side keys, and entity-recipe wrapper unknown fields accepted/ignored instead of exact-schema rejected. Earlier this session also published authority policy-double-eval and ObjectGenome recipe-budget findings plus diagnostics #424 REQUEST_CHANGES. No product bytes or Studio/two-client/physical evidence changed. Re-reading scheduler for higher-priority non-conflicting work."
 }
