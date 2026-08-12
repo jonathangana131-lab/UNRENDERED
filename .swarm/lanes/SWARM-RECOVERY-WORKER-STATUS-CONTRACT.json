@@ -5,7 +5,7 @@
   "title": "Repair worker and event schema contract drift",
   "objective": "Stop repeated Swarm control validation failures caused by worker-facing producer conventions drifting from the strict validator: workers emit intuitive lifecycle aliases such as CLAIMING/DONE and immutable REVIEW_RESULT events already carry typed pr/headSha/verdict fields that the current generic event validator rejects. Make the accepted lifecycle/event contract explicit, preserve strict typing and unknown-field fail-closed behavior, and restore live control validity without weakening authoritative claim/resource fencing.",
   "priority": 10000,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -56,10 +56,10 @@
     "live swarm-control validation returns PASS on authoritative history without rewriting immutable events"
   ],
   "pr": 428,
-  "notes": "Primary candidate exact head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae is published as PR #428. Canonical CI run 31579573385 and candidate control engine-tests in run 31579573480 pass. Fresh independent exact-head review is required. The earlier malformed REALITY-CONTRACT lease blocker has cleared from live state. Current trusted-main control validation now fails on worker sol-20260812-w1e7q9m3 status DONE, which is one of the exact evidence-backed aliases PR #428 adds; therefore trusted-base PR ownership remains bootstrap-blocked until the repair is integrated or live producer state is independently normalized. No immutable history was rewritten.",
+  "notes": "Independent exact-head review by sol-20260812-m8q4v2c7 on PR #428 head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae returned REQUEST_CHANGES. The candidate correctly narrows worker aliases and typed REVIEW_RESULT fields, but verdict validation performs set membership before requiring a string; JSON array/object verdicts can therefore raise raw TypeError instead of controlled fail-closed ControlError. Primary must add an explicit string guard plus an unhashable JSON verdict hardening regression, then rerun exact-head CI and request fresh independent review. Canonical candidate CI is otherwise green. Trusted-main pr-ownership remains separately bootstrap-blocked behind trusted-history continuity; no immutable history was rewritten.",
   "blockers": [
-    "Independent exact-head review is required before integration.",
-    "Trusted-main control validation currently rejects live worker sol-20260812-w1e7q9m3 status DONE before PR ownership can execute; PR #428 is the candidate repair for that exact contract drift."
+    "Independent review found typed REVIEW_RESULT verdict lacks an explicit string type guard before REVIEW_VERDICTS set membership; repair and add unhashable JSON verdict regression before re-review.",
+    "Trusted-main control validation remains bootstrap-blocked by the separate trusted-history/generated-board continuity gate until the recovery chain is integrated."
   ],
   "tags": ["control-repair", "red-ci", "worker-lifecycle", "event-schema", "hero-gate"]
 }
