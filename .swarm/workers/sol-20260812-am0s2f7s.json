@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:44:29+00:00",
-  "lastSeenAt": "2026-08-12T10:44:29+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-am0s2f7s-g5",
-  "notes": "Complementary diagnostics adversary: lock the generation-12 clone-completeness matcher against early loop exit/first-descendant-only mutants; no Studio evidence claim."
+  "lastSeenAt": "2026-08-12T10:46:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-diagnostics",
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-am0s2f7s",
+  "notes": "Mining diagnostics source/tests for a distinct bounded Hero-Gate gap after losing the test-adversary claim race; no Studio evidence claim and no overlap with the active generation-12 early-exit matcher repair."
 }
