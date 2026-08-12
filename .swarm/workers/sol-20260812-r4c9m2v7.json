@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-r4c9m2v7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T10:45:12+00:00",
-  "lastSeenAt": "2026-08-12T10:45:12+00:00",
-  "notes": "Rerouted after losing the stale worker-status repair takeover; checking the highest available source-depth capacity slot without overlapping active work."
+  "lastSeenAt": "2026-08-12T10:50:30+00:00",
+  "notes": "Completed Physics geometry capacity mining. Published evt-20260812-r4c9m2v7-physics-geometry-domain-gap: canonical recipe geometry scalars need an upstream finite/positive domain contract distinct from retained scale PR #423. No product or Studio changes made."
 }
