@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-12T07:58:30+00:00",
-  "lastSeenAt": "2026-08-12T07:58:30+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "lastSeenAt": "2026-08-12T07:59:20+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-pg423a7x",
-  "notes": "Independent exact-head source/test audit of retained generation-7 physics geometry PR #423; no Studio evidence claims."
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-pg423a7x",
+  "notes": "Lost the physics-geometry audit race before claim; rerouted to independent exact-head diagnostics audit of retained generation-9 PR #424. No Studio evidence claims."
 }
