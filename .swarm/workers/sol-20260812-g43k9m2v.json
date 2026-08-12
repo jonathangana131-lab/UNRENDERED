@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-g43k9m2v",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-12T10:43:23+00:00",
-  "lastSeenAt": "2026-08-12T11:00:20+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-fidelity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-g43k9m2v",
-  "notes": "Fidelity mining completed with durable FINDING evt-20260812-105900-g43k9m2v-fidelity-no-new-gap: no new non-duplicate lane justified beyond retained #385/#398/#419 and retained runtime adapter invariants. Claim released; no Studio or product evidence claimed."
+  "lastSeenAt": "2026-08-12T11:06:30+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-g43k9m2v-g14",
+  "notes": "Generation-14 primary is absorbing exact green support PR #433 into the coherent generation-13 production lineage to close the non-exhaustive/dead descendant-scan matcher false-pass; fresh exact-head CI and new independent review required."
 }
