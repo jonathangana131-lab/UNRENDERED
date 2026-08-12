@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260812-s8v4q2n7",
+  "workerId": "sol-20260812-g43k9m2v",
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-  "claimToken": "d7a4c91e2f6b8035",
-  "acquiredAt": "2026-08-12T10:42:44+00:00",
-  "heartbeatAt": "2026-08-12T10:55:00+00:00",
+  "claimToken": "a7d3c9e15b806f42",
+  "acquiredAt": "2026-08-12T11:26:00+00:00",
+  "heartbeatAt": "2026-08-12T11:26:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 2,
-  "notes": "Generation-2 successor PR #434 exact head 4c73ae7bd82fb7969824bd2cdbfa49346b2dc482 is in REVIEW. Canonical CI and Swarm engine-tests passed; primary waits for independent exact-head review. Shared pr-ownership is separately fail-closed on malformed dependency shape in live proposed HG-BACKFILL-OBJECTGENOME-STRING-BUDGET."
+  "generation": 3,
+  "notes": "Generation-3 stale-primary takeover after authoritative lane returned to NEEDS_CHANGES. Absorb PR #434 exact head and add the reviewer-required worker status string guard plus []/{} controlled-error regressions; preserve claim/resource fencing and finite aliases."
 }
