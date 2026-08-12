@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-m4d7n2q9",
   "model": "gpt-5.6-sol",
-  "status": "DONE",
+  "status": "IDLE",
   "startedAt": "2026-08-12T08:10:00+00:00",
   "lastSeenAt": "2026-08-12T08:17:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-materialdna",
   "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-m4d7n2q9",
-  "notes": "Capacity mining complete. Published FINDING evt-20260812-081430-m4d7n2q9-materialdna-closed-record-bounds and folded its bounded closed-record/error-allocation requirements into existing PROPOSED HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS rather than creating duplicate WIP. No product bytes or Studio/engine evidence claimed."
+  "notes": "Capacity mining complete. Published FINDING evt-20260812-081430-m4d7n2q9-materialdna-closed-record-bounds and folded its bounded closed-record/error-allocation requirements into existing PROPOSED HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS rather than creating duplicate WIP. No product bytes or Studio/engine evidence claimed. Ownership has ended; normalized terminal DONE status to V2 IDLE."
 }
