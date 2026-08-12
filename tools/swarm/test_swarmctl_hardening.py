@@ -274,6 +274,16 @@ class WorkerReviewContractHardeningRegressionTests(unittest.TestCase):
         with self.assertRaises(core.ControlError):
             hard.validate_all(self.fx.root, self.now)
 
+    def test_typed_review_unhashable_verdicts_fail_with_control_error(self):
+        path = self.fx.root / "events" / "2026-08-12" / "review.json"
+        for verdict in ([], {}):
+            with self.subTest(verdict=verdict):
+                value = self.review_event()
+                value["verdict"] = verdict
+                write(path, value)
+                with self.assertRaises(core.ControlError):
+                    hard.validate_all(self.fx.root, self.now)
+
 
 class WorkflowSnapshotFenceRegressionTests(unittest.TestCase):
     def workflow_text(self):
