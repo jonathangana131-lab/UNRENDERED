@@ -263,6 +263,14 @@ class WorkerReviewContractHardeningRegressionTests(unittest.TestCase):
         with self.assertRaises(core.ControlError):
             hard.validate_all(self.fx.root, self.now)
 
+    def test_unhashable_worker_status_shapes_fail_with_control_error(self):
+        path = self.fx.root / "workers" / "sol-20260812-abcd.json"
+        for status in ([], {}):
+            with self.subTest(status=status):
+                write(path, self.worker(status))
+                with self.assertRaises(core.ControlError):
+                    hard.validate_all(self.fx.root, self.now)
+
     def test_typed_review_fields_pass_only_on_review_result(self):
         path = self.fx.root / "events" / "2026-08-12" / "review.json"
         write(path, self.review_event())
