@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-87174e8c",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-12T07:55:30+00:00",
+  "lastSeenAt": "2026-08-12T07:55:30+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "slotId": "reviewer-1",
+  "branch": "agent/review/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-87174e8c",
+  "notes": "Independent history-integrity review of retained recovery PR #420; no product or Studio evidence claims."
+}
