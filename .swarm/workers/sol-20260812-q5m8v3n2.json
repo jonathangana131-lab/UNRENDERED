@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:41:30+00:00",
-  "lastSeenAt": "2026-08-12T10:49:30+00:00",
+  "lastSeenAt": "2026-08-12T10:54:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-fidelity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-q5m8v3n2",
-  "notes": "Claimed FidelityManager capacity mining after losing the higher-priority worker-status recovery race. Auditing retained Fidelity candidate/source/tests for a concrete non-duplicate invariant or test gap; no Studio evidence or new Hero feature work."
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-q5m8v3n2-g2",
+  "notes": "Fidelity mining released after publishing a stale-lane dependency conflict. Continuing with the unclaimed Physics geometry mining slot; auditing current and retained geometry lanes/source/tests for a concrete non-duplicate source-only gap."
 }
