@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-r9k3v6m2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T10:52:00+00:00",
-  "lastSeenAt": "2026-08-12T10:52:00+00:00",
+  "lastSeenAt": "2026-08-12T11:02:00+00:00",
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "slotId": "reviewer-1",
-  "notes": "Independent exact-head review of PR #434 head 4c73ae7bd82fb7969824bd2cdbfa49346b2dc482."
+  "notes": "Reviewer claim lost to live generation-2 reviewer race; no review or product/control mutation performed under this worker."
 }
