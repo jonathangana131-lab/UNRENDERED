@@ -399,7 +399,8 @@ def validate_worker(path: Path) -> dict[str, Any]:
         raise ControlError(f"{path}: filename must equal workerId")
     if obj["model"] != "gpt-5.6-sol":
         raise ControlError(f"{path}: worker model must be gpt-5.6-sol")
-    if obj["status"] not in WORKER_STATUSES:
+    status = obj["status"]
+    if not isinstance(status, str) or status not in WORKER_STATUSES:
         raise ControlError(f"{path}: invalid worker status")
     started, seen = parse_time(obj["startedAt"]), parse_time(obj["lastSeenAt"])
     if seen < started:
@@ -476,7 +477,7 @@ def read_tree(root: Path) -> tuple[
 
 
 def dependency_cycles(lanes: dict[str, dict]) -> list[list[str]]:
-    graph = {lane_id: [d["laneId"] for d in lane["dependencies"] if d["laneId"] in lanes] for lane_id, lane in lanes.items()}
+    graph = {lane_id: [d["laneId"] for d in lane["dependencies"] if d["laneId"] in lanes] for lane_id in lanes}
     visiting: set[str] = set()
     visited: set[str] = set()
     stack: list[str] = []
