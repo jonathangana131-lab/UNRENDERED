@@ -65,12 +65,14 @@ WorldEntity.Fidelity = table.freeze({
 
 WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY = 64
 WorldEntity.MAX_DUPLICATE_DIAGNOSTIC_CAPACITY = 1024
+WorldEntity.MAX_CANONICAL_METADATA_STRING_BYTES = 65536
 WorldEntity.MAX_PERSISTENT_STATE_DEPTH = 64
 WorldEntity.MAX_PERSISTENT_STATE_NODES = 4096
 WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES = 65536
 
 local MAX_SAFE_INTEGER = 9007199254740991
 local MAX_GENERATOR_VERSION = 2147483647
+local CANONICAL_METADATA_LIMIT_ERROR = "WorldEntity canonical metadata exceeds owned string byte budget"
 local STATE_LIMIT_ERROR = "persistentState exceeds structural limits"
 
 local FIDELITY_RANK: { [string]: number } = table.freeze({
@@ -314,6 +316,14 @@ local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
 	})
 end
 
+local function assertCanonicalMetadataBudget(kind: string, origin: GenerationOrigin): ()
+	local stringBytes = #kind + #origin.worldId + #origin.generator + #origin.recipeKey
+	if origin.regionId ~= nil then
+		stringBytes += #origin.regionId
+	end
+	assert(stringBytes <= WorldEntity.MAX_CANONICAL_METADATA_STRING_BYTES, CANONICAL_METADATA_LIMIT_ERROR)
+end
+
 local function cloneRecord(
 	record: WorldEntityRecord,
 	fidelity: Fidelity,
@@ -362,6 +372,8 @@ local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
 	)
 	local kind = checkedNonEmpty("WorldEntityRecord.kind", source.kind)
 	assert(type(source.origin) == "table", "WorldEntityRecord.origin must be a table")
+	local origin = cloneOrigin(source.origin :: GenerationOrigin)
+	assertCanonicalMetadataBudget(kind, origin)
 	assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {safeValueLabel(source.fidelity)}`)
 	assert(type(source.persistentState) == "table", "WorldEntityRecord.persistentState must be a table")
 
@@ -372,7 +384,7 @@ local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
 	return table.freeze({
 		id = source.id,
 		kind = kind,
-		origin = cloneOrigin(source.origin :: GenerationOrigin),
+		origin = origin,
 		fidelity = source.fidelity :: Fidelity,
 		persistentState = cloneState(source.persistentState :: PlainData),
 		stateRevision = stateRevision,
@@ -389,6 +401,7 @@ function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord
 	local kind = checkedNonEmpty("WorldEntity.kind", source.kind)
 	assert(type(source.origin) == "table", "WorldEntity.origin must be a table")
 	local origin = cloneOrigin(source.origin :: GenerationOrigin)
+	assertCanonicalMetadataBudget(kind, origin)
 
 	local fidelity: Fidelity
 	if source.fidelity == nil then
