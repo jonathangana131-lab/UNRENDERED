@@ -7,7 +7,9 @@
   "priority": 4660,
   "state": "PROPOSED",
   "mode": "exclusive",
-  "dependencies": ["HG-BACKFILL-OBJECTGENOME"],
+  "dependencies": [
+    {"laneId": "HG-BACKFILL-OBJECTGENOME", "acceptableStates": ["DONE"]}
+  ],
   "writeScopes": ["src/shared/Objects/ObjectGenome.luau", "tests/object_genome.luau", "tests/object_genome_contract_lock.luau"],
   "resources": [],
   "slots": [
