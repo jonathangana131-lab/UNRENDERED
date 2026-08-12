@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exact generation-4/5/6 additions to the finite 2026-08-11 history reset.
+"""Exact generation-4/5/6/7 additions to the finite history reset.
 
 These rows were measured from live swarm-control by read-only bootstrap inventory
 or exact Git provenance inspection. They are data only: no schema aliasing,
@@ -14,10 +14,19 @@ import swarm_history_recovery_generation6_tail as _generation6_tail
 # status and later moved through another unsupported alias before a claim-aware
 # mutable repair returned it to canonical IDLE. Pin the first invalid commit and
 # exact repair commit; all intermediate snapshots remain strict-invalid. Later
-# generation-6 worker defects are also crossed only by exact bad->repair commits.
+# generation-6/7 worker defects are also crossed only by exact bad->repair commits.
+GENERATION7_FINITE_WORKER_TRANSITIONS = (
+    ("b101e9c156befdc22d89195559f205d0d86b95a1", "512a1fa6051fe956936a203cc81f813f62470336"),
+    ("1a1300335ddc57f2913b024260f3c82a17a2916e", "493f9b34cacfcc90a695814434e24b70694566aa"),
+    ("ade84dab3f97b7fe022425f5258b95dd36d15e2d", "7f58400bea56171e559867e74ff112285641f1f2"),
+    ("81c61efc4eb063f8a5c8ddbfd7029376e2d94953", "15371ed8d9ccb6c917544256482aa9d1241c6a74"),
+    ("1fa04ae307f1f7e9a485a849d0ade69a347e1130", "984e83ad9a425e68ffb26b04734c4c330003e651"),
+    ("e631f9e1e2681a64cff4d73a3f3d53b8f54e635e", "687c9dbc579f635851dd0e69cbd62dc5736bf44b"),
+)
+
 FINITE_WORKER_TRANSITIONS = (
     ("b5bd3a372a4d4f044873c9bedf86d82e7cc92c23", "ef789a2e2e1b56d7a816b8c2be39412f5b6f0ccc"),
-) + _generation6.FINITE_WORKER_TRANSITIONS
+) + _generation6.FINITE_WORKER_TRANSITIONS + GENERATION7_FINITE_WORKER_TRANSITIONS
 
 # (eventId, exact filename, exact first-write commit, exact quarantine Git blob SHA-1)
 # Every row has exactly one first-add commit and no later byte rewrite in the
@@ -98,9 +107,30 @@ MALFORMED_EVENT_QUARANTINE_ROWS = (
     ),
 ) + _generation6.MALFORMED_EVENT_QUARANTINE_ROWS + _generation6_tail.MALFORMED_EVENT_QUARANTINE_ROWS
 
+# Later recovery history must preserve its real event directory rather than being
+# forced through the original 2026-08-11 filename-only row shape.
+# (eventId, date, exact filename, exact first-write commit, exact quarantine Git blob SHA-1)
+DATED_MALFORMED_EVENT_QUARANTINE_ROWS = (
+    (
+        "evt-20260812T080700Z-sol-20260812-k7m4q9v2-handoff-diagnostics-generation10",
+        "2026-08-12",
+        "080700-sol-20260812-k7m4q9v2-handoff-diagnostics-generation10.json",
+        "3e8d11601444a2681eee5f030a0597fbee55b0bf",
+        "706647f87553ce70e796da306afe58216332f0bb",
+    ),
+)
+
+
+def malformed_event_quarantine_rows_with_dates() -> tuple[tuple[str, str, str, str, str], ...]:
+    legacy = tuple(
+        (event_id, "2026-08-11", filename, first_write_commit, blob_sha)
+        for event_id, filename, first_write_commit, blob_sha in MALFORMED_EVENT_QUARANTINE_ROWS
+    )
+    return legacy + DATED_MALFORMED_EVENT_QUARANTINE_ROWS
+
 
 def quarantine_rules() -> dict[str, dict[str, str]]:
-    return {
+    rules = {
         event_id: {
             "date": "2026-08-11",
             "filename": filename,
@@ -108,3 +138,10 @@ def quarantine_rules() -> dict[str, dict[str, str]]:
         }
         for event_id, filename, _first_write_commit, blob_sha in MALFORMED_EVENT_QUARANTINE_ROWS
     }
+    for event_id, date, filename, _first_write_commit, blob_sha in DATED_MALFORMED_EVENT_QUARANTINE_ROWS:
+        rules[event_id] = {
+            "date": date,
+            "filename": filename,
+            "quarantineOnlyGitBlobSha1": blob_sha,
+        }
+    return rules
