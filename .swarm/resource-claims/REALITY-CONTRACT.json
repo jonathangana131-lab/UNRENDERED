@@ -5,8 +5,8 @@
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "claimToken": "e5c27a914bd3608f",
   "acquiredAt": "2026-08-12T10:45:45+00:00",
-  "heartbeatAt": "2026-08-12T10:45:45+00:00",
+  "heartbeatAt": "2026-08-12T10:58:17+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
-  "notes": "Bounded WorldEntity duplicate-origin diagnostic completeness repair on active Hero Gate lineage."
+  "notes": "PR #437 generation-9 bounded WorldEntity duplicate-origin diagnostic completeness repair; exact-head CI passed and trusted pr-ownership rerun is in progress."
 }
