@@ -14,6 +14,33 @@ import swarmctl_hardening as hard
 
 class RecoveryExtensionTests(unittest.TestCase):
     def test_worker_transitions_are_exact_and_finite(self):
+        generation7 = (
+            (
+                "b101e9c156befdc22d89195559f205d0d86b95a1",
+                "512a1fa6051fe956936a203cc81f813f62470336",
+            ),
+            (
+                "1a1300335ddc57f2913b024260f3c82a17a2916e",
+                "493f9b34cacfcc90a695814434e24b70694566aa",
+            ),
+            (
+                "ade84dab3f97b7fe022425f5258b95dd36d15e2d",
+                "7f58400bea56171e559867e74ff112285641f1f2",
+            ),
+            (
+                "81c61efc4eb063f8a5c8ddbfd7029376e2d94953",
+                "15371ed8d9ccb6c917544256482aa9d1241c6a74",
+            ),
+            (
+                "1fa04ae307f1f7e9a485a849d0ade69a347e1130",
+                "984e83ad9a425e68ffb26b04734c4c330003e651",
+            ),
+            (
+                "e631f9e1e2681a64cff4d73a3f3d53b8f54e635e",
+                "687c9dbc579f635851dd0e69cbd62dc5736bf44b",
+            ),
+        )
+        self.assertEqual(extension.GENERATION7_FINITE_WORKER_TRANSITIONS, generation7)
         self.assertEqual(
             extension.FINITE_WORKER_TRANSITIONS,
             (
@@ -41,8 +68,9 @@ class RecoveryExtensionTests(unittest.TestCase):
                     "370f6ec7568a78fc98c38a825227f52cb65b6259",
                     "ce4ad38f302fa4b094e3a1e58324352879fce969",
                 ),
-            ),
+            ) + generation7,
         )
+        self.assertEqual(hard.FINITE_WORKER_TRANSITIONS[-len(generation7) :], generation7)
 
     def test_measured_quarantine_rows_are_exact_and_unique(self):
         rows = extension.MALFORMED_EVENT_QUARANTINE_ROWS
@@ -122,12 +150,37 @@ class RecoveryExtensionTests(unittest.TestCase):
             rows,
         )
         rules = extension.quarantine_rules()
-        expected_ids = {row[0] for row in rows}
-        self.assertEqual(len(rules), len(rows))
+        expected_ids = {row[0] for row in rows} | {row[0] for row in extension.DATED_MALFORMED_EVENT_QUARANTINE_ROWS}
+        self.assertEqual(len(rules), len(expected_ids))
         self.assertEqual(set(rules), expected_ids)
         for event_id, filename, _first_write, blob_sha in rows:
+            self.assertEqual(rules[event_id]["date"], "2026-08-11")
             self.assertEqual(rules[event_id]["filename"], filename)
             self.assertEqual(rules[event_id]["quarantineOnlyGitBlobSha1"], blob_sha)
+
+    def test_generation7_dated_quarantine_is_exact_and_preserves_real_directory(self):
+        expected = (
+            (
+                "evt-20260812T080700Z-sol-20260812-k7m4q9v2-handoff-diagnostics-generation10",
+                "2026-08-12",
+                "080700-sol-20260812-k7m4q9v2-handoff-diagnostics-generation10.json",
+                "3e8d11601444a2681eee5f030a0597fbee55b0bf",
+                "706647f87553ce70e796da306afe58216332f0bb",
+            ),
+        )
+        self.assertEqual(extension.DATED_MALFORMED_EVENT_QUARANTINE_ROWS, expected)
+        normalized = extension.malformed_event_quarantine_rows_with_dates()
+        self.assertEqual(len(normalized), 48)
+        self.assertEqual(len({row[0] for row in normalized}), len(normalized))
+        self.assertEqual(len({(row[1], row[2]) for row in normalized}), len(normalized))
+        self.assertIn(expected[0], normalized)
+
+        event_id, date, filename, _first_write, blob_sha = expected[0]
+        rule = extension.quarantine_rules()[event_id]
+        self.assertEqual(rule["date"], date)
+        self.assertEqual(rule["filename"], filename)
+        self.assertEqual(rule["quarantineOnlyGitBlobSha1"], blob_sha)
+        self.assertEqual(hard._CANONICAL_IMMUTABLE_EVENTS[event_id], rule)
 
 
 class ExecutableFieldQuarantineTests(unittest.TestCase):
