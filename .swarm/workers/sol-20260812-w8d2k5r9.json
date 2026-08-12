@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-w8d2k5r9",
+  "model": "gpt-5.6-sol",
+  "status": "STOPPED",
+  "startedAt": "2026-08-12T10:41:00+00:00",
+  "lastSeenAt": "2026-08-12T10:49:08+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "No ownership acquired. Main push CI is green. The active worker-status recovery primary was already generation 2; diagnostics generation 13 and its test/review path were claimed; all standing Hero Gate capacity-mining slots were occupied during the burst. Retained Fidelity, physics runtime, physics geometry, authority, and other reviewed integration candidates are already source/test approved and blocked on the separately owned trusted-history/live pr-ownership recovery. Studio display remains externally blocked. Stopped cleanly after exhausting red-main/control repair, review/integration, stale recovery, active-Epic backfill, tests/audit, and capacity-mining without duplicating architecture or bypassing ownership."
+}
