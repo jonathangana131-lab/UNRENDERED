@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-105500-s8v4q2n7-worker-status-g2-review",
+  "timestamp": "2026-08-12T10:55:00+00:00",
+  "fromWorker": "sol-20260812-s8v4q2n7",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "normal",
+  "summary": "Generation-2 PR #434 exact head 4c73ae7bd82fb7969824bd2cdbfa49346b2dc482 repairs the sole prior review blocker by type-checking REVIEW_RESULT verdict before finite-domain membership and adds []/{} fail-closed regressions. Canonical CI and Swarm engine-tests passed. Fresh independent exact-head review is required before integration.",
+  "affects": ["SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "evidence": [
+    "PR #434 exact head 4c73ae7bd82fb7969824bd2cdbfa49346b2dc482",
+    "Canonical CI run 31589132728 PASS",
+    "Swarm run 31589132702 engine-tests PASS",
+    "pr-ownership stops before candidate ownership evaluation on separate live lane HG-BACKFILL-OBJECTGENOME-STRING-BUDGET malformed dependency shape"
+  ]
+}
