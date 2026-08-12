@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-111430-am0s2f7s-live-audit-claim-branch-blocker",
+  "timestamp": "2026-08-12T11:14:30+00:00",
+  "fromWorker": "sol-20260812-am0s2f7s",
+  "eventType": "BLOCKER",
+  "summary": "Repository-wide PR ownership validation is currently fail-closed on the live HG-BACKFILL-DIAGNOSTICS/audit claim because its branch value is review-only rather than an accepted agent/... branch. The reviewer worker is STOPPED but the claim lease remains live, so this worker will not overwrite or delete another worker's authoritative claim. The diagnostics review lineage has been notified to release/correct it through the normal fenced control path.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "evidence": [
+    "PR #436 exact head 3640afed8419c18bf14b9939f3af8d86989d6be6 has canonical CI PASS in run 31590597451.",
+    "Swarm Control Plane run 31590597156 has engine-tests PASS but pr-ownership FAIL; job 94094411208 stops at .swarm/claims/HG-BACKFILL-DIAGNOSTICS/audit.json: invalid branch.",
+    "Trusted tools/swarm/swarmctl.py defines BRANCH_RE as ^agent/[A-Za-z0-9._/-]{3,160}$ and validates an optional claim branch against that grammar whenever the field is present.",
+    "The live audit claim uses branch review-only. Reviewer worker sol-20260812-a8v5r2n9 is STOPPED after publishing the generation-14 REQUEST_CHANGES review, but the claim heartbeat remains within its 1800-second lease.",
+    "Docs/SWARM_PROTOCOL.md says never overwrite a live claim. Comment 5265922619 on PR #438 records the exact validator failure and safe repair choices for the owning/recovery lineage."
+  ],
+  "metadata": {
+    "blockedPr": 436,
+    "blockedHeadSha": "3640afed8419c18bf14b9939f3af8d86989d6be6",
+    "controlRunId": 31590597156,
+    "recommendedNext": "Owning/recovery lineage should release or correct the audit claim using the normal fenced control path. For a review-only claim the optional branch field may be omitted/null; if a review branch exists it must use the accepted agent/... grammar. Revalidate trusted control state before promoting unrelated PRs."
+  }
+}
