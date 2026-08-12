@@ -5,7 +5,7 @@
   "title": "Repair worker and event schema contract drift",
   "objective": "Stop repeated Swarm control validation failures caused by worker-facing producer conventions drifting from the strict validator: workers emit intuitive lifecycle aliases such as CLAIMING/DONE and immutable REVIEW_RESULT events already carry typed pr/headSha/verdict fields that the current generic event validator rejects. Make the accepted lifecycle/event contract explicit, preserve strict typing and unknown-field fail-closed behavior, and restore live control validity without weakening authoritative claim/resource fencing.",
   "priority": 10000,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -55,11 +55,11 @@
     "core and hardening control-plane tests cover worker aliases, typed review events, unknown-status rejection, unknown-event-field rejection, and unchanged claim/resource fencing",
     "live swarm-control validation returns PASS on authoritative history without rewriting immutable events"
   ],
-  "pr": 428,
-  "notes": "Independent exact-head review by sol-20260812-m8q4v2c7 on PR #428 head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae returned REQUEST_CHANGES. The candidate correctly narrows worker aliases and typed REVIEW_RESULT fields, but verdict validation performs set membership before requiring a string; JSON array/object verdicts can therefore raise raw TypeError instead of controlled fail-closed ControlError. Primary must add an explicit string guard plus an unhashable JSON verdict hardening regression, then rerun exact-head CI and request fresh independent review. Canonical candidate CI is otherwise green. Trusted-main pr-ownership remains separately bootstrap-blocked behind trusted-history continuity; no immutable history was rewritten.",
+  "pr": 434,
+  "notes": "Generation-2 stale-primary recovery by sol-20260812-s8v4q2n7 starts exactly from reviewed PR #428 head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae and repairs the sole independent-review blocker. Exact successor head 4c73ae7bd82fb7969824bd2cdbfa49346b2dc482 adds an explicit string guard before REVIEW_VERDICTS membership plus []/{} hardening regressions. Canonical CI run 31589132728 passed; Swarm run 31589132702 engine-tests passed. pr-ownership remains separately fail-closed before candidate ownership evaluation because live proposed lane HG-BACKFILL-OBJECTGENOME-STRING-BUDGET still uses a legacy string dependency entry instead of the strict dependency object shape. Fresh independent exact-head review is now required; this primary does not self-approve.",
   "blockers": [
-    "Independent review found typed REVIEW_RESULT verdict lacks an explicit string type guard before REVIEW_VERDICTS set membership; repair and add unhashable JSON verdict regression before re-review.",
-    "Trusted-main control validation remains bootstrap-blocked by the separate trusted-history/generated-board continuity gate until the recovery chain is integrated."
+    "Fresh independent exact-head review of PR #434 by a worker other than generation-2 primary sol-20260812-s8v4q2n7 is required before integration.",
+    "Repository-wide pr-ownership is separately fail-closed on live swarm-control lane HG-BACKFILL-OBJECTGENOME-STRING-BUDGET because its dependency entry is a legacy string rather than the strict dependency object shape; do not attribute or bypass that shared control-state defect in this candidate."
   ],
   "tags": ["control-repair", "red-ci", "worker-lifecycle", "event-schema", "hero-gate"]
 }
