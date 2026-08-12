@@ -5,11 +5,11 @@
   "workerId": "sol-20260812-m8q4v2c7",
   "claimToken": "d4a82f6c1b9e7305",
   "claimedAt": "2026-08-12T08:47:10+00:00",
-  "heartbeatAt": "2026-08-12T08:49:05+00:00",
+  "heartbeatAt": "2026-08-12T08:54:00+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
   "resources": [],
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-m8q4v2c7-g4",
   "pr": 430,
-  "notes": "Published stacked test-only PR #430 exact head 193c373117b5428c761fe986fab3ec01a96de2ab. It pins helper-local live descendant enumeration, exact diagnostics overlay ancestry exemption, and descendant Archivable fail-closed guard before Clone(). Awaiting exact-head CI; no Studio evidence claims."
+  "notes": "PR #430 exact head 7716eba2ace4be9dc04df7264a1003de5dc0df55 now uses literal negative mutants: prior model-only clone proof and broadened overlay exemption. Awaiting exact-head CI; no Studio evidence claims."
 }
