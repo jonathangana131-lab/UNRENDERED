@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-k8v3m6q2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "REVIEWING",
   "startedAt": "2026-08-12T10:40:00+00:00",
-  "lastSeenAt": "2026-08-12T10:44:30+00:00",
-  "laneId": "HG-BACKFILL-WORLDENTITY",
-  "slotId": "test-adversary",
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-test-adversary-k8v3m6q2",
-  "notes": "Lost the higher-priority stale control-recovery takeover race before implementation; now holding the WorldEntity test-adversary slot for bounded source-only Hero Gate depth work."
+  "lastSeenAt": "2026-08-12T10:56:50+00:00",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "reviewer-1",
+  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-k8v3m6q2",
+  "notes": "Independent exact-head review of PR #434 after publishing green WorldEntity support PR #435 and releasing that claim."
 }
