@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-PHYSICS-RUNTIME-RECIPE-CLOSED-SHAPE",
+  "epicId": "HERO-GATE",
+  "title": "Physics Lab runtime canonical recipe closed shape",
+  "objective": "Close the retained PhysicsLabRuntime canonical-recipe container-shape gap after #408 lands: reject extra top-level recipe fields, extra entity-recipe wrapper fields, and any non-exact key/index on recipe.entities while preserving bounded malformed-input work and all accepted runtime transaction/identity invariants.",
+  "priority": 4880,
+  "state": "PROPOSED",
+  "mode": "exclusive",
+  "dependencies": ["HG-PHYSICS-RUNTIME-SYNTHESIS"],
+  "writeScopes": ["src/shared/Physics/PhysicsLabRuntime.luau", "tests/physics_lab_runtime_synthesis.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"Canonical recipe container-shape hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Physics/PhysicsLabRuntime.luau","tests/physics_lab_runtime_synthesis.luau"]},
+    {"slotId":"audit","role":"Canonical shape/bounded-work auditor","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":140,"requiresIndependentFrom":"primary","writeScopes":["tests/physics_lab_runtime_synthesis.luau"]}
+  ],
+  "acceptance": [
+    "top-level Physics Lab recipe is an exact plain closed record: only schemaVersion, recipeKey, worldId, regionId, and entities are accepted",
+    "each entity-recipe wrapper is an exact plain closed record containing only key and entity",
+    "recipe.entities is an exact dense array with only integer keys 1..canonicalEntityCount; reject string keys, zero/negative/noninteger indices, sparse/high indices, or any extra entry outside the canonical population",
+    "closed-shape validation is bounded by project-owned schema/population size: stop after at most allowedCount+1 observed keys rather than scanning arbitrarily many malformed caller keys",
+    "reject malformed container shape before registry/Fidelity authority construction and without executing metatable/stringification hooks",
+    "add deterministic adversaries for one extra top-level field, one extra entity-wrapper field, one entities string key, sparse/high numeric key, zero/negative/noninteger key, and many-extra-key input; verify immediate canonical retry remains valid",
+    "preserve #408 canonical value/provenance/state/revision checks, WorldEntityId lookup fence, closure-private weak-key state, frozen facade, whole-step transaction fence, callback unwind/retry, and exact source-only evidence boundaries",
+    "canonical CI and engine-tests required; fresh independent exact-head review required; trusted live pr-ownership remains mandatory before integration",
+    "no Studio, viewport, physical-contact, or two-client evidence claim"
+  ],
+  "tags": ["backfill", "hero-gate", "physics-runtime", "canonical-recipe", "closed-shape", "source-only"],
+  "notes": "Proposed from capacity-mining finding evt-20260812t090530z-r7m4k9q2-physics-runtime-recipe-shape against independently reviewed retained synthesis #408 head d31c100c5d3766ca14d89b046fff4cdb09086754. #408 correctly closes nested WorldEntity record/origin shapes and canonical value/state/provenance identity, but top-level recipe, entity-recipe wrappers, and the entities container itself can silently carry extra plain-data keys outside the fields/prefix actually read. Keep PROPOSED until HG-PHYSICS-RUNTIME-SYNTHESIS can integrate under restored trusted ownership; do not fork or weaken #408 while it is trust-blocked."
+}
