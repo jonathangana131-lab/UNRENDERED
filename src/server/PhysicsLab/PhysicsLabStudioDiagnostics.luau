@@ -224,6 +224,20 @@ local function captureCanonicalWhileDiagnosticsEnabled(
 	local liveRoot = diagnosticsRoot(lab.model)
 	assert(liveRoot ~= nil, "enabled canonical validation requires the owned diagnostics root")
 
+	-- Clone() omits non-Archivable Instances. Fail closed rather than normalize live
+	-- canonical truth: every Instance outside the exact owned diagnostics overlay
+	-- must be clone-preservable before the disposable validation copy is created.
+	assert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")
+	for _, liveInstance in ipairs(lab.model:GetDescendants()) do
+		local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot)
+		if not isDiagnosticsOverlay then
+			assert(
+				liveInstance.Archivable,
+				`enabled canonical validation cannot clone non-Archivable live truth: {liveInstance:GetFullName()}`
+			)
+		end
+	end
+
 	-- Keep the canonical validator strict. Validate a disposable copy of the live
 	-- lab after removing only the exact project-owned diagnostics overlay from that
 	-- copy; arbitrary live children, geometry drift, attributes, and recipe truth
