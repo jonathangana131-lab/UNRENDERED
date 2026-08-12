@@ -12,7 +12,8 @@ local function run(): number
 		end
 	end
 
-	local metadataBudget = WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES
+	local metadataBudget = WorldEntity.MAX_CANONICAL_METADATA_STRING_BYTES
+	expect("canonical metadata string-byte budget is explicit", metadataBudget == 65536)
 	local entityKind = "office-chair"
 	local worldIdValue = "world:0000000000000001"
 	local regionIdValue = "region:office-a"
