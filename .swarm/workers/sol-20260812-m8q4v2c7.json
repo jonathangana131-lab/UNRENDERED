@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-m8q4v2c7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T08:00:15+00:00",
-  "lastSeenAt": "2026-08-12T08:00:15+00:00",
+  "lastSeenAt": "2026-08-12T08:44:20+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
-  "slotId": "test-adversary",
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-m8q4v2c7-g1",
-  "notes": "Review/integration fallback: adversarial WorldEntity depth pass while trusted-history ownership recovery is independently reviewed. No Studio evidence claims."
+  "slotId": "primary",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-m8q4v2c7-g8",
+  "notes": "Generation-8 primary PR #429 exact head a5374aadce95ee0c3992c75d81b1d9b8619d0e7d is CI green and handed off. PR remains draft because lane policy requires trusted-history continuity recovery before REVIEW; primary/resource claims released. No Studio evidence claims."
 }
