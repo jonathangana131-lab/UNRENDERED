@@ -12,15 +12,89 @@ local DESCENDANT_BLOCK = [[
 		end
 	end]]
 
+local function longBracketEnd(source: string, openerStart: number): number?
+	if string.sub(source, openerStart, openerStart) ~= "[" then
+		return nil
+	end
+
+	local cursor = openerStart + 1
+	while string.sub(source, cursor, cursor) == "=" do
+		cursor += 1
+	end
+	if string.sub(source, cursor, cursor) ~= "[" then
+		return nil
+	end
+
+	local equals = string.sub(source, openerStart + 1, cursor - 1)
+	local closer = "]" .. equals .. "]"
+	local _, closeEnd = string.find(source, closer, cursor + 1, true)
+	return closeEnd or #source
+end
+
+local function maskInertSource(source: string): string
+	local output = {}
+	local copyStart = 1
+	local cursor = 1
+
+	local function maskThrough(regionEnd: number)
+		table.insert(output, string.sub(source, copyStart, cursor - 1))
+		local region = string.sub(source, cursor, regionEnd)
+		table.insert(output, (string.gsub(region, "[^\n]", " ")))
+		cursor = regionEnd + 1
+		copyStart = cursor
+	end
+
+	while cursor <= #source do
+		local character = string.sub(source, cursor, cursor)
+		if character == '"' or character == "'" or character == "`" then
+			local quote = character
+			cursor += 1
+			while cursor <= #source do
+				local quotedCharacter = string.sub(source, cursor, cursor)
+				if quotedCharacter == "\\" then
+					cursor += 2
+				elseif quotedCharacter == quote then
+					cursor += 1
+					break
+				else
+					cursor += 1
+				end
+			end
+		elseif string.sub(source, cursor, cursor + 1) == "--" then
+			local commentStart = cursor
+			local bracketEnd = longBracketEnd(source, cursor + 2)
+			if bracketEnd ~= nil then
+				maskThrough(bracketEnd)
+			else
+				local newline = string.find(source, "\n", cursor + 2, true)
+				local commentEnd = if newline ~= nil then newline - 1 else #source
+				cursor = commentStart
+				maskThrough(commentEnd)
+			end
+		else
+			local bracketEnd = longBracketEnd(source, cursor)
+			if bracketEnd ~= nil then
+				maskThrough(bracketEnd)
+			else
+				cursor += 1
+			end
+		end
+	end
+
+	table.insert(output, string.sub(source, copyStart))
+	return table.concat(output)
+end
+
 local function hasCompleteCloneProof(helperSource: string): boolean
+	local executableSource = maskInertSource(helperSource)
 	local modelArchivable = string.find(
-		helperSource,
+		executableSource,
 		'\n\tassert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")',
 		1,
 		true
 	)
-	local descendantBlock = string.find(helperSource, DESCENDANT_BLOCK, 1, true)
-	local cloneLab = string.find(helperSource, "\n\tlocal cloneInstance = lab.model:Clone()", 1, true)
+	local descendantBlock = string.find(executableSource, DESCENDANT_BLOCK, 1, true)
+	local cloneLab = string.find(executableSource, "\n\tlocal cloneInstance = lab.model:Clone()", 1, true)
 	return modelArchivable ~= nil
 		and descendantBlock ~= nil
 		and cloneLab ~= nil
@@ -41,9 +115,9 @@ local function run(): number
 	end
 
 	local rawSource = fs.readFile(DIAGNOSTICS_SOURCE)
-	-- Ignore inactive line comments, and anchor checks on semantic tokens instead
-	-- of one-line function signatures so StyLua wrapping cannot change the result.
-	local source = string.gsub(rawSource, "%-%-[^\n]*", "")
+	-- Mask comments and Luau long-bracket strings while preserving source positions and
+	-- newlines. Source-contract checks must never certify executable behavior from inert text.
+	local source = maskInertSource(rawSource)
 
 	local helperStart =
 		string.find(source, "local function captureCanonicalWhileDiagnosticsEnabled(", 1, true)
@@ -76,7 +150,7 @@ local function run(): number
 	)
 
 	-- Instance:Clone() omits non-Archivable descendants. Pin the complete helper-local
-	-- proof as a formatted block so token-preserving early exits or dead wrappers cannot
+	-- proof as a formatted block so token-preserving early exits or dead/inert wrappers cannot
 	-- masquerade as an exhaustive scan. The block must remain at helper scope and finish
 	-- before the disposable clone is created.
 	expect(
@@ -144,6 +218,26 @@ local function run(): number
 	expect(
 		"clone-completeness matcher rejects a dead wrapped descendant scan",
 		not hasCompleteCloneProof(deadWrapperMutant)
+	)
+
+	local inertCommentMutant = '\n\tassert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")'
+		.. "\n\t--[["
+		.. DESCENDANT_BLOCK
+		.. "\n\t]]"
+		.. "\n\tlocal cloneInstance = lab.model:Clone()"
+	expect(
+		"clone-completeness matcher rejects an inert long-comment copy of the descendant proof",
+		not hasCompleteCloneProof(inertCommentMutant)
+	)
+
+	local inertStringMutant = '\n\tassert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")'
+		.. "\n\tlocal inertProof = [=["
+		.. DESCENDANT_BLOCK
+		.. "\n\t]=]"
+		.. "\n\tlocal cloneInstance = lab.model:Clone()"
+	expect(
+		"clone-completeness matcher rejects an inert long-string copy of the descendant proof",
+		not hasCompleteCloneProof(inertStringMutant)
 	)
 
 	expect(
