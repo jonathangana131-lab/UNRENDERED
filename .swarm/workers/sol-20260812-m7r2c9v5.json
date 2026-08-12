@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-m7r2c9v5",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T10:56:30+00:00",
-  "lastSeenAt": "2026-08-12T10:56:30+00:00",
+  "lastSeenAt": "2026-08-12T11:04:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-materialdna",
-  "notes": "Mining current MaterialDNA source/tests and live lanes for one concrete non-duplicate source-only Reality-Grade gap."
+  "notes": "Completed source-only MaterialDNA mining. Published corrective finding evt-20260812-110300-m7r2c9v5-materialdna-key-grammar-correction: the proposed percent-sign defect is a Lua-pattern misread; recommend retiring HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR without product edits. Existing repairCount and dense-validation-budget findings remain valid. No Studio/engine evidence claimed."
 }
