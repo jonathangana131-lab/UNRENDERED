@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:42:49+00:00",
-  "lastSeenAt": "2026-08-12T10:44:11+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "primary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-q8n5v2c7-g13",
-  "notes": "Recovery claim for generation-12 diagnostics successor PR #431 after losing the higher-priority control-repair race. Verifying the completed clone-completeness regression and preparing the lane for independent exact-head review without claiming Studio evidence."
+  "lastSeenAt": "2026-08-12T10:45:49+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-q8n5v2c7",
+  "notes": "Authority/multiplayer capacity miner claimed after higher-priority recovery and diagnostics primary races were lost. Mining current source/tests/PR lineage for one concrete non-duplicate Hero-Gate gap without Studio evidence claims."
 }
