@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-s6v3k8r1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T10:44:30+00:00",
-  "lastSeenAt": "2026-08-12T11:01:35+00:00",
-  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-  "slotId": "reviewer-1",
+  "lastSeenAt": "2026-08-12T11:04:20+00:00",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-s6v3k8r1",
-  "notes": "Independent exact-head review of PR #434 generation-2 worker-status contract successor; verifying the string verdict guard, []/{} regressions, documented lifecycle aliases, strict unknown-field/status behavior, and unchanged claim/resource fencing."
+  "notes": "Completed independent exact-head review of PR #434. Published REQUEST_CHANGES evt-20260812-110330-s6v3k8r1-worker-status-g2-review and GitHub review 4915685995: worker status still lacks a string guard before set membership, so []/{} escape as TypeError. Lane moved to NEEDS_CHANGES. No code or Studio evidence claimed."
 }
