@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:40:00+00:00",
-  "lastSeenAt": "2026-08-12T10:40:00+00:00",
-  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-  "slotId": "primary",
-  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-h7m2v9q4",
-  "notes": "Inspecting stale primary takeover after independent REQUEST_CHANGES on PR #428; no implementation edits before claim fencing."
+  "lastSeenAt": "2026-08-12T10:44:30+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-test-adversary-k8v3m6q2",
+  "notes": "Lost the higher-priority stale control-recovery takeover race before implementation; now holding the WorldEntity test-adversary slot for bounded source-only Hero Gate depth work."
 }
