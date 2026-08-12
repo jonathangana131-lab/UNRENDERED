@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "workerId": "sol-20260812-r7m4k9q2",
+  "claimToken": "5b8d2f1a7c409e63",
+  "claimedAt": "2026-08-12T09:07:00+00:00",
+  "heartbeatAt": "2026-08-12T09:07:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-r7m4k9q2",
+  "pr": null,
+  "notes": "Mine retained PhysicsLab recipe/scale/validation source and tests for one non-duplicate Hero-Gate gap beyond reviewed #423 numeric/no-execute/derived-output fences. No Studio/contact evidence and no Hero Door scope expansion."
+}
