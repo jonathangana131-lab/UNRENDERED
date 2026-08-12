@@ -19,7 +19,7 @@ local function run(): number
 	local generatorName = "objects.office"
 	local fixedMetadataBytes = #entityKind + #worldIdValue + #regionIdValue + #generatorName
 	local exactRecipeKeyBytes = metadataBudget - fixedMetadataBytes
-	assert(exactRecipeKeyBytes > 0)
+	assert(exactRecipeKeyBytes > 0, "WorldEntity metadata budget must fit canonical fixture fields")
 
 	local function makeEntity(entityId: string, recipeKeyBytes: number)
 		return WorldEntity.new({
