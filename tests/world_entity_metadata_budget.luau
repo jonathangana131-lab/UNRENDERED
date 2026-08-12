@@ -35,6 +35,24 @@ local function run(): number
 		})
 	end
 
+	local function makeMutableRecord(entityId: string, recipeKeyBytes: number)
+		return {
+			id = entityId,
+			kind = entityKind,
+			origin = {
+				worldId = worldIdValue,
+				regionId = regionIdValue,
+				generator = generatorName,
+				generatorVersion = 1,
+				recipeKey = string.rep("r", recipeKeyBytes),
+			},
+			fidelity = "F0",
+			persistentState = {},
+			stateRevision = 0,
+			representationRevision = 0,
+		}
+	end
+
 	local exactRegistry = WorldEntity.createRegistry()
 	local exactAccepted = pcall(function()
 		local exactEntity = makeEntity("entity:canonical-metadata-exact-budget", exactRecipeKeyBytes)
@@ -75,6 +93,39 @@ local function run(): number
 	expect(
 		"rejected canonical metadata leaves no retained record",
 		WorldEntity.get(atomicRegistry, overBudgetId) == nil
+	)
+
+	local directRegistry = WorldEntity.createRegistry()
+	local directExistingEntity = WorldEntity.new({
+		id = "entity:canonical-metadata-direct-existing",
+		kind = entityKind,
+		origin = {
+			worldId = worldIdValue,
+			regionId = regionIdValue,
+			generator = generatorName,
+			generatorVersion = 1,
+			recipeKey = "chair/canonical-metadata-direct-existing",
+		},
+	})
+	assert(WorldEntity.register(directRegistry, directExistingEntity))
+	local directExistingRecord = WorldEntity.get(directRegistry, directExistingEntity.id)
+	local directBeforeCount = WorldEntity.count(directRegistry)
+	local directOverBudgetId = "entity:canonical-metadata-direct-over-budget"
+	local directOverBudgetAccepted = pcall(function()
+		assert(WorldEntity.register(directRegistry, makeMutableRecord(directOverBudgetId, exactRecipeKeyBytes + 1)))
+	end)
+	expect("direct registry ownership rejects one byte beyond aggregate metadata budget", not directOverBudgetAccepted)
+	expect(
+		"rejected direct metadata preserves registry count",
+		WorldEntity.count(directRegistry) == directBeforeCount
+	)
+	expect(
+		"rejected direct metadata preserves existing registry truth",
+		WorldEntity.get(directRegistry, directExistingEntity.id) == directExistingRecord
+	)
+	expect(
+		"rejected direct metadata leaves no retained record",
+		WorldEntity.get(directRegistry, directOverBudgetId) == nil
 	)
 
 	return failures
