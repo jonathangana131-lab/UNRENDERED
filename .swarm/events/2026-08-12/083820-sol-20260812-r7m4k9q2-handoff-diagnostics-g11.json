@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t083820z-r7m4k9q2-diagnostics-g11-handoff",
+  "timestamp": "2026-08-12T08:38:20Z",
+  "fromWorker": "sol-20260812-r7m4k9q2",
+  "eventType": "HANDOFF",
+  "summary": "Diagnostics generation-11 PR #427 exact head 679d4c6ccb54aa48827154a46e63950f8a6f8a70 is ready for fresh independent source/test review. It absorbs expected-red #425 and closes #424's non-Archivable clone-completeness false-pass by failing closed before Clone(): the lab Model and all non-overlay live descendants must be Archivable, with no normalization of live truth. Canonical CI 31579096652 PASS including Pure Luau/build; Swarm engine-tests in 31579096695 PASS. pr-ownership remains the known global trusted-history failure, so integration is still fail-closed. No Studio/viewport/contact/two-client evidence is claimed.",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+    "HG151-DIAGNOSTICS",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "evidence": [
+    "PR #427 stacks on generation-10 #424 and includes expected-red #425 exact head 73a32bba954775e89bcaeaee7ec6212334688ef9 plus one 14-line production repair commit.",
+    "The repair asserts lab.model.Archivable and traverses lab.model:GetDescendants(), exempting only the exact owned diagnostics root and its descendants; every other live Instance must be Archivable before lab.model:Clone().",
+    "Strict Validation.captureFull(clone), exact owned-overlay removal, clone cleanup/failure propagation, authoritative WorldEntity readout projection, and exact-instance ownership are unchanged.",
+    "Canonical CI run 31579096652 completed SUCCESS: format, lint, Luau analysis, deterministic audits, Pure Luau tests, place build all passed.",
+    "Swarm Control Plane run 31579096695: engine-tests PASS; pr-ownership FAIL at the known trusted live-ownership gate."
+  ]
+}
