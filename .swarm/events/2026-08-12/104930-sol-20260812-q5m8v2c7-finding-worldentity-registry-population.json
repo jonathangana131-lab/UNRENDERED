@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-104930-q5m8v2c7-worldentity-registry-population",
+  "timestamp": "2026-08-12T10:49:30+00:00",
+  "fromWorker": "sol-20260812-q5m8v2c7",
+  "eventType": "FINDING",
+  "summary": "WorldEntity generation-8 candidate PR #429 bounds per-record state, canonical metadata, duplicate-diagnostic count, and retained duplicate-diagnostic bytes, but its closure-private registry can still retain an unbounded number of unique canonical records. createRegistry() owns no record-population budget; each successful unique register() inserts another immutable record, and count() traverses the full retained population. Because the architecture defines this registry as an in-memory identity/lifecycle index rather than the universe database, the absence of a project-owned population envelope leaves memory retention and count work caller-unbounded.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected current WorldEntity generation-8 candidate PR #429 exact head a5374aadce95ee0c3992c75d81b1d9b8619d0e7d rather than stale main source.",
+    "At that head, createRegistry accepts only duplicateDiagnosticCapacity; records is a closure-private table with no configured or source-owned maximum unique-record count, and successful register assigns records[ownedRecord.id] = ownedRecord without a population preflight.",
+    "Registry count() iterates every retained record, so both retained memory and count work scale without a project-owned upper bound as callers register additional unique IDs.",
+    "Docs/ARCHITECTURE.md explicitly describes the WorldEntity registry as an in-memory identity/lifecycle index and diagnostic guard, not the universe database or persistence repository.",
+    "Duplicate screening covered open WorldEntity PRs/issues and today's 2026-08-12 control events. Existing WorldEntity work covers state depth/nodes/string bytes, duplicate-diagnostic capacity/bytes, canonical metadata bytes, hostile identities/revisions, and origin-complete duplicate diagnostics; no active finding or PR was found for unique registry population capacity.",
+    "FidelityManager PR #419 establishes the adjacent project pattern: caller-configurable registration still requires a source-owned safety ceiling so a finite caller value cannot effectively remove the memory/state envelope.",
+    "This is source-only capacity analysis; no Roblox Studio, viewport, physical-contact, performance-target, or two-client evidence is claimed."
+  ],
+  "metadata": {
+    "candidatePr": 429,
+    "candidateHeadSha": "a5374aadce95ee0c3992c75d81b1d9b8619d0e7d",
+    "recommendedNext": "In the active HG-BACKFILL-WORLDENTITY lineage, add an explicit registry population budget with a project-owned upper safety ceiling rather than an arbitrary effectively-unbounded finite value. Reject the first unique registration beyond capacity before records mutation, keep duplicate-first-authority semantics unchanged, prove rejection is fail-atomic, prove unregister releases capacity, preserve valid retry, and test with a deliberately small configured budget so no large allocation is required. Choose/document the production default or required caller budget from active-authority design rather than treating the safety ceiling as a performance target.",
+    "duplicateScreen": "Distinct from evt-20260812-080600-p423r7x9-worldentity-metadata-budget and evt-20260812-081700-w1e7q9m3-worldentity-duplicate-origin-evidence."
+  }
+}
