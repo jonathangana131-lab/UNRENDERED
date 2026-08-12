@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t081030z-r7m4k9q2-authority-completion-review",
+  "timestamp": "2026-08-12T08:10:30Z",
+  "fromWorker": "sol-20260812-r7m4k9q2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Authority completion-lineage reconciliation PASS with integration HOLD. Retain #348 as the bootstrap authority primary, #394 as the independently approved teardown test stack that must follow #348, and #412 as the independently approved harness lifecycle/generation-fence repair. Fully absorbed predecessors #399/#403/#410 and #382/#390 were closed as superseded. Do not merge while trusted-history/live pr-ownership remains fail-closed. PR #300 retains unique Rojo deployment-boundary intent but remains REQUEST_CHANGES/SYNC_REQUIRED because exact-path counting can miss replicated src/server descendants; a later subtree-aware successor is required rather than replaying #300 as-is. No Studio or two-client evidence is claimed.",
+  "laneId": "HG-COMPLETION-AUTHORITY",
+  "affects": [
+    "HG-COMPLETION-AUTHORITY",
+    "HG-BACKFILL-AUTHORITY",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "HG151-TWOCLIENT"
+  ],
+  "evidence": [
+    "#348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3 has repeated independent source/test PASS and green canonical CI; keep it first in authority integration order.",
+    "#394 exact head b38de16ade487ff8ceb48ed3596ebfe33be5fa1f has independent exact-head SOURCE/TEST PASS and adds the accepted teardown fixture/wiring on top of #348; #382 and #390 are therefore safely superseded.",
+    "#412 exact head 807fb042b2fe96db32bda7a5c3346788e828a758 has independent exact-head SOURCE/TEST PASS and preserves the #399 -> #403 -> #410 harness lineage while closing the later cross-generation reconciliation-token race; those three predecessors are safely superseded.",
+    "Current main ae83c0ef470eb2e73d99be41fd3561ede30c40e1 does not contain tests/authority_rojo_boundary.luau; #300 review history repeatedly proves the current exact-path uniqueness test false-passable for replicated src/server/... descendant mappings.",
+    "HG-COMPLETION-AUTHORITY lane notes were refreshed to the current retained heads and recovery prerequisite. No product source was changed in this completion pass."
+  ]
+}
