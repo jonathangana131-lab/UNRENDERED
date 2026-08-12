@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS",
   "epicId": "HERO-GATE",
-  "title": "ObjectGenome bounded ObjectState validation work",
-  "objective": "Close the demonstrated ObjectState exact-cardinality scan gap so malformed plain snapshots reject after bounded work derived from the canonical v1 schema/genome, without changing ObjectGenome identity/schema semantics or depending on Studio.",
+  "title": "ObjectGenome bounded validation work",
+  "objective": "Close the demonstrated ObjectGenome cardinality/work-bound gaps so oversized immutable recipe collections and mutable ObjectState snapshots reject at project-owned bounded preflight fences before nested graph/identity/ownership or state-map traversal, without changing ObjectGenome identity/schema semantics or depending on Studio.",
   "priority": 5135,
   "state": "PROPOSED",
   "mode": "exclusive",
@@ -11,18 +11,21 @@
   "writeScopes": ["src/shared/Objects/ObjectGenome.luau", "tests/object_genome*.luau"],
   "resources": [],
   "slots": [
-    {"slotId":"primary","role":"Bounded ObjectState cardinality validation hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Objects/ObjectGenome.luau","tests/object_genome*.luau"]},
-    {"slotId":"audit","role":"ObjectState bounded-work auditor","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":120,"writeScopes":["tests/object_genome*.luau"]}
+    {"slotId":"primary","role":"Bounded ObjectGenome/ObjectState cardinality validation hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Objects/ObjectGenome.luau","tests/object_genome*.luau"]},
+    {"slotId":"audit","role":"ObjectGenome bounded-work auditor","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":120,"writeScopes":["tests/object_genome*.luau"]}
   ],
   "acceptance": [
+    "introduce explicit named project-owned maximum cardinalities for immutable v1 recipe collections at least components, each component.supportKeys, mechanisms, and affordances; choose limits from canonical fixture/resource-budget audit rather than arbitrary mining-time numbers",
+    "oversized immutable recipe collections reject at bounded preflight points before validatePlainGenomeTables/validateGenomeShape nested traversal, support-graph/reachability work, recipe fingerprinting, or ownership cloning can consume work proportional to arbitrarily large caller input",
     "top-level ObjectState validation rejects once observed entries exceed the fixed v1 STATE_FIELDS cardinality instead of scanning an arbitrarily wider table",
     "componentWear, componentDamage, and detachedComponents reject once observed entries exceed the exact genome component count; mechanismPosition rejects once observed entries exceed the exact genome mechanism count",
     "over-cardinality rejection uses deterministic field-level diagnostics that do not depend on pairs traversal order or stringify hostile keys",
-    "within-bound snapshots preserve existing missing-key, unknown-key, value-range, kind-specific mechanism, metatable, aliasing, and exact genomeId behavior",
-    "ObjectGenome/ObjectState schema versions, stable identity inputs, recipe fingerprint semantics, and valid fixture outputs remain unchanged",
-    "add deterministic regressions proving exact-cardinality valid snapshots remain accepted and oversized plain maps/top-level state fail at the bounded cardinality fence without claiming an unmeasured timing result",
+    "within-bound recipes/snapshots preserve existing dense-shape, missing-key, unknown-key, value-range, kind-specific mechanism, metatable, aliasing, support-graph, and exact genomeId behavior",
+    "ObjectGenome/ObjectState schema versions, stable identity inputs, recipe fingerprint semantics, and previously valid under-cap fixture outputs remain unchanged",
+    "add deterministic regressions proving exact-cap immutable recipe collections remain accepted, cap+1 components/supportKeys/mechanisms/affordances fail at the early cardinality fence, exact-cardinality valid snapshots remain accepted, and oversized plain state maps/top-level state fail without claiming an unmeasured timing result",
+    "audit validate/inspect, recipeFingerprint, and ObjectGenomeOwnership construction/clone public paths so valid canonical work is bounded by the new recipe limits before downstream traversal",
     "no Roblox Studio or engine-evidence claim"
   ],
-  "notes": "Capacity-mined from retained ObjectGenome generation-8 PR #395 after confirming its independent source/test approval and existing identity/key/aliasing/deterministic-diagnostic/decoder-shape closure. Current inspectState still traverses every supplied top-level and mutable-map key even though v1 exact-snapshot semantics provide a natural maximum cardinality. Dependency prevents overlap with retained #395 while live pr-ownership recovery is blocked. Finding: evt-20260811t231030z-n4q8v6c2-objectgenome-state-cardinality.",
-  "tags": ["backfill", "hero-gate", "source-only", "objectgenome", "performance-boundary"]
+  "notes": "Capacity-mined from retained ObjectGenome generation-8 PR #395 after confirming its independent source/test approval and existing identity/key/aliasing/deterministic-diagnostic/decoder-shape closure. The original finding showed inspectState traverses every supplied top-level and mutable-map key even though v1 exact-snapshot semantics provide natural maximum cardinalities. Follow-up mining found the immutable recipe has the same bounded-work class: validateDenseArray has no maxCount, and inspect() traverses components/mechanisms/affordances before dense validation while support reachability can make componentCount passes. Fold both defects into this one proposed leaf to avoid overlapping ObjectGenome source/test WIP. Dependency prevents overlap with retained #395 while live pr-ownership recovery is blocked. Findings: evt-20260811t231030z-n4q8v6c2-objectgenome-state-cardinality; evt-20260812-082034-w3n8q6v2-objectgenome-recipe-cardinality.",
+  "tags": ["backfill", "hero-gate", "source-only", "objectgenome", "performance-boundary", "bounded-validation"]
 }
