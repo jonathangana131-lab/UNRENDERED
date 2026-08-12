@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t084600z-r7m4k9q2-objectgenome-string-bounds",
+  "timestamp": "2026-08-12T08:46:00Z",
+  "fromWorker": "sol-20260812-r7m4k9q2",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome retained generation-8 source/test contract has an unbounded canonical free-form string surface distinct from the already proposed collection/state-cardinality lane. provenance.manufacturerFamily, provenance.productLine, provenance.apparentEra, and component.role are validated only as non-empty strings, then retained by canonical cloning and consumed byte-for-byte by recipeFingerprint's chunked StableId fold. Existing tests intentionally accept a 1,025-byte productLine, so a repair must not silently assume the semantic-key 512-byte ceiling applies or casually break the established v1 compatibility contract. Recommend a dedicated post-#395 one-shot string-byte-budget lane that first makes the compatibility/versioning choice explicit, then rejects over-budget canonical free-form text before clone/fingerprint work with exact-bound/+1 and fail-atomic coverage. This is not the existing HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS collection-cardinality/state-map task.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-BACKFILL-OBJECTGENOME",
+    "HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS",
+    "HG-COMPLETION-CONTENT"
+  ],
+  "evidence": [
+    "Retained PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 validates familyId/variantKey and semantic keys with explicit StableId byte ceilings, but provenance.manufacturerFamily/productLine/apparentEra and component.role use only isNonEmptyString().",
+    "ObjectGenome.recipeFingerprint() recursively fingerprints every validated string through foldFingerprintToken(), which loops across the complete payload in RECIPE_FINGERPRINT_CHUNK_BYTES chunks; accepted caller-sized free-form strings therefore create caller-sized deterministic hashing work.",
+    "ObjectGenome constructors/clones retain canonical plain-data string values, so the same unbounded input also creates caller-sized retained recipe memory rather than only transient fingerprint cost.",
+    "tests/object_genome.luau at #395 explicitly sets provenance.productLine = string.rep('x', 1025), asserts the genome remains valid, and asserts deterministic fingerprinting. A future ceiling must therefore preserve or deliberately version/migrate this established v1 behavior rather than reusing the 512-byte StableId semantic-key rule by accident.",
+    "HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS is already PROPOSED for immutable collection cardinalities and mutable state-map breadth/work; no existing lane/PR found in current swarm-control owns free-form provenance/component-role byte bounds."
+  ]
+}
