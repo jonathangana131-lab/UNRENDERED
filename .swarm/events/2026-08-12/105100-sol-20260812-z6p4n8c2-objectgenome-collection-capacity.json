@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-105100-z6p4n8c2-objectgenome-collection-capacity",
+  "timestamp": "2026-08-12T10:51:00+00:00",
+  "fromWorker": "sol-20260812-z6p4n8c2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "summary": "Retained ObjectGenome generation-8 bounds nested semantic-key bytes but leaves canonical recipe collection cardinality unbounded. ObjectGenome.inspect accepts arbitrarily large dense components, per-component supportKeys, mechanisms, and affordances; validation then allocates component/mechanism maps, recursively traverses support chains, runs a component-count-bounded fixed-point pass over those unbounded collections, and ObjectGenomeOwnership.own clones every accepted entry. A structurally valid dense recipe can therefore make canonical validation/ownership CPU, recursion depth, mutable default-state size, and retained memory caller-sized. Recommend a bounded successor after the retained ObjectGenome lineage/control gate is integrated: explicit project-owned finite collection ceilings, rejected before graph/map/clone work, exact max/max+1 regressions, and documentation that the ceilings are defensive envelopes rather than device-performance budgets.",
+  "affects": [
+    "HG-BACKFILL-OBJECTGENOME"
+  ],
+  "severity": "HIGH",
+  "evidence": [
+    "PR #395 exact retained head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 adds a 512-byte nested semantic-key bound and decoder-shape hardening but no collection-count constants or checks.",
+    "src/shared/Objects/ObjectGenome.luau validateDenseArray proves only dense 1-based shape and returns maxIndex without a project-owned maximum.",
+    "src/shared/Objects/ObjectGenome.luau ObjectGenome.inspect builds componentsByKey/mechanism maps, recursively calls detectSupportCycles across support chains, and performs the external-support fixed-point pass for up to componentCount iterations.",
+    "src/shared/Objects/ObjectGenomeOwnership.luau cloneGenome copies every accepted component, support key, mechanism, and affordance before recursive freeze.",
+    "Docs/OBJECT_GENOME.md documents dense canonical arrays but no finite cardinality envelope."
+  ]
+}
