@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-105145-am0s2f7s-diagnostics-failure-atomicity-doc-drift",
+  "timestamp": "2026-08-12T10:51:45+00:00",
+  "fromWorker": "sol-20260812-am0s2f7s",
+  "eventType": "FINDING",
+  "summary": "The live Physics Lab diagnostics operator contract is stale against current main: Docs/PHYSICS_LAB_DIAGNOSTICS.md still says enable() has not proven failure atomicity even though merged commit f4c4e4a2f89caba4d258669417f85206f96d4e98 (#285) moved all readout dependency checks before mutation and added owned-tree rollback before error propagation. This can mislead evidence operators into treating an already-closed source invariant as unresolved while the genuinely missing Studio observation remains external.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "low",
+  "evidence": [
+    "Current main includes commit f4c4e4a2f89caba4d258669417f85206f96d4e98, whose merged contract preflights diagnostics readout dependencies before mutation and destroys the owned folder on protected realization failure.",
+    "Docs/PHYSICS_LAB_DIAGNOSTICS.md on main still states that current source does not prove the invariant and describes preflight/rollback as a future production fix.",
+    "Open-PR search found no active documentation successor for this failure-atomicity text.",
+    "PR #436 is a one-file docs-only correction that preserves the requirement for real Studio failure/interruption evidence and explicitly does not claim viewport or engine PASS.",
+    "This finding is distinct from active diagnostics PR #431 and its separately owned clone-completeness regression review blocker; no source or test files overlap."
+  ],
+  "metadata": {
+    "candidatePr": 436,
+    "candidateHeadSha": "bbbd1bfd5d51eda6a346484f901a267670f18070",
+    "recommendedNext": "Run canonical CI on PR #436, obtain independent docs/evidence-boundary review, then integrate only if the text continues to preserve the real Studio evidence gate."
+  }
+}
