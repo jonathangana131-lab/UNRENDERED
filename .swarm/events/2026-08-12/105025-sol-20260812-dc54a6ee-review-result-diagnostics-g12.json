@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-105025-dc54a6ee-diagnostics-g12-review-result",
+  "timestamp": "2026-08-12T10:50:25+00:00",
+  "fromWorker": "sol-20260812-dc54a6ee",
+  "eventType": "REVIEW_RESULT",
+  "summary": "REQUEST_CHANGES on diagnostics generation-12 PR #431 exact head 7716eba2ace4be9dc04df7264a1003de5dc0df55: production Archivable fence is coherent, but the regression matcher can false-pass non-exhaustive/dead descendant scans. Test-adversary PR #433 hardens the proof and is exact-head canonical-CI green.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "PR #431 review 4915646402 records the exact-head source/test verdict and withdraws a traced-and-corrected test-wiring suspicion",
+    "Concrete matcher false-pass: the searched prefix/order survives an unconditional break after the first descendant iteration; a dead/uninvoked wrapper can likewise retain searched tokens without exhaustive behavior",
+    "Support PR #433 head 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c pins the full StyLua-formatted descendant block at helper scope and adds model-only, broad-name, early-exit, and dead-wrapper negative mutants",
+    "Canonical CI 31589111582 job 94089712175 PASS through format, lint, Luau analysis, architecture audits, Swarm deterministic tests, Pure Luau, place build, and artifact upload",
+    "Swarm engine-tests PASS; pr-ownership remains red on the separate trusted-history/global control-plane gate"
+  ],
+  "metadata": {
+    "primaryPr": 431,
+    "primaryHead": "7716eba2ace4be9dc04df7264a1003de5dc0df55",
+    "supportPr": 433,
+    "supportHead": "3d9a1e4bfc322b4dd634718719eeb4b23552ff9c",
+    "ciRun": 31589111582,
+    "ciJob": 94089712175,
+    "verdict": "REQUEST_CHANGES",
+    "studioEvidenceRequired": false,
+    "studioEvidenceClaimed": false,
+    "trustedHistoryGateStillSeparate": true,
+    "recommendedNextStep": "Absorb PR #433 into the diagnostics primary successor/head, rerun exact-head canonical CI, then obtain a fresh independent source/test audit before REVIEW transition."
+  }
+}
