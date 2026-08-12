@@ -19,10 +19,12 @@ local function run(): number
 	-- of one-line function signatures so StyLua wrapping cannot change the result.
 	local source = string.gsub(rawSource, "%-%-[^\n]*", "")
 
-	local helperStart = string.find(source, "local function captureCanonicalWhileDiagnosticsEnabled(", 1, true)
+	local helperStart =
+		string.find(source, "local function captureCanonicalWhileDiagnosticsEnabled(", 1, true)
 	local helperEnd = helperStart
 		and string.find(source, "function PhysicsLabStudioDiagnostics.capture(", helperStart, true)
-	local cloneLab = helperStart and string.find(source, "local cloneInstance = lab.model:Clone()", helperStart, true)
+	local cloneLab = helperStart
+		and string.find(source, "local cloneInstance = lab.model:Clone()", helperStart, true)
 	local proveCloneModel = helperStart
 		and string.find(source, 'assert(cloneInstance:IsA("Model")', helperStart, true)
 	local locateOwnedOverlay = helperStart
@@ -64,19 +66,40 @@ local function run(): number
 			and propagate < helperEnd
 	)
 
-	local evidenceStart = string.find(source, "function PhysicsLabStudioDiagnostics.runToggleEvidence(", 1, true)
+	local evidenceStart =
+		string.find(source, "function PhysicsLabStudioDiagnostics.runToggleEvidence(", 1, true)
 	local evidenceReturn = evidenceStart and string.find(source, "return evidence", evidenceStart, true)
 	local enable = evidenceStart
-		and string.find(source, "local enabled = PhysicsLabStudioDiagnostics.enable(lab)", evidenceStart, true)
+		and string.find(
+			source,
+			"local enabled = PhysicsLabStudioDiagnostics.enable(lab)",
+			evidenceStart,
+			true
+		)
 	local onSnapshot = evidenceStart
-		and string.find(source, "local onSnapshot = captureCanonicalWhileDiagnosticsEnabled(lab)", evidenceStart, true)
+		and string.find(
+			source,
+			"local onSnapshot = captureCanonicalWhileDiagnosticsEnabled(lab)",
+			evidenceStart,
+			true
+		)
 	local onCompare = evidenceStart
-		and string.find(source, "local onComparison = Validation.compare(baseline, onSnapshot, 0.001)", evidenceStart, true)
+		and string.find(
+			source,
+			"local onComparison = Validation.compare(baseline, onSnapshot, 0.001)",
+			evidenceStart,
+			true
+		)
 	local onDelta = evidenceStart
 		and string.find(source, "for countName, delta in pairs(onComparison.delta) do", evidenceStart, true)
-	local onEnvelope = evidenceStart and string.find(source, "assert(", onDelta or evidenceStart, true)
+	local onEnvelope = onDelta and string.find(source, "onComparison.envelope.ok", onDelta, true)
 	local disable = evidenceStart
-		and string.find(source, "local disabled = PhysicsLabStudioDiagnostics.disable(lab)", evidenceStart, true)
+		and string.find(
+			source,
+			"local disabled = PhysicsLabStudioDiagnostics.disable(lab)",
+			evidenceStart,
+			true
+		)
 
 	expect(
 		"each enabled evidence window validates canonical truth before diagnostics are disabled",
