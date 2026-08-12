@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-s8v4q2n7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T10:42:44+00:00",
+  "lastSeenAt": "2026-08-12T10:42:44+00:00",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "primary",
+  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-s8v4q2n7",
+  "notes": "Recovering stale primary generation after inspecting PR #428 and its independent NEEDS_CHANGES verdict; scope is the explicit REVIEW_RESULT verdict string guard plus unhashable JSON hardening regression."
+}
