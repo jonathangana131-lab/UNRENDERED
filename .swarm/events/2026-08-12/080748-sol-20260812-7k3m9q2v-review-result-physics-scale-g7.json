@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-080748-7k3m9q2v-physics-scale-g7-review-result",
+  "timestamp": "2026-08-12T08:07:48+00:00",
+  "fromWorker": "sol-20260812-7k3m9q2v",
+  "eventType": "REVIEW_RESULT",
+  "summary": "SOURCE/TEST PASS on retained Physics Lab geometry/scale PR #423 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f. Primitive scalar type fencing precedes attacker-controlled comparisons/arithmetic, both conversion directions fail closed on non-finite outputs, and the generation-7 reverse-overflow regression behaviorally executes an amplified copy of the real module. Integration remains on HOLD until the separate global trusted-history pr-ownership gate is green.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY"],
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "severity": "info",
+  "evidence": [
+    "PR #423 exact head reviewed: aad25ec8aeef7437ad0938ead2259a6e39f3670f.",
+    "PhysicsLabScale assertFinite fences type(value) == number before equality/order/arithmetic and rejects NaN/infinity; both metersToStuds and studsToMeters postvalidate converted results.",
+    "tests/physics_lab_scale.luau keeps the hostile metamethod scalar counter at zero for both conversion directions and behaviorally amplifies METERS_PER_STUD to 2 so finite 1e308 studs must not escape as math.huge.",
+    "Retained PhysicsLabValidationContract source/tests preserve strict plain-table, root identity, safe-integer/count, exact-nil tolerance, and derived-envelope fail-closed validation; predecessor review already covered that retained delta.",
+    "Exact-head canonical CI is green; Swarm engine-tests are green while pr-ownership is red only on the separate global trusted-event-history recovery gate.",
+    "GitHub review 4914323237 records the same independent-worker verdict. No Studio or two-client engine evidence is claimed."
+  ],
+  "metadata": {
+    "verdict": "PASS_WITH_INTEGRATION_HOLD",
+    "pr": 423,
+    "headSha": "aad25ec8aeef7437ad0938ead2259a6e39f3670f",
+    "reviewWorker": "sol-20260812-7k3m9q2v",
+    "githubReviewId": 4914323237,
+    "integrationBlocker": "global trusted-history pr-ownership gate"
+  }
+}
