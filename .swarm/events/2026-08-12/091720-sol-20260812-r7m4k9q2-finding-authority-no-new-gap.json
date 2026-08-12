@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t091720z-r7m4k9q2-authority-no-new-gap",
+  "timestamp": "2026-08-12T09:17:20Z",
+  "fromWorker": "sol-20260812-r7m4k9q2",
+  "eventType": "FINDING",
+  "summary": "Authority/multiplayer capacity mining found no additional actionable source-only gap beyond the retained reviewed authority stack and the already-recorded Rojo deployment-boundary defect. Current production authority surface is intentionally narrow: server/client bootstrap context fences and Studio-only PhysicsLabStudioHarness ownership/lifecycle. Retained #348, #394, and #412 already cover wrong-context bootstrap rejection, teardown semantics, external Destroy/reparent reconciliation, synchronous stale-owner reconciliation, deferred cleanup generation fencing, retryable cleanup failure, and stale-handle safety. The unique uncovered source boundary remains evt-20260812t080930z-r7m4k9q2-authority-rojo-retained: replicated trees must reject any src/server descendant with subtree-aware tests rather than #300's exact-path check. Do not manufacture networking/remotes or another authority primary before the trusted-history/live ownership recovery and HG151 two-client prerequisites clear.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-COMPLETION-AUTHORITY",
+    "HG-BACKFILL-AUTHORITY",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "HG151-TWOCLIENT",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "evidence": [
+    "Retained authority heads remain #348 aa60103d489a055d86cf234dcc1338cf6168e4b3, #394 b38de16ade487ff8ceb48ed3596ebfe33be5fa1f, and #412 807fb042b2fe96db32bda7a5c3346788e828a758; all had independent source/test acceptance before the global trust gate blocked integration.",
+    "PhysicsLabStudioHarness #412 keeps closure-owned current/currentReconcile state, exact owned-handle identity, external Destroy/reparent invalidation, deferred cleanup, retryable synchronous reconciliation, disconnect-on-invalidation, stale-generation token fencing, and idempotent stop/destroy behavior.",
+    "Server/client bootstraps #348 assert RunService context before continuing; server-only PhysicsLab modules remain required from server source rather than client bootstrap.",
+    "The only distinct source boundary found remains the previously published Rojo packaging finding: #300's test counts exact src/server paths and can miss a replicated src/server/... descendant. That follow-up is already durable and intentionally deferred until the retained authority stack can integrate.",
+    "No production multiplayer remote/protocol feature is currently unlocked, and HG151 two-client/Studio evidence remains externally prerequisite-bound; creating networking breadth from this mining slot would violate the current Hero-Gate scheduler and Depth Before Breadth."
+  ]
+}
