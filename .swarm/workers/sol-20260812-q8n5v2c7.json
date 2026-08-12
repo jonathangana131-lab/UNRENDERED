@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-q8n5v2c7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T10:42:49+00:00",
+  "lastSeenAt": "2026-08-12T10:42:49+00:00",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "primary",
+  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-q8n5v2c7",
+  "notes": "Attempting fenced stale-primary recovery after independent review requested a verdict string-type guard and unhashable JSON hardening regression on PR #428."
+}
