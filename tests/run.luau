@@ -25,6 +25,7 @@ local runResolvedRegionRecipeV1Compat = require("./resolved_region_recipe_v1_com
 local runResolvedRegionRecipeV2Compat = require("./resolved_region_recipe_v2_compat")
 local runStableIdHeadless = require("./stable_id_headless")
 local runWorldEntity = require("./world_entity")
+local runWorldEntityDuplicateOriginDiagnostic = require("./world_entity_duplicate_origin_diagnostic")
 local runWorldEntityMetadataBudget = require("./world_entity_metadata_budget")
 local runWorldEntityRegistryShape = require("./world_entity_registry_shape")
 
@@ -34,6 +35,7 @@ registerReproKey(runner)
 
 local legacyFailures = runDeterministicRng()
 	+ runWorldEntity()
+	+ runWorldEntityDuplicateOriginDiagnostic()
 	+ runWorldEntityMetadataBudget()
 	+ runWorldEntityRegistryShape()
 	+ runFidelityManager()
