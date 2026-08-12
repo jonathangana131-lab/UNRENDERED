@@ -221,6 +221,60 @@ class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
                     hard.transition_check(before, after)
 
 
+class WorkerReviewContractHardeningRegressionTests(unittest.TestCase):
+    def setUp(self):
+        self.fx = Fx()
+        self.now = core.parse_time("2026-08-12T08:24:30+00:00")
+
+    def tearDown(self):
+        self.fx.close()
+
+    def worker(self, status):
+        return {
+            "schemaVersion": 1,
+            "workerId": "sol-20260812-abcd",
+            "model": "gpt-5.6-sol",
+            "status": status,
+            "startedAt": "2026-08-12T08:00:00+00:00",
+            "lastSeenAt": "2026-08-12T08:01:00+00:00",
+        }
+
+    def review_event(self):
+        return {
+            "schemaVersion": 1,
+            "eventId": "evt-20260812-hardening-review-contract",
+            "timestamp": "2026-08-12T08:00:00+00:00",
+            "fromWorker": "sol-20260812-abcd",
+            "eventType": "REVIEW_RESULT",
+            "summary": "Exact-head independent review result.",
+            "affects": ["LANE-A"],
+            "pr": 423,
+            "headSha": "a" * 40,
+            "verdict": "APPROVE",
+        }
+
+    def test_legacy_worker_aliases_are_finite_and_unknown_status_fails(self):
+        path = self.fx.root / "workers" / "sol-20260812-abcd.json"
+        for status in ("ACTIVE", "CLAIMING", "DONE"):
+            with self.subTest(status=status):
+                write(path, self.worker(status))
+                hard.validate_all(self.fx.root, self.now)
+        write(path, self.worker("FINISHED"))
+        with self.assertRaises(core.ControlError):
+            hard.validate_all(self.fx.root, self.now)
+
+    def test_typed_review_fields_pass_only_on_review_result(self):
+        path = self.fx.root / "events" / "2026-08-12" / "review.json"
+        write(path, self.review_event())
+        result = hard.validate_all(self.fx.root, self.now)
+        self.assertEqual(result["events"], 1)
+        value = self.review_event()
+        value["eventType"] = "FINDING"
+        write(path, value)
+        with self.assertRaises(core.ControlError):
+            hard.validate_all(self.fx.root, self.now)
+
+
 class WorkflowSnapshotFenceRegressionTests(unittest.TestCase):
     def workflow_text(self):
         workflow_path = Path(__file__).resolve().parents[2] / ".github" / "workflows" / "swarm-control.yml"
