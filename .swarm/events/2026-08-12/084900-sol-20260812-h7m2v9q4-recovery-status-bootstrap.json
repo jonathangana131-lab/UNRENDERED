@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-h7m2v9q4-status-bootstrap-recovery",
+  "timestamp": "2026-08-12T08:49:00+00:00",
+  "fromWorker": "sol-20260812-h7m2v9q4",
+  "eventType": "RECOVERY",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "normal",
+  "summary": "The earlier malformed REALITY-CONTRACT resource-lease blocker has cleared. Trusted-main control validation now advances to and fails on live worker sol-20260812-w1e7q9m3 status DONE, one of the exact evidence-backed aliases repaired by PR #428. This confirms the remaining control failure is the candidate's target bootstrap contract, not an unrelated resource lease.",
+  "affects": ["SWARM-RECOVERY-WORKER-STATUS-CONTRACT"],
+  "evidence": [
+    "Live .swarm/resource-claims/REALITY-CONTRACT.json is no longer present",
+    "Swarm control run 31579918104 validate-control-branch fails on sol-20260812-w1e7q9m3 invalid worker status",
+    "Live worker sol-20260812-w1e7q9m3 status is DONE",
+    "PR #428 candidate accepts finite aliases ACTIVE, CLAIMING, and DONE while unknown statuses remain rejected"
+  ],
+  "metadata": {
+    "pr": 428,
+    "headSha": "fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae",
+    "controlRun": 31579918104
+  }
+}
