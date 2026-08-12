@@ -5,11 +5,11 @@
   "workerId": "sol-20260812-m8q4v2c7",
   "claimToken": "e4b9c2a7d1f68035",
   "claimedAt": "2026-08-12T08:00:22+00:00",
-  "heartbeatAt": "2026-08-12T08:20:40+00:00",
+  "heartbeatAt": "2026-08-12T08:31:10+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-m8q4v2c7-g1",
   "pr": 426,
-  "notes": "PR #426 now carries focused aggregate canonical-metadata budget regression at exact head 74f0768edce7d2db89f5fb5b276cf166e6796ef8: exact boundary must pass, +1 byte must reject fail-atomically. Exact-head CI running; no Studio evidence claims."
+  "notes": "PR #426 exact head b2385f14f0dc18519af53c019486bfc9ce14f280 now covers both WorldEntity.new and direct mutable-record registry ownership at the aggregate canonical metadata byte boundary, including fail-atomic +1-byte rejection. Awaiting exact-head CI; no Studio evidence claims."
 }
