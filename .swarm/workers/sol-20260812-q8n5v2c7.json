@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:42:49+00:00",
-  "lastSeenAt": "2026-08-12T10:42:49+00:00",
-  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "lastSeenAt": "2026-08-12T10:44:11+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
-  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-q8n5v2c7",
-  "notes": "Attempting fenced stale-primary recovery after independent review requested a verdict string-type guard and unhashable JSON hardening regression on PR #428."
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-q8n5v2c7-g13",
+  "notes": "Recovery claim for generation-12 diagnostics successor PR #431 after losing the higher-priority control-repair race. Verifying the completed clone-completeness regression and preparing the lane for independent exact-head review without claiming Studio evidence."
 }
