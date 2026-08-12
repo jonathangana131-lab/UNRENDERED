@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-r7m4q2v9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T07:56:00+00:00",
-  "lastSeenAt": "2026-08-12T08:02:45+00:00",
+  "lastSeenAt": "2026-08-12T08:10:22+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-materialdna",
   "branch": "agent/mining/HG-CAPACITY-MINING-materialdna-r7m4q2v9-g2",
-  "notes": "Recovered the stale MaterialDNA mining slot after the #420 and #423 review races were won by other workers. Mining only for a concrete non-duplicate Hero-Gate source/test gap; no feature unlock or Studio evidence claim."
+  "notes": "Published FINDING evt-20260812-080845-r7m4q2v9-materialdna-validation-budget and released the mining claim. Current critical path is SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY: independent review requested changes on PR #420 because ADR-0005 understates/misidentifies the composed finite reset inventory. A generation-2 reviewer currently owns SWARM-PROTOCOL, so no safe non-conflicting recovery primary claim was available this session."
 }
