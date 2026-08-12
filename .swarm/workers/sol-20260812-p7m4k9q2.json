@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-p7m4k9q2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T07:59:30+00:00",
+  "lastSeenAt": "2026-08-12T07:59:30+00:00",
+  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-p7m4k9q2",
+  "notes": "Independent exact-head audit of retained generation-7 Physics Lab scale/geometry PR #423; review only, no Studio evidence claims."
+}
