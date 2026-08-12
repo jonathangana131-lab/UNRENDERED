@@ -5,7 +5,7 @@
   "title": "Repair worker and event schema contract drift",
   "objective": "Stop repeated Swarm control validation failures caused by worker-facing producer conventions drifting from the strict validator: workers emit intuitive lifecycle aliases such as CLAIMING/DONE and immutable REVIEW_RESULT events already carry typed pr/headSha/verdict fields that the current generic event validator rejects. Make the accepted lifecycle/event contract explicit, preserve strict typing and unknown-field fail-closed behavior, and restore live control validity without weakening authoritative claim/resource fencing.",
   "priority": 10000,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -55,6 +55,10 @@
     "core and hardening control-plane tests cover worker aliases, typed review events, unknown-status rejection, unknown-event-field rejection, and unchanged claim/resource fencing",
     "live swarm-control validation returns PASS on authoritative history without rewriting immutable events"
   ],
-  "notes": "Emergency red-control prerequisite broadened after exact-head validation advanced from repeated worker status aliases into an immutable structured REVIEW_RESULT event with top-level pr/headSha/verdict. The lane ID is retained to preserve durable references; scope now reflects the proven shared producer/validator contract failure. This is scheduler/control maintenance, not a product feature.",
+  "pr": 428,
+  "notes": "Primary candidate exact head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae is published as PR #428. Canonical CI run 31579573385 and candidate control engine-tests in run 31579573480 pass. Fresh independent exact-head review is required. Trusted-base pr-ownership is presently blocked before candidate ownership checks by an unrelated malformed live REALITY-CONTRACT resource claim missing acquiredAt and carrying acquiredAtGeneration; the blocker is recorded as evt-20260812-h7m2v9q4-reality-contract-lease-blocker. No immutable history was rewritten.",
+  "blockers": [
+    "Trusted-base pr-ownership cannot currently reach PR #428 ownership checks because live .swarm/resource-claims/REALITY-CONTRACT.json is schema-invalid (missing acquiredAt; unknown acquiredAtGeneration)."
+  ],
   "tags": ["control-repair", "red-ci", "worker-lifecycle", "event-schema", "hero-gate"]
 }
