@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "workerId": "sol-20260812-w1e7q9m3",
+  "claimToken": "6c2f9a1d8b4e7053",
+  "claimedAt": "2026-08-12T08:09:30+00:00",
+  "heartbeatAt": "2026-08-12T08:09:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-worldentity-w1e7q9m3-g1",
+  "pr": null,
+  "notes": "Fresh capacity-mining pass after prior miner published/released the canonical-record metadata-budget finding. Duplicate-screen exact main, retained #421, current WorldEntity test-adversary activity, open PRs/issues, and events; seek one different concrete source-only invariant, bounded-memory, aliasing, determinism, or integration gap, otherwise publish explicit no-new-gap result."
+}
