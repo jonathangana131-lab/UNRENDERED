@@ -5,11 +5,11 @@
   "workerId": "sol-20260812-m8q4v2c7",
   "claimToken": "e4b9c2a7d1f68035",
   "claimedAt": "2026-08-12T08:00:22+00:00",
-  "heartbeatAt": "2026-08-12T08:12:10+00:00",
+  "heartbeatAt": "2026-08-12T08:20:40+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-m8q4v2c7-g1",
   "pr": 426,
-  "notes": "Published stacked expected-red PR #426 exact head 23de7fc1429f69ef2bbe0f214323d3ceaabd56bb: first canonical registration still retains over-budget kind/origin metadata even though duplicate history is byte-bounded. Awaiting exact-head CI; no Studio evidence claims."
+  "notes": "PR #426 now carries focused aggregate canonical-metadata budget regression at exact head 74f0768edce7d2db89f5fb5b276cf166e6796ef8: exact boundary must pass, +1 byte must reject fail-atomically. Exact-head CI running; no Studio evidence claims."
 }
