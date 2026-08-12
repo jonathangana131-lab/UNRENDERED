@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-q6n9v4c2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T10:46:00+00:00",
+  "lastSeenAt": "2026-08-12T10:46:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-q6n9v4c2",
+  "notes": "Capacity fallback after higher-priority control and diagnostics lanes were actively claimed; mining WorldEntity only for a concrete non-duplicate invariant, test, or integration gap."
+}
