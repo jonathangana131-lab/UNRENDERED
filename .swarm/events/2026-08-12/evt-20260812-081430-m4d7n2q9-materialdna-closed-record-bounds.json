@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-081430-m4d7n2q9-materialdna-closed-record-bounds",
+  "timestamp": "2026-08-12T08:14:30+00:00",
+  "fromWorker": "sol-20260812-m4d7n2q9",
+  "eventType": "FINDING",
+  "summary": "MaterialDNA closed-record validation remains input-cardinality unbounded even after the retained counter fix and the existing proposed dense-array bound. validateKnownFields() iterates every supplied key and appends a distinct diagnostic for every unknown/non-string key. Because MaterialRecipe and each nested record have tiny fixed closed schemas but callers may supply arbitrarily oversized plain tables, malformed input can force O(N) scan work and O(N) error-string allocation before fail-closed rejection. This should be absorbed into the already-proposed HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS leaf rather than spawning another lane: bound closed-record validation to the finite schema (for example return after the first unknown key, which necessarily occurs within allowed-field-count + 1 examined keys) and add a large-unknown-field regression proving bounded diagnostics without claiming timing evidence.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "MEDIUM",
+  "evidence": [
+    "Retained MaterialDNA PR #353 exact head 10559afdce1a1854e7932522f6e78561736c8ed3 implements validateKnownFields() as an unrestricted pairs(record) loop and appendError() for every unknown/non-string key. The helper is used for the top-level recipe/state/reference records and all nested closed recipe records.",
+    "The closed schemas are finite fieldSet tables, so a valid record can contain only that small finite number of distinct allowed keys; after all allowed keys have been encountered, any additional key is necessarily invalid. Continuing across an arbitrarily oversized malformed table is not required to decide validity.",
+    "Docs/MATERIAL_DNA_CONTRACT.md describes recipe validation/freezing as bounded content-generation/persistence work. Existing history/anomaly cardinality caps and proposed HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS address dense-array work, but they do not bound validateKnownFields() or its diagnostics array.",
+    "Existing MaterialDNA regressions cover one unknown top-level field and one unknown nested field, metatable rejection, immutable freezing, exact repairCount, dense/sparse arrays, and fixture identity; no retained test exercises many unknown closed-record keys or bounds ValidationResult.errors cardinality.",
+    "Repository PR search found no separate MaterialDNA unknown-field/error-budget repair; folding this into the existing proposed dense-bounds leaf avoids duplicate WIP.",
+    "No local Luau/Lune execution, Roblox Studio, viewport, timing benchmark, physical-contact, or two-client evidence is claimed; this is a source-contract capacity-mining finding only."
+  ]
+}
