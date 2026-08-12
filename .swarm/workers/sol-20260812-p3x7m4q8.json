@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-p3x7m4q8",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T10:58:00+00:00",
+  "lastSeenAt": "2026-08-12T10:58:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-p3x7m4q8",
+  "notes": "Source-only Physics runtime capacity mining; no product edits before claim."
+}
