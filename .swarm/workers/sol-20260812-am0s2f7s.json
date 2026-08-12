@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-12T10:44:29+00:00",
-  "lastSeenAt": "2026-08-12T10:46:30+00:00",
+  "lastSeenAt": "2026-08-12T11:05:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-diagnostics",
   "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-am0s2f7s",
-  "notes": "Mining diagnostics source/tests for a distinct bounded Hero-Gate gap after losing the test-adversary claim race; no Studio evidence claim and no overlap with the active generation-12 early-exit matcher repair."
+  "notes": "Published current-main diagnostics docs salvage PR #436 at 35b5b224 with canonical CI PASS. Closed stale predecessor #304 after preserving its reviewed failure-atomicity Studio probe. #436 remains draft; trusted control is separately red on immutable historical validation.command data owned by PR #420, itself blocked on active worker-status repair PR #434. No Studio evidence claimed."
 }
