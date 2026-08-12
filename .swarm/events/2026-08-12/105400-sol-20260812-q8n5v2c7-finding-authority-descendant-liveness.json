@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t105400z-q8n5v2c7-authority-descendant-liveness",
+  "timestamp": "2026-08-12T10:54:00Z",
+  "fromWorker": "sol-20260812-q8n5v2c7",
+  "eventType": "FINDING",
+  "summary": "Authority capacity mining found a bounded follow-on liveness gap not covered by retained PR #412: the harness publishes the mutable lab Model through the owned RealizedLab-shaped handle, but reconciliation observes only root Destroying/AncestryChanged and exact root Parent drift. A caller can destructively mutate descendants (for example ClearAllChildren or destroy/reparent one canonical representation) without changing the root Parent, leaving Harness.get() bound to the same owner. The Realizer's current isRepresented() presence check is based on a non-nil private-map reference, so a destroyed/reparented representation reference can remain logically present until a stronger exact-instance predicate or validation path is invoked. Retained PR #349 adds ownsRepresentation() for diagnostics and can fail closed on stale/destroyed candidates, but it is not consumed by the harness and does not reconcile harness ownership. Queue a narrow descendant/representation-liveness follow-on only after the retained #348/#394/#412 authority stack and #349 can integrate; do not spawn another authority primary while trusted ownership is blocked, and do not treat this source finding as Studio/two-client evidence.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-COMPLETION-AUTHORITY",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
+    "HG151-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "PR #412 exact head 807fb042b2fe96db32bda7a5c3346788e828a758 clones the RealizedLab-shaped handle and therefore still exposes realized.model; its reconcileExternalLifecycle() returns live whenever realized.model.Parent equals expectedParent, and its asynchronous hooks are only realized.model.Destroying and realized.model.AncestryChanged.",
+    "A descendant-only destructive mutation does not require the root Model Parent to change, so #412's synchronous Parent preflight and root lifecycle signals do not observe that class of corruption before get()/start() ownership decisions.",
+    "PhysicsLabRealizer keeps representations in a private entityId->Instance map and isRepresented() derives physical presence from representations[entityId] ~= nil; destroying or reparenting the referenced Instance does not itself nil that Lua table entry.",
+    "Retained PR #349 exact head ee771bd50db972ad572f5d3cef8463220d69fa06 adds ownsRepresentation(entityId, candidate), requiring exact private-map Instance identity plus direct membership under the realized model, and its lane explicitly limits that seam to diagnostics consumption rather than harness lifecycle recovery.",
+    "Search of current authority PR lineage found no ClearAllChildren/DescendantRemoving or equivalent descendant-liveness repair, while HG-COMPLETION-AUTHORITY is explicitly BLOCKED and instructs workers not to start another authority primary until trusted-history/live pr-ownership recovers.",
+    "Docs/PHYSICS_LAB_STUDIO_RUNBOOK.md treats the harness as the production lifecycle boundary and explicitly says not to manually delete the lab model; this finding is source-only resilience hardening and does not claim Roblox Studio, viewport, physical-contact, or true two-client evidence."
+  ]
+}
