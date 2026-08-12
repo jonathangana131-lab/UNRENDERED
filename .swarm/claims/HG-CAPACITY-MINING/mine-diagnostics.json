@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-diagnostics",
-  "workerId": "sol-20260811-r4k9v2m7",
-  "claimToken": "4b8e1c6d9a2f7053",
-  "claimedAt": "2026-08-11T23:09:30+00:00",
-  "heartbeatAt": "2026-08-11T23:14:00+00:00",
+  "workerId": "sol-20260812-m8q2v7k4",
+  "claimToken": "d4a81f2c7b9e3650",
+  "claimedAt": "2026-08-12T08:12:00+00:00",
+  "heartbeatAt": "2026-08-12T08:12:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-r4k9v2m7",
+  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-m8q2v7k4-g2",
   "pr": null,
-  "notes": "Inspect exact main diagnostics source/tests plus retained diagnostics PR lineage and structured findings. Do not duplicate active generation-7/final-state work; mine one separate concrete invariant/test/integration gap or publish no-gap evidence."
+  "notes": "Generation-2 stale takeover of diagnostics capacity-mining only. Predecessor heartbeat 2026-08-11T23:14:00Z expired; searches found no predecessor branch, PR, commit, or published handoff/finding. Review-only scope: inspect current main diagnostics source/tests plus active #424/#425 lineage for one distinct evidence-backed gap or publish no-gap; do not alter production or claim Studio evidence."
 }
