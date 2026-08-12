@@ -4,7 +4,7 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-12T07:59:21+00:00",
-  "lastSeenAt": "2026-08-12T08:00:30+00:00",
+  "lastSeenAt": "2026-08-12T08:09:41+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-runtime",
   "branch": "agent/mining/HG-CAPACITY-MINING-mine-physics-runtime-p423v7r4",
