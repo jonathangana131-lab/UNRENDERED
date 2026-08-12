@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-FIDELITY-CONFIG-CLOSED-SHAPE",
+  "epicId": "HERO-GATE",
+  "title": "Fail closed on unknown Fidelity PolicyConfig keys",
+  "objective": "Close the source-only configuration-shape gap where an otherwise-valid PolicyConfig may contain misspelled/unknown keys that are silently discarded, including safety-budget override typos, while preserving current Fidelity policy semantics and no-execute validation boundaries.",
+  "priority": 5040,
+  "state": "PROPOSED",
+  "mode": "exclusive",
+  "dependencies": [
+    {"laneId": "HG-FIDELITY-MANAGER-STATE-ENCAPSULATION", "acceptableStates": ["DONE"]}
+  ],
+  "writeScopes": ["src/shared/Physics/FidelityManager.luau", "tests/fidelity_manager*.luau", "Docs/FIDELITY_MANAGER.md"],
+  "resources": [],
+  "slots": [
+    {"slotId": "primary", "role": "Fidelity PolicyConfig closed-shape repair", "exclusive": true, "availableWhen": ["READY", "NEEDS_CHANGES"], "priorityBoost": 300, "writeScopes": ["src/shared/Physics/FidelityManager.luau", "tests/fidelity_manager*.luau", "Docs/FIDELITY_MANAGER.md"]},
+    {"slotId": "audit", "role": "Independent Fidelity PolicyConfig schema auditor", "exclusive": true, "availableWhen": ["REVIEW"], "priorityBoost": 130, "requiresIndependentFrom": "primary", "writeScopes": ["tests/fidelity_manager*.luau", "Docs/FIDELITY_MANAGER.md"]}
+  ],
+  "acceptance": [
+    "PolicyConfig remains a metatable-free plain record and validation rejects every unknown key before copying/using the config",
+    "an otherwise-valid defaultConfig clone with a misspelled maxRegisteredEntities override fails closed in both FidelityManager.new() and evaluatePolicy() rather than silently retaining the default budget",
+    "unknown string keys and non-string keys are rejected deterministically without executing caller metamethods",
+    "all 13 currently recognized PolicyConfig keys retain their accepted types/ranges and policy semantics; no field rename, schema-version framework, or new config abstraction",
+    "retain the project-owned 65,536 registration ceiling and all accepted Fidelity malformed-input, atomicity, determinism, entity-ID, capacity, and state-encapsulation regressions",
+    "document the closed PolicyConfig record boundary in Docs/FIDELITY_MANAGER.md",
+    "canonical CI, live pr-ownership, and fresh independent exact-head review are required before integration",
+    "source-only lane: no Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence claim"
+  ],
+  "notes": "Capacity-mined against retained Fidelity capacity PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3. validateConfig() currently checks table/metatable and recognized field values but never enumerates keys; copyConfig() then drops extras. The concrete safety case is a cloned default config with typo maxRegsteredEntities = 1: validation accepts the real default maxRegisteredEntities = 4096 and silently ignores the intended override. This lane is intentionally PROPOSED and sequenced after HG-FIDELITY-MANAGER-STATE-ENCAPSULATION to avoid competing edits in FidelityManager while the retained Fidelity lineages remain blocked on trusted-history recovery. Finding: evt-20260812-083100-x9c2p7r4n6-fidelity-config-closed-shape.",
+  "tags": ["backfill", "hero-gate", "source-only", "fidelity", "config", "contract"]
+}
