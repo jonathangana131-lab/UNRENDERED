@@ -441,7 +441,8 @@ def validate_event(path: Path) -> dict[str, Any]:
             raise ControlError(f"{path}: invalid REVIEW_RESULT pr")
         if not isinstance(obj["headSha"], str) or not re.fullmatch(r"[a-f0-9]{40}", obj["headSha"]):
             raise ControlError(f"{path}: invalid REVIEW_RESULT headSha")
-        if obj["verdict"] not in REVIEW_VERDICTS:
+        verdict = obj["verdict"]
+        if not isinstance(verdict, str) or verdict not in REVIEW_VERDICTS:
             raise ControlError(f"{path}: invalid REVIEW_RESULT verdict")
     return obj
 
