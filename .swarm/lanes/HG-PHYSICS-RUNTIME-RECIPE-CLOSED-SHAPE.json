@@ -7,7 +7,7 @@
   "priority": 4880,
   "state": "PROPOSED",
   "mode": "exclusive",
-  "dependencies": ["HG-PHYSICS-RUNTIME-SYNTHESIS"],
+  "dependencies": [{"laneId":"HG-PHYSICS-RUNTIME-SYNTHESIS","acceptableStates":["DONE"]}],
   "writeScopes": ["src/shared/Physics/PhysicsLabRuntime.luau", "tests/physics_lab_runtime_synthesis.luau"],
   "resources": [],
   "slots": [
@@ -26,5 +26,5 @@
     "no Studio, viewport, physical-contact, or two-client evidence claim"
   ],
   "tags": ["backfill", "hero-gate", "physics-runtime", "canonical-recipe", "closed-shape", "source-only"],
-  "notes": "Proposed from capacity-mining finding evt-20260812t090530z-r7m4k9q2-physics-runtime-recipe-shape against independently reviewed retained synthesis #408 head d31c100c5d3766ca14d89b046fff4cdb09086754. #408 correctly closes nested WorldEntity record/origin shapes and canonical value/state/provenance identity, but top-level recipe, entity-recipe wrappers, and the entities container itself can silently carry extra plain-data keys outside the fields/prefix actually read. Keep PROPOSED until HG-PHYSICS-RUNTIME-SYNTHESIS can integrate under restored trusted ownership; do not fork or weaken #408 while it is trust-blocked."
+  "notes": "Proposed from capacity-mining finding evt-20260812t090530z-r7m4k9q2-physics-runtime-recipe-shape against independently reviewed retained synthesis #408 head d31c100c5d3766ca14d89b046fff4cdb09086754. #408 correctly closes nested WorldEntity record/origin shapes and canonical value/state/provenance identity, but top-level recipe, entity-recipe wrappers, and the entities container itself can silently carry extra plain-data keys outside the fields/prefix actually read. Keep PROPOSED until HG-PHYSICS-RUNTIME-SYNTHESIS can integrate under restored trusted ownership; do not fork or weaken #408 while it is trust-blocked. Dependency normalized from legacy string form to the strict dependency object shape during control recovery; eligibility semantics remain HG-PHYSICS-RUNTIME-SYNTHESIS=DONE."
 }
