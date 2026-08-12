@@ -73,26 +73,26 @@ Malformed first writes have **no canonical authoritative payload to recover**. T
 The complete reviewed machine-readable source is the **composed finite inventory** consumed by `tools/swarm/swarmctl_hardening.py` and bootstrap CI:
 
 - `tools/swarm/swarm_history_recovery_manifest.py` contains 65 canonical-filename malformed-event tuples plus 2 path-divergent tuples returned by `malformed_event_quarantine_rows()`, for 67 foundational normalized rows;
-- `tools/swarm/swarm_history_recovery_extension.py` contains 47 additional exact normalized rows;
-- `swarmctl_hardening.py` composes both quarantine-rule maps, and the bootstrap workflow audits `recovery.malformed_event_quarantine_rows() + extension.MALFORMED_EVENT_QUARANTINE_ROWS`.
+- `tools/swarm/swarm_history_recovery_extension.py` retains 47 exact legacy extension rows under their real `2026-08-11` directory and adds 1 explicitly dated `2026-08-12` quarantine row;
+- `swarmctl_hardening.py` composes both quarantine-rule maps, while bootstrap CI normalizes the foundational rows with date `2026-08-11` and consumes `extension.malformed_event_quarantine_rows_with_dates()` so every later row carries its real directory explicitly.
 
-The exact current recovery boundary therefore pins **114 malformed first-write rows** as:
+The exact current recovery boundary therefore pins **115 malformed first-write rows** as:
 
-`eventId + exact filename + exact first-write commit + exact quarantine-only Git blob SHA-1`
+`eventId + exact date + exact filename + exact first-write commit + exact quarantine-only Git blob SHA-1`
 
 The 65 canonical-filename foundational tuples are independently regression-locked by SHA-256:
 
 `8c8c77f85c8210cfbca5a804364e3792bec347f7d62b994dee83a6870181bdfe`
 
-The two path-divergent foundational rows remain explicit machine-readable path identities, and the 47-row extension is separately count/identity/uniqueness regression-tested. This split preserves reviewable provenance without pretending the older foundational digest covers later extensions.
+The two path-divergent foundational rows remain explicit machine-readable path identities. The 47-row legacy extension remains separately count/identity/uniqueness regression-tested, and the generation-7 dated row is pinned independently with its `2026-08-12` directory, first-write commit, and Git blob. This split preserves reviewable provenance without pretending the older foundational digest covers later extensions.
 
 Bootstrap CI does not trust either manifest merely because it is source code. For every composed normalized row it independently proves from Git history that:
 
-1. the event path has exactly one first-add commit;
+1. the exact dated event path has exactly one first-add commit;
 2. that commit equals the pinned `firstWriteCommit`;
 3. the pinned first-write commit is an ancestor of the exact bootstrap control SHA;
 4. the Git blob at `firstWriteCommit:path` equals the pinned quarantine-only blob;
-5. strict snapshot validation sees the exact same blob at the canonical path.
+5. strict snapshot validation sees the exact same blob at the canonical dated path.
 
 For every quarantined event:
 
@@ -116,7 +116,7 @@ The foundational manifest contains 21 exact invalid-worker -> repair pairs and i
 
 `165419f1d0e6308a4f55d8c5f87b79fd03d508f477bcbfaaf7622f026e1ceafe`
 
-The extension contains 6 further exact pairs, each pinned verbatim by `tools/swarm/test_swarm_history_recovery_extension.py`. The exact current reset boundary therefore contains **27 exact invalid-worker -> repair transitions**. The read-only bootstrap workflow consumes the composed value, emits no trust pair if it is empty, and proves for every row:
+The extension contains 12 further exact pairs: the previously retained 6 plus 6 generation-7 repairs measured from the August 12 live bootstrap audit. Each generation-7 pair is pinned verbatim by `tools/swarm/test_swarm_history_recovery_extension.py`. The exact current reset boundary therefore contains **33 exact invalid-worker -> repair transitions**. The read-only bootstrap workflow consumes the composed value, emits no trust pair if it is empty, and proves for every row:
 
 `invalid commit -> exact repair commit -> BOOTSTRAP_CONTROL_SHA`
 
@@ -132,7 +132,7 @@ Before the recovery merge is accepted, read-only CI:
 
 1. resolves one exact live `swarm-control` SHA;
 2. proves every finite invalid-worker -> repair -> candidate ancestry chain;
-3. proves exact Git first-write provenance for every malformed-event quarantine tuple;
+3. proves exact Git first-write provenance for every malformed-event quarantine tuple using its explicit date/path;
 4. emits a read-only residual history inventory so any unlisted malformed event remains visible;
 5. validates the exact live snapshot using only the explicit finite quarantine;
 6. prints the exact pair `BOOTSTRAP_CONTROL_SHA` and `BOOTSTRAP_STATE_DIGEST`.
@@ -177,9 +177,9 @@ Recovery acceptance requires:
 
 - all prior V2/V2.1 hardening tests remain green;
 - exact rewritten quarantine blobs remain inert and unchanged;
-- all **114** composed malformed-first-write rows remain exact quarantine-only and cannot acquire authority;
-- regression tests pin the 65-row foundational canonical inventory digest, the 2 path-divergent foundational identities, the 47-row extension count/identities, and their uniqueness;
-- CI independently proves every composed malformed-event first-add commit and first-write blob;
+- all **115** composed malformed-first-write rows remain exact quarantine-only and cannot acquire authority;
+- regression tests pin the 65-row foundational canonical inventory digest, the 2 path-divergent foundational identities, the 47-row legacy extension count/identities, the generation-7 dated row, and their uniqueness;
+- CI independently proves every composed malformed-event dated path, first-add commit, and first-write blob;
 - one-byte quarantine mutation fails;
 - quarantined event IDs remain replay-protected;
 - strict new events can append after reset;
@@ -188,7 +188,7 @@ Recovery acceptance requires:
 - separate trust digest authorizes only when `bootstrap` is false;
 - any authoritative state mutation after trust publication fails the trust check;
 - bootstrap records cannot authorize PR state;
-- regression tests pin all **27** exact invalid->repair worker pairs across the foundational and extension manifests;
+- regression tests pin all **33** exact invalid->repair worker pairs across the foundational and extension manifests;
 - read-only bootstrap CI consumes the executable composed finite manifests rather than maintaining duplicate hard-coded subsets;
 - workflow transition validation uses `TRUSTED_CONTROL_SHA`, not `github.event.before`;
 - workflow health mutations are not skipped as generated-only state;
