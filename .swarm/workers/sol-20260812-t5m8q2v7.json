@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-t5m8q2v7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T11:14:00+00:00",
+  "lastSeenAt": "2026-08-12T11:14:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "notes": "Expected-red regression for generation-14 clone-proof matcher inert long-comment/long-string false-pass discovered by independent review of PR #438. Test-only stacked support work; no Studio evidence."
+}
