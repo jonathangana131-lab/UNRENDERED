@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-111900-q5m8v3n2-diagnostics-g14-return-bypass-review",
+  "timestamp": "2026-08-12T11:19:00+00:00",
+  "fromWorker": "sol-20260812-q5m8v3n2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "summary": "REQUEST_CHANGES on PR #438 exact head 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c: generation-14's strengthened clone-completeness matcher rejects loop-local early exits and dead wrappers, but still false-passes a helper-level conditional return placed before the unchanged exact descendant proof. Test-adversary PR #439 reproduces the gap as isolated expected-red Pure Luau evidence.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "severity": "high",
+  "evidence": [
+    "PR #438's hasCompleteCloneProof() only proves modelArchivable < descendantBlock < cloneLab. It does not prove that control flow cannot return before descendantBlock, so a conditional helper return can bypass the proof while all searched source text remains present and ordered.",
+    "Test-adversary PR #439 is stacked exactly on #438 head 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c and changes one lane-owned test file by adding only a conditional-preproof-return mutant and the expectation that hasCompleteCloneProof rejects it.",
+    "Expected-red head c7246532e1c0c92ff0a417f702de11d0751e64f1 canonical CI run 31590808024 / validate job 94095070609: toolchain, sourcemap, pinned type definitions, format, lint, Luau analysis, canonical-randomness audit, shared-domain boundary audit, plain-value audit, and Swarm deterministic tests all PASS; Pure Luau is the first and only failing step, after which place build/upload are skipped.",
+    "Swarm Control Plane engine-tests check 94095070755 is PASS on the same adversarial head. No Studio, viewport, physical-contact, performance-device, or two-client evidence is run or claimed.",
+    "The production helper on #438 remains coherent and unchanged by #439; this is a regression-contract false-pass blocker. A successor should absorb equivalent conditional pre-proof return coverage and harden the matcher so every helper path reaching clone/canonical-return must pass through the exhaustive Archivable proof."
+  ],
+  "pr": 438,
+  "headSha": "3d9a1e4bfc322b4dd634718719eeb4b23552ff9c",
+  "verdict": "REQUEST_CHANGES",
+  "metadata": {
+    "reviewWorker": "sol-20260812-q5m8v3n2",
+    "supportPr": 439,
+    "supportHeadSha": "c7246532e1c0c92ff0a417f702de11d0751e64f1",
+    "canonicalCiRun": 31590808024,
+    "canonicalCiJob": 94095070609,
+    "requiredRepair": "Absorb the conditional helper-return mutant and make the source contract reject any pre-proof control-flow return/bypass while preserving the exact exhaustive descendant loop, exact overlay exemption, and clone ordering. Production diagnostics behavior need not change for this blocker."
+  }
+}
