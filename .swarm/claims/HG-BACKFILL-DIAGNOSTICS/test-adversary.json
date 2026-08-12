@@ -5,12 +5,12 @@
   "workerId": "sol-20260812-x9c2p7r4n6",
   "claimToken": "e1b7c3d9a5f20468",
   "claimedAt": "2026-08-12T08:00:30+00:00",
-  "heartbeatAt": "2026-08-12T08:00:30+00:00",
+  "heartbeatAt": "2026-08-12T08:07:30+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "resources": [],
   "branch": "agent/tests/HG-BACKFILL-DIAGNOSTICS-x9c2p7r4n6-g3",
-  "pr": null,
+  "pr": 425,
   "takeoverOf": "sol-20260811-q7m3v8c6:g2:c4a9e17b6d2f8053",
-  "notes": "Stale-slot recovery after inspecting PR #422 and retained generation-9 PR #424. Scope is adversarial/source-contract review of #424 for non-duplicate diagnostics gaps only; no Studio/viewport evidence claims."
+  "notes": "Draft PR #425 exact head 73a32bba954775e89bcaeaee7ec6212334688ef9 is stacked on current generation-9 PR #424 exact head f89ce88ea7791e29d22a0e2ca76b22f2d7b63699. It exposes the non-Archivable Clone omission blind spot in enabled-state canonical evidence. Test-only expected-red; no Studio/viewport evidence claims."
 }
