@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-110156-p8r4n6c2-runtime-recipe-canonicality",
+  "timestamp": "2026-08-12T11:01:56+00:00",
+  "fromWorker": "sol-20260812-p8r4n6c2",
+  "eventType": "FINDING",
+  "summary": "Retained Physics runtime synthesis PR #408 correctly fences canonical WorldId/RegionId/entity identity/provenance/state, but PhysicsLabRuntime.assertCanonicalRecipe() does not prove the full deterministic EntityRecipe contract: plain top-level/entity-list/entity-recipe extra fields are tolerated, and canonical keys/WorldEntity records can be paired with forged primitive placement/material/collision fields or ObjectGenome key/id/fingerprint/placement fields without rejection. Current PhysicsLabRealizer is not directly exploitable through this seam because realize() always obtains PhysicsLabRecipe.build() internally, but the shared runtime constructor can still label a physically noncanonical recipe with the canonical recipeKey and future callers could incorrectly treat constructor success as full-recipe validation.",
+  "affects": ["HG-PHYSICS-RUNTIME-SYNTHESIS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected retained synthesis PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754, including PhysicsLabRuntime.luau, PhysicsLabRecipe.luau, PhysicsLabRealizer.luau, the synthesis regression, and the predecessor #310/#388/#402 lineage.",
+    "assertCanonicalRecipe() checks top-level schemaVersion/recipeKey/worldId/regionId and entity count, then each entity's primitive key, WorldEntity record shape/id/kind/fidelity/revisions/persistentState, and origin. It does not compare EntityRecipe.kind, primitive role/sizeM/positionM/rotationDeg/material/collidable/transparency, or object genomeKey/genomeId/genomeRecipeFingerprint/positionM/rotationDeg to CANONICAL_RECIPE.",
+    "The same validator does not enforce exact keys on the top-level recipe, entities container, or EntityRecipe wrapper; the existing exact-key preflights cover only WorldEntity record and origin tables.",
+    "The retained synthesis regression covers metatable/no-execute wrappers plus canonical population/provenance/state/revision mismatches, but contains no forged placement/material/ObjectGenome-field or plain unknown-wrapper-field rejection case.",
+    "PhysicsLabRecipe.luau explicitly owns placement data, semantic material references, ObjectGenome references and initial WorldEntity state; Docs/PHYSICS_LAB.md documents that recipe as the deterministic headless contract.",
+    "PhysicsLabRealizer.realize() currently calls PhysicsLabRecipe.build() itself and then passes that canonical recipe to PhysicsLabRuntime.new(), so no current Studio/viewport exploit or engine behavior claim is made from this source finding.",
+    "Search of current/open PhysicsLabRuntime PR lineage found no separate full EntityRecipe canonicality lane; #310 addressed identity/provenance/state and bounded/no-execute validation, #388 transition fencing, #402 entity-id lookup safety, and #408 composes those exact invariants."
+  ],
+  "metadata": {
+    "candidatePr": 408,
+    "candidateHeadSha": "d31c100c5d3766ca14d89b046fff4cdb09086754",
+    "recommendedNext": "Do not widen the currently blocked integration candidate opportunistically. When the scheduler next opens runtime completion work, add a narrow bounded exact-shape/full-canonical-recipe regression and make constructor success mean the complete deterministic PhysicsLabRecipe contract matches, while preserving no-execute/bounded traversal and the current Realizer-owned canonical build path."
+  }
+}
