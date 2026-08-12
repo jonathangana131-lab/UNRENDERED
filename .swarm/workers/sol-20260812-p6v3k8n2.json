@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-p6v3k8n2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-12T10:43:05+00:00",
-  "lastSeenAt": "2026-08-12T11:08:30+00:00",
+  "lastSeenAt": "2026-08-12T11:12:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-p6v3k8n2-g2",
-  "notes": "WorldEntity source-only capacity pass complete. Published distinct StableId-boundary finding evt-20260812-110700-p6v3k8n2-worldentity-stableid-boundary at control commit 4ea6f9e5fc85f8ce611f55fc27e2688796b23aae after screening retained generation-8 PR #429 and prior identity/metadata repair lineage. Finding requires an explicit compatibility/versioning decision because legacy WorldEntity tests intentionally use pseudo IDs while production PhysicsLab/ResolvedRegionRecipe use canonical StableIds. Released mine-worldentity claim at 11dab9d0794998d5dfda568359dcc99fd24ccdf8. No product source/test/Studio evidence changed."
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-runtime-p6v3k8n2-g3",
+  "notes": "Third safe source-only capacity pass. Mining retained PhysicsLabRuntime synthesis and its already-proposed closed-shape follow-up for a concrete non-duplicate correctness/resource/integration gap while trusted ownership recovery remains independently owned."
 }
