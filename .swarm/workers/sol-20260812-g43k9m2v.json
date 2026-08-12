@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-g43k9m2v",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-12T10:43:23+00:00",
-  "lastSeenAt": "2026-08-12T11:17:00+00:00",
+  "lastSeenAt": "2026-08-12T11:19:30+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-g43k9m2v-g15",
-  "notes": "Generation-15 diagnostics test-contract repair after independent review. Preserve production behavior; strengthen matcher against inert source text; fresh CI and review required. ObjectGenome mining claim released."
+  "notes": "Generation-15 successor PR #440 exact head 34fde53ba6ab74c4fd1c88da9de98e3ed704336b is canonical-CI green and handed to REVIEW after closing inert long-comment/string source-contract false passes. Primary claim released; fresh independent exact-head review required. Global pr-ownership remains separately owned."
 }
