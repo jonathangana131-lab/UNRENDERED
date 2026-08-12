@@ -21,13 +21,13 @@ The readout surface exposes:
 
 The visual labels are diagnostic representation only. They are never canonical world data and are excluded from all diagnostics-off validation evidence by being destroyed before `PhysicsLabValidation.captureFull()` runs.
 
-## Failure atomicity audit
+## Failure atomicity contract
 
-The diagnostics boundary must be fail-closed as well as leak-free. A failed diagnostics-on attempt must not leave a partial owned tree that changes the next observation or causes the next enable attempt to fail as "already enabled."
+The diagnostics boundary is fail-closed as well as leak-free. A failed diagnostics-on attempt must not leave a partial owned tree that changes the next observation or causes the next enable attempt to fail as "already enabled."
 
-Current source does not yet prove that invariant for every assertion path: `enable()` creates and parents the owned diagnostics folder before it has preflighted every realized representation, authoritative record, required identity attribute, and usable `BasePart` adornee. If any later validation/assertion fails, the partially-created folder can remain under the lab root. This is a source-level audit finding, **not** a claim that the engine evidence row has failed or passed.
+Current source enforces this in two stages. `enable()` first preflights the fingerprint/repro identity and every realized representation, authoritative record, fidelity value, and usable `BasePart` adornee before parenting the owned diagnostics folder. It then realizes the diagnostics tree inside a protected transaction: every newly created readout is parented under the owned folder before later fallible configuration, and any error destroys the entire owned folder before the original failure is propagated. Always-run source regressions lock that ordering so a future edit cannot silently move fallible dependency checks after mutation or drop rollback cleanup.
 
-Until the implementation is hardened, evidence collection must treat any interrupted/errored diagnostics-on attempt as contaminated. Explicitly disable/clean the owned diagnostics tree and re-establish the canonical lab baseline before collecting a new candidate observation. A production fix should make enable failure-atomic by validating all required inputs before mutation or by guaranteed rollback of every owned Instance created during a failed attempt. The fix requires a regression test for an injected mid-enable failure and must preserve the rule that an unrelated same-name object is never adopted or destroyed.
+This source-level contract does **not** convert the engine evidence row to PASS. A real Studio candidate still has to demonstrate that an interrupted/errored diagnostics-on attempt leaves no owned diagnostics tree and does not poison the next observation. If such an attempt fails in Studio, explicitly force diagnostics off and re-establish the canonical lab baseline before collecting another candidate; do not reinterpret cleanup code or CI as engine evidence.
 
 ## Manual server procedure
 
