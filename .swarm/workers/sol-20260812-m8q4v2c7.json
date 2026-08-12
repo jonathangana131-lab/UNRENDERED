@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-m8q4v2c7",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-12T08:00:15+00:00",
-  "lastSeenAt": "2026-08-12T08:57:05+00:00",
+  "lastSeenAt": "2026-08-12T08:58:35+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-m8q4v2c7-g4",
-  "notes": "Test-adversary PR #430 exact head 7716eba2ace4be9dc04df7264a1003de5dc0df55 is exact-head CI green and handed off. Clone-completeness matcher now rejects the prior model-only false-pass and broadened overlay exemption. Claim released; no Studio evidence claims."
+  "slotId": "primary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-m8q4v2c7-g12",
+  "notes": "Generation-12 primary successor absorbs green test-adversary PR #430 on top of generation-11 production. Goal is a full successor candidate with hardened clone-completeness regression; no new production behavior and no Studio evidence claims."
 }
