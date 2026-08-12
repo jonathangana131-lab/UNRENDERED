@@ -56,9 +56,10 @@
     "live swarm-control validation returns PASS on authoritative history without rewriting immutable events"
   ],
   "pr": 428,
-  "notes": "Primary candidate exact head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae is published as PR #428. Canonical CI run 31579573385 and candidate control engine-tests in run 31579573480 pass. Fresh independent exact-head review is required. Trusted-base pr-ownership is presently blocked before candidate ownership checks by an unrelated malformed live REALITY-CONTRACT resource claim missing acquiredAt and carrying acquiredAtGeneration; the blocker is recorded as evt-20260812-h7m2v9q4-reality-contract-lease-blocker. No immutable history was rewritten.",
+  "notes": "Primary candidate exact head fe0c4eb48eec77c95ee83cf22c0e8b7ef1014aae is published as PR #428. Canonical CI run 31579573385 and candidate control engine-tests in run 31579573480 pass. Fresh independent exact-head review is required. The earlier malformed REALITY-CONTRACT lease blocker has cleared from live state. Current trusted-main control validation now fails on worker sol-20260812-w1e7q9m3 status DONE, which is one of the exact evidence-backed aliases PR #428 adds; therefore trusted-base PR ownership remains bootstrap-blocked until the repair is integrated or live producer state is independently normalized. No immutable history was rewritten.",
   "blockers": [
-    "Trusted-base pr-ownership cannot currently reach PR #428 ownership checks because live .swarm/resource-claims/REALITY-CONTRACT.json is schema-invalid (missing acquiredAt; unknown acquiredAtGeneration)."
+    "Independent exact-head review is required before integration.",
+    "Trusted-main control validation currently rejects live worker sol-20260812-w1e7q9m3 status DONE before PR ownership can execute; PR #428 is the candidate repair for that exact contract drift."
   ],
   "tags": ["control-repair", "red-ci", "worker-lifecycle", "event-schema", "hero-gate"]
 }
