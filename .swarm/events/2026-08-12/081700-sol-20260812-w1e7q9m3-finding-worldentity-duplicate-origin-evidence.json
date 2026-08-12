@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-081700-w1e7q9m3-worldentity-duplicate-origin-evidence",
+  "timestamp": "2026-08-12T08:17:00+00:00",
+  "fromWorker": "sol-20260812-w1e7q9m3",
+  "eventType": "FINDING",
+  "summary": "WorldEntity generation-7 candidate #421 does not satisfy the documented duplicate-identity diagnostic contract: Docs/ARCHITECTURE.md says duplicate live IDs emit a diagnostic describing both origins, but DuplicateIdentityDiagnostic retains only entityId, existing/incoming kind, and existing/incoming recipeKey. Collisions whose recipeKey and kind match but whose worldId, regionId, generator, or generatorVersion differ therefore collapse to indistinguishable diagnostic payloads, reducing the exact provenance needed to reproduce identity conflicts.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected retained WorldEntity PR #421 exact head 863fd843b477d0b3761f31556183a641fbc6b7f3 and current Docs/ARCHITECTURE.md.",
+    "The architecture contract states that duplicate live IDs keep the first registration authoritative and emit a diagnostic describing both origins.",
+    "At #421, DuplicateIdentityDiagnostic contains entityId, existingKind, incomingKind, existingRecipeKey, and incomingRecipeKey only; register() builds exactly those fields from the existing and incoming canonical records.",
+    "A deterministic collision with identical kind/recipeKey but different origin.worldId, origin.regionId, origin.generator, or origin.generatorVersion yields the same diagnostic payload as a same-origin collision, so the diagnostic cannot describe or distinguish both generation origins.",
+    "Duplicate-screened repo issues/search, open WorldEntity PR lineage, current 2026-08-12 capacity findings, and the active WorldEntity adversarial branch. The active work addresses canonical-record metadata byte budgets, not origin-complete duplicate evidence.",
+    "This is source-only domain/diagnostic evidence; no Roblox Studio or engine claim is made."
+  ],
+  "metadata": {
+    "candidatePr": 421,
+    "candidateHeadSha": "863fd843b477d0b3761f31556183a641fbc6b7f3",
+    "dependency": "Integrate the already-published canonical-record metadata byte-budget finding first or in the same retained successor, so adding origin-complete diagnostic evidence cannot reopen an unbounded retained-string path.",
+    "recommendedNext": "In the active HG-BACKFILL-WORLDENTITY lineage, make duplicate diagnostics carry an immutable bounded snapshot (or equivalent complete scalar representation) of both GenerationOrigin values: worldId, optional regionId, generator, generatorVersion, and recipeKey. Add a regression where kind/recipeKey match but another origin field differs and prove the diagnostic distinguishes the two origins exactly; preserve first-registration authority, no-execute/plain-data semantics, caller-alias isolation, and bounded diagnostic retention."
+  }
+}
