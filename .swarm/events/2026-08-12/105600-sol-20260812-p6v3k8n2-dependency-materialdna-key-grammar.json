@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-105600-p6v3k8n2-materialdna-key-grammar-sequencing",
+  "timestamp": "2026-08-12T10:56:00+00:00",
+  "fromWorker": "sol-20260812-p6v3k8n2",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "summary": "The existing MaterialDNA percent-key grammar finding is still actionable, but it must not become concurrent WIP with the higher-priority bounded-validator leaf because both edit MaterialDNA.luau. Materialized HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR as PROPOSED and serialized it behind HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS instead of duplicating or immediately unlocking implementation.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS",
+    "HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR"
+  ],
+  "severity": "low",
+  "evidence": [
+    "main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 still implements validateProjectKey with ^[a-z0-9][a-z0-9._/%-]*$ while the adjacent error text and Docs/MATERIAL_DNA_CONTRACT.md define the stable alphabet without '%'.",
+    "Audited immutable historical finding evt-20260811-081620-mat8c3r1-materialdna-key-grammar already records the percent alias and proposed the same bounded lane identity; this mining pass did not emit a duplicate defect finding.",
+    "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS is already PROPOSED at priority 5140 and writes src/shared/Materials/MaterialDNA.luau; the key-grammar leaf is priority 5130 and now depends on DENSE-BOUNDS=DONE to prevent overlapping edits and review churn.",
+    "HG-BACKFILL-MATERIALDNA-COUNTERS remains separately BLOCKED pending trusted ownership recovery and is already a predecessor of DENSE-BOUNDS, so the resulting chain keeps all three MaterialDNA source edits serialized.",
+    "Repository PR/lane search found no current implementation PR or existing lane owning the percent-key repair. No source code, tests, Studio run, or engine evidence was produced by this capacity-mining slot."
+  ],
+  "metadata": {
+    "materializedLane": "HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR",
+    "historicalFinding": "evt-20260811-081620-mat8c3r1-materialdna-key-grammar",
+    "candidateBaseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1"
+  }
+}
