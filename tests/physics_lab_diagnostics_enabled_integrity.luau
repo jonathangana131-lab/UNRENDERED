@@ -1,20 +1,31 @@
 local fs = require("@lune/fs")
 
 local DIAGNOSTICS_SOURCE = "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau"
-local DESCENDANT_FENCE =
-	"for _, liveInstance in ipairs(lab.model:GetDescendants()) do local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot) if not isDiagnosticsOverlay then assert( liveInstance.Archivable,"
-local BROAD_OVERLAY_FENCE =
-	"for _, liveInstance in ipairs(lab.model:GetDescendants()) do local isDiagnosticsOverlay = liveInstance.Name == liveRoot.Name if not isDiagnosticsOverlay then assert( liveInstance.Archivable,"
+local DESCENDANT_BLOCK = [[
+	for _, liveInstance in ipairs(lab.model:GetDescendants()) do
+		local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot)
+		if not isDiagnosticsOverlay then
+			assert(
+				liveInstance.Archivable,
+				`enabled canonical validation cannot clone non-Archivable live truth: {liveInstance:GetFullName()}`
+			)
+		end
+	end]]
 
-local function hasCompleteCloneProof(compactHelper: string): boolean
-	local modelArchivable = string.find(compactHelper, "assert(lab.model.Archivable,", 1, true)
-	local descendantFence = string.find(compactHelper, DESCENDANT_FENCE, 1, true)
-	local cloneLab = string.find(compactHelper, "local cloneInstance = lab.model:Clone()", 1, true)
+local function hasCompleteCloneProof(helperSource: string): boolean
+	local modelArchivable = string.find(
+		helperSource,
+		'\n\tassert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")',
+		1,
+		true
+	)
+	local descendantBlock = string.find(helperSource, DESCENDANT_BLOCK, 1, true)
+	local cloneLab = string.find(helperSource, "\n\tlocal cloneInstance = lab.model:Clone()", 1, true)
 	return modelArchivable ~= nil
-		and descendantFence ~= nil
+		and descendantBlock ~= nil
 		and cloneLab ~= nil
-		and modelArchivable < descendantFence
-		and descendantFence < cloneLab
+		and modelArchivable < descendantBlock
+		and descendantBlock < cloneLab
 end
 
 local function run(): number
@@ -65,28 +76,74 @@ local function run(): number
 	)
 
 	-- Instance:Clone() omits non-Archivable descendants. Pin the complete helper-local
-	-- proof, not merely an Archivable token plus any earlier assertion: scan every live
-	-- descendant, exempt only the exact owned overlay tree, and fail closed on canonical
-	-- descendants before the disposable clone is created.
+	-- proof as a formatted block so token-preserving early exits or dead wrappers cannot
+	-- masquerade as an exhaustive scan. The block must remain at helper scope and finish
+	-- before the disposable clone is created.
 	expect(
 		"enabled canonical clone proves every non-overlay live descendant is Archivable before cloning",
-		compactHelper ~= nil and hasCompleteCloneProof(compactHelper)
+		helperSource ~= nil and hasCompleteCloneProof(helperSource)
 	)
 
-	local modelOnlyMutant =
-		'assert(lab.model.Archivable, "model must be cloneable") local cloneInstance = lab.model:Clone()'
+	local modelOnlyMutant = [[
+	assert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")
+	local cloneInstance = lab.model:Clone()]]
 	expect(
 		"clone-completeness matcher rejects the prior model-only false-pass mutant",
 		not hasCompleteCloneProof(modelOnlyMutant)
 	)
 
+	local broadOverlayMutant = [[
+	assert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")
+	for _, liveInstance in ipairs(lab.model:GetDescendants()) do
+		local isDiagnosticsOverlay = liveInstance.Name == liveRoot.Name
+		if not isDiagnosticsOverlay then
+			assert(
+				liveInstance.Archivable,
+				`enabled canonical validation cannot clone non-Archivable live truth: {liveInstance:GetFullName()}`
+			)
+		end
+	end
+	local cloneInstance = lab.model:Clone()]]
 	expect(
 		"clone-completeness matcher rejects a broadened overlay exemption mutant",
-		not hasCompleteCloneProof(
-			'assert(lab.model.Archivable, "model") '
-				.. BROAD_OVERLAY_FENCE
-				.. " local cloneInstance = lab.model:Clone()"
-		)
+		not hasCompleteCloneProof(broadOverlayMutant)
+	)
+
+	local earlyExitMutant = [[
+	assert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")
+	for _, liveInstance in ipairs(lab.model:GetDescendants()) do
+		local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot)
+		if not isDiagnosticsOverlay then
+			assert(
+				liveInstance.Archivable,
+				`enabled canonical validation cannot clone non-Archivable live truth: {liveInstance:GetFullName()}`
+			)
+		end
+		break
+	end
+	local cloneInstance = lab.model:Clone()]]
+	expect(
+		"clone-completeness matcher rejects an early-exit descendant scan",
+		not hasCompleteCloneProof(earlyExitMutant)
+	)
+
+	local deadWrapperMutant = [[
+	if false then
+		assert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")
+		for _, liveInstance in ipairs(lab.model:GetDescendants()) do
+			local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot)
+			if not isDiagnosticsOverlay then
+				assert(
+					liveInstance.Archivable,
+					`enabled canonical validation cannot clone non-Archivable live truth: {liveInstance:GetFullName()}`
+				)
+			end
+		end
+	end
+	local cloneInstance = lab.model:Clone()]]
+	expect(
+		"clone-completeness matcher rejects a dead wrapped descendant scan",
+		not hasCompleteCloneProof(deadWrapperMutant)
 	)
 
 	expect(
