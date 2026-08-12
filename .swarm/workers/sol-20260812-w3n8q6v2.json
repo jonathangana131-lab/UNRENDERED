@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-w3n8q6v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T08:00:30+00:00",
-  "lastSeenAt": "2026-08-12T08:43:00+00:00",
+  "lastSeenAt": "2026-08-12T08:47:00+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING-audit-w3n8q6v2-g2",
-  "notes": "Higher-priority generation-2 stale-review reconciliation after yielding Diagnostics capacity mining. Prior independent reviewer already published exact-head source-contract PASS on PR #349 head ee771bd50db972ad572f5d3cef8463220d69fa06; reconcile stale lane/claim state without duplicating review."
+  "notes": "Generation-2 stale review reconciliation complete. Prior independent reviewer already passed PR #349 exact head ee771bd50db972ad572f5d3cef8463220d69fa06; published reconciliation finding, moved lane from stale REVIEW to BLOCKED on trusted-history/live ownership recovery, and released claim without duplicating review or test execution."
 }
