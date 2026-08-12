@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "primary",
+  "workerId": "sol-20260812-m8q4v2c7",
+  "claimToken": "a781d4f0c2e6935b",
+  "claimedAt": "2026-08-12T08:36:10+00:00",
+  "heartbeatAt": "2026-08-12T08:36:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 8,
+  "resources": ["REALITY-CONTRACT"],
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-m8q4v2c7-g8",
+  "pr": null,
+  "notes": "Generation-8 primary successor consumes expected-red PR #426 exact head 9597fdf23c7b2d7509051a42839730712003a1f3. Repair aggregate canonical metadata byte bound across WorldEntity.new and direct registry ownership; preserve exact boundary and fail-atomic rejection. No Studio evidence claims."
+}
