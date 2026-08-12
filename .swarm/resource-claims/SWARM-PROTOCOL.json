@@ -5,8 +5,8 @@
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "claimToken": "d7a4c91e2f6b8035",
   "acquiredAt": "2026-08-12T10:42:44+00:00",
-  "heartbeatAt": "2026-08-12T10:50:00+00:00",
+  "heartbeatAt": "2026-08-12T10:55:00+00:00",
   "leaseSeconds": 1800,
   "generation": 2,
-  "notes": "Generation-2 successor PR #434 published from reviewed PR #428 lineage; exact-head CI is pending for the verdict type guard and unhashable JSON regression."
+  "notes": "Generation-2 successor PR #434 exact head 4c73ae7bd82fb7969824bd2cdbfa49346b2dc482 is in REVIEW. Canonical CI and Swarm engine-tests passed; primary waits for independent exact-head review. Shared pr-ownership is separately fail-closed on malformed dependency shape in live proposed HG-BACKFILL-OBJECTGENOME-STRING-BUDGET."
 }
