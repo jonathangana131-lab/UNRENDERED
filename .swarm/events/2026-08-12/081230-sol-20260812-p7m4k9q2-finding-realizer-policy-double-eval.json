@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-081230-p7m4k9q2-realizer-policy-double-eval",
+  "timestamp": "2026-08-12T08:12:30+00:00",
+  "fromWorker": "sol-20260812-p7m4k9q2",
+  "eventType": "FINDING",
+  "summary": "Exact main evaluates the same caller-owned FidelityManager.PolicyInputs twice on the PhysicsLabRealizer.step path: first in the server realizer's adapter precheck via selectDesiredLevel(), then again inside PhysicsLabRuntime/FidelityManager.step(). That makes the physical adapter and authoritative runtime reason over potentially different snapshots for metatable/stateful inputs, and the first evaluation occurs outside the retained PR #388 runtime mutation fence that was specifically designed to contain hostile PolicyInputs evaluation.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-PHYSICS-RUNTIME-TRANSITION-FENCE",
+    "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected exact main ae83c0ef470eb2e73d99be41fd3561ede30c40e1. src/server/PhysicsLab/PhysicsLabRealizer.luau step() calls FidelityManager.selectDesiredLevel(inputs, nil, current.fidelity) before runtime:step(entityId, inputs, nowSeconds, captureState, observeTransition).",
+    "src/shared/Physics/FidelityManager.luau evaluatePolicy() validates and repeatedly dereferences caller-owned PolicyInputs; Manager.step() calls evaluatePolicy(inputs, self.config, currentLevel) again, so a proxy/metatable input can yield different values or execute callbacks on the two reads.",
+    "Exact main PhysicsLabRuntime.step() delegates the second evaluation to self._fidelity:step(). Retained PR #388 explicitly hardens that runtime path by wrapping the entire FidelityManager.step call in its transitionInFlight transaction because hostile PolicyInputs metatables can mutate/dispose during pre-hook evaluation.",
+    "PR #388 cannot cover the realizer's earlier selectDesiredLevel() call because its lane owns only PhysicsLabRuntime plus its dedicated test. The realizer precheck therefore remains outside that proposed transaction even if #388 integrates unchanged.",
+    "Retained realizer PR #349 changes only exact representation ownership (ownsRepresentation) and its source-contract regression; its patch does not alter step() or policy evaluation.",
+    "Search of current/open PRs and issues for PhysicsLabRealizer/selectDesiredLevel/PolicyInputs found no separate owner for the double-evaluation seam. No Roblox Studio or two-client evidence is implicated; this is a source/deterministic-authority boundary finding."
+  ],
+  "metadata": {
+    "mainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "relatedPr": 388,
+    "recommendedNext": "After retained runtime/realizer lineages are schedulable, use one bounded source-only successor/leaf to make the adapter and authoritative runtime consume one validated policy decision/snapshot per step. Prefer returning/consuming the runtime decision rather than evaluating caller PolicyInputs in PhysicsLabRealizer; add an adversarial metatable/stateful-input regression proving no pre-runtime policy execution and no adapter/runtime disagreement. Do not widen #388 while its ownership/history integration is blocked."
+  }
+}
