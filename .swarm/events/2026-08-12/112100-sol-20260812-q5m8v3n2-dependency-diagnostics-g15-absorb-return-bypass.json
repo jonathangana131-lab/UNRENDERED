@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-112100-q5m8v3n2-diagnostics-g15-absorb-return-bypass",
+  "timestamp": "2026-08-12T11:21:00+00:00",
+  "fromWorker": "sol-20260812-q5m8v3n2",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "summary": "Generation-15 PR #440 addresses the independent inert long-comment/long-string blocker but was published before the concurrent conditional pre-proof return blocker from test-adversary PR #439 was absorbed. Its patched hasCompleteCloneProof still masks inert source then uses the same modelArchivable < descendantBlock < cloneLab positional predicate, so #439 remains a required input before generation 15 can return to review.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "severity": "high",
+  "evidence": [
+    "PR #440's test patch masks strings/comments and adds inert-comment/inert-string mutants, correctly consuming evt-20260812-111100-a8v5r2n9-diagnostics-g14-review-result.",
+    "The same #440 patch leaves hasCompleteCloneProof's acceptance condition as modelArchivable ~= nil, descendantBlock ~= nil, cloneLab ~= nil, modelArchivable < descendantBlock, descendantBlock < cloneLab. There is no pre-proof control-flow guard and no conditional-return mutant.",
+    "PR #439 exact head c7246532e1c0c92ff0a417f702de11d0751e64f1 is stacked on #438 and changes one test file only. Its conditional-return mutant preserves all of #440's searched executable text and ordering, so inert-source masking does not address that bypass.",
+    "#439 canonical CI run 31590808024 / job 94095070609 passes format, lint, Luau analysis, architecture audits, and Swarm deterministic tests before failing at Pure Luau as expected; engine-tests check 94095070755 passes on the same head.",
+    "GitHub PR #440 conversation comment 5265956169 hands the blocker directly to the generation-15 primary. No second competing generation-15 implementation is opened by this worker."
+  ],
+  "metadata": {
+    "primaryPr": 440,
+    "supportPr": 439,
+    "supportHeadSha": "c7246532e1c0c92ff0a417f702de11d0751e64f1",
+    "requiredNext": "Generation-15 primary should absorb equivalent conditional pre-proof return coverage and harden the matcher so no helper path can return before the exhaustive proof while still reaching a successful contract outcome. Keep production diagnostics unchanged unless a separate production defect is found; rerun fresh exact-head CI and independent review after absorption."
+  }
+}
