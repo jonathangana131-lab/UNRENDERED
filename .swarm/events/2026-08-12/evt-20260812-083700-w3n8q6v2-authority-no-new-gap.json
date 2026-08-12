@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-083700-w3n8q6v2-authority-no-new-gap",
+  "timestamp": "2026-08-12T08:37:00+00:00",
+  "fromWorker": "sol-20260812-w3n8q6v2",
+  "eventType": "FINDING",
+  "summary": "Authority capacity mining found no additional non-duplicate source-only defect worth opening while the retained authority stack is blocked on trusted ownership. Current live completion state already retains #348 wrong-context bootstrap guards, #394 teardown evidence, and #412 harness lifecycle/capability fencing with independent source/test approval, and it separately records the unique future Rojo replicated-subtree exclusion gap from PR #300. Starting another authority primary now would duplicate accepted work or violate the completion queue's drain-before-spawn rule. Preserve the existing Rojo finding for a future dependency-cleared leaf and prioritize trusted-history recovery/integration before further authority breadth.",
+  "affects": ["HG-COMPLETION-AUTHORITY", "HG-BACKFILL-AUTHORITY", "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "LOW",
+  "evidence": [
+    "HG-COMPLETION-AUTHORITY is BLOCKED and explicitly retains exactly three current candidates: PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3, PR #394 exact head b38de16ade487ff8ceb48ed3596ebfe33be5fa1f, and PR #412 exact head 807fb042b2fe96db32bda7a5c3346788e828a758. Its notes state all are independently approved with green exact-head canonical CI/engine-test evidence and integration is fail-closed on trusted-history/live pr-ownership recovery.",
+    "HG-BACKFILL-AUTHORITY separately records the retained #348 bootstrap-context repair and #394 teardown stack and explicitly says the PhysicsLabStudioHarness.get() raw destroy capability is out of scope because that defect has its own lane.",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY retains PR #412 as the source/test-approved repair for raw RealizedLab.destroy() ownership and stale-generation reconciliation; reopening that capability defect would be duplicate work.",
+    "HG-COMPLETION-AUTHORITY already records the remaining unique source-only deployment-boundary issue from PR #300: exact-path counting can miss replicated src/server/... descendants. It points to structured finding evt-20260812t080930z-r7m4k9q2-authority-rojo-retained and requires a future subtree/prefix-aware exclusion plus adversarial leaked-server-subpath fixture after the retained stack can integrate.",
+    "HG151-TWOCLIENT remains blocked on OPS-STUDIO-DISPLAY, so source-only mining cannot honestly close real replication/session/two-client evidence. No Roblox Studio, real two-client, replication/session, transport, viewport, physical-contact, or local test execution is claimed by this no-new-gap result."
+  ]
+}
