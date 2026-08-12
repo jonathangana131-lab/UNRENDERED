@@ -60,7 +60,7 @@ jobs:
 
           # Every malformed immutable event is an exact quarantine-only artifact.
           # Preserve the original reviewed manifest and verify each later measured
-          # extension row by exact filename, first-write commit, and Git blob.
+          # extension row by exact date, filename, first-write commit, and Git blob.
           MALFORMED_FILE="$RUNNER_TEMP/malformed-event-quarantine.txt"
           python3 - "$MALFORMED_FILE" <<'PY'
           import sys
@@ -69,18 +69,21 @@ jobs:
           import swarm_history_recovery_extension as extension
           import swarm_history_recovery_manifest as recovery
           assert recovery.MALFORMED_EVENT_QUARANTINE
-          rows = recovery.malformed_event_quarantine_rows() + extension.MALFORMED_EVENT_QUARANTINE_ROWS
+          rows = tuple(
+              (event_id, "2026-08-11", filename, first_write, blob_sha)
+              for event_id, filename, first_write, blob_sha in recovery.malformed_event_quarantine_rows()
+          ) + extension.malformed_event_quarantine_rows_with_dates()
           Path(sys.argv[1]).write_text(
               "".join(
-                  f"{event_id} {filename} {first_write} {blob_sha}\n"
-                  for event_id, filename, first_write, blob_sha in rows
+                  f"{event_id} {event_date} {filename} {first_write} {blob_sha}\n"
+                  for event_id, event_date, filename, first_write, blob_sha in rows
               ),
               encoding="utf-8",
           )
           PY
           [[ -s "$MALFORMED_FILE" ]] || { echo 'Malformed event quarantine manifest is empty.'; exit 1; }
-          while read -r EVENT_ID FIRST_WRITE_FILENAME FIRST_WRITE_SHA FIRST_WRITE_BLOB; do
-            EVENT_PATH=".swarm/events/2026-08-11/${FIRST_WRITE_FILENAME}"
+          while read -r EVENT_ID EVENT_DATE FIRST_WRITE_FILENAME FIRST_WRITE_SHA FIRST_WRITE_BLOB; do
+            EVENT_PATH=".swarm/events/${EVENT_DATE}/${FIRST_WRITE_FILENAME}"
             mapfile -t ADD_COMMITS < <(git log --format=%H --reverse --diff-filter=A "$CONTROL_SHA" -- "$EVENT_PATH")
             [[ "${#ADD_COMMITS[@]}" -eq 1 ]] || { echo "$EVENT_ID: expected exactly one first-add commit"; exit 1; }
             [[ "${ADD_COMMITS[0]}" == "$FIRST_WRITE_SHA" ]] || { echo "$EVENT_ID: first-write commit mismatch"; exit 1; }
