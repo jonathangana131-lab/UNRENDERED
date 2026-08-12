@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-k7m2v9q4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-12T07:55:00+00:00",
-  "lastSeenAt": "2026-08-12T08:16:00+00:00",
+  "lastSeenAt": "2026-08-12T08:18:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-geometry",
   "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-k7m2v9q4",
-  "notes": "Lost the independent recovery-review claim race and rerouted. Mined the retained Physics Lab cart geometry lineage, recorded shelf/frame manufacturability finding evt-20260812-081400-k7m2v9q4-cart-shelf-frame, and materialized blocked successor lane HG-PHYSICS-CART-SHELF-FRAME. No Studio evidence or Hero feature implementation claimed."
+  "notes": "Capacity-mining role completed and claim released. Mined the retained Physics Lab cart geometry lineage, recorded shelf/frame manufacturability finding evt-20260812-081400-k7m2v9q4-cart-shelf-frame, and materialized blocked successor lane HG-PHYSICS-CART-SHELF-FRAME. No Studio evidence or Hero feature implementation claimed."
 }
