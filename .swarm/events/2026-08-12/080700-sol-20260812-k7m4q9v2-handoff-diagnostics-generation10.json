@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812T080700Z-sol-20260812-k7m4q9v2-handoff-diagnostics-generation10",
+  "eventType": "HANDOFF",
+  "at": "2026-08-12T08:07:00Z",
+  "workerId": "sol-20260812-k7m4q9v2",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "claimToken": "6d2a9c4e1f7b8053",
+  "generation": 10,
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-8d5d357a-g9",
+  "pr": 424,
+  "commit": "f89ce88ea7791e29d22a0e2ca76b22f2d7b63699",
+  "resources": [],
+  "summary": "Recovered stale diagnostics primary PR #424 and repaired its isolated source-contract regression without changing production diagnostics behavior. The atomicity regression now scopes enable transaction/rollback sentinels to the actual enable() body, preventing unrelated helper pcall/error tokens from producing false failures or false passes. Retained generation-9 enabled-window canonical-integrity and authoritative readout hardening remains intact. Exact-head canonical CI is green; lane moved to REVIEW for fresh independent audit/test-adversary review. No Studio evidence is claimed.",
+  "validation": [
+    {
+      "command": "GitHub Actions CI run 31576692805 on f89ce88ea7791e29d22a0e2ca76b22f2d7b63699",
+      "result": "PASS",
+      "notes": "Format, lint, Luau analysis, canonical randomness audit, shared-domain audits, swarm deterministic tests, Pure Luau tests, place build, and artifact upload all passed."
+    },
+    {
+      "command": "Swarm Control Plane engine-tests run 31576692836",
+      "result": "PASS",
+      "notes": "Deterministic/adversarial control-plane engine tests passed on the exact PR head."
+    },
+    {
+      "command": "Swarm Control Plane pr-ownership run 31576692836",
+      "result": "BLOCKED_EXTERNAL",
+      "notes": "Live control state fails before PR-specific ownership evaluation because .swarm/resource-claims/REALITY-CONTRACT.json is missing required acquiredAt; this is outside the diagnostics diff and belongs to the dedicated recovery lane."
+    }
+  ],
+  "details": {
+    "productionBehaviorChangedByGeneration10": false,
+    "atomicityTestScopedToEnableBody": true,
+    "enabledCanonicalIntegrityRetained": true,
+    "authoritativeReadoutProjectionRetained": true,
+    "independentReviewRequired": true,
+    "studioEvidenceClaimed": false,
+    "viewportEvidenceClaimed": false,
+    "twoClientEvidenceClaimed": false
+  }
+}
