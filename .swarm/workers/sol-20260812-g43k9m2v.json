@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-g43k9m2v",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "WORKING",
   "startedAt": "2026-08-12T10:43:23+00:00",
-  "lastSeenAt": "2026-08-12T11:25:30+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "lastSeenAt": "2026-08-12T11:26:00+00:00",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "slotId": "primary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-g43k9m2v-g16",
-  "notes": "Generation-16 successor PR #441 exact head b8ca3302cc3012011fb911ad3df5dc878130c133 is canonical-CI green, Swarm engine-tests green, mergeable, and handed to REVIEW. Primary claim released; fresh independent exact-head review required. Global pr-ownership/trusted-history recovery remains separately owned."
+  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-g43k9m2v-g3",
+  "notes": "Generation-3 stale-primary takeover from #434 exact green head. Repair only worker status string validation before set membership and add []/{} controlled-ControlError regressions; preserve finite aliases, typed REVIEW_RESULT repair, claim/resource fencing, and fail-closed unknown fields."
 }
