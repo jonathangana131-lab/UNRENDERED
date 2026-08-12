@@ -23,8 +23,11 @@ local function run(): number
 		string.find(source, "local function captureCanonicalWhileDiagnosticsEnabled(", 1, true)
 	local helperEnd = helperStart
 		and string.find(source, "function PhysicsLabStudioDiagnostics.capture(", helperStart, true)
+	local archivableCheck = helperStart and string.find(source, "Archivable", helperStart, true)
 	local cloneLab = helperStart
 		and string.find(source, "local cloneInstance = lab.model:Clone()", helperStart, true)
+	local archivableAssert = archivableCheck and string.find(source, "assert(", archivableCheck, true)
+	local archivableError = archivableCheck and string.find(source, "error(", archivableCheck, true)
 	local proveCloneModel = helperStart
 		and string.find(source, 'assert(cloneInstance:IsA("Model")', helperStart, true)
 	local locateOwnedOverlay = helperStart
@@ -45,6 +48,28 @@ local function run(): number
 			and cloneLab < proveCloneModel
 			and proveCloneModel < helperEnd
 	)
+
+	-- Instance:Clone() intentionally omits descendants whose Archivable property is
+	-- false. The enabled-state evidence seam must therefore fail closed on that
+	-- live condition (or otherwise prove clone completeness) before cloning, or an
+	-- unauthorized live child can disappear before strict canonical validation.
+	local failsClosedBeforeClone = cloneLab ~= nil
+		and (
+			(archivableAssert ~= nil and archivableAssert < cloneLab)
+			or (archivableError ~= nil and archivableError < cloneLab)
+		)
+	expect(
+		"enabled canonical clone cannot silently omit non-Archivable live truth",
+		helperStart ~= nil
+			and helperEnd ~= nil
+			and archivableCheck ~= nil
+			and cloneLab ~= nil
+			and helperStart < archivableCheck
+			and archivableCheck < cloneLab
+			and failsClosedBeforeClone
+			and cloneLab < helperEnd
+	)
+
 	expect(
 		"only the exact owned diagnostics overlay is removed before strict canonical validation",
 		locateOwnedOverlay ~= nil
