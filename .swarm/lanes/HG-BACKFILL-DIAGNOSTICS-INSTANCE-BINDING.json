@@ -5,7 +5,7 @@
   "title": "Diagnostics exact representation-instance authority seam",
   "objective": "Provide the narrow project-owned source seam needed for Physics Lab diagnostics to prove that an enumerated Workspace representation is the exact runtime-owned Instance for its canonical WorldEntity id, without exposing the private representation map or treating Workspace as canonical data.",
   "priority": 4860,
-  "state": "REVIEW",
+  "state": "BLOCKED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabRealizer.luau", "tests/physics_lab_realizer_representation_ownership.luau", "tests/run.luau"],
@@ -24,5 +24,6 @@
     "do not claim Roblox Studio, viewport, physical-contact, or two-client evidence from source-only validation",
     "canonical CI and fresh independent exact-head review are required before integration"
   ],
+  "notes": "Retain PR #349 exact head ee771bd50db972ad572f5d3cef8463220d69fa06. Generation-1 independent audit by sol-20260811-q7n2v5m8 published source-contract PASS as PR review 4911543619 after the earlier false-pass test weakness was fixed: ownsRepresentation() preserves isRepresented() authority checks, requires exact private-map Instance identity plus direct model membership, keeps the map private, and the regression locks the complete local predicate. Exact-head canonical CI 31539525697 and Swarm engine-tests 93938658376 are PASS. Generation-2 reconciliation evt-20260812-084500-w3n8q6v2-diagnostics-binding-review-reconcile removed the stale review advertisement without duplicating review. Lane is now BLOCKED only on the separately owned repository-wide trusted-history/live pr-ownership recovery. After integration, HG-BACKFILL-DIAGNOSTICS may consume this seam; no Roblox Studio, viewport, physical-contact, diagnostics-capture, or two-client evidence is claimed here.",
   "tags": ["backfill", "hero-gate", "source-only", "diagnostics", "authority-prerequisite"]
 }
