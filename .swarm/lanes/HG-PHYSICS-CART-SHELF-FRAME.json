@@ -7,7 +7,7 @@
   "priority": 5085,
   "state": "BLOCKED",
   "mode": "exclusive",
-  "dependencies": ["HG-PHYSICS-CART-GEOMETRY"],
+  "dependencies": [{"laneId":"HG-PHYSICS-CART-GEOMETRY","acceptableStates":["DONE"]}],
   "writeScopes": ["src/shared/Physics/PhysicsLabObjectGenomes.luau", "tests/physics_lab_recipe.luau"],
   "resources": [],
   "slots": [
