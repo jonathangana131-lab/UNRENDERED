@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812T111830Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation15",
+  "eventType": "HANDOFF",
+  "at": "2026-08-12T11:18:30Z",
+  "workerId": "sol-20260812-g43k9m2v",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "claimToken": "c91e4a7b2d806f53",
+  "generation": 15,
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-g43k9m2v-g15",
+  "pr": 440,
+  "commit": "34fde53ba6ab74c4fd1c88da9de98e3ed704336b",
+  "resources": [],
+  "summary": "Generation-15 diagnostics successor closes the generation-14 inert-source false-pass without changing production diagnostics behavior. Source-contract matching now masks Luau comments and long-bracket strings before matching the exact executable clone-completeness proof, and explicit inert long-comment plus long-string mutants pass. Fresh exact-head canonical CI is green and Swarm engine-tests pass. Lane is REVIEW; fresh independent exact-head source/test audit is required and primary does not self-approve.",
+  "validation": [
+    {
+      "command": "GitHub Actions CI run 31591148254 on 34fde53ba6ab74c4fd1c88da9de98e3ed704336b",
+      "result": "PASS",
+      "notes": "Fresh PR-specific canonical CI passed format, lint, Luau analysis, architecture audits, deterministic Swarm tests, Pure Luau including both inert-source mutants, place build, and artifact upload."
+    },
+    {
+      "command": "Swarm Control Plane run 31591148251 engine-tests",
+      "result": "PASS",
+      "notes": "Deterministic and adversarial control-plane tests passed on the exact head."
+    },
+    {
+      "command": "Swarm Control Plane run 31591148251 pr-ownership",
+      "result": "BLOCKED_EXTERNAL",
+      "notes": "The known trusted-history/live ownership gate remains globally red and separately owned; no diagnostics bypass or product failure is inferred."
+    }
+  ],
+  "details": {
+    "productionBytesChangedFromGeneration14": false,
+    "inertLongCommentMutantRejected": true,
+    "inertLongStringMutantRejected": true,
+    "freshIndependentReviewRequired": true,
+    "studioEvidenceClaimed": false,
+    "viewportEvidenceClaimed": false,
+    "twoClientEvidenceClaimed": false
+  }
+}
