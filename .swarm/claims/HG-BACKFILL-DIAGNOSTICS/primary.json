@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "workerId": "sol-20260812-r7m4k9q2",
+  "claimToken": "b5e18c7a3d409f62",
+  "claimedAt": "2026-08-12T08:35:00+00:00",
+  "heartbeatAt": "2026-08-12T08:35:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 11,
+  "resources": [],
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-r7m4k9q2-g11",
+  "pr": null,
+  "notes": "Generation-11 repair for #424 Archivable=false clone-completeness blocker. Start from exact expected-red #425 lineage if compatible; preserve exact-instance ownership, overlay-only exclusion, canonical WorldEntity projection, cleanup/failure atomicity, and source-only evidence boundaries."
+}
