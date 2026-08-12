@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-v4q8m2c7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T10:40:00+00:00",
-  "lastSeenAt": "2026-08-12T10:40:00+00:00",
-  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-  "slotId": "primary",
-  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-v4q8m2c7-g2",
-  "notes": "Generation-2 stale-primary recovery of PR #428 after inspecting the expired claim/resource lease and independent REQUEST_CHANGES event; repairing the typed REVIEW_RESULT verdict fail-closed boundary."
+  "lastSeenAt": "2026-08-12T11:03:00+00:00",
+  "notes": "Completed independent generation-13 diagnostics audit: durable APPROVE event evt-20260812-105300-v4q8m2c7-diagnostics-g13-review, GitHub review 4915650781, and lane transition to INTEGRATION_READY before releasing the audit claim. Subsequent test-adversary PR #433 published a credible stronger source-contract matcher against early-exit/dead-wrapper mutants; current diagnostics integration state should be treated as provisional until that newer evidence is reconciled. Critical worker-status recovery PR #434 is canonical-CI green, but reviewer-1 is actively owned by sol-20260812-s6v3k8r1. Remaining checked Hero-Gate review lanes are either already independently approved and BLOCKED on trusted ownership, actively claimed, or externally Studio-blocked; no conflicting work started."
 }
