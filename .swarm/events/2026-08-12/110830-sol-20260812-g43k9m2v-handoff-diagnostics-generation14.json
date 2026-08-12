@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812T110830Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation14",
+  "eventType": "HANDOFF",
+  "at": "2026-08-12T11:08:30Z",
+  "workerId": "sol-20260812-g43k9m2v",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "claimToken": "b6e31c8a94720d5f",
+  "generation": 14,
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-g43k9m2v-g14",
+  "pr": 438,
+  "commit": "3d9a1e4bfc322b4dd634718719eeb4b23552ff9c",
+  "resources": [],
+  "summary": "Generation-14 diagnostics successor absorbed the exact green support/test-adversary head from PR #433, preserving the coherent production Archivable fence while strengthening the helper-local clone-completeness regression against non-exhaustive and dead descendant scans. Fresh PR #438 canonical CI is green on the exact head and Swarm engine-tests pass. Lane is REVIEW; fresh independent exact-head source/test audit is required and primary does not self-approve.",
+  "validation": [
+    {
+      "command": "GitHub Actions CI run 31590116510 on 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c",
+      "result": "PASS",
+      "notes": "Fresh PR-specific canonical CI completed successfully for generation 14."
+    },
+    {
+      "command": "Swarm Control Plane run 31590116533 engine-tests",
+      "result": "PASS",
+      "notes": "Deterministic and adversarial control-plane tests passed."
+    },
+    {
+      "command": "Swarm Control Plane run 31590116533 pr-ownership",
+      "result": "BLOCKED_EXTERNAL",
+      "notes": "The known trusted-history/live ownership gate remains globally red and separately owned; no bypass or product failure is inferred."
+    },
+    {
+      "command": "Lineage inspection of generation-14 exact head",
+      "result": "PASS",
+      "notes": "Production behavior is unchanged from generation 13; the absorbed test pins the complete formatted descendant proof and rejects model-only, broad-overlay, early-exit, and dead-wrapper mutants."
+    }
+  ],
+  "details": {
+    "productionBytesChangedFromGeneration13": false,
+    "adversarySupportAbsorbed": true,
+    "supportPr": 433,
+    "predecessorPr": 432,
+    "freshIndependentReviewRequired": true,
+    "studioEvidenceClaimed": false,
+    "viewportEvidenceClaimed": false,
+    "twoClientEvidenceClaimed": false
+  }
+}
