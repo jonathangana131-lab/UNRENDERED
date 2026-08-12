@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "workerId": "sol-20260812-q5m8v2c7",
+  "claimToken": "9b3e6c1d7a4f2058",
+  "claimedAt": "2026-08-12T10:52:30+00:00",
+  "heartbeatAt": "2026-08-12T10:52:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-q5m8v2c7",
+  "pr": null
+}
