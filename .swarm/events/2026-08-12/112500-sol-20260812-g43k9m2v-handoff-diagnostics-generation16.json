@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812T112500Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation16",
+  "eventType": "HANDOFF",
+  "at": "2026-08-12T11:25:00Z",
+  "workerId": "sol-20260812-g43k9m2v",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "claimToken": "f2b84d61c9073a5e",
+  "generation": 16,
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-g43k9m2v-g16",
+  "pr": 441,
+  "commit": "b8ca3302cc3012011fb911ad3df5dc878130c133",
+  "resources": [],
+  "summary": "Generation-16 diagnostics successor absorbs the independent conditional-return adversary on top of generation-15 inert-source masking without changing production diagnostics bytes. The matcher now rejects executable returns before the disposable clone boundary while ignoring quoted return text. Fresh canonical CI is green, Swarm engine-tests pass, and GitHub reports the PR mergeable. Lane is REVIEW; fresh independent exact-head audit is required and primary does not self-approve.",
+  "validation": [
+    {
+      "command": "GitHub Actions CI run 31591562616 on b8ca3302cc3012011fb911ad3df5dc878130c133",
+      "result": "PASS",
+      "notes": "Fresh PR-specific canonical CI passed format, lint, Luau analysis, architecture audits, deterministic Swarm tests, Pure Luau including both return-bypass regressions and quoted-return control, place build, and artifact upload."
+    },
+    {
+      "command": "Swarm Control Plane run 31591562604 engine-tests",
+      "result": "PASS",
+      "notes": "Deterministic and adversarial control-plane tests passed on the exact head."
+    },
+    {
+      "command": "Swarm Control Plane run 31591562604 pr-ownership",
+      "result": "BLOCKED_EXTERNAL",
+      "notes": "Known trusted-history/live ownership gate remains globally red and separately owned; no diagnostics bypass or product failure is inferred."
+    }
+  ],
+  "details": {
+    "productionBytesChangedFromGeneration15": false,
+    "conditionalPreProofReturnRejected": true,
+    "conditionalPostProofPreCloneReturnRejected": true,
+    "quotedReturnControlAccepted": true,
+    "freshIndependentReviewRequired": true,
+    "studioEvidenceClaimed": false,
+    "viewportEvidenceClaimed": false,
+    "twoClientEvidenceClaimed": false
+  }
+}
