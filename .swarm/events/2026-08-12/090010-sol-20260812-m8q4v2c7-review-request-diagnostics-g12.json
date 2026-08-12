@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-090010-m8q4v2c7-diagnostics-g12-review-request",
+  "timestamp": "2026-08-12T09:00:10+00:00",
+  "fromWorker": "sol-20260812-m8q4v2c7",
+  "eventType": "REVIEW_REQUEST",
+  "summary": "Diagnostics generation-12 primary PR #431 supersedes generation 11 and its test-adversary support. Exact-head CI is green. A fresh independent exact-head source/test audit is required before any lane REVIEW/integration transition; specifically verify the helper-local non-Archivable descendant fence, exact owned-overlay ancestry exemption, clone ordering, and that the regression cannot false-pass if the descendant scan or exact exemption is weakened.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "PR #431 exact head 7716eba2ace4be9dc04df7264a1003de5dc0df55",
+    "Canonical CI run 31580787789 job 94063117481 PASS through format, lint, Luau analysis, architecture audits, Swarm deterministic tests, Pure Luau, place build, and artifact upload",
+    "Regression self-tests reject both the prior model-only false-pass mutant and a broadened name-based overlay exemption mutant",
+    "Superseded generation-11 PR #427 and test-only PR #430 are closed so review converges on #431"
+  ],
+  "metadata": {
+    "primaryPr": 431,
+    "primaryHead": "7716eba2ace4be9dc04df7264a1003de5dc0df55",
+    "ciRun": 31580787789,
+    "ciJob": 94063117481,
+    "baseHead": "f89ce88ea7791e29d22a0e2ca76b22f2d7b63699",
+    "requiredReview": "independent exact-head source/test audit",
+    "studioEvidenceRequired": false,
+    "externalDiagnosticsEvidenceStillBlocked": true,
+    "trustedHistoryGateStillSeparate": true
+  }
+}
