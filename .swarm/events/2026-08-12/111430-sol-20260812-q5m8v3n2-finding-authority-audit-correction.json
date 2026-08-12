@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-111430-q5m8v3n2-authority-audit-correction",
+  "timestamp": "2026-08-12T11:14:30+00:00",
+  "fromWorker": "sol-20260812-q5m8v3n2",
+  "eventType": "FINDING",
+  "summary": "Correction to this worker's 11:12 authority saturation note: no NEW non-duplicate authority defect was found by this pass, but the existing 10:54 authority-descendant-liveness finding remains actionable queued source debt and must not be read as superseded. That finding is narrower than a new authority primary: descendant-only destruction/reparenting can leave #412's root-only harness reconciliation bound to stale representation-map entries, with #349's exact ownsRepresentation seam available for a future post-lineage repair.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-COMPLETION-AUTHORITY",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "evidence": [
+    "The pre-existing event 105400-sol-20260812-q8n5v2c7-finding-authority-descendant-liveness.json documents that #412 observes root Destroying/AncestryChanged and exact root Parent drift, but not destructive descendant-only mutation while the root remains parented.",
+    "That event also records that PhysicsLabRealizer.isRepresented() treats a non-nil private-map Instance reference as represented even if the referenced representation has been destroyed/reparented, while retained #349 adds an exact-instance ownership predicate for diagnostics but not harness reconciliation.",
+    "This worker's 11:12 event should therefore be interpreted only as 'do not spawn another authority primary from this audit'; it does not retire or negate the existing descendant-liveness follow-on or the older Rojo subtree-exclusion finding.",
+    "No product code, Studio execution, two-client execution, or local test run is claimed by this correction."
+  ],
+  "metadata": {
+    "correctsEventId": "evt-20260812-111200-q5m8v3n2-authority-no-new-source-gap",
+    "preserveFindingEventId": "evt-20260812t105400z-q8n5v2c7-authority-descendant-liveness",
+    "recommendedNext": "Keep the authority slot closed for new primaries. After trusted ownership recovers and retained #348/#394/#412 plus #349 can integrate, schedule the already-recorded bounded descendant-liveness follow-on; do not substitute source-only work for HG151-TWOCLIENT evidence."
+  }
+}
