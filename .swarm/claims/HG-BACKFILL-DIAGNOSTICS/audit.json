@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "workerId": "sol-20260812-pg423a7x",
+  "claimToken": "6b3d8f1a9c4e2075",
+  "claimedAt": "2026-08-12T07:59:20+00:00",
+  "heartbeatAt": "2026-08-12T07:59:20+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-pg423a7x",
+  "pr": 424
+}
