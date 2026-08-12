@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-slrxu0c5",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T10:44:46+00:00",
-  "lastSeenAt": "2026-08-12T10:44:46+00:00",
+  "lastSeenAt": "2026-08-12T10:48:30+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-slrxu0c5",
-  "notes": "Claiming the bounded WorldEntity adversarial regression role while global trusted-history recovery is separately owned."
+  "notes": "No claim was acquired. WorldEntity test-adversary and ObjectGenome/diagnostics capacity roles were won concurrently by other workers; all standing capacity-mining roles are occupied. Fidelity/ObjectGenome/physics backfill is BLOCKED on trusted ownership, and READY control-recovery work requires the currently leased SWARM-PROTOCOL resource owned by SWARM-RECOVERY-WORKER-STATUS-CONTRACT. No gated feature or speculative Studio work started."
 }
