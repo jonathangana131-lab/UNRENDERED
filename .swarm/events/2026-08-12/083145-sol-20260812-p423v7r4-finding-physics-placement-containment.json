@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-083145-p423v7r4-physics-placement-containment",
+  "timestamp": "2026-08-12T08:31:45+00:00",
+  "fromWorker": "sol-20260812-p423v7r4",
+  "eventType": "FINDING",
+  "summary": "Physics Lab geometry capacity mining found a source-regression gap in the retained geometry/property corpus: generic canonical ObjectGenome placements are asserted to be vertically grounded, but there is no retained invariant that their transformed plan-view envelopes remain inside the room shell or avoid unintended interpenetration with other canonical props/obstacles. The spawn anchor has an explicit inside-shell check and shell/door/stair/ramp relations have dedicated assertions, so a future lateral furniture edit can remain grounded while crossing a wall or another prop without tripping the generic ObjectGenome placement checks. This finding does not assert that the current canonical placements are intersecting; it identifies a missing Reality-Grade normality regression guard.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY", "HG-COMPLETION-PHYSICS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "MEDIUM",
+  "evidence": [
+    "Inspected retained geometry/property evidence PR #393 exact head f64f841b25a3fa50203137eff86b48192e70a597. Its generic ObjectGenome loop computes each objectBottom and asserts only that every authored outer envelope is grounded on floorTop.",
+    "The same retained test explicitly checks the character spawn anchor is inside the shell and separately checks shell flushness, the door aperture/clearance, stair continuity/rise, ramp bounds, and chair caster/contact properties. No generic object plan-view shell-containment or pairwise object/obstacle non-interpenetration assertion is present in the inspected corpus or its review discussion.",
+    "Inspected PhysicsLabRecipe/PhysicsLabRealizer geometry path: authored positions/rotations are converted and realized directly; the source path does not add a general placement-containment/interpenetration validator that would make this test redundant.",
+    "A grounded-object-only invariant is independent of lateral placement: changing an object's x/z while preserving its y keeps objectBottom == floorTop, so that class of regression can satisfy the existing generic grounding assertion.",
+    "The previously suspected 0.09m door/header top clearance is not reported here because the retained adversary explicitly accepts topClearance <= 0.15m. The known rolling-cart caster grounding/manufacturability lineage is also not duplicated by this finding.",
+    "No production code was changed, no executable test was run by this worker, and no Roblox Studio, engine-contact, physical-settling, viewport, diagnostics-capture, or two-client authority evidence is claimed."
+  ],
+  "metadata": {
+    "candidatePr": 393,
+    "candidateHeadSha": "f64f841b25a3fa50203137eff86b48192e70a597",
+    "recommendedNext": "When the retained Physics geometry test lineage is writable, add a pure deterministic placement guard that transforms each canonical ObjectGenome outer envelope by authored yaw, proves intended props remain within the shell's usable plan-view bounds (with explicit exceptions such as the shell-integrated door), and rejects unintended pairwise prop/obstacle overlap using a conservative OBB/SAT or equally explicit contract. Keep intentional contacts/assemblies allowlisted by semantic key, and add expected-red mutation cases that move a still-grounded prop through a wall and into another prop. Do not substitute this source guard for Roblox Studio contact/settling evidence."
+  }
+}
