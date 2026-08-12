@@ -5,9 +5,12 @@
   "title": "Recover immutable event history continuity",
   "objective": "Define and prove an explicit trusted-history continuity/reset mechanism for already-laundered immutable control events without silently rewriting published event bytes or allowing a failed transition to become a later trusted baseline.",
   "priority": 9999,
-  "state": "NEEDS_CHANGES",
+  "state": "BLOCKED",
   "mode": "exclusive",
-  "dependencies": [{"laneId": "SWARM-RECOVERY-EVENT-COMPAT", "acceptableStates": ["DONE"]}],
+  "dependencies": [
+    {"laneId": "SWARM-RECOVERY-EVENT-COMPAT", "acceptableStates": ["DONE"]},
+    {"laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT", "acceptableStates": ["DONE"]}
+  ],
   "writeScopes": ["tools/swarm/**", ".github/workflows/swarm-control.yml", "Docs/ADR/**", "Docs/ADR*.md", "Docs/ADRs/**"],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
@@ -23,6 +26,6 @@
     "adversarial tests cover failed-transition laundering, descendant-baseline laundering, duplicate/replayed event identities, and recovery-boundary abuse",
     "canonical CI and live control validation are green only after the explicit recovery contract is exercised and independently reviewed"
   ],
-  "notes": "Recovery implementation remains published as PR #420 at exact head 67e89918af03e85863c6eda89fad62a98e314237. Independent reviewer sol-20260812-r420h9k2 returned REQUEST_CHANGES: ADR-0005's stated complete finite reset inventory/source is stale relative to the exact composed foundational + extension manifests and must match the implementation before bootstrap acceptance. Exact-head engine tests/read-only bootstrap candidate remain green; pr-ownership remains intentionally fail-closed until trusted non-bootstrap live state is established.",
+  "notes": "Generation-7 recovery is published as PR #420 at exact head e57c3439d8373d033e33ff40065a8c0c4f68274e. Canonical CI and all deterministic/adversarial Swarm engine tests are green; the dated 2026-08-12 quarantine closes the executable-looking immutable event with invalidEventCount=0. Live bootstrap sampling is now blocked by repeated producer use of worker lifecycle aliases such as ACTIVE/DONE. The higher-priority SWARM-RECOVERY-WORKER-STATUS-CONTRACT lane owns that shared producer/validator contract and is explicitly evaluating evidence-backed compatibility aliases without weakening claim/resource fencing. Continuity must resume only after that contract lane reaches DONE, then rerun exact bootstrap and request fresh independent history-integrity review. pr-ownership remains intentionally fail-closed while swarm-trust is bootstrap:true.",
   "tags": ["control-repair", "red-ci", "history-integrity", "hero-gate"]
 }
