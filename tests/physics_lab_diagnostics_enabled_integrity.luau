@@ -85,6 +85,43 @@ local function maskInertSource(source: string): string
 	return table.concat(output)
 end
 
+local function maskQuotedStrings(source: string): string
+	local output = {}
+	local copyStart = 1
+	local cursor = 1
+
+	while cursor <= #source do
+		local character = string.sub(source, cursor, cursor)
+		if character == '"' or character == "'" or character == "`" then
+			local quoteStart = cursor
+			local quote = character
+			cursor += 1
+			while cursor <= #source do
+				local quotedCharacter = string.sub(source, cursor, cursor)
+				if quotedCharacter == "\\" then
+					cursor += 2
+				elseif quotedCharacter == quote then
+					cursor += 1
+					break
+				else
+					cursor += 1
+				end
+			end
+
+			table.insert(output, string.sub(source, copyStart, quoteStart - 1))
+			local quoteEnd = math.min(cursor - 1, #source)
+			local region = string.sub(source, quoteStart, quoteEnd)
+			table.insert(output, (string.gsub(region, "[^\n]", " ")))
+			copyStart = cursor
+		else
+			cursor += 1
+		end
+	end
+
+	table.insert(output, string.sub(source, copyStart))
+	return table.concat(output)
+end
+
 local function hasCompleteCloneProof(helperSource: string): boolean
 	local executableSource = maskInertSource(helperSource)
 	local modelArchivable = string.find(
@@ -95,11 +132,13 @@ local function hasCompleteCloneProof(helperSource: string): boolean
 	)
 	local descendantBlock = string.find(executableSource, DESCENDANT_BLOCK, 1, true)
 	local cloneLab = string.find(executableSource, "\n\tlocal cloneInstance = lab.model:Clone()", 1, true)
-	return modelArchivable ~= nil
-		and descendantBlock ~= nil
-		and cloneLab ~= nil
-		and modelArchivable < descendantBlock
-		and descendantBlock < cloneLab
+	if modelArchivable == nil or descendantBlock == nil or cloneLab == nil then
+		return false
+	end
+
+	local preCloneSource = maskQuotedStrings(string.sub(executableSource, 1, cloneLab - 1))
+	local preCloneReturn = string.find(preCloneSource, "%f[%a]return%f[^%w_]", 1)
+	return modelArchivable < descendantBlock and descendantBlock < cloneLab and preCloneReturn == nil
 end
 
 local function run(): number
@@ -151,8 +190,8 @@ local function run(): number
 
 	-- Instance:Clone() omits non-Archivable descendants. Pin the complete helper-local
 	-- proof as a formatted block so token-preserving early exits or dead/inert wrappers cannot
-	-- masquerade as an exhaustive scan. The block must remain at helper scope and finish
-	-- before the disposable clone is created.
+	-- masquerade as an exhaustive scan. No helper return may bypass the proof or disposable
+	-- clone boundary before the clone is created.
 	expect(
 		"enabled canonical clone proves every non-overlay live descendant is Archivable before cloning",
 		helperSource ~= nil and hasCompleteCloneProof(helperSource)
@@ -238,6 +277,64 @@ local function run(): number
 	expect(
 		"clone-completeness matcher rejects an inert long-string copy of the descendant proof",
 		not hasCompleteCloneProof(inertStringMutant)
+	)
+
+	local conditionalBypassMutant = [[
+	if reuseUnsafeSnapshot then
+		return unsafeSnapshot
+	end
+	assert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")
+	for _, liveInstance in ipairs(lab.model:GetDescendants()) do
+		local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot)
+		if not isDiagnosticsOverlay then
+			assert(
+				liveInstance.Archivable,
+				`enabled canonical validation cannot clone non-Archivable live truth: {liveInstance:GetFullName()}`
+			)
+		end
+	end
+	local cloneInstance = lab.model:Clone()]]
+	expect(
+		"clone-completeness matcher rejects a conditional helper return that bypasses the proof",
+		not hasCompleteCloneProof(conditionalBypassMutant)
+	)
+
+	local postProofBypassMutant = [[
+	assert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")
+	for _, liveInstance in ipairs(lab.model:GetDescendants()) do
+		local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot)
+		if not isDiagnosticsOverlay then
+			assert(
+				liveInstance.Archivable,
+				`enabled canonical validation cannot clone non-Archivable live truth: {liveInstance:GetFullName()}`
+			)
+		end
+	end
+	if reuseUnsafeSnapshot then
+		return unsafeSnapshot
+	end
+	local cloneInstance = lab.model:Clone()]]
+	expect(
+		"clone-completeness matcher rejects a conditional helper return before the disposable clone",
+		not hasCompleteCloneProof(postProofBypassMutant)
+	)
+
+	local quotedReturnControl = [[
+	local harmlessText = "return is inert here"
+	assert(lab.model.Archivable, "enabled canonical validation requires an Archivable lab model")
+	for _, liveInstance in ipairs(lab.model:GetDescendants()) do
+		local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot)
+		if not isDiagnosticsOverlay then
+			assert(
+				liveInstance.Archivable,
+				`enabled canonical validation cannot clone non-Archivable live truth: {liveInstance:GetFullName()}`
+			)
+		end
+	end
+	local cloneInstance = lab.model:Clone()]]
+	expect(
+		"clone-completeness matcher ignores return text inside a quoted string",
+		hasCompleteCloneProof(quotedReturnControl)
 	)
 
 	expect(
