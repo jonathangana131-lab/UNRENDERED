@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "BLOCKED",
   "startedAt": "2026-08-12T10:44:29+00:00",
-  "lastSeenAt": "2026-08-12T11:15:20+00:00",
+  "lastSeenAt": "2026-08-12T11:18:40+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-diagnostics",
   "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-am0s2f7s",
-  "notes": "Draft PR #436 exact head 3640afed has canonical CI PASS (run 31590597451). It salvages reviewed diagnostics failure-atomicity evidence guidance, documents explicit OFF recovery after failed toggle sweeps, and records the separate runToggleEvidence post-enable cleanup gap. No Studio evidence claimed. Promotion is blocked on independent docs/evidence review plus repository-wide trusted-control recovery: current pr-ownership fails on the still-live HG-BACKFILL-DIAGNOSTICS/audit claim branch value review-only; owning review lineage notified on #438 and structured blocker event published."
+  "notes": "Draft PR #436 exact head 3640afed has canonical product CI PASS (run 31590597451). It salvages reviewed diagnostics failure-atomicity evidence guidance, documents explicit OFF recovery after failed toggle sweeps, and records the separate runToggleEvidence post-enable cleanup gap. No Studio evidence claimed. Promotion is blocked on independent docs/evidence review plus repository-wide trusted-control recovery: latest control head 5989fed fails first because HG-BACKFILL-DIAGNOSTICS/test-adversary uses invalid leaseSeconds=1 as an expiry sentinel; the same active owner also left HG-CAPACITY-MINING/mine-authority at leaseSeconds=1. Owner notified on PR #439; no foreign claim overwritten."
 }
