@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-g43k9m2v",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-12T10:43:23+00:00",
-  "lastSeenAt": "2026-08-12T10:43:23+00:00",
+  "lastSeenAt": "2026-08-12T10:50:05+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-g43k9m2v-g13",
-  "notes": "Generation-13 salvage of successor PR #431 after inspecting the generation-12 patch and existing NEEDS_CHANGES contract; no new feature scope."
+  "notes": "Generation-13 successor PR #432 is exact-head green and in REVIEW; independent audit worker sol-20260812-v4q8m2c7 owns the audit slot. Primary is waiting without self-reviewing or modifying the accepted candidate."
 }
