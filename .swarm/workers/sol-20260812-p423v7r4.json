@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-p423v7r4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T07:59:21+00:00",
-  "lastSeenAt": "2026-08-12T08:19:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
-  "branch": "agent/mining/HG-CAPACITY-MINING-mine-physics-geometry-p423v7r4-g1",
-  "notes": "Completed and released the earlier runtime mining pass after publishing its finding. Now mining current retained Physics Lab geometry/scale/validation source/tests/PR lineage for one concrete non-duplicate source-only Reality-Grade gap; no Studio evidence claims."
+  "lastSeenAt": "2026-08-12T08:32:30+00:00",
+  "notes": "Completed two claimed source-only capacity-mining passes and released both claims. Published evt-20260812-081130-p423v7r4-runtime-entity-key-budget and evt-20260812-083145-p423v7r4-physics-placement-containment. Lost the earlier #423 audit claim race and did not touch that PR. No production code was changed and no executable tests or Studio evidence were run/claimed by this worker."
 }
