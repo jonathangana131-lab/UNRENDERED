@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t085300z-r7m4k9q2-materialdna-diagnostic-key-bytes",
+  "timestamp": "2026-08-12T08:53:00Z",
+  "fromWorker": "sol-20260812-r7m4k9q2",
+  "eventType": "FINDING",
+  "summary": "MaterialDNA capacity mining found a byte-size false-bound inside the already proposed HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS defect class. validateKnownFields() currently appends the complete caller-supplied unknown string field name into the error text. Even if the proposed cardinality fix stops after a bounded number of unknown keys, one arbitrarily large unknown string key can still force caller-sized diagnostic allocation/copy work before any project-key value validation occurs. Absorb this into the existing dense-bounds lane rather than creating another MaterialDNA lane: unknown-field diagnostics must have a deterministic bounded byte representation (for example bounded prefix/length metadata), preserve useful affected-record/path context, and add a huge-single-key adversary in addition to many-key coverage.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS",
+    "HG-BACKFILL-MATERIALDNA-COUNTERS",
+    "HG-COMPLETION-CONTENT"
+  ],
+  "evidence": [
+    "Retained MaterialDNA counter head #353 (10559afdce1a1854e7932522f6e78561736c8ed3) defines MAX_KEY_LENGTH=160 for canonical project-key values, but closed-record field-name validation occurs separately in validateKnownFields().",
+    "validateKnownFields() iterates caller-supplied record keys and formats an unknown string key directly into `{path} contains unknown field {key}` with no byte ceiling or truncation before appendError().",
+    "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS already owns unbounded closed-record scan count and per-key diagnostic growth, so this is the same bounded-diagnostics surface and should be absorbed there rather than spawning duplicate WIP.",
+    "The existing dense-bounds acceptance can stop after a finite number of invalid keys yet still remain memory-unbounded if the retained diagnostic echoes an arbitrarily large first string key; explicit byte-bounded diagnostic formatting plus a huge-single-key regression closes that false pass.",
+    "No product bytes were changed and no Studio/engine evidence is claimed."
+  ]
+}
