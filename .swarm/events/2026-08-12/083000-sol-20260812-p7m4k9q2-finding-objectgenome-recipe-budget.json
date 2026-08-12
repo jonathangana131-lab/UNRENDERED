@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-083000-p7m4k9q2-objectgenome-recipe-budget",
+  "timestamp": "2026-08-12T08:30:00+00:00",
+  "fromWorker": "sol-20260812-p7m4k9q2",
+  "eventType": "FINDING",
+  "summary": "Retained ObjectGenome generation-8 source has no project-owned canonical recipe size/work envelope. Semantic keys are capped at 512 bytes, but provenance manufacturerFamily/productLine/apparentEra use only non-empty-string validation, and dense components/mechanisms/affordances/supportKeys arrays have no count ceiling. This permits arbitrarily large otherwise-canonical ObjectGenome records and unbounded validation/fingerprint work; component support reachability is additionally worst-case quadratic because it may scan the full component array once per component. No existing PR/issue found for this exact bounded-recipe surface.",
+  "affects": [
+    "HG-BACKFILL-OBJECTGENOME",
+    "HG-CAPACITY-MINING"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected retained generation-8 PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962, which is the currently source/test-approved ObjectGenome candidate.",
+    "ObjectGenome.luau caps semantic keys through STABLE_ID_SEMANTIC_PART_MAX_BYTES=512, but provenance.manufacturerFamily, provenance.productLine, and provenance.apparentEra are checked only with isNonEmptyString() and therefore have no byte envelope.",
+    "validateDenseArray() proves only dense 1-based shape; inspect() accepts any positive componentCount and likewise imposes no maximum on mechanisms, affordances, or per-component supportKeys.",
+    "The support-reachability pass loops from 1..componentCount and rescans value.components each pass. A reverse-ordered support chain can require repeated propagation passes, making validation work O(componentCount^2) before later fingerprint traversal.",
+    "recipeFingerprint() chunks individual payload strings into 384-byte StableId inputs, which protects StableId part size but does not bound total canonical recipe bytes or total fingerprint CPU across an arbitrarily large accepted recipe.",
+    "Repository PR and issue searches for ObjectGenome provenance/collection capacity/budget found no current or historical owner of this exact surface. PR #395's generation-8 delta addresses decoder exact-shape, semantic-key length, familyVersion, issue ordering, and ObjectState aliasing—not canonical recipe aggregate size."
+  ],
+  "metadata": {
+    "mainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "retainedPr": 395,
+    "retainedHeadSha": "ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962",
+    "recommendedNext": "After the trusted-history/integration gate permits new ObjectGenome source work, decompose one bounded source-only leaf (suggested identity: HG-OBJECTGENOME-RECIPE-BUDGET) that gives canonical ObjectGenome v1 an explicit project-owned total recipe envelope. Prefer a small set of construction-relevant count ceilings plus an aggregate text/recipe byte or node budget rather than arbitrary tiny per-field limits. Regress exact maximum/max+1 provenance/collection cases and a worst-case support-chain adversary. Preserve StableId/schema/fingerprint bytes for already-valid ordinary fixtures; do not widen retained PR #395 while it is blocked only on trust."
+  }
+}
