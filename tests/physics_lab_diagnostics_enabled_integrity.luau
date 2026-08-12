@@ -23,20 +23,31 @@ local function run(): number
 		string.find(source, "local function captureCanonicalWhileDiagnosticsEnabled(", 1, true)
 	local helperEnd = helperStart
 		and string.find(source, "function PhysicsLabStudioDiagnostics.capture(", helperStart, true)
-	local archivableCheck = helperStart and string.find(source, "Archivable", helperStart, true)
-	local cloneLab = helperStart
-		and string.find(source, "local cloneInstance = lab.model:Clone()", helperStart, true)
-	local archivableAssert = archivableCheck and string.find(source, "assert(", archivableCheck, true)
-	local archivableError = archivableCheck and string.find(source, "error(", archivableCheck, true)
-	local proveCloneModel = helperStart
-		and string.find(source, 'assert(cloneInstance:IsA("Model")', helperStart, true)
-	local locateOwnedOverlay = helperStart
-		and string.find(source, "local clonedRoot = diagnosticsRoot(clone)", helperStart, true)
-	local removeOwnedOverlay = helperStart and string.find(source, "clonedRoot:Destroy()", helperStart, true)
-	local canonicalCapture = helperStart
-		and string.find(source, "return Validation.captureFull(clone)", helperStart, true)
-	local destroyClone = helperStart and string.find(source, "clone:Destroy()", helperStart, true)
-	local propagate = helperStart and string.find(source, "error(result, 0)", helperStart, true)
+	local helperSource = if helperStart ~= nil and helperEnd ~= nil
+		then string.sub(source, helperStart, helperEnd - 1)
+		else nil
+	local compactHelper = if helperSource ~= nil then string.gsub(helperSource, "%s+", " ") else nil
+
+	local modelArchivable = compactHelper
+		and string.find(compactHelper, "assert(lab.model.Archivable,", 1, true)
+	local descendantFence = compactHelper
+		and string.find(
+			compactHelper,
+			"for _, liveInstance in ipairs(lab.model:GetDescendants()) do local isDiagnosticsOverlay = liveInstance == liveRoot or liveInstance:IsDescendantOf(liveRoot) if not isDiagnosticsOverlay then assert( liveInstance.Archivable,",
+			1,
+			true
+		)
+	local cloneLab = compactHelper
+		and string.find(compactHelper, "local cloneInstance = lab.model:Clone()", 1, true)
+	local proveCloneModel = compactHelper
+		and string.find(compactHelper, 'assert(cloneInstance:IsA("Model")', 1, true)
+	local locateOwnedOverlay = compactHelper
+		and string.find(compactHelper, "local clonedRoot = diagnosticsRoot(clone)", 1, true)
+	local removeOwnedOverlay = compactHelper and string.find(compactHelper, "clonedRoot:Destroy()", 1, true)
+	local canonicalCapture = compactHelper
+		and string.find(compactHelper, "return Validation.captureFull(clone)", 1, true)
+	local destroyClone = compactHelper and string.find(compactHelper, "clone:Destroy()", 1, true)
+	local propagate = compactHelper and string.find(compactHelper, "error(result, 0)", 1, true)
 
 	expect(
 		"enabled canonical integrity is checked on a disposable clone",
@@ -44,30 +55,20 @@ local function run(): number
 			and helperEnd ~= nil
 			and cloneLab ~= nil
 			and proveCloneModel ~= nil
-			and helperStart < cloneLab
 			and cloneLab < proveCloneModel
-			and proveCloneModel < helperEnd
 	)
 
-	-- Instance:Clone() intentionally omits descendants whose Archivable property is
-	-- false. The enabled-state evidence seam must therefore fail closed on that
-	-- live condition (or otherwise prove clone completeness) before cloning, or an
-	-- unauthorized live child can disappear before strict canonical validation.
-	local failsClosedBeforeClone = cloneLab ~= nil
-		and (
-			(archivableAssert ~= nil and archivableAssert < cloneLab)
-			or (archivableError ~= nil and archivableError < cloneLab)
-		)
+	-- Instance:Clone() omits non-Archivable descendants. Pin the complete helper-local
+	-- proof, not merely an Archivable token plus any earlier assertion: scan every live
+	-- descendant, exempt only the exact owned overlay tree, and fail closed on canonical
+	-- descendants before the disposable clone is created.
 	expect(
-		"enabled canonical clone cannot silently omit non-Archivable live truth",
-		helperStart ~= nil
-			and helperEnd ~= nil
-			and archivableCheck ~= nil
+		"enabled canonical clone proves every non-overlay live descendant is Archivable before cloning",
+		modelArchivable ~= nil
+			and descendantFence ~= nil
 			and cloneLab ~= nil
-			and helperStart < archivableCheck
-			and archivableCheck < cloneLab
-			and failsClosedBeforeClone
-			and cloneLab < helperEnd
+			and modelArchivable < descendantFence
+			and descendantFence < cloneLab
 	)
 
 	expect(
@@ -75,20 +76,16 @@ local function run(): number
 		locateOwnedOverlay ~= nil
 			and removeOwnedOverlay ~= nil
 			and canonicalCapture ~= nil
-			and helperEnd ~= nil
 			and locateOwnedOverlay < removeOwnedOverlay
 			and removeOwnedOverlay < canonicalCapture
-			and canonicalCapture < helperEnd
 	)
 	expect(
 		"disposable canonical clone is destroyed before either success or propagated failure returns",
 		canonicalCapture ~= nil
 			and destroyClone ~= nil
 			and propagate ~= nil
-			and helperEnd ~= nil
 			and canonicalCapture < destroyClone
 			and destroyClone < propagate
-			and propagate < helperEnd
 	)
 
 	local evidenceStart =
