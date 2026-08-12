@@ -5,8 +5,8 @@
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "claimToken": "e5c27a914bd3608f",
   "acquiredAt": "2026-08-12T10:45:45+00:00",
-  "heartbeatAt": "2026-08-12T10:58:17+00:00",
+  "heartbeatAt": "2026-08-12T11:06:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
-  "notes": "PR #437 generation-9 bounded WorldEntity duplicate-origin diagnostic completeness repair; exact-head CI passed and trusted pr-ownership rerun is in progress."
+  "notes": "PR #437 generation-9 WorldEntity duplicate-origin diagnostic completeness repair is source-complete at exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3; canonical CI and engine-tests pass; independent review requested; integration remains blocked on unrelated trusted pr-ownership recovery."
 }
