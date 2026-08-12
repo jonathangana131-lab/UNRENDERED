@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-q7m4p9",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "IDLE",
   "startedAt": "2026-08-12T08:00:30+00:00",
   "lastSeenAt": "2026-08-12T08:00:30+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-q7m4p9",
-  "notes": "Adversarial source/test audit of retained WorldEntity generation-7 candidate #421; no Studio evidence claims."
+  "notes": "Adversarial WorldEntity slot registration lost the atomic claim race; no ownership was obtained. Normalized registration to IDLE while this session performs control-plane recovery."
 }
