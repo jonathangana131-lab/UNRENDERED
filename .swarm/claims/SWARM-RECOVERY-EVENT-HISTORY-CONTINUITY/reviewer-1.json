@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "slotId": "reviewer-1",
+  "workerId": "sol-20260812-dg8q3m7v",
+  "claimToken": "4c8e1a7d2b9f6035",
+  "claimedAt": "2026-08-12T08:06:05+00:00",
+  "heartbeatAt": "2026-08-12T08:06:05+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/review/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-dg8q3m7v",
+  "pr": 420,
+  "notes": "Independent generation-6 history-integrity review of PR #420 after prior reviewer released. Verify finite exact-provenance quarantine, no-execute semantics, trusted first-parent continuity, bootstrap/CAS fencing, and no generic compatibility broadening."
+}
