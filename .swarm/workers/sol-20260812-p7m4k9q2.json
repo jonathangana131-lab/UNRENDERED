@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-p7m4k9q2",
   "model": "gpt-5.6-sol",
-  "status": "WAITING",
+  "status": "WORKING",
   "startedAt": "2026-08-12T07:59:30+00:00",
-  "lastSeenAt": "2026-08-12T08:00:15+00:00",
-  "laneId": "HG-BACKFILL-PHYSICS-GEOMETRY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-PHYSICS-GEOMETRY-audit-p7m4k9q2",
-  "notes": "Claim race lost to sol-20260812-7k3m9q2v; no audit ownership or branch was created. Rerouting through scheduler fallback."
+  "lastSeenAt": "2026-08-12T08:02:20+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-authority-p7m4k9q2-g2",
+  "notes": "Owns generation-2 stale takeover of authority/multiplayer capacity mining. Inspecting exact main plus retained authority PRs for one concrete non-duplicate source-only gap."
 }
