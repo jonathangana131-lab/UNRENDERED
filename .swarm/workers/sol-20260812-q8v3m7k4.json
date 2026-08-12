@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-q8v3m7k4",
+  "model": "gpt-5.6-sol",
+  "status": "IDLE",
+  "startedAt": "2026-08-12T10:44:19+00:00",
+  "lastSeenAt": "2026-08-12T10:44:19+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Registered for Go-cycle scheduler inspection; no implementation claim yet."
+}
