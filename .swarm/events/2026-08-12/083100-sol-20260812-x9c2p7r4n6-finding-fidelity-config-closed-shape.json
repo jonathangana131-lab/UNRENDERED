@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-083100-x9c2p7r4n6-fidelity-config-closed-shape",
+  "timestamp": "2026-08-12T08:31:00+00:00",
+  "fromWorker": "sol-20260812-x9c2p7r4n6",
+  "eventType": "FINDING",
+  "summary": "Retained FidelityManager validates PolicyConfig value types/ranges and metatable-freedom but never validates the config key set. Because copyConfig() copies only known fields, an unknown/misspelled caller key is silently discarded. A caller that clones defaultConfig(), writes a typo such as maxRegsteredEntities = 1, and leaves the real maxRegisteredEntities at its default is accepted and still constructs a 4096-record manager instead of failing closed on the intended safety-budget override.",
+  "affects": ["HG-BACKFILL-FIDELITY", "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING", "HG-FIDELITY-MANAGER-STATE-ENCAPSULATION"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "LOW",
+  "evidence": [
+    "Inspected retained Fidelity capacity PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3. validateConfig() asserts table type and a nil metatable, then validates each required known field, but has no allowed-key table or pairs() pass rejecting unknown schema keys.",
+    "On the same head, DEFAULT_CONFIG.maxRegisteredEntities is 4096 and copyConfig() reconstructs only the 13 recognized PolicyConfig fields. Therefore any extra key on an otherwise-valid config is ignored rather than rejected.",
+    "The retained tests cover hostile/metatable-backed configs, scalar type/range failures, capacity ceiling exactness, rejected-step atomicity, entity IDs, and determinism, but contain no unknown-PolicyConfig-key regression.",
+    "Repository issue/PR searches for Fidelity unknown config keys / exact shape returned no matching work, and the current swarm lane directory has no Fidelity config-shape lane. The existing HG-FIDELITY-MANAGER-STATE-ENCAPSULATION proposal protects manager-owned state after construction but does not close caller PolicyConfig schema shape before construction.",
+    "WorldEntity already uses an explicit allowed-key exact-record validator for its production domain records, providing a project-local fail-closed contract precedent rather than requiring a new framework.",
+    "No Luau/Lune execution, Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence is claimed; this is a source-contract capacity-mining finding."
+  ],
+  "metadata": {
+    "sourcePr": 419,
+    "sourceHeadSha": "1f017628bf49365663dfc2db3a30b81ba477a0a3",
+    "recommendedNext": "After retained Fidelity/capacity work and the already-proposed state-encapsulation leaf integrate, add an exact allowed-key PolicyConfig fence before field reads/copying, preserve metatable no-execute ordering, reject string or non-string unknown keys deterministically, and add constructor + pure-policy regressions proving a misspelled maxRegisteredEntities override fails closed. Keep this source-only and do not broaden into a new config framework."
+  }
+}
