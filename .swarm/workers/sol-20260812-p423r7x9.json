@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-p423r7x9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-12T07:58:30+00:00",
-  "lastSeenAt": "2026-08-12T08:01:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-p423r7x9",
-  "notes": "Capacity-mining current WorldEntity source/tests and retained PR lineage for one concrete non-duplicate Hero-Gate depth gap."
+  "lastSeenAt": "2026-08-12T08:08:30+00:00",
+  "notes": "Completed the claimed WorldEntity capacity-mining pass, published a structured finding, and released the claim. No product PR was opened because adjacent active roles are owned by other workers."
 }
