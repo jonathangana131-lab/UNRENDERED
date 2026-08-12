@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-OBJECTGENOME-STRING-BUDGET",
+  "epicId": "HERO-GATE",
+  "title": "ObjectGenome canonical free-form string byte budget",
+  "objective": "Close the retained ObjectGenome free-form string memory/fingerprint-work gap without silently breaking established v1 recipe compatibility. Bound canonical provenance and component-role text using an explicit compatibility/versioning decision, then reject over-budget inputs before retained clone/fingerprint work.",
+  "priority": 4660,
+  "state": "PROPOSED",
+  "mode": "exclusive",
+  "dependencies": ["HG-BACKFILL-OBJECTGENOME"],
+  "writeScopes": ["src/shared/Objects/ObjectGenome.luau", "tests/object_genome.luau", "tests/object_genome_contract_lock.luau"],
+  "resources": [],
+  "slots": [
+    {"slotId":"primary","role":"ObjectGenome string-budget hardening","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":300,"writeScopes":["src/shared/Objects/ObjectGenome.luau","tests/object_genome.luau","tests/object_genome_contract_lock.luau"]},
+    {"slotId":"audit","role":"ObjectGenome compatibility and byte-budget auditor","exclusive":true,"availableWhen":["REVIEW"],"priorityBoost":150,"requiresIndependentFrom":"primary","writeScopes":["tests/object_genome.luau","tests/object_genome_contract_lock.luau"]}
+  ],
+  "acceptance": [
+    "do not reuse the StableId semantic-key ceiling for free-form text without an explicit compatibility rationale",
+    "make the v1 compatibility/versioning decision explicit before tightening any currently accepted canonical recipe",
+    "apply a documented byte ceiling and/or aggregate canonical free-form byte envelope to provenance.manufacturerFamily, provenance.productLine, provenance.apparentEra, and component.role",
+    "reject over-budget canonical text before recipe cloning or recipeFingerprint chunk traversal can perform caller-sized retained work",
+    "cover every bounded field plus any aggregate envelope at exact-bound and +1 boundaries",
+    "preserve deterministic recipe fingerprint behavior for accepted recipes and verify constructor/inspect/fingerprint failure is fail-closed and non-mutating",
+    "remain distinct from HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS collection cardinality and mutable-state breadth work",
+    "no Studio, viewport, persistence, networking, or physical evidence claim"
+  ],
+  "tags": ["backfill", "hero-gate", "objectgenome", "capacity", "memory", "determinism", "source-only"],
+  "notes": "Proposed from capacity-mining finding evt-20260812t084600z-r7m4k9q2-objectgenome-string-bounds against retained generation-8 PR #395 head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962. Current source bounds StableId/semantic-key strings but validates provenance.manufacturerFamily/productLine/apparentEra and component.role only as non-empty strings; recipeFingerprint consumes full string bytes in 384-byte chunks and canonical cloning retains them. Existing tests intentionally accept a 1,025-byte productLine, so this cannot be treated as a trivial 512-byte semantic-key cleanup. Keep PROPOSED until HG-BACKFILL-OBJECTGENOME retained source can integrate and scheduler explicitly unlocks this leaf."
+}
