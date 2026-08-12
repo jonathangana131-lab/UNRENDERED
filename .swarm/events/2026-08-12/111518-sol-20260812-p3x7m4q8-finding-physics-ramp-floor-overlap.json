@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-111518-p3x7m4q8-physics-ramp-floor-overlap",
+  "timestamp": "2026-08-12T11:15:18+00:00",
+  "fromWorker": "sol-20260812-p3x7m4q8",
+  "eventType": "FINDING",
+  "summary": "Physics Lab geometry capacity mining found a concrete authored overlap at the fixed incline/floor seam: with the canonical ramp size 3.00 x 0.20 x 1.25 m, center Y 0.42 m, and -14 degree Z rotation, the ramp's lowest solid corner resolves to Y=-0.039912416 m while the floor top is Y=0. The two anchored collidable primitives therefore geometrically interpenetrate by about 3.99 cm. Existing retained ramp checks constrain the low top-surface lip and incline angle but do not assert the ramp solid's lower support envelope against the floor plane. This is source geometry evidence only; no Roblox contact behavior is claimed.",
+  "affects": ["HG-BACKFILL-PHYSICS-GEOMETRY", "HG-COMPLETION-PHYSICS", "HERO-GATE"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Current main PhysicsLabRecipe authors floor centerY=-0.10 m and sizeY=0.20 m, so floorTop=0. It authors ramp sizeM=(3.00,0.20,1.25), positionM.y=0.42, rotationDeg.z=-14, anchored=true, collidable=true, role='incline contact test'.",
+    "PhysicsLabRealizer realizes authored rotation as CFrame.new(position) * CFrame.Angles(rad(x),rad(y),rad(z)); there is no alternate axis convention or post-placement offset. For the ramp rectangle, world half-height = 1.50*sin(14deg) + 0.10*cos(14deg) = 0.459912416 m, so minY = 0.42 - 0.459912416 = -0.039912416 m.",
+    "Retained geometry test PR #393 exact head f64f841b25a3fa50203137eff86b48192e70a597 computes the ramp low TOP-surface Y as centerY - halfRun*sin(angle) + halfThickness*cos(angle), requiring that surface to remain between floorTop and firstStairTop and the incline to remain <=15 degrees. At current values that top surface is ~0.154147 m; the assertion does not check the lower solid corner/face against floorTop.",
+    "The earlier generic placement-containment finding evt-20260812-083145-p423v7r4-physics-placement-containment explicitly did not assert a current canonical intersection, while this finding identifies a concrete current primitive/primitive overlap. The later no-new-gap event evt-20260812t091120z-r7m4k9q2-physics-geometry-no-gap concerns capture detecting drift from canonical geometry and does not establish that the canonical geometry itself is non-interpenetrating.",
+    "Retained PR #423 changes PhysicsLabScale/PhysicsLabValidationContract and scale tests, not PhysicsLabRecipe ramp placement; no existing RAMP/incline-specific lane was found in the live lane catalog.",
+    "No production code was changed, no executable test was run by this worker, and no Roblox Studio, engine-contact, physical-settling, viewport, diagnostics-capture, or multiplayer evidence is claimed."
+  ],
+  "metadata": {
+    "mainShaInspected": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "retainedGeometryPr": 423,
+    "recommendedLane": "HG-PHYSICS-RAMP-FLOOR-SEAM",
+    "recommendedNext": "When the scheduler explicitly unlocks the leaf, decide the intended seam contract (non-penetrating tangent/support versus a documented deliberate embed), encode that contract in canonical recipe geometry, and add a pure rotated-envelope regression that fails if the ramp solid crosses floorTop accidentally. Preserve the existing incline role/angle/size unless a reviewed physical reason requires changing them; do not substitute source math for Studio contact/settling evidence."
+  }
+}
