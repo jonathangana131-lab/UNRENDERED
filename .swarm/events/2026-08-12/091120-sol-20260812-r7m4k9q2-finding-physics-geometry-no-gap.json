@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812t091120z-r7m4k9q2-physics-geometry-no-gap",
+  "timestamp": "2026-08-12T09:11:20Z",
+  "fromWorker": "sol-20260812-r7m4k9q2",
+  "eventType": "FINDING",
+  "summary": "Physics Lab geometry/scale capacity mining found no additional actionable source/test gap beyond retained #423 and existing chair/cart/evidence lanes. A first-pass concern that aggregate ValidationContract snapshots compare only resource counts and the outer lab envelope is already closed by the server capture boundary: PhysicsLabValidation.captureInternal() calls assertCanonicalRepresentationSet() before producing a snapshot, and that validator checks the complete direct representation set plus canonical primitive/object/component attributes, sizes, positions, orientation basis vectors, collision/query/touch state, transparency, MaterialDNA/ObjectGenome identity, and missing/unexpected components. Interior geometry drift therefore fails during capture even if the global envelope is unchanged. Retained #423's finite/no-execute conversion and derived-overflow fences remain the correct scale/contract head; do not create a duplicate per-entity-envelope lane.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-BACKFILL-PHYSICS-GEOMETRY",
+    "HG-COMPLETION-PHYSICS",
+    "HG151-PHYSICS"
+  ],
+  "evidence": [
+    "Retained #423 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f already independently passed primitive-number no-execute and symmetric finite derived-output review for PhysicsLabScale/ValidationContract.",
+    "PhysicsLabValidation.captureInternal() constructs the canonical recipe and invokes assertCanonicalRepresentationSet(model, recipe, requireComplete) before counting resources or computing the aggregate envelope.",
+    "assertCanonicalRepresentationSet() rejects unexpected/missing direct representations, duplicate keys/WorldEntityIds, wrong F2 identity/provenance/material/object attributes, and delegates geometry to assertCanonicalPartGeometry().",
+    "assertCanonicalPartGeometry() verifies anchored/collision/query/touch/transparency plus expected Size, Position, RightVector, UpVector, and LookVector; assertCanonicalObjectComponents() applies the same canonical geometry checks to every expected ObjectGenome component and rejects extras/missing components.",
+    "Therefore moving an interior stair/ramp/furniture/component while preserving counts and full-lab min/max cannot produce a valid captured snapshot; the capture fails before aggregate compare. No Studio/contact evidence is inferred."
+  ]
+}
