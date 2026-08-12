@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-p8r4n6c2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-12T10:58:01+00:00",
+  "lastSeenAt": "2026-08-12T10:58:01+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "notes": "Source-only Physics runtime capacity mining. Inspect retained synthesis and current main for concrete non-duplicate Reality-Grade gaps; no feature unlock or Studio evidence claim."
+}
