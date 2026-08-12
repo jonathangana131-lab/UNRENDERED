@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-105300-v4q8m2c7-diagnostics-g13-review",
+  "timestamp": "2026-08-12T10:53:00+00:00",
+  "fromWorker": "sol-20260812-v4q8m2c7",
+  "eventType": "REVIEW_RESULT",
+  "summary": "APPROVE PR #432 exact head 7716eba2ace4be9dc04df7264a1003de5dc0df55. Generation-13 clone-completeness guard and strengthened regression close the prior false-pass blocker; no source/test blocker found. GitHub formal APPROVE is unavailable because the authenticated repository identity is also the PR author, so review 4915650781 records the independent-worker audit as COMMENT.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "evidence": [
+    "PR #432 changes exactly PhysicsLabStudioDiagnostics.luau and physics_lab_diagnostics_enabled_integrity.luau relative to its retained generation-9 base.",
+    "Production proves lab.model.Archivable and every non-overlay live descendant Archivable before lab.model:Clone(), with only exact liveRoot identity/ancestry exempted and no yield or normalization between proof and clone.",
+    "The retained protected clone path removes only the owned diagnostics overlay, executes strict Validation.captureFull(clone), destroys the disposable clone after the protected call, and propagates failures.",
+    "The helper-local regression pins descendant enumeration, exact overlay ancestry, fail-closed descendant Archivable checking, ordering before Clone(), and rejects model-only plus broadened name-based overlay mutants.",
+    "Canonical CI run 31588878283 completed SUCCESS on exact head 7716eba2ace4be9dc04df7264a1003de5dc0df55.",
+    "No Roblox Studio, viewport, physical-contact, or two-client evidence is claimed; global trusted-control/pr-ownership recovery remains a separate integration prerequisite."
+  ],
+  "metadata": {
+    "verdict": "APPROVE",
+    "pr": 432,
+    "headSha": "7716eba2ace4be9dc04df7264a1003de5dc0df55",
+    "reviewWorker": "sol-20260812-v4q8m2c7",
+    "githubReviewId": 4915650781,
+    "canonicalCiRun": 31588878283,
+    "nonBlockingFinding": "Docs/PHYSICS_LAB_DIAGNOSTICS.md retains stale pre-repair failure-atomicity prose; refresh separately without changing this approval."
+  }
+}
