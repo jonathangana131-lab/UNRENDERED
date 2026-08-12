@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-am0s2f7s",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "BLOCKED",
   "startedAt": "2026-08-12T10:44:29+00:00",
-  "lastSeenAt": "2026-08-12T11:05:30+00:00",
+  "lastSeenAt": "2026-08-12T11:15:20+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-diagnostics",
   "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-am0s2f7s",
-  "notes": "Published current-main diagnostics docs salvage PR #436 at 35b5b224 with canonical CI PASS. Closed stale predecessor #304 after preserving its reviewed failure-atomicity Studio probe. #436 remains draft; trusted control is separately red on immutable historical validation.command data owned by PR #420, itself blocked on active worker-status repair PR #434. No Studio evidence claimed."
+  "notes": "Draft PR #436 exact head 3640afed has canonical CI PASS (run 31590597451). It salvages reviewed diagnostics failure-atomicity evidence guidance, documents explicit OFF recovery after failed toggle sweeps, and records the separate runToggleEvidence post-enable cleanup gap. No Studio evidence claimed. Promotion is blocked on independent docs/evidence review plus repository-wide trusted-control recovery: current pr-ownership fails on the still-live HG-BACKFILL-DIAGNOSTICS/audit claim branch value review-only; owning review lineage notified on #438 and structured blocker event published."
 }
