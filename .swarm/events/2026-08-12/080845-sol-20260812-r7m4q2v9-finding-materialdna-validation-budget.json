@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-080845-r7m4q2v9-materialdna-validation-budget",
+  "timestamp": "2026-08-12T08:08:45+00:00",
+  "fromWorker": "sol-20260812-r7m4q2v9",
+  "eventType": "FINDING",
+  "summary": "MaterialDNA advertises bounded generation/persistence validation, but malformed plain tables can force unbounded scans and diagnostic allocation: validateKnownFields walks every supplied record key and emits one error per unknown field, while validateDenseArray walks every supplied entry before enforcing the 32/8-entry canonical limits. A hostile or corrupted oversized recipe can therefore consume work proportional to attacker-controlled table size before failing.",
+  "affects": ["HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Inspected main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 MaterialDNA source and tests plus retained repair-count PR #353 exact head 10559afdce1a1854e7932522f6e78561736c8ed3; both retain the same unbounded validateKnownFields and validateDenseArray traversal behavior.",
+    "validateKnownFields iterates pairs(record) to exhaustion and appends a distinct diagnostic for every unknown field; closed schema records have small fixed legal shapes, so malformed extra fields currently remove the intended work/error bound.",
+    "validateDenseArray counts the full supplied table before checking count > maximum, so historyEvents/anomalyModifiers with arbitrarily many entries still require a full scan despite canonical maxima of 32 and 8.",
+    "Docs/MATERIAL_DNA_CONTRACT.md states recipe validation/freezing is bounded content-generation/persistence work and cites the 32-event/8-modifier caps, which malformed inputs can currently bypass as a work bound before rejection.",
+    "Repository PR/code search found no existing MaterialDNA malformed-input scan/error-budget lane. Existing #353 bounds repairCount exactness; the older percent-key grammar finding is a separate canonical alphabet issue.",
+    "No Roblox Studio or engine evidence is implicated; this is a source-only malformed-input/resource-boundary defect."
+  ],
+  "metadata": {
+    "candidateBaseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
+    "recommendedLaneId": "HG-BACKFILL-MATERIALDNA-VALIDATION-BUDGET",
+    "recommendedNext": "After the trusted-history control recovery stabilizes ownership, add an explicit bounded preflight/early-rejection contract for closed records and capped arrays, preserve valid recipe/state/reference semantics and #353 safe-integer behavior, cap malformed diagnostic growth, and add deterministic over-budget regressions without a schema/version bump."
+  }
+}
