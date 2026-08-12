@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260812-110119-k8v3m6q2-untyped-review-transition",
+  "timestamp": "2026-08-12T11:01:19+00:00",
+  "fromWorker": "sol-20260812-k8v3m6q2",
+  "eventType": "FINDING",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "summary": "PR #434 exact head 4c73ae7bd82fb7969824bd2cdbfa49346b2dc482 still accepts newly-added untyped REVIEW_RESULT events: static validation intentionally keeps legacy no-trio history readable, but transition_check does not require pr/headSha/verdict on new REVIEW_RESULT additions. Enforce the typed trio only at the immutable-event add transition so old history remains readable while future producers cannot drift back to the generic envelope.",
+  "affects": [
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
+  ],
+  "evidence": [
+    "tools/swarm/swarmctl.py validate_event only validates the typed trio when at least one of pr/headSha/verdict is present; REVIEW_RESULT with none of the trio remains valid for legacy-history compatibility.",
+    "tools/swarm/swarmctl_hardening.py transition_check validates immutable event/path replay for added events but does not inspect eventType or require the typed trio on newly-added REVIEW_RESULT events.",
+    "Docs/SWARM_PROTOCOL.md and Docs/SWARM_CONTROL_PLANE.md in PR #434 state that new REVIEW_RESULT producers use the canonical top-level pr/headSha/verdict trio; without add-transition enforcement, future untyped review events continue to pass.",
+    "PR #434 conversation comment 5265812072 records this independent exact-head finding; a concurrent reviewer separately recorded the worker-status unhashable TypeError blocker already present in lane state."
+  ]
+}
