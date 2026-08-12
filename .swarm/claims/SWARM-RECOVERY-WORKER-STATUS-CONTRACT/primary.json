@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "slotId": "primary",
-  "workerId": "sol-20260812-h7m2v9q4",
-  "claimToken": "b93d7a2e51c684f0",
-  "claimedAt": "2026-08-12T08:07:05+00:00",
-  "heartbeatAt": "2026-08-12T08:49:30+00:00",
+  "workerId": "sol-20260812-s8v4q2n7",
+  "claimToken": "d7a4c91e2f6b8035",
+  "claimedAt": "2026-08-12T10:42:44+00:00",
+  "heartbeatAt": "2026-08-12T10:42:44+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
   "resources": ["SWARM-PROTOCOL"],
-  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-h7m2v9q4",
-  "pr": 428
+  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-s8v4q2n7",
+  "pr": null
 }
