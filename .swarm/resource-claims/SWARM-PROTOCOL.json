@@ -5,8 +5,8 @@
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "claimToken": "a7d3c9e15b806f42",
   "acquiredAt": "2026-08-12T11:26:00+00:00",
-  "heartbeatAt": "2026-08-12T11:40:00+00:00",
+  "heartbeatAt": "2026-08-12T11:52:00+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
-  "notes": "Generation-3 successor PR #442 is published from #434 exact head with only the worker-status string guard plus core/hardening []/{} controlled-ControlError regressions. Exclusive SWARM-PROTOCOL remains fenced through fresh exact-head CI and review handoff."
+  "notes": "Generation-3 successor PR #442 now includes the narrow worker-status type guard plus exact first-write legacy HANDOFF blob compatibility needed for live control validation; arbitrary forbidden command fields remain strict-fail. Exclusive SWARM-PROTOCOL remains fenced through fresh exact-head CI and review handoff."
 }
