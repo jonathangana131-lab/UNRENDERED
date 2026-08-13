@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224400-k3r8v1m6-objectgenome-caster-axis-frame",
+  "timestamp": "2026-08-13T22:44:00+00:00",
+  "fromWorker": "sol-20260813-k3r8v1m6",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome v1 defines caster swivelAxis and rollAxis as canonical unit direction vectors, but both current inspect() validation and retained generation-8 PR #395's standalone decoder boundary validate the axes independently and accept a physically degenerate caster whose two axes are parallel. Propose a bounded post-#395 ObjectGenome leaf that rejects non-orthogonal caster axis frames at both semantic boundaries, preserves all shipped fixture identities/fingerprints, performs no adapter-side normalization, and adds deterministic accepted/rejected tolerance regressions. This is distinct from the already proposed ObjectGenome state/cardinality and free-form string budget leaves.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "evidence": [
+    "Docs/OBJECT_GENOME.md defines caster swivelAxis and rollAxis as canonical unit vectors and makes mechanism semantics project-owned so realization adapters do not invent competing physical interpretations; it specifies only the individual magnitude tolerance today.",
+    "Retained PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 calls validateAxis() independently for swivelAxis and rollAxis in full inspect(), while standaloneMechanismIsCanonical() independently calls isCanonicalUnitAxis() for each axis; neither checks their dot product or frame relationship.",
+    "Current ObjectGenomeFixtures office-chair casters and PhysicsLabObjectGenomes rolling-cart casters both author swivelAxis={0,1,0} and rollAxis={1,0,0}, so an orthogonality fence preserves shipped canonical recipes and requires no fixture identity/fingerprint migration.",
+    "Repository PR/issue searches for caster orthogonality found no existing implementation/review leaf; the existing proposed HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS and HG-BACKFILL-OBJECTGENOME-STRING-BUDGET lanes cover different bounded-memory concerns."
+  ]
+}
