@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224800-s56e7c2a-materialdna-capacity-exhausted",
+  "timestamp": "2026-08-13T22:48:00+00:00",
+  "fromWorker": "sol-20260813-s56e7c2a",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "low",
+  "summary": "MaterialDNA mining found no safe non-duplicate new lane; remaining demonstrated source gaps are already sequenced in existing MaterialDNA leaves.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-MATERIALDNA-COUNTERS", "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS", "HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR"],
+  "evidence": [
+    "Current main still has the repairCount exact-integer gap already owned by HG-BACKFILL-MATERIALDNA-COUNTERS and retained PR #353.",
+    "Current validation work on oversized tables and unknown closed-record fields is already owned by HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS.",
+    "Current percent-character semantic-key grammar mismatch is already owned by HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR.",
+    "Existing tests already cover immutable ownership, closed schema-v2 records, metatable rejection, fixture content seals, revision binding, and bounded physical/acoustic/response numeric ranges.",
+    "No Studio or engine evidence was run or claimed."
+  ]
+}
