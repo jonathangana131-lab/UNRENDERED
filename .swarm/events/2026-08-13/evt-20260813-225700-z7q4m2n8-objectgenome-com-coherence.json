@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-225700-z7q4m2n8-objectgenome-com-coherence",
+  "timestamp": "2026-08-13T22:57:00+00:00",
+  "fromWorker": "sol-20260813-z7q4m2n8",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome v1 validates that component masses sum to massKg, but centerOfMassM is only required to be finite and lie inside the object envelope; it is not required to match the mass-weighted centroid of the authored component masses/local positions. This leaves the production construction-grammar boundary able to accept physically contradictory mass metadata even though multiple Hero repairs have already had to recompute fixture COM by hand. Propose a bounded post-#395 ObjectGenome leaf that defines a deterministic component-derived COM coherence tolerance, rejects contradictory authored centerOfMassM in inspect(), and adds generic adversarial contract tests rather than continuing fixture-specific COM regressions. No schema/identity change or Studio/runtime claim is implied by this source-level finding.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-BACKFILL-OBJECTGENOME",
+  "evidence": [
+    "main@8134a3962be80e8ba6ec2c27207e44db63e6765c src/shared/Objects/ObjectGenome.luau accumulates componentMassKg and emits mass.component_sum when it diverges from massKg, but the preceding centerOfMassM validation only checks finite Vec3 shape plus containment inside dimensionsM; no weighted component centroid is compared.",
+    "tests/object_genome.luau has a generic badMass mutation asserting mass.component_sum, but no generic mutation proving an in-envelope yet component-incoherent centerOfMassM is rejected.",
+    "Prior source-only repairs repeatedly had to close this exact physical inconsistency at fixture level: PR #187 corrected the Physics Lab door COM after frame changes; PR #311 recomputed rolling-cart COM; PR #332 exposed office-chair declared-COM mismatch and PR #355 repaired it. This recurrence is evidence that the invariant belongs at the shared ObjectGenome validation boundary.",
+    "Retained generation-8 ObjectGenome PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 hardens decoder shape/state aliasing but does not add component-derived center-of-mass coherence, so the gap survives that retained lineage.",
+    "Repository issue/PR searches for ObjectGenome center-of-mass coherence found the broad #6 contract and fixture-specific repairs above, but no generic validator leaf. Existing proposed ObjectGenome string-budget/state-bounds lanes and today's caster-axis-frame finding are orthogonal."
+  ]
+}
