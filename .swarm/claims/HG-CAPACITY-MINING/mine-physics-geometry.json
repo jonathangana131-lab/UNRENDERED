@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "workerId": "sol-20260813-8fa445",
+  "claimToken": "0b6fc835f346582e",
+  "claimedAt": "2026-08-13T22:38:39+00:00",
+  "heartbeatAt": "2026-08-13T22:38:39+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-8fa445",
+  "pr": null,
+  "notes": "Source-only Physics geometry capacity mining after inspecting higher-scored ready slots and avoiding fresh competing claims. No Studio/viewport/runtime evidence will be claimed."
+}
