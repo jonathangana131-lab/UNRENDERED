@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260813-m6t3x8q1",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-13T22:38:58+00:00",
+  "lastSeenAt": "2026-08-13T22:38:58+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-test-adversary-m6t3x8q1",
+  "notes": "Claiming diagnostics test-adversary support for generation-16 PR #441; source-only review/test work, no Studio evidence claim."
+}
