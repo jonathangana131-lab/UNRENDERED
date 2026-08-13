@@ -73,10 +73,10 @@ Malformed first writes have **no canonical authoritative payload to recover**. T
 The complete reviewed machine-readable source is the **composed finite inventory** consumed by `tools/swarm/swarmctl_hardening.py` and bootstrap CI:
 
 - `tools/swarm/swarm_history_recovery_manifest.py` contains 65 canonical-filename malformed-event tuples plus 2 path-divergent tuples returned by `malformed_event_quarantine_rows()`, for 67 foundational normalized rows;
-- `tools/swarm/swarm_history_recovery_extension.py` retains 47 exact legacy extension rows under their real `2026-08-11` directory and adds 1 explicitly dated `2026-08-12` quarantine row;
+- `tools/swarm/swarm_history_recovery_extension.py` retains 47 exact legacy extension rows under their real `2026-08-11` directory and adds 5 explicitly dated `2026-08-12` quarantine rows: the generation-7 row plus the four generation-8 diagnostics rows discovered by fresh live bootstrap;
 - `swarmctl_hardening.py` composes both quarantine-rule maps, while bootstrap CI normalizes the foundational rows with date `2026-08-11` and consumes `extension.malformed_event_quarantine_rows_with_dates()` so every later row carries its real directory explicitly.
 
-The exact current recovery boundary therefore pins **115 malformed first-write rows** as:
+The exact current recovery boundary therefore pins **119 malformed first-write rows** as:
 
 `eventId + exact date + exact filename + exact first-write commit + exact quarantine-only Git blob SHA-1`
 
@@ -84,7 +84,7 @@ The 65 canonical-filename foundational tuples are independently regression-locke
 
 `8c8c77f85c8210cfbca5a804364e3792bec347f7d62b994dee83a6870181bdfe`
 
-The two path-divergent foundational rows remain explicit machine-readable path identities. The 47-row legacy extension remains separately count/identity/uniqueness regression-tested, and the generation-7 dated row is pinned independently with its `2026-08-12` directory, first-write commit, and Git blob. This split preserves reviewable provenance without pretending the older foundational digest covers later extensions.
+The two path-divergent foundational rows remain explicit machine-readable path identities. The 47-row legacy extension remains separately count/identity/uniqueness regression-tested, and all 5 dated rows are pinned independently with their `2026-08-12` directory, first-write commit, and Git blob. This split preserves reviewable provenance without pretending the older foundational digest covers later extensions.
 
 Bootstrap CI does not trust either manifest merely because it is source code. For every composed normalized row it independently proves from Git history that:
 
@@ -177,8 +177,8 @@ Recovery acceptance requires:
 
 - all prior V2/V2.1 hardening tests remain green;
 - exact rewritten quarantine blobs remain inert and unchanged;
-- all **115** composed malformed-first-write rows remain exact quarantine-only and cannot acquire authority;
-- regression tests pin the 65-row foundational canonical inventory digest, the 2 path-divergent foundational identities, the 47-row legacy extension count/identities, the generation-7 dated row, and their uniqueness;
+- all **119** composed malformed-first-write rows remain exact quarantine-only and cannot acquire authority;
+- regression tests pin the 65-row foundational canonical inventory digest, the 2 path-divergent foundational identities, the 47-row legacy extension count/identities, all 5 explicitly dated rows, and their uniqueness;
 - CI independently proves every composed malformed-event dated path, first-add commit, and first-write blob;
 - one-byte quarantine mutation fails;
 - quarantined event IDs remain replay-protected;
