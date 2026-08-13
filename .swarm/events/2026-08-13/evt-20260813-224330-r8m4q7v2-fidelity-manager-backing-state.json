@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224330-r8m4q7v2-fidelity-manager-backing-state",
+  "timestamp": "2026-08-13T22:43:30+00:00",
+  "fromWorker": "sol-20260813-r8m4q7v2",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Retained FidelityManager hardening PR #385 fences same-entity step/unregister during transition callbacks, but Manager still exposes mutable _states and _metrics backing tables through its returned object and exported Manager structural type. Callback code that captures the manager can mutate the transitioning EntityState or aggregate counters directly, bypassing the new API-level transition fence and violating registered/count/observed-level invariants without calling a guarded method.",
+  "affects": [
+    "HG-BACKFILL-FIDELITY",
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING"
+  ],
+  "evidence": [
+    "PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 defines ManagerImpl with config, mutable _states, and mutable _metrics, then exports Manager as typeof(setmetatable({} :: ManagerImpl, FidelityManager)); new() returns that mutable table directly rather than a frozen capability facade over closure-private backing state",
+    "PR #385 stores the same-entity transition guard as EntityState.transitioning inside _states and guards step()/unregister() by reading that bit. A transition callback closes over the manager, so direct access to manager._states can delete/replace the active record or clear transitioning without traversing either guarded method; the outer step retains a local state pointer and can then commit metrics/counts against backing state that no longer contains the entity",
+    "The same public _metrics table permits direct mutation of registered, counts, transition and rejection counters, defeating the documented bounded aggregate diagnostics/accounting even when every public method is otherwise correct",
+    "Existing retained #385 regressions cover callback reentry through step()/unregister(), unwind/retry and normal aggregate accounting; stacked PR #398 covers cross-entity commit isolation. Neither retained lineage seals or adversarially tests direct backing-table mutation",
+    "Docs/ARCHITECTURE.md already treats closure-private backing state as the required authority pattern for the adjacent WorldEntity registry, while Docs/FIDELITY_MANAGER.md describes manager-owned bounded temporal/diagnostic state and aggregate metrics rather than caller-owned mutable storage",
+    "Repository PR search for FidelityManager private/facade/backing-state hardening found no separate retained Fidelity lane or PR; the only active Fidelity follow-up #419 is the independent maxRegisteredEntities upper-ceiling repair stacked on #385 and does not change Manager backing-state ownership"
+  ],
+  "recommendation": "Create a narrow source-only one-shot Hero-Gate lane stacked on the retained Fidelity lineage that moves EntityState/metrics backing storage behind closure-private manager authority and returns a frozen/capability-style facade exposing only the existing public methods/config snapshot. Add adversarial regressions proving callers and transition callbacks cannot reach or mutate backing state, cannot clear the in-flight fence, and cannot forge registered/count/transition metrics. Preserve F0-F4 policy, per-entity transaction semantics, maxRegisteredEntities/default/ceiling behavior, WorldEntity authority, runtime adapters, and all Studio evidence boundaries. No new feature or engine claim is required."
+}
