@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "SWARM-PROTOCOL",
+  "workerId": "sol-20260813-eic7n4p2",
+  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+  "claimToken": "c89a3f56179122d1",
+  "acquiredAt": "2026-08-13T22:38:00+00:00",
+  "heartbeatAt": "2026-08-13T22:38:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "notes": "Exclusive protocol lease for generation-2 exact-identity compatibility recovery."
+}
