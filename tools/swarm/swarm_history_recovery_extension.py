@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exact generation-4/5/6/7 additions to the finite history reset.
+"""Exact generation-4/5/6/7/8 additions to the finite history reset.
 
 These rows were measured from live swarm-control by read-only bootstrap inventory
 or exact Git provenance inspection. They are data only: no schema aliasing,
@@ -117,6 +117,34 @@ DATED_MALFORMED_EVENT_QUARANTINE_ROWS = (
         "080700-sol-20260812-k7m4q9v2-handoff-diagnostics-generation10.json",
         "3e8d11601444a2681eee5f030a0597fbee55b0bf",
         "706647f87553ce70e796da306afe58216332f0bb",
+    ),
+    (
+        "evt-20260812T105120Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation13",
+        "2026-08-12",
+        "105120-sol-20260812-g43k9m2v-handoff-diagnostics-generation13.json",
+        "d3b3bf56eff635785321e4fce433e5e695bd136a",
+        "966a8362e3aebe5cadedee586114ec3ef4618bf5",
+    ),
+    (
+        "evt-20260812T110830Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation14",
+        "2026-08-12",
+        "110830-sol-20260812-g43k9m2v-handoff-diagnostics-generation14.json",
+        "a058912e408b486ea9411b2bfff7359a3c812c5d",
+        "cb440ccabb5459252d36b782ba955f8a2aa37abd",
+    ),
+    (
+        "evt-20260812T111830Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation15",
+        "2026-08-12",
+        "111830-sol-20260812-g43k9m2v-handoff-diagnostics-generation15.json",
+        "7cc2c334628dc00197a3f814491c8b3ea6767b72",
+        "8eef4f40d414f4f43c03813c3276b8dd095036b9",
+    ),
+    (
+        "evt-20260812T112500Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation16",
+        "2026-08-12",
+        "112500-sol-20260812-g43k9m2v-handoff-diagnostics-generation16.json",
+        "92843914017c38b861b3ecd9cbb758b52d3428eb",
+        "b7a4bab4760413bdcd629a1a8e4b0af4e4291964",
     ),
 )
 
