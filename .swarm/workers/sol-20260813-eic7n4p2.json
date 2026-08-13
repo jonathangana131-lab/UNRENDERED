@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260813-eic7n4p2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-13T22:38:00+00:00",
+  "lastSeenAt": "2026-08-13T22:38:00+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+  "slotId": "repair",
+  "notes": "Generation-2 stale-claim recovery after inspecting PR #328, its laundering review blocker, current main exact-identity compatibility source, and current regressions."
+}
