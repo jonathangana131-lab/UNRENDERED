@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-223900-v7k2m9p4-worldentity-mutable-duplicate-aliasing",
+  "timestamp": "2026-08-13T22:39:00+00:00",
+  "fromWorker": "sol-20260813-v7k2m9p4",
+  "eventType": "FINDING",
+  "summary": "PR #437 changes duplicate diagnostics to retain complete GenerationOrigin snapshots, but its focused regression only exercises incoming duplicates already owned through WorldEntity.new(). The public registry also accepts structurally valid mutable records directly; a missing adversarial regression should prove register() re-owns and freezes the mutable incoming origin before returned/retained duplicate diagnostics are formed, so post-rejection caller mutation cannot rewrite diagnostic evidence. Test-only PR #435 separately contains direct-mutable duplicate validation-order coverage that should be absorbed into the retained successor lineage.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "evidence": [
+    "PR #437 exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3: register() calls ownRecord(record) before duplicate lookup and diagnostics retain existing.origin plus ownedRecord.origin.",
+    "PR #437 tests/world_entity_duplicate_origin_diagnostic.luau constructs both duplicate records through WorldEntity.new(), so caller-alias re-ownership is not exercised.",
+    "PR #435 adds direct-mutable duplicate metadata-validation ordering coverage and must not remain stranded as an independently merging support branch.",
+    "GitHub review comment 4932208634 records the exact-head adversarial handoff."
+  ]
+}
