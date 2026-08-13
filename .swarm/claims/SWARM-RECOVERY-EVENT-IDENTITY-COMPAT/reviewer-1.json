@@ -6,9 +6,9 @@
   "claimToken": "d4a92f7c1b6e8035",
   "claimedAt": "2026-08-13T22:45:00+00:00",
   "heartbeatAt": "2026-08-13T22:45:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 1,
   "resources": [],
   "branch": "agent/review/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-reviewer-1-v16rvw2",
-  "notes": "Independent current-main review of the event identity compatibility lane. No implementation or resource ownership."
+  "notes": "Review complete. Lane closed DONE-by-current-main with typed supersede review event evt-20260813-224900-v16rvw2-event-identity-main-review. Lease reduced to protocol minimum without heartbeat advancement for prompt expiry; no implementation or resource ownership."
 }
