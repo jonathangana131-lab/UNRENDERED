@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224300-m6t3x8q1-authority-capacity-exhausted",
+  "timestamp": "2026-08-13T22:43:00+00:00",
+  "fromWorker": "sol-20260813-m6t3x8q1",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "low",
+  "summary": "Authority source-depth mining found no currently safe non-duplicate new lane; finish the retained authority stack and external two-client prerequisite instead of spawning another primary.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-AUTHORITY",
+    "HG-COMPLETION-AUTHORITY",
+    "HG151-TWOCLIENT"
+  ],
+  "evidence": [
+    "Current main still traverses ReplicatedStorage/shared dependencies before the server/client context assertions; retained PR #348 already owns and independently source-validates that exact bootstrap-order repair.",
+    "Current main PhysicsLabStudioHarness.get() still exposes the raw RealizedLab lifecycle surface; retained PR #412 already owns the independently approved generation-fenced lifecycle-capability repair, while #394 retains the accepted teardown regression stack over #348.",
+    "HG-COMPLETION-AUTHORITY already records PR #300's distinct Rojo deployment test weakness: exact-path counting can miss replicated src/server descendants; that subtree/prefix-aware follow-up is explicitly deferred until the retained stack can integrate.",
+    "HG151-TWOCLIENT already owns the stronger real-server plus two-independent-client canonical-authority/evaluator proof and remains dependency-blocked on OPS-STUDIO-DISPLAY; source inspection must not be promoted to two-client evidence.",
+    "Docs/PHYSICS_LAB_VALIDATION.md currently describes only a two-client smoke procedure, but issue #151 and HG151-TWOCLIENT already define the stricter evidence contract, so opening a competing source-only authority framework would duplicate scheduled work rather than deepen it."
+  ]
+}
