@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260813-v7k2m9p4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-13T22:36:30+00:00",
-  "lastSeenAt": "2026-08-13T22:36:30+00:00",
+  "lastSeenAt": "2026-08-13T22:41:00+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-test-adversary-v7k2m9p4",
-  "notes": "Independent WorldEntity adversarial depth pass. Inspected stale primary/resource holder PR #437 before claiming; scope is tests/world_entity*.luau only."
+  "notes": "Read-only adversarial pass completed. Durable FINDING evt-20260813-223900-v7k2m9p4-worldentity-mutable-duplicate-aliasing and PR #437 review 4932208634 identify missing direct-mutable duplicate aliasing proof and #435 absorption. Product branch creation was unavailable in this session, so claim and REALITY-CONTRACT lease were released for handoff. No product code or tests were changed/run."
 }
