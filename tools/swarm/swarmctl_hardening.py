@@ -15,9 +15,19 @@ import swarmctl_hardening_base as _base
 from swarmctl_hardening_base import *  # re-export the proven engine API
 
 
-_STRICT_VALIDATE_EVENT = _base.core.validate_event
-_STRICT_READ_TREE = _base.read_tree
-_STRICT_TRANSITION_CHECK = _base.transition_check
+# Keep the first strict engine anchors on the shared base module. Re-executing this
+# facade in-process (for example via runpy in a CLI regression) must not wrap a
+# wrapper and silently change which compatibility registry the trusted engine uses.
+if not hasattr(_base, "_V21_STRICT_VALIDATE_EVENT"):
+    _base._V21_STRICT_VALIDATE_EVENT = _base.core.validate_event
+if not hasattr(_base, "_V21_STRICT_READ_TREE"):
+    _base._V21_STRICT_READ_TREE = _base.read_tree
+if not hasattr(_base, "_V21_STRICT_TRANSITION_CHECK"):
+    _base._V21_STRICT_TRANSITION_CHECK = _base.transition_check
+
+_STRICT_VALIDATE_EVENT = _base._V21_STRICT_VALIDATE_EVENT
+_STRICT_READ_TREE = _base._V21_STRICT_READ_TREE
+_STRICT_TRANSITION_CHECK = _base._V21_STRICT_TRANSITION_CHECK
 
 # Five immutable events were emitted before every writer converged on the strict
 # V2 event shape. Three were later rewritten after their first transition failure,
@@ -27,7 +37,7 @@ _STRICT_TRANSITION_CHECK = _base.transition_check
 # is an unchanged first-write HANDOFF whose validation evidence used the legacy
 # nested `command` key; only its exact audited blob may cross the executable-key
 # fence. All other control JSON remains subject to the strict loader.
-_CANONICAL_IMMUTABLE_EVENTS = {
+_LOCAL_CANONICAL_IMMUTABLE_EVENTS = {
     "evt-20260811-073500-q9m4r2-authority-rereview-approve": {
         "date": "2026-08-11",
         "filename": "evt-20260811-073500-q9m4r2-authority-rereview-approve.json",
@@ -54,6 +64,10 @@ _CANONICAL_IMMUTABLE_EVENTS = {
         "canonicalGitBlobSha1": "713d54c453faa65e89875e69499444d5a7644d3f",
     },
 }
+
+if not hasattr(_base, "_V21_CANONICAL_IMMUTABLE_EVENTS"):
+    _base._V21_CANONICAL_IMMUTABLE_EVENTS = _LOCAL_CANONICAL_IMMUTABLE_EVENTS
+_CANONICAL_IMMUTABLE_EVENTS = _base._V21_CANONICAL_IMMUTABLE_EVENTS
 
 
 def _git_blob_sha1_bytes(raw: bytes) -> str:
