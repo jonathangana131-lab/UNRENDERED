@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260813-k7m4v9q2",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-13T22:40:00+00:00",
+  "lastSeenAt": "2026-08-13T22:40:00+00:00",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "reviewer-1",
+  "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-k7m4v9q2-g2",
+  "notes": "Fresh independent integration audit of approved PR #444 against current main; no source modification before a fenced primary handoff."
+}
