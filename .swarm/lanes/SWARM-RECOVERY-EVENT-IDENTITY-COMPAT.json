@@ -5,7 +5,7 @@
   "title": "Seal immutable event compatibility by exact identity",
   "objective": "Repair the merged V2.1 event compatibility facade so only audited immutable historical event identities can bypass legacy schema defects, including the exact MaterialDNA malformed affects record, while fresh/backdated writes fail closed.",
   "priority": 10000,
-  "state": "READY",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -46,6 +46,6 @@
     "transition-check still rejects historical event rewrites and deletions byte-for-byte",
     "canonical CI and swarm hardening tests are green on the exact head"
   ],
-  "notes": "Red control prerequisite after merged PR #322: live swarm-control run 31473696812 still fails on evt-20260811-081620-mat8c3r1-materialdna-key-grammar invalid affects, and independent #322 reviews also proved the timestamp-only legacy path is forgeable by fresh backdated writes.",
-  "tags": ["control-repair", "red-ci", "security", "hero-gate"]
+  "notes": "Generation-2 stale recovery inspected rejected PR #328 and current main@8134a3962be80e8ba6ec2c27207e44db63e6765c. Later trusted-history recovery already supersedes #328's timestamp reader with finite exact path/eventId/Git-blob identities. Current regressions pin the MaterialDNA first-write blob, reject byte/path/id substitution, reject fresh backdated legacy events and generalized malformed affects, and retain transition rewrite/replay fences. Canonical main is GREEN. No product bytes are changed by generation 2; independent exact-main security review is requested before marking this stale lane DONE.",
+  "tags": ["control-repair", "security", "hero-gate"]
 }
