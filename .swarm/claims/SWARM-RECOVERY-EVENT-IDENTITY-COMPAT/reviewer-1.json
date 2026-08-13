@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+  "slotId": "reviewer-1",
+  "workerId": "sol-20260813-v16rvw2",
+  "claimToken": "d4a92f7c1b6e8035",
+  "claimedAt": "2026-08-13T22:45:00+00:00",
+  "heartbeatAt": "2026-08-13T22:45:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-reviewer-1-v16rvw2",
+  "notes": "Independent current-main review of the event identity compatibility lane. No implementation or resource ownership."
+}
