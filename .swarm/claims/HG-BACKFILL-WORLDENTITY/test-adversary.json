@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260813-v7k2m9p4",
+  "claimToken": "4f8c2a71d9e6053b",
+  "claimedAt": "2026-08-13T22:36:45+00:00",
+  "heartbeatAt": "2026-08-13T22:36:45+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["REALITY-CONTRACT"],
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-test-adversary-v7k2m9p4",
+  "pr": null,
+  "notes": "Test-only adversarial depth pass on current main and PR #437 lineage; stale prior primary/resource state inspected before claim."
+}
