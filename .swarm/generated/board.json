@@ -1,24 +1,6 @@
 {
   "activeClaims": [
     {
-      "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-audit-r7k4n9p2",
-      "expiresAt": "2026-08-13T23:07:14+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "pr": null,
-      "slotId": "audit",
-      "workerId": "sol-20260813-r7k4n9p2"
-    },
-    {
-      "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n4q7v2m9",
-      "expiresAt": "2026-08-13T23:07:30+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "pr": null,
-      "slotId": "test-adversary",
-      "workerId": "sol-20260813-n4q7v2m9"
-    },
-    {
       "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-k3r8v1m6",
       "expiresAt": "2026-08-13T23:19:00+00:00",
       "generation": 1,
@@ -26,24 +8,6 @@
       "pr": null,
       "slotId": "mine-materialdna",
       "workerId": "sol-20260813-k3r8v1m6"
-    },
-    {
-      "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-k2m8v4q7",
-      "expiresAt": "2026-08-13T23:10:00+00:00",
-      "generation": 1,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": null,
-      "slotId": "mine-physics-runtime",
-      "workerId": "sol-20260813-k2m8v4q7"
-    },
-    {
-      "branch": "agent/control/event-identity-compat-g2-eic7n4p2",
-      "expiresAt": "2026-08-13T23:08:00+00:00",
-      "generation": 2,
-      "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
-      "pr": null,
-      "slotId": "repair",
-      "workerId": "sol-20260813-eic7n4p2"
     },
     {
       "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-k7m4v9q2-g5",
@@ -178,17 +142,17 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-13T23:07:10.547168+00:00",
+  "generatedAt": "2026-08-13T23:13:47.208445+00:00",
   "mainHealth": {
     "conclusion": "success",
-    "headSha": "b87987ff7c96b8dda894942771283aca86b7cfb6",
+    "headSha": "ce49c39d98052eba55fd7824676d16dbdf30a30f",
     "schemaVersion": 1,
     "status": "GREEN",
-    "updatedAt": "2026-08-13T23:07:02+00:00",
-    "workflowRunId": 31752596958
+    "updatedAt": "2026-08-13T23:13:37+00:00",
+    "workflowRunId": 31753001126
   },
   "metrics": {
-    "activeClaims": 6,
+    "activeClaims": 2,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -207,7 +171,7 @@
       "REVIEW_RESULT": 204,
       "SUPERSEDED": 1
     },
-    "generatedAt": "2026-08-13T23:07:10.547168+00:00",
+    "generatedAt": "2026-08-13T23:13:47.208445+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
@@ -221,10 +185,10 @@
       "SUPERSEDED": 2
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 8,
+    "readySlots": 11,
     "reviewBacklog": 4,
     "schemaVersion": 1,
-    "staleClaims": 10
+    "staleClaims": 14
   },
   "readySlots": [
     {
@@ -252,6 +216,34 @@
         "src/shared/Physics/PhysicsLabRuntime.luau",
         "tests/physics_lab_runtime*.luau",
         "Docs/PHYSICS_LAB.md"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Diagnostics lifecycle and no-drift test author",
+      "score": 5070,
+      "slotId": "test-adversary",
+      "writeScopes": [
+        "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
+        "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
+        "tests/**diagnostic*.luau",
+        "tests/hero_gate_contract_integration.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Diagnostics failure-path and capture-contract auditor",
+      "score": 4970,
+      "slotId": "audit",
+      "writeScopes": [
+        "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
+        "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
+        "tests/**diagnostic*.luau",
+        "tests/hero_gate_contract_integration.luau"
       ]
     },
     {
@@ -283,6 +275,17 @@
       "role": "Mine FidelityManager for next concrete depth lane",
       "score": 3650,
       "slotId": "mine-fidelity",
+      "writeScopes": [
+        "Docs/**"
+      ]
+    },
+    {
+      "laneId": "HG-CAPACITY-MINING",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Mine Physics runtime for next concrete depth lane",
+      "score": 3640,
+      "slotId": "mine-physics-runtime",
       "writeScopes": [
         "Docs/**"
       ]
@@ -795,6 +798,24 @@
   "schemaVersion": 1,
   "staleClaims": [
     {
+      "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-audit-r7k4n9p2",
+      "expiredAt": "2026-08-13T23:07:14+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "pr": null,
+      "slotId": "audit",
+      "workerId": "sol-20260813-r7k4n9p2"
+    },
+    {
+      "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n4q7v2m9",
+      "expiredAt": "2026-08-13T23:07:30+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "pr": null,
+      "slotId": "test-adversary",
+      "workerId": "sol-20260813-n4q7v2m9"
+    },
+    {
       "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-s6q2m9v4",
       "expiredAt": "2026-08-11T23:59:54+00:00",
       "generation": 1,
@@ -831,6 +852,15 @@
       "workerId": "sol-20260812-q6n9v2m4"
     },
     {
+      "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-k2m8v4q7",
+      "expiredAt": "2026-08-13T23:10:00+00:00",
+      "generation": 1,
+      "laneId": "HG-CAPACITY-MINING",
+      "pr": null,
+      "slotId": "mine-physics-runtime",
+      "workerId": "sol-20260813-k2m8v4q7"
+    },
+    {
       "branch": "agent/physics/HG-FIDELITY-REGISTRATION-CAPACITY-CEILING-r8n4m2q6",
       "expiredAt": "2026-08-11T23:50:30+00:00",
       "generation": 1,
@@ -847,6 +877,15 @@
       "pr": 408,
       "slotId": "primary",
       "workerId": "sol-20260811-r5k8m3q7"
+    },
+    {
+      "branch": "agent/control/event-identity-compat-g2-eic7n4p2",
+      "expiredAt": "2026-08-13T23:08:00+00:00",
+      "generation": 2,
+      "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+      "pr": null,
+      "slotId": "repair",
+      "workerId": "sol-20260813-eic7n4p2"
     },
     {
       "branch": "agent/review/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-reviewer-1-v16rvw2",
@@ -885,14 +924,14 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "eb73526e5416992bc12d8c38842b85ef97c7851b2a24af6fc6dd8243b336cbbb",
+  "stateDigest": "74d012cc86adcd052309f490f283b1de298edd645f6201c9db6972f0215066a4",
   "summary": {
-    "activeClaims": 6,
+    "activeClaims": 2,
     "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 58,
-    "readySlots": 8,
-    "staleClaims": 10,
+    "readySlots": 11,
+    "staleClaims": 14,
     "workers": 391
   }
 }
