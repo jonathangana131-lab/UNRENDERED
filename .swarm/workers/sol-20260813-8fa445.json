@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260813-8fa445",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-13T22:38:39+00:00",
-  "lastSeenAt": "2026-08-13T22:48:00+00:00",
+  "lastSeenAt": "2026-08-13T22:50:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
-  "branch": "agent/mining/HG-CAPACITY-MINING-physics-geometry-8fa445",
-  "notes": "Source-only Physics geometry mining completed. Published DEPENDENCY_DISCOVERED evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract: ObjectGenome v1 hinge semantics define component pair/axis/limits but no canonical axis-line or attachment anchors, so future F3/F4 door swing geometry is underdetermined across adapters. Duplicate checks covered current lanes and retained PRs; ramp/cart/chair candidates were rejected as already tracked. No product code or tests changed/run; no Studio/viewport/runtime evidence claimed."
+  "slotId": "mine-authority",
+  "branch": "agent/mining/HG-CAPACITY-MINING-authority-8fa445-a1",
+  "notes": "Second source-only capacity shard after completing/releasing mine-physics-geometry. Authority/multiplayer slot claimed cleanly. Product branch creation was unavailable through the connector, so this pass remains read-only and will publish only a structured finding/no-gap event. No Studio/two-client evidence will be claimed."
 }
