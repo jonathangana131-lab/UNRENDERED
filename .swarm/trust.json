@@ -1,11 +1,11 @@
 {
-  "bootstrap": true,
+  "bootstrap": false,
   "controlBranch": "swarm-control",
   "resetId": "reset-20260811-history-continuity",
-  "resetReason": "Read-only recovery PR #445 exact head 4515cafc28454a11b504d3041573c68b8483475e measured and provenance-validated this exact control SHA/state digest pair in run 31662314466. This remains deliberately non-authorizing until recovery code is merged to main and the next strict control validation CAS-advances bootstrap=false.",
+  "resetReason": "Reviewed finite reset quarantines the exact immutable-event artifacts enumerated by the recovery validator and crosses every malformed worker transition enumerated by FINITE_WORKER_TRANSITIONS; all later authority is strict append-only/trusted history.",
   "schemaVersion": 1,
-  "trustedControlSha": "9d86b626c832ce984634bcc80add515a47bf9cae",
-  "trustedStateDigest": "7cceb47d3eda6bcbc68e934fdc1c2f4848bff7b7cf973f9c9a1b7a493c64cebd",
-  "validatedAt": "2026-08-13T02:55:51+00:00",
-  "validatorMainSha": "4515cafc28454a11b504d3041573c68b8483475e"
+  "trustedControlSha": "628c655c9b6bf90bd667809f4b4edc7723f47992",
+  "trustedStateDigest": "0506689606d4c07f1aa319fb4ba57410a3d388b4712637c5c1000469203b932c",
+  "validatedAt": "2026-08-13T03:07:53+00:00",
+  "validatorMainSha": "8c8bf1348856a1f9aafc7665ef81f7abab0772c7"
 }
