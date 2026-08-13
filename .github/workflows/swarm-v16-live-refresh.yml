@@ -1,0 +1,39 @@
+name: Swarm V16 Live Main Refresh
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: swarm-v16-live-refresh
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Refresh active graph main binding when V16 exists
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin swarm-control
+          if ! git cat-file -e origin/swarm-control:.swarm/runtime/v16/mission-graph.json 2>/dev/null; then
+            echo "V16 not activated yet; refresh is a no-op."
+            exit 0
+          fi
+          python3 tools/swarm/v16ctl.py refresh-main \
+            --repo "$GITHUB_REPOSITORY" \
+            --state-branch swarm-control \
+            --main-sha "$(git rev-parse HEAD)"
