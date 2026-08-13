@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260812-v16g4r9x",
-  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-  "claimToken": "d4e7a9c21f6b8035",
-  "acquiredAt": "2026-08-13T02:30:00+00:00",
-  "heartbeatAt": "2026-08-13T02:38:00+00:00",
-  "leaseSeconds": 1800,
-  "generation": 4,
-  "notes": "Generation-4 primary retains the exclusive SWARM-PROTOCOL lease during exact-head independent review; reviewer owns no scarce resource."
+  "workerId": "sol-20260812-v16pkg1",
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "claimToken": "c3a7e19b42d8f650",
+  "acquiredAt": "2026-08-13T03:17:00+00:00",
+  "heartbeatAt": "2026-08-13T03:17:00+00:00",
+  "leaseSeconds": 14400,
+  "generation": 5,
+  "notes": "Exact stale exclusive-resource takeover for generation-4 validation-fence recovery. No product or runtime authority is granted by this lease."
 }

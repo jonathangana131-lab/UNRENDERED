@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
   "slotId": "primary",
-  "workerId": "sol-20260811-h4v8n2",
-  "claimToken": "b61e9c4a72d3058f",
-  "claimedAt": "2026-08-11T08:34:30+00:00",
-  "heartbeatAt": "2026-08-11T08:34:30+00:00",
-  "leaseSeconds": 1800,
-  "generation": 3,
+  "workerId": "sol-20260812-v16pkg1",
+  "claimToken": "c3a7e19b42d8f650",
+  "claimedAt": "2026-08-13T03:17:00+00:00",
+  "heartbeatAt": "2026-08-13T03:17:00+00:00",
+  "leaseSeconds": 14400,
+  "generation": 4,
   "resources": ["SWARM-PROTOCOL"],
-  "branch": "agent/swarm/SWARM-RECOVERY-HEALTH-VALIDATION-FENCE-h4v8n2-g3",
+  "branch": "agent/control/SWARM-RECOVERY-HEALTH-VALIDATION-FENCE-primary-v16pkg1-g4",
   "pr": null,
-  "notes": "Generation-3 salvage of released recovery PR #315 after inspecting its current head f9eb94d8, live recovery comments, immutable-event laundering finding, CAS race evidence, and primary-WIP saturation. Preserve fail-closed semantics; no force push or marker weakening."
+  "takeoverOf": "sol-20260811-h4v8n2",
+  "notes": "Generation-4 stale-claim takeover for the exact post-recovery trusted-validator materialization closure defect exposed by V16 PR #443. Scope is limited to .github/workflows/swarm-control.yml and retains trusted-base-only, fail-closed ownership semantics."
 }

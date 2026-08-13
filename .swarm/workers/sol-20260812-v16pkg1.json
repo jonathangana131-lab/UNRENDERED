@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260812-v16pkg1",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-13T03:17:00+00:00",
+  "lastSeenAt": "2026-08-13T03:17:00+00:00",
+  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+  "slotId": "primary",
+  "branch": "agent/control/SWARM-RECOVERY-HEALTH-VALIDATION-FENCE-primary-v16pkg1-g4",
+  "notes": "Narrow control-plane worker repairing trusted-base validator packaging exposed by Swarm V16 integration."
+}
