@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260813-m6t3x8q1",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "STOPPED",
   "startedAt": "2026-08-13T22:38:58+00:00",
-  "lastSeenAt": "2026-08-13T22:43:30+00:00",
-  "notes": "Completed HG-CAPACITY-MINING/mine-authority. Published evt-20260813-224300-m6t3x8q1-authority-capacity-exhausted: no currently safe non-duplicate new authority lane; retained #348/#394/#412 and known deferred Rojo subtree finding cover source gaps, while HG151-TWOCLIENT remains display-blocked. Claim released."
+  "lastSeenAt": "2026-08-13T22:44:30+00:00",
+  "notes": "Completed HG-CAPACITY-MINING/mine-authority and released the claim. Published evt-20260813-224300-m6t3x8q1-authority-capacity-exhausted: no safe non-duplicate authority lane remains now. Re-read current swarm state: all other capacity-mining shards are actively claimed, runtime synthesis/authority completion are blocked on trusted ownership, diagnostics review/test slots are occupied, and HG151-TWOCLIENT remains blocked on OPS-STUDIO-DISPLAY."
 }
