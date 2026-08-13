@@ -46,3 +46,33 @@ jobs:
           python3 tools/swarm/v16ctl.py validate --graph "$RUNNER_TEMP/mission-graph.json"
           python3 tools/swarm/v16ctl.py status --graph "$RUNNER_TEMP/mission-graph.json" --workers 30
           python3 tools/swarm/v16ctl.py recommend --graph "$RUNNER_TEMP/mission-graph.json" --limit 10
+
+  live-trusted-control-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout trusted validator from current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Strict read-only replay and digest of live control
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin swarm-control:refs/remotes/origin/swarm-control
+          git fetch origin swarm-trust:refs/remotes/origin/swarm-trust
+          git show origin/swarm-trust:.swarm/trust.json > "$RUNNER_TEMP/swarm-trust.json"
+          TRUSTED_CONTROL_SHA="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["trustedControlSha"])' "$RUNNER_TEMP/swarm-trust.json")"
+          CONTROL_SHA="$(git rev-parse origin/swarm-control)"
+          mkdir -p "$RUNNER_TEMP/live-control"
+          git archive "$CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/live-control"
+          python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/live-control/.swarm"
+          python3 tools/swarm/trusted_history_chain.py \
+            --git-root . \
+            --trusted-sha "$TRUSTED_CONTROL_SHA" \
+            --control-sha "$CONTROL_SHA"
+          STATE_DIGEST="$(python3 -c 'import sys; from pathlib import Path; sys.path.insert(0,"tools/swarm"); import swarmctl_hardening as h; print(h.state_digest(Path(sys.argv[1])))' "$RUNNER_TEMP/live-control/.swarm")"
+          echo "LIVE_CONTROL_SHA=$CONTROL_SHA"
+          echo "LIVE_STATE_DIGEST=$STATE_DIGEST"
