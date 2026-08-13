@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224900-k7m4v9q2-worldentity-registered-noop-transition",
+  "timestamp": "2026-08-13T22:49:00+00:00",
+  "fromWorker": "sol-20260813-k7m4v9q2",
+  "eventType": "FINDING",
+  "summary": "PR #437 registered same-fidelity transitions with no captured state still copy an already-owned WorldEntity record even though fidelity and revisions do not change. Current FidelityManager avoids this call when desired fidelity already equals current fidelity. PR #452 records the bounded source-depth finding and regression target.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "evidence": [
+    "PR #437 exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3",
+    "PR #452 exact head a71531dde7ce8e418fe0348a185dc5d3069cf8d8"
+  ]
+}
