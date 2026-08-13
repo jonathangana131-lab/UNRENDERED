@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-13T22:36:00+00:00",
-  "lastSeenAt": "2026-08-13T22:36:00+00:00",
-  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
-  "slotId": "repair",
-  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-z7q4m2n8-g2",
-  "notes": "Go worker selected the highest-scored ready V16/V2.1 packet after confirming main green, PROJECT_STATE gate, stale generation-1 PR #328 ownership, and no live SWARM-PROTOCOL resource lease. Taking generation-2 stale recovery only after exact predecessor inspection; no Roblox/runtime evidence claimed."
+  "lastSeenAt": "2026-08-13T22:46:10+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "branch": "agent/capacity/HG-CAPACITY-MINING-objectgenome-z7q4m2n8",
+  "notes": "Rerouted after protected SWARM-PROTOCOL lease creation was safety-blocked. Claimed free unprotected ObjectGenome capacity-mining shard for source/test/PR/event audit only; no major feature unlock or external evidence claim."
 }
