@@ -19,6 +19,12 @@ from typing import Iterable
 
 import swarm_failed_control_recovery as failed_recovery
 import swarmctl_hardening as hard
+import swarm_burst_takeover_recovery as burst_takeover_recovery
+
+# Trusted first-parent replay encounters the first malformed burst takeover before
+# the later state originally pinned by the hardening facade. Replace only that
+# finite replay row; normal/live transition validation remains strict.
+burst_takeover_recovery.install(hard)
 
 _SHA_RE = re.compile(r"[a-f0-9]{40}")
 
@@ -93,8 +99,6 @@ def _validate_recovery_bridge(git_root: Path, row: dict, predecessor_root: Path,
         raise hard.core.ControlError("failed-control recovery repair path set mismatch")
     if any(path.startswith(".swarm/events/") for path in invalid_paths + repair_paths):
         raise hard.core.ControlError("failed-control recovery may not cross immutable event changes")
-    # The repair must itself be a fully valid control snapshot, and the only
-    # authoritative state transition is predecessor -> repair.
     hard.validate_all(repair_root, hard.core.now_utc())
     strict = hard.transition_check(predecessor_root, repair_root)
     return {
