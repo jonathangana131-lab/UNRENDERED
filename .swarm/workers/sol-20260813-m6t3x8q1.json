@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260813-m6t3x8q1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-13T22:38:58+00:00",
-  "lastSeenAt": "2026-08-13T22:40:10+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-authority",
-  "branch": "agent/capacity/HG-CAPACITY-MINING-authority-m6t3x8q1",
-  "notes": "Lost higher-priority diagnostics/ObjectGenome/MaterialDNA claim races and rerouted to the successfully claimed authority/multiplayer capacity-mining slot. Source-only mining; no Studio/two-client evidence claim."
+  "lastSeenAt": "2026-08-13T22:43:30+00:00",
+  "notes": "Completed HG-CAPACITY-MINING/mine-authority. Published evt-20260813-224300-m6t3x8q1-authority-capacity-exhausted: no currently safe non-duplicate new authority lane; retained #348/#394/#412 and known deferred Rojo subtree finding cover source gaps, while HG151-TWOCLIENT remains display-blocked. Claim released."
 }
