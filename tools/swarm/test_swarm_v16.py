@@ -83,14 +83,32 @@ class MissionGraphTests(unittest.TestCase):
             root = Path(td); (root/"lanes").mkdir(); (root/"generated").mkdir()
             lanes = [
                 {"schemaVersion":1,"laneId":"HG-BACKFILL-WORLDENTITY","epicId":"HERO-GATE","title":"WorldEntity depth","objective":"fix concrete gaps","priority":5200,"state":"READY","dependencies":[],"writeScopes":["src/shared/Reality/WorldEntity.luau"],"slots":[{"slotId":"primary","role":"source hardening","writeScopes":["src/shared/Reality/WorldEntity.luau"]}],"acceptance":["source accepted"],"blockers":[],"tags":["source-only"]},
-                {"schemaVersion":1,"laneId":"OPS-STUDIO-DISPLAY","epicId":"OPS","title":"Studio display recovery","objective":"restore real Studio runner","priority":9000,"state":"BLOCKED_EXTERNAL","dependencies":[],"writeScopes":["Docs/**"],"slots":[],"acceptance":["real Studio executor available"],"blockers":["External Mac GUI/display recovery required"],"tags":["studio"]},
+                {"schemaVersion":1,"laneId":"OPS-STUDIO-DISPLAY","epicId":"OPS","title":"Studio display recovery","objective":"restore real Studio runner","priority":9000,"state":"BLOCKED_EXTERNAL","dependencies":[{"laneId":"HG-BACKFILL-WORLDENTITY","acceptableStates":["DONE"]}],"writeScopes":["Docs/**"],"slots":[],"acceptance":["real Studio executor available"],"blockers":["External Mac GUI/display recovery required"],"tags":["studio"]},
             ]
             for lane in lanes: (root/"lanes"/f"{lane['laneId']}.json").write_text(json.dumps(lane))
             (root/"generated"/"board.json").write_text(json.dumps({"activeClaims":[],"recentEvents":[{"eventId":"evt-one","eventType":"FINDING","laneId":"HG-BACKFILL-WORLDENTITY","summary":"immutable event fact","timestamp":"2026-08-12T18:00:00Z"}]}))
             graph = migrate_legacy_root(root, main_sha="a"*40, control_sha="b"*40)
             self.assertTrue(graph["migration"]["legacyImported"]); self.assertFalse(graph["migration"]["destructiveActionsAllowed"]); self.assertEqual(graph["metrics"]["legacyLanesImported"], 2)
             studio = graph["objectives"]["ops-studio-display"]; self.assertTrue(studio["externalTruthRequired"]); self.assertEqual(studio["status"], "EXTERNAL_BLOCKED"); self.assertEqual(studio["featureGenome"]["runtimeTruth"]["state"], "BLOCKED")
+            self.assertEqual(studio["dependencies"], ["hg-backfill-worldentity"])
+            self.assertEqual(studio["legacyDependencyRequirements"], [{"laneId":"HG-BACKFILL-WORLDENTITY","acceptableStates":["DONE"]}])
             self.assertTrue(any(m["type"] == "LEGACY_EVENT_FACT" for m in graph["memory"]))
+
+    def test_legacy_migration_rejects_malformed_dependency_shape(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td); (root/"lanes").mkdir(); (root/"generated").mkdir()
+            lane = {"schemaVersion":1,"laneId":"HG-BAD-DEPENDENCY","epicId":"HERO-GATE","title":"Bad dependency","objective":"must fail closed","priority":5000,"state":"READY","dependencies":["HG-MISSING"],"writeScopes":["src/**"],"slots":[{"slotId":"primary","role":"source hardening"}],"acceptance":["never imported"],"blockers":[],"tags":[]}
+            (root/"lanes"/"HG-BAD-DEPENDENCY.json").write_text(json.dumps(lane))
+            (root/"generated"/"board.json").write_text(json.dumps({"activeClaims":[],"recentEvents":[]}))
+            with self.assertRaises(ValidationError): migrate_legacy_root(root, main_sha="a"*40, control_sha="b"*40)
+
+    def test_legacy_migration_rejects_missing_dependency_lane(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td); (root/"lanes").mkdir(); (root/"generated").mkdir()
+            lane = {"schemaVersion":1,"laneId":"HG-MISSING-DEPENDENCY","epicId":"HERO-GATE","title":"Missing dependency","objective":"must fail closed","priority":5000,"state":"READY","dependencies":[{"laneId":"HG-NOT-PRESENT","acceptableStates":["DONE"]}],"writeScopes":["src/**"],"slots":[{"slotId":"primary","role":"source hardening"}],"acceptance":["never imported"],"blockers":[],"tags":[]}
+            (root/"lanes"/"HG-MISSING-DEPENDENCY.json").write_text(json.dumps(lane))
+            (root/"generated"/"board.json").write_text(json.dumps({"activeClaims":[],"recentEvents":[]}))
+            with self.assertRaises(ValidationError): migrate_legacy_root(root, main_sha="a"*40, control_sha="b"*40)
 
     def test_adversarial_30(self):
         result = run_adversarial_simulation(30); self.assertTrue(result["passed"], result)
