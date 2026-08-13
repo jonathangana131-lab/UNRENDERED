@@ -1340,7 +1340,7 @@
     "closedBlockers": 0,
     "duplicateTasksPrevented": 0,
     "legacyLanesImported": 58,
-    "meaningfulProgressEvents": 7,
+    "meaningfulProgressEvents": 8,
     "newLegitimateBlockers": 0,
     "startBlockers": 5,
     "supersededBranches": 0
@@ -1410,7 +1410,7 @@
       "SWARM-V21-PR-OWNERSHIP-RECOVERY",
       "SWARM-V22-THROUGHPUT"
     ],
-    "liveRefreshMainSHA": "ae87515c586dd7024b14eb2d70734cc21d6eb047",
+    "liveRefreshMainSHA": "9c9846c6e40fe0ead47d57fd570936eb86ca801b",
     "phase": "ACTIVE"
   },
   "missions": {
@@ -9579,10 +9579,10 @@
       "userValue": 8
     }
   },
-  "revision": 11,
+  "revision": 12,
   "schemaVersion": 16,
   "solutions": {},
-  "updatedAt": "2026-08-13T23:21:26Z",
+  "updatedAt": "2026-08-13T23:24:52Z",
   "workItems": {
     "legacy-hg-authority-harness-lifecycle-capability-audit": {
       "blockerId": "",
