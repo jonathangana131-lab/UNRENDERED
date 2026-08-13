@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "workerId": "sol-20260813-z7q4m2n8",
+  "claimToken": "82c5d7a14e9f306b",
+  "claimedAt": "2026-08-13T22:46:00+00:00",
+  "heartbeatAt": "2026-08-13T22:46:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/capacity/HG-CAPACITY-MINING-objectgenome-z7q4m2n8",
+  "pr": null,
+  "notes": "Claimed after main-green/unlock review and duplicate suppression. Source-depth audit only; docs/event publication permitted, no feature unlock or Studio/runtime evidence claim."
+}
