@@ -109,7 +109,11 @@ local function run(): number
 	local returnedDiagnosticMutationAccepted = pcall(function()
 		duplicateDiagnostic.incomingKind = "mutated-kind"
 	end)
-	expectEqual("returned duplicate diagnostic rejects top-level mutation", returnedDiagnosticMutationAccepted, false)
+	expectEqual(
+		"returned duplicate diagnostic rejects top-level mutation",
+		returnedDiagnosticMutationAccepted,
+		false
+	)
 	local returnedExistingOriginMutationAccepted = pcall(function()
 		duplicateDiagnostic.existingOrigin.worldId = "world:mutated-existing"
 	end)
