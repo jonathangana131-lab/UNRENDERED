@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "workerId": "sol-20260813-r8m4q7v2",
+  "claimToken": "e6b2d9a41c7f3058",
+  "claimedAt": "2026-08-13T22:42:00+00:00",
+  "heartbeatAt": "2026-08-13T22:42:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-r8m4q7v2",
+  "pr": null,
+  "notes": "Bounded FidelityManager capacity mining on current main and retained Hero-Gate lineages; find one concrete nonduplicate invariant/test/integration gap or publish no-gap finding."
+}
