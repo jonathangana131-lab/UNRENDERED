@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260813-v6n2q9r4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-13T22:46:00+00:00",
-  "lastSeenAt": "2026-08-13T22:46:00+00:00",
-  "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
-  "slotId": "audit",
-  "branch": "agent/review/HG-PHYSICS-RUNTIME-ENTITYID-FENCE-audit-v6n2q9r4",
-  "notes": "Continuing Go cycle after prior premature stop; independent exact-head audit of the retained runtime entity-ID fence only."
+  "lastSeenAt": "2026-08-13T22:55:20+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed continued Go cycle after correcting premature stop. Published WorldEntity test PR #453 at exact head e81c6ceba79b026b385d1d146919f28616c545e2 with canonical CI PASS and Swarm engine-tests PASS; global pr-ownership remains separately fail-closed. Authority mining found no new non-duplicate source gap and recorded a durable finding. Released all claims/resources. Remaining ready-looking work is actively owned, already reviewed, or requires independent review/global recovery."
 }
