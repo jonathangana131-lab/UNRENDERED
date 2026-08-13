@@ -1,5 +1,60 @@
 {
-  "activeClaims": [],
+  "activeClaims": [
+    {
+      "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-audit-r7k4n9p2",
+      "expiresAt": "2026-08-13T23:07:14+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "pr": null,
+      "slotId": "audit",
+      "workerId": "sol-20260813-r7k4n9p2"
+    },
+    {
+      "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n4q7v2m9",
+      "expiresAt": "2026-08-13T23:07:30+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "pr": null,
+      "slotId": "test-adversary",
+      "workerId": "sol-20260813-n4q7v2m9"
+    },
+    {
+      "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-k3r8v1m6",
+      "expiresAt": "2026-08-13T23:19:00+00:00",
+      "generation": 1,
+      "laneId": "HG-CAPACITY-MINING",
+      "pr": null,
+      "slotId": "mine-materialdna",
+      "workerId": "sol-20260813-k3r8v1m6"
+    },
+    {
+      "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-k2m8v4q7",
+      "expiresAt": "2026-08-13T23:10:00+00:00",
+      "generation": 1,
+      "laneId": "HG-CAPACITY-MINING",
+      "pr": null,
+      "slotId": "mine-physics-runtime",
+      "workerId": "sol-20260813-k2m8v4q7"
+    },
+    {
+      "branch": "agent/control/event-identity-compat-g2-eic7n4p2",
+      "expiresAt": "2026-08-13T23:08:00+00:00",
+      "generation": 2,
+      "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+      "pr": null,
+      "slotId": "repair",
+      "workerId": "sol-20260813-eic7n4p2"
+    },
+    {
+      "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-k7m4v9q2-g5",
+      "expiresAt": "2026-08-13T23:22:00+00:00",
+      "generation": 5,
+      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+      "pr": null,
+      "slotId": "primary",
+      "workerId": "sol-20260813-k7m4v9q2"
+    }
+  ],
   "blockedLanes": [
     {
       "laneId": "HERO-DOOR",
@@ -118,91 +173,60 @@
     },
     {
       "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-      "reason": "waiting for SWARM-RECOVERY-WORKER-STATUS-CONTRACT (REVIEW)",
+      "reason": "waiting for SWARM-RECOVERY-WORKER-STATUS-CONTRACT (NEEDS_CHANGES)",
       "state": "BLOCKED"
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-13T22:37:47.199058+00:00",
+  "generatedAt": "2026-08-13T23:07:10.547168+00:00",
   "mainHealth": {
     "conclusion": "success",
-    "headSha": "8134a3962be80e8ba6ec2c27207e44db63e6765c",
+    "headSha": "b87987ff7c96b8dda894942771283aca86b7cfb6",
     "schemaVersion": 1,
     "status": "GREEN",
-    "updatedAt": "2026-08-13T10:11:42+00:00",
-    "workflowRunId": 31689964857
+    "updatedAt": "2026-08-13T23:07:02+00:00",
+    "workflowRunId": 31752596958
   },
   "metrics": {
-    "activeClaims": 0,
+    "activeClaims": 6,
     "activeEpics": [
       "HERO-GATE"
     ],
     "eventCounts": {
       "BLOCKER": 23,
       "DECISION": 2,
-      "DEPENDENCY_DISCOVERED": 16,
+      "DEPENDENCY_DISCOVERED": 17,
       "EVIDENCE_RESULT": 20,
       "EXTERNAL_BLOCKER": 1,
-      "FINDING": 227,
-      "HANDOFF": 66,
+      "FINDING": 239,
+      "HANDOFF": 68,
       "INTEGRATION_RESULT": 11,
       "QUESTION": 1,
       "RECOVERY": 11,
-      "REVIEW_REQUEST": 65,
-      "REVIEW_RESULT": 201,
+      "REVIEW_REQUEST": 67,
+      "REVIEW_RESULT": 204,
       "SUPERSEDED": 1
     },
-    "generatedAt": "2026-08-13T22:37:47.199058+00:00",
+    "generatedAt": "2026-08-13T23:07:10.547168+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
       "BLOCKED_EXTERNAL": 1,
-      "DONE": 14,
+      "DONE": 15,
       "LOCKED": 1,
-      "NEEDS_CHANGES": 1,
+      "NEEDS_CHANGES": 2,
       "PROPOSED": 9,
-      "READY": 7,
-      "REVIEW": 3,
+      "READY": 6,
+      "REVIEW": 2,
       "SUPERSEDED": 2
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 14,
+    "readySlots": 8,
     "reviewBacklog": 4,
     "schemaVersion": 1,
-    "staleClaims": 13
+    "staleClaims": 10
   },
   "readySlots": [
-    {
-      "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
-      "reason": "dependencies satisfied",
-      "resources": [
-        "SWARM-PROTOCOL"
-      ],
-      "role": "Critical exact-identity compatibility repair",
-      "score": 11000,
-      "slotId": "repair",
-      "writeScopes": [
-        "tools/swarm/swarmctl_hardening.py",
-        "tools/swarm/test_swarmctl_hardening.py"
-      ]
-    },
-    {
-      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-      "reason": "dependencies satisfied; unblocks 1 downstream lane(s)",
-      "resources": [
-        "SWARM-PROTOCOL"
-      ],
-      "role": "Independent control schema recovery verifier",
-      "score": 10950,
-      "slotId": "reviewer-1",
-      "writeScopes": [
-        "tools/swarm/swarmctl.py",
-        "tools/swarm/test_swarmctl.py",
-        "tools/swarm/test_swarmctl_hardening.py",
-        "Docs/SWARM_PROTOCOL.md",
-        "Docs/SWARM_CONTROL_PLANE.md"
-      ]
-    },
     {
       "laneId": "HG-BACKFILL-WORLDENTITY",
       "reason": "dependencies satisfied",
@@ -231,34 +255,6 @@
       ]
     },
     {
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Diagnostics lifecycle and no-drift test author",
-      "score": 5070,
-      "slotId": "test-adversary",
-      "writeScopes": [
-        "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
-        "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
-        "tests/**diagnostic*.luau",
-        "tests/hero_gate_contract_integration.luau"
-      ]
-    },
-    {
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Diagnostics failure-path and capture-contract auditor",
-      "score": 4970,
-      "slotId": "audit",
-      "writeScopes": [
-        "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
-        "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
-        "tests/**diagnostic*.luau",
-        "tests/hero_gate_contract_integration.luau"
-      ]
-    },
-    {
       "laneId": "HG-CAPACITY-MINING",
       "reason": "dependencies satisfied",
       "resources": [],
@@ -284,31 +280,9 @@
       "laneId": "HG-CAPACITY-MINING",
       "reason": "dependencies satisfied",
       "resources": [],
-      "role": "Mine MaterialDNA for next concrete depth lane",
-      "score": 3660,
-      "slotId": "mine-materialdna",
-      "writeScopes": [
-        "Docs/**"
-      ]
-    },
-    {
-      "laneId": "HG-CAPACITY-MINING",
-      "reason": "dependencies satisfied",
-      "resources": [],
       "role": "Mine FidelityManager for next concrete depth lane",
       "score": 3650,
       "slotId": "mine-fidelity",
-      "writeScopes": [
-        "Docs/**"
-      ]
-    },
-    {
-      "laneId": "HG-CAPACITY-MINING",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Mine Physics runtime for next concrete depth lane",
-      "score": 3640,
-      "slotId": "mine-physics-runtime",
       "writeScopes": [
         "Docs/**"
       ]
@@ -350,453 +324,84 @@
   "recentEvents": [
     {
       "affects": [
-        "HG-CAPACITY-MINING",
-        "HG-BACKFILL-AUTHORITY",
-        "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
-        "HG-COMPLETION-AUTHORITY",
-        "HG151-TWOCLIENT"
-      ],
-      "eventId": "evt-20260812-111200-q5m8v3n2-authority-no-new-source-gap",
-      "eventType": "FINDING",
-      "evidence": [
-        "Retained authority primary #348 already fails closed on server/client execution context before ReplicatedStorage traversal or module require; retained teardown stack #394 adds source-contract coverage for Studio/server authority, duplicate-start rejection, destroy-before-release, and restart-before-reacquire ordering.",
-        "Retained harness successor #412 already wraps the RealizedLab destroy capability, reconciles external model Destroying/AncestryChanged invalidation, identity-fences reconciliation tokens across generations, and has independent exact-head source/test approval recorded by the authority lane.",
-        "PhysicsLabRealizer publishes server-authored WorldId, RegionId, resolved-region fingerprint/repro key, entity count, and per-entity WorldEntityId/fidelity/recipe/revision attributes on the physical representation; those are sufficient source surfaces for a future real two-client observer/evaluator without inventing a second authority framework.",
-        "HG151-TWOCLIENT explicitly requires a real server plus two distinct clients and depends on OPS-STUDIO-DISPLAY being DONE. No source-only fixture or static audit can satisfy that evidence gate, so implementing a substitute observer transport from this mining slot would violate the scheduler and the evidence boundary.",
-        "HG-COMPLETION-AUTHORITY already retains a separate concrete Rojo deployment-boundary finding: future exclusion coverage must be subtree/prefix-aware rather than replaying PR #300's exact-path count. This audit did not duplicate that finding.",
-        "No local Lune/Luau/Studio/two-client execution was run or claimed by this worker; this is a connector/source audit only."
-      ],
-      "fromWorker": "sol-20260812-q5m8v3n2",
-      "laneId": "HG-CAPACITY-MINING",
-      "metadata": {
-        "candidateBaseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
-        "recommendedNext": "Do not open another source-only authority primary. Recover trusted pr-ownership/event history, integrate retained #348 then #394 and #412 in their declared order, preserve the existing Rojo subtree-exclusion finding, and wait for OPS-STUDIO-DISPLAY before attempting HG151-TWOCLIENT evidence.",
-        "retainedHarnessHead": "807fb042b2fe96db32bda7a5c3346788e828a758",
-        "retainedPrimaryHead": "aa60103d489a055d86cf234dcc1338cf6168e4b3",
-        "retainedTeardownHead": "b38de16ade487ff8ceb48ed3596ebfe33be5fa1f"
-      },
-      "schemaVersion": 1,
-      "severity": "info",
-      "summary": "Authority capacity mining found no additional non-duplicate source-only defect worth spawning while the retained authority stack is blocked on trusted ownership and real two-client evidence remains gated on OPS-STUDIO-DISPLAY. Keep depth-before-breadth: finish the retained #348/#394/#412 lineage and the already-recorded Rojo subtree exclusion follow-up before opening another authority primary.",
-      "timestamp": "2026-08-12T11:12:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-CAPACITY-MINING",
-        "HG-BACKFILL-DIAGNOSTICS"
-      ],
-      "eventId": "evt-20260812-111430-am0s2f7s-live-audit-claim-branch-blocker",
-      "eventType": "BLOCKER",
-      "evidence": [
-        "PR #436 exact head 3640afed8419c18bf14b9939f3af8d86989d6be6 has canonical CI PASS in run 31590597451.",
-        "Swarm Control Plane run 31590597156 has engine-tests PASS but pr-ownership FAIL; job 94094411208 stops at .swarm/claims/HG-BACKFILL-DIAGNOSTICS/audit.json: invalid branch.",
-        "Trusted tools/swarm/swarmctl.py defines BRANCH_RE as ^agent/[A-Za-z0-9._/-]{3,160}$ and validates an optional claim branch against that grammar whenever the field is present.",
-        "The live audit claim uses branch review-only. Reviewer worker sol-20260812-a8v5r2n9 is STOPPED after publishing the generation-14 REQUEST_CHANGES review, but the claim heartbeat remains within its 1800-second lease.",
-        "Docs/SWARM_PROTOCOL.md says never overwrite a live claim. Comment 5265922619 on PR #438 records the exact validator failure and safe repair choices for the owning/recovery lineage."
-      ],
-      "fromWorker": "sol-20260812-am0s2f7s",
-      "laneId": "HG-CAPACITY-MINING",
-      "metadata": {
-        "blockedHeadSha": "3640afed8419c18bf14b9939f3af8d86989d6be6",
-        "blockedPr": 436,
-        "controlRunId": 31590597156,
-        "recommendedNext": "Owning/recovery lineage should release or correct the audit claim using the normal fenced control path. For a review-only claim the optional branch field may be omitted/null; if a review branch exists it must use the accepted agent/... grammar. Revalidate trusted control state before promoting unrelated PRs."
-      },
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Repository-wide PR ownership validation is currently fail-closed on the live HG-BACKFILL-DIAGNOSTICS/audit claim because its branch value is review-only rather than an accepted agent/... branch. The reviewer worker is STOPPED but the claim lease remains live, so this worker will not overwrite or delete another worker's authoritative claim. The diagnostics review lineage has been notified to release/correct it through the normal fenced control path.",
-      "timestamp": "2026-08-12T11:14:30+00:00"
-    },
-    {
-      "affects": [
-        "HG-CAPACITY-MINING",
-        "HG-COMPLETION-AUTHORITY",
-        "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
-        "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING"
-      ],
-      "eventId": "evt-20260812-111430-q5m8v3n2-authority-audit-correction",
-      "eventType": "FINDING",
-      "evidence": [
-        "The pre-existing event 105400-sol-20260812-q8n5v2c7-finding-authority-descendant-liveness.json documents that #412 observes root Destroying/AncestryChanged and exact root Parent drift, but not destructive descendant-only mutation while the root remains parented.",
-        "That event also records that PhysicsLabRealizer.isRepresented() treats a non-nil private-map Instance reference as represented even if the referenced representation has been destroyed/reparented, while retained #349 adds an exact-instance ownership predicate for diagnostics but not harness reconciliation.",
-        "This worker's 11:12 event should therefore be interpreted only as 'do not spawn another authority primary from this audit'; it does not retire or negate the existing descendant-liveness follow-on or the older Rojo subtree-exclusion finding.",
-        "No product code, Studio execution, two-client execution, or local test run is claimed by this correction."
-      ],
-      "fromWorker": "sol-20260812-q5m8v3n2",
-      "laneId": "HG-CAPACITY-MINING",
-      "metadata": {
-        "correctsEventId": "evt-20260812-111200-q5m8v3n2-authority-no-new-source-gap",
-        "preserveFindingEventId": "evt-20260812t105400z-q8n5v2c7-authority-descendant-liveness",
-        "recommendedNext": "Keep the authority slot closed for new primaries. After trusted ownership recovers and retained #348/#394/#412 plus #349 can integrate, schedule the already-recorded bounded descendant-liveness follow-on; do not substitute source-only work for HG151-TWOCLIENT evidence."
-      },
-      "schemaVersion": 1,
-      "severity": "info",
-      "summary": "Correction to this worker's 11:12 authority saturation note: no NEW non-duplicate authority defect was found by this pass, but the existing 10:54 authority-descendant-liveness finding remains actionable queued source debt and must not be read as superseded. That finding is narrower than a new authority primary: descendant-only destruction/reparenting can leave #412's root-only harness reconciliation bound to stale representation-map entries, with #349's exact ownsRepresentation seam available for a future post-lineage repair.",
-      "timestamp": "2026-08-12T11:14:30+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-PHYSICS-GEOMETRY",
-        "HG-COMPLETION-PHYSICS",
-        "HERO-GATE"
-      ],
-      "eventId": "evt-20260812-111518-p3x7m4q8-physics-ramp-floor-overlap",
-      "eventType": "FINDING",
-      "evidence": [
-        "Current main PhysicsLabRecipe authors floor centerY=-0.10 m and sizeY=0.20 m, so floorTop=0. It authors ramp sizeM=(3.00,0.20,1.25), positionM.y=0.42, rotationDeg.z=-14, anchored=true, collidable=true, role='incline contact test'.",
-        "PhysicsLabRealizer realizes authored rotation as CFrame.new(position) * CFrame.Angles(rad(x),rad(y),rad(z)); there is no alternate axis convention or post-placement offset. For the ramp rectangle, world half-height = 1.50*sin(14deg) + 0.10*cos(14deg) = 0.459912416 m, so minY = 0.42 - 0.459912416 = -0.039912416 m.",
-        "Retained geometry test PR #393 exact head f64f841b25a3fa50203137eff86b48192e70a597 computes the ramp low TOP-surface Y as centerY - halfRun*sin(angle) + halfThickness*cos(angle), requiring that surface to remain between floorTop and firstStairTop and the incline to remain <=15 degrees. At current values that top surface is ~0.154147 m; the assertion does not check the lower solid corner/face against floorTop.",
-        "The earlier generic placement-containment finding evt-20260812-083145-p423v7r4-physics-placement-containment explicitly did not assert a current canonical intersection, while this finding identifies a concrete current primitive/primitive overlap. The later no-new-gap event evt-20260812t091120z-r7m4k9q2-physics-geometry-no-gap concerns capture detecting drift from canonical geometry and does not establish that the canonical geometry itself is non-interpenetrating.",
-        "Retained PR #423 changes PhysicsLabScale/PhysicsLabValidationContract and scale tests, not PhysicsLabRecipe ramp placement; no existing RAMP/incline-specific lane was found in the live lane catalog.",
-        "No production code was changed, no executable test was run by this worker, and no Roblox Studio, engine-contact, physical-settling, viewport, diagnostics-capture, or multiplayer evidence is claimed."
-      ],
-      "fromWorker": "sol-20260812-p3x7m4q8",
-      "laneId": "HG-CAPACITY-MINING",
-      "metadata": {
-        "mainShaInspected": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
-        "recommendedLane": "HG-PHYSICS-RAMP-FLOOR-SEAM",
-        "recommendedNext": "When the scheduler explicitly unlocks the leaf, decide the intended seam contract (non-penetrating tangent/support versus a documented deliberate embed), encode that contract in canonical recipe geometry, and add a pure rotated-envelope regression that fails if the ramp solid crosses floorTop accidentally. Preserve the existing incline role/angle/size unless a reviewed physical reason requires changing them; do not substitute source math for Studio contact/settling evidence.",
-        "retainedGeometryPr": 423
-      },
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "Physics Lab geometry capacity mining found a concrete authored overlap at the fixed incline/floor seam: with the canonical ramp size 3.00 x 0.20 x 1.25 m, center Y 0.42 m, and -14 degree Z rotation, the ramp's lowest solid corner resolves to Y=-0.039912416 m while the floor top is Y=0. The two anchored collidable primitives therefore geometrically interpenetrate by about 3.99 cm. Existing retained ramp checks constrain the low top-surface lip and incline angle but do not assert the ramp solid's lower support envelope against the floor plane. This is source geometry evidence only; no Roblox contact behavior is claimed.",
-      "timestamp": "2026-08-12T11:15:18+00:00"
-    },
-    {
-      "affects": [
-        "HG-CAPACITY-MINING",
-        "HG-BACKFILL-DIAGNOSTICS"
-      ],
-      "eventId": "evt-20260812-111800-am0s2f7s-lease-expiry-sentinel-recovery",
-      "eventType": "RECOVERY",
-      "evidence": [
-        "Latest observed control head 5989fed9d9a259009e194551fa34dbc11d6ef493 fails Swarm Control Plane run 31591053765 in validate-control-branch job 94095840088 after both deterministic swarm test suites pass.",
-        "The first validator error is .swarm/claims/HG-BACKFILL-DIAGNOSTICS/test-adversary.json: leaseSeconds out of bounds.",
-        "That claim belongs to active worker sol-20260812-q5m8v3n2 and explicitly uses leaseSeconds=1 as an intentional expiry sentinel after completing draft PR #439.",
-        "The same worker's stale HG-CAPACITY-MINING/mine-authority claim also uses leaseSeconds=1, so a second schema-invalid record remains behind the first.",
-        "Trusted tools/swarm/swarmctl.py validates leaseSeconds in the inclusive 300..14400 range; an out-of-range lease is invalid control data, not a valid stale-claim encoding.",
-        "Comment 5265965157 on PR #439 gives the owning lineage the exact failure and safe repair direction. No foreign claim was overwritten or deleted."
-      ],
-      "fromWorker": "sol-20260812-am0s2f7s",
-      "laneId": "HG-CAPACITY-MINING",
-      "metadata": {
-        "blockedHeadSha": "3640afed8419c18bf14b9939f3af8d86989d6be6",
-        "blockedPr": 436,
-        "controlRunId": 31591053765,
-        "recommendedNext": "Owning/recovery lineage should release completed claims through the normal fenced path or retain schema-valid lease metadata. Re-run trusted control validation; do not use leaseSeconds below 300 as an expiry sentinel.",
-        "supersedesEvent": "evt-20260812-111430-am0s2f7s-live-audit-claim-branch-blocker"
-      },
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Supersedes the earlier live-audit-branch blocker: that malformed audit claim has been released. Trusted control now fails first because completed claims were intentionally expired with leaseSeconds=1, but the authoritative claim schema accepts only 300..14400 seconds. The active owner has been notified; this worker will not rewrite another worker's claim records.",
-      "timestamp": "2026-08-12T11:18:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-CAPACITY-MINING",
-        "HG-PHYSICS-RUNTIME-SYNTHESIS"
-      ],
-      "eventId": "evt-20260812-111800-p6v3k8n2-realizer-step-prefence-mutation",
-      "eventType": "FINDING",
-      "evidence": [
-        "Inspected main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 PhysicsLabRealizer: step first checks destroyed, reads the current record, then calls FidelityManager.selectDesiredLevel(inputs, nil, current.fidelity); only afterward does it call runtime:step(...).",
-        "The same Realizer exposes destroy(), which sets destroyed=true, destroys the model, clears the representation map, and calls runtime:dispose(). There is no Realizer-local step transaction flag guarding destroy or recursive step during the preflight call.",
-        "Inspected retained runtime synthesis PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754: PhysicsLabRuntime raises transitionInFlight around the entire FidelityManager.step specifically so caller-owned PolicyInputs cannot mutate/dispose runtime authority through policy metamethods before the transition hook. That fence starts only inside runtime:step and therefore cannot cover the Realizer's earlier selectDesiredLevel call.",
-        "FidelityManager at the retained #408 head validates/evaluates PolicyInputs by direct field reads such as inputs.distanceStuds, inputs.significance, inputs.visible, and inputs.directlyObserved without a plain-table/no-metatable preflight. A caller-controlled __index can therefore execute while Realizer is still outside the runtime fence.",
-        "Concrete source-level sequence: an inputs __index invokes realized.destroy() on its first field read and returns otherwise-valid values; destroy succeeds because runtime transitionInFlight is still false; selectDesiredLevel may continue; the subsequent runtime:step then rejects because runtime is disposed. The rejected outer step is therefore not lifecycle-fail-atomic.",
-        "Repository PR/issue search found no PhysicsLabRealizer pre-fence policy-input mutation/reentrancy repair. Existing #388/#408 fixes are runtime-local, and the already-proposed runtime recipe closed-shape leaf concerns constructor container validation rather than representation-adapter step mutation.",
-        "No product source, tests, Roblox Studio run, viewport/contact/two-client evidence, or runtime performance claim was produced by this capacity-mining slot."
-      ],
-      "fromWorker": "sol-20260812-p6v3k8n2",
-      "laneId": "HG-CAPACITY-MINING",
-      "metadata": {
-        "candidateBaseSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
-        "recommendedLaneId": "HG-PHYSICS-REALIZER-STEP-MUTATION-FENCE",
-        "recommendedNext": "After HG-PHYSICS-RUNTIME-SYNTHESIS is integrated or its invariant is otherwise retained, close the adapter gap without weakening the runtime fence: ensure no caller-owned PolicyInputs are dereferenced before a Realizer-level lifecycle/mutation transaction is active (or remove the duplicate pre-evaluation and fail closed inside the guarded transition path), reject destroy/step reentry while that transaction is active, and add a deterministic adversary proving hostile policy access cannot destroy or transition the lab and that an immediate valid retry remains possible. Keep the repair source-only unless genuine engine evidence is actually run.",
-        "retainedRuntimePr": 408
-      },
-      "schemaVersion": 1,
-      "severity": "medium",
-      "summary": "PhysicsLabRealizer.step inspects caller-owned FidelityManager PolicyInputs through selectDesiredLevel before entering PhysicsLabRuntime's retained whole-step mutation fence. A metatable-backed input can therefore execute RealizedLab.destroy (or another Realizer mutation) during this preflight, destructively tearing down the model/runtime before the guarded runtime:step begins. The outer step then fails, but the caller-controlled rejected input has already caused authoritative/representation lifecycle mutation.",
-      "timestamp": "2026-08-12T11:18:00+00:00"
-    },
-    {
-      "affects": [
         "HG-BACKFILL-DIAGNOSTICS",
         "HG151-DIAGNOSTICS"
       ],
-      "eventId": "evt-20260812-111900-q5m8v3n2-diagnostics-g14-return-bypass-review",
+      "eventId": "evt-20260813-224700-n4q7v2m9-diagnostics-toggle-failure-cleanup-regression",
+      "eventType": "HANDOFF",
+      "evidence": [
+        "Existing finding evt-20260812-110900-am0s2f7s-diagnostics-toggle-failure-cleanup identifies the same retained defect: after enable(lab), enabled-window capture/comparison/assertions can throw before disable(lab), leaving the owned diagnostics overlay live.",
+        "Primary generation-16 PR #441 exact inspected head b8ca3302cc3012011fb911ad3df5dc878130c133 retains the same runToggleEvidence() production ordering; its generation-16 delta is clone-proof test hardening, not a failure-cleanup repair.",
+        "Support branch agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n4q7v2m9 head 4633472020ec5af8f8da6eead35bbd75eed7662e adds tests/physics_lab_diagnostics_toggle_failure_cleanup.luau and registers it in tests/hero_gate_contract_integration.luau; compare against main 8134a3962be80e8ba6ec2c27207e44db63e6765c shows exactly those two test files and no production changes.",
+        "The new source-contract assertion requires a protected post-enable validation phase whose failure path disables diagnostics before propagating the original validation failure; current production structure intentionally fails this new regression.",
+        "No Actions run exists for the support branch because no PR could be opened. No local Pure Luau, Roblox Studio, viewport, physical-contact, performance-device, or two-client test was run or claimed in this session.",
+        "Primary PR #441 received top-level handoff comment id 5287252362 with exact branch/head, defect, expected-red status, and absorption guidance."
+      ],
+      "fromWorker": "sol-20260813-n4q7v2m9",
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "metadata": {
+        "prPublication": "BLOCKED_TOOL_SURFACE",
+        "primaryCommentId": 5287252362,
+        "primaryHeadSha": "b8ca3302cc3012011fb911ad3df5dc878130c133",
+        "primaryPr": 441,
+        "recommendedNext": "Primary diagnostics worker or a successor with a functioning PR-creation surface should absorb equivalent regression coverage together with the bounded production cleanup repair. Preserve enabled-window validation-before-disable semantics, guarantee owned-overlay cleanup on every post-enable failure path, preserve the original evidence failure when cleanup succeeds, and do not claim Studio PASS from this source-only handoff.",
+        "supportBranch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n4q7v2m9",
+        "supportHeadSha": "4633472020ec5af8f8da6eead35bbd75eed7662e"
+      },
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "The known diagnostics toggle-evidence failure-atomicity gap now has an isolated expected-red regression on a published support branch. The available GitHub connector refused PR creation twice and local gh is not installed, so the exact branch/head and absorption guidance were posted directly to primary PR #441 instead of fabricating a PR or Studio result.",
+      "timestamp": "2026-08-13T22:47:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-CAPACITY-MINING",
+        "HG-BACKFILL-DIAGNOSTICS"
+      ],
+      "eventId": "evt-20260813-224855-j4n7q2v9-diagnostics-docs-g2-review-request",
+      "eventType": "REVIEW_REQUEST",
+      "evidence": [
+        "PR #436 exact head 8884e559ac12526ae97c45e26aa93283b69d0509; mergeable, draft, one changed file Docs/PHYSICS_LAB_DIAGNOSTICS.md",
+        "Canonical CI run 31751389573 PASS on exact head: format, lint, Luau analysis, randomness/boundary audits, deterministic swarm tests, pure Luau tests, and place build all passed",
+        "Generation 2 corrected the stale claim that runToggleEvidence validates the enabled canonical window before disable; current source disables first, validates the off snapshot, and yields RunService.Heartbeat around bounded cycles",
+        "Failure-atomicity probe remains aligned with current source: numeric UNRENDERED_RepresentationClass bypasses preflight, final capture rejects inside the protected transaction, and rollback destroys the exact owned diagnostics folder before rethrow",
+        "Swarm Control run 31751389611 FAIL is separately owned: deterministic/adversarial tests pass, while read-only trust bootstrap fails and pr-ownership stops at Require live state to equal separately trusted state before ownership enforcement",
+        "Current main 8134a3962be80e8ba6ec2c27207e44db63e6765c was independently observed green after PR #450; do not mutate trust recovery from this docs lane",
+        "No local repository execution, Studio, viewport, physical-contact, persistence, networking, or two-client evidence was run or claimed"
+      ],
+      "fromWorker": "sol-20260813-j4n7q2v9",
+      "laneId": "HG-CAPACITY-MINING",
+      "metadata": {
+        "headSha": "8884e559ac12526ae97c45e26aa93283b69d0509",
+        "pr": 436
+      },
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "Generation-2 stale takeover refreshed docs-only PR #436 against current diagnostics source semantics and requests independent exact-head docs/evidence-boundary review. Product CI is green; Swarm Control remains fail-closed at separate trust-ledger convergence and must not be bypassed.",
+      "timestamp": "2026-08-13T22:48:55+00:00"
+    },
+    {
+      "affects": [
+        "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+        "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
+      ],
+      "eventId": "evt-20260813-224900-v16rvw2-event-identity-main-review",
       "eventType": "REVIEW_RESULT",
       "evidence": [
-        "PR #438's hasCompleteCloneProof() only proves modelArchivable < descendantBlock < cloneLab. It does not prove that control flow cannot return before descendantBlock, so a conditional helper return can bypass the proof while all searched source text remains present and ordered.",
-        "Test-adversary PR #439 is stacked exactly on #438 head 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c and changes one lane-owned test file by adding only a conditional-preproof-return mutant and the expectation that hasCompleteCloneProof rejects it.",
-        "Expected-red head c7246532e1c0c92ff0a417f702de11d0751e64f1 canonical CI run 31590808024 / validate job 94095070609: toolchain, sourcemap, pinned type definitions, format, lint, Luau analysis, canonical-randomness audit, shared-domain boundary audit, plain-value audit, and Swarm deterministic tests all PASS; Pure Luau is the first and only failing step, after which place build/upload are skipped.",
-        "Swarm Control Plane engine-tests check 94095070755 is PASS on the same adversarial head. No Studio, viewport, physical-contact, performance-device, or two-client evidence is run or claimed.",
-        "The production helper on #438 remains coherent and unchanged by #439; this is a regression-contract false-pass blocker. A successor should absorb equivalent conditional pre-proof return coverage and harden the matcher so every helper path reaching clone/canonical-return must pass through the exhaustive Archivable proof."
+        "main 8134a3962be80e8ba6ec2c27207e44db63e6765c hardening registry pins evt-20260811-081620-mat8c3r1-materialdna-key-grammar to canonical Git blob 9a7f679ea84600d6a28a8bef02436e5f85fd857e.",
+        "Current hardening tests cover exact canonical blob acceptance without mutation, one-byte mutation rejection, canonical path/eventId substitution rejection, date clone rejection, duplicate eventId rejection, fresh backdated legacy rejection, malformed affects non-generalization, and transition replay/re-add rejection.",
+        "Base transition_check rejects immutable event byte changes and deletions; current main CI and Swarm Control were observed green on 8134a3962be80e8ba6ec2c27207e44db63e6765c.",
+        "PR #328 is closed unmerged and non-mergeable; later trusted-history recovery on main supersedes its timestamp-based compatibility architecture."
       ],
-      "fromWorker": "sol-20260812-q5m8v3n2",
-      "headSha": "3d9a1e4bfc322b4dd634718719eeb4b23552ff9c",
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "metadata": {
-        "canonicalCiJob": 94095070609,
-        "canonicalCiRun": 31590808024,
-        "requiredRepair": "Absorb the conditional helper-return mutant and make the source contract reject any pre-proof control-flow return/bypass while preserving the exact exhaustive descendant loop, exact overlay exemption, and clone ordering. Production diagnostics behavior need not change for this blocker.",
-        "reviewWorker": "sol-20260812-q5m8v3n2",
-        "supportHeadSha": "c7246532e1c0c92ff0a417f702de11d0751e64f1",
-        "supportPr": 439
-      },
-      "pr": 438,
+      "fromWorker": "sol-20260813-v16rvw2",
+      "headSha": "85c49c28db117e00301626823c4000521f32104a",
+      "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+      "pr": 328,
       "schemaVersion": 1,
-      "severity": "high",
-      "summary": "REQUEST_CHANGES on PR #438 exact head 3d9a1e4bfc322b4dd634718719eeb4b23552ff9c: generation-14's strengthened clone-completeness matcher rejects loop-local early exits and dead wrappers, but still false-passes a helper-level conditional return placed before the unchanged exact descendant proof. Test-adversary PR #439 reproduces the gap as isolated expected-red Pure Luau evidence.",
-      "timestamp": "2026-08-12T11:19:00+00:00",
-      "verdict": "REQUEST_CHANGES"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-DIAGNOSTICS",
-        "HG151-DIAGNOSTICS"
-      ],
-      "eventId": "evt-20260812-112100-q5m8v3n2-diagnostics-g15-absorb-return-bypass",
-      "eventType": "DEPENDENCY_DISCOVERED",
-      "evidence": [
-        "PR #440's test patch masks strings/comments and adds inert-comment/inert-string mutants, correctly consuming evt-20260812-111100-a8v5r2n9-diagnostics-g14-review-result.",
-        "The same #440 patch leaves hasCompleteCloneProof's acceptance condition as modelArchivable ~= nil, descendantBlock ~= nil, cloneLab ~= nil, modelArchivable < descendantBlock, descendantBlock < cloneLab. There is no pre-proof control-flow guard and no conditional-return mutant.",
-        "PR #439 exact head c7246532e1c0c92ff0a417f702de11d0751e64f1 is stacked on #438 and changes one test file only. Its conditional-return mutant preserves all of #440's searched executable text and ordering, so inert-source masking does not address that bypass.",
-        "#439 canonical CI run 31590808024 / job 94095070609 passes format, lint, Luau analysis, architecture audits, and Swarm deterministic tests before failing at Pure Luau as expected; engine-tests check 94095070755 passes on the same head.",
-        "GitHub PR #440 conversation comment 5265956169 hands the blocker directly to the generation-15 primary. No second competing generation-15 implementation is opened by this worker."
-      ],
-      "fromWorker": "sol-20260812-q5m8v3n2",
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "metadata": {
-        "primaryPr": 440,
-        "requiredNext": "Generation-15 primary should absorb equivalent conditional pre-proof return coverage and harden the matcher so no helper path can return before the exhaustive proof while still reaching a successful contract outcome. Keep production diagnostics unchanged unless a separate production defect is found; rerun fresh exact-head CI and independent review after absorption.",
-        "supportHeadSha": "c7246532e1c0c92ff0a417f702de11d0751e64f1",
-        "supportPr": 439
-      },
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Generation-15 PR #440 addresses the independent inert long-comment/long-string blocker but was published before the concurrent conditional pre-proof return blocker from test-adversary PR #439 was absorbed. Its patched hasCompleteCloneProof still masks inert source then uses the same modelArchivable < descendantBlock < cloneLab positional predicate, so #439 remains a required input before generation 15 can return to review.",
-      "timestamp": "2026-08-12T11:21:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-CAPACITY-MINING",
-        "HG-BACKFILL-FIDELITY",
-        "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
-        "HG-FIDELITY-MANAGER-STATE-ENCAPSULATION",
-        "HG-FIDELITY-CONFIG-CLOSED-SHAPE"
-      ],
-      "eventId": "evt-20260812-112300-f6r3m8v2-fidelity-no-new-leaf",
-      "eventType": "FINDING",
-      "evidence": [
-        "Retained Fidelity primary PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 documents and tests fail-closed PolicyConfig/PolicyInputs/timestamp validation, rejected-step atomicity, transactional transition hooks, same-entity reentrancy fencing, retry after callback failure, cross-entity isolation, and bounded aggregate accounting; canonical CI and Swarm engine-tests are retained green per lane state.",
-        "Retained capacity PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 adds the explicit project-owned MAX_REGISTERED_ENTITIES=65536 ceiling while retaining the 4096 default; canonical CI run 31545808224 and Swarm engine-tests were green on that exact head. Integration remains separately blocked by trusted-control ownership recovery.",
-        "Inspection of FidelityManager.luau at #419 head confirms the remaining direct caller-mutability of config/_states/_metrics described by proposed HG-FIDELITY-MANAGER-STATE-ENCAPSULATION; this pass found no distinct state-capability defect outside that planned repair.",
-        "Inspection of validateConfig()/copyConfig() and validateInputs() at #419 head confirms unknown keys are not enumerated/rejected, matching proposed HG-FIDELITY-CONFIG-CLOSED-SHAPE. That proposed leaf already covers both config and runtime input extras, including hostile/non-string keys and bounded exact-shape validation.",
-        "The manager's bounded string entityId check was not promoted as a new independent leaf in this pass: the documented production integration flow treats WorldEntity as authoritative, and the PhysicsLabRuntime identity boundary already has a retained WorldEntity.isId hardening lineage (#402). Any future direct-production FidelityManager caller should reuse the stable-ID boundary rather than justify a competing identity framework.",
-        "No source/test edits, local Luau/Lune execution, Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence are claimed by this mining pass."
-      ],
-      "fromWorker": "sol-20260812-f6r3m8v2",
-      "laneId": "HG-CAPACITY-MINING",
-      "metadata": {
-        "recommendedAction": "Finish/integrate retained Fidelity lineages after trusted ownership recovery, then sequence existing state-encapsulation and closed-shape leaves; do not add another overlapping FidelityManager lane from this audit.",
-        "result": "NO_NEW_NON_DUPLICATE_LEAF",
-        "retainedCapacityPr": 419,
-        "retainedFidelityPr": 385
-      },
-      "schemaVersion": 1,
-      "severity": "info",
-      "summary": "Fidelity capacity recheck found no additional non-duplicate source leaf worth opening. The retained lineage through PR #419 already covers malformed PolicyConfig/PolicyInputs/time no-execute boundaries, rejected-step and transition-callback atomicity/retry, same-entity transition fencing, cross-entity isolation, deterministic F0-F4 accounting, and a project-owned registration ceiling. The two remaining concrete manager-local gaps found in current source are already represented by proposed HG-FIDELITY-MANAGER-STATE-ENCAPSULATION and HG-FIDELITY-CONFIG-CLOSED-SHAPE; do not create a third overlapping FidelityManager hardening lane from this pass.",
-      "timestamp": "2026-08-12T11:23:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-FIDELITY",
-        "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING"
-      ],
-      "eventId": "evt-20260812-080600-r7m2v9c4-fidelity-manager-state-encapsulation",
-      "eventType": "FINDING",
-      "evidence": [
-        "PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 retains ManagerImpl fields config, _states, and _metrics directly on the manager table; FidelityManager.new() constructs that table and returns setmetatable(self, FidelityManager) without table.freeze on the facade or closure-private state storage.",
-        "On the same retained head, step() reads self.config, register/get/unregister/step read or mutate self._states, and getMetrics()/transition paths trust self._metrics. Direct table mutation can therefore change effective policy/state/accounting outside validation and transaction boundaries.",
-        "The retained Fidelity lanes already cover malformed PolicyConfig/PolicyInputs/time no-execute behavior, callback atomicity/reentrancy, cross-entity isolation, and the 65,536 registration ceiling; repository PR/issue searches found no existing FidelityManager facade/state-encapsulation repair, so this is not a duplicate of #385, #398, or #419.",
-        "PhysicsLabRuntime retained synthesis PR #408 already uses the desired project pattern for mutable authority-adjacent state: closure-private weak-key runtimeStates plus a frozen public Runtime facade, while consuming FidelityManager only through public methods. That provides a compatible architectural precedent rather than a new framework.",
-        "No local Luau/Lune execution, Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence is claimed; this is a source-contract capacity-mining finding only."
-      ],
-      "fromWorker": "sol-20260812-r7m2v9c4",
-      "laneId": "HG-CAPACITY-MINING",
-      "schemaVersion": 1,
-      "severity": "MEDIUM",
-      "summary": "Retained FidelityManager source still exposes its mutable ManagerImpl as the public runtime object. FidelityManager.new() returns setmetatable(self, FidelityManager) without freezing the facade or moving config/_states/_metrics behind closure-private storage. A holder can therefore replace manager.config after construction or mutate manager._states / manager._metrics directly, bypassing the copied/frozen config ownership, F0-F4 accounting, registration bound, transition fence, and rejected-step atomicity contracts without going through a validated manager method. Recommend a bounded follow-on leaf after the retained Fidelity/capacity lineages integrate: keep the current public methods/API, move mutable ManagerState behind a weak-key closure-private map (or equivalent non-exposed capability), freeze the public facade, and add adversarial regressions proving direct facade writes cannot alter config, observed fidelity, registration/count metrics, or transition fencing.",
-      "timestamp": "2026-08-12T08:06:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS"
-      ],
-      "eventId": "evt-20260812-081430-m4d7n2q9-materialdna-closed-record-bounds",
-      "eventType": "FINDING",
-      "evidence": [
-        "Retained MaterialDNA PR #353 exact head 10559afdce1a1854e7932522f6e78561736c8ed3 implements validateKnownFields() as an unrestricted pairs(record) loop and appendError() for every unknown/non-string key. The helper is used for the top-level recipe/state/reference records and all nested closed recipe records.",
-        "The closed schemas are finite fieldSet tables, so a valid record can contain only that small finite number of distinct allowed keys; after all allowed keys have been encountered, any additional key is necessarily invalid. Continuing across an arbitrarily oversized malformed table is not required to decide validity.",
-        "Docs/MATERIAL_DNA_CONTRACT.md describes recipe validation/freezing as bounded content-generation/persistence work. Existing history/anomaly cardinality caps and proposed HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS address dense-array work, but they do not bound validateKnownFields() or its diagnostics array.",
-        "Existing MaterialDNA regressions cover one unknown top-level field and one unknown nested field, metatable rejection, immutable freezing, exact repairCount, dense/sparse arrays, and fixture identity; no retained test exercises many unknown closed-record keys or bounds ValidationResult.errors cardinality.",
-        "Repository PR search found no separate MaterialDNA unknown-field/error-budget repair; folding this into the existing proposed dense-bounds leaf avoids duplicate WIP.",
-        "No local Luau/Lune execution, Roblox Studio, viewport, timing benchmark, physical-contact, or two-client evidence is claimed; this is a source-contract capacity-mining finding only."
-      ],
-      "fromWorker": "sol-20260812-m4d7n2q9",
-      "laneId": "HG-CAPACITY-MINING",
-      "schemaVersion": 1,
-      "severity": "MEDIUM",
-      "summary": "MaterialDNA closed-record validation remains input-cardinality unbounded even after the retained counter fix and the existing proposed dense-array bound. validateKnownFields() iterates every supplied key and appends a distinct diagnostic for every unknown/non-string key. Because MaterialRecipe and each nested record have tiny fixed closed schemas but callers may supply arbitrarily oversized plain tables, malformed input can force O(N) scan work and O(N) error-string allocation before fail-closed rejection. This should be absorbed into the already-proposed HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS leaf rather than spawning another lane: bound closed-record validation to the finite schema (for example return after the first unknown key, which necessarily occurs within allowed-field-count + 1 examined keys) and add a large-unknown-field regression proving bounded diagnostics without claiming timing evidence.",
-      "timestamp": "2026-08-12T08:14:30+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS"
-      ],
-      "eventId": "evt-20260812-082034-w3n8q6v2-objectgenome-recipe-cardinality",
-      "eventType": "FINDING",
-      "evidence": [
-        "Retained ObjectGenome PR #395 source head 9446081669aea7087dfe7ea0a0722d9359f07b15 defines validateDenseArray(issues, path, value) with no maxCount parameter or fixed cardinality ceiling; it scans every supplied key to establish density and returns maxIndex.",
-        "ObjectGenome.inspect() invokes validatePlainGenomeTables() and validateGenomeShape() before validateDenseArray(components). Both helpers enumerate caller-supplied components/mechanisms/affordances, so a cardinality check added only at the existing dense-array call would be too late to bound hostile oversized input.",
-        "Each component.supportKeys uses the same uncapped dense-array helper; later support validation walks those arrays, cycle detection walks support edges, and external-support reachability can make up to componentCount full passes over components. A project-owned component/support ceiling therefore bounds both malformed-input validation and valid canonical graph work.",
-        "recipeFingerprint() recursively collects and sorts every validated table key, and ObjectGenomeOwnership owns/clones validated recipe collections. An early recipe cardinality fence bounds these downstream identity/ownership paths without changing the fingerprint algorithm for previously valid under-cap genomes.",
-        "Retained PR #395 already closes familyVersion bounds, semantic-key byte limits, deterministic issue ordering, ObjectState alias rejection, and strict mechanism decode shape. Existing HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS separately covers mutable ObjectState map cardinality; repository PR/lane search found no recipe-array cardinality repair, so this finding extends that proposed bounded-work leaf rather than duplicating it.",
-        "No numeric cap is invented by this mining result: implementation should choose named project-owned maxima from existing canonical fixtures/resource budgets and prove exact-cap acceptance plus cap+1 rejection. No local Luau/Lune execution, Roblox Studio, timing benchmark, physical-contact, or two-client evidence is claimed."
-      ],
-      "fromWorker": "sol-20260812-w3n8q6v2",
-      "laneId": "HG-CAPACITY-MINING",
-      "schemaVersion": 1,
-      "severity": "MEDIUM",
-      "summary": "Retained ObjectGenome generation-8 still has no project-owned cardinality ceiling for immutable recipe collections. components, each component.supportKeys, mechanisms, and affordances are validated as dense arrays but validateDenseArray only proves shape and returns the observed size. More importantly, inspect() traverses top-level recipe collections in validatePlainGenomeTables() and validateGenomeShape() before reaching validateDenseArray, so adding a late cap alone would not bound malformed-input work. Component support reachability can also perform componentCount passes across all components. Fold this into the already-proposed HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS leaf rather than creating overlapping ObjectGenome WIP: introduce named recipe collection maxima and enforce them at bounded preflight points before nested shape/graph/fingerprint/ownership traversal, with exact-cap/cap+1 regressions and unchanged under-cap canonical identity.",
-      "timestamp": "2026-08-12T08:20:34+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-PHYSICS-GEOMETRY"
-      ],
-      "eventId": "evt-20260812-082430-g6p2v8n4-physics-recipe-genome-key-noexecute",
-      "eventType": "FINDING",
-      "evidence": [
-        "PR #423 exact head aad25ec8aeef7437ad0938ead2259a6e39f3670f retains PhysicsLabRecipe.objectGenome(key) as: local genome = OBJECT_GENOMES[key]; assert(genome ~= nil, `unknown Physics Lab ObjectGenome key {key}`); return genome. There is no runtime primitive-string check before interpolation.",
-        "The same repository has already established this threat model in Physics Lab runtime hardening: retained PR #310 explicitly adds primitive-string checks so hostile non-string entity/schema keys cannot execute __tostring during diagnostics. The objectGenome helper remains outside that runtime input preflight.",
-        "tests/physics_lab_recipe.luau exercises canonical objectGenome lookups such as commercialDoor and the recipe's generated genomeKey values, but has no malformed dynamic-key/no-execute regression.",
-        "PR search for PhysicsLabRecipe.objectGenome found geometry/representation consumers but no dedicated hostile-key/no-execute repair; the active #423 lineage is about scale conversion overflow and should not be widened during REVIEW.",
-        "No local Luau/Lune execution, Roblox Studio, viewport, physical-contact, timing, or two-client evidence is claimed; this is a source-contract capacity-mining finding only."
-      ],
-      "fromWorker": "sol-20260812-g6p2v8n4",
-      "laneId": "HG-CAPACITY-MINING",
-      "schemaVersion": 1,
-      "severity": "MEDIUM",
-      "summary": "PhysicsLabRecipe.objectGenome() has a small retained no-execute boundary gap independent of the active scale-overflow review. The exported helper accepts a statically typed ObjectGenomeKey but performs OBJECT_GENOMES[key] and then interpolates the original caller value in the unknown-key assert before runtime-proving that the key is a primitive string. A metatable-backed table passed through any/dynamic code can therefore execute caller __tostring during fail-closed rejection. Recommend a bounded follow-on source leaf after the current physics-geometry line completes: primitive-type-check the key before lookup/diagnostics, keep unknown-string rejection generic/safe, and add a zero-metamethod-execution regression while preserving every known canonical genome mapping.",
-      "timestamp": "2026-08-12T08:24:30+00:00"
-    },
-    {
-      "affects": [
-        "HG-FIDELITY-CONFIG-CLOSED-SHAPE"
-      ],
-      "eventId": "evt-20260812-083120-w3n8q6v2-fidelity-policyinputs-closed-shape",
-      "eventType": "FINDING",
-      "evidence": [
-        "Retained Fidelity capacity PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 defines PolicyInputs with exactly seven fields: distanceStuds, visible, directlyObserved, secondsSinceInteraction, significance, networkRelevance, and entityRelevance.",
-        "At that exact head, validateInputs() checks type(inputs) == table, rejects a metatable, then dereferences and validates only those seven recognized fields. It never enumerates supplied keys or compares them against a fixed schema, so extra keys survive validation and are ignored by evaluatePolicy().",
-        "The retained tests/fidelity_manager.luau inputs(overrides) helper writes arbitrary override keys into an otherwise-valid input table. Existing tests exercise value-domain and metatable rejection but contain no unknown-key rejection case, so an override typo can remain observationally silent.",
-        "Concrete semantic case: an otherwise-valid record with directlyObserved=false plus misspelled directlyObseved=true is accepted; the intended observation signal is discarded and policy evaluates using false. The same applies to misspelled visibility/relevance fields. Fail-closed rejection is preferable at this typed runtime contract boundary.",
-        "Repository PR and live lane search found no separate Fidelity PolicyInputs closed-shape repair. HG-FIDELITY-CONFIG-CLOSED-SHAPE already owns the same source/tests and the same unknown-record-key defect class for PolicyConfig, so expanding that one PROPOSED leaf avoids duplicate WIP.",
-        "No local Luau/Lune execution, Roblox Studio, device-performance measurement, viewport, physical-contact, or two-client evidence is claimed by this mining result."
-      ],
-      "fromWorker": "sol-20260812-w3n8q6v2",
-      "laneId": "HG-CAPACITY-MINING",
-      "schemaVersion": 1,
-      "severity": "MEDIUM",
-      "summary": "Retained Fidelity capacity head #419 validates PolicyInputs as a metatable-free table and validates all seven recognized values, but it never closes the runtime input record against unknown keys. Extra string or non-string keys are silently ignored by evaluatePolicy()/step(). This is the same fail-closed record-shape class as the already-proposed HG-FIDELITY-CONFIG-CLOSED-SHAPE defect, so fold PolicyInputs closure into that leaf instead of opening competing FidelityManager source/test WIP. An otherwise-valid input record carrying a misspelled directlyObserved/visible/relevance field should reject deterministically before policy evaluation, while all exactly-shaped under-contract inputs preserve existing F0-F4 semantics and no-execute behavior.",
-      "timestamp": "2026-08-12T08:31:20+00:00"
-    },
-    {
-      "affects": [
-        "HG-COMPLETION-AUTHORITY",
-        "HG-BACKFILL-AUTHORITY",
-        "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY"
-      ],
-      "eventId": "evt-20260812-083700-w3n8q6v2-authority-no-new-gap",
-      "eventType": "FINDING",
-      "evidence": [
-        "HG-COMPLETION-AUTHORITY is BLOCKED and explicitly retains exactly three current candidates: PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3, PR #394 exact head b38de16ade487ff8ceb48ed3596ebfe33be5fa1f, and PR #412 exact head 807fb042b2fe96db32bda7a5c3346788e828a758. Its notes state all are independently approved with green exact-head canonical CI/engine-test evidence and integration is fail-closed on trusted-history/live pr-ownership recovery.",
-        "HG-BACKFILL-AUTHORITY separately records the retained #348 bootstrap-context repair and #394 teardown stack and explicitly says the PhysicsLabStudioHarness.get() raw destroy capability is out of scope because that defect has its own lane.",
-        "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY retains PR #412 as the source/test-approved repair for raw RealizedLab.destroy() ownership and stale-generation reconciliation; reopening that capability defect would be duplicate work.",
-        "HG-COMPLETION-AUTHORITY already records the remaining unique source-only deployment-boundary issue from PR #300: exact-path counting can miss replicated src/server/... descendants. It points to structured finding evt-20260812t080930z-r7m4k9q2-authority-rojo-retained and requires a future subtree/prefix-aware exclusion plus adversarial leaked-server-subpath fixture after the retained stack can integrate.",
-        "HG151-TWOCLIENT remains blocked on OPS-STUDIO-DISPLAY, so source-only mining cannot honestly close real replication/session/two-client evidence. No Roblox Studio, real two-client, replication/session, transport, viewport, physical-contact, or local test execution is claimed by this no-new-gap result."
-      ],
-      "fromWorker": "sol-20260812-w3n8q6v2",
-      "laneId": "HG-CAPACITY-MINING",
-      "schemaVersion": 1,
-      "severity": "LOW",
-      "summary": "Authority capacity mining found no additional non-duplicate source-only defect worth opening while the retained authority stack is blocked on trusted ownership. Current live completion state already retains #348 wrong-context bootstrap guards, #394 teardown evidence, and #412 harness lifecycle/capability fencing with independent source/test approval, and it separately records the unique future Rojo replicated-subtree exclusion gap from PR #300. Starting another authority primary now would duplicate accepted work or violate the completion queue's drain-before-spawn rule. Preserve the existing Rojo finding for a future dependency-cleared leaf and prioritize trusted-history recovery/integration before further authority breadth.",
-      "timestamp": "2026-08-12T08:37:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
-        "HG-BACKFILL-DIAGNOSTICS"
-      ],
-      "eventId": "evt-20260812-084500-w3n8q6v2-diagnostics-binding-review-reconcile",
-      "eventType": "FINDING",
-      "evidence": [
-        "PR #349 is still open/mergeable at exact head ee771bd50db972ad572f5d3cef8463220d69fa06 on main ae83c0ef470eb2e73d99be41fd3561ede30c40e1.",
-        "PR review 4911543619 by independent worker sol-20260811-q7n2v5m8 records PASS at the source-contract layer on that exact head after the earlier false-pass source-regression defect was fixed.",
-        "That review verifies ownsRepresentation() asserts live lab state, reuses isRepresented(), requires exact private-map Instance identity and candidate.Parent == model, keeps the private representation map inaccessible, and locks the complete local function in the pure regression.",
-        "The same review records canonical CI 31539525697 PASS and Swarm engine-tests job 93938658376 PASS; live pr-ownership remains red only behind the separately owned repository-wide trusted-history continuity recovery. No new test execution or Studio evidence is claimed by this reconciliation."
-      ],
-      "fromWorker": "sol-20260812-w3n8q6v2",
-      "laneId": "HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING",
-      "schemaVersion": 1,
-      "severity": "LOW",
-      "summary": "Reconciled stale HG-BACKFILL-DIAGNOSTICS-INSTANCE-BINDING audit ownership without duplicating an already-complete independent review. Generation-1 reviewer sol-20260811-q7n2v5m8 published source-contract PASS on PR #349 exact head ee771bd50db972ad572f5d3cef8463220d69fa06, explicitly verifying the repaired exact-function regression and the exact private Instance/direct-model authority predicate. The candidate remains integration-blocked only by repository-wide trusted-history/live pr-ownership recovery, so the lane should be BLOCKED rather than continuing to advertise REVIEW work.",
-      "timestamp": "2026-08-12T08:45:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-BACKFILL-MATERIALDNA",
-        "HG-BACKFILL-MATERIALDNA-COUNTERS",
-        "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS"
-      ],
-      "eventId": "evt-20260812-085100-w3n8q6v2-materialdna-no-new-gap",
-      "eventType": "FINDING",
-      "evidence": [
-        "HG-BACKFILL-MATERIALDNA is DONE after merged PR #283 and records closure of hostile unknown-key metamethod execution plus canonical fixture revision content.",
-        "HG-BACKFILL-MATERIALDNA-COUNTERS retains source/test-approved PR #353 exact head 10559afdce1a1854e7932522f6e78561736c8ed3 with exact-safe-integer repairCount bounds and green canonical CI/engine tests; integration is blocked only on trusted-history/live ownership recovery.",
-        "HG-MATERIALDNA-REPAIRCOUNT-BOUND is already SUPERSEDED by the counter lineage, so reopening repairCount would be duplicate work.",
-        "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS is a fresh PROPOSED leaf that already combines the remaining demonstrated bounded-work defects in validateDenseArray and validateKnownFields, including deterministic bounded diagnostics for arbitrarily many unknown closed-record keys.",
-        "No local Luau/Lune execution, Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence is claimed by this mining result."
-      ],
-      "fromWorker": "sol-20260812-w3n8q6v2",
-      "laneId": "HG-CAPACITY-MINING",
-      "schemaVersion": 1,
-      "severity": "LOW",
-      "summary": "MaterialDNA capacity mining found no additional non-duplicate source-only defect worth spawning now. The base adversarial lane is DONE; repairCount exactness is retained in the independently approved HG-BACKFILL-MATERIALDNA-COUNTERS lineage while the older repair-count lane is explicitly SUPERSEDED; and fresh HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS already absorbs both demonstrated oversized dense-array scan work and closed-record unknown-key diagnostic growth. Further MaterialDNA source work should wait for those retained/proposed lineages rather than create overlapping WIP.",
-      "timestamp": "2026-08-12T08:51:00+00:00"
-    },
-    {
-      "affects": [
-        "HG-CAPACITY-MINING",
-        "HG-BACKFILL-PHYSICS-GEOMETRY"
-      ],
-      "eventId": "evt-20260812-r4c9m2v7-physics-geometry-domain-gap",
-      "eventType": "FINDING",
-      "evidence": [
-        "PhysicsLabRecipe primitive construction validates MaterialDNA and transparency range but does not require finite positive size axes or finite position/rotation axes; object placement likewise lacks finite position/rotation validation.",
-        "Current physics_lab_recipe coverage checks identity, materials, ObjectGenome bindings and selected door geometry, but does not assert finite/positive geometry domains across every primitive and object placement.",
-        "Retained PR #423 hardens PhysicsLabScale conversion inputs/derived outputs and validation snapshots; it does not establish the upstream canonical recipe geometry-domain invariant.",
-        "Recommended bounded successor after the retained geometry stack is safe to schedule: validate canonical recipe geometry scalars at authoring/build time and add pure regressions covering non-finite placement/rotation, non-positive primitive dimensions, and finite transparency. No Studio evidence is required."
-      ],
-      "fromWorker": "sol-20260812-r4c9m2v7",
-      "laneId": "HG-CAPACITY-MINING",
-      "schemaVersion": 1,
-      "summary": "PhysicsLabRecipe lacks an explicit canonical geometry scalar-domain contract before Roblox realization.",
-      "timestamp": "2026-08-12T10:49:21+00:00"
+      "severity": "normal",
+      "summary": "Independent exact-current-main review APPROVES closing the event-identity compatibility lane as DONE-by-current-main and SUPERSEDES stale closed PR #328. Main pins the exact MaterialDNA canonical blob, binds compatibility to exact date/path/eventId/Git-blob identity, rejects fresh backdated and non-allowlisted malformed affects records, and retains byte-for-byte immutable rewrite/deletion fencing. No new implementation is needed. The separately discovered facade re-entry identity gap is tracked in SWARM-RECOVERY-WORKER-STATUS-CONTRACT and does not reopen this exact-identity lane.",
+      "timestamp": "2026-08-13T22:49:00+00:00",
+      "verdict": "SUPERSEDE"
     },
     {
       "affects": [
@@ -836,6 +441,318 @@
       "summary": "Independent exact-head review APPROVE for generation-4 PR #444: the one-file re-entry repair preserves the first strict engine anchors and one finite audited-blob registry across facade re-execution without widening immutable-history compatibility or ordinary executable-key acceptance. Live trust-bootstrap validation remains a separate gate.",
       "timestamp": "2026-08-13T02:40:00+00:00",
       "verdict": "APPROVE"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-WORLDENTITY"
+      ],
+      "eventId": "evt-20260813-223900-v7k2m9p4-worldentity-mutable-duplicate-aliasing",
+      "eventType": "FINDING",
+      "evidence": [
+        "PR #437 exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3: register() calls ownRecord(record) before duplicate lookup and diagnostics retain existing.origin plus ownedRecord.origin.",
+        "PR #437 tests/world_entity_duplicate_origin_diagnostic.luau constructs both duplicate records through WorldEntity.new(), so caller-alias re-ownership is not exercised.",
+        "PR #435 adds direct-mutable duplicate metadata-validation ordering coverage and must not remain stranded as an independently merging support branch.",
+        "GitHub review comment 4932208634 records the exact-head adversarial handoff."
+      ],
+      "fromWorker": "sol-20260813-v7k2m9p4",
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "schemaVersion": 1,
+      "summary": "PR #437 changes duplicate diagnostics to retain complete GenerationOrigin snapshots, but its focused regression only exercises incoming duplicates already owned through WorldEntity.new(). The public registry also accepts structurally valid mutable records directly; a missing adversarial regression should prove register() re-owns and freezes the mutable incoming origin before returned/retained duplicate diagnostics are formed, so post-rejection caller mutation cannot rewrite diagnostic evidence. Test-only PR #435 separately contains direct-mutable duplicate validation-order coverage that should be absorbed into the retained successor lineage.",
+      "timestamp": "2026-08-13T22:39:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-DIAGNOSTICS"
+      ],
+      "eventId": "evt-20260813-224200-r7k4n9p2-diagnostics-g16-review",
+      "eventType": "REVIEW_RESULT",
+      "evidence": [
+        "PR #441 exact head b8ca3302cc3012011fb911ad3df5dc878130c133 reviewed against generation-15 head 34fde53ba6ab74c4fd1c88da9de98e3ed704336b: one test file, +104/-7, production diagnostics byte-identical",
+        "GitHub PR-thread independent verdict comment 5287214107; formal APPROVE is unavailable because the connector authenticates as the repository owner",
+        "Canonical CI run 31591562616 PASS on the exact head",
+        "Swarm Control Plane engine-tests job 94097496303 PASS; overall control run remains red at separately owned pr-ownership job 94097496515"
+      ],
+      "fromWorker": "sol-20260813-r7k4n9p2",
+      "headSha": "b8ca3302cc3012011fb911ad3df5dc878130c133",
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "pr": 441,
+      "schemaVersion": 1,
+      "summary": "Independent exact-head source/test audit APPROVE for diagnostics generation-16 PR #441. The one-file test delta closes the pre-clone return matcher bypass without changing production diagnostics; trusted pr-ownership remains a separate integration gate.",
+      "timestamp": "2026-08-13T22:42:00+00:00",
+      "verdict": "APPROVE"
+    },
+    {
+      "affects": [
+        "HG-CAPACITY-MINING",
+        "HG-BACKFILL-AUTHORITY",
+        "HG-COMPLETION-AUTHORITY",
+        "HG151-TWOCLIENT"
+      ],
+      "eventId": "evt-20260813-224300-m6t3x8q1-authority-capacity-exhausted",
+      "eventType": "FINDING",
+      "evidence": [
+        "Current main still traverses ReplicatedStorage/shared dependencies before the server/client context assertions; retained PR #348 already owns and independently source-validates that exact bootstrap-order repair.",
+        "Current main PhysicsLabStudioHarness.get() still exposes the raw RealizedLab lifecycle surface; retained PR #412 already owns the independently approved generation-fenced lifecycle-capability repair, while #394 retains the accepted teardown regression stack over #348.",
+        "HG-COMPLETION-AUTHORITY already records PR #300's distinct Rojo deployment test weakness: exact-path counting can miss replicated src/server descendants; that subtree/prefix-aware follow-up is explicitly deferred until the retained stack can integrate.",
+        "HG151-TWOCLIENT already owns the stronger real-server plus two-independent-client canonical-authority/evaluator proof and remains dependency-blocked on OPS-STUDIO-DISPLAY; source inspection must not be promoted to two-client evidence.",
+        "Docs/PHYSICS_LAB_VALIDATION.md currently describes only a two-client smoke procedure, but issue #151 and HG151-TWOCLIENT already define the stricter evidence contract, so opening a competing source-only authority framework would duplicate scheduled work rather than deepen it."
+      ],
+      "fromWorker": "sol-20260813-m6t3x8q1",
+      "laneId": "HG-CAPACITY-MINING",
+      "schemaVersion": 1,
+      "severity": "low",
+      "summary": "Authority source-depth mining found no currently safe non-duplicate new lane; finish the retained authority stack and external two-client prerequisite instead of spawning another primary.",
+      "timestamp": "2026-08-13T22:43:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-FIDELITY",
+        "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING"
+      ],
+      "eventId": "evt-20260813-224330-r8m4q7v2-fidelity-manager-backing-state",
+      "eventType": "FINDING",
+      "evidence": [
+        "PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 defines ManagerImpl with config, mutable _states, and mutable _metrics, then exports Manager as typeof(setmetatable({} :: ManagerImpl, FidelityManager)); new() returns that mutable table directly rather than a frozen capability facade over closure-private backing state",
+        "PR #385 stores the same-entity transition guard as EntityState.transitioning inside _states and guards step()/unregister() by reading that bit. A transition callback closes over the manager, so direct access to manager._states can delete/replace the active record or clear transitioning without traversing either guarded method; the outer step retains a local state pointer and can then commit metrics/counts against backing state that no longer contains the entity",
+        "The same public _metrics table permits direct mutation of registered, counts, transition and rejection counters, defeating the documented bounded aggregate diagnostics/accounting even when every public method is otherwise correct",
+        "Existing retained #385 regressions cover callback reentry through step()/unregister(), unwind/retry and normal aggregate accounting; stacked PR #398 covers cross-entity commit isolation. Neither retained lineage seals or adversarially tests direct backing-table mutation",
+        "Docs/ARCHITECTURE.md already treats closure-private backing state as the required authority pattern for the adjacent WorldEntity registry, while Docs/FIDELITY_MANAGER.md describes manager-owned bounded temporal/diagnostic state and aggregate metrics rather than caller-owned mutable storage",
+        "Repository PR search for FidelityManager private/facade/backing-state hardening found no separate retained Fidelity lane or PR; the only active Fidelity follow-up #419 is the independent maxRegisteredEntities upper-ceiling repair stacked on #385 and does not change Manager backing-state ownership"
+      ],
+      "fromWorker": "sol-20260813-r8m4q7v2",
+      "laneId": "HG-CAPACITY-MINING",
+      "metadata": {
+        "recommendation": "Create a narrow source-only one-shot Hero-Gate lane stacked on the retained Fidelity lineage that moves EntityState/metrics backing storage behind closure-private manager authority and returns a frozen/capability-style facade exposing only the existing public methods/config snapshot. Add adversarial regressions proving callers and transition callbacks cannot reach or mutate backing state, cannot clear the in-flight fence, and cannot forge registered/count/transition metrics. Preserve F0-F4 policy, per-entity transaction semantics, maxRegisteredEntities/default/ceiling behavior, WorldEntity authority, runtime adapters, and all Studio evidence boundaries. No new feature or engine claim is required."
+      },
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "Retained FidelityManager hardening PR #385 fences same-entity step/unregister during transition callbacks, but Manager still exposes mutable _states and _metrics backing tables through its returned object and exported Manager structural type. Callback code that captures the manager can mutate the transitioning EntityState or aggregate counters directly, bypassing the new API-level transition fence and violating registered/count/observed-level invariants without calling a guarded method.",
+      "timestamp": "2026-08-13T22:43:30+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-OBJECTGENOME"
+      ],
+      "eventId": "evt-20260813-224400-k3r8v1m6-objectgenome-caster-axis-frame",
+      "eventType": "FINDING",
+      "evidence": [
+        "Docs/OBJECT_GENOME.md defines caster swivelAxis and rollAxis as canonical unit vectors and makes mechanism semantics project-owned so realization adapters do not invent competing physical interpretations; it specifies only the individual magnitude tolerance today.",
+        "Retained PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 calls validateAxis() independently for swivelAxis and rollAxis in full inspect(), while standaloneMechanismIsCanonical() independently calls isCanonicalUnitAxis() for each axis; neither checks their dot product or frame relationship.",
+        "Current ObjectGenomeFixtures office-chair casters and PhysicsLabObjectGenomes rolling-cart casters both author swivelAxis={0,1,0} and rollAxis={1,0,0}, so an orthogonality fence preserves shipped canonical recipes and requires no fixture identity/fingerprint migration.",
+        "Repository PR/issue searches for caster orthogonality found no existing implementation/review leaf; the existing proposed HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS and HG-BACKFILL-OBJECTGENOME-STRING-BUDGET lanes cover different bounded-memory concerns."
+      ],
+      "fromWorker": "sol-20260813-k3r8v1m6",
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "schemaVersion": 1,
+      "summary": "ObjectGenome v1 defines caster swivelAxis and rollAxis as canonical unit direction vectors, but both current inspect() validation and retained generation-8 PR #395's standalone decoder boundary validate the axes independently and accept a physically degenerate caster whose two axes are parallel. Propose a bounded post-#395 ObjectGenome leaf that rejects non-orthogonal caster axis frames at both semantic boundaries, preserves all shipped fixture identities/fingerprints, performs no adapter-side normalization, and adds deterministic accepted/rejected tolerance regressions. This is distinct from the already proposed ObjectGenome state/cardinality and free-form string budget leaves.",
+      "timestamp": "2026-08-13T22:44:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-CAPACITY-MINING",
+        "HG-BACKFILL-DIAGNOSTICS"
+      ],
+      "eventId": "evt-20260813-224400-m5q9v2r7-diagnostics-doc-probe-stale",
+      "eventType": "FINDING",
+      "evidence": [
+        "No authoritative mine-diagnostics claim was acquired by this worker; the expired generation-1 claim remains owned by sol-20260812-am0s2f7s because the connector rejected the SHA-conditional takeover write. No PR/source mutation was attempted.",
+        "PR #436 exact head 3640afed8419c18bf14b9939f3af8d86989d6be6 documents setting UNRENDERED_RepresentationClass to a number and requiring the exact 'invalid representation class diagnostics attribute' failure.",
+        "Retained PR #441 exact head b8ca3302cc3012011fb911ad3df5dc878130c133 builds EntityDiagnostic.representationClass as nil and does not read UNRENDERED_RepresentationClass in capture(), so that injection is no longer a failure boundary.",
+        "A source-compatible replacement exists on #441: enable() preflights fingerprint/repro/readouts but not root UNRENDERED_WorldId/UNRENDERED_RegionId, while final capture requireStringAttribute-checks those root fields after the owned diagnostics folder is parented. Temporarily injecting a non-string root WorldId or RegionId therefore exercises the rollback path, with restoration required before retry.",
+        "No Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence was run or claimed."
+      ],
+      "fromWorker": "sol-20260813-m5q9v2r7",
+      "laneId": "HG-CAPACITY-MINING",
+      "schemaVersion": 1,
+      "summary": "Inspection-only finding after the stale HG-CAPACITY-MINING/mine-diagnostics takeover was blocked by the connector safety fence: draft PR #436's failure-atomicity Studio probe injects numeric UNRENDERED_RepresentationClass, but retained diagnostics generation-16 PR #441 intentionally no longer reads that mutable attribute. If #441 is the retained diagnostics source, the documented probe would stop producing the expected failure and must be replaced before #436 integrates.",
+      "timestamp": "2026-08-13T22:44:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-PHYSICS-GEOMETRY",
+        "HG-PHYSICS-RUNTIME-SYNTHESIS"
+      ],
+      "eventId": "evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract",
+      "eventType": "DEPENDENCY_DISCOVERED",
+      "evidence": [
+        "main@8134a3962be80e8ba6ec2c27207e44db63e6765c src/shared/Objects/ObjectGenome.luau defines HingeMechanism with only key, kind, movingComponentKey, frameComponentKey, axis, minDegrees and maxDegrees; there is no pivot point, frame anchor, moving anchor, or equivalent canonical axis-line location.",
+        "Docs/OBJECT_GENOME.md states that mechanisms reference component keys and plain axes/limits, authored component transforms are the zero/reference pose, and a later Roblox adapter may choose constraints. Those rules determine hinge direction and scalar angle but do not determine which axis-parallel line the moving component rotates around.",
+        "src/shared/Physics/PhysicsLabObjectGenomes.luau authors commercialDoor.leaf at x=0 with width 0.92 m (hinge-side leaf edge x=-0.46 m) and hinge-jamb at x=-0.525 m with width 0.12 m (inner jamb face x=-0.465 m), leaving a deliberate 0.005 m clearance. The same valid recipe permits materially different swing radii if an adapter chooses the leaf center, jamb center, or near-edge clearance line because no canonical anchor selects among them; z is likewise underdetermined by the hinge record.",
+        "Current main PhysicsLabRealizer is the F2 proxy boundary and does not resolve an articulated hinge, so this finding does not infer any Roblox-engine behavior. It identifies missing data needed before a truthful F3/F4 physical representation can be canonical.",
+        "Duplicate check: existing Physics Lab door work covers hollow/constructible frame geometry (#174/#175), shell/runtime semantics (#186), center-of-mass versioning (#187), and source geometry reachability (#302); repository PR search for hinge pivot/ObjectGenome mechanism anchor/pivot returned no retained repair, and the current swarm-control lane tree exposes no hinge/pivot-specific lane. Cart shelf/caster and chair grounding geometry are separately tracked and were not duplicated here."
+      ],
+      "fromWorker": "sol-20260813-8fa445",
+      "laneId": "HG-CAPACITY-MINING",
+      "metadata": {
+        "recommendation": "Create a narrow source-only foundation lane, tentatively HG-OBJECTGENOME-MECHANISM-ANCHOR-CONTRACT, only when PROJECT_STATE/control-plane authority unlocks it. First record the measured v1 limitation and compatibility/migration choice (ADR if schema meaning/identity must evolve). Then make hinge/slide/tilt mechanisms carry or deterministically derive canonical attachment geometry in plain SI domain data, with exact-shape validation, fingerprint/version coverage and adversarial tests proving two independent adapters resolve the same axis line/reference pose. Update the Physics Lab commercial door fixture through an explicit family/schema version as required. Do not add F3/F4 Roblox realization, unlock the Hero Door, or claim Studio/contact evidence in that contract lane."
+      },
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "ObjectGenome v1 can encode a hinge's component pair, unit axis and angular limits but not the canonical hinge axis line / attachment anchors. The permanent Physics Lab commercial door therefore has enough data to name the leaf-hinge relationship but not enough domain data for independent physical adapters to reconstruct one deterministic swing geometry. This is a source-contract gap for future F3/F4 promotion, not a Studio failure and not a Hero Door unlock.",
+      "timestamp": "2026-08-13T22:47:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-CAPACITY-MINING",
+        "HG-BACKFILL-FIDELITY",
+        "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING"
+      ],
+      "eventId": "evt-20260813-224700-r8m4q7v2-fidelity-mining-handoff",
+      "eventType": "HANDOFF",
+      "evidence": [
+        "Finding evt-20260813-224330-r8m4q7v2-fidelity-manager-backing-state is durable on swarm-control and recommends the bounded source-only follow-up",
+        "The mine-fidelity claim file was deleted through its owned SHA after the finding was published, so no Fidelity ownership remains with this worker",
+        "The connector rejected the later atomic mine-authority claim write before ownership was created; no authority source, tests, branch content, or evidence was changed",
+        "A final worker-record status update was also connector-safety-blocked, so consumers should rely on the absence of an active claim plus this handoff rather than the stale WORKING metadata in the worker registry"
+      ],
+      "fromWorker": "sol-20260813-r8m4q7v2",
+      "laneId": "HG-CAPACITY-MINING",
+      "schemaVersion": 1,
+      "severity": "info",
+      "summary": "Fidelity capacity mining is complete and its authoritative mine-fidelity claim was released after publishing the backing-state encapsulation finding. No production branch delta or PR was created. A follow-on mine-authority claim attempt was connector-safety-blocked and was not bypassed; this worker owns no active lane claim.",
+      "timestamp": "2026-08-13T22:47:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-CAPACITY-MINING",
+        "HG-BACKFILL-MATERIALDNA-COUNTERS",
+        "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS",
+        "HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR"
+      ],
+      "eventId": "evt-20260813-224800-s56e7c2a-materialdna-capacity-exhausted",
+      "eventType": "FINDING",
+      "evidence": [
+        "Current main still has the repairCount exact-integer gap already owned by HG-BACKFILL-MATERIALDNA-COUNTERS and retained PR #353.",
+        "Current validation work on oversized tables and unknown closed-record fields is already owned by HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS.",
+        "Current percent-character semantic-key grammar mismatch is already owned by HG-BACKFILL-MATERIALDNA-KEY-GRAMMAR.",
+        "Existing tests already cover immutable ownership, closed schema-v2 records, metatable rejection, fixture content seals, revision binding, and bounded physical/acoustic/response numeric ranges.",
+        "No Studio or engine evidence was run or claimed."
+      ],
+      "fromWorker": "sol-20260813-s56e7c2a",
+      "laneId": "HG-CAPACITY-MINING",
+      "schemaVersion": 1,
+      "severity": "low",
+      "summary": "MaterialDNA mining found no safe non-duplicate new lane; remaining demonstrated source gaps are already sequenced in existing MaterialDNA leaves.",
+      "timestamp": "2026-08-13T22:48:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-MATERIALDNA-COUNTERS"
+      ],
+      "eventId": "evt-20260813-224900-k3r8v1m6-materialdna-validation-budget",
+      "eventType": "FINDING",
+      "evidence": [
+        "src/shared/Materials/MaterialDNA.luau current main: validateKnownFields() uses an unrestricted for key in pairs(record) loop and appends an error for every unknown key; no record-field or ValidationResult error cap precedes that traversal.",
+        "src/shared/Materials/MaterialDNA.luau current main: validateDenseArray() scans all supplied keys to compute count/highest/keyed before applying MAX_HISTORY_EVENTS=32 or MAX_ANOMALY_MODIFIERS=8, so an already-over-budget shallow array still consumes work proportional to attacker/caller input size.",
+        "Docs/MATERIAL_DNA_CONTRACT.md states recipe validation/freezing is bounded content-generation/persistence work and calls out 32 history events / 8 anomaly modifiers, making the unbounded pre-rejection scan inconsistent with the documented performance boundary.",
+        "Current MaterialDNA tests cover malformed/metatable/unknown fields, canonical dense shape, fixture seals, and scalar bounds but no oversized shallow closed-record/error-budget or pre-rejection traversal regression; repository PR search found no existing MaterialDNA structural-budget implementation.",
+        "HG-BACKFILL-MATERIALDNA-COUNTERS is narrowly scoped to maintenance.repairCount exact safe-integer behavior and does not address structural traversal or error-allocation bounds."
+      ],
+      "fromWorker": "sol-20260813-k3r8v1m6",
+      "laneId": "HG-CAPACITY-MINING",
+      "schemaVersion": 1,
+      "summary": "MaterialDNA's canonical schema is content-bounded, but its validation work is not fully traversal-bounded: validateKnownFields() iterates every supplied record key and appends one error per unknown field, while validateDenseArray() iterates every supplied array key before reporting keyed/sparse/over-limit shape. A huge shallow decoded/generated table can therefore force unbounded CPU traversal and, for closed records, unbounded ValidationResult error allocation before fail-closed rejection. Propose a source-only MaterialDNA validation-budget leaf that short-circuits closed-record scans after the finite declared field budget plus one, short-circuits bounded-array scans once rejection is provable, caps error growth deterministically, preserves all valid fixture/reference/state behavior, and adds adversarial oversized-shape regressions. This is distinct from HG-BACKFILL-MATERIALDNA-COUNTERS, which only closes maintenance.repairCount IEEE-754 integer exactness.",
+      "timestamp": "2026-08-13T22:49:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-WORLDENTITY"
+      ],
+      "eventId": "evt-20260813-224900-k7m4v9q2-worldentity-registered-noop-transition",
+      "eventType": "FINDING",
+      "evidence": [
+        "PR #437 exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3",
+        "PR #452 exact head a71531dde7ce8e418fe0348a185dc5d3069cf8d8"
+      ],
+      "fromWorker": "sol-20260813-k7m4v9q2",
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "schemaVersion": 1,
+      "summary": "PR #437 registered same-fidelity transitions with no captured state still copy an already-owned WorldEntity record even though fidelity and revisions do not change. Current FidelityManager avoids this call when desired fidelity already equals current fidelity. PR #452 records the bounded source-depth finding and regression target.",
+      "timestamp": "2026-08-13T22:49:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-CAPACITY-MINING",
+        "HG-BACKFILL-AUTHORITY",
+        "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY"
+      ],
+      "eventId": "evt-20260813-225430-v6n2q9r4-authority-no-new-gap",
+      "eventType": "FINDING",
+      "evidence": [
+        "PR #348 retains the wrong-context bootstrap guard and client authority exclusion source contract",
+        "PR #394 retains teardown and restart ordering regressions stacked on the authority primary",
+        "PR #412 retains synchronous stale-owner reconciliation and generation-fenced deferred cleanup",
+        "The existing authority mining correction preserves the separate descendant-liveness follow-up and the existing deployment subtree-exclusion finding",
+        "No new source change or engine evidence is claimed by this mining pass"
+      ],
+      "fromWorker": "sol-20260813-v6n2q9r4",
+      "laneId": "HG-CAPACITY-MINING",
+      "schemaVersion": 1,
+      "severity": "info",
+      "summary": "Authority source mining found no additional non-duplicate source defect worth opening. Retain the existing authority lineages and already-published descendant-liveness and deployment-exclusion follow-ups rather than creating another overlapping primary.",
+      "timestamp": "2026-08-13T22:54:30+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-FIDELITY"
+      ],
+      "eventId": "evt-20260813-225443-f4q9n2c7-fidelity-extra-keys-corrected",
+      "eventType": "FINDING",
+      "evidence": [
+        "PR 385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 validates declared fields but has no exact-key check or extra-key regression.",
+        "MaterialDNA PR 75, WorldEntity PR 76, and ObjectGenome PR 94 use exact record shapes at comparable plain-data boundaries.",
+        "PR 419 changes the registration ceiling only and inherits this record-shape behavior.",
+        "The earlier immutable event evt-20260813-224945-f4q9n2c7-fidelity-extra-keys is malformed because recommendation was emitted as a top-level field; this replacement keeps the recommendation under metadata without editing or deleting the earlier bytes."
+      ],
+      "fromWorker": "sol-20260813-f4q9n2c7",
+      "laneId": "HG-CAPACITY-MINING",
+      "metadata": {
+        "recommendation": "Add bounded exact-key validation and extra-key regressions in the retained Fidelity integration lineage without changing F0-F4 behavior.",
+        "supersedesMalformedPayloadEventId": "evt-20260813-224945-f4q9n2c7-fidelity-extra-keys"
+      },
+      "schemaVersion": 1,
+      "severity": "medium",
+      "summary": "FidelityManager accepts undeclared extra keys in otherwise valid input and configuration records; this corrected event supersedes only the malformed event payload shape, not its immutable history.",
+      "timestamp": "2026-08-13T22:54:43+00:00"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-OBJECTGENOME"
+      ],
+      "eventId": "evt-20260813-225700-z7q4m2n8-objectgenome-com-coherence",
+      "eventType": "FINDING",
+      "evidence": [
+        "main@8134a3962be80e8ba6ec2c27207e44db63e6765c src/shared/Objects/ObjectGenome.luau accumulates componentMassKg and emits mass.component_sum when it diverges from massKg, but the preceding centerOfMassM validation only checks finite Vec3 shape plus containment inside dimensionsM; no weighted component centroid is compared.",
+        "tests/object_genome.luau has a generic badMass mutation asserting mass.component_sum, but no generic mutation proving an in-envelope yet component-incoherent centerOfMassM is rejected.",
+        "Prior source-only repairs repeatedly had to close this exact physical inconsistency at fixture level: PR #187 corrected the Physics Lab door COM after frame changes; PR #311 recomputed rolling-cart COM; PR #332 exposed office-chair declared-COM mismatch and PR #355 repaired it. This recurrence is evidence that the invariant belongs at the shared ObjectGenome validation boundary.",
+        "Retained generation-8 ObjectGenome PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 hardens decoder shape/state aliasing but does not add component-derived center-of-mass coherence, so the gap survives that retained lineage.",
+        "Repository issue/PR searches for ObjectGenome center-of-mass coherence found the broad #6 contract and fixture-specific repairs above, but no generic validator leaf. Existing proposed ObjectGenome string-budget/state-bounds lanes and today's caster-axis-frame finding are orthogonal."
+      ],
+      "fromWorker": "sol-20260813-z7q4m2n8",
+      "laneId": "HG-BACKFILL-OBJECTGENOME",
+      "schemaVersion": 1,
+      "summary": "ObjectGenome v1 validates that component masses sum to massKg, but centerOfMassM is only required to be finite and lie inside the object envelope; it is not required to match the mass-weighted centroid of the authored component masses/local positions. This leaves the production construction-grammar boundary able to accept physically contradictory mass metadata even though multiple Hero repairs have already had to recompute fixture COM by hand. Propose a bounded post-#395 ObjectGenome leaf that defines a deterministic component-derived COM coherence tolerance, rejects contradictory authored centerOfMassM in inspect(), and adds generic adversarial contract tests rather than continuing fixture-specific COM regressions. No schema/identity change or Studio/runtime claim is implied by this source-level finding.",
+      "timestamp": "2026-08-13T22:57:00+00:00"
+    },
+    {
+      "affects": [
+        "HG-CAPACITY-MINING",
+        "HG-BACKFILL-WORLDENTITY"
+      ],
+      "eventId": "evt-20260813-230400-z7q4m2n8-worldentity-no-new-gap",
+      "eventType": "FINDING",
+      "evidence": [
+        "Retained PR #437 exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3 inherits explicit MAX_CANONICAL_METADATA_STRING_BYTES=65536, MAX_PERSISTENT_STATE_DEPTH=64, MAX_PERSISTENT_STATE_NODES=4096, MAX_PERSISTENT_STATE_STRING_BYTES=65536, and MAX_DUPLICATE_DIAGNOSTIC_CAPACITY=1024 fences.",
+        "The retained source owns caller-supplied WorldEntityRecord data before capture/transition derivation, including the same-fidelity transition path, so the mutable-input alias concern does not survive the retained lineage.",
+        "PR #437's remaining concrete proof gap is already recorded by review 4932208634 and FINDING evt-20260813-223900-v7k2m9p4-worldentity-mutable-duplicate-aliasing: direct mutable duplicate registration must prove returned/retained diagnostics preserve owned frozen origin snapshots.",
+        "HG-BACKFILL-WORLDENTITY remains NEEDS_CHANGES because trusted pr-ownership is red and a fresh independent exact-head review is required; widening source scope from capacity mining would duplicate active work rather than deepen it.",
+        "No local tests, Roblox Studio, viewport, physical-contact, or two-client execution was run or claimed; this was a connector/source audit only."
+      ],
+      "fromWorker": "sol-20260813-z7q4m2n8",
+      "laneId": "HG-CAPACITY-MINING",
+      "schemaVersion": 1,
+      "summary": "WorldEntity capacity mining found no additional non-duplicate source-only defect worth spawning beyond the retained generation-9 lineage and today's already-published direct-mutable duplicate-diagnostic adversarial gap. Candidate concerns around metadata retention, persistent-state growth, duplicate-history growth, and direct lifecycle aliasing are already fail-closed in retained PR #437/#429 ancestry. Do not create another WorldEntity primary from this shard; finish the existing exact-head review/adversarial proof and restore trusted pr-ownership instead.",
+      "timestamp": "2026-08-13T23:04:00+00:00"
     }
   ],
   "resources": [
@@ -847,7 +764,7 @@
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 0,
+      "activeOwners": 1,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "SWARM-PROTOCOL",
@@ -914,24 +831,6 @@
       "workerId": "sol-20260812-q6n9v2m4"
     },
     {
-      "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-am0s2f7s",
-      "expiredAt": "2026-08-12T11:48:20+00:00",
-      "generation": 1,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": 436,
-      "slotId": "mine-diagnostics",
-      "workerId": "sol-20260812-am0s2f7s"
-    },
-    {
-      "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-p3x7m4q8",
-      "expiredAt": "2026-08-12T11:50:00+00:00",
-      "generation": 1,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": null,
-      "slotId": "mine-worldentity",
-      "workerId": "sol-20260812-p3x7m4q8"
-    },
-    {
       "branch": "agent/physics/HG-FIDELITY-REGISTRATION-CAPACITY-CEILING-r8n4m2q6",
       "expiredAt": "2026-08-11T23:50:30+00:00",
       "generation": 1,
@@ -950,13 +849,13 @@
       "workerId": "sol-20260811-r5k8m3q7"
     },
     {
-      "branch": "agent/swarm/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-m8q2v7",
-      "expiredAt": "2026-08-11T09:09:30+00:00",
+      "branch": "agent/review/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-reviewer-1-v16rvw2",
+      "expiredAt": "2026-08-13T22:50:00+00:00",
       "generation": 1,
       "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
-      "pr": 328,
-      "slotId": "repair",
-      "workerId": "sol-20260811-m8q2v7"
+      "pr": null,
+      "slotId": "reviewer-1",
+      "workerId": "sol-20260813-v16rvw2"
     },
     {
       "branch": "agent/control/SWARM-RECOVERY-HEALTH-VALIDATION-FENCE-primary-v16pkg1-g4",
@@ -968,22 +867,13 @@
       "workerId": "sol-20260812-v16pkg1"
     },
     {
-      "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-v16g4r9x-g4",
-      "expiredAt": "2026-08-13T03:08:00+00:00",
-      "generation": 4,
-      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-      "pr": 444,
-      "slotId": "primary",
-      "workerId": "sol-20260812-v16g4r9x"
-    },
-    {
-      "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-v16rvw1",
-      "expiredAt": "2026-08-13T03:08:00+00:00",
-      "generation": 1,
+      "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-v16rvw2",
+      "expiredAt": "2026-08-13T22:40:00+00:00",
+      "generation": 2,
       "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
       "pr": 444,
       "slotId": "reviewer-1",
-      "workerId": "sol-20260812-rvw16g4a"
+      "workerId": "sol-20260813-v16rvw2"
     },
     {
       "branch": "agent/swarm/SWARM-V22-THROUGHPUT-2b51a8-g1r3",
@@ -995,14 +885,14 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "056074cb274157545d308e4e52875d8ceb1a098ef30c64c4e610ec54bbf77f30",
+  "stateDigest": "eb73526e5416992bc12d8c38842b85ef97c7851b2a24af6fc6dd8243b336cbbb",
   "summary": {
-    "activeClaims": 0,
-    "activeResourceClaims": 0,
+    "activeClaims": 6,
+    "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 58,
-    "readySlots": 14,
-    "staleClaims": 13,
-    "workers": 372
+    "readySlots": 8,
+    "staleClaims": 10,
+    "workers": 391
   }
 }

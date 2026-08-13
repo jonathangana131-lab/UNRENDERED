@@ -1,39 +1,39 @@
 {
-  "activeClaims": 0,
+  "activeClaims": 6,
   "activeEpics": [
     "HERO-GATE"
   ],
   "eventCounts": {
     "BLOCKER": 23,
     "DECISION": 2,
-    "DEPENDENCY_DISCOVERED": 16,
+    "DEPENDENCY_DISCOVERED": 17,
     "EVIDENCE_RESULT": 20,
     "EXTERNAL_BLOCKER": 1,
-    "FINDING": 227,
-    "HANDOFF": 66,
+    "FINDING": 239,
+    "HANDOFF": 68,
     "INTEGRATION_RESULT": 11,
     "QUESTION": 1,
     "RECOVERY": 11,
-    "REVIEW_REQUEST": 65,
-    "REVIEW_RESULT": 201,
+    "REVIEW_REQUEST": 67,
+    "REVIEW_RESULT": 204,
     "SUPERSEDED": 1
   },
-  "generatedAt": "2026-08-13T22:37:47.199058+00:00",
+  "generatedAt": "2026-08-13T23:07:10.547168+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED": 20,
     "BLOCKED_EXTERNAL": 1,
-    "DONE": 14,
+    "DONE": 15,
     "LOCKED": 1,
-    "NEEDS_CHANGES": 1,
+    "NEEDS_CHANGES": 2,
     "PROPOSED": 9,
-    "READY": 7,
-    "REVIEW": 3,
+    "READY": 6,
+    "REVIEW": 2,
     "SUPERSEDED": 2
   },
   "note": "Gross lines written are diagnostic, not a success metric.",
-  "readySlots": 14,
+  "readySlots": 8,
   "reviewBacklog": 4,
   "schemaVersion": 1,
-  "staleClaims": 13
+  "staleClaims": 10
 }
