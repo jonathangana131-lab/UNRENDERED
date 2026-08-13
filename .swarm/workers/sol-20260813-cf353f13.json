@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260813-cf353f13",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-13T22:36:00+00:00",
-  "lastSeenAt": "2026-08-13T22:36:00+00:00",
-  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
-  "slotId": "repair",
-  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-cf353f13-g2",
-  "notes": "Generation-2 recovery worker inspecting stale PR #328 against current main before source changes."
+  "lastSeenAt": "2026-08-13T22:55:00+00:00",
+  "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
+  "slotId": "audit",
+  "branch": "agent/physics/HG-PHYSICS-RUNTIME-ENTITYID-FENCE-audit-cf353f13",
+  "notes": "Completed independent source audit of PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754 and posted GitHub review/comment. Source approved; integration held on live swarm-control recovery. No live claim or resource lease remains. A separate WorldEntity mutable-duplicate regression was identified but not written because connector safety blocked source writes; its claim and REALITY-CONTRACT lease were released."
 }
