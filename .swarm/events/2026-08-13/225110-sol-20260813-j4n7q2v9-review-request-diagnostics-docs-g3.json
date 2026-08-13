@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-225110-j4n7q2v9-diagnostics-docs-g3-review-request",
+  "timestamp": "2026-08-13T22:51:10+00:00",
+  "fromWorker": "sol-20260813-j4n7q2v9",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Superseding generation-3 review request for docs-only PR #436: exact head remains product-CI green and matches current main, but active diagnostics PR #441 changes runToggleEvidence to enabled-window canonical validation before disable and retains a separately owned post-enable cleanup gap. Independent review must enforce the recorded merge-order guard so #436 cannot land stale after #441.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "PR #436 exact head 8884e559ac12526ae97c45e26aa93283b69d0509 remains mergeable, draft, one changed file; generation 3 changed PR/control metadata only",
+    "Canonical CI run 31751389573 PASS on exact head",
+    "Current main 8134a3962be80e8ba6ec2c27207e44db63e6765c runToggleEvidence disables diagnostics before its full canonical off-snapshot validation, matching #436 current-main wording",
+    "Diagnostics PR #441 exact inspected head b8ca3302cc3012011fb911ad3df5dc878130c133 calls captureCanonicalWhileDiagnosticsEnabled(lab) and validates/comparisons before disable(lab)",
+    "HANDOFF evt-20260813-224700-n4q7v2m9-diagnostics-toggle-failure-cleanup-regression publishes expected-red support head 4633472020ec5af8f8da6eead35bbd75eed7662e because an enabled-window validation failure can throw before disable and leave the owned overlay live",
+    "PR #436 body now requires: merge-before-#441 only if #441/follow-up refreshes docs to final repaired semantics; if #441 lands first, refresh/re-review #436 before merge",
+    "Swarm Control run 31751389611 remains fail-closed at separate trust-ledger convergence; this docs lane does not own or bypass it",
+    "No Studio, viewport, physical-contact, persistence, networking, or two-client evidence was run or claimed"
+  ],
+  "pr": 436,
+  "headSha": "8884e559ac12526ae97c45e26aa93283b69d0509",
+  "metadata": {
+    "supersedesReviewRequest": "evt-20260813-224855-j4n7q2v9-diagnostics-docs-g2-review-request",
+    "relatedDiagnosticsPr": 441,
+    "relatedDiagnosticsHead": "b8ca3302cc3012011fb911ad3df5dc878130c133",
+    "expectedRedSupportHead": "4633472020ec5af8f8da6eead35bbd75eed7662e",
+    "reviewFocus": "current-main evidence accuracy plus cross-PR integration-order safety"
+  }
+}
