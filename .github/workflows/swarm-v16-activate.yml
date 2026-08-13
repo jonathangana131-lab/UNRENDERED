@@ -8,6 +8,7 @@ on:
       - 'tools/swarm/v16cp/**'
       - 'tools/swarm/v16ctl.py'
       - 'tools/swarm/v16_objective_integrate.py'
+      - 'tools/swarm/v16_legacy_trust_sync.py'
       - 'tools/swarm/test_swarm_v16*.py'
   workflow_dispatch:
 
@@ -33,6 +34,7 @@ jobs:
         run: |
           python3 tools/swarm/test_swarm_v16.py
           python3 tools/swarm/test_swarm_v16_objective_integration.py
+          python3 tools/swarm/test_swarm_v16_legacy_trust_sync.py
           python3 tools/swarm/v16ctl.py simulate --workers 30
       - name: Materialize authoritative legacy swarm state
         shell: bash
@@ -69,3 +71,12 @@ jobs:
           assert graph['authority']['automaticExternalTruthPromotion'] is False
           print(json.dumps({'phase':'ACTIVE','revision':graph['revision'],'legacyLanes':len(graph['migration']['legacyLaneIds']),'runtimeAuthorityPromoted':False},indent=2))
           PY
+      - name: Reconcile V2.1 projections and exact trust anchor
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 tools/swarm/v16_legacy_trust_sync.py \
+            --repo "$GITHUB_REPOSITORY" \
+            --control-branch swarm-control \
+            --trust-branch swarm-trust \
+            --default-branch main
