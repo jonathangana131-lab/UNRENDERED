@@ -106,6 +106,37 @@ local function run(): number
 		sharedRecipeKey
 	)
 
+	local returnedDiagnosticMutationAccepted = pcall(function()
+		duplicateDiagnostic.incomingKind = "mutated-kind"
+	end)
+	expectEqual("returned duplicate diagnostic rejects top-level mutation", returnedDiagnosticMutationAccepted, false)
+	local returnedExistingOriginMutationAccepted = pcall(function()
+		duplicateDiagnostic.existingOrigin.worldId = "world:mutated-existing"
+	end)
+	expectEqual(
+		"returned existing origin snapshot rejects mutation",
+		returnedExistingOriginMutationAccepted,
+		false
+	)
+	local returnedIncomingOriginMutationAccepted = pcall(function()
+		duplicateDiagnostic.incomingOrigin.worldId = "world:mutated-incoming"
+	end)
+	expectEqual(
+		"returned incoming origin snapshot rejects mutation",
+		returnedIncomingOriginMutationAccepted,
+		false
+	)
+	expectEqual(
+		"returned existing origin remains authoritative after rejected mutation",
+		duplicateDiagnostic.existingOrigin.worldId,
+		"world:alpha"
+	)
+	expectEqual(
+		"returned incoming origin remains evidence after rejected mutation",
+		duplicateDiagnostic.incomingOrigin.worldId,
+		"world:beta"
+	)
+
 	local retained = WorldEntity.duplicateDiagnostics(registry)[1] :: any
 	expectEqual("complete diagnostic is retained", retained ~= nil, true)
 	expectEqual(
