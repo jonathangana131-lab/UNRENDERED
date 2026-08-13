@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract",
+  "timestamp": "2026-08-13T22:47:00+00:00",
+  "fromWorker": "sol-20260813-8fa445",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "ObjectGenome v1 can encode a hinge's component pair, unit axis and angular limits but not the canonical hinge axis line / attachment anchors. The permanent Physics Lab commercial door therefore has enough data to name the leaf-hinge relationship but not enough domain data for independent physical adapters to reconstruct one deterministic swing geometry. This is a source-contract gap for future F3/F4 promotion, not a Studio failure and not a Hero Door unlock.",
+  "affects": [
+    "HG-BACKFILL-PHYSICS-GEOMETRY",
+    "HG-PHYSICS-RUNTIME-SYNTHESIS"
+  ],
+  "evidence": [
+    "main@8134a3962be80e8ba6ec2c27207e44db63e6765c src/shared/Objects/ObjectGenome.luau defines HingeMechanism with only key, kind, movingComponentKey, frameComponentKey, axis, minDegrees and maxDegrees; there is no pivot point, frame anchor, moving anchor, or equivalent canonical axis-line location.",
+    "Docs/OBJECT_GENOME.md states that mechanisms reference component keys and plain axes/limits, authored component transforms are the zero/reference pose, and a later Roblox adapter may choose constraints. Those rules determine hinge direction and scalar angle but do not determine which axis-parallel line the moving component rotates around.",
+    "src/shared/Physics/PhysicsLabObjectGenomes.luau authors commercialDoor.leaf at x=0 with width 0.92 m (hinge-side leaf edge x=-0.46 m) and hinge-jamb at x=-0.525 m with width 0.12 m (inner jamb face x=-0.465 m), leaving a deliberate 0.005 m clearance. The same valid recipe permits materially different swing radii if an adapter chooses the leaf center, jamb center, or near-edge clearance line because no canonical anchor selects among them; z is likewise underdetermined by the hinge record.",
+    "Current main PhysicsLabRealizer is the F2 proxy boundary and does not resolve an articulated hinge, so this finding does not infer any Roblox-engine behavior. It identifies missing data needed before a truthful F3/F4 physical representation can be canonical.",
+    "Duplicate check: existing Physics Lab door work covers hollow/constructible frame geometry (#174/#175), shell/runtime semantics (#186), center-of-mass versioning (#187), and source geometry reachability (#302); repository PR search for hinge pivot/ObjectGenome mechanism anchor/pivot returned no retained repair, and the current swarm-control lane tree exposes no hinge/pivot-specific lane. Cart shelf/caster and chair grounding geometry are separately tracked and were not duplicated here."
+  ],
+  "recommendation": "Create a narrow source-only foundation lane, tentatively HG-OBJECTGENOME-MECHANISM-ANCHOR-CONTRACT, only when PROJECT_STATE/control-plane authority unlocks it. First record the measured v1 limitation and compatibility/migration choice (ADR if schema meaning/identity must evolve). Then make hinge/slide/tilt mechanisms carry or deterministically derive canonical attachment geometry in plain SI domain data, with exact-shape validation, fingerprint/version coverage and adversarial tests proving two independent adapters resolve the same axis line/reference pose. Update the Physics Lab commercial door fixture through an explicit family/schema version as required. Do not add F3/F4 Roblox realization, unlock the Hero Door, or claim Studio/contact evidence in that contract lane."
+}
