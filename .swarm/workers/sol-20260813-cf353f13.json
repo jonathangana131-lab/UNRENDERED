@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260813-cf353f13",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-13T22:36:00+00:00",
+  "lastSeenAt": "2026-08-13T22:36:00+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+  "slotId": "repair",
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-cf353f13-g2",
+  "notes": "Generation-2 recovery worker inspecting stale PR #328 against current main before source changes."
+}
