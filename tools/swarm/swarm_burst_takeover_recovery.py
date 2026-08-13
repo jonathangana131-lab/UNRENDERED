@@ -1,15 +1,6 @@
-"""Finite replay-only compatibility for malformed burst takeovers.
-
-The 2026-08-13 burst wrote stale generation-2 takeovers without the required
-`takeoverOf` breadcrumb. Trusted first-parent replay encounters these historical
-commits before the later states previously pinned by the recovery facade.
-
-This module does not change live control bytes and does not relax the general
-claim-transition contract. It installs only finite exact compatibility rows for
-the trusted-history replayer, each binding the exact path, exact before-state
-SHA-256, exact malformed after-state SHA-256, and exact missing previous worker.
-"""
 from __future__ import annotations
+
+import swarm_burst_event_replay as _event_replay
 
 RULES = {
     "claims/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT/repair.json": {
@@ -28,6 +19,7 @@ RULES = {
 def install(hardening_module) -> None:
     registry = getattr(hardening_module, "_FINITE_CLAIM_TAKEOVER_COMPAT", None)
     if not isinstance(registry, dict):
-        raise RuntimeError("trusted hardening finite takeover registry is unavailable")
+        raise RuntimeError("finite takeover registry unavailable")
     for path, rule in RULES.items():
         registry[path] = dict(rule)
+    _event_replay.install(hardening_module)
