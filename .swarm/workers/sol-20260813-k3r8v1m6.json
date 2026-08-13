@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260813-k3r8v1m6",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-13T22:38:30+00:00",
-  "lastSeenAt": "2026-08-13T22:49:00+00:00",
+  "lastSeenAt": "2026-08-13T22:50:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-materialdna",
   "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-k3r8v1m6",
-  "notes": "ObjectGenome mining finding published and lease released. Now mining MaterialDNA under token c6f1a83d4b7e9052 for one concrete non-duplicate source/test/contract gap, explicitly excluding the existing repairCount/counter lane and any Studio evidence."
+  "notes": "Completed two source-only capacity findings with no product edits/tests/Studio claims: evt-20260813-224400-k3r8v1m6-objectgenome-caster-axis-frame and evt-20260813-224900-k3r8v1m6-materialdna-validation-budget. ObjectGenome lease was released successfully. MaterialDNA owned claim token c6f1a83d4b7e9052 could not be deleted because the available GitHub mutation was blocked before execution; do not overwrite it while live. Its heartbeat is 2026-08-13T22:49:00+00:00 with leaseSeconds 1800, resources []. Worker stopped to avoid holding a second major claim or falsifying release state."
 }
