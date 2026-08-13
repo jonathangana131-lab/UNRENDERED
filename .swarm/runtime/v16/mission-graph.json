@@ -1253,7 +1253,7 @@
     "closedBlockers": 0,
     "duplicateTasksPrevented": 0,
     "legacyLanesImported": 58,
-    "meaningfulProgressEvents": 0,
+    "meaningfulProgressEvents": 1,
     "newLegitimateBlockers": 0,
     "startBlockers": 5,
     "supersededBranches": 0
@@ -9472,10 +9472,10 @@
       "userValue": 8
     }
   },
-  "revision": 2,
+  "revision": 3,
   "schemaVersion": 16,
   "solutions": {},
-  "updatedAt": "2026-08-13T10:01:53Z",
+  "updatedAt": "2026-08-13T10:01:58Z",
   "workItems": {
     "legacy-hg-authority-harness-lifecycle-capability-audit": {
       "blockerId": "",
