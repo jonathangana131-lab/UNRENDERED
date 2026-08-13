@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 1,
+  "bootstrap": true,
   "controlBranch": "swarm-control",
-  "trustedControlSha": "4a8ca7a185c991b467320b9b0c52c0ed2ffb7a36",
-  "trustedStateDigest": "0000000000000000000000000000000000000000000000000000000000000000",
-  "validatedAt": "2026-08-11T09:52:00+00:00",
-  "validatorMainSha": "ae83c0ef470eb2e73d99be41fd3561ede30c40e1",
   "resetId": "reset-20260811-history-continuity",
-  "resetReason": "Bootstrap-only ledger creation before ADR-0005 recovery merge. This record is deliberately non-authorizing; bootstrap=true forces verify_trusted_state to fail until the exact reviewed control SHA and state digest are measured and a reviewed post-merge validation advances the ledger.",
-  "bootstrap": true
+  "resetReason": "Read-only recovery PR #445 exact head 4515cafc28454a11b504d3041573c68b8483475e measured and provenance-validated this exact control SHA/state digest pair in run 31662314466. This remains deliberately non-authorizing until recovery code is merged to main and the next strict control validation CAS-advances bootstrap=false.",
+  "schemaVersion": 1,
+  "trustedControlSha": "9d86b626c832ce984634bcc80add515a47bf9cae",
+  "trustedStateDigest": "7cceb47d3eda6bcbc68e934fdc1c2f4848bff7b7cf973f9c9a1b7a493c64cebd",
+  "validatedAt": "2026-08-13T02:55:51+00:00",
+  "validatorMainSha": "4515cafc28454a11b504d3041573c68b8483475e"
 }
