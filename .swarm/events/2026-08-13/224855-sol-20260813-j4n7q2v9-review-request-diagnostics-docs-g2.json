@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224855-j4n7q2v9-diagnostics-docs-g2-review-request",
+  "timestamp": "2026-08-13T22:48:55+00:00",
+  "fromWorker": "sol-20260813-j4n7q2v9",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "summary": "Generation-2 stale takeover refreshed docs-only PR #436 against current diagnostics source semantics and requests independent exact-head docs/evidence-boundary review. Product CI is green; Swarm Control remains fail-closed at separate trust-ledger convergence and must not be bypassed.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "PR #436 exact head 8884e559ac12526ae97c45e26aa93283b69d0509; mergeable, draft, one changed file Docs/PHYSICS_LAB_DIAGNOSTICS.md",
+    "Canonical CI run 31751389573 PASS on exact head: format, lint, Luau analysis, randomness/boundary audits, deterministic swarm tests, pure Luau tests, and place build all passed",
+    "Generation 2 corrected the stale claim that runToggleEvidence validates the enabled canonical window before disable; current source disables first, validates the off snapshot, and yields RunService.Heartbeat around bounded cycles",
+    "Failure-atomicity probe remains aligned with current source: numeric UNRENDERED_RepresentationClass bypasses preflight, final capture rejects inside the protected transaction, and rollback destroys the exact owned diagnostics folder before rethrow",
+    "Swarm Control run 31751389611 FAIL is separately owned: deterministic/adversarial tests pass, while read-only trust bootstrap fails and pr-ownership stops at Require live state to equal separately trusted state before ownership enforcement",
+    "Current main 8134a3962be80e8ba6ec2c27207e44db63e6765c was independently observed green after PR #450; do not mutate trust recovery from this docs lane",
+    "No local repository execution, Studio, viewport, physical-contact, persistence, networking, or two-client evidence was run or claimed"
+  ],
+  "pr": 436,
+  "headSha": "8884e559ac12526ae97c45e26aa93283b69d0509"
+}
