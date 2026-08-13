@@ -1,0 +1,48 @@
+name: Swarm V16 Mission Graph Shadow
+
+on:
+  pull_request:
+    paths:
+      - 'tools/swarm/v16cp/**'
+      - 'tools/swarm/v16ctl.py'
+      - 'tools/swarm/v16_objective_integrate.py'
+      - 'tools/swarm/test_swarm_v16*.py'
+      - '.github/workflows/swarm-v16-*.yml'
+      - 'Docs/SWARM_V16_MISSION_GRAPH.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  v16-exact-head:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compile V16 Python
+        run: python3 -m py_compile tools/swarm/v16cp/*.py tools/swarm/v16ctl.py tools/swarm/v16_objective_integrate.py
+      - name: Deterministic V16 unit tests
+        run: |
+          python3 tools/swarm/test_swarm_v16.py
+          python3 tools/swarm/test_swarm_v16_objective_integration.py
+      - name: Thirty-worker adversarial convergence
+        run: python3 tools/swarm/v16ctl.py simulate --workers 30
+      - name: Live legacy migration smoke test
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin swarm-control
+          mkdir -p "$RUNNER_TEMP/legacy"
+          git archive origin/swarm-control .swarm | tar -x -C "$RUNNER_TEMP/legacy"
+          CONTROL_SHA="$(git rev-parse origin/swarm-control)"
+          python3 tools/swarm/v16ctl.py migrate \
+            --legacy-root "$RUNNER_TEMP/legacy/.swarm" \
+            --output "$RUNNER_TEMP/mission-graph.json" \
+            --main-sha "$(git rev-parse HEAD)" \
+            --control-sha "$CONTROL_SHA"
+          python3 tools/swarm/v16ctl.py validate --graph "$RUNNER_TEMP/mission-graph.json"
+          python3 tools/swarm/v16ctl.py status --graph "$RUNNER_TEMP/mission-graph.json" --workers 30
+          python3 tools/swarm/v16ctl.py recommend --graph "$RUNNER_TEMP/mission-graph.json" --limit 10
