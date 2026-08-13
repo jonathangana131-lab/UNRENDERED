@@ -20,6 +20,8 @@
     "Current main 8134a3962be80e8ba6ec2c27207e44db63e6765c was independently observed green after PR #450; do not mutate trust recovery from this docs lane",
     "No local repository execution, Studio, viewport, physical-contact, persistence, networking, or two-client evidence was run or claimed"
   ],
-  "pr": 436,
-  "headSha": "8884e559ac12526ae97c45e26aa93283b69d0509"
+  "metadata": {
+    "pr": 436,
+    "headSha": "8884e559ac12526ae97c45e26aa93283b69d0509"
+  }
 }
