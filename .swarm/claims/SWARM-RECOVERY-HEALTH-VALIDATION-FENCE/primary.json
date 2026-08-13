@@ -5,12 +5,12 @@
   "workerId": "sol-20260812-v16pkg1",
   "claimToken": "c3a7e19b42d8f650",
   "claimedAt": "2026-08-13T03:17:00+00:00",
-  "heartbeatAt": "2026-08-13T03:17:00+00:00",
+  "heartbeatAt": "2026-08-13T03:22:00+00:00",
   "leaseSeconds": 14400,
   "generation": 4,
-  "resources": ["SWARM-PROTOCOL"],
+  "resources": [],
   "branch": "agent/control/SWARM-RECOVERY-HEALTH-VALIDATION-FENCE-primary-v16pkg1-g4",
-  "pr": null,
+  "pr": 447,
   "takeoverOf": "sol-20260811-h4v8n2",
-  "notes": "Generation-4 stale-claim takeover for the exact post-recovery trusted-validator materialization closure defect exposed by V16 PR #443. Scope is limited to .github/workflows/swarm-control.yml and retains trusted-base-only, fail-closed ownership semantics."
+  "notes": "Generation-4 packaging repair integrated as main@4acd7b2fe48258d1f11cfee124dc25eed53f72b7; scarce SWARM-PROTOCOL lease released atomically to V16. Claim retained as audit/observability only."
 }

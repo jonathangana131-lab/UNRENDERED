@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V16-MISSION-GRAPH",
+  "epicId": "SWARM-V16",
+  "title": "UNRENDERED Swarm V16 Mission Graph",
+  "objective": "Add a persistent mission-level control plane above V2.1 that schedules coherent Hero Gate objectives through blockers, work items, solutions, evidence, integration and milestones while preserving legacy claim/resource/event authority and failing closed across Roblox Studio, two-client, device and server-authority truth boundaries.",
+  "priority": 10000,
+  "state": "IMPLEMENTING",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    ".github/workflows/swarm-v16-*.yml",
+    "Docs/SWARM_V16_MISSION_GRAPH.md",
+    "tools/swarm/v16cp/**",
+    "tools/swarm/v16ctl.py",
+    "tools/swarm/v16_objective_integrate.py",
+    "tools/swarm/test_swarm_v16*.py"
+  ],
+  "resources": ["SWARM-PROTOCOL"],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Mission Graph architect and integrator",
+      "exclusive": true,
+      "availableWhen": ["READY", "CLAIMED", "IMPLEMENTING", "NEEDS_CHANGES"],
+      "priorityBoost": 1000,
+      "writeScopes": [
+        ".github/workflows/swarm-v16-*.yml",
+        "Docs/SWARM_V16_MISSION_GRAPH.md",
+        "tools/swarm/v16cp/**",
+        "tools/swarm/v16ctl.py",
+        "tools/swarm/v16_objective_integrate.py",
+        "tools/swarm/test_swarm_v16*.py"
+      ]
+    },
+    {
+      "slotId": "reviewer-1",
+      "role": "Independent Mission Graph invariant reviewer",
+      "exclusive": true,
+      "availableWhen": ["REVIEW", "INTEGRATION_READY"],
+      "priorityBoost": 900,
+      "requiresIndependentFrom": "primary",
+      "writeScopes": [
+        ".github/workflows/swarm-v16-*.yml",
+        "Docs/SWARM_V16_MISSION_GRAPH.md",
+        "tools/swarm/v16cp/**",
+        "tools/swarm/v16ctl.py",
+        "tools/swarm/v16_objective_integrate.py",
+        "tools/swarm/test_swarm_v16*.py"
+      ]
+    }
+  ],
+  "acceptance": [
+    "exact-head canonical CI and V16 shadow suite pass",
+    "trusted V2.1 PR ownership accepts the exact canonical branch and protected SWARM-PROTOCOL lease",
+    "live V2.1 structured dependencies migrate without rewriting immutable events",
+    "30-worker adversarial convergence preserves CAS, duplicate suppression and merge serialization invariants",
+    "source CI and simulation cannot promote Studio, two-client, device or server-authority truth",
+    "post-merge activation persists ACTIVE Mission Graph state with destructive migration disabled",
+    "at least one non-external objective is dogfooded through evidence-bound integration before this lane is declared DONE"
+  ],
+  "pr": 443,
+  "notes": "Canonical V16 implementation PR #443. Migration is additive above V2.1. Hero Door/runtime authority remains fail-closed until explicit external evidence exists.",
+  "tags": ["swarm-v16", "mission-graph", "control-plane", "hero-gate", "truth-boundary"]
+}
