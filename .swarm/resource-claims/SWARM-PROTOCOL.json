@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260812-v16pkg1",
-  "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
-  "claimToken": "c3a7e19b42d8f650",
-  "acquiredAt": "2026-08-13T03:17:00+00:00",
-  "heartbeatAt": "2026-08-13T03:17:00+00:00",
-  "leaseSeconds": 300,
-  "generation": 5,
-  "notes": "Exact repair snapshot restores the prior owner and shortens only its same-owner lease to the minimum valid duration. The lease is expired before any V16 takeover is attempted."
+  "workerId": "sol-20260812-v16graph",
+  "laneId": "SWARM-V16-MISSION-GRAPH",
+  "claimToken": "9f2c4a71d8e6503b",
+  "acquiredAt": "2026-08-13T09:38:42+00:00",
+  "heartbeatAt": "2026-08-13T09:38:42+00:00",
+  "leaseSeconds": 14400,
+  "generation": 6,
+  "notes": "Exclusive SWARM-PROTOCOL lease acquired by canonical V16 Mission Graph after the prior generation-5 recovery lease expired; no external runtime authority is conferred."
 }
