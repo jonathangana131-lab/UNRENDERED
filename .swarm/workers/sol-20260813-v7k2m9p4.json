@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260813-v7k2m9p4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-13T22:36:30+00:00",
+  "lastSeenAt": "2026-08-13T22:36:30+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-test-adversary-v7k2m9p4",
+  "notes": "Independent WorldEntity adversarial depth pass. Inspected stale primary/resource holder PR #437 before claiming; scope is tests/world_entity*.luau only."
+}
