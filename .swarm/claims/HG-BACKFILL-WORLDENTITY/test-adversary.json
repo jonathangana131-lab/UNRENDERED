@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260813-cf353f13",
+  "claimToken": "5ec7a4b9d1328f60",
+  "claimedAt": "2026-08-13T22:48:00+00:00",
+  "heartbeatAt": "2026-08-13T22:48:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["REALITY-CONTRACT"],
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-cf353f13",
+  "pr": null,
+  "notes": "Complementary adversarial test pass against retained generation-9 PR #437. Inspect current candidate first; only add a regression for a concrete nonduplicate gap."
+}
