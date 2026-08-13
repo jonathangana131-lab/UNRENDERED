@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260813-v16rvw2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "REVIEWING",
   "startedAt": "2026-08-13T22:35:00+00:00",
-  "lastSeenAt": "2026-08-13T22:44:48+00:00",
-  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "lastSeenAt": "2026-08-13T22:45:00+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
   "slotId": "reviewer-1",
-  "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-v16rvw2",
-  "notes": "Completed current-main convergence review of PR #444 exact head cadfd75b0913a9b22bac09f726807fd0e98194f0 against main 8134a3962be80e8ba6ec2c27207e44db63e6765c. Verdict REQUEST_CHANGES is durable in swarm-control event evt-20260813-223500-v16rvw2-worker-status-current-main-review; PR rationale recorded as comment review 4932229184 because GitHub forbids owner self-request-changes reviews. Lane transitioned to NEEDS_CHANGES. Reviewer lease generation 2 was reduced to 300 seconds without heartbeat advancement and is stale/released."
+  "branch": "agent/review/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-reviewer-1-v16rvw2",
+  "notes": "Independent exact-current-main review of event identity compatibility after generation-2 recovery. Prior worker-status review is complete and its lease stale/released. This role owns no implementation resource."
 }
