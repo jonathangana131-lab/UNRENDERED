@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260813-v4m8q2k7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-13T22:38:20+00:00",
+  "lastSeenAt": "2026-08-13T22:38:20+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Go worker registered; main is green. Avoiding overlap with a concurrently registered worker targeting the highest-priority stale control recovery; selecting the highest-value non-conflicting ready Hero-Gate depth slot."
+}
