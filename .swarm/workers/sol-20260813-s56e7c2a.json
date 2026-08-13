@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260813-s56e7c2a",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-13T22:38:00+00:00",
-  "lastSeenAt": "2026-08-13T22:41:30+00:00",
+  "lastSeenAt": "2026-08-13T22:49:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-materialdna",
   "branch": "agent/mining/HG-CAPACITY-MINING-mine-materialdna-s56e7c2a",
-  "notes": "Event-identity generation-2 takeover lost its fenced CAS race to sol-20260813-z7q4m2n8, so rerouted without duplicate work. Mining current MaterialDNA production/tests/history for one concrete non-overlapping Hero-Gate depth gap; no Studio evidence claims."
+  "notes": "Completed MaterialDNA capacity mining. Published evt-20260813-224800-s56e7c2a-materialdna-capacity-exhausted: no safe non-duplicate new leaf; demonstrated remaining gaps are already sequenced in counter exactness, dense bounds, and key grammar lanes. Claim retired; no Studio evidence claimed."
 }
