@@ -4,8 +4,8 @@
   "resetId": "reset-20260811-history-continuity",
   "resetReason": "Reviewed finite reset quarantines the exact immutable-event artifacts enumerated by the recovery validator and crosses every malformed worker transition enumerated by FINITE_WORKER_TRANSITIONS; all later authority is strict append-only/trusted history.",
   "schemaVersion": 1,
-  "trustedControlSha": "81cbaddfee8463cac6961607c730157af5381def",
-  "trustedStateDigest": "77d7ea6884eb436c4c3809cb299972580678a86492332bbd6d820fa8f48bb6a8",
-  "validatedAt": "2026-08-13T09:57:03+00:00",
+  "trustedControlSha": "c4a20619843cf52495f44e214d0a4d32a17d0c94",
+  "trustedStateDigest": "b78f44b9f23cdb7cd831dd013a62a8f7bfef298832bc885ce1c8245f838ebc37",
+  "validatedAt": "2026-08-13T10:00:01+00:00",
   "validatorMainSha": "a90eb0285075a290fb5d6724e66eb08aaa4559b7"
 }
