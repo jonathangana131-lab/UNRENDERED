@@ -1,24 +1,5 @@
 {
-  "activeClaims": [
-    {
-      "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-k3r8v1m6",
-      "expiresAt": "2026-08-13T23:19:00+00:00",
-      "generation": 1,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": null,
-      "slotId": "mine-materialdna",
-      "workerId": "sol-20260813-k3r8v1m6"
-    },
-    {
-      "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-k7m4v9q2-g5",
-      "expiresAt": "2026-08-13T23:22:00+00:00",
-      "generation": 5,
-      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-      "pr": null,
-      "slotId": "primary",
-      "workerId": "sol-20260813-k7m4v9q2"
-    }
-  ],
+  "activeClaims": [],
   "blockedLanes": [
     {
       "laneId": "HERO-DOOR",
@@ -142,17 +123,17 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-13T23:13:47.208445+00:00",
+  "generatedAt": "2026-08-13T23:22:02.522660+00:00",
   "mainHealth": {
     "conclusion": "success",
-    "headSha": "ce49c39d98052eba55fd7824676d16dbdf30a30f",
+    "headSha": "ae87515c586dd7024b14eb2d70734cc21d6eb047",
     "schemaVersion": 1,
     "status": "GREEN",
-    "updatedAt": "2026-08-13T23:13:37+00:00",
-    "workflowRunId": 31753001126
+    "updatedAt": "2026-08-13T23:21:52+00:00",
+    "workflowRunId": 31753501021
   },
   "metrics": {
-    "activeClaims": 2,
+    "activeClaims": 0,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -171,7 +152,7 @@
       "REVIEW_RESULT": 204,
       "SUPERSEDED": 1
     },
-    "generatedAt": "2026-08-13T23:13:47.208445+00:00",
+    "generatedAt": "2026-08-13T23:22:02.522660+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
@@ -185,10 +166,10 @@
       "SUPERSEDED": 2
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 11,
+    "readySlots": 12,
     "reviewBacklog": 4,
     "schemaVersion": 1,
-    "staleClaims": 14
+    "staleClaims": 16
   },
   "readySlots": [
     {
@@ -264,6 +245,17 @@
       "role": "Mine ObjectGenome for next concrete depth lane",
       "score": 3670,
       "slotId": "mine-objectgenome",
+      "writeScopes": [
+        "Docs/**"
+      ]
+    },
+    {
+      "laneId": "HG-CAPACITY-MINING",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Mine MaterialDNA for next concrete depth lane",
+      "score": 3660,
+      "slotId": "mine-materialdna",
       "writeScopes": [
         "Docs/**"
       ]
@@ -767,7 +759,7 @@
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 1,
+      "activeOwners": 0,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "SWARM-PROTOCOL",
@@ -852,6 +844,15 @@
       "workerId": "sol-20260812-q6n9v2m4"
     },
     {
+      "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-k3r8v1m6",
+      "expiredAt": "2026-08-13T23:19:00+00:00",
+      "generation": 1,
+      "laneId": "HG-CAPACITY-MINING",
+      "pr": null,
+      "slotId": "mine-materialdna",
+      "workerId": "sol-20260813-k3r8v1m6"
+    },
+    {
       "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-k2m8v4q7",
       "expiredAt": "2026-08-13T23:10:00+00:00",
       "generation": 1,
@@ -906,6 +907,15 @@
       "workerId": "sol-20260812-v16pkg1"
     },
     {
+      "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-k7m4v9q2-g5",
+      "expiredAt": "2026-08-13T23:22:00+00:00",
+      "generation": 5,
+      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+      "pr": null,
+      "slotId": "primary",
+      "workerId": "sol-20260813-k7m4v9q2"
+    },
+    {
       "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-v16rvw2",
       "expiredAt": "2026-08-13T22:40:00+00:00",
       "generation": 2,
@@ -924,14 +934,14 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "74d012cc86adcd052309f490f283b1de298edd645f6201c9db6972f0215066a4",
+  "stateDigest": "b84a1c6263356287e8d98c7d03aa16d80a18f0f3076affb42455aac3db30287f",
   "summary": {
-    "activeClaims": 2,
-    "activeResourceClaims": 1,
+    "activeClaims": 0,
+    "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
     "lanes": 58,
-    "readySlots": 11,
-    "staleClaims": 14,
+    "readySlots": 12,
+    "staleClaims": 16,
     "workers": 391
   }
 }

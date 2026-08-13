@@ -1,16 +1,16 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-13T23:13:47.208445+00:00`
+Generated: `2026-08-13T23:22:02.522660+00:00`
 
-Canonical main: **GREEN** `ce49c39d98052eba55fd7824676d16dbdf30a30f`
+Canonical main: **GREEN** `ae87515c586dd7024b14eb2d70734cc21d6eb047`
 
-State digest: `74d012cc86adcd052309f490f283b1de298edd645f6201c9db6972f0215066a4`
+State digest: `b84a1c6263356287e8d98c7d03aa16d80a18f0f3076affb42455aac3db30287f`
 
 ## Summary
 
-- ready slots: **11**
-- active claims: **2**
-- stale claims: **14**
+- ready slots: **12**
+- active claims: **0**
+- stale claims: **16**
 - blocked-external lanes: **1**
 
 ## Ready slots
@@ -21,6 +21,7 @@ State digest: `74d012cc86adcd052309f490f283b1de298edd645f6201c9db6972f0215066a4`
 - `HG-BACKFILL-DIAGNOSTICS/audit` — **Diagnostics failure-path and capture-contract auditor** — score 4970 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-worldentity` — **Mine WorldEntity for next concrete depth lane** — score 3680 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-objectgenome` — **Mine ObjectGenome for next concrete depth lane** — score 3670 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-materialdna` — **Mine MaterialDNA for next concrete depth lane** — score 3660 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-fidelity` — **Mine FidelityManager for next concrete depth lane** — score 3650 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-physics-runtime` — **Mine Physics runtime for next concrete depth lane** — score 3640 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-physics-geometry` — **Mine Physics geometry for next concrete depth lane** — score 3630 — dependencies satisfied
@@ -29,8 +30,7 @@ State digest: `74d012cc86adcd052309f490f283b1de298edd645f6201c9db6972f0215066a4`
 
 ## Active claims
 
-- `HG-CAPACITY-MINING/mine-materialdna` → `sol-20260813-k3r8v1m6`; lease to `2026-08-13T23:19:00+00:00`
-- `SWARM-RECOVERY-WORKER-STATUS-CONTRACT/primary` → `sol-20260813-k7m4v9q2`; lease to `2026-08-13T23:22:00+00:00`
+_None._
 
 ## Blocked lanes
 
