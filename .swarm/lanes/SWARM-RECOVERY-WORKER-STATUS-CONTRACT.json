@@ -8,44 +8,11 @@
   "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
-  "writeScopes": [
-    "tools/swarm/swarmctl.py",
-    "tools/swarm/test_swarmctl.py",
-    "tools/swarm/test_swarmctl_hardening.py",
-    "Docs/SWARM_PROTOCOL.md",
-    "Docs/SWARM_CONTROL_PLANE.md"
-  ],
+  "writeScopes": ["tools/swarm/swarmctl.py", "tools/swarm/test_swarmctl.py", "tools/swarm/test_swarmctl_hardening.py", "Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md"],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
-    {
-      "slotId": "primary",
-      "role": "Critical control schema contract repair",
-      "exclusive": true,
-      "availableWhen": ["READY", "NEEDS_CHANGES"],
-      "priorityBoost": 1000,
-      "writeScopes": [
-        "tools/swarm/swarmctl.py",
-        "tools/swarm/test_swarmctl.py",
-        "tools/swarm/test_swarmctl_hardening.py",
-        "Docs/SWARM_PROTOCOL.md",
-        "Docs/SWARM_CONTROL_PLANE.md"
-      ]
-    },
-    {
-      "slotId": "reviewer-1",
-      "role": "Independent control schema recovery verifier",
-      "exclusive": true,
-      "availableWhen": ["REVIEW", "INTEGRATION_READY"],
-      "priorityBoost": 900,
-      "requiresIndependentFrom": "primary",
-      "writeScopes": [
-        "tools/swarm/swarmctl.py",
-        "tools/swarm/test_swarmctl.py",
-        "tools/swarm/test_swarmctl_hardening.py",
-        "Docs/SWARM_PROTOCOL.md",
-        "Docs/SWARM_CONTROL_PLANE.md"
-      ]
-    }
+    {"slotId":"primary","role":"Critical control schema contract repair","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":1000,"writeScopes":["tools/swarm/swarmctl.py","tools/swarm/test_swarmctl.py","tools/swarm/test_swarmctl_hardening.py","Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md"]},
+    {"slotId":"reviewer-1","role":"Independent control schema recovery verifier","exclusive":true,"availableWhen":["REVIEW","INTEGRATION_READY"],"priorityBoost":900,"requiresIndependentFrom":"primary","writeScopes":["tools/swarm/swarmctl.py","tools/swarm/test_swarmctl.py","tools/swarm/test_swarmctl_hardening.py","Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md"]}
   ],
   "acceptance": [
     "the supported canonical worker-status vocabulary is explicitly documented where every Go worker reads it, with only evidence-backed compatibility aliases accepted",
@@ -56,11 +23,10 @@
     "live swarm-control validation returns PASS on authoritative history without rewriting immutable events"
   ],
   "pr": 444,
-  "notes": "Generation-4 PR #444 exact head cadfd75b0913a9b22bac09f726807fd0e98194f0 is frozen in REVIEW. Canonical CI run 31660999467 PASS and Swarm engine-tests job 94325932094 PASS, including deterministic/hardening suites and both 30-worker races. The generation-4 delta from generation-3 is one file (+18/-4) and only stabilizes repeated facade execution by retaining the first strict base anchors plus one shared finite audited-blob registry. Exact path+Git-blob authentication remains mandatory before inert legacy JSON parsing; all unlisted/new executable-looking event fields remain strict-fail. Reviewer sol-20260812-rvw16g4a is distinct from primary and owns no SWARM-PROTOCOL resource. The ordinary pr-ownership job remains bootstrap-blocked because it deliberately executes the older validator from main; that red job is not accepted as evidence of this candidate. Live state validation and reviewer verdict still gate integration.",
+  "notes": "Generation-4 PR #444 exact head cadfd75b0913a9b22bac09f726807fd0e98194f0 has canonical CI 31660999467 PASS and control engine/adversarial job 94325932094 PASS. Independent reviewer sol-20260812-rvw16g4a APPROVED the exact head in GitHub review 4922922407 and typed REVIEW_RESULT evt-20260813-024000-rvw16g4a-worker-status-review. Review verified the one-file +18/-4 delta only stabilizes repeated facade execution by retaining the first strict base anchors and one shared finite audited-blob registry; exact path+Git-blob authentication remains mandatory before inert legacy JSON parsing and all unlisted/new executable-looking event fields remain strict-fail. The lane stays REVIEW until live swarm-control validates under the accepted recovery validator. Ordinary pr-ownership remains intentionally bootstrap-blocked on older main and must not be weakened.",
   "blockers": [
-    "Fresh independent exact-head reviewer verdict by sol-20260812-rvw16g4a is required before integration.",
     "Live swarm-control validation must PASS under the accepted recovery validator without rewriting immutable events.",
-    "The ordinary pr-ownership job remains intentionally fail-closed until the trusted-history bootstrap moves the accepted validator to main; do not weaken that workflow."
+    "The trusted-history bootstrap must move the accepted validator to main without weakening the ordinary pr-ownership fence."
   ],
   "tags": ["control-repair", "red-ci", "worker-lifecycle", "event-schema", "hero-gate"]
 }

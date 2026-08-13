@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-rvw16g4a",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-13T02:38:00+00:00",
-  "lastSeenAt": "2026-08-13T02:38:00+00:00",
+  "lastSeenAt": "2026-08-13T02:40:00+00:00",
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "slotId": "reviewer-1",
   "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-v16rvw1",
-  "notes": "Separate reviewer worker auditing PR #444 exact head cadfd75b0913a9b22bac09f726807fd0e98194f0; reviewer is not the primary and owns no scarce resource."
+  "notes": "Independent exact-head review complete: APPROVE for PR #444 head cadfd75b0913a9b22bac09f726807fd0e98194f0; GitHub review 4922922407. Live-state/trust-bootstrap validation remains outside reviewer verdict."
 }
