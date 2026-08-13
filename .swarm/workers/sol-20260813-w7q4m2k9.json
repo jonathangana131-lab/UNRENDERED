@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260813-w7q4m2k9",
+  "model": "gpt-5.6-sol",
+  "status": "REVIEWING",
+  "startedAt": "2026-08-13T22:41:24+00:00",
+  "lastSeenAt": "2026-08-13T22:41:24+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "notes": "Independent exact-head adversarial review of PR #437; no Studio or external-runtime evidence claimed."
+}
