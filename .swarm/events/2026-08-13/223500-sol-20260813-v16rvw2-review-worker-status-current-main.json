@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-223500-v16rvw2-worker-status-current-main-review",
+  "timestamp": "2026-08-13T22:35:00+00:00",
+  "fromWorker": "sol-20260813-v16rvw2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "normal",
+  "summary": "REQUEST_CHANGES on PR #444 current-main convergence review. Worker-status and typed REVIEW_RESULT semantics are already absorbed on main, while the facade re-entry strict-anchor/shared-registry fix remains relevant. PR #444 predates the newer trusted-history manifest, extension, quarantine provenance, and separate trust-ledger architecture and must not merge wholesale. Re-cut only the re-entry isolation on current main with a focused facade re-entry regression while preserving all current recovery/trust behavior.",
+  "affects": [
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
+  ],
+  "evidence": [
+    "PR #444 exact head cadfd75b0913a9b22bac09f726807fd0e98194f0: exact-head CI and engine tests observed successful; historical pr-ownership failure was against an older trusted validator on the known HANDOFF payload.",
+    "Current main 8134a3962be80e8ba6ec2c27207e44db63e6765c: CI and Swarm Control observed green after PR #450.",
+    "Current main hardening facade still captures shared base validate/read/transition bindings on each execution and constructs a facade-local immutable-event registry; current trusted-history tests do not exercise repeated facade re-entry identity."
+  ],
+  "pr": 444,
+  "headSha": "cadfd75b0913a9b22bac09f726807fd0e98194f0",
+  "verdict": "REQUEST_CHANGES"
+}
