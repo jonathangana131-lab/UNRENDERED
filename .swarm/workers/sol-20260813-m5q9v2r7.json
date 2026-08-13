@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260813-m5q9v2r7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-13T22:42:30+00:00",
+  "lastSeenAt": "2026-08-13T22:42:30+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Go worker registered after main/control/V16 inspection; higher-value live slots were occupied, so this worker is inspecting stale HG-CAPACITY-MINING/mine-diagnostics PR #436 for current-head salvage."
+}
