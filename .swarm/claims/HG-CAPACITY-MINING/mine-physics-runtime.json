@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "workerId": "sol-20260813-k2m8v4q7",
+  "claimToken": "6e3a9c81d4f2075b",
+  "claimedAt": "2026-08-13T22:40:00+00:00",
+  "heartbeatAt": "2026-08-13T22:40:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-k2m8v4q7",
+  "pr": null,
+  "notes": "Bounded source-depth mining pass over the retained Physics Lab runtime/synthesis lineages. Find one concrete non-duplicate invariant/test/integration gap or publish a no-gap finding; no Studio evidence or feature unlock."
+}
