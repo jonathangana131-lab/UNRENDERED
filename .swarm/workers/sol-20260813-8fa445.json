@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260813-8fa445",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-13T22:38:39+00:00",
-  "lastSeenAt": "2026-08-13T22:50:00+00:00",
+  "lastSeenAt": "2026-08-13T22:51:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
   "branch": "agent/mining/HG-CAPACITY-MINING-authority-8fa445-a1",
-  "notes": "Second source-only capacity shard after completing/releasing mine-physics-geometry. Authority/multiplayer slot claimed cleanly. Product branch creation was unavailable through the connector, so this pass remains read-only and will publish only a structured finding/no-gap event. No Studio/two-client evidence will be claimed."
+  "notes": "Completed two source-only capacity shards. Physics geometry published DEPENDENCY_DISCOVERED evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract for the missing ObjectGenome hinge axis-line/attachment-anchor contract. Authority/multiplayer published FINDING evt-20260813-225000-8fa445-authority-current-main-no-new-gap after proving current main changed only swarm/trusted-history machinery since the prior authority audit and retained #348/#394/#412 remain the correct blocked integration train. No product code or tests changed/run; no Roblox Studio, runtime, replication, or real two-client evidence claimed. Authority product branch creation was unavailable through the connector, but the role remained read-only and completed via durable event."
 }
