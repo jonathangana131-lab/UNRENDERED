@@ -1261,7 +1261,7 @@
   "migration": {
     "activationMainSHA": "a90eb0285075a290fb5d6724e66eb08aaa4559b7",
     "destructiveActionsAllowed": false,
-    "legacyControlSHA": "6d221007cb3a3e637a2160b27e133e81d90e2ee3",
+    "legacyControlSHA": "f6957e670ef4d0fcd18cf2ad44623fff01c91b17",
     "legacyImported": true,
     "legacyLaneIds": [
       "HERO-DOOR",
@@ -9472,10 +9472,10 @@
       "userValue": 8
     }
   },
-  "revision": 4,
+  "revision": 5,
   "schemaVersion": 16,
   "solutions": {},
-  "updatedAt": "2026-08-13T10:11:16Z",
+  "updatedAt": "2026-08-13T10:11:45Z",
   "workItems": {
     "legacy-hg-authority-harness-lifecycle-capability-audit": {
       "blockerId": "",
