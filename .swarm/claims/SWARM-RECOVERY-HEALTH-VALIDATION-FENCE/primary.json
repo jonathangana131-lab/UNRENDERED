@@ -5,12 +5,12 @@
   "workerId": "sol-20260812-v16pkg1",
   "claimToken": "c3a7e19b42d8f650",
   "claimedAt": "2026-08-13T03:17:00+00:00",
-  "heartbeatAt": "2026-08-13T03:22:00+00:00",
-  "leaseSeconds": 14400,
+  "heartbeatAt": "2026-08-13T03:17:00+00:00",
+  "leaseSeconds": 300,
   "generation": 4,
-  "resources": [],
+  "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/control/SWARM-RECOVERY-HEALTH-VALIDATION-FENCE-primary-v16pkg1-g4",
   "pr": 447,
   "takeoverOf": "sol-20260811-h4v8n2",
-  "notes": "Generation-4 packaging repair integrated as main@4acd7b2fe48258d1f11cfee124dc25eed53f72b7; scarce SWARM-PROTOCOL lease released atomically to V16. Claim retained as audit/observability only."
+  "notes": "Exact repair snapshot for the failed V16 resource handoff. This claim preserves its declared lane resource but is intentionally expired; no authority is transferred by this record."
 }
