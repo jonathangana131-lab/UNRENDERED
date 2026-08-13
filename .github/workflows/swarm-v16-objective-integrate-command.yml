@@ -20,7 +20,7 @@ jobs:
       github.actor == github.repository_owner &&
       startsWith(github.event.comment.body, '/v16-objective-integrate ')
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout current default branch truth
         uses: actions/checkout@v4
@@ -49,3 +49,13 @@ jobs:
           for value in affected: cmd += ['--affected-path', value]
           subprocess.run(cmd, check=True)
           PY
+      - name: Reconcile V2.1 projections and exact trust anchor
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          python3 tools/swarm/v16_legacy_trust_sync.py \
+            --repo "$GITHUB_REPOSITORY" \
+            --control-branch swarm-control \
+            --trust-branch swarm-trust \
+            --default-branch "$DEFAULT_BRANCH"
