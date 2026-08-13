@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260813-r7k4n9p2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-13T22:37:14+00:00",
+  "lastSeenAt": "2026-08-13T22:37:14+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Go worker registered; main is green and scheduler inspection selected the highest-value stale recovery candidate after predecessor/ownership review."
+}
