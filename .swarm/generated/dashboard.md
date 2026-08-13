@@ -1,16 +1,16 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-13T03:21:02.039639+00:00`
+Generated: `2026-08-13T09:36:29.549979+00:00`
 
 Canonical main: **GREEN** `4acd7b2fe48258d1f11cfee124dc25eed53f72b7`
 
-State digest: `911ee4428699d476aaf95f30f4a48bf2bf8f4f4243f8a0024acef5676ca4da18`
+State digest: `a872f271e377c377a204d530bf036c3eb79204aa9ea59defc0ce510389d2c05e`
 
 ## Summary
 
 - ready slots: **14**
-- active claims: **1**
-- stale claims: **12**
+- active claims: **0**
+- stale claims: **14**
 - blocked-external lanes: **1**
 
 ## Ready slots
@@ -32,7 +32,7 @@ State digest: `911ee4428699d476aaf95f30f4a48bf2bf8f4f4243f8a0024acef5676ca4da18`
 
 ## Active claims
 
-- `SWARM-RECOVERY-HEALTH-VALIDATION-FENCE/primary` → `sol-20260812-v16pkg1`; lease to `2026-08-13T07:17:00+00:00`
+_None._
 
 ## Blocked lanes
 
