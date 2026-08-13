@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260812-v16graph",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-13T03:22:00+00:00",
-  "lastSeenAt": "2026-08-13T10:09:00+00:00",
+  "lastSeenAt": "2026-08-13T10:17:04+00:00",
   "laneId": "SWARM-V16-MISSION-GRAPH",
   "slotId": "primary",
   "branch": "agent/swarm-v16-mission-graph",
-  "notes": "Lead V16 Mission Graph implementation/integration worker; fixing serialized state writes and trust CAS retry on PR #450."
+  "notes": "V16 Mission Graph implementation/integration complete. Core, trust-sync hardening, CAS-race serialization, production activation, and evidence-bound self-dogfood all accepted; worker stopped and exclusive protocol lease released."
 }
