@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-13T22:38:30+00:00",
-  "lastSeenAt": "2026-08-13T22:45:00+00:00",
+  "lastSeenAt": "2026-08-13T22:49:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-objectgenome",
-  "branch": "agent/objectgenome/HG-CAPACITY-MINING-objectgenome-k3r8v1m6",
-  "notes": "ObjectGenome capacity pass completed without product edits. Published FINDING evt-20260813-224400-k3r8v1m6-objectgenome-caster-axis-frame: current + retained generation-8 validation independently unit-check caster swivel/roll axes but accepts degenerate parallel axes; shipped chair/cart frames are orthogonal. FamilyVersion, state/cardinality, and string-budget candidates were ruled out as existing work. Continuing scheduler fallback after releasing this mining lease; no tests or Studio evidence claimed."
+  "slotId": "mine-materialdna",
+  "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-k3r8v1m6",
+  "notes": "ObjectGenome mining finding published and lease released. Now mining MaterialDNA under token c6f1a83d4b7e9052 for one concrete non-duplicate source/test/contract gap, explicitly excluding the existing repairCount/counter lane and any Studio evidence."
 }
