@@ -2,6 +2,7 @@ name: Swarm V16 Mission Graph Shadow
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
     paths:
       - 'tools/swarm/v16cp/**'
       - 'tools/swarm/v16ctl.py'
