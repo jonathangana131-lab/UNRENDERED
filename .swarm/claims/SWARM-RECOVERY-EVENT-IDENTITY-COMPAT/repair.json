@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+  "slotId": "repair",
+  "workerId": "sol-20260813-eic7n4p2",
+  "claimToken": "c89a3f56179122d1",
+  "claimedAt": "2026-08-13T22:38:00+00:00",
+  "heartbeatAt": "2026-08-13T22:38:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/control/event-identity-compat-g2-eic7n4p2",
+  "notes": "Generation-2 stale recovery after inspecting expired generation-1 PR #328 and its laundering review blocker. Current main has exact path/blob compatibility; this generation locks the remaining laundering regression and finite identity-compat closure."
+}
