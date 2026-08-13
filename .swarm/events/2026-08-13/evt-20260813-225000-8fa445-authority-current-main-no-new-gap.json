@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-225000-8fa445-authority-current-main-no-new-gap",
+  "timestamp": "2026-08-13T22:50:00+00:00",
+  "fromWorker": "sol-20260813-8fa445",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "summary": "Fresh authority/multiplayer mining on current main found no additional non-duplicate source-only defect worth spawning. The six commits since the prior authority no-gap audit changed only swarm-control/trusted-history machinery, while the retained authority candidates remain independently source/test reviewed and intentionally blocked on live ownership recovery; real HG151 two-client evidence remains gated on OPS-STUDIO-DISPLAY.",
+  "affects": [
+    "HG-BACKFILL-AUTHORITY",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "HG-COMPLETION-AUTHORITY",
+    "HG151-TWOCLIENT"
+  ],
+  "evidence": [
+    "Compared prior authority mining base main@ae83c0ef470eb2e73d99be41fd3561ede30c40e1 to current main@8134a3962be80e8ba6ec2c27207e44db63e6765c: current main is 6 commits ahead / 0 behind and every changed path is under .github swarm-control workflows, Docs swarm/trusted-history material, or tools/swarm; no src/server, src/client, PhysicsLab harness, authority, or multiplayer production source changed.",
+    "HG-BACKFILL-AUTHORITY still retains PR #348 exact head aa60103d489a055d86cf234dcc1338cf6168e4b3 and stacked teardown PR #394 exact head b38de16ade487ff8ceb48ed3596ebfe33be5fa1f. Both remain open/mergeable with prior independent SOURCE/TEST PASS; #394 contains no production-source delta and must follow #348 after fresh live ownership.",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY still retains PR #412 exact head 807fb042b2fe96db32bda7a5c3346788e828a758. It remains open/mergeable and addresses the already-known harness generation/lifecycle capability fence; the lane records independent exact-head source/test approval and green canonical CI/engine tests, with integration blocked only on trusted ownership recovery.",
+    "HG-COMPLETION-AUTHORITY explicitly instructs the swarm to retain exactly #348, #394 and #412 and not spawn another authority primary while trusted ownership is blocked. It already preserves the separate PR #300 Rojo deployment-boundary finding requiring a future subtree/prefix-aware replicated-tree exclusion; reopening that exact source gap here would be duplicate work.",
+    "HG151-TWOCLIENT still requires a real server plus two distinct clients and depends on OPS-STUDIO-DISPLAY. No source-only fixture, static audit, or connector inspection can truthfully satisfy that evidence gate.",
+    "No local Lune/Luau tests, Roblox Studio run, replication session, runtime scheduler, or real two-client evidence was executed or claimed by this mining pass. Product branch creation was unavailable through the connector, but the claimed role was read-only and required only a structured finding/no-gap result."
+  ],
+  "recommendation": "Do not create another authority primary from this mining shard. Finish the separately owned trusted-history/live-ownership recovery, then integrate the retained authority train in its declared order (#348 first, then replay/retarget #394 as needed, and retain #412 through its own lane), preserve the existing subtree-aware Rojo exclusion finding for its later authorized lane, and wait for OPS-STUDIO-DISPLAY before attempting HG151-TWOCLIENT evidence."
+}
