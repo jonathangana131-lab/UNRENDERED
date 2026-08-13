@@ -6,10 +6,10 @@
   "claimToken": "b7d31a6f0c94e285",
   "claimedAt": "2026-08-13T22:35:00+00:00",
   "heartbeatAt": "2026-08-13T22:35:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 2,
   "resources": [],
   "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-v16rvw2",
   "pr": 444,
-  "notes": "Stale reviewer takeover after generation 1 expired. Re-review PR #444 head cadfd75b0913a9b22bac09f726807fd0e98194f0 for convergence against current main 8134a3962be80e8ba6ec2c27207e44db63e6765c and current trusted-history architecture; no implementation writes or SWARM-PROTOCOL lease."
+  "notes": "Review completed with typed REQUEST_CHANGES event evt-20260813-223500-v16rvw2-worker-status-current-main-review and PR comment review 4932229184. Lease intentionally reduced to the protocol minimum without advancing heartbeat so this generation is stale/released after 2026-08-13T22:40:00+00:00. No implementation writes or SWARM-PROTOCOL lease."
 }
