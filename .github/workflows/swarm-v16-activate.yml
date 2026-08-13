@@ -1,6 +1,14 @@
 name: Swarm V16 Mission Graph Activate
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/swarm-v16-activate.yml'
+      - 'tools/swarm/v16cp/**'
+      - 'tools/swarm/v16ctl.py'
+      - 'tools/swarm/v16_objective_integrate.py'
+      - 'tools/swarm/test_swarm_v16*.py'
   workflow_dispatch:
 
 permissions:
