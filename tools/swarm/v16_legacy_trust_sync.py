@@ -14,9 +14,10 @@ usable without weakening it. This helper:
 6. replays through that generated-only commit; and
 7. CAS-advances ``swarm-trust`` to the exact final control SHA/digest.
 
-Any ref race, invalid transition, digest mismatch, malformed trust record, or
-bootstrap trust state fails closed. No immutable event or product/runtime state is
-modified here.
+A concurrent valid control/trust writer is treated as a CAS miss: the whole proof is
+restarted from fresh refs. Invalid history, digest mismatch, malformed trust state,
+bootstrap trust, or a moving default branch still fails closed. No immutable event
+or product/runtime state is modified here.
 """
 from __future__ import annotations
 
@@ -28,6 +29,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.parse
 from pathlib import Path
 from typing import Any
@@ -40,6 +42,10 @@ from v16cp.store import GitHubContentsStore
 
 SHA40 = re.compile(r"^[0-9a-f]{40}$")
 TRUST_PATH = ".swarm/trust.json"
+
+
+class RefRace(ValidationError):
+    """A validated CAS target moved; restart from fresh authoritative refs."""
 
 
 def _git(*args: str, capture: bool = False) -> str:
@@ -133,7 +139,7 @@ def _generated_bytes(root: Path) -> dict[str, bytes]:
 
 
 def _commit_generated(api: GitHubContentsStore, branch: str, expected_control: str, root: Path) -> str:
-    """Publish only rendered generated files, refusing any control-head race."""
+    """Publish only rendered generated files, restarting on any control-head race."""
     before = _generated_bytes(root)
     hard.render(root, now_utc())
     hard.validate_marker(root)
@@ -144,7 +150,7 @@ def _commit_generated(api: GitHubContentsStore, branch: str, expected_control: s
     if not changed:
         return expected_control
     if _api_ref_sha(api, branch) != expected_control:
-        raise ValidationError("control branch advanced before generated projection publish")
+        raise RefRace("control branch advanced before generated projection publish")
     commit = api._request("GET", f"/repos/{api.owner}/{api.repo}/git/commits/{expected_control}")
     base_tree = ((commit or {}).get("tree") or {}).get("sha") if isinstance(commit, dict) else None
     if not isinstance(base_tree, str):
@@ -181,7 +187,7 @@ def _commit_generated(api: GitHubContentsStore, branch: str, expected_control: s
     if not isinstance(commit_sha, str) or not SHA40.fullmatch(commit_sha):
         raise ValidationError("generated commit creation omitted SHA")
     if _api_ref_sha(api, branch) != expected_control:
-        raise ValidationError("control branch advanced during generated projection publish")
+        raise RefRace("control branch advanced during generated projection publish")
     encoded = urllib.parse.quote(branch, safe="")
     api._request(
         "PATCH",
@@ -189,7 +195,7 @@ def _commit_generated(api: GitHubContentsStore, branch: str, expected_control: s
         {"sha": commit_sha, "force": False},
     )
     if _api_ref_sha(api, branch) != commit_sha:
-        raise ValidationError("generated projection ref update was not exact")
+        raise RefRace("generated projection ref advanced after exact publish")
     return commit_sha
 
 
@@ -204,9 +210,9 @@ def _advance_trust(
     trust: dict[str, Any],
 ) -> str:
     if _api_ref_sha(api, trust_branch) != expected_trust_head:
-        raise ValidationError("trust branch advanced before CAS update")
+        raise RefRace("trust branch advanced before CAS update")
     if _api_ref_sha(api, trust["controlBranch"]) != expected_control:
-        raise ValidationError("control branch advanced before trust CAS update")
+        raise RefRace("control branch advanced before trust CAS update")
     main_payload = api._request("GET", f"/repos/{api.owner}/{api.repo}/git/commits/{expected_trust_head}")
     base_tree = ((main_payload or {}).get("tree") or {}).get("sha") if isinstance(main_payload, dict) else None
     if not isinstance(base_tree, str):
@@ -256,9 +262,9 @@ def _advance_trust(
     if not isinstance(commit_sha, str) or not SHA40.fullmatch(commit_sha):
         raise ValidationError("trust commit creation omitted SHA")
     if _api_ref_sha(api, trust_branch) != expected_trust_head:
-        raise ValidationError("trust branch advanced during CAS update")
+        raise RefRace("trust branch advanced during CAS update")
     if _api_ref_sha(api, trust["controlBranch"]) != expected_control:
-        raise ValidationError("control branch advanced during trust CAS update")
+        raise RefRace("control branch advanced during trust CAS update")
     encoded = urllib.parse.quote(trust_branch, safe="")
     api._request(
         "PATCH",
@@ -266,23 +272,19 @@ def _advance_trust(
         {"sha": commit_sha, "force": False},
     )
     if _api_ref_sha(api, trust_branch) != commit_sha:
-        raise ValidationError("trust ref update was not exact")
+        raise RefRace("trust ref advanced after exact publish")
     return commit_sha
 
 
-def synchronize(
-    repository: str,
-    token: str,
+def _synchronize_once(
+    api: GitHubContentsStore,
     *,
-    control_branch: str = "swarm-control",
-    trust_branch: str = "swarm-trust",
-    default_branch: str = "main",
-    dry_run: bool = False,
+    control_branch: str,
+    trust_branch: str,
+    default_branch: str,
+    validator_main_sha: str,
+    dry_run: bool,
 ) -> dict[str, Any]:
-    api = GitHubContentsStore(repository, token, control_branch)
-    validator_main_sha = _git("rev-parse", "HEAD", capture=True)
-    if not SHA40.fullmatch(validator_main_sha):
-        raise ValidationError("checkout HEAD is not exact Git SHA")
     if _api_ref_sha(api, default_branch) != validator_main_sha:
         raise ValidationError("validator checkout is not current default-branch head")
     control_sha = _api_ref_sha(api, control_branch)
@@ -306,6 +308,8 @@ def synchronize(
         if dry_run:
             hard.render(control_root, now_utc())
             hard.validate_marker(control_root)
+            if _api_ref_sha(api, control_branch) != control_sha or _api_ref_sha(api, trust_branch) != trust_head:
+                raise RefRace("authority refs advanced during dry-run proof")
             return {
                 "status": "PASS",
                 "dryRun": True,
@@ -331,6 +335,8 @@ def synchronize(
         hard.validate_marker(final_root)
         if final_digest != digest:
             raise ValidationError("generated-only publish changed authoritative state digest")
+    if _api_ref_sha(api, default_branch) != validator_main_sha:
+        raise ValidationError("default branch advanced before trust authorization")
     trust_commit = _advance_trust(
         api,
         trust_branch=trust_branch,
@@ -352,6 +358,41 @@ def synchronize(
     }
 
 
+def synchronize(
+    repository: str,
+    token: str,
+    *,
+    control_branch: str = "swarm-control",
+    trust_branch: str = "swarm-trust",
+    default_branch: str = "main",
+    dry_run: bool = False,
+    max_race_retries: int = 6,
+) -> dict[str, Any]:
+    if max_race_retries < 0:
+        raise ValidationError("max_race_retries must be non-negative")
+    api = GitHubContentsStore(repository, token, control_branch)
+    validator_main_sha = _git("rev-parse", "HEAD", capture=True)
+    if not SHA40.fullmatch(validator_main_sha):
+        raise ValidationError("checkout HEAD is not exact Git SHA")
+    for attempt in range(max_race_retries + 1):
+        try:
+            result = _synchronize_once(
+                api,
+                control_branch=control_branch,
+                trust_branch=trust_branch,
+                default_branch=default_branch,
+                validator_main_sha=validator_main_sha,
+                dry_run=dry_run,
+            )
+            result["raceRetries"] = attempt
+            return result
+        except RefRace:
+            if attempt >= max_race_retries:
+                raise
+            time.sleep(min(0.25 * (attempt + 1), 1.0))
+    raise AssertionError("unreachable")
+
+
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser()
     p.add_argument("--repo", required=True)
@@ -360,6 +401,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--trust-branch", default="swarm-trust")
     p.add_argument("--default-branch", default="main")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--max-race-retries", type=int, default=6)
     return p
 
 
@@ -375,6 +417,7 @@ def main(argv: list[str] | None = None) -> int:
         trust_branch=args.trust_branch,
         default_branch=args.default_branch,
         dry_run=args.dry_run,
+        max_race_retries=args.max_race_retries,
     )
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0
