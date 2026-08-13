@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-225430-v6n2q9r4-authority-no-new-gap",
+  "timestamp": "2026-08-13T22:54:30+00:00",
+  "fromWorker": "sol-20260813-v6n2q9r4",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "summary": "Authority source mining found no additional non-duplicate source defect worth opening. Retain the existing authority lineages and already-published descendant-liveness and deployment-exclusion follow-ups rather than creating another overlapping primary.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-AUTHORITY", "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY"],
+  "evidence": [
+    "PR #348 retains the wrong-context bootstrap guard and client authority exclusion source contract",
+    "PR #394 retains teardown and restart ordering regressions stacked on the authority primary",
+    "PR #412 retains synchronous stale-owner reconciliation and generation-fenced deferred cleanup",
+    "The existing authority mining correction preserves the separate descendant-liveness follow-up and the existing deployment subtree-exclusion finding",
+    "No new source change or engine evidence is claimed by this mining pass"
+  ]
+}
