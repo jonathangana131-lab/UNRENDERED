@@ -195,10 +195,31 @@ class RecoveryExtensionTests(unittest.TestCase):
                 "92843914017c38b861b3ecd9cbb758b52d3428eb",
                 "b7a4bab4760413bdcd629a1a8e4b0af4e4291964",
             ),
+            (
+                "evt-20260813-225110-j4n7q2v9-diagnostics-docs-g3-review-request",
+                "2026-08-13",
+                "225110-sol-20260813-j4n7q2v9-review-request-diagnostics-docs-g3.json",
+                "af25c84703c1bde8beb84cdb1853ebd07aea6bea",
+                "835076ffce9bf4f355aa9f9b6d85f54177543421",
+            ),
+            (
+                "evt-20260813-224945-f4q9n2c7-fidelity-extra-keys",
+                "2026-08-13",
+                "evt-20260813-224945-f4q9n2c7-fidelity-extra-keys.json",
+                "407732f50438acc4f11da30cca17c348936e73f8",
+                "0dd395b2757e7e3685b5c79aa6d6852ee50e85f3",
+            ),
+            (
+                "evt-20260813-225000-8fa445-authority-current-main-no-new-gap",
+                "2026-08-13",
+                "evt-20260813-225000-8fa445-authority-current-main-no-new-gap.json",
+                "47e9d65cb46852f396cfe109836623f4063d0d03",
+                "6503ee1458957314660adab6ef1e56793e775175",
+            ),
         )
         self.assertEqual(extension.DATED_MALFORMED_EVENT_QUARANTINE_ROWS, expected)
         normalized = extension.malformed_event_quarantine_rows_with_dates()
-        self.assertEqual(len(normalized), 52)
+        self.assertEqual(len(normalized), 55)
         self.assertEqual(len({row[0] for row in normalized}), len(normalized))
         self.assertEqual(len({(row[1], row[2]) for row in normalized}), len(normalized))
         for row in expected:

@@ -8,7 +8,10 @@ resources, state-digest fencing, or immutable-event append-only semantics.
 from __future__ import annotations
 
 import hashlib
+import json
 import re
+import shutil
+import tempfile
 from pathlib import Path
 
 import swarm_history_recovery_extension as _extension
@@ -26,6 +29,20 @@ _STRICT_TRANSITION_CHECK = _base.transition_check
 # the reviewed bootstrap candidate ancestry. This is data, not compatibility: the
 # invalid statuses remain rejected everywhere.
 FINITE_WORKER_TRANSITIONS = _recovery.FINITE_WORKER_TRANSITIONS + _extension.FINITE_WORKER_TRANSITIONS
+
+# One post-anchor stale-claim takeover was written without the required takeoverOf
+# breadcrumb before the error was observed. The old lease was already expired by
+# more than two days and generation advanced exactly once. Git history is immutable,
+# so trusted replay may cross only this exact path + before/after byte identity. The
+# disposable replay copy receives the missing breadcrumb before the proven strict
+# transition engine runs; no live control bytes or general takeover rule are changed.
+_FINITE_CLAIM_TAKEOVER_COMPAT = {
+    "claims/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT/repair.json": {
+        "beforeSha256": "ed68427c1b4b4e75a079432ff7e27ffd9b03985c3e5f00842f9fc64a91d9fabb",
+        "afterSha256": "328b733ef56d7392b1cb3aa1267bb1c377344a1abaf8f359cdb7b66ac930fdb4",
+        "takeoverOf": "sol-20260811-m8q2v7",
+    },
+}
 
 # Pre-convergence immutable history has two distinct recovery classes:
 # 1) valid first-write bytes that were later rewritten; the rewritten bytes are
@@ -306,13 +323,49 @@ def verify_trusted_state(root: Path, trust_path: Path) -> dict:
     return verify_trusted_snapshot(root, trust_path, allow_bootstrap=False)
 
 
+def _strict_transition_check_with_finite_claim_compat(before: Path, after: Path) -> dict:
+    """Cross one byte-pinned missing-takeoverOf transition without weakening strict leases."""
+    try:
+        return _STRICT_TRANSITION_CHECK(before, after)
+    except _base.core.ControlError:
+        matched: list[tuple[str, dict]] = []
+        for relative, rule in _FINITE_CLAIM_TAKEOVER_COMPAT.items():
+            before_path = Path(before) / relative
+            after_path = Path(after) / relative
+            if not before_path.is_file() or not after_path.is_file():
+                continue
+            before_digest = hashlib.sha256(before_path.read_bytes()).hexdigest()
+            after_digest = hashlib.sha256(after_path.read_bytes()).hexdigest()
+            if before_digest == rule["beforeSha256"] and after_digest == rule["afterSha256"]:
+                matched.append((relative, rule))
+        if len(matched) != 1:
+            raise
+
+        relative, rule = matched[0]
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            compat_before = temp_root / "before"
+            compat_after = temp_root / "after"
+            shutil.copytree(before, compat_before)
+            shutil.copytree(after, compat_after)
+            compat_path = compat_after / relative
+            obj = _base.core.load_json(compat_path, max_bytes=32_000)
+            if "takeoverOf" in obj:
+                raise _base.core.ControlError(f"{compat_path}: finite takeover compatibility bytes unexpectedly contain takeoverOf")
+            obj["takeoverOf"] = rule["takeoverOf"]
+            compat_path.write_text(json.dumps(obj, indent=2) + "\n", encoding="utf-8")
+            result = _STRICT_TRANSITION_CHECK(compat_before, compat_after)
+        result["finiteClaimTakeoverCompat"] = [relative]
+        return result
+
+
 def transition_check(before: Path, after: Path) -> dict:
     """Compare from the last separately trusted snapshot, never merely the immediate parent."""
     before = Path(before)
     after = Path(after)
     read_tree(before)
     read_tree(after)
-    result = _STRICT_TRANSITION_CHECK(before, after)
+    result = _strict_transition_check_with_finite_claim_compat(before, after)
 
     before_paths = {str(path.relative_to(before)): path for path in before.glob("events/*/*.json")}
     after_paths = {str(path.relative_to(after)): path for path in after.glob("events/*/*.json")}
