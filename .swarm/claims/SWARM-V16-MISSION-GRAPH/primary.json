@@ -5,11 +5,11 @@
   "workerId": "sol-20260812-v16graph",
   "claimToken": "9f2c4a71d8e6503b",
   "claimedAt": "2026-08-13T03:22:00+00:00",
-  "heartbeatAt": "2026-08-13T09:55:33+00:00",
+  "heartbeatAt": "2026-08-13T10:09:00+00:00",
   "leaseSeconds": 14400,
   "generation": 1,
   "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/swarm-v16-mission-graph",
-  "pr": 449,
-  "notes": "Canonical V16 Mission Graph primary. Same-owner PR reattachment and heartbeat after active V16 trust proof; external Roblox runtime truth remains out of scope."
+  "pr": 450,
+  "notes": "Canonical V16 Mission Graph primary. Same-owner PR reattachment and heartbeat for CAS-race hardening; external Roblox runtime truth remains out of scope."
 }

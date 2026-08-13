@@ -5,8 +5,8 @@
   "laneId": "SWARM-V16-MISSION-GRAPH",
   "claimToken": "9f2c4a71d8e6503b",
   "acquiredAt": "2026-08-13T09:38:42+00:00",
-  "heartbeatAt": "2026-08-13T09:55:33+00:00",
+  "heartbeatAt": "2026-08-13T10:09:00+00:00",
   "leaseSeconds": 14400,
   "generation": 6,
-  "notes": "Exclusive SWARM-PROTOCOL lease held by canonical V16 Mission Graph; same-owner heartbeat refreshed for PR #449. No external runtime authority is conferred."
+  "notes": "Exclusive SWARM-PROTOCOL lease held by canonical V16 Mission Graph; same-owner heartbeat refreshed for PR #450. No external runtime authority is conferred."
 }
