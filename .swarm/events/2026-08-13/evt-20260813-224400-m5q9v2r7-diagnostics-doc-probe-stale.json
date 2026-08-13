@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224400-m5q9v2r7-diagnostics-doc-probe-stale",
+  "timestamp": "2026-08-13T22:44:00+00:00",
+  "fromWorker": "sol-20260813-m5q9v2r7",
+  "eventType": "FINDING",
+  "summary": "Inspection-only finding after the stale HG-CAPACITY-MINING/mine-diagnostics takeover was blocked by the connector safety fence: draft PR #436's failure-atomicity Studio probe injects numeric UNRENDERED_RepresentationClass, but retained diagnostics generation-16 PR #441 intentionally no longer reads that mutable attribute. If #441 is the retained diagnostics source, the documented probe would stop producing the expected failure and must be replaced before #436 integrates.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "No authoritative mine-diagnostics claim was acquired by this worker; the expired generation-1 claim remains owned by sol-20260812-am0s2f7s because the connector rejected the SHA-conditional takeover write. No PR/source mutation was attempted.",
+    "PR #436 exact head 3640afed8419c18bf14b9939f3af8d86989d6be6 documents setting UNRENDERED_RepresentationClass to a number and requiring the exact 'invalid representation class diagnostics attribute' failure.",
+    "Retained PR #441 exact head b8ca3302cc3012011fb911ad3df5dc878130c133 builds EntityDiagnostic.representationClass as nil and does not read UNRENDERED_RepresentationClass in capture(), so that injection is no longer a failure boundary.",
+    "A source-compatible replacement exists on #441: enable() preflights fingerprint/repro/readouts but not root UNRENDERED_WorldId/UNRENDERED_RegionId, while final capture requireStringAttribute-checks those root fields after the owned diagnostics folder is parented. Temporarily injecting a non-string root WorldId or RegionId therefore exercises the rollback path, with restoration required before retry.",
+    "No Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence was run or claimed."
+  ]
+}
