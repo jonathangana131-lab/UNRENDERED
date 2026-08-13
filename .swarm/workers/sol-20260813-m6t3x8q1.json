@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-13T22:38:58+00:00",
-  "lastSeenAt": "2026-08-13T22:38:58+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-test-adversary-m6t3x8q1",
-  "notes": "Claiming diagnostics test-adversary support for generation-16 PR #441; source-only review/test work, no Studio evidence claim."
+  "lastSeenAt": "2026-08-13T22:40:10+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "branch": "agent/capacity/HG-CAPACITY-MINING-authority-m6t3x8q1",
+  "notes": "Lost higher-priority diagnostics/ObjectGenome/MaterialDNA claim races and rerouted to the successfully claimed authority/multiplayer capacity-mining slot. Source-only mining; no Studio/two-client evidence claim."
 }
