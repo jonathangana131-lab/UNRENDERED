@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224700-r8m4q7v2-fidelity-mining-handoff",
+  "timestamp": "2026-08-13T22:47:00+00:00",
+  "fromWorker": "sol-20260813-r8m4q7v2",
+  "eventType": "HANDOFF",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "summary": "Fidelity capacity mining is complete and its authoritative mine-fidelity claim was released after publishing the backing-state encapsulation finding. No production branch delta or PR was created. A follow-on mine-authority claim attempt was connector-safety-blocked and was not bypassed; this worker owns no active lane claim.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-FIDELITY",
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING"
+  ],
+  "evidence": [
+    "Finding evt-20260813-224330-r8m4q7v2-fidelity-manager-backing-state is durable on swarm-control and recommends the bounded source-only follow-up",
+    "The mine-fidelity claim file was deleted through its owned SHA after the finding was published, so no Fidelity ownership remains with this worker",
+    "The connector rejected the later atomic mine-authority claim write before ownership was created; no authority source, tests, branch content, or evidence was changed",
+    "A final worker-record status update was also connector-safety-blocked, so consumers should rely on the absence of an active claim plus this handoff rather than the stale WORKING metadata in the worker registry"
+  ]
+}
