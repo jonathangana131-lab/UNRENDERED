@@ -108,22 +108,101 @@
   "branches": {
     "agent/swarm-v16-mission-graph": {
       "branch": "agent/swarm-v16-mission-graph",
-      "integratedAt": "",
+      "integratedAt": "2026-08-13T10:13:25Z",
       "missionId": "swarm-operations",
       "objectiveId": "swarm-v16-mission-graph",
       "pr": 443,
       "selectedAt": "2026-08-13T09:43:38Z",
       "source": {
-        "legacyLaneId": "SWARM-V16-MISSION-GRAPH",
-        "pr": 443,
-        "slotId": "primary"
+        "headSHA": "762ffe7fe1d8b84b60e14497825de8ff45acdade",
+        "mergeSHA": "a90eb0285075a290fb5d6724e66eb08aaa4559b7",
+        "pr": 443
       },
       "state": "SELECTED",
-      "world": "FRONTIER"
+      "world": "MAIN"
     }
   },
   "createdAt": "2026-08-13T09:43:36Z",
-  "evidence": {},
+  "evidence": {
+    "swarm-v16-mission-graph-ci-762ffe7fe1d8": {
+      "affectedPaths": [
+        "tools/swarm/v16cp",
+        "tools/swarm/v16ctl.py",
+        "tools/swarm/v16_objective_integrate.py",
+        "Docs/SWARM_V16_MISSION_GRAPH.md"
+      ],
+      "createdAt": "2026-08-13T10:13:25Z",
+      "dependencyDigest": "9c2f06c51f5e6c6cdd87d6bd30291313e7cefae3f3565669e911899e082b1f8e",
+      "details": {
+        "acceptanceRuns": [
+          "31687685110",
+          "31687685129",
+          "31687705825"
+        ],
+        "pr": 443,
+        "sourceHead": "762ffe7fe1d8b84b60e14497825de8ff45acdade"
+      },
+      "environmentDigest": "51f91dc039da5e536d7946d289528594d79014f8edbbc513192e00e2940318fd",
+      "evidenceId": "swarm-v16-mission-graph-ci-762ffe7fe1d8",
+      "invalidatedAt": "",
+      "invalidationReason": "",
+      "objectiveId": "swarm-v16-mission-graph",
+      "sourceDigest": "5fbfc261d33ee22d1ebcf894f437077a5e961d438da80fe7ed54ea4f8342c8ff",
+      "status": "PASS",
+      "truthClass": "CI_VERIFIED",
+      "type": "software-acceptance"
+    },
+    "swarm-v16-mission-graph-main-a90eb0285075": {
+      "affectedPaths": [
+        "tools/swarm/v16cp",
+        "tools/swarm/v16ctl.py",
+        "tools/swarm/v16_objective_integrate.py",
+        "Docs/SWARM_V16_MISSION_GRAPH.md"
+      ],
+      "createdAt": "2026-08-13T10:13:25Z",
+      "dependencyDigest": "9c2f06c51f5e6c6cdd87d6bd30291313e7cefae3f3565669e911899e082b1f8e",
+      "details": {
+        "mergeSHA": "a90eb0285075a290fb5d6724e66eb08aaa4559b7",
+        "pr": 443,
+        "sourceHead": "762ffe7fe1d8b84b60e14497825de8ff45acdade"
+      },
+      "environmentDigest": "5a5dc7afba0d3b86dfccd89532afda3def6db8338af4b64fb933e08b82926a7e",
+      "evidenceId": "swarm-v16-mission-graph-main-a90eb0285075",
+      "invalidatedAt": "",
+      "invalidationReason": "",
+      "objectiveId": "swarm-v16-mission-graph",
+      "sourceDigest": "5fbfc261d33ee22d1ebcf894f437077a5e961d438da80fe7ed54ea4f8342c8ff",
+      "status": "PASS",
+      "truthClass": "CI_VERIFIED",
+      "type": "main-integration"
+    },
+    "swarm-v16-mission-graph-review-762ffe7fe1d8": {
+      "affectedPaths": [
+        "tools/swarm/v16cp",
+        "tools/swarm/v16ctl.py",
+        "tools/swarm/v16_objective_integrate.py",
+        "Docs/SWARM_V16_MISSION_GRAPH.md"
+      ],
+      "createdAt": "2026-08-13T10:13:25Z",
+      "dependencyDigest": "9c2f06c51f5e6c6cdd87d6bd30291313e7cefae3f3565669e911899e082b1f8e",
+      "details": {
+        "pr": 443,
+        "reviewRefs": [
+          "4925597044"
+        ],
+        "sourceHead": "762ffe7fe1d8b84b60e14497825de8ff45acdade"
+      },
+      "environmentDigest": "e3bbfcc97dce189df575cc1a626eadd989de0f775006d3940f1378734fbf97cc",
+      "evidenceId": "swarm-v16-mission-graph-review-762ffe7fe1d8",
+      "invalidatedAt": "",
+      "invalidationReason": "",
+      "objectiveId": "swarm-v16-mission-graph",
+      "sourceDigest": "5fbfc261d33ee22d1ebcf894f437077a5e961d438da80fe7ed54ea4f8342c8ff",
+      "status": "PASS",
+      "truthClass": "SOURCE_VERIFIED",
+      "type": "independent-review"
+    }
+  },
   "failureKnowledge": [],
   "graphId": "unrendered-v16",
   "kind": "mission-graph",
@@ -1242,6 +1321,14 @@
       "message": "Imported 58 legacy lanes without rewriting immutable events",
       "objectiveId": "",
       "type": "MIGRATION_ACTIVE"
+    },
+    {
+      "at": "2026-08-13T10:13:25Z",
+      "data": {},
+      "eventId": "3ff154c4bc874903",
+      "message": "UNRENDERED Swarm V16 Mission Graph",
+      "objectiveId": "swarm-v16-mission-graph",
+      "type": "OBJECTIVE_DONE"
     }
   ],
   "mergeTrain": {
@@ -1253,7 +1340,7 @@
     "closedBlockers": 0,
     "duplicateTasksPrevented": 0,
     "legacyLanesImported": 58,
-    "meaningfulProgressEvents": 2,
+    "meaningfulProgressEvents": 3,
     "newLegitimateBlockers": 0,
     "startBlockers": 5,
     "supersededBranches": 0
@@ -1399,7 +1486,7 @@
     },
     "swarm-operations": {
       "captain": "",
-      "lastMeaningfulProgress": "2026-08-13T09:43:36Z",
+      "lastMeaningfulProgress": "2026-08-13T10:13:25Z",
       "missionId": "swarm-operations",
       "objectiveIds": [
         "swarm-v16-mission-graph",
@@ -8152,7 +8239,11 @@
       "captain": "",
       "createdAt": "2026-08-13T09:43:36Z",
       "dependencies": [],
-      "evidenceIds": [],
+      "evidenceIds": [
+        "swarm-v16-mission-graph-ci-762ffe7fe1d8",
+        "swarm-v16-mission-graph-review-762ffe7fe1d8",
+        "swarm-v16-mission-graph-main-a90eb0285075"
+      ],
       "externalTruthRequired": false,
       "featureGenome": {
         "accessibility": {
@@ -8171,19 +8262,31 @@
           "state": "NOT_STARTED"
         },
         "functionality": {
-          "evidenceIds": [],
-          "notes": "",
-          "state": "NOT_STARTED"
+          "evidenceIds": [
+            "swarm-v16-mission-graph-ci-762ffe7fe1d8",
+            "swarm-v16-mission-graph-review-762ffe7fe1d8",
+            "swarm-v16-mission-graph-main-a90eb0285075"
+          ],
+          "notes": "Accepted software integration PR #443 -> a90eb0285075",
+          "state": "ACCEPTED"
         },
         "integration": {
-          "evidenceIds": [],
-          "notes": "",
-          "state": "NOT_STARTED"
+          "evidenceIds": [
+            "swarm-v16-mission-graph-ci-762ffe7fe1d8",
+            "swarm-v16-mission-graph-review-762ffe7fe1d8",
+            "swarm-v16-mission-graph-main-a90eb0285075"
+          ],
+          "notes": "Accepted software integration PR #443 -> a90eb0285075",
+          "state": "ACCEPTED"
         },
         "knownBlockers": {
-          "evidenceIds": [],
-          "notes": "",
-          "state": "NOT_STARTED"
+          "evidenceIds": [
+            "swarm-v16-mission-graph-ci-762ffe7fe1d8",
+            "swarm-v16-mission-graph-review-762ffe7fe1d8",
+            "swarm-v16-mission-graph-main-a90eb0285075"
+          ],
+          "notes": "Accepted software integration PR #443 -> a90eb0285075",
+          "state": "ACCEPTED"
         },
         "multiplayerSecurity": {
           "evidenceIds": [],
@@ -8211,9 +8314,13 @@
           "state": "NOT_APPLICABLE"
         },
         "testing": {
-          "evidenceIds": [],
-          "notes": "",
-          "state": "NOT_STARTED"
+          "evidenceIds": [
+            "swarm-v16-mission-graph-ci-762ffe7fe1d8",
+            "swarm-v16-mission-graph-review-762ffe7fe1d8",
+            "swarm-v16-mission-graph-main-a90eb0285075"
+          ],
+          "notes": "Accepted software integration PR #443 -> a90eb0285075",
+          "state": "ACCEPTED"
         },
         "visualQuality": {
           "evidenceIds": [],
@@ -8231,17 +8338,17 @@
         "at least one non-external objective is dogfooded through evidence-bound integration before this lane is declared DONE"
       ],
       "finishSatisfied": [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
       ],
       "forbiddenAreas": [],
-      "integrationState": "FRONTIER",
-      "lastMeaningfulProgress": "2026-08-13T09:43:36Z",
+      "integrationState": "MAIN",
+      "lastMeaningfulProgress": "2026-08-13T10:13:25Z",
       "legacyDependencyRequirements": [],
       "missionId": "swarm-operations",
       "objectiveId": "swarm-v16-mission-graph",
@@ -8262,7 +8369,7 @@
         "tools/swarm/test_swarm_v16*.py"
       ],
       "severity": "P0",
-      "status": "ACTIVE",
+      "status": "DONE",
       "title": "UNRENDERED Swarm V16 Mission Graph",
       "userValue": 6
     },
@@ -9472,10 +9579,10 @@
       "userValue": 8
     }
   },
-  "revision": 5,
+  "revision": 6,
   "schemaVersion": 16,
   "solutions": {},
-  "updatedAt": "2026-08-13T10:11:45Z",
+  "updatedAt": "2026-08-13T10:13:25Z",
   "workItems": {
     "legacy-hg-authority-harness-lifecycle-capability-audit": {
       "blockerId": "",
