@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224900-v16rvw2-event-identity-main-review",
+  "timestamp": "2026-08-13T22:49:00+00:00",
+  "fromWorker": "sol-20260813-v16rvw2",
+  "eventType": "REVIEW_RESULT",
+  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+  "severity": "normal",
+  "summary": "Independent exact-current-main review APPROVES closing the event-identity compatibility lane as DONE-by-current-main and SUPERSEDES stale closed PR #328. Main pins the exact MaterialDNA canonical blob, binds compatibility to exact date/path/eventId/Git-blob identity, rejects fresh backdated and non-allowlisted malformed affects records, and retains byte-for-byte immutable rewrite/deletion fencing. No new implementation is needed. The separately discovered facade re-entry identity gap is tracked in SWARM-RECOVERY-WORKER-STATUS-CONTRACT and does not reopen this exact-identity lane.",
+  "affects": [
+    "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
+  ],
+  "evidence": [
+    "main 8134a3962be80e8ba6ec2c27207e44db63e6765c hardening registry pins evt-20260811-081620-mat8c3r1-materialdna-key-grammar to canonical Git blob 9a7f679ea84600d6a28a8bef02436e5f85fd857e.",
+    "Current hardening tests cover exact canonical blob acceptance without mutation, one-byte mutation rejection, canonical path/eventId substitution rejection, date clone rejection, duplicate eventId rejection, fresh backdated legacy rejection, malformed affects non-generalization, and transition replay/re-add rejection.",
+    "Base transition_check rejects immutable event byte changes and deletions; current main CI and Swarm Control were observed green on 8134a3962be80e8ba6ec2c27207e44db63e6765c.",
+    "PR #328 is closed unmerged and non-mergeable; later trusted-history recovery on main supersedes its timestamp-based compatibility architecture."
+  ],
+  "pr": 328,
+  "headSha": "85c49c28db117e00301626823c4000521f32104a",
+  "verdict": "SUPERSEDE"
+}
