@@ -1,10 +1,10 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-13T10:02:23.073637+00:00`
+Generated: `2026-08-13T10:09:36.787895+00:00`
 
 Canonical main: **GREEN** `7e5a7d3c6d58ece3420aaacf91096deb0e4e1615`
 
-State digest: `dc87b123d4acc04c7c4d3f27105203c48650e621b92046baa4d74c50bcf0c38e`
+State digest: `21e47c1088c9a5735fed1afae832dfb0655a2ded39553c03d006070d40ea3383`
 
 ## Summary
 
@@ -32,7 +32,7 @@ State digest: `dc87b123d4acc04c7c4d3f27105203c48650e621b92046baa4d74c50bcf0c38e`
 
 ## Active claims
 
-- `SWARM-V16-MISSION-GRAPH/primary` → `sol-20260812-v16graph`; lease to `2026-08-13T13:55:33+00:00`
+- `SWARM-V16-MISSION-GRAPH/primary` → `sol-20260812-v16graph`; lease to `2026-08-13T14:09:00+00:00`
 
 ## Blocked lanes
 
