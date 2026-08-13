@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224700-n4q7v2m9-diagnostics-toggle-failure-cleanup-regression",
+  "timestamp": "2026-08-13T22:47:00+00:00",
+  "fromWorker": "sol-20260813-n4q7v2m9",
+  "eventType": "HANDOFF",
+  "summary": "The known diagnostics toggle-evidence failure-atomicity gap now has an isolated expected-red regression on a published support branch. The available GitHub connector refused PR creation twice and local gh is not installed, so the exact branch/head and absorption guidance were posted directly to primary PR #441 instead of fabricating a PR or Studio result.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "Existing finding evt-20260812-110900-am0s2f7s-diagnostics-toggle-failure-cleanup identifies the same retained defect: after enable(lab), enabled-window capture/comparison/assertions can throw before disable(lab), leaving the owned diagnostics overlay live.",
+    "Primary generation-16 PR #441 exact inspected head b8ca3302cc3012011fb911ad3df5dc878130c133 retains the same runToggleEvidence() production ordering; its generation-16 delta is clone-proof test hardening, not a failure-cleanup repair.",
+    "Support branch agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n4q7v2m9 head 4633472020ec5af8f8da6eead35bbd75eed7662e adds tests/physics_lab_diagnostics_toggle_failure_cleanup.luau and registers it in tests/hero_gate_contract_integration.luau; compare against main 8134a3962be80e8ba6ec2c27207e44db63e6765c shows exactly those two test files and no production changes.",
+    "The new source-contract assertion requires a protected post-enable validation phase whose failure path disables diagnostics before propagating the original validation failure; current production structure intentionally fails this new regression.",
+    "No Actions run exists for the support branch because no PR could be opened. No local Pure Luau, Roblox Studio, viewport, physical-contact, performance-device, or two-client test was run or claimed in this session.",
+    "Primary PR #441 received top-level handoff comment id 5287252362 with exact branch/head, defect, expected-red status, and absorption guidance."
+  ],
+  "metadata": {
+    "primaryPr": 441,
+    "primaryHeadSha": "b8ca3302cc3012011fb911ad3df5dc878130c133",
+    "supportBranch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n4q7v2m9",
+    "supportHeadSha": "4633472020ec5af8f8da6eead35bbd75eed7662e",
+    "primaryCommentId": 5287252362,
+    "prPublication": "BLOCKED_TOOL_SURFACE",
+    "recommendedNext": "Primary diagnostics worker or a successor with a functioning PR-creation surface should absorb equivalent regression coverage together with the bounded production cleanup repair. Preserve enabled-window validation-before-disable semantics, guarantee owned-overlay cleanup on every post-enable failure path, preserve the original evidence failure when cleanup succeeds, and do not claim Studio PASS from this source-only handoff."
+  }
+}
