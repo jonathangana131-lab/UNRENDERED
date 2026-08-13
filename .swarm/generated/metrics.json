@@ -1,8 +1,7 @@
 {
-  "activeClaims": 1,
+  "activeClaims": 0,
   "activeEpics": [
-    "HERO-GATE",
-    "SWARM-V16"
+    "HERO-GATE"
   ],
   "eventCounts": {
     "BLOCKER": 23,
@@ -19,13 +18,12 @@
     "REVIEW_RESULT": 201,
     "SUPERSEDED": 1
   },
-  "generatedAt": "2026-08-13T10:13:31.102251+00:00",
+  "generatedAt": "2026-08-13T10:18:07.926419+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED": 20,
     "BLOCKED_EXTERNAL": 1,
-    "DONE": 13,
-    "IMPLEMENTING": 1,
+    "DONE": 14,
     "LOCKED": 1,
     "NEEDS_CHANGES": 1,
     "PROPOSED": 9,

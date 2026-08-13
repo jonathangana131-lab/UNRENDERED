@@ -1,15 +1,5 @@
 {
-  "activeClaims": [
-    {
-      "branch": "agent/swarm-v16-mission-graph",
-      "expiresAt": "2026-08-13T14:09:00+00:00",
-      "generation": 1,
-      "laneId": "SWARM-V16-MISSION-GRAPH",
-      "pr": 450,
-      "slotId": "primary",
-      "workerId": "sol-20260812-v16graph"
-    }
-  ],
+  "activeClaims": [],
   "blockedLanes": [
     {
       "laneId": "HERO-DOOR",
@@ -133,7 +123,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-13T10:13:31.102251+00:00",
+  "generatedAt": "2026-08-13T10:18:07.926419+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "8134a3962be80e8ba6ec2c27207e44db63e6765c",
@@ -143,10 +133,9 @@
     "workflowRunId": 31689964857
   },
   "metrics": {
-    "activeClaims": 1,
+    "activeClaims": 0,
     "activeEpics": [
-      "HERO-GATE",
-      "SWARM-V16"
+      "HERO-GATE"
     ],
     "eventCounts": {
       "BLOCKER": 23,
@@ -163,13 +152,12 @@
       "REVIEW_RESULT": 201,
       "SUPERSEDED": 1
     },
-    "generatedAt": "2026-08-13T10:13:31.102251+00:00",
+    "generatedAt": "2026-08-13T10:18:07.926419+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
       "BLOCKED_EXTERNAL": 1,
-      "DONE": 13,
-      "IMPLEMENTING": 1,
+      "DONE": 14,
       "LOCKED": 1,
       "NEEDS_CHANGES": 1,
       "PROPOSED": 9,
@@ -859,7 +847,7 @@
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 1,
+      "activeOwners": 0,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "SWARM-PROTOCOL",
@@ -1007,10 +995,10 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "e0585b7dc04391ed453d4960f9899898579d1aaa9bfcdada075c4de06882ac3a",
+  "stateDigest": "53128eb7ee95ce8ba921a49fc362cec85c1b937fd058e65ced488c91c84e7084",
   "summary": {
-    "activeClaims": 1,
-    "activeResourceClaims": 1,
+    "activeClaims": 0,
+    "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
     "lanes": 58,
     "readySlots": 14,
