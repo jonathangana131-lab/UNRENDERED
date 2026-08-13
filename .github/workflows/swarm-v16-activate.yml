@@ -1,0 +1,71 @@
+name: Swarm V16 Mission Graph Activate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/swarm-v16-activate.yml'
+      - 'tools/swarm/v16cp/**'
+      - 'tools/swarm/v16ctl.py'
+      - 'tools/swarm/v16_objective_integrate.py'
+      - 'tools/swarm/test_swarm_v16*.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: swarm-v16-activation
+  cancel-in-progress: false
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact default branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Pre-activation exact-head gates
+        run: |
+          python3 tools/swarm/test_swarm_v16.py
+          python3 tools/swarm/test_swarm_v16_objective_integration.py
+          python3 tools/swarm/v16ctl.py simulate --workers 30
+      - name: Materialize authoritative legacy swarm state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin swarm-control
+          mkdir -p "$RUNNER_TEMP/legacy"
+          git archive origin/swarm-control .swarm | tar -x -C "$RUNNER_TEMP/legacy"
+          echo "CONTROL_SHA=$(git rev-parse origin/swarm-control)" >> "$GITHUB_ENV"
+          echo "MAIN_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Activate or idempotently refresh Mission Graph
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 tools/swarm/v16ctl.py activate \
+            --legacy-root "$RUNNER_TEMP/legacy/.swarm" \
+            --repo "$GITHUB_REPOSITORY" \
+            --state-branch swarm-control \
+            --main-sha "$MAIN_SHA" \
+            --control-sha "$CONTROL_SHA"
+      - name: Verify persisted active graph
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin swarm-control
+          git show origin/swarm-control:.swarm/runtime/v16/mission-graph.json > "$RUNNER_TEMP/persisted.json"
+          python3 tools/swarm/v16ctl.py validate --graph "$RUNNER_TEMP/persisted.json"
+          python3 - "$RUNNER_TEMP/persisted.json" <<'PY'
+          import json,sys
+          graph=json.load(open(sys.argv[1]))
+          assert graph['migration']['phase']=='ACTIVE'
+          assert graph['migration']['legacyImported'] is True
+          assert graph['migration']['destructiveActionsAllowed'] is False
+          assert graph['authority']['automaticExternalTruthPromotion'] is False
+          print(json.dumps({'phase':'ACTIVE','revision':graph['revision'],'legacyLanes':len(graph['migration']['legacyLaneIds']),'runtimeAuthorityPromoted':False},indent=2))
+          PY

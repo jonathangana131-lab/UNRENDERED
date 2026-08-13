@@ -1,0 +1,51 @@
+name: Swarm V16 Objective Integration Command
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: read
+  actions: read
+
+concurrency:
+  group: swarm-v16-objective-integration
+  cancel-in-progress: false
+
+jobs:
+  objective-integration:
+    if: >-
+      github.event.issue.pull_request != null &&
+      github.actor == github.repository_owner &&
+      startsWith(github.event.comment.body, '/v16-objective-integrate ')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout current default branch truth
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Parse owner command and record trusted integration
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import os, shlex, subprocess
+          parts = shlex.split(os.environ['COMMENT_BODY'])
+          if len(parts) != 8 or parts[0] != '/v16-objective-integrate':
+              raise SystemExit('usage: /v16-objective-integrate OBJECTIVE PR SOURCE_HEAD MERGE_SHA RUN_IDS REVIEW_IDS PATHS')
+          _, objective, pr, source, merge, runs, reviews, paths = parts
+          run_ids=[x for x in runs.split(',') if x]
+          review_ids=[x for x in reviews.split(',') if x]
+          affected=[x for x in paths.split(',') if x]
+          cmd=['python3','tools/swarm/v16_objective_integrate.py','--repo',os.environ['GITHUB_REPOSITORY'],'--state-branch','swarm-control','--default-branch',os.environ['DEFAULT_BRANCH'],'--objective',objective,'--pr',pr,'--source-head',source,'--merge-sha',merge]
+          for value in run_ids: cmd += ['--acceptance-run', value]
+          for value in review_ids: cmd += ['--review-ref', value]
+          for value in affected: cmd += ['--affected-path', value]
+          subprocess.run(cmd, check=True)
+          PY
