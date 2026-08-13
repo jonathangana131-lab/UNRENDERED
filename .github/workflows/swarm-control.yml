@@ -21,12 +21,86 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Deterministic and adversarial control-plane tests
         run: |
           python3 tools/swarm/test_swarmctl.py
           python3 tools/swarm/test_swarmctl_hardening.py
+          python3 tools/swarm/test_audit_history_recovery.py
+          python3 tools/swarm/test_trusted_history_chain.py
+          python3 tools/swarm/test_swarm_history_recovery_extension.py
           python3 tools/swarm/swarmctl.py simulate --workers 30
           python3 tools/swarm/swarmctl_hardening.py simulate --workers 30
+      - name: Read-only exact trust-bootstrap candidate
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch origin swarm-control:refs/remotes/origin/swarm-control
+          CONTROL_SHA="$(git rev-parse origin/swarm-control)"
+
+          # Keep the one-time mutable-history reset manifest in audited finite data.
+          # Every invalid commit must precede its exact repair, and every repair
+          # must precede the exact bootstrap candidate before a trust pair is emitted.
+          TRANSITIONS_FILE="$RUNNER_TEMP/finite-worker-transitions.txt"
+          python3 - "$TRANSITIONS_FILE" <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, "tools/swarm")
+          import swarmctl_hardening as hard
+          Path(sys.argv[1]).write_text(
+              "".join(f"{invalid_sha} {repair_sha}\n" for invalid_sha, repair_sha in hard.FINITE_WORKER_TRANSITIONS),
+              encoding="utf-8",
+          )
+          PY
+          [[ -s "$TRANSITIONS_FILE" ]] || { echo 'Finite worker transition manifest is empty.'; exit 1; }
+          while read -r INVALID_SHA REPAIR_SHA; do
+            git merge-base --is-ancestor "$INVALID_SHA" "$REPAIR_SHA"
+            git merge-base --is-ancestor "$REPAIR_SHA" "$CONTROL_SHA"
+          done < "$TRANSITIONS_FILE"
+
+          # Every malformed immutable event is an exact quarantine-only artifact.
+          # Preserve the original reviewed manifest and verify each later measured
+          # extension row by exact date, filename, first-write commit, and Git blob.
+          MALFORMED_FILE="$RUNNER_TEMP/malformed-event-quarantine.txt"
+          python3 - "$MALFORMED_FILE" <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, "tools/swarm")
+          import swarm_history_recovery_extension as extension
+          import swarm_history_recovery_manifest as recovery
+          assert recovery.MALFORMED_EVENT_QUARANTINE
+          rows = tuple(
+              (event_id, "2026-08-11", filename, first_write, blob_sha)
+              for event_id, filename, first_write, blob_sha in recovery.malformed_event_quarantine_rows()
+          ) + extension.malformed_event_quarantine_rows_with_dates()
+          Path(sys.argv[1]).write_text(
+              "".join(
+                  f"{event_id} {event_date} {filename} {first_write} {blob_sha}\n"
+                  for event_id, event_date, filename, first_write, blob_sha in rows
+              ),
+              encoding="utf-8",
+          )
+          PY
+          [[ -s "$MALFORMED_FILE" ]] || { echo 'Malformed event quarantine manifest is empty.'; exit 1; }
+          while read -r EVENT_ID EVENT_DATE FIRST_WRITE_FILENAME FIRST_WRITE_SHA FIRST_WRITE_BLOB; do
+            EVENT_PATH=".swarm/events/${EVENT_DATE}/${FIRST_WRITE_FILENAME}"
+            mapfile -t ADD_COMMITS < <(git log --format=%H --reverse --diff-filter=A "$CONTROL_SHA" -- "$EVENT_PATH")
+            [[ "${#ADD_COMMITS[@]}" -eq 1 ]] || { echo "$EVENT_ID: expected exactly one first-add commit"; exit 1; }
+            [[ "${ADD_COMMITS[0]}" == "$FIRST_WRITE_SHA" ]] || { echo "$EVENT_ID: first-write commit mismatch"; exit 1; }
+            git merge-base --is-ancestor "$FIRST_WRITE_SHA" "$CONTROL_SHA"
+            [[ "$(git rev-parse "${FIRST_WRITE_SHA}:${EVENT_PATH}")" == "$FIRST_WRITE_BLOB" ]] || { echo "$EVENT_ID: first-write blob mismatch"; exit 1; }
+          done < "$MALFORMED_FILE"
+
+          mkdir -p "$RUNNER_TEMP/bootstrap-control"
+          git archive "$CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/bootstrap-control"
+          python3 tools/swarm/audit_history_recovery.py \
+            --root "$RUNNER_TEMP/bootstrap-control/.swarm" --git-root . --control-sha "$CONTROL_SHA" \
+            > "$RUNNER_TEMP/recovery-history-inventory.json"
+          cat "$RUNNER_TEMP/recovery-history-inventory.json"
+          python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/bootstrap-control/.swarm"
+          STATE_DIGEST="$(python3 -c 'import sys; from pathlib import Path; sys.path.insert(0,"tools/swarm"); import swarmctl_hardening as h; print(h.state_digest(Path(sys.argv[1])))' "$RUNNER_TEMP/bootstrap-control/.swarm")"
+          echo "BOOTSTRAP_CONTROL_SHA=$CONTROL_SHA"
+          echo "BOOTSTRAP_STATE_DIGEST=$STATE_DIGEST"
 
   pr-ownership:
     if: github.event_name == 'pull_request'
@@ -36,14 +110,16 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Fetch trusted base and live control branch
+      - name: Fetch trusted base, live control, and separate trust ledger
         run: |
           git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}"
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
-      - name: Materialize authoritative control state
+          git fetch origin swarm-trust:refs/remotes/origin/swarm-trust
+      - name: Materialize authoritative control state and trust record
         run: |
           mkdir -p "$RUNNER_TEMP/swarm-state"
           git archive origin/swarm-control .swarm | tar -x -C "$RUNNER_TEMP/swarm-state"
+          git show origin/swarm-trust:.swarm/trust.json > "$RUNNER_TEMP/swarm-trust.json"
       - name: Materialize trusted base validator
         id: trusted-validator
         run: |
@@ -58,13 +134,65 @@ jobs:
             PYTHONPATH="$RUNNER_TEMP/trusted-swarm" python3 -c 'import swarmctl_hardening'
             echo "engine=hardening" >> "$GITHUB_OUTPUT"
           else
-            # This one upgrade generation remains policed by the already-trusted
-            # V2 validator. Once merged, all later PRs use hardened base code.
             python3 -m py_compile "$RUNNER_TEMP/trusted-swarm/swarmctl.py"
             echo "engine=bootstrap" >> "$GITHUB_OUTPUT"
           fi
       - name: Collect changed files safely
         run: git diff --name-only "origin/${GITHUB_BASE_REF}...HEAD" > "$RUNNER_TEMP/swarm-changed-files.txt"
+      - name: Require live state to equal separately trusted state
+        if: steps.trusted-validator.outputs.engine == 'hardening'
+        run: |
+          # The trusted/base validator can predate verify_trusted_state; bind the
+          # separate record with standard-library shape checks plus its existing
+          # trusted state_digest primitive rather than invoking a PR-new API.
+          PYTHONPATH="$RUNNER_TEMP/trusted-swarm" python3 - "$RUNNER_TEMP/swarm-state/.swarm" "$RUNNER_TEMP/swarm-trust.json" <<'PY'
+          import json
+          import re
+          import sys
+          from pathlib import Path
+          import swarmctl_hardening as hard
+
+          root = Path(sys.argv[1])
+          trust_path = Path(sys.argv[2])
+          try:
+              trust = json.loads(trust_path.read_text(encoding="utf-8"))
+          except (OSError, json.JSONDecodeError) as exc:
+              raise SystemExit(f"invalid swarm trust record: {exc}")
+          if not isinstance(trust, dict):
+              raise SystemExit("swarm trust record must be an object")
+          required = {
+              "schemaVersion", "controlBranch", "trustedControlSha", "trustedStateDigest",
+              "validatedAt", "validatorMainSha", "resetId", "resetReason",
+          }
+          allowed = required | {"bootstrap"}
+          if not required.issubset(trust) or not set(trust).issubset(allowed):
+              raise SystemExit("swarm trust record has invalid keys")
+          if trust["schemaVersion"] != 1 or trust["controlBranch"] != "swarm-control":
+              raise SystemExit("swarm trust record has invalid schema or branch")
+          for key in ("trustedControlSha", "validatorMainSha"):
+              if not isinstance(trust[key], str) or re.fullmatch(r"[a-f0-9]{40}", trust[key]) is None:
+                  raise SystemExit(f"swarm trust record has invalid {key}")
+          if not isinstance(trust["trustedStateDigest"], str) or re.fullmatch(r"[a-f0-9]{64}", trust["trustedStateDigest"]) is None:
+              raise SystemExit("swarm trust record has invalid trustedStateDigest")
+          if not isinstance(trust["validatedAt"], str) or not trust["validatedAt"]:
+              raise SystemExit("swarm trust record has invalid validatedAt")
+          if not isinstance(trust["resetId"], str) or not trust["resetId"].startswith("reset-"):
+              raise SystemExit("swarm trust record has invalid resetId")
+          if not isinstance(trust["resetReason"], str) or not trust["resetReason"]:
+              raise SystemExit("swarm trust record has invalid resetReason")
+          bootstrap = trust.get("bootstrap", False)
+          if not isinstance(bootstrap, bool):
+              raise SystemExit("swarm trust record bootstrap must be bool")
+          if bootstrap:
+              raise SystemExit("swarm trust branch is still in bootstrap/reset mode")
+          actual_digest = hard.state_digest(root)
+          if actual_digest != trust["trustedStateDigest"]:
+              raise SystemExit(
+                  "live control state does not match separately trusted digest: "
+                  f"{actual_digest} != {trust['trustedStateDigest']}"
+              )
+          print(f"trusted control sha={trust['trustedControlSha']} digest={trust['trustedStateDigest']}")
+          PY
       - name: Enforce live ownership with trusted code
         run: |
           if [[ "${{ steps.trusted-validator.outputs.engine }}" == "hardening" ]]; then
@@ -88,36 +216,87 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: Materialize current and previous control snapshots
+      - name: Materialize current control and last separately trusted snapshot
         env:
-          BEFORE_SHA: ${{ github.event.before }}
           AFTER_SHA: ${{ github.sha }}
         run: |
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
+          git fetch origin swarm-trust:refs/remotes/origin/swarm-trust
           git cat-file -e "${AFTER_SHA}^{commit}"
           echo "CONTROL_SHA=$AFTER_SHA" >> "$GITHUB_ENV"
+          TRUST_BRANCH_SHA="$(git rev-parse origin/swarm-trust)"
+          echo "TRUST_BRANCH_SHA=$TRUST_BRANCH_SHA" >> "$GITHUB_ENV"
+          git show origin/swarm-trust:.swarm/trust.json > "$RUNNER_TEMP/swarm-trust.json"
+          TRUSTED_CONTROL_SHA="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["trustedControlSha"])' "$RUNNER_TEMP/swarm-trust.json")"
+          echo "TRUSTED_CONTROL_SHA=$TRUSTED_CONTROL_SHA" >> "$GITHUB_ENV"
+          git cat-file -e "${TRUSTED_CONTROL_SHA}^{commit}"
           mkdir -p "$RUNNER_TEMP/control-after" "$RUNNER_TEMP/control-before"
           git archive "$AFTER_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-after"
-          if [[ -n "${BEFORE_SHA:-}" && "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ]] && git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
-            if git ls-tree -d --name-only "$BEFORE_SHA" .swarm | grep -qx '.swarm'; then
-              git archive "$BEFORE_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-before"
-              echo "before_available=true" >> "$GITHUB_ENV"
-            fi
-          fi
-      - name: Validate state and ownership model
+          git archive "$TRUSTED_CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-before"
+      - name: Bind trust digest to archived trusted control SHA
+        run: |
+          python3 - "$RUNNER_TEMP/control-before/.swarm" "$RUNNER_TEMP/swarm-trust.json" <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, "tools/swarm")
+          import swarmctl_hardening as hard
+          trust = hard.verify_trusted_snapshot(Path(sys.argv[1]), Path(sys.argv[2]), allow_bootstrap=True)
+          print(f"atomic trust anchor sha={trust['trustedControlSha']} digest={trust['trustedStateDigest']}")
+          PY
+      - name: Validate candidate state and ownership model
         run: |
           python3 tools/swarm/test_swarmctl.py
           python3 tools/swarm/test_swarmctl_hardening.py
+          python3 tools/swarm/test_audit_history_recovery.py
+          python3 tools/swarm/test_trusted_history_chain.py
+          python3 tools/swarm/test_swarm_history_recovery_extension.py
           python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/control-after/.swarm"
           python3 tools/swarm/swarmctl_hardening.py simulate --workers 30
-      - name: Validate lease and immutable-event transitions
-        if: env.before_available == 'true'
+      - name: Validate every transition from last trusted history snapshot
         run: |
-          python3 tools/swarm/swarmctl_hardening.py transition-check \
-            --before-root "$RUNNER_TEMP/control-before/.swarm" \
-            --after-root "$RUNNER_TEMP/control-after/.swarm"
+          # trusted_history_chain.py runs strict transition-check on every consecutive
+          # first-parent snapshot, so an invalid middle commit cannot be laundered by a restored descendant.
+          python3 tools/swarm/trusted_history_chain.py \
+            --git-root . \
+            --trusted-sha "$TRUSTED_CONTROL_SHA" \
+            --control-sha "$CONTROL_SHA"
       - name: Rebuild board, metrics, and validation fence
         run: python3 tools/swarm/swarmctl_hardening.py render --root "$RUNNER_TEMP/control-after/.swarm"
+      - name: Advance separate trust ledger only for this exact validated control tip
+        run: |
+          EXPECTED_CONTROL="${CONTROL_SHA:?validated control snapshot SHA missing}"
+          EXPECTED_TRUST="${TRUST_BRANCH_SHA:?trust branch snapshot SHA missing}"
+          git fetch origin main:refs/remotes/origin/main
+          git fetch origin swarm-control:refs/remotes/origin/swarm-control
+          git fetch origin swarm-trust:refs/remotes/origin/swarm-trust
+          [[ "$(git rev-parse origin/swarm-control)" == "$EXPECTED_CONTROL" ]] || { echo 'Control advanced; refusing stale trust advance.'; exit 1; }
+          [[ "$(git rev-parse origin/swarm-trust)" == "$EXPECTED_TRUST" ]] || { echo 'Trust ledger advanced; refusing stale trust overwrite.'; exit 1; }
+          STATE_DIGEST="$(python3 -c 'import sys; from pathlib import Path; sys.path.insert(0,"tools/swarm"); import swarmctl_hardening as h; print(h.state_digest(Path(sys.argv[1])))' "$RUNNER_TEMP/control-after/.swarm")"
+          VALIDATED_AT="$(date -u +%Y-%m-%dT%H:%M:%S+00:00)"
+          git switch --detach "$EXPECTED_TRUST"
+          mkdir -p .swarm
+          python3 - "$EXPECTED_CONTROL" "$STATE_DIGEST" "$VALIDATED_AT" "$(git rev-parse origin/main)" <<'PY'
+          import json, sys
+          record = {
+              "schemaVersion": 1,
+              "controlBranch": "swarm-control",
+              "trustedControlSha": sys.argv[1],
+              "trustedStateDigest": sys.argv[2],
+              "validatedAt": sys.argv[3],
+              "validatorMainSha": sys.argv[4],
+              "resetId": "reset-20260811-history-continuity",
+              "resetReason": "Reviewed finite reset quarantines the exact immutable-event artifacts enumerated by the recovery validator and crosses every malformed worker transition enumerated by FINITE_WORKER_TRANSITIONS; all later authority is strict append-only/trusted history.",
+              "bootstrap": False,
+          }
+          with open('.swarm/trust.json', 'w', encoding='utf-8') as handle:
+              json.dump(record, handle, indent=2, sort_keys=True)
+              handle.write('\n')
+          PY
+          git config user.name unrendered-swarm-trust
+          git config user.email actions@users.noreply.github.com
+          git add .swarm/trust.json
+          git commit -m 'chore(swarm): advance separately trusted control head [swarm-trust]'
+          git push origin HEAD:swarm-trust
       - name: Publish generated projection without overwriting newer state
         run: |
           EXPECTED="${CONTROL_SHA:?validated control snapshot SHA missing}"
@@ -152,7 +331,7 @@ jobs:
           echo "CONTROL_SHA=$CONTROL_SHA" >> "$GITHUB_ENV"
           mkdir -p "$RUNNER_TEMP/control-health"
           git archive "$CONTROL_SHA" .swarm | tar -x -C "$RUNNER_TEMP/control-health"
-      - name: Apply canonical CI health as data
+      - name: Apply canonical CI health and rebuild validation fence
         env:
           MAIN_SHA: ${{ github.event.workflow_run.head_sha }}
           MAIN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
@@ -163,18 +342,21 @@ jobs:
             --root "$RUNNER_TEMP/control-health/.swarm" --sha "$MAIN_SHA" \
             --conclusion "$MAIN_CONCLUSION" --run-id "$MAIN_RUN_ID" --updated-at "$MAIN_UPDATED_AT"
           python3 tools/swarm/swarmctl_hardening.py validate --root "$RUNNER_TEMP/control-health/.swarm"
-      - name: Publish health without overwriting newer state
+          python3 tools/swarm/swarmctl_hardening.py render --root "$RUNNER_TEMP/control-health/.swarm"
+      - name: Publish health and matching validation fence without overwriting newer state
         run: |
           EXPECTED="${CONTROL_SHA:?materialized control snapshot SHA missing}"
           git switch --detach "$EXPECTED"
-          mkdir -p .swarm/health
+          mkdir -p .swarm/health .swarm/generated
           cp "$RUNNER_TEMP/control-health/.swarm/health/main.json" .swarm/health/main.json
           cp "$RUNNER_TEMP/control-health/.swarm/lanes/OPS-MAIN-HEALTH.json" .swarm/lanes/OPS-MAIN-HEALTH.json
-          [[ -n "$(git status --porcelain -- .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json)" ]] || exit 0
+          rm -rf .swarm/generated/*
+          cp -R "$RUNNER_TEMP/control-health/.swarm/generated/." .swarm/generated/
+          [[ -n "$(git status --porcelain -- .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json .swarm/generated)" ]] || exit 0
           git config user.name unrendered-swarm-health
           git config user.email actions@users.noreply.github.com
-          git add .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json
-          git commit -m 'chore(swarm): sync canonical main CI health [swarm-health]'
+          git add .swarm/health/main.json .swarm/lanes/OPS-MAIN-HEALTH.json .swarm/generated
+          git commit -m 'chore(swarm): sync canonical main CI health and validation fence [swarm-health]'
           git fetch origin swarm-control:refs/remotes/origin/swarm-control
           [[ "$(git rev-parse origin/swarm-control)" == "$EXPECTED" ]] || { echo 'Control advanced; refusing stale health push.'; exit 1; }
           git push origin HEAD:swarm-control
