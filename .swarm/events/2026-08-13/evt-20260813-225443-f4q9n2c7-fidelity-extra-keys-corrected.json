@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-225443-f4q9n2c7-fidelity-extra-keys-corrected",
+  "timestamp": "2026-08-13T22:54:43+00:00",
+  "fromWorker": "sol-20260813-f4q9n2c7",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "FidelityManager accepts undeclared extra keys in otherwise valid input and configuration records; this corrected event supersedes only the malformed event payload shape, not its immutable history.",
+  "affects": [
+    "HG-BACKFILL-FIDELITY"
+  ],
+  "evidence": [
+    "PR 385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 validates declared fields but has no exact-key check or extra-key regression.",
+    "MaterialDNA PR 75, WorldEntity PR 76, and ObjectGenome PR 94 use exact record shapes at comparable plain-data boundaries.",
+    "PR 419 changes the registration ceiling only and inherits this record-shape behavior.",
+    "The earlier immutable event evt-20260813-224945-f4q9n2c7-fidelity-extra-keys is malformed because recommendation was emitted as a top-level field; this replacement keeps the recommendation under metadata without editing or deleting the earlier bytes."
+  ],
+  "metadata": {
+    "supersedesMalformedPayloadEventId": "evt-20260813-224945-f4q9n2c7-fidelity-extra-keys",
+    "recommendation": "Add bounded exact-key validation and extra-key regressions in the retained Fidelity integration lineage without changing F0-F4 behavior."
+  }
+}
