@@ -5,7 +5,7 @@
   "title": "Repair worker and event schema contract drift",
   "objective": "Stop repeated Swarm control validation failures caused by worker-facing producer conventions drifting from the strict validator: workers emit intuitive lifecycle aliases such as CLAIMING/DONE and immutable REVIEW_RESULT events already carry typed pr/headSha/verdict fields that the current generic event validator rejects. Make the accepted lifecycle/event contract explicit, preserve strict typing and unknown-field fail-closed behavior, and restore live control validity without weakening authoritative claim/resource fencing.",
   "priority": 10000,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["tools/swarm/swarmctl.py", "tools/swarm/test_swarmctl.py", "tools/swarm/test_swarmctl_hardening.py", "Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md"],
@@ -23,7 +23,7 @@
     "live swarm-control validation returns PASS on authoritative history without rewriting immutable events"
   ],
   "pr": 444,
-  "notes": "Generation-4 PR #444 exact head cadfd75b0913a9b22bac09f726807fd0e98194f0 has canonical CI 31660999467 PASS and control engine/adversarial job 94325932094 PASS. Independent reviewer sol-20260812-rvw16g4a APPROVED the exact head in GitHub review 4922922407 and typed REVIEW_RESULT evt-20260813-024000-rvw16g4a-worker-status-review. Review verified the one-file +18/-4 delta only stabilizes repeated facade execution by retaining the first strict base anchors and one shared finite audited-blob registry; exact path+Git-blob authentication remains mandatory before inert legacy JSON parsing and all unlisted/new executable-looking event fields remain strict-fail. The lane stays REVIEW until live swarm-control validates under the accepted recovery validator. Ordinary pr-ownership remains intentionally bootstrap-blocked on older main and must not be weakened.",
+  "notes": "Generation-4 PR #444 exact head cadfd75b0913a9b22bac09f726807fd0e98194f0 had canonical CI and control engine/adversarial tests PASS, but it is now stale/non-mergeable against main 8134a3962be80e8ba6ec2c27207e44db63e6765c. Current-main convergence review generation 2 by sol-20260813-v16rvw2 records REQUEST_CHANGES in typed event evt-20260813-223500-v16rvw2-worker-status-current-main-review. Worker-status aliases and typed REVIEW_RESULT semantics are already absorbed on main. Preserve #444's still-relevant facade re-entry isolation only by re-cutting it narrowly on current main: retain first strict base validate/read/transition anchors and one shared immutable-event registry across repeated facade execution, add a focused re-entry regression, and preserve all newer recovery manifest/extension, quarantine provenance, trusted-snapshot and trust-ledger behavior. GitHub cannot record formal self REQUEST_CHANGES because swarm workers publish through the repository owner account; review rationale is attached to PR #444 as comment review 4932229184. Live swarm-control validation and accepted trusted-history bootstrap remain required; ordinary pr-ownership must not be weakened.",
   "blockers": [
     "Live swarm-control validation must PASS under the accepted recovery validator without rewriting immutable events.",
     "The trusted-history bootstrap must move the accepted validator to main without weakening the ordinary pr-ownership fence."
