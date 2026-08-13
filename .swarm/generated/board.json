@@ -2,10 +2,10 @@
   "activeClaims": [
     {
       "branch": "agent/swarm-v16-mission-graph",
-      "expiresAt": "2026-08-13T13:38:42+00:00",
+      "expiresAt": "2026-08-13T13:55:33+00:00",
       "generation": 1,
       "laneId": "SWARM-V16-MISSION-GRAPH",
-      "pr": 443,
+      "pr": 449,
       "slotId": "primary",
       "workerId": "sol-20260812-v16graph"
     }
@@ -133,7 +133,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-13T09:44:07.410654+00:00",
+  "generatedAt": "2026-08-13T09:57:01.412981+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "a90eb0285075a290fb5d6724e66eb08aaa4559b7",
@@ -163,7 +163,7 @@
       "REVIEW_RESULT": 201,
       "SUPERSEDED": 1
     },
-    "generatedAt": "2026-08-13T09:44:07.410654+00:00",
+    "generatedAt": "2026-08-13T09:57:01.412981+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
@@ -1007,7 +1007,7 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "3989ce465accf844f4b9780ad5c9676caba97b54a3db2dc417c801b62faf6779",
+  "stateDigest": "77d7ea6884eb436c4c3809cb299972580678a86492332bbd6d820fa8f48bb6a8",
   "summary": {
     "activeClaims": 1,
     "activeResourceClaims": 1,
