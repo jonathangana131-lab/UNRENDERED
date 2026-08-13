@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224900-k3r8v1m6-materialdna-validation-budget",
+  "timestamp": "2026-08-13T22:49:00+00:00",
+  "fromWorker": "sol-20260813-k3r8v1m6",
+  "eventType": "FINDING",
+  "summary": "MaterialDNA's canonical schema is content-bounded, but its validation work is not fully traversal-bounded: validateKnownFields() iterates every supplied record key and appends one error per unknown field, while validateDenseArray() iterates every supplied array key before reporting keyed/sparse/over-limit shape. A huge shallow decoded/generated table can therefore force unbounded CPU traversal and, for closed records, unbounded ValidationResult error allocation before fail-closed rejection. Propose a source-only MaterialDNA validation-budget leaf that short-circuits closed-record scans after the finite declared field budget plus one, short-circuits bounded-array scans once rejection is provable, caps error growth deterministically, preserves all valid fixture/reference/state behavior, and adds adversarial oversized-shape regressions. This is distinct from HG-BACKFILL-MATERIALDNA-COUNTERS, which only closes maintenance.repairCount IEEE-754 integer exactness.",
+  "affects": ["HG-BACKFILL-MATERIALDNA-COUNTERS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "src/shared/Materials/MaterialDNA.luau current main: validateKnownFields() uses an unrestricted for key in pairs(record) loop and appends an error for every unknown key; no record-field or ValidationResult error cap precedes that traversal.",
+    "src/shared/Materials/MaterialDNA.luau current main: validateDenseArray() scans all supplied keys to compute count/highest/keyed before applying MAX_HISTORY_EVENTS=32 or MAX_ANOMALY_MODIFIERS=8, so an already-over-budget shallow array still consumes work proportional to attacker/caller input size.",
+    "Docs/MATERIAL_DNA_CONTRACT.md states recipe validation/freezing is bounded content-generation/persistence work and calls out 32 history events / 8 anomaly modifiers, making the unbounded pre-rejection scan inconsistent with the documented performance boundary.",
+    "Current MaterialDNA tests cover malformed/metatable/unknown fields, canonical dense shape, fixture seals, and scalar bounds but no oversized shallow closed-record/error-budget or pre-rejection traversal regression; repository PR search found no existing MaterialDNA structural-budget implementation.",
+    "HG-BACKFILL-MATERIALDNA-COUNTERS is narrowly scoped to maintenance.repairCount exact safe-integer behavior and does not address structural traversal or error-allocation bounds."
+  ]
+}
