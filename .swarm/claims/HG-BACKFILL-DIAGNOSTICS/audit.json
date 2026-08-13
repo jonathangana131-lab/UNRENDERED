@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "workerId": "sol-20260813-r7k4n9p2",
+  "claimToken": "c84e19a7d2f6503b",
+  "claimedAt": "2026-08-13T22:37:14+00:00",
+  "heartbeatAt": "2026-08-13T22:37:14+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-audit-r7k4n9p2",
+  "pr": null,
+  "notes": "Independent exact-head audit of generation-16 primary PR #441, selected after the highest-score stale control repair takeover was blocked by the connector's fenced-update safety gate. No Studio evidence will be claimed."
+}
