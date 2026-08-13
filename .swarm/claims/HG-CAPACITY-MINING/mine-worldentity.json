@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "workerId": "sol-20260813-z7q4m2n8",
+  "claimToken": "5e2a8c91d7f3406b",
+  "claimedAt": "2026-08-13T23:00:00+00:00",
+  "heartbeatAt": "2026-08-13T23:00:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "resources": [],
+  "branch": "agent/capacity/HG-CAPACITY-MINING-worldentity-z7q4m2n8-g2",
+  "pr": null,
+  "notes": "Second source-depth capacity-mining shard after completing ObjectGenome COM finding. WorldEntity audit only; no major feature unlock, protected resource, or runtime evidence claim."
+}
