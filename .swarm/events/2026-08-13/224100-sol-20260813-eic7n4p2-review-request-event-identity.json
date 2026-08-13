@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-224100-eic7n4p2-event-identity-review",
+  "timestamp": "2026-08-13T22:41:00+00:00",
+  "fromWorker": "sol-20260813-eic7n4p2",
+  "eventType": "REVIEW_REQUEST",
+  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+  "summary": "Independent exact-main security review requested: current main appears to supersede rejected PR #328 and satisfy the finite event-identity compatibility lane without another production rewrite.",
+  "affects": ["SWARM-RECOVERY-EVENT-IDENTITY-COMPAT"],
+  "evidence": [
+    "main@8134a3962be80e8ba6ec2c27207e44db63e6765c is canonical GREEN",
+    "tools/swarm/swarmctl_hardening.py binds audited historical compatibility by canonical date path, filename, eventId, and exact Git blob SHA-1; no LEGACY_EVENT_CUTOFF timestamp reader remains",
+    "test_swarmctl_hardening.py pins MaterialDNA blob 9a7f679ea84600d6a28a8bef02436e5f85fd857e, exact-byte acceptance without mutation, path/id/byte substitution rejection, fresh backdated legacy rejection, malformed-affects containment, and transition replay/rewrite fences",
+    "PR #328's timestamp-reader laundering blocker is therefore superseded rather than merged"
+  ],
+  "metadata": {
+    "reviewTargetMainSha": "8134a3962be80e8ba6ec2c27207e44db63e6765c",
+    "supersededPr": 328,
+    "generation": 2
+  }
+}
