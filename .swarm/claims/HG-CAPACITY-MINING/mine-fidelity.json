@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "workerId": "sol-20260813-f4q9n2c7",
+  "claimToken": "3b8f2d6a91c4e705",
+  "claimedAt": "2026-08-13T22:47:00+00:00",
+  "heartbeatAt": "2026-08-13T22:47:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-f4q9n2c7-g2",
+  "pr": null,
+  "notes": "Generation-2 bounded FidelityManager capacity mining after generation 1 published a backing-state authority finding and released cleanly. Inspect current main, retained Fidelity lineages, tests, and recent control findings for one concrete nonduplicate Reality-Grade gap; do not duplicate the backing-state finding or claim Studio evidence."
+}
