@@ -123,13 +123,32 @@ jobs:
       - name: Materialize trusted base validator
         id: trusted-validator
         run: |
+          set -euo pipefail
           mkdir -p "$RUNNER_TEMP/trusted-swarm"
-          git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl.py"
-          if git cat-file -e "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening.py" 2>/dev/null; then
-            git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py"
-            if git cat-file -e "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening_base.py" 2>/dev/null; then
-              git show "origin/${GITHUB_BASE_REF}:tools/swarm/swarmctl_hardening_base.py" > "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening_base.py"
+          for module in \
+            swarmctl.py \
+            swarmctl_hardening.py \
+            swarmctl_hardening_base.py \
+            swarm_history_recovery_manifest.py \
+            swarm_history_recovery_extension.py \
+            swarm_history_recovery_generation6.py \
+            swarm_history_recovery_generation6_tail.py
+          do
+            if git cat-file -e "origin/${GITHUB_BASE_REF}:tools/swarm/${module}" 2>/dev/null; then
+              git show "origin/${GITHUB_BASE_REF}:tools/swarm/${module}" > "$RUNNER_TEMP/trusted-swarm/${module}"
             fi
+          done
+          [[ -s "$RUNNER_TEMP/trusted-swarm/swarmctl.py" ]] || { echo 'trusted base missing swarmctl.py'; exit 1; }
+          if [[ -s "$RUNNER_TEMP/trusted-swarm/swarmctl_hardening.py" ]]; then
+            for required in \
+              swarmctl_hardening_base.py \
+              swarm_history_recovery_manifest.py \
+              swarm_history_recovery_extension.py \
+              swarm_history_recovery_generation6.py \
+              swarm_history_recovery_generation6_tail.py
+            do
+              [[ -s "$RUNNER_TEMP/trusted-swarm/${required}" ]] || { echo "trusted hardening dependency missing: ${required}"; exit 1; }
+            done
             python3 -m py_compile "$RUNNER_TEMP/trusted-swarm/"*.py
             PYTHONPATH="$RUNNER_TEMP/trusted-swarm" python3 -c 'import swarmctl_hardening'
             echo "engine=hardening" >> "$GITHUB_OUTPUT"
