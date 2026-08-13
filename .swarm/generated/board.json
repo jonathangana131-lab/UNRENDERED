@@ -142,7 +142,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-13T03:05:43.021890+00:00",
+  "generatedAt": "2026-08-13T03:06:55.853977+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "8c8bf1348856a1f9aafc7665ef81f7abab0772c7",
@@ -171,7 +171,7 @@
       "REVIEW_RESULT": 201,
       "SUPERSEDED": 1
     },
-    "generatedAt": "2026-08-13T03:05:43.021890+00:00",
+    "generatedAt": "2026-08-13T03:06:55.853977+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
