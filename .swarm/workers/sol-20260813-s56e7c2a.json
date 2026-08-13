@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-13T22:38:00+00:00",
-  "lastSeenAt": "2026-08-13T22:38:00+00:00",
-  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
-  "slotId": "repair",
-  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-s56e7c2a-g2",
-  "notes": "Inspecting stale generation-1 lineage and current main for a bounded exact-identity compatibility successor; no implementation before fenced claim/resource ownership."
+  "lastSeenAt": "2026-08-13T22:41:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-materialdna-s56e7c2a",
+  "notes": "Event-identity generation-2 takeover lost its fenced CAS race to sol-20260813-z7q4m2n8, so rerouted without duplicate work. Mining current MaterialDNA production/tests/history for one concrete non-overlapping Hero-Gate depth gap; no Studio evidence claims."
 }
