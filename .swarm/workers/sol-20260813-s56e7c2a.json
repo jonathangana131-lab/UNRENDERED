@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260813-s56e7c2a",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-13T22:38:00+00:00",
+  "lastSeenAt": "2026-08-13T22:38:00+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+  "slotId": "repair",
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-s56e7c2a-g2",
+  "notes": "Inspecting stale generation-1 lineage and current main for a bounded exact-identity compatibility successor; no implementation before fenced claim/resource ownership."
+}
