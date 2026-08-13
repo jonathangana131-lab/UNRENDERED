@@ -1,22 +1,13 @@
 {
   "activeClaims": [
     {
-      "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-v16g4r9x-g4",
-      "expiresAt": "2026-08-13T03:08:00+00:00",
+      "branch": "agent/control/SWARM-RECOVERY-HEALTH-VALIDATION-FENCE-primary-v16pkg1-g4",
+      "expiresAt": "2026-08-13T07:17:00+00:00",
       "generation": 4,
-      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-      "pr": 444,
+      "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+      "pr": null,
       "slotId": "primary",
-      "workerId": "sol-20260812-v16g4r9x"
-    },
-    {
-      "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-v16rvw1",
-      "expiresAt": "2026-08-13T03:08:00+00:00",
-      "generation": 1,
-      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-      "pr": 444,
-      "slotId": "reviewer-1",
-      "workerId": "sol-20260812-rvw16g4a"
+      "workerId": "sol-20260812-v16pkg1"
     }
   ],
   "blockedLanes": [
@@ -142,7 +133,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-13T03:07:52.414260+00:00",
+  "generatedAt": "2026-08-13T03:18:46.201131+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "8c8bf1348856a1f9aafc7665ef81f7abab0772c7",
@@ -152,7 +143,7 @@
     "workflowRunId": 31662818511
   },
   "metrics": {
-    "activeClaims": 2,
+    "activeClaims": 1,
     "activeEpics": [
       "HERO-GATE"
     ],
@@ -171,7 +162,7 @@
       "REVIEW_RESULT": 201,
       "SUPERSEDED": 1
     },
-    "generatedAt": "2026-08-13T03:07:52.414260+00:00",
+    "generatedAt": "2026-08-13T03:18:46.201131+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
@@ -185,10 +176,10 @@
       "SUPERSEDED": 2
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 13,
+    "readySlots": 14,
     "reviewBacklog": 4,
     "schemaVersion": 1,
-    "staleClaims": 11
+    "staleClaims": 12
   },
   "readySlots": [
     {
@@ -203,6 +194,23 @@
       "writeScopes": [
         "tools/swarm/swarmctl_hardening.py",
         "tools/swarm/test_swarmctl_hardening.py"
+      ]
+    },
+    {
+      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+      "reason": "dependencies satisfied; unblocks 1 downstream lane(s)",
+      "resources": [
+        "SWARM-PROTOCOL"
+      ],
+      "role": "Independent control schema recovery verifier",
+      "score": 10950,
+      "slotId": "reviewer-1",
+      "writeScopes": [
+        "tools/swarm/swarmctl.py",
+        "tools/swarm/test_swarmctl.py",
+        "tools/swarm/test_swarmctl_hardening.py",
+        "Docs/SWARM_PROTOCOL.md",
+        "Docs/SWARM_CONTROL_PLANE.md"
       ]
     },
     {
@@ -961,13 +969,22 @@
       "workerId": "sol-20260811-m8q2v7"
     },
     {
-      "branch": "agent/swarm/SWARM-RECOVERY-HEALTH-VALIDATION-FENCE-h4v8n2-g3",
-      "expiredAt": "2026-08-11T09:04:30+00:00",
-      "generation": 3,
-      "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
-      "pr": null,
+      "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-v16g4r9x-g4",
+      "expiredAt": "2026-08-13T03:08:00+00:00",
+      "generation": 4,
+      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+      "pr": 444,
       "slotId": "primary",
-      "workerId": "sol-20260811-h4v8n2"
+      "workerId": "sol-20260812-v16g4r9x"
+    },
+    {
+      "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-v16rvw1",
+      "expiredAt": "2026-08-13T03:08:00+00:00",
+      "generation": 1,
+      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+      "pr": 444,
+      "slotId": "reviewer-1",
+      "workerId": "sol-20260812-rvw16g4a"
     },
     {
       "branch": "agent/swarm/SWARM-V22-THROUGHPUT-2b51a8-g1r3",
@@ -979,14 +996,14 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "0506689606d4c07f1aa319fb4ba57410a3d388b4712637c5c1000469203b932c",
+  "stateDigest": "62716808defabe61f1df7c8f087b403c3bf78a538b206ebd037dd84f6fdf4a7b",
   "summary": {
-    "activeClaims": 2,
+    "activeClaims": 1,
     "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 57,
-    "readySlots": 13,
-    "staleClaims": 11,
-    "workers": 369
+    "readySlots": 14,
+    "staleClaims": 12,
+    "workers": 370
   }
 }

@@ -1,21 +1,22 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-13T03:07:52.414260+00:00`
+Generated: `2026-08-13T03:18:46.201131+00:00`
 
 Canonical main: **GREEN** `8c8bf1348856a1f9aafc7665ef81f7abab0772c7`
 
-State digest: `0506689606d4c07f1aa319fb4ba57410a3d388b4712637c5c1000469203b932c`
+State digest: `62716808defabe61f1df7c8f087b403c3bf78a538b206ebd037dd84f6fdf4a7b`
 
 ## Summary
 
-- ready slots: **13**
-- active claims: **2**
-- stale claims: **11**
+- ready slots: **14**
+- active claims: **1**
+- stale claims: **12**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
 - `SWARM-RECOVERY-EVENT-IDENTITY-COMPAT/repair` — **Critical exact-identity compatibility repair** — score 11000 — dependencies satisfied
+- `SWARM-RECOVERY-WORKER-STATUS-CONTRACT/reviewer-1` — **Independent control schema recovery verifier** — score 10950 — dependencies satisfied; unblocks 1 downstream lane(s)
 - `HG-BACKFILL-WORLDENTITY/test-adversary` — **WorldEntity adversarial regression author** — score 5420 — dependencies satisfied
 - `HG-PHYSICS-RUNTIME-ENTITYID-FENCE/audit` — **Independent runtime entity-ID boundary audit** — score 5095 — dependencies satisfied
 - `HG-BACKFILL-DIAGNOSTICS/test-adversary` — **Diagnostics lifecycle and no-drift test author** — score 5070 — dependencies satisfied
@@ -31,8 +32,7 @@ State digest: `0506689606d4c07f1aa319fb4ba57410a3d388b4712637c5c1000469203b932c`
 
 ## Active claims
 
-- `SWARM-RECOVERY-WORKER-STATUS-CONTRACT/primary` → `sol-20260812-v16g4r9x`; lease to `2026-08-13T03:08:00+00:00`
-- `SWARM-RECOVERY-WORKER-STATUS-CONTRACT/reviewer-1` → `sol-20260812-rvw16g4a`; lease to `2026-08-13T03:08:00+00:00`
+- `SWARM-RECOVERY-HEALTH-VALIDATION-FENCE/primary` → `sol-20260812-v16pkg1`; lease to `2026-08-13T07:17:00+00:00`
 
 ## Blocked lanes
 
