@@ -3,3 +3,4 @@ from .model import *
 from .coordination import *
 from .migration import *
 from .simulation import *
+from .persistence import *
