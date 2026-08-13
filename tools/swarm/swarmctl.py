@@ -37,7 +37,11 @@ EVENT_TYPES = {
     "SCOPE_CHANGE", "SUPERSEDED", "EVIDENCE_RESULT", "EXTERNAL_BLOCKER",
     "INTEGRATION_RESULT", "RECOVERY",
 }
-WORKER_STATUSES = {"WORKING", "WAITING", "REVIEWING", "INTEGRATING", "BLOCKED", "IDLE", "STOPPED"}
+CANONICAL_WORKER_STATUSES = {"WORKING", "WAITING", "REVIEWING", "INTEGRATING", "BLOCKED", "IDLE", "STOPPED"}
+LEGACY_WORKER_STATUS_ALIASES = {"ACTIVE", "CLAIMING", "DONE"}
+WORKER_STATUSES = CANONICAL_WORKER_STATUSES | LEGACY_WORKER_STATUS_ALIASES
+REVIEW_VERDICTS = {"APPROVE", "REQUEST_CHANGES", "BLOCK", "SUPERSEDE"}
+REVIEW_RESULT_FIELDS = {"pr", "headSha", "verdict"}
 LANE_ID_RE = re.compile(r"^[A-Z0-9][A-Z0-9._-]{2,63}$")
 SLOT_ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{1,47}$")
 WORKER_ID_RE = re.compile(r"^sol-[0-9]{8}-[a-z0-9]{4,16}$")
@@ -395,7 +399,8 @@ def validate_worker(path: Path) -> dict[str, Any]:
         raise ControlError(f"{path}: filename must equal workerId")
     if obj["model"] != "gpt-5.6-sol":
         raise ControlError(f"{path}: worker model must be gpt-5.6-sol")
-    if obj["status"] not in WORKER_STATUSES:
+    status = obj["status"]
+    if not isinstance(status, str) or status not in WORKER_STATUSES:
         raise ControlError(f"{path}: invalid worker status")
     started, seen = parse_time(obj["startedAt"]), parse_time(obj["lastSeenAt"])
     if seen < started:
@@ -408,6 +413,8 @@ def validate_event(path: Path) -> dict[str, Any]:
     require_schema(obj, path)
     required = {"schemaVersion", "eventId", "timestamp", "fromWorker", "eventType", "summary", "affects"}
     allowed = required | {"laneId", "severity", "evidence", "toWorker", "metadata"}
+    if obj.get("eventType") == "REVIEW_RESULT":
+        allowed |= REVIEW_RESULT_FIELDS
     require_keys(obj, required, allowed, path)
     if not isinstance(obj["eventId"], str) or not re.fullmatch(r"evt-[a-z0-9-]{12,96}", obj["eventId"]):
         raise ControlError(f"{path}: invalid eventId")
@@ -427,6 +434,17 @@ def validate_event(path: Path) -> dict[str, Any]:
         or any(not isinstance(x, str) or len(x) > 1000 for x in obj["evidence"])
     ):
         raise ControlError(f"{path}: invalid evidence")
+    typed_review_fields = REVIEW_RESULT_FIELDS & obj.keys()
+    if typed_review_fields:
+        if typed_review_fields != REVIEW_RESULT_FIELDS:
+            raise ControlError(f"{path}: typed REVIEW_RESULT requires pr, headSha, and verdict together")
+        if type(obj["pr"]) is not int or obj["pr"] <= 0:
+            raise ControlError(f"{path}: invalid REVIEW_RESULT pr")
+        if not isinstance(obj["headSha"], str) or not re.fullmatch(r"[a-f0-9]{40}", obj["headSha"]):
+            raise ControlError(f"{path}: invalid REVIEW_RESULT headSha")
+        verdict = obj["verdict"]
+        if not isinstance(verdict, str) or verdict not in REVIEW_VERDICTS:
+            raise ControlError(f"{path}: invalid REVIEW_RESULT verdict")
     return obj
 
 
