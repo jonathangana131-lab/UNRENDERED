@@ -1,5 +1,6 @@
 local ProductionLoader = require("./support/ProductionLoader")
 local runPhysicsLabDiagnosticsAtomicity = require("./physics_lab_diagnostics_atomicity")
+local runPhysicsLabDiagnosticsToggleFailureCleanup = require("./physics_lab_diagnostics_toggle_failure_cleanup")
 
 local StableId = ProductionLoader.requireShared("Core/StableId")
 local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
@@ -164,6 +165,7 @@ local function run(): number
 	)
 
 	failures += runPhysicsLabDiagnosticsAtomicity()
+	failures += runPhysicsLabDiagnosticsToggleFailureCleanup()
 	return failures
 end
 
