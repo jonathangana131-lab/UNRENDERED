@@ -4,7 +4,8 @@ import hashlib
 from typing import Any, Mapping, Sequence
 
 from . import scheduler as _base
-from .model import MissionPacket
+
+MissionPacket = _base.MissionPacket
 
 WORKER_PERSISTENCE_VERSION = 1
 
