@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "workerId": "sol-20260813-k3r8v1m6",
+  "claimToken": "c6f1a83d4b7e9052",
+  "claimedAt": "2026-08-13T22:49:00+00:00",
+  "heartbeatAt": "2026-08-13T22:49:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-k3r8v1m6",
+  "pr": null,
+  "notes": "Capacity mine MaterialDNA only: inspect current source/tests/retained PRs/events and existing counter lane for a concrete non-duplicate invariant, defect, test gap, or bounded follow-up lane. No major feature unlock and no Studio evidence claims."
+}
