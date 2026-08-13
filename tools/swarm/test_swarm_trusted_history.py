@@ -149,6 +149,75 @@ class QuarantinedHistoryTests(unittest.TestCase):
             self.assertNotIn("quarantinedGitBlobSha1", rule)
 
 
+class FiniteClaimTakeoverHistoryTests(unittest.TestCase):
+    RELATIVE = Path("claims/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT/repair.json")
+    BEFORE = """{
+  \"schemaVersion\": 1,
+  \"laneId\": \"SWARM-RECOVERY-EVENT-IDENTITY-COMPAT\",
+  \"slotId\": \"repair\",
+  \"workerId\": \"sol-20260811-m8q2v7\",
+  \"claimToken\": \"7c1e4a9d2f6b8035\",
+  \"claimedAt\": \"2026-08-11T08:35:00+00:00\",
+  \"heartbeatAt\": \"2026-08-11T08:39:30+00:00\",
+  \"leaseSeconds\": 1800,
+  \"generation\": 1,
+  \"resources\": [\"SWARM-PROTOCOL\"],
+  \"branch\": \"agent/swarm/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-m8q2v7\",
+  \"pr\": 328,
+  \"notes\": \"PR #328 published on main@dd8f1581. Exact MaterialDNA blob identity/path compat + no-new-legacy transition fence + SYNC_REQUIRED historical verdict regression; canonical CI and independent exact-head review required.\"
+}
+"""
+    AFTER = """{
+  \"schemaVersion\": 1,
+  \"laneId\": \"SWARM-RECOVERY-EVENT-IDENTITY-COMPAT\",
+  \"slotId\": \"repair\",
+  \"workerId\": \"sol-20260813-eic7n4p2\",
+  \"claimToken\": \"c89a3f56179122d1\",
+  \"claimedAt\": \"2026-08-13T22:38:00+00:00\",
+  \"heartbeatAt\": \"2026-08-13T22:38:00+00:00\",
+  \"leaseSeconds\": 1800,
+  \"generation\": 2,
+  \"resources\": [\"SWARM-PROTOCOL\"],
+  \"branch\": \"agent/control/event-identity-compat-g2-eic7n4p2\",
+  \"notes\": \"Generation-2 stale recovery after inspecting expired generation-1 PR #328 and its laundering review blocker. Current main has exact path/blob compatibility; this generation locks the remaining laundering regression and finite identity-compat closure.\"
+}
+"""
+
+    def write_raw(self, fx, value):
+        path = fx.root / self.RELATIVE
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(value, encoding="utf-8")
+        return path
+
+    def test_exact_missing_takeover_breadcrumb_is_finite_and_byte_pinned(self):
+        before_fx, after_fx = Fx(), Fx()
+        try:
+            before_path = self.write_raw(before_fx, self.BEFORE)
+            after_path = self.write_raw(after_fx, self.AFTER)
+            rule = hard._FINITE_CLAIM_TAKEOVER_COMPAT[str(self.RELATIVE)]
+            self.assertEqual(hashlib.sha256(before_path.read_bytes()).hexdigest(), rule["beforeSha256"])
+            self.assertEqual(hashlib.sha256(after_path.read_bytes()).hexdigest(), rule["afterSha256"])
+            with self.assertRaises(core.ControlError):
+                hard._STRICT_TRANSITION_CHECK(before_fx.root, after_fx.root)
+            result = hard.transition_check(before_fx.root, after_fx.root)
+            self.assertEqual(result["finiteClaimTakeoverCompat"], [str(self.RELATIVE)])
+            self.assertTrue(result["trustedHistoryBaseline"])
+        finally:
+            before_fx.close()
+            after_fx.close()
+
+    def test_one_byte_variant_does_not_inherit_takeover_compatibility(self):
+        before_fx, after_fx = Fx(), Fx()
+        try:
+            self.write_raw(before_fx, self.BEFORE)
+            self.write_raw(after_fx, self.AFTER.replace("finite identity-compat closure.", "finite identity-compat closure!"))
+            with self.assertRaises(core.ControlError):
+                hard.transition_check(before_fx.root, after_fx.root)
+        finally:
+            before_fx.close()
+            after_fx.close()
+
+
 class SeparateTrustLedgerTests(unittest.TestCase):
     def setUp(self):
         self.fx = Fx()
