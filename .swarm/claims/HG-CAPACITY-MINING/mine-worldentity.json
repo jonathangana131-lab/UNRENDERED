@@ -5,12 +5,12 @@
   "workerId": "sol-20260813-k7m4v9q2",
   "claimToken": "71c5e8a24d9f306b",
   "claimedAt": "2026-08-13T22:43:00+00:00",
-  "heartbeatAt": "2026-08-13T22:43:00+00:00",
+  "heartbeatAt": "2026-08-13T22:50:00+00:00",
   "leaseSeconds": 1800,
   "generation": 2,
   "resources": [],
   "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-k7m4v9q2-g2",
-  "pr": null,
+  "pr": 452,
   "takeoverOf": "sol-20260812-p3x7m4q8",
-  "notes": "Generation-2 stale takeover after inspecting predecessor: branch is zero commits ahead of main, no PR exists, and predecessor published no WorldEntity mining handoff after claiming this slot. Bound current pass to non-duplicate source/test/lineage gaps around current main and retained PR #437."
+  "notes": "Generation-2 stale takeover completed duplicate-screened WorldEntity source-depth audit. Published registered same-fidelity nil-capture no-op ownership/cost finding in PR #452 and immutable FINDING event evt-20260813-224900-k7m4v9q2-worldentity-registered-noop-transition. No product source or Studio evidence changed."
 }
