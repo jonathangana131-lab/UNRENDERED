@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260813-k3r8v1m6",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-13T22:38:30+00:00",
+  "lastSeenAt": "2026-08-13T22:38:30+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-IDENTITY-COMPAT",
+  "slotId": "repair",
+  "branch": "agent/swarm/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT-k3r8v1m6-g2",
+  "notes": "Stale-primary recovery candidate. Inspected PR #328 and its independent P0 reviews; will preserve exact MaterialDNA blob pinning while replacing timestamp-only legacy review compatibility with finite audited identities."
+}
