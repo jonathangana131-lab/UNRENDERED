@@ -1,5 +1,5 @@
 {
-  "activeClaims": 0,
+  "activeClaims": 1,
   "activeEpics": [
     "HERO-GATE",
     "SWARM-V16"
@@ -19,7 +19,7 @@
     "REVIEW_RESULT": 201,
     "SUPERSEDED": 1
   },
-  "generatedAt": "2026-08-13T09:36:29.549979+00:00",
+  "generatedAt": "2026-08-13T09:40:25.557815+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED": 20,
@@ -37,5 +37,5 @@
   "readySlots": 14,
   "reviewBacklog": 4,
   "schemaVersion": 1,
-  "staleClaims": 14
+  "staleClaims": 13
 }

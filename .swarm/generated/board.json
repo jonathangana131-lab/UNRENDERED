@@ -1,5 +1,15 @@
 {
-  "activeClaims": [],
+  "activeClaims": [
+    {
+      "branch": "agent/swarm-v16-mission-graph",
+      "expiresAt": "2026-08-13T13:38:42+00:00",
+      "generation": 1,
+      "laneId": "SWARM-V16-MISSION-GRAPH",
+      "pr": 443,
+      "slotId": "primary",
+      "workerId": "sol-20260812-v16graph"
+    }
+  ],
   "blockedLanes": [
     {
       "laneId": "HERO-DOOR",
@@ -123,7 +133,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-13T09:36:29.549979+00:00",
+  "generatedAt": "2026-08-13T09:40:25.557815+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "4acd7b2fe48258d1f11cfee124dc25eed53f72b7",
@@ -133,7 +143,7 @@
     "workflowRunId": 31663616892
   },
   "metrics": {
-    "activeClaims": 0,
+    "activeClaims": 1,
     "activeEpics": [
       "HERO-GATE",
       "SWARM-V16"
@@ -153,7 +163,7 @@
       "REVIEW_RESULT": 201,
       "SUPERSEDED": 1
     },
-    "generatedAt": "2026-08-13T09:36:29.549979+00:00",
+    "generatedAt": "2026-08-13T09:40:25.557815+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
@@ -171,7 +181,7 @@
     "readySlots": 14,
     "reviewBacklog": 4,
     "schemaVersion": 1,
-    "staleClaims": 14
+    "staleClaims": 13
   },
   "readySlots": [
     {
@@ -849,7 +859,7 @@
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 0,
+      "activeOwners": 1,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "SWARM-PROTOCOL",
@@ -988,15 +998,6 @@
       "workerId": "sol-20260812-rvw16g4a"
     },
     {
-      "branch": "agent/swarm-v16-mission-graph",
-      "expiredAt": "2026-08-13T07:22:00+00:00",
-      "generation": 1,
-      "laneId": "SWARM-V16-MISSION-GRAPH",
-      "pr": 443,
-      "slotId": "primary",
-      "workerId": "sol-20260812-v16graph"
-    },
-    {
       "branch": "agent/swarm/SWARM-V22-THROUGHPUT-2b51a8-g1r3",
       "expiredAt": "2026-08-11T09:57:20+00:00",
       "generation": 1,
@@ -1006,14 +1007,14 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "a872f271e377c377a204d530bf036c3eb79204aa9ea59defc0ce510389d2c05e",
+  "stateDigest": "ae544e6fade093c4676525cdfb0d3a29f97b6585a54e8bcb9c3c3a8eaad23195",
   "summary": {
-    "activeClaims": 0,
-    "activeResourceClaims": 0,
+    "activeClaims": 1,
+    "activeResourceClaims": 1,
     "blockedExternalLanes": 1,
     "lanes": 58,
     "readySlots": 14,
-    "staleClaims": 14,
+    "staleClaims": 13,
     "workers": 371
   }
 }
