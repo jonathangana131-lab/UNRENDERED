@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "workerId": "sol-20260813-m6t3x8q1",
+  "claimToken": "6c2e9a4f1b7d3058",
+  "claimedAt": "2026-08-13T22:40:10+00:00",
+  "heartbeatAt": "2026-08-13T22:40:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/capacity/HG-CAPACITY-MINING-authority-m6t3x8q1",
+  "pr": null,
+  "notes": "Authority/multiplayer capacity mining after losing higher-score claim races. Inspect only current Hero-Gate authority source/tests/PR/event history for a concrete non-duplicate source-only gap; no Studio rerun, no two-client PASS claim, no major feature unlock."
+}
