@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260813-z7q4m2n8",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-13T22:36:00+00:00",
-  "lastSeenAt": "2026-08-13T22:46:10+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-objectgenome",
-  "branch": "agent/capacity/HG-CAPACITY-MINING-objectgenome-z7q4m2n8",
-  "notes": "Rerouted after protected SWARM-PROTOCOL lease creation was safety-blocked. Claimed free unprotected ObjectGenome capacity-mining shard for source/test/PR/event audit only; no major feature unlock or external evidence claim."
+  "lastSeenAt": "2026-08-13T22:58:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed HG-CAPACITY-MINING/mine-objectgenome source-depth audit. Published FINDING evt-20260813-225700-z7q4m2n8-objectgenome-com-coherence: shared ObjectGenome validates total component mass but not declared COM against the mass-weighted component centroid; recurring fixture-level door/cart/chair repairs show the invariant is missing at the contract boundary. No source patch, tests, Studio/runtime evidence, or feature unlock claimed. Earlier protected SWARM-PROTOCOL recovery attempt was released without bypass after connector safety blocked resource-lease creation."
 }
