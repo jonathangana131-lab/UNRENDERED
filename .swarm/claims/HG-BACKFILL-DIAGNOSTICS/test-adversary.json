@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260813-n4q7v2m9",
+  "claimToken": "9d2f6b80c4e17a35",
+  "claimedAt": "2026-08-13T22:37:30+00:00",
+  "heartbeatAt": "2026-08-13T22:37:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n4q7v2m9",
+  "pr": null,
+  "notes": "Independent generation-16 diagnostics adversarial test pass against PR #441. Focus on concrete false-pass/failure-path gaps only; no Studio/viewport evidence will be claimed."
+}
