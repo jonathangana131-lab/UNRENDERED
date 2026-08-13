@@ -6,7 +6,7 @@
   "claimToken": "c89a3f56179122d1",
   "acquiredAt": "2026-08-13T22:38:00+00:00",
   "heartbeatAt": "2026-08-13T22:38:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 2,
-  "notes": "Exclusive protocol lease for generation-2 exact-identity compatibility recovery."
+  "notes": "Review handoff complete. No renewal after 22:38Z; minimum schema-valid lease expires naturally at 22:43Z so independent reviewer can acquire SWARM-PROTOCOL without a lingering lock."
 }
