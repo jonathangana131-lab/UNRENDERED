@@ -158,7 +158,7 @@ class RecoveryExtensionTests(unittest.TestCase):
             self.assertEqual(rules[event_id]["filename"], filename)
             self.assertEqual(rules[event_id]["quarantineOnlyGitBlobSha1"], blob_sha)
 
-    def test_generation7_dated_quarantine_is_exact_and_preserves_real_directory(self):
+    def test_generation8_dated_quarantine_is_exact_and_preserves_real_directory(self):
         expected = (
             (
                 "evt-20260812T080700Z-sol-20260812-k7m4q9v2-handoff-diagnostics-generation10",
@@ -167,20 +167,48 @@ class RecoveryExtensionTests(unittest.TestCase):
                 "3e8d11601444a2681eee5f030a0597fbee55b0bf",
                 "706647f87553ce70e796da306afe58216332f0bb",
             ),
+            (
+                "evt-20260812T105120Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation13",
+                "2026-08-12",
+                "105120-sol-20260812-g43k9m2v-handoff-diagnostics-generation13.json",
+                "d3b3bf56eff635785321e4fce433e5e695bd136a",
+                "966a8362e3aebe5cadedee586114ec3ef4618bf5",
+            ),
+            (
+                "evt-20260812T110830Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation14",
+                "2026-08-12",
+                "110830-sol-20260812-g43k9m2v-handoff-diagnostics-generation14.json",
+                "a058912e408b486ea9411b2bfff7359a3c812c5d",
+                "cb440ccabb5459252d36b782ba955f8a2aa37abd",
+            ),
+            (
+                "evt-20260812T111830Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation15",
+                "2026-08-12",
+                "111830-sol-20260812-g43k9m2v-handoff-diagnostics-generation15.json",
+                "7cc2c334628dc00197a3f814491c8b3ea6767b72",
+                "8eef4f40d414f4f43c03813c3276b8dd095036b9",
+            ),
+            (
+                "evt-20260812T112500Z-sol-20260812-g43k9m2v-handoff-diagnostics-generation16",
+                "2026-08-12",
+                "112500-sol-20260812-g43k9m2v-handoff-diagnostics-generation16.json",
+                "92843914017c38b861b3ecd9cbb758b52d3428eb",
+                "b7a4bab4760413bdcd629a1a8e4b0af4e4291964",
+            ),
         )
         self.assertEqual(extension.DATED_MALFORMED_EVENT_QUARANTINE_ROWS, expected)
         normalized = extension.malformed_event_quarantine_rows_with_dates()
-        self.assertEqual(len(normalized), 48)
+        self.assertEqual(len(normalized), 52)
         self.assertEqual(len({row[0] for row in normalized}), len(normalized))
         self.assertEqual(len({(row[1], row[2]) for row in normalized}), len(normalized))
-        self.assertIn(expected[0], normalized)
-
-        event_id, date, filename, _first_write, blob_sha = expected[0]
-        rule = extension.quarantine_rules()[event_id]
-        self.assertEqual(rule["date"], date)
-        self.assertEqual(rule["filename"], filename)
-        self.assertEqual(rule["quarantineOnlyGitBlobSha1"], blob_sha)
-        self.assertEqual(hard._CANONICAL_IMMUTABLE_EVENTS[event_id], rule)
+        for row in expected:
+            self.assertIn(row, normalized)
+            event_id, date, filename, _first_write, blob_sha = row
+            rule = extension.quarantine_rules()[event_id]
+            self.assertEqual(rule["date"], date)
+            self.assertEqual(rule["filename"], filename)
+            self.assertEqual(rule["quarantineOnlyGitBlobSha1"], blob_sha)
+            self.assertEqual(hard._CANONICAL_IMMUTABLE_EVENTS[event_id], rule)
 
 
 class ExecutableFieldQuarantineTests(unittest.TestCase):
