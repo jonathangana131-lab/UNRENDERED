@@ -14,6 +14,7 @@
     "tools/swarm/v16cp/**",
     "tools/swarm/v16ctl.py",
     "tools/swarm/v16_objective_integrate.py",
+    "tools/swarm/v16_legacy_trust_sync.py",
     "tools/swarm/test_swarm_v16*.py"
   ],
   "resources": ["SWARM-PROTOCOL"],
@@ -30,6 +31,7 @@
         "tools/swarm/v16cp/**",
         "tools/swarm/v16ctl.py",
         "tools/swarm/v16_objective_integrate.py",
+        "tools/swarm/v16_legacy_trust_sync.py",
         "tools/swarm/test_swarm_v16*.py"
       ]
     },
@@ -46,6 +48,7 @@
         "tools/swarm/v16cp/**",
         "tools/swarm/v16ctl.py",
         "tools/swarm/v16_objective_integrate.py",
+        "tools/swarm/v16_legacy_trust_sync.py",
         "tools/swarm/test_swarm_v16*.py"
       ]
     }
