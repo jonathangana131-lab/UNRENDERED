@@ -3,9 +3,9 @@ from __future__ import annotations
 
 import base64
 import json
-import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import v16_legacy_trust_sync as sync
 from v16cp.core import ValidationError
@@ -89,9 +89,9 @@ class LegacyTrustSyncTests(unittest.TestCase):
         self.assertEqual(written["resetId"], "reset-test-history")
         self.assertFalse(written["bootstrap"])
 
-    def test_control_race_aborts_before_trust_ref_update(self):
+    def test_control_race_is_retryable_and_never_updates_trust_ref(self):
         api = FakeGitHub(race_control=True)
-        with self.assertRaisesRegex(ValidationError, "control branch advanced"):
+        with self.assertRaisesRegex(sync.RefRace, "control branch advanced"):
             sync._advance_trust(
                 api,
                 trust_branch="swarm-trust",
@@ -103,6 +103,26 @@ class LegacyTrustSyncTests(unittest.TestCase):
             )
         self.assertEqual(api.refs["swarm-trust"], "a" * 40)
 
+    def test_synchronize_restarts_entire_proof_after_ref_race(self):
+        winner = {"status": "PASS", "controlSha": "b" * 40}
+        with mock.patch.object(sync, "GitHubContentsStore", return_value=object()), \
+             mock.patch.object(sync, "_git", return_value="d" * 40), \
+             mock.patch.object(sync, "_synchronize_once", side_effect=[sync.RefRace("moved"), winner]) as once, \
+             mock.patch.object(sync.time, "sleep") as sleep:
+            result = sync.synchronize("owner/repo", "token", max_race_retries=2)
+        self.assertEqual(once.call_count, 2)
+        sleep.assert_called_once()
+        self.assertEqual(result["raceRetries"], 1)
+        self.assertEqual(result["status"], "PASS")
+
+    def test_non_race_validation_failure_is_not_retried(self):
+        with mock.patch.object(sync, "GitHubContentsStore", return_value=object()), \
+             mock.patch.object(sync, "_git", return_value="d" * 40), \
+             mock.patch.object(sync, "_synchronize_once", side_effect=ValidationError("bad history")) as once:
+            with self.assertRaisesRegex(ValidationError, "bad history"):
+                sync.synchronize("owner/repo", "token", max_race_retries=6)
+        self.assertEqual(once.call_count, 1)
+
     def test_source_contract_replays_history_and_validates_marker(self):
         source = Path(sync.__file__).read_text(encoding="utf-8")
         self.assertIn("trusted_history_chain.py", source)
@@ -111,12 +131,20 @@ class LegacyTrustSyncTests(unittest.TestCase):
         self.assertIn("hard.validate_marker", source)
         self.assertIn('"force": False', source)
         self.assertNotIn('"force": True', source)
+        self.assertIn("class RefRace", source)
+        self.assertIn("max_race_retries", source)
 
-    def test_v16_write_workflows_reconcile_legacy_trust(self):
+    def test_all_v16_write_workflows_share_lock_and_reconcile_trust(self):
         root = Path(__file__).resolve().parents[2]
-        activate = (root / ".github/workflows/swarm-v16-activate.yml").read_text(encoding="utf-8")
-        objective = (root / ".github/workflows/swarm-v16-objective-integrate-command.yml").read_text(encoding="utf-8")
-        for workflow in (activate, objective):
+        names = (
+            "swarm-v16-activate.yml",
+            "swarm-v16-live-refresh.yml",
+            "swarm-v16-objective-integrate-command.yml",
+        )
+        for name in names:
+            workflow = (root / ".github/workflows" / name).read_text(encoding="utf-8")
+            self.assertIn("group: swarm-v16-state-writes", workflow)
+            self.assertIn("cancel-in-progress: false", workflow)
             self.assertIn("v16_legacy_trust_sync.py", workflow)
             self.assertIn("--control-branch swarm-control", workflow)
             self.assertIn("--trust-branch swarm-trust", workflow)

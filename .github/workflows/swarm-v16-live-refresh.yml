@@ -9,13 +9,13 @@ permissions:
   contents: write
 
 concurrency:
-  group: swarm-v16-live-refresh
-  cancel-in-progress: true
+  group: swarm-v16-state-writes
+  cancel-in-progress: false
 
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,3 +37,12 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --state-branch swarm-control \
             --main-sha "$(git rev-parse HEAD)"
+      - name: Reconcile V2.1 projections and exact trust anchor
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 tools/swarm/v16_legacy_trust_sync.py \
+            --repo "$GITHUB_REPOSITORY" \
+            --control-branch swarm-control \
+            --trust-branch swarm-trust \
+            --default-branch main

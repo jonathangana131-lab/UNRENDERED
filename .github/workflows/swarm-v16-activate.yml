@@ -16,7 +16,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: swarm-v16-activation
+  group: swarm-v16-state-writes
   cancel-in-progress: false
 
 jobs:

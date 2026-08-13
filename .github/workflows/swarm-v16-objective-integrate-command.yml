@@ -10,7 +10,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: swarm-v16-objective-integration
+  group: swarm-v16-state-writes
   cancel-in-progress: false
 
 jobs:
