@@ -5,7 +5,7 @@
   "title": "Repair worker and event schema contract drift",
   "objective": "Stop repeated Swarm control validation failures caused by worker-facing producer conventions drifting from the strict validator: workers emit intuitive lifecycle aliases such as CLAIMING/DONE and immutable REVIEW_RESULT events already carry typed pr/headSha/verdict fields that the current generic event validator rejects. Make the accepted lifecycle/event contract explicit, preserve strict typing and unknown-field fail-closed behavior, and restore live control validity without weakening authoritative claim/resource fencing.",
   "priority": 10000,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -56,11 +56,11 @@
     "live swarm-control validation returns PASS on authoritative history without rewriting immutable events"
   ],
   "pr": 444,
-  "notes": "Generation-4 successor PR #444 starts exactly from generation-3 PR #442 head f2f76cd1cb240f6824ae631ce90f6730c1f43cca after its primary and SWARM-PROTOCOL leases expired. Generation 3 fixed the worker-status type guard and added exact first-write legacy HANDOFF blob compatibility, then fresh CI exposed in-process facade re-entry contamination: the earlier runpy CLI regression replaced shared base hooks with a second facade instance, so the later audited-blob fixture patched a different registry. Generation 4 preserves first strict engine anchors and one finite audited-blob registry on the shared base module. Exact path+Git-blob authentication still occurs before inert legacy JSON parsing; all unlisted/new command fields remain strict-fail. Fresh exact-head CI, 30-worker races, live validation, and independent review are required. Repository-wide pr-ownership may remain separately fail-closed on HG-BACKFILL-OBJECTGENOME-STRING-BUDGET legacy dependency shape; do not bypass that shared defect.",
+  "notes": "Generation-4 PR #444 exact head cadfd75b0913a9b22bac09f726807fd0e98194f0 is frozen in REVIEW. Canonical CI run 31660999467 PASS and Swarm engine-tests job 94325932094 PASS, including deterministic/hardening suites and both 30-worker races. The generation-4 delta from generation-3 is one file (+18/-4) and only stabilizes repeated facade execution by retaining the first strict base anchors plus one shared finite audited-blob registry. Exact path+Git-blob authentication remains mandatory before inert legacy JSON parsing; all unlisted/new executable-looking event fields remain strict-fail. Reviewer sol-20260812-rvw16g4a is distinct from primary and owns no SWARM-PROTOCOL resource. The ordinary pr-ownership job remains bootstrap-blocked because it deliberately executes the older validator from main; that red job is not accepted as evidence of this candidate. Live state validation and reviewer verdict still gate integration.",
   "blockers": [
-    "Generation-4 PR #444 must prove the facade re-entry repair with fresh exact-head core/hardening suites and both 30-worker simulations.",
-    "Live swarm-control validation and a fresh independent review by a worker other than generation-4 primary sol-20260812-v16g4r9x are required before integration.",
-    "Repository-wide pr-ownership is separately fail-closed on live swarm-control lane HG-BACKFILL-OBJECTGENOME-STRING-BUDGET because its dependency entry is a legacy string rather than the strict dependency object shape; do not attribute or bypass that shared control-state defect in this candidate."
+    "Fresh independent exact-head reviewer verdict by sol-20260812-rvw16g4a is required before integration.",
+    "Live swarm-control validation must PASS under the accepted recovery validator without rewriting immutable events.",
+    "The ordinary pr-ownership job remains intentionally fail-closed until the trusted-history bootstrap moves the accepted validator to main; do not weaken that workflow."
   ],
   "tags": ["control-repair", "red-ci", "worker-lifecycle", "event-schema", "hero-gate"]
 }

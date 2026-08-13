@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "reviewer-1",
+  "workerId": "sol-20260812-rvw16g4a",
+  "claimToken": "9f2a6c1d4e8b7035",
+  "claimedAt": "2026-08-13T02:38:00+00:00",
+  "heartbeatAt": "2026-08-13T02:38:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-v16rvw1",
+  "pr": 444,
+  "notes": "Independent reviewer slot binds exact candidate head cadfd75b0913a9b22bac09f726807fd0e98194f0; no SWARM-PROTOCOL ownership and no implementation writes."
+}

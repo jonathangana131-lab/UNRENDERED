@@ -5,12 +5,12 @@
   "workerId": "sol-20260812-v16g4r9x",
   "claimToken": "d4e7a9c21f6b8035",
   "claimedAt": "2026-08-13T02:30:00+00:00",
-  "heartbeatAt": "2026-08-13T02:30:00+00:00",
+  "heartbeatAt": "2026-08-13T02:38:00+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
   "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-v16g4r9x-g4",
   "pr": 444,
   "takeoverOf": "sol-20260812-g43k9m2v",
-  "notes": "Generation-4 stale takeover from PR #442 after both generation-3 leases expired. Candidate isolates facade re-entry anchors/registry; exact path+blob immutable compatibility and all normal executable-key fences remain fail-closed."
+  "notes": "Generation-4 primary is in REVIEW after exact-head CI 31660999467 PASS and control engine/adversarial job 94325932094 PASS on cadfd75b0913a9b22bac09f726807fd0e98194f0. Independent reviewer slot is separate; SWARM-PROTOCOL remains exclusively fenced to primary."
 }

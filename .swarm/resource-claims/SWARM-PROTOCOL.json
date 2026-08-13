@@ -5,8 +5,8 @@
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "claimToken": "d4e7a9c21f6b8035",
   "acquiredAt": "2026-08-13T02:30:00+00:00",
-  "heartbeatAt": "2026-08-13T02:30:00+00:00",
+  "heartbeatAt": "2026-08-13T02:38:00+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
-  "notes": "Generation-4 stale takeover paired atomically with primary claim for PR #444; preserves exclusive SWARM-PROTOCOL fencing through exact-head CI and independent review."
+  "notes": "Generation-4 primary retains the exclusive SWARM-PROTOCOL lease during exact-head independent review; reviewer owns no scarce resource."
 }
