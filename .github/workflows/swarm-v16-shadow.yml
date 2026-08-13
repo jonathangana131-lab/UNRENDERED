@@ -29,6 +29,7 @@ jobs:
       - name: Deterministic V16 unit tests
         run: |
           python3 tools/swarm/test_swarm_v16.py
+          python3 tools/swarm/test_swarm_v16_persistence.py
           python3 tools/swarm/test_swarm_v16_objective_integration.py
           python3 tools/swarm/test_swarm_v16_legacy_trust_sync.py
       - name: Thirty-worker adversarial convergence
