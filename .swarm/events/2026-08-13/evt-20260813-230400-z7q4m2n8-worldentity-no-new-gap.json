@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260813-230400-z7q4m2n8-worldentity-no-new-gap",
+  "timestamp": "2026-08-13T23:04:00+00:00",
+  "fromWorker": "sol-20260813-z7q4m2n8",
+  "eventType": "FINDING",
+  "summary": "WorldEntity capacity mining found no additional non-duplicate source-only defect worth spawning beyond the retained generation-9 lineage and today's already-published direct-mutable duplicate-diagnostic adversarial gap. Candidate concerns around metadata retention, persistent-state growth, duplicate-history growth, and direct lifecycle aliasing are already fail-closed in retained PR #437/#429 ancestry. Do not create another WorldEntity primary from this shard; finish the existing exact-head review/adversarial proof and restore trusted pr-ownership instead.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "Retained PR #437 exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3 inherits explicit MAX_CANONICAL_METADATA_STRING_BYTES=65536, MAX_PERSISTENT_STATE_DEPTH=64, MAX_PERSISTENT_STATE_NODES=4096, MAX_PERSISTENT_STATE_STRING_BYTES=65536, and MAX_DUPLICATE_DIAGNOSTIC_CAPACITY=1024 fences.",
+    "The retained source owns caller-supplied WorldEntityRecord data before capture/transition derivation, including the same-fidelity transition path, so the mutable-input alias concern does not survive the retained lineage.",
+    "PR #437's remaining concrete proof gap is already recorded by review 4932208634 and FINDING evt-20260813-223900-v7k2m9p4-worldentity-mutable-duplicate-aliasing: direct mutable duplicate registration must prove returned/retained diagnostics preserve owned frozen origin snapshots.",
+    "HG-BACKFILL-WORLDENTITY remains NEEDS_CHANGES because trusted pr-ownership is red and a fresh independent exact-head review is required; widening source scope from capacity mining would duplicate active work rather than deepen it.",
+    "No local tests, Roblox Studio, viewport, physical-contact, or two-client execution was run or claimed; this was a connector/source audit only."
+  ]
+}
