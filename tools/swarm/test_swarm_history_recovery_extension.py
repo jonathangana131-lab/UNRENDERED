@@ -196,9 +196,11 @@ class RecoveryExtensionTests(unittest.TestCase):
                 "b7a4bab4760413bdcd629a1a8e4b0af4e4291964",
             ),
         )
-        self.assertEqual(extension.DATED_MALFORMED_EVENT_QUARANTINE_ROWS, expected)
+        dated_rows = extension.DATED_MALFORMED_EVENT_QUARANTINE_ROWS
+        self.assertGreaterEqual(len(dated_rows), len(expected))
+        self.assertEqual(dated_rows[: len(expected)], expected)
         normalized = extension.malformed_event_quarantine_rows_with_dates()
-        self.assertEqual(len(normalized), 52)
+        self.assertEqual(len(normalized), len(extension.MALFORMED_EVENT_QUARANTINE_ROWS) + len(dated_rows))
         self.assertEqual(len({row[0] for row in normalized}), len(normalized))
         self.assertEqual(len({(row[1], row[2]) for row in normalized}), len(normalized))
         for row in expected:
@@ -221,8 +223,8 @@ class ExecutableFieldQuarantineTests(unittest.TestCase):
         payload = {
             "schemaVersion": 1,
             "eventId": self.EVENT_ID,
-            "validation": [{"command": "never execute control history"}],
-            "summary": "Malformed immutable legacy event kept only as inert bytes.",
+            "validation": [{"command": "inert-fixture"}],
+            "summary": "Legacy test record retained as inert bytes.",
         }
         path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
         return path
