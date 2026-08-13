@@ -123,7 +123,7 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-13T10:18:07.926419+00:00",
+  "generatedAt": "2026-08-13T22:37:47.199058+00:00",
   "mainHealth": {
     "conclusion": "success",
     "headSha": "8134a3962be80e8ba6ec2c27207e44db63e6765c",
@@ -152,7 +152,7 @@
       "REVIEW_RESULT": 201,
       "SUPERSEDED": 1
     },
-    "generatedAt": "2026-08-13T10:18:07.926419+00:00",
+    "generatedAt": "2026-08-13T22:37:47.199058+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
@@ -995,7 +995,7 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "53128eb7ee95ce8ba921a49fc362cec85c1b937fd058e65ced488c91c84e7084",
+  "stateDigest": "056074cb274157545d308e4e52875d8ceb1a098ef30c64c4e610ec54bbf77f30",
   "summary": {
     "activeClaims": 0,
     "activeResourceClaims": 0,
@@ -1003,6 +1003,6 @@
     "lanes": 58,
     "readySlots": 14,
     "staleClaims": 13,
-    "workers": 371
+    "workers": 372
   }
 }
