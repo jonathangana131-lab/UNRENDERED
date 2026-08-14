@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-afb1aa7d",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:20:05+00:00",
-  "lastSeenAt": "2026-08-14T08:20:05+00:00",
-  "laneId": "OPS-MAIN-HEALTH",
-  "slotId": "primary",
+  "lastSeenAt": "2026-08-14T08:36:10+00:00",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/red-main/OPS-MAIN-HEALTH-afb1aa7d",
-  "notes": "Red-main recovery worker. Registered before atomic claim; scope limited to diagnosing and minimally repairing canonical CI failure."
+  "notes": "Completed red-main/control-plane recovery. Canonical main CI remained green at af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9; malformed live-control records were normalized fail-closed, guarded health publication succeeded via run 31783469998 attempt 9/job 94717259179, and OPS claim was released. No product source edits or product CI rerun claimed."
 }
