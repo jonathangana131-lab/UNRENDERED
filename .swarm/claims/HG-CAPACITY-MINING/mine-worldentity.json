@@ -5,12 +5,12 @@
   "workerId": "sol-20260814-q8m4n7v2",
   "claimToken": "8f3c1d6a9b2740e5",
   "claimedAt": "2026-08-14T08:34:12+00:00",
-  "heartbeatAt": "2026-08-14T08:40:30+00:00",
-  "leaseSeconds": 1800,
+  "heartbeatAt": "2026-08-14T08:41:15+00:00",
+  "leaseSeconds": 300,
   "generation": 2,
   "takeoverOf": "sol-20260814-z4p7m3n8",
   "resources": [],
   "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-q8m4n7v2-g2",
   "pr": null,
-  "notes": "Deep non-duplicate audit complete. No new WorldEntity slice warranted: retained generation-10 already covers lifecycle revision ceilings, owned-state budgets, detached-record validation, metadata bounds, duplicate-history bounds, and hostile no-execute boundaries. Existing open findings #464 (bounded rejection labels) and #491 (StableId authenticity) remain unconsumed; publishing a no-new-slice FINDING instead of creating overlapping production work."
+  "notes": "Released after immutable FINDING evt-20260814t084100z-q8m4n7v2-worldentity-no-new-slice. No new non-duplicate source slice warranted; existing open #464 bounded rejection-label and #491 StableId-authenticity findings should be consumed after active generation-10 WorldEntity convergence. No product source, tests, or Studio evidence claimed."
 }
