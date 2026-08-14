@@ -6,10 +6,10 @@
   "claimToken": "8d3a6f1c9b2e7054",
   "claimedAt": "2026-08-14T08:00:10+00:00",
   "heartbeatAt": "2026-08-14T08:00:10+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 1,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-r6h3n9v2-g1",
   "pr": 477,
-  "notes": "Independent WorldEntity adversarial completion pass against generation-10 PR #477. Focus only on concrete identity/ownership/immutability/bounds gaps not already covered by #435/#461 or the completed audit; test-only unless a separately unlocked primary absorbs the finding."
+  "notes": "Preempted before source/test changes when post-merge V16 live history replay exposed the higher-priority WorldEntity generation-9->10 malformed stale takeover. Exact control finding published as evt-20260814-081020-r6h3n9v2-worldentity-takeover-replay-gap. Lease intentionally reduced to protocol minimum without advancing heartbeat; stale/released after 2026-08-14T08:05:10+00:00."
 }
