@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T08:39:47+00:00",
-  "lastSeenAt": "2026-08-14T08:40:20+00:00",
+  "lastSeenAt": "2026-08-14T08:44:20+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-p6m9q4v2-g3",
-  "notes": "Owns generation-3 WorldEntity adversarial regression slot and generation-5 REALITY-CONTRACT lease. Building test-only current-main convergence evidence distinct from PR #493's metadata-budget/capacity transplant; no src or Studio claim."
+  "notes": "Draft PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b is published as expected-red test-only current-main convergence evidence. Canonical CI/Swarm runs 31785096163/31785096202 are queued; holding claim/resource only through exact evidence capture."
 }
