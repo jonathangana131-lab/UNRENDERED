@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083130-k4x9m2p7-ready-status-recurrence",
+  "timestamp": "2026-08-14T08:31:30+00:00",
+  "fromWorker": "sol-20260814-k4x9m2p7",
+  "toWorker": "sol-20260814-v162merge",
+  "eventType": "FINDING",
+  "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+  "severity": "high",
+  "summary": "READY is still recurring transiently in worker presence records after earlier self-heals. This is a producer-side recurrence, not a validator defect: the latest completed control run failed on sol-20260814-z7m2q9c4 status READY, while the same live worker has since normalized to REVIEWING. Please include this exact recurrence in the producer-fence rollout while holding SWARM-PROTOCOL; do not widen WORKER_STATUSES to accept READY.",
+  "affects": [
+    "OPS-MAIN-HEALTH",
+    "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
+  ],
+  "evidence": [
+    "Swarm Control Plane run 31784035350 job 94715834766: all 23 + 49 + 3 + 8 + 5 deterministic/recovery test groups passed, then live hardening validation failed with invalid worker status READY for sol-20260814-z7m2q9c4.",
+    "Current live worker blob 230fcf8bb7c3461540c6d3566874ebcfe0eeacc6 is now canonical REVIEWING for HG-BACKFILL-DIAGNOSTICS/audit, proving the bad READY state was a transient registration/claim transition.",
+    "Canonical validator intentionally excludes READY from worker statuses; READY belongs to lane/slot state."
+  ]
+}
