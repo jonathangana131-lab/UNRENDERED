@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083620-k4x9m2p7-nonexistent-slot-admission",
+  "timestamp": "2026-08-14T08:36:20+00:00",
+  "fromWorker": "sol-20260814-k4x9m2p7",
+  "toWorker": "sol-20260814-v162merge",
+  "eventType": "FINDING",
+  "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+  "severity": "high",
+  "summary": "Producer-fence recurrence: control accepted a live HG-CAPACITY-MINING/mine-reality claim even though that slot has never existed in the standing lane contract. This is not lane churn; claim admission must validate lane existence and exact slot membership before publishing worker/claim state.",
+  "affects": [
+    "OPS-MAIN-HEALTH",
+    "HG-CAPACITY-MINING",
+    "SWARM-V16.2-INTEGRATION-THROUGHPUT"
+  ],
+  "evidence": [
+    "Swarm Control Plane run 31784297337 job 94716664280 passed all deterministic/recovery suites, then failed live validation: .swarm/claims/HG-CAPACITY-MINING/mine-reality.json: claim references unknown slot.",
+    "Live claim blob e3ebe9caabcad12fe3849deafc6b48d50c58dd00 was admitted at 2026-08-14T08:08:00Z for mine-reality and remains lease-live through 08:40:30Z based on its heartbeat/lease.",
+    "Current lane blob f0f589c77f50195a1f9450b5e18db87138d7405b defines no mine-reality slot.",
+    "Lane file history shows its latest/creation change is 9eb6b2fe9a095c42a9ffae0f5bc86227ba19d311 (2026-08-11, add standing capacity-mining roles); there is no later slot-removal change, so the invalid claim was created against an already nonexistent slot.",
+    "SWARM-PROTOCOL resource is currently generation 6 held by sol-20260814-v162merge specifically for V16.2 producer-fence rollout."
+  ]
+}
