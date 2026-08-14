@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-u5m8q2v7",
   "claimToken": "d5e0a47c61b9328f",
   "claimedAt": "2026-08-14T07:21:39+00:00",
-  "heartbeatAt": "2026-08-14T07:21:39+00:00",
+  "heartbeatAt": "2026-08-14T07:33:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/materials/HG-CAPACITY-MINING-materialdna-u5m8q2v7",
-  "pr": null,
-  "notes": "Post-diagnostics continuation. Mine current-main MaterialDNA source/tests and active/retained MaterialDNA lanes/PRs for one concrete non-duplicate Reality-Grade gap; docs/event only, no production edits or Studio claims."
+  "pr": 472,
+  "notes": "Published non-duplicate known-family coherence finding as draft docs PR #472 at 374da8e8cd52bec78ec0cc086ff3f362f5896001; exact-head canonical CI run 31780067240 PASS. Durable FINDING event evt-20260814-073230-u5m8q2v7-materialdna-known-family-coherence records exact repro, non-duplication, bounded follow-up, and the unrelated live control invalidity. No product or Studio evidence claimed."
 }
