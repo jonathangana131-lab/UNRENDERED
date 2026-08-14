@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-h7v2m9c5",
   "claimToken": "6f3a91d8c2b740e5",
   "claimedAt": "2026-08-14T08:32:10+00:00",
-  "heartbeatAt": "2026-08-14T08:35:30+00:00",
+  "heartbeatAt": "2026-08-14T08:36:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/audit/HG-CAPACITY-MINING-physics-geometry-h7v2m9c5-g1",
-  "pr": null,
-  "notes": "Bounded audit found filing-cabinet F2 solid-shell/drawer enclosure: three canonical drawer components are fully inside the solid collidable shell while the realizer instantiates every component as a collidable Part. Preparing docs-only non-duplicate finding; no Studio claim."
+  "pr": 498,
+  "notes": "Docs-only filing-cabinet F2 solid-shell/drawer enclosure finding published as draft PR #498 at 9c5e6aca9f9e2a62c7a0ac898f99437fb32a80a5. Awaiting exact-head CI; no Studio claim."
 }
