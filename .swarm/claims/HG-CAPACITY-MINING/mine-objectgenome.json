@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "workerId": "sol-20260814-v8n3q6m2",
+  "claimToken": "b7c4e9a126f038d5",
+  "claimedAt": "2026-08-14T07:15:00+00:00",
+  "heartbeatAt": "2026-08-14T07:15:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-v8n3q6m2",
+  "pr": null,
+  "notes": "Bounded ObjectGenome capacity-mining pass on current Hero Gate foundations. Inspect current source/tests/PRs/events for one concrete non-duplicate invariant, regression, or integration gap; publish a structured finding and do not unlock a new major feature or claim Studio evidence."
+}
