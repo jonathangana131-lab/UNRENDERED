@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-r6h3n9v2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:10:00+00:00",
-  "lastSeenAt": "2026-08-14T07:53:00+00:00",
+  "lastSeenAt": "2026-08-14T07:55:00+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-r6h3n9v2-g1",
-  "notes": "Independent generation-17 diagnostics exact-head failure-path/capture-contract audit for PR #468. No Studio/viewport evidence will be inferred from source/test results."
+  "notes": "Diagnostics audit released after discovering the already-published exact-head REQUEST_CHANGES verdict and reconciling the lane to NEEDS_CHANGES. Recovery event evt-20260814-075429-r6h3n9v2-diagnostics-review-state-recovery records the required successor work; no duplicate review or Studio evidence was created."
 }
