@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-y7q3m5v8",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-14T07:31:40+00:00",
-  "lastSeenAt": "2026-08-14T07:31:40+00:00",
+  "lastSeenAt": "2026-08-14T07:38:00+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-y7q3m5v8",
-  "notes": "Independent generation-17 diagnostics failure-path/capture-contract audit of PR #468 exact head 0703a44ff68a96d5907d514f66480ac8aca0145a; no Studio evidence claimed."
+  "notes": "Independent exact-head review of PR #468 head 0703a44ff68a96d5907d514f66480ac8aca0145a recorded REQUEST_CHANGES in review 4935006875 and REVIEW_RESULT evt-20260814-073700-y7q3m5v8-diagnostics-g17-review. Blocking finding: disable(lab) is a fallible strict cleanup path outside the enabled-window pcall and can leave the owned overlay live on duplicate/malformed-root failure or mask the original failure during post-destroy capture. Audit claim released; no Studio/viewport evidence claimed."
 }
