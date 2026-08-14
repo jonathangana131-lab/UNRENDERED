@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082930-k8m3v7q2-door-wall-header-clearance",
+  "timestamp": "2026-08-14T08:29:30+00:00",
+  "fromWorker": "sol-20260814-k8m3v7q2",
+  "eventType": "FINDING",
+  "severity": "normal",
+  "summary": "Physics Lab door installation geometry leaves approximately 0.09 m head clearance to the front wall header while left/right clearances are approximately 0.01 m. This is distinct from landed leaf-to-frame door repairs and the already-known ramp/cabinet/cart/chair geometry lineages. Draft PR #492 records a narrow source-only successor contract; canonical CI is green on exact head, while Swarm Control Plane remains fail-closed at separate repository-wide trust/bootstrap gates.",
+  "affects": [
+    "HERO-GATE",
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-PHYSICS-GEOMETRY"
+  ],
+  "evidence": [
+    "main af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9: wall-front-header underside = 3.125 - 1.75/2 = 2.25 m.",
+    "commercialDoor outer envelope is 1.18 m wide x 2.16 m tall; grounded door-main at y=1.08 spans y=[0.00, 2.16] m and x=[-0.59, 0.59] m.",
+    "Centered wall opening spans x=[-0.60, 0.60] m, producing 0.01 m left/right clearance versus 0.09 m head clearance.",
+    "PhysicsLabRealizer consumes the authored primitive/object transforms directly into anchored F2 Parts, so the clearance is represented physical geometry rather than metadata only.",
+    "PR #302 discussion already owns the ramp-entry/floor issue; PR #473 owns cabinet/ledge overlap; merged #174/#187 own door-internal frame/leaf and COM contracts.",
+    "PR #492 exact head a8d952504b351ebdce0bbd6f9941182d6371289c changes one docs file only; canonical CI run 31783943433 succeeded.",
+    "Swarm Control Plane run 31783943196 passed deterministic/adversarial engine tests before failing read-only trust bootstrap; pr-ownership failed at trusted-state equality before lane-specific ownership enforcement."
+  ],
+  "metadata": {
+    "pr": 492,
+    "headSha": "a8d952504b351ebdce0bbd6f9941182d6371289c",
+    "baseSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "canonicalCiRunId": 31783943433,
+    "swarmControlRunId": 31783943196,
+    "recommendedNext": "After the retained physics-geometry lineage is schedulable, materialize a narrow source/test leaf that reduces frame-to-wall head clearance to an explicitly reviewed small installation tolerance, preserves grounded door identity and landed internal door contracts, versions canonical recipe geometry, and adds deterministic clearance regression coverage. Do not reopen the Hero Door feature or claim Studio evidence from source-only tests."
+  }
+}
