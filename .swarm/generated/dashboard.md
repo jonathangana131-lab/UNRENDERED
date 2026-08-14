@@ -1,10 +1,10 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-14T07:40:14.803967+00:00`
+Generated: `2026-08-14T07:40:46.910344+00:00`
 
-Canonical main: **GREEN** `8a481f74a442f499163574a1eb510604ac3a8c3a`
+Canonical main: **GREEN** `ec7755717c9512b8418e2cfc77f0da69610ea9ae`
 
-State digest: `fa5f56a6450a12030a0ea81a8a89bfd20cd8bab4521520092155945b7b4a12fd`
+State digest: `daa2147167c80bded1a172bafb1e066414c74395704c7f87f72ebe1499e746d9`
 
 ## Summary
 
@@ -30,7 +30,7 @@ State digest: `fa5f56a6450a12030a0ea81a8a89bfd20cd8bab4521520092155945b7b4a12fd`
 
 - `HG-BACKFILL-DIAGNOSTICS/primary` → `sol-20260814-t5n8q3v6`; lease to `2026-08-14T08:00:30+00:00`
 - `HG-BACKFILL-DIAGNOSTICS/test-adversary` → `sol-20260814-v4q7m2c9`; lease to `2026-08-14T08:09:00+00:00`
-- `HG-BACKFILL-WORLDENTITY/primary` → `sol-20260814-k8m2q6v4`; lease to `2026-08-14T08:10:00+00:00`
+- `HG-BACKFILL-WORLDENTITY/primary` → `sol-20260814-k8m2q6v4`; lease to `2026-08-14T08:12:00+00:00`
 - `HG-CAPACITY-MINING/mine-physics-runtime` → `sol-20260814-x4m9p2c7`; lease to `2026-08-14T07:52:30+00:00`
 - `SWARM-RECOVERY-WORKER-STATUS-CONTRACT/primary` → `sol-20260814-r6h3n9v2`; lease to `2026-08-14T08:06:00+00:00`
 

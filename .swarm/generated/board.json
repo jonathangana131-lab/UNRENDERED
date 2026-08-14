@@ -20,10 +20,10 @@
     },
     {
       "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-primary-k8m2q6v4-g10",
-      "expiresAt": "2026-08-14T08:10:00+00:00",
+      "expiresAt": "2026-08-14T08:12:00+00:00",
       "generation": 10,
       "laneId": "HG-BACKFILL-WORLDENTITY",
-      "pr": null,
+      "pr": 477,
       "slotId": "primary",
       "workerId": "sol-20260814-k8m2q6v4"
     },
@@ -174,14 +174,14 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-14T07:40:14.803967+00:00",
+  "generatedAt": "2026-08-14T07:40:46.910344+00:00",
   "mainHealth": {
     "conclusion": "success",
-    "headSha": "8a481f74a442f499163574a1eb510604ac3a8c3a",
+    "headSha": "ec7755717c9512b8418e2cfc77f0da69610ea9ae",
     "schemaVersion": 1,
     "status": "GREEN",
-    "updatedAt": "2026-08-14T07:40:01+00:00",
-    "workflowRunId": 31780774489
+    "updatedAt": "2026-08-14T07:40:36+00:00",
+    "workflowRunId": 31780801965
   },
   "metrics": {
     "activeClaims": 5,
@@ -203,7 +203,7 @@
       "REVIEW_RESULT": 206,
       "SUPERSEDED": 1
     },
-    "generatedAt": "2026-08-14T07:40:14.803967+00:00",
+    "generatedAt": "2026-08-14T07:40:46.910344+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
@@ -997,7 +997,7 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "fa5f56a6450a12030a0ea81a8a89bfd20cd8bab4521520092155945b7b4a12fd",
+  "stateDigest": "daa2147167c80bded1a172bafb1e066414c74395704c7f87f72ebe1499e746d9",
   "summary": {
     "activeClaims": 5,
     "activeResourceClaims": 2,
