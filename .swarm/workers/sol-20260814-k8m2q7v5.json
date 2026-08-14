@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k8m2q7v5",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:13:00+00:00",
-  "lastSeenAt": "2026-08-14T07:24:00+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-k8m2q7v5-g17",
-  "notes": "Generation-17 diagnostics test-adversary: verify post-enable failure cleanup, original-error preservation, no-drift, and immediate retry against the active primary repair; no Studio evidence claims."
+  "lastSeenAt": "2026-08-14T07:27:00+00:00",
+  "notes": "Completed diagnostics generation-17 test-adversary support in stacked draft PR #469 and handed the one-file regression delta to primary PR #468. Primary exact-head canonical CI and Swarm engine-tests are green; support PR has no own workflow because it targets the feature branch and local GitHub DNS is unavailable. No Studio evidence claimed."
 }
