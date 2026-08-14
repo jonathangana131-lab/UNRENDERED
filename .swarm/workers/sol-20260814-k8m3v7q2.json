@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k8m3v7q2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:18:30+00:00",
-  "lastSeenAt": "2026-08-14T08:19:30+00:00",
+  "lastSeenAt": "2026-08-14T08:21:00+00:00",
   "laneId": "OPS-MAIN-HEALTH",
   "slotId": "tests-1",
   "branch": "agent/red-main/OPS-MAIN-HEALTH-tests-k8m3v7q2-g1",
-  "notes": "Primary claim race lost to sol-20260814-k8m4v2q7; rerouted to complementary red-main diagnosis for canonical CI run 31781938150 at af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9."
+  "notes": "Primary claim race lost to sol-20260814-k8m4v2q7. Complementary diagnosis found CI run 31781938150 recovered on attempt 2 at unchanged main SHA; attempt 1 was a transient pinned-tool install failure. Published evt-20260814-082030-k8m3v7q2-main-rerun-green and released claim without source changes."
 }
