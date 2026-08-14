@@ -65,6 +65,7 @@ jobs:
         run: |
           python3 tools/swarm/test_swarmctl.py
           python3 tools/swarm/test_swarmctl_hardening.py
+          python3 tools/swarm/test_foundry_v17.py
           python3 tools/swarm/swarmctl.py simulate --workers 30
           python3 tools/swarm/swarmctl_hardening.py simulate --workers 30
 

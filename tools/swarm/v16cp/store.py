@@ -128,7 +128,9 @@ class GitHubContentsStore:
 
 
 class MissionGraphStore:
-    def __init__(self, store: Any, path: str = GRAPH_PATH, max_retries: int = 8):
+    def __init__(self, store: Any, path: str = GRAPH_PATH, max_retries: int = 64):
+        if max_retries < 1:
+            raise ValidationError("Mission Graph CAS retry budget must be positive")
         self.store = store; self.path = path; self.max_retries = max_retries
 
     def load(self) -> tuple[dict[str, Any], str]:

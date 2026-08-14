@@ -1,6 +1,8 @@
-# Dynamic Swarm Protocol V2.1
+# Dynamic Swarm Protocol V2.1 + Foundry 17
 
-The user may open 1 worker or 30+ GPT-5.6 Sol workers and simply say `Go`.
+The user may open 1–20 ordinary ChatGPT workers with the GitHub connector and simply say `Go`.
+
+Before any new primary work, apply `Docs/SWARM_FOUNDRY_V17.md` to exact current GitHub PR/branch pressure. Twenty chats are capacity, not twenty writers. When repository headroom is exhausted, new product branches are denied except one red-main emergency repair; use integration, review, verification, evidence transfer, or bounded retirement instead.
 
 GitHub is the durable scheduler, memory, review queue, ownership system and quality gate. Separate chats do not share working memory.
 

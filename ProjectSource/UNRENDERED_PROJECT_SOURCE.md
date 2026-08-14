@@ -719,7 +719,7 @@ A major feature is not done just because it works. Applicable gates include:
 - permanent experience scenarios,
 - independent Reality-Grade review/polish.
 
-The project normally allows only **3–5 active major Feature Epics** even with 20+ workers. Extra workers deepen those epics through strike-team roles rather than create breadth.
+The project allows at most **3 active major Feature Epics** even with 20 chats. Extra admitted workers deepen those epics through strike-team roles rather than create breadth; unneeded chats park instead of manufacturing work. Exact repository pressure is governed by `Docs/SWARM_FOUNDRY_V17.md` before any new product branch.
 
 Open issue != unlocked work. `Docs/PROJECT_STATE.md` decides what can be implemented now.
 

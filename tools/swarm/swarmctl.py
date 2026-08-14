@@ -192,7 +192,7 @@ def validate_config(path: Path) -> dict[str, Any]:
     require_keys(
         obj,
         {"schemaVersion", "controlBranch", "leaseDefaults", "wip", "scheduler", "protectedScopes"},
-        {"schemaVersion", "controlBranch", "leaseDefaults", "wip", "scheduler", "protectedScopes", "description"},
+        {"schemaVersion", "controlBranch", "leaseDefaults", "wip", "scheduler", "protectedScopes", "description", "foundry"},
         path,
     )
     if obj["controlBranch"] != "swarm-control":
@@ -220,6 +220,27 @@ def validate_config(path: Path) -> dict[str, Any]:
         ensure_identifier(entry["resource"], LANE_ID_RE, "protected resource", path)
     if not isinstance(obj["scheduler"], dict):
         raise ControlError(f"{path}: scheduler must be object")
+    foundry = obj.get("foundry")
+    if foundry is not None:
+        required_foundry = {
+            "enabled", "policyVersion", "chatCapacityCeiling", "maxOpenProductPRs",
+            "maxOpenBranches", "retirementWorkers", "verificationWorkers",
+            "redMainEmergencyBuilders", "claimsRemainAuthoritative",
+            "activationDeletesBranches",
+        }
+        require_keys(foundry, required_foundry, required_foundry, path)
+        if foundry["enabled"] is not True or foundry["policyVersion"] != "17.0":
+            raise ControlError(f"{path}: Foundry 17 must be enabled at policyVersion 17.0")
+        for key in (
+            "chatCapacityCeiling", "maxOpenProductPRs", "maxOpenBranches",
+            "retirementWorkers", "verificationWorkers", "redMainEmergencyBuilders",
+        ):
+            if not isinstance(foundry[key], int) or foundry[key] < 1:
+                raise ControlError(f"{path}: invalid Foundry setting {key}")
+        if foundry["claimsRemainAuthoritative"] is not True:
+            raise ControlError(f"{path}: Foundry cannot replace claim authority")
+        if foundry["activationDeletesBranches"] is not False:
+            raise ControlError(f"{path}: activation must preserve branches")
     return obj
 
 

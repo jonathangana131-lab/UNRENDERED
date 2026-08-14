@@ -11,6 +11,7 @@ from v16cp.core import (
     seed_graph, transition_check, user_status, validate_graph,
 )
 from v16cp.store import GitHubContentsStore, MissionGraphStore
+from foundry_v17 import RepositoryPressure, admission_plan
 
 
 def load(path: str) -> dict:
@@ -33,6 +34,7 @@ def parser() -> argparse.ArgumentParser:
     x = sub.add_parser("recommend"); x.add_argument("--graph", required=True); x.add_argument("--limit", type=int, default=10); x.add_argument("--workers", nargs="*", default=[])
     x = sub.add_parser("transition-check"); x.add_argument("--before-graph", required=True); x.add_argument("--after-graph", required=True)
     x = sub.add_parser("simulate"); x.add_argument("--workers", type=int, default=30)
+    x = sub.add_parser("admission"); x.add_argument("--workers", type=int, default=20); x.add_argument("--ready-builders", type=int, required=True); x.add_argument("--active-builders", type=int, required=True); x.add_argument("--review-backlog", type=int, required=True); x.add_argument("--integration-backlog", type=int, required=True); x.add_argument("--retirement-candidates", type=int, required=True); x.add_argument("--open-prs", type=int, required=True); x.add_argument("--open-branches", type=int, required=True); x.add_argument("--red-main", action="store_true")
     x = sub.add_parser("activate"); x.add_argument("--legacy-root", required=True); x.add_argument("--repo", required=True); x.add_argument("--state-branch", default="swarm-control"); x.add_argument("--main-sha", required=True); x.add_argument("--control-sha", required=True); x.add_argument("--token", default="")
     x = sub.add_parser("refresh-main"); x.add_argument("--repo", required=True); x.add_argument("--state-branch", default="swarm-control"); x.add_argument("--main-sha", required=True); x.add_argument("--token", default="")
     return p
@@ -54,6 +56,9 @@ def main(argv=None) -> int:
         print(json.dumps(transition_check(load(args.before_graph), load(args.after_graph)), indent=2)); return 0
     if args.cmd == "simulate":
         result = run_adversarial_simulation(args.workers); print(json.dumps(result, indent=2)); return 0 if result["passed"] else 2
+    if args.cmd == "admission":
+        result = admission_plan(requested_workers=args.workers, ready_builders=args.ready_builders, active_builders=args.active_builders, review_backlog=args.review_backlog, integration_backlog=args.integration_backlog, retirement_candidates=args.retirement_candidates, pressure=RepositoryPressure(args.open_prs, args.open_branches), red_main=args.red_main)
+        print(json.dumps(result, indent=2)); return 0
     token = args.token or os.getenv("GITHUB_TOKEN", "")
     if not token: raise SystemExit("GITHUB_TOKEN is required")
     store = GitHubContentsStore(args.repo, token, args.state_branch); service = MissionGraphStore(store)

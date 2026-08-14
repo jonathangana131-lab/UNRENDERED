@@ -14,7 +14,7 @@ Current phase: **Hero Gate — Production Physics Lab**
 
 Open issue != unlocked work. This file is the authoritative unlock board.
 
-Project-wide WIP target: **3–5 major Feature Epics maximum**. With many workers, deepen active epics through tests, fuzzing, performance, polish, integration and independent review rather than opening unrelated systems.
+Project-wide WIP limit: **3 major Feature Epics maximum**. With many chats, deepen active epics through tests, fuzzing, performance, polish, integration and independent review rather than opening unrelated systems; apply Foundry 17 repository-pressure admission before any new product branch.
 
 ## Foundation Lock — Wave 1 complete
 
