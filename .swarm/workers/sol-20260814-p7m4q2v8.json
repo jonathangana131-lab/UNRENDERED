@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-p7m4q2v8",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T07:45:30+00:00",
+  "lastSeenAt": "2026-08-14T07:45:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "branch": "agent/audit/HG-CAPACITY-MINING-objectgenome-p7m4q2v8",
+  "notes": "Bounded current-main ObjectGenome source/test miner. Goal is one concrete non-duplicate depth finding or a durable no-gap finding; no product writes or feature unlocks."
+}
