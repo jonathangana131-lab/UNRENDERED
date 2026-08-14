@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "REALITY-CONTRACT",
-  "workerId": "sol-20260814-j4p8n6q2",
+  "workerId": "sol-20260814-p6m9q4v2",
   "laneId": "HG-BACKFILL-WORLDENTITY",
-  "claimToken": "8f3a1c6d9b2e7054",
-  "acquiredAt": "2026-08-14T08:34:15+00:00",
-  "heartbeatAt": "2026-08-14T08:34:15+00:00",
-  "leaseSeconds": 300,
-  "generation": 4,
-  "notes": "Released after completed independent PR #493 convergence-evidence audit. REVIEW_RESULT evt-20260814-083900-j4p8n6q2-worldentity-main-convergence-audit; next source-owning successor may take over once stale."
+  "claimToken": "9c4e1a7d2b6f8053",
+  "acquiredAt": "2026-08-14T08:40:12+00:00",
+  "heartbeatAt": "2026-08-14T08:40:12+00:00",
+  "leaseSeconds": 1800,
+  "generation": 5,
+  "notes": "Generation-5 stale takeover after completed independent PR #493 audit released generation 4. Held only for HG-BACKFILL-WORLDENTITY/test-adversary generation 3 current-main convergence regression work."
 }
