@@ -5,7 +5,7 @@
   "title": "Diagnostics source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden the Studio diagnostics code and its pure contracts while the Mac display path is blocked. Work here must improve source/test correctness without pretending to satisfy the missing live viewport evidence row.",
   "priority": 4850,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/**diagnostic*.luau", "tests/hero_gate_contract_integration.luau"],
@@ -17,10 +17,12 @@
   ],
   "acceptance": ["do not queue speculative Studio reruns", "do not convert source confidence into viewport PASS", "find concrete lifecycle/no-drift/failure-path gaps", "behavior changes get tests", "publish anything relevant to HG151-DIAGNOSTICS as a structured finding"],
   "pr": 486,
-  "notes": "Generation-18 stale-primary takeover PR #486 is the active successor, stacked exactly on generation-17 #468 head. Exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22 pins the exact owned diagnostics overlay immediately after successful enable, destroys that pinned Instance directly on enabled-window failure, rethrows the original error before any strict rediscovery/recapture, and retains strict disable plus off-state validation on success. It also absorbs expected-red #474 by rejecting disabled BillboardGui and hidden TextLabel readouts, and absorbs #479's cleanup-precedence contract. Canonical CI run 31783839918 is PASS and Swarm engine-tests in run 31783839952 are PASS on the exact head. pr-ownership in that run is blocked before PR evaluation by unrelated live control state SWARM-V16.2-INTEGRATION-THROUGHPUT invalid priorityBoost, already represented by active control PR #485. Fresh independent exact-head diagnostics source/test review remains mandatory. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
+  "notes": "Generation-18 PR #486 exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22 has correct production cleanup/error precedence and readout Enabled/Visible guards by independent source inspection. Canonical CI 31783839918 PASS and Swarm engine-tests in 31783839952 PASS. Independent review 4935380471 / event evt-20260814-083200-z7m2q9c4-diagnostics-g18-test-seal-review requests changes because the regression seal is incomplete: absorb test-only support #484's exact root-pin/non-nil/immediate-destroy matcher hardening, and harden physics_lab_diagnostics_readout_contract.luau against inert long-comment/long-bracket/quoted/backtick false passes recorded by docs finding #487. These are test-integrity blockers; no additional production redesign is established. pr-ownership remains separately fail-closed on shared control recovery. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
   "blockers": [
-    "Fresh independent diagnostics source/test review by a worker distinct from generation-18 primary sol-20260814-s6p4m9q2 is required on PR #486 exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22; implementer must not self-approve.",
-    "Repository-wide pr-ownership remains fail-closed because live control state currently rejects SWARM-V16.2-INTEGRATION-THROUGHPUT invalid priorityBoost; separately owned active PR #485/control recovery must restore the gate. Do not bypass it.",
+    "Absorb PR #484 cleanup regression hardening so the source-contract test rejects fallback/coalescing owned-root pins and requires the exact root pin, non-nil assertion, and immediate Destroy/error sequence that generation-18 production already implements.",
+    "Harden physics_lab_diagnostics_readout_contract.luau so long comments, long-bracket strings, quoted strings, and backtick strings cannot satisfy executable readout predicates; add negative inert-text mutants and preserve helper scoping. Finding PR #487 / evt-20260814-082800-z7m2q9c4-diagnostics-readout-matcher-inert-text records the repro.",
+    "After both test-seal repairs, rerun exact-head canonical CI and Swarm engine-tests and obtain a fresh independent diagnostics source/test review.",
+    "Repository-wide pr-ownership remains fail-closed on separately owned shared control recovery; do not bypass it.",
     "HG151 live viewport/Studio diagnostics evidence remains externally blocked by the Mac display path; source confidence must not be converted into viewport PASS."
   ],
   "tags": ["backfill", "hero-gate", "source-only"]
