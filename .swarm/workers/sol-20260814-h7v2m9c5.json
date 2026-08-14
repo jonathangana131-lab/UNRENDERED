@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "DONE",
   "startedAt": "2026-08-14T08:31:30+00:00",
-  "lastSeenAt": "2026-08-14T08:38:15+00:00",
+  "lastSeenAt": "2026-08-14T08:39:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-geometry",
   "branch": "agent/audit/HG-CAPACITY-MINING-physics-geometry-h7v2m9c5-g1",
-  "notes": "Bounded Physics geometry audit complete. Published docs-only filing-cabinet F2 solid-shell/drawer enclosure finding as draft PR #498 at exact head 9c5e6aca9f9e2a62c7a0ac898f99437fb32a80a5 and immutable FINDING event evt-20260814-083730-h7v2m9c5-filing-cabinet-drawer-enclosure. Exact-head control-plane workflow was queued when last checked; no CI pass, local Luau, or Studio evidence is claimed."
+  "notes": "Bounded Physics geometry audit complete. Published non-duplicate filing-cabinet F2 solid-shell/drawer enclosure finding as ready-for-review docs PR #498 at exact head 9c5e6aca9f9e2a62c7a0ac898f99437fb32a80a5 and immutable FINDING event evt-20260814-083730-h7v2m9c5-filing-cabinet-drawer-enclosure. Canonical CI run 31784519225 PASS. Swarm Control Plane run 31784519112 remains independently fail-closed at trust-bootstrap/trusted-state equality before lane ownership enforcement; deterministic/adversarial control tests passed. No local Luau or Studio evidence claimed. Claim released."
 }
