@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t072000z-v5n8q3r2-authority-no-new-slice",
+  "timestamp": "2026-08-14T07:20:00Z",
+  "fromWorker": "sol-20260814-v5n8q3r2",
+  "eventType": "FINDING",
+  "summary": "Authority capacity mining found no safe non-duplicate source slice to start while the Hero Gate Studio display dependency remains external. Current public main still exposes only the minimal server-owned Physics Lab bootstrap plus a client protocol bootstrap; the retained authority lineages already own wrong-context bootstrap fencing (#348/#394), harness lifecycle capability/reconciliation (#412), and the one known unabsorbed Rojo replicated-subtree boundary finding. HG151-TWOCLIENT itself already defines the missing real-server/two-distinct-client observation and fail-closed evaluator contract, but it is dependency-blocked on OPS-STUDIO-DISPLAY. Recommendation: do not spawn another authority primary now; preserve the completion backlog, integrate retained authority work when live ownership permits, then resume HG151 only after the display runner can produce real request-bound client evidence. The next source-only authority depth item remains the already-published subtree/prefix-aware Rojo exclusion finding after retained authority integration, not a new parallel framework.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-COMPLETION-AUTHORITY",
+    "HG-BACKFILL-AUTHORITY",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "HG151-TWOCLIENT",
+    "OPS-STUDIO-DISPLAY"
+  ],
+  "evidence": [
+    "main eea d13b2e90ffbba36248909d97e17856e002ad9 was green at worker start; PROJECT_STATE keeps Door/Chair/Player locked behind the Physics Lab Hero Gate.",
+    "src/server/Bootstrap.server.luau owns Studio PhysicsLabStudioHarness.start(workspace); src/client/Bootstrap.client.luau only performs client-context bootstrap/protocol logging and does not introduce a competing canonical lab authority path.",
+    "HG-BACKFILL-AUTHORITY is BLOCKED with retained candidates #348 and #394; HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY is BLOCKED with retained #412. Those lineages already cover wrong-context dependency traversal, teardown ordering, raw destroy-capability fencing, external model teardown, and synchronous liveness reconciliation.",
+    "HG-COMPLETION-AUTHORITY explicitly retains the separate authority Rojo deployment-boundary finding: future coverage must reject src/server descendants under any replicated/client-readable subtree; PR #300 must not be replayed as-is.",
+    "HG151-TWOCLIENT acceptance requires a real Studio server, two distinct client identities, independent canonical observations, server/client agreement, teardown-safe handoff, and a fail-closed evaluator; its dependency remains OPS-STUDIO-DISPLAY DONE.",
+    "Docs/PHYSICS_LAB_VALIDATION.md continues to classify two-client correctness as real-Studio evidence, and issue #151 explicitly forbids speculative retries or source slices while bridge display preflight is red.",
+    "No product source, tests, Studio run, two-client run, viewport capture, or engine evidence was produced or claimed by this mining pass."
+  ]
+}
