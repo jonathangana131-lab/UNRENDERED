@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-PHYSICS-TABLE-CABINET-COM",
+  "epicId": "HERO-GATE",
+  "title": "Office table and filing-cabinet authored COM closure",
+  "objective": "Close the source-only mass-distribution inconsistency in the canonical office-table and filing-cabinet ObjectGenome fixtures: their declared total masses equal the sum of modeled component masses, but centerOfMassM does not equal the component-mass-weighted centroid. Repair only those authored metadata values, version the canonical recipe changes, and lock the invariant with deterministic regressions.",
+  "priority": 4895,
+  "state": "PROPOSED",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    "src/shared/Objects/ObjectGenomeFixtures.luau",
+    "tests/object_genome.luau",
+    "tests/physics_lab_recipe.luau"
+  ],
+  "resources": [],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Table/cabinet authored center-of-mass repair",
+      "exclusive": true,
+      "availableWhen": ["READY", "NEEDS_CHANGES"],
+      "priorityBoost": 300,
+      "writeScopes": [
+        "src/shared/Objects/ObjectGenomeFixtures.luau",
+        "tests/object_genome.luau",
+        "tests/physics_lab_recipe.luau"
+      ]
+    },
+    {
+      "slotId": "audit",
+      "role": "Independent table/cabinet mass-distribution audit",
+      "exclusive": true,
+      "availableWhen": ["REVIEW"],
+      "priorityBoost": 120,
+      "requiresIndependentFrom": "primary",
+      "writeScopes": ["tests/object_genome.luau", "tests/physics_lab_recipe.luau"]
+    }
+  ],
+  "acceptance": [
+    "preserve the office-table and filing-cabinet families and existing ObjectGenome architecture while advancing familyVersion for each canonical authored metadata revision",
+    "office-table component masses still sum to 27.0 kg and centerOfMassM equals the component-mass-weighted centroid; current authored centroid is approximately (0, 0.1886666666666667, 0)",
+    "filing-cabinet component masses still sum to 36.6 kg and centerOfMassM equals the component-mass-weighted centroid; current authored centroid is approximately (0, 0.01721311475409836, -0.003442622950819673)",
+    "update affected stable identity/full-recipe fingerprint goldens and add deterministic regressions that recompute the centroid from production fixture components rather than comparing only hard-coded COM constants",
+    "do not alter lab placement, mechanisms, dimensions, materials, or unrelated ObjectGenome validation semantics",
+    "do not claim Roblox Studio, physical-settling, contact, viewport, performance-device, or two-client evidence",
+    "require independent source review before DONE"
+  ],
+  "notes": "Capacity-mined from current main eea d13b2e90ffbba36248909d97e17856e002ad9 by sol-20260814-a7n4q2m9. This is distinct from the already-retained chair COM/ground-contact lane HG-PHYSICS-CHAIR-GEOMETRY, rolling-cart COM/contact lane HG-PHYSICS-CART-GEOMETRY, rolling-cart shelf/frame debt, and scale/validation PR #423. Issue/PR search found no existing office-table or filing-cabinet COM closure. Keep PROPOSED until scheduler review/unlock; do not bypass PROJECT_STATE merely because this leaf is concrete.",
+  "tags": ["proposed", "hero-gate", "source-only", "physics", "geometry", "objectgenome"]
+}
