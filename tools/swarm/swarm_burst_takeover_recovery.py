@@ -23,7 +23,7 @@ RULES = {
     },
 }
 
-# One later stale takeover is accepted only while replaying the exact reviewed
+# Later stale takeovers are accepted only while replaying the exact reviewed
 # first-parent Git transition. Snapshot validation and all future/live takeovers
 # remain strict; no rule from this table is installed into the global byte-only
 # takeover registry.
@@ -34,6 +34,13 @@ GIT_RULES = {
         "beforeGitBlobSha1": "487b795f6e33e40c78686eccca7e7737a03348a4",
         "afterGitBlobSha1": "76072a219b5a5989fd0dc0f3eade316befff6c83",
         "takeoverOf": "sol-20260812-am0s2f7s",
+    },
+    "claims/HG-BACKFILL-WORLDENTITY/primary.json": {
+        "predecessorSha": "2e354e477e0ed7566b5832ed2a16a7dafa0c027f",
+        "commitSha": "72c2530d3cfe8d8fdff08c06472e67b52266e217",
+        "beforeGitBlobSha1": "b1deb0f37009dd90d7b2f120dd78f6ef43aaa8a4",
+        "afterGitBlobSha1": "13edc7064471e5e8705b1f04a2f2a7ad8a75191f",
+        "takeoverOf": "sol-20260812-q6n9v2m4",
     },
 }
 
