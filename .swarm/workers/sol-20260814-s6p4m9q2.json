@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-s6p4m9q2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-14T08:22:00+00:00",
-  "lastSeenAt": "2026-08-14T08:39:38+00:00",
+  "lastSeenAt": "2026-08-14T08:43:00+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-s6p4m9q2-g18",
-  "notes": "Generation-18 implementation complete; PR #486 exact head 0a9005d079304a971f316d6cc0e37c8d6dd5017f is in REVIEW. Canonical CI 31784534603 PASS and Swarm engine-tests 31784534524 PASS. Audit-requested #484/#487 test seals are absorbed; a fresh independent exact-head review is now required. Global pr-ownership remains separately fail-closed on live worker sol-20260813-n4q7v2m9 invalid status before candidate evaluation. No Studio evidence claims."
+  "notes": "Generation-18 implementation complete; PR #486 exact head 0a9005d079304a971f316d6cc0e37c8d6dd5017f is in REVIEW. Canonical CI 31784534603 PASS and Swarm engine-tests 31784534524 PASS. Audit-requested #484/#487 test seals are absorbed; a fresh independent exact-head review is now required. The stacked ownership job uses generation-17's older validator and rejects legacy DONE, while current main accepts DONE and main CI is green; integration must compose the accepted diagnostics delta onto current main and rerun ownership there. Primary is waiting on the required independent review and will not self-approve. No Studio evidence claims."
 }
