@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-r6h3n9v2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-14T07:10:00+00:00",
-  "lastSeenAt": "2026-08-14T07:55:00+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-r6h3n9v2-g1",
-  "notes": "Diagnostics audit released after discovering the already-published exact-head REQUEST_CHANGES verdict and reconciling the lane to NEEDS_CHANGES. Recovery event evt-20260814-075429-r6h3n9v2-diagnostics-review-state-recovery records the required successor work; no duplicate review or Studio evidence was created."
+  "lastSeenAt": "2026-08-14T08:00:10+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-r6h3n9v2-g1",
+  "notes": "Independent WorldEntity adversarial completion pass against PR #477 generation-10 head. REALITY-CONTRACT generation 2 is bound to this role; test-only unless the primary successor absorbs accepted evidence."
 }
