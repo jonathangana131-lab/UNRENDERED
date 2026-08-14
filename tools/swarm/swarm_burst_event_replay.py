@@ -10,6 +10,10 @@ RULES = {
         "filename": "evt-20260813-224330-r8m4q7v2-fidelity-manager-backing-state.json",
         "quarantinedGitBlobSha1": "cfe7cf3c383c8daeeb46e4bc24e8fa24d70fc30c",
         "canonicalGitBlobSha1": "96971d517ca7ca980f24e0677f7432d514f5824b",
+        "introductionPredecessorSha": "f55497a1a1a53c8a63fad2e4e2d2bb53b4b82662",
+        "introductionCommitSha": "51fffefac32e3670794de06a55459d32ca4037c6",
+        "repairPredecessorSha": "17829cc31434d92b252fafb1f406574f81281156",
+        "repairCommitSha": "643de12b1fd3a008736d4815f6e3280c02ce5329",
     },
 }
 
@@ -18,63 +22,114 @@ def _relative(rule: dict[str, str]) -> str:
     return f"events/{rule['date']}/{rule['filename']}"
 
 
+def _git_relative(rule: dict[str, str]) -> str:
+    return f".swarm/{_relative(rule)}"
+
+
 def install(hardening_module) -> None:
+    """Register exact historical bytes without changing transition semantics.
+
+    Snapshot-only validation must remain strict. The two finite compatibility
+    transitions are authorized only by validate_git_transition(), where reviewed
+    predecessor/commit identities and the exact Git path set are available.
+    """
     registry = getattr(hardening_module, "_CANONICAL_IMMUTABLE_EVENTS", None)
     if not isinstance(registry, dict):
         raise RuntimeError("immutable event registry unavailable")
     for event_id, rule in RULES.items():
-        registry[event_id] = dict(rule)
+        registry[event_id] = {
+            "date": rule["date"],
+            "filename": rule["filename"],
+            "quarantinedGitBlobSha1": rule["quarantinedGitBlobSha1"],
+            "canonicalGitBlobSha1": rule["canonicalGitBlobSha1"],
+        }
 
-    if getattr(hardening_module, "_BURST_EVENT_REPLAY_TRANSITION_INSTALLED", False):
-        return
 
-    original_transition = hardening_module.transition_check
+def _require_exact_changed_path(hardening_module, rule: dict[str, str], changed_paths: tuple[str, ...]) -> None:
+    expected = (_git_relative(rule),)
+    if tuple(sorted(changed_paths)) != expected:
+        raise hardening_module.core.ControlError(
+            f"finite historical event transition changed-path mismatch: expected {expected}, got {tuple(sorted(changed_paths))}"
+        )
 
-    def transition_check(before: Path, after: Path) -> dict:
-        try:
-            return original_transition(before, after)
-        except hardening_module.core.ControlError:
-            for event_id, rule in RULES.items():
-                relative = _relative(rule)
-                before_path = Path(before) / relative
-                after_path = Path(after) / relative
-                if not after_path.is_file():
-                    continue
-                after_blob = hardening_module._git_blob_sha1(after_path)
 
-                # Exact historical first write: the malformed event is inert
-                # quarantine. Validate every other byte/state transition with the
-                # event removed from a disposable copy, then prove the real file is
-                # exactly the reviewed quarantined blob.
-                if not before_path.exists() and after_blob == rule["quarantinedGitBlobSha1"]:
-                    with tempfile.TemporaryDirectory(prefix="swarm-burst-event-intro-") as temp:
-                        compat_after = Path(temp) / "after"
-                        shutil.copytree(after, compat_after)
-                        (compat_after / relative).unlink()
-                        result = original_transition(before, compat_after)
-                    event = hardening_module._validate_event_with_immutable_compat(after_path)
-                    if event.get("_quarantined") is not True or event.get("eventId") != event_id:
-                        raise hardening_module.core.ControlError("finite event introduction did not remain quarantine-only")
-                    result["finiteHistoricalEventIntroductionCompat"] = [relative]
-                    return result
+def _real_after_metadata(hardening_module, result: dict, after: Path) -> dict:
+    # Compatibility validates a disposable tree. Audit metadata must describe the
+    # immutable real after-snapshot that actually participates in trusted history.
+    result["quarantinedHistoricalEvents"] = len(hardening_module.quarantined_history(Path(after)))
+    return result
 
-                # Exact later repair: validate every other state transition while a
-                # disposable copy retains the old inert bytes, then separately prove
-                # the real repaired file is the exact reviewed canonical blob.
-                if before_path.is_file():
-                    before_blob = hardening_module._git_blob_sha1(before_path)
-                    if before_blob == rule["quarantinedGitBlobSha1"] and after_blob == rule["canonicalGitBlobSha1"]:
-                        with tempfile.TemporaryDirectory(prefix="swarm-burst-event-repair-") as temp:
-                            compat_after = Path(temp) / "after"
-                            shutil.copytree(after, compat_after)
-                            shutil.copy2(before_path, compat_after / relative)
-                            result = original_transition(before, compat_after)
-                        repaired = hardening_module._validate_event_with_immutable_compat(after_path)
-                        if repaired.get("_quarantined") is True or repaired.get("eventId") != event_id:
-                            raise hardening_module.core.ControlError("finite event repair did not resolve to reviewed canonical bytes")
-                        result["finiteHistoricalEventRepairCompat"] = [relative]
-                        return result
-            raise
 
-    hardening_module.transition_check = transition_check
-    hardening_module._BURST_EVENT_REPLAY_TRANSITION_INSTALLED = True
+def validate_git_transition(
+    hardening_module,
+    before_sha: str,
+    after_sha: str,
+    changed_paths: tuple[str, ...],
+    before: Path,
+    after: Path,
+) -> dict | None:
+    """Cross only the two reviewed Fidelity event transitions in Git history.
+
+    A matching commit identity with different paths/bytes fails closed. Any other
+    commit pair receives no compatibility and must use the ordinary strict
+    transition checker.
+    """
+    before = Path(before)
+    after = Path(after)
+
+    for event_id, rule in RULES.items():
+        relative = _relative(rule)
+        before_path = before / relative
+        after_path = after / relative
+
+        if before_sha == rule["introductionPredecessorSha"] and after_sha == rule["introductionCommitSha"]:
+            _require_exact_changed_path(hardening_module, rule, changed_paths)
+            if before_path.exists() or not after_path.is_file():
+                raise hardening_module.core.ControlError("finite event introduction path shape mismatch")
+            if hardening_module._git_blob_sha1(after_path) != rule["quarantinedGitBlobSha1"]:
+                raise hardening_module.core.ControlError("finite event introduction blob mismatch")
+
+            with tempfile.TemporaryDirectory(prefix="swarm-burst-event-intro-") as temp:
+                compat_after = Path(temp) / "after"
+                shutil.copytree(after, compat_after)
+                (compat_after / relative).unlink()
+                result = hardening_module.transition_check(before, compat_after)
+
+            event = hardening_module._validate_event_with_immutable_compat(after_path)
+            if event.get("_quarantined") is not True or event.get("eventId") != event_id:
+                raise hardening_module.core.ControlError("finite event introduction did not remain quarantine-only")
+            _real_after_metadata(hardening_module, result, after)
+            result["finiteHistoricalEventIntroductionCompat"] = [relative]
+            result["historicalGitTransition"] = {
+                "predecessorSha": before_sha,
+                "commitSha": after_sha,
+            }
+            return result
+
+        if before_sha == rule["repairPredecessorSha"] and after_sha == rule["repairCommitSha"]:
+            _require_exact_changed_path(hardening_module, rule, changed_paths)
+            if not before_path.is_file() or not after_path.is_file():
+                raise hardening_module.core.ControlError("finite event repair path shape mismatch")
+            if hardening_module._git_blob_sha1(before_path) != rule["quarantinedGitBlobSha1"]:
+                raise hardening_module.core.ControlError("finite event repair predecessor blob mismatch")
+            if hardening_module._git_blob_sha1(after_path) != rule["canonicalGitBlobSha1"]:
+                raise hardening_module.core.ControlError("finite event repair canonical blob mismatch")
+
+            with tempfile.TemporaryDirectory(prefix="swarm-burst-event-repair-") as temp:
+                compat_after = Path(temp) / "after"
+                shutil.copytree(after, compat_after)
+                shutil.copy2(before_path, compat_after / relative)
+                result = hardening_module.transition_check(before, compat_after)
+
+            repaired = hardening_module._validate_event_with_immutable_compat(after_path)
+            if repaired.get("_quarantined") is True or repaired.get("eventId") != event_id:
+                raise hardening_module.core.ControlError("finite event repair did not resolve to reviewed canonical bytes")
+            _real_after_metadata(hardening_module, result, after)
+            result["finiteHistoricalEventRepairCompat"] = [relative]
+            result["historicalGitTransition"] = {
+                "predecessorSha": before_sha,
+                "commitSha": after_sha,
+            }
+            return result
+
+    return None
