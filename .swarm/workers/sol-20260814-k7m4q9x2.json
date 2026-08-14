@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k7m4q9x2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-14T07:13:00+00:00",
-  "lastSeenAt": "2026-08-14T07:18:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-diagnostics",
-  "branch": "agent/diagnostics/HG-CAPACITY-MINING-mine-diagnostics-k7m4q9x2",
-  "notes": "Mining diagnostics for a distinct non-duplicate source/test gap after releasing a redundant already-approved runtime audit. Active cleanup regression is treated as already owned; no Studio evidence will be inferred."
+  "lastSeenAt": "2026-08-14T07:25:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed HG-CAPACITY-MINING/mine-diagnostics generation 4. Published evt-20260814-072300-k7m4q9x2-diagnostics-entry-state-evidence and PR #441 comment 5290647092: runToggleEvidence self-cleans before sampling initiallyEnabled, so dirty entry state can be hidden. Recommended absorption by active diagnostics generation-17 primary; no Studio evidence claimed."
 }
