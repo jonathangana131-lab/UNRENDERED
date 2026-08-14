@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-075100-p7m4q2v8-objectgenome-affordance-radius",
+  "timestamp": "2026-08-14T07:51:00+00:00",
+  "fromWorker": "sol-20260814-p7m4q2v8",
+  "eventType": "FINDING",
+  "summary": "Bounded current-main ObjectGenome audit found a non-duplicate affordance locality gap: affordance localPointM must lie inside the referenced component, but radiusM is constrained only to positive finite. An otherwise valid canonical affordance can therefore use an arbitrarily large finite interaction radius, leaving physical adapters to clamp or reinterpret domain data. Draft docs-only PR #480 records the finding and recommends an explicit v1 radius/locality compatibility decision before any source repair.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-OBJECTGENOME"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "Current main ec7755717c9512b8418e2cfc77f0da69610ea9ae validates affordance key/kind/component/localPointM and only checks radiusM with isPositiveFinite; no later affordance radius locality predicate is present.",
+    "Docs/OBJECT_GENOME.md defines affordances as stable interaction/grip regions on components using a local point and radius, so unconstrained canonical radius extent leaves the domain/representation boundary underspecified.",
+    "Canonical fixtures use local radii such as office-chair sit-seat 0.20 m and grip-back-top 0.08 m; the source-level repro changes only an existing valid affordance radius to a huge finite value while preserving every currently checked predicate.",
+    "Repository searches found no dedicated existing ObjectGenome affordance-radius/component-locality repair; proposed string-budget work and PR #466 caster-axis relation work are distinct.",
+    "PR #480 exact head e85dfa8b39475235117ed6d1d0212b67788e520d changes one docs file only; canonical CI #1208 / 31781446922 PASS and Swarm engine-tests job 94707904205 PASS.",
+    "Swarm pr-ownership job 94707904117 remains fail-closed at the separately owned shared trusted-state equality gate before lane ownership enforcement; this finding does not bypass or modify that recovery."
+  ],
+  "metadata": {
+    "pr": 480,
+    "headSha": "e85dfa8b39475235117ed6d1d0212b67788e520d",
+    "baseSha": "ec7755717c9512b8418e2cfc77f0da69610ea9ae",
+    "findingDoc": "Docs/OBJECTGENOME_AFFORDANCE_RADIUS_LOCALITY_FINDING.md",
+    "recommendedNext": "When the retained ObjectGenome lineage and scheduler explicitly unlock another depth leaf, define v1 radiusM geometry/locality semantics and compatibility first, then add expected-red exact-bound/offset-point regressions before a source repair. Do not reuse this mining PR as an implementation unlock."
+  }
+}
