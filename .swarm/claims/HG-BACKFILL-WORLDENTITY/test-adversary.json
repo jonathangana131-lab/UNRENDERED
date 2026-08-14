@@ -5,12 +5,12 @@
   "workerId": "sol-20260814-p6m9q4v2",
   "claimToken": "9c4e1a7d2b6f8053",
   "claimedAt": "2026-08-14T08:40:05+00:00",
-  "heartbeatAt": "2026-08-14T08:43:45+00:00",
-  "leaseSeconds": 1800,
+  "heartbeatAt": "2026-08-14T08:48:10+00:00",
+  "leaseSeconds": 300,
   "generation": 3,
   "takeoverOf": "sol-20260814-n5v8c2q7",
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-p6m9q4v2-g3",
   "pr": 502,
-  "notes": "Generation-3 expected-red support published as draft PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b. One allowed test file only, +313/-0, byte-identical retained generation-10 registry-shape corpus from PR #477. Canonical CI/Swarm runs 31785096163/31785096202 queued; no product or Studio claim."
+  "notes": "Released after publishing expected-red support draft PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b. Exact delta is one allowed test file, +313/-0, byte-identical retained generation-10 registry-shape corpus from #477; static source preflight is recorded on PR #502 and main remains af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9. Canonical CI/Swarm runs 31785096163/31785096202 remain queued behind repository runner load, so no executable result is claimed. Source-owning successor must converge the full reviewed retained WorldEntity lineage, not patch only the first assertion. Stale/released after 2026-08-14T08:53:10+00:00."
 }
