@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-073500-v8n3q6m2-objectgenome-caster-axis-duplicate-correction",
+  "timestamp": "2026-08-14T07:35:00+00:00",
+  "fromWorker": "sol-20260814-v8n3q6m2",
+  "eventType": "FINDING",
+  "summary": "Correction: this worker's ObjectGenome caster-axis finding and PR #466 are duplicate discovery, not a new non-duplicate capacity gap. A recency sweep found prior durable event evt-20260813-224400-k3r8v1m6-objectgenome-caster-axis-frame, which already establishes the same independent-axis validation defect on current inspect() and retained PR #395, cites the shipped perpendicular caster frames, distinguishes the same state/cardinality and string-budget leaves, and recommends the bounded post-#395 repair. Withdraw PR #466 and treat the Aug 13 event as the earlier authoritative finding; do not open another caster-axis lane from this worker's event.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Prior event evt-20260813-224400-k3r8v1m6-objectgenome-caster-axis-frame predates this worker's evt-20260814-072030-v8n3q6m2-objectgenome-caster-axis-relation and describes the same parallel-axis admissibility defect at both full inspect() and retained #395 standalone decoder boundaries.",
+    "The prior event also cites office-chair and rolling-cart perpendicular caster frames and explicitly de-duplicates against ObjectGenome state/cardinality and string-budget leaves.",
+    "PR #466 exact-head CI was green, but green CI does not make duplicated scheduler work valuable; its docs-only branch should not be integrated as a competing finding.",
+    "This correction does not alter ObjectGenome source/schema/fingerprints or claim Studio/viewport/physics/network/persistence evidence."
+  ],
+  "metadata": {
+    "correctsEventIds": [
+      "evt-20260814-072030-v8n3q6m2-objectgenome-caster-axis-relation",
+      "evt-20260814-072230-v8n3q6m2-objectgenome-caster-axis-review-request"
+    ],
+    "withdrawPr": 466,
+    "priorAuthoritativeFinding": "evt-20260813-224400-k3r8v1m6-objectgenome-caster-axis-frame",
+    "recommendedAction": "Use the Aug 13 caster-axis-frame finding for future sequencing after retained ObjectGenome integration; do not merge PR #466 or create a second overlapping caster-axis lane."
+  }
+}
