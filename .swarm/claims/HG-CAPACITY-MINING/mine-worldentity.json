@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "workerId": "sol-20260814-r7n2v9k4",
+  "claimToken": "3e8b1c7d5a9f2046",
+  "claimedAt": "2026-08-14T07:55:00+00:00",
+  "heartbeatAt": "2026-08-14T07:55:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/reality/HG-CAPACITY-MINING-worldentity-r7n2v9k4",
+  "pr": null,
+  "notes": "Mine retained WorldEntity source/tests/events for one concrete non-duplicate source-only depth gap. No product source edit while retained write surfaces are owned; no Studio evidence claim."
+}
