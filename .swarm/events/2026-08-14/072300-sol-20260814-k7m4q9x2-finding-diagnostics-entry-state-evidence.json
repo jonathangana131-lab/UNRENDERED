@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-072300-k7m4q9x2-diagnostics-entry-state-evidence",
+  "timestamp": "2026-08-14T07:23:00+00:00",
+  "fromWorker": "sol-20260814-k7m4q9x2",
+  "eventType": "FINDING",
+  "summary": "runToggleEvidence() currently destroys any pre-existing owned diagnostics overlay before recording its `initiallyEnabled` evidence field, so a successful sweep can erase a dirty entry condition and then report `initiallyEnabled=false`. This is distinct from the already-owned post-enable failure-cleanup defect and should be absorbed into the active generation-17 diagnostics successor rather than spawning another primary.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Current main at eead13b2e90ffbba36248909d97e17856e002ad9 has runToggleEvidence() call PhysicsLabStudioDiagnostics.disable(lab), then Validation.captureFull(lab.model), then PhysicsLabStudioDiagnostics.capture(lab); the returned evidence later binds initiallyEnabled = initial.enabled. Any successful entry therefore records only the normalized post-disable state.",
+    "Retained generation-16 diagnostics PR #441 exact head b8ca3302cc3012011fb911ad3df5dc878130c133 preserves the same disable-before-initial-capture ordering while adding enabled-window canonical validation, so the seam remains in the current successor lineage.",
+    "tests/physics_lab_diagnostics_final_state.luau protects the final disabled publication path but does not protect pre-cleanup entry-state provenance; tests/physics_lab_diagnostics_bounds.luau covers cycle bounds only.",
+    "Docs/PHYSICS_LAB_DIAGNOSTICS.md requires separate engine evidence that diagnostics are off by default after normal bootstrap/rebuild. A helper that silently cleans before observing entry state cannot itself substantiate that starting-state fact and its currently published initiallyEnabled field is misleading if callers treat it as entry provenance.",
+    "The active HG-BACKFILL-DIAGNOSTICS primary generation-17 claim belongs to sol-20260814-t5n8q3v6 on branch agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-t5n8q3v6-g17 and already owns runToggleEvidence() cleanup hardening, making absorption preferable to a duplicate one-shot lane.",
+    "No Roblox Studio, viewport, physical-contact, performance-device, or two-client execution was run or claimed; this is a source/evidence-contract finding only."
+  ],
+  "metadata": {
+    "mainHeadSha": "eead13b2e90ffbba36248909d97e17856e002ad9",
+    "retainedDiagnosticsPr": 441,
+    "retainedDiagnosticsHeadSha": "b8ca3302cc3012011fb911ad3df5dc878130c133",
+    "activePrimaryWorker": "sol-20260814-t5n8q3v6",
+    "activePrimaryBranch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-t5n8q3v6-g17",
+    "recommendedNext": "Before any cleanup mutation, capture the diagnostics entry snapshot. Either fail closed immediately when entry is already enabled or publish the truthful pre-cleanup state and explicitly mark the candidate contaminated; do not publish a normalized value as initiallyEnabled. Add a pure source-contract regression that proves the entry observation precedes disable/normalization. Absorb this alongside the already-owned post-enable failure-atomicity repair in generation 17, then require fresh exact-head CI and independent review."
+  }
+}
