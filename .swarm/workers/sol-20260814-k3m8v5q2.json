@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k3m8v5q2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-14T08:20:30+00:00",
-  "lastSeenAt": "2026-08-14T08:23:30+00:00",
+  "lastSeenAt": "2026-08-14T08:27:10+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-materialdna",
   "branch": "agent/audit/HG-CAPACITY-MINING-materialdna-k3m8v5q2",
-  "notes": "Lost the OPS-MAIN-HEALTH tests claim race cleanly and rerouted. Mining MaterialDNA on current Hero Gate for one concrete non-duplicate source/test/contract gap; docs-only scope, no Studio or feature unlock claims."
+  "notes": "MaterialDNA capacity mining complete. Published non-duplicate seamPeriodMeters nil-semantics finding as ready-for-review docs PR #488 at 0197dad8d8065dc48b9de94ec75cea99b4e4000b and durable FINDING event evt-20260814-082630-k3m8v5q2-materialdna-seam-period-semantics. Exact-head canonical CI 31783850451 PASS. Swarm Control Plane remains independently fail-closed at trust-bootstrap/trusted-state equality before ownership enforcement. Main CI 31781938150 rerun PASS; no red-main product patch needed. No local Luau or Studio evidence claimed."
 }
