@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-085100-q8m4n7v2-worldentity-main-convergence-pr502",
+  "timestamp": "2026-08-14T08:51:00+00:00",
+  "fromWorker": "sol-20260814-q8m4n7v2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head audit approves PR #502 head 8f6837eba8d5ae814925e6a6387d6e02cb82341b as expected-red current-main WorldEntity convergence evidence only. The one-file registry-shape corpus is byte-identical to retained generation-10 PR #477, is executed by the current pure-test runner, and canonical CI passes static/tooling/control deterministic gates before failing on missing WorldEntity contract categories. PR #502 must remain unmerged; the useful next action is a source-owning current-main successor that converges the full already-reviewed retained WorldEntity production/test lineage, then earns exact-head green CI and fresh independent review.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "evidence": [
+    "PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b remains open, draft, base main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9, and changes exactly tests/world_entity_registry_shape.luau (+313/-0).",
+    "The transplanted tests/world_entity_registry_shape.luau blob is byte-identical to retained reviewed generation-10 PR #477, so this support PR is replaying an accepted corpus rather than inventing a new contract during convergence.",
+    "Current tests/run.luau requires ./world_entity_registry_shape, proving the transplanted module is part of the canonical Pure Luau execution path.",
+    "Canonical CI run 31785096163 exact head passes checkout, pinned toolchain install, sourcemap/types, format, lint, Luau analysis, canonical-randomness audit, shared-domain audits, and swarm deterministic tests, then fails specifically at Pure Luau tests.",
+    "Pure Luau red output spans on-target retained contract categories: hostile/non-string identity no-execute fences, suspicious lookup rejection, finite/safe-integer generator and revision ceilings, persistent-state depth/node/string budgets, canonical metadata/key budgets, registry population bounds, and related rejection/atomicity expectations. The 22 failures are treated as categories with possible downstream cascades, not 22 independent source defects.",
+    "Swarm Control Plane run 31785096202 also fails, but engine-tests stops at read-only trust-bootstrap and pr-ownership stops at live-state/trusted-state equality. Those control-state failures are not used as semantic WorldEntity evidence and do not invalidate the isolated canonical Pure Luau result.",
+    "GitHub review 4935585164 records APPROVE-as-expected-red-evidence / do-not-merge on the exact head. As with prior convergence support review, this is not integration approval.",
+    "Strict StableId authenticity finding #491 and the distinct duplicate-diagnostic retention coverage finding evt-20260814-084230-k8m4v2q7-worldentity-diagnostic-retention-gap remain separate follow-ups; this review does not claim either is solved or fully exercised by #502.",
+    "No Studio, viewport, persistence-backend, networking, physical-contact, performance-device, or true two-client evidence is applicable or claimed."
+  ],
+  "pr": 502,
+  "headSha": "8f6837eba8d5ae814925e6a6387d6e02cb82341b",
+  "verdict": "APPROVE",
+  "metadata": {
+    "reviewId": 4935585164,
+    "integrationReady": false,
+    "expectedRedEvidenceAccepted": true,
+    "currentMainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "canonicalCiRun": 31785096163,
+    "swarmControlRun": 31785096202,
+    "requiredNext": "source-owning-current-main-successor-converges-full-reviewed-retained-worldentity-production-and-test-lineage-then-exact-head-green-ci-and-fresh-independent-review"
+  }
+}
