@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260814-q5n8v2c4",
-  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "claimToken": "91e4c6a8f3d75b20",
-  "acquiredAt": "2026-08-14T07:50:00+00:00",
-  "heartbeatAt": "2026-08-14T07:50:00+00:00",
+  "workerId": "sol-20260814-v162merge",
+  "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+  "claimToken": "a62c9e3d7f1840b5",
+  "acquiredAt": "2026-08-14T08:22:30Z",
+  "heartbeatAt": "2026-08-14T08:22:30Z",
   "leaseSeconds": 1800,
-  "generation": 5,
-  "notes": "Generation-5 SWARM-PROTOCOL lease acquired after the prior worker-status lease expired at 07:41 UTC. Bound only to continuity generation-8 token 91e4c6a8f3d75b20."
+  "generation": 6,
+  "notes": "Generation-6 takeover after generation-5 heartbeat 07:50 UTC + 1800s lease expired at 08:20 UTC. Scope is V16.2 integration-throughput and producer-fence rollout only."
 }
