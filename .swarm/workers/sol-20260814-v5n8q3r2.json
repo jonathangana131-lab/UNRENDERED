@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T07:12:00+00:00",
-  "lastSeenAt": "2026-08-14T07:12:00+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Go worker registered; main is green. Taking a stale independent diagnostics audit lease after inspecting PR #441, the lane, and the latest failure-cleanup handoff. No Studio evidence will be claimed."
+  "lastSeenAt": "2026-08-14T07:15:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "branch": "agent/authority/HG-CAPACITY-MINING-authority-v5n8q3r2",
+  "notes": "Authority/multiplayer source-depth mining after losing higher-priority claim races. Inspecting current Hero-Gate authority source/tests/PR lineage for one concrete non-duplicate gap; no Studio evidence will be claimed."
 }
