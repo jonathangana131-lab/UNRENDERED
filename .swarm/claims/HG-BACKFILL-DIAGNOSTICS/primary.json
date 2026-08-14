@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-t5n8q3v6",
   "claimToken": "9f2c7a41d8e6b305",
   "claimedAt": "2026-08-14T07:16:00+00:00",
-  "heartbeatAt": "2026-08-14T07:16:00+00:00",
+  "heartbeatAt": "2026-08-14T07:23:00+00:00",
   "leaseSeconds": 1800,
   "generation": 17,
   "resources": [],
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-t5n8q3v6-g17",
-  "pr": null,
-  "notes": "Generation-17 successor after inspecting generation-16 PR #441, current NEEDS_CHANGES lane state, and the published expected-red post-enable cleanup regression. Scope is the bounded runToggleEvidence failure-atomicity repair plus retained regression coverage; no Studio evidence claims."
+  "pr": 468,
+  "notes": "Generation-17 successor published as draft PR #468 at c3381f3f372603f9e587fec54a595a025cfce3d6. It repairs runToggleEvidence post-enable failure atomicity and absorbs support PR #463 cleanup regression while preserving generation-16 clone-proof hardening. Await exact-head CI/engine-tests and fresh independent review; no Studio evidence claims."
 }
