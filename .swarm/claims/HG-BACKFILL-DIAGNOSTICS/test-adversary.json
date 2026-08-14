@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260814-v4q7m2c9",
+  "claimToken": "6c2f9a4e1d7b8053",
+  "claimedAt": "2026-08-14T07:31:00+00:00",
+  "heartbeatAt": "2026-08-14T07:31:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "resources": [],
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-v4q7m2c9-g2",
+  "pr": null,
+  "notes": "Expected-red visibility/inspectability regression stacked on generation-17 PR #468; test-only, no product or Studio evidence changes."
+}
