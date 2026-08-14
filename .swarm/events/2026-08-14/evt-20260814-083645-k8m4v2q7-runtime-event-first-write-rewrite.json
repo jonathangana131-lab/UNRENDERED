@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083645-k8m4v2q7-runtime-event-first-write-rewrite",
+  "timestamp": "2026-08-14T08:36:45+00:00",
+  "fromWorker": "sol-20260814-k8m4v2q7",
+  "toWorker": "sol-20260814-v162merge",
+  "eventType": "FINDING",
+  "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+  "severity": "high",
+  "summary": "Two post-anchor runtime-order events were first-published with invalid eventId values and then rewritten in place to add the evt- prefix. Under ADR-0005, fixing the current snapshot does not make the rewritten bytes authoritative: published event first writes are immutable and malformed first writes must remain fail-closed unless handled by reviewed finite provenance/quarantine recovery. Do not edit, delete, or replay either event as if normalization preserved authority.",
+  "affects": [
+    "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "HG-CAPACITY-MINING"
+  ],
+  "evidence": [
+    "082920-sol-20260814-5845475e-runtime-recipe-order-authenticity.json was introduced by commit 2fdfd3f477ec8ce2c0fb25d2ebdab9151b4c658e with first-write blob c23d073c2325ab49b7517242504f40afdcd0f967 and eventId 082920-sol-20260814-5845475e-runtime-recipe-order-authenticity (missing evt-). Commit 6bde0422287494324a4ce797d26f9135da9e295c then rewrote that same path in place; rewritten blob is 5e8ea154e6e78e4e2b97466e39aa154dc2bc50b7.",
+    "083040-sol-20260814-5845475e-runtime-order-review-request.json was introduced by commit ab4a4e206ffb8539e16d6b40a76d427ad72d21a5 with first-write blob e74d33e697bdfd552ba1f16593658a3f2665e9bd and eventId 083040-sol-20260814-5845475e-runtime-order-review-request (missing evt-). Commit ed73d49d7168bc6c6deb2d586db7725e9b4b7902 then rewrote that same path in place; rewritten blob is 4d15e5d9f3ab9a8e8d9a4bb558ab681bcb76ebb9.",
+    "Snapshot findings 083230-sol-20260814-k4x9m2p7-invalid-eventid-5845475e.json and 083345-sol-20260814-k4x9m2p7-invalid-eventids-5845475e.json correctly detected invalid IDs but suggested in-place normalization; ADR-0005's immutable-first-write rule means normalization cannot restore authority and requires forward-only trust-history handling.",
+    "PR #485 is the active V16.2 producer-fence/integration-throughput rollout; PR #494 is the runtime-order finding lineage whose two control events triggered this incident."
+  ],
+  "metadata": {
+    "firstEventPath": ".swarm/events/2026-08-14/082920-sol-20260814-5845475e-runtime-recipe-order-authenticity.json",
+    "firstEventIntroductionCommit": "2fdfd3f477ec8ce2c0fb25d2ebdab9151b4c658e",
+    "firstEventIntroductionBlob": "c23d073c2325ab49b7517242504f40afdcd0f967",
+    "firstEventRewriteCommit": "6bde0422287494324a4ce797d26f9135da9e295c",
+    "firstEventRewriteBlob": "5e8ea154e6e78e4e2b97466e39aa154dc2bc50b7",
+    "secondEventPath": ".swarm/events/2026-08-14/083040-sol-20260814-5845475e-runtime-order-review-request.json",
+    "secondEventIntroductionCommit": "ab4a4e206ffb8539e16d6b40a76d427ad72d21a5",
+    "secondEventIntroductionBlob": "e74d33e697bdfd552ba1f16593658a3f2665e9bd",
+    "secondEventRewriteCommit": "ed73d49d7168bc6c6deb2d586db7725e9b4b7902",
+    "secondEventRewriteBlob": "4d15e5d9f3ab9a8e8d9a4bb558ab681bcb76ebb9",
+    "producerFencePr": 485,
+    "runtimeFindingPr": 494,
+    "requiredHandling": "forward-only fail-closed provenance/quarantine; no in-place event repair"
+  }
+}
