@@ -5,12 +5,12 @@
   "workerId": "sol-20260814-r6h3n9v2",
   "claimToken": "7c4f91a2d8e360b5",
   "claimedAt": "2026-08-14T07:10:00+00:00",
-  "heartbeatAt": "2026-08-14T07:10:00+00:00",
+  "heartbeatAt": "2026-08-14T07:18:00+00:00",
   "leaseSeconds": 1800,
   "generation": 6,
   "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-r6h3n9v2-g6",
-  "pr": null,
+  "pr": 465,
   "takeoverOf": "sol-20260813-k7m4v9q2",
-  "notes": "Generation-6 stale takeover after inspecting generation-5's missing branch/PR, closed generation-4 PR #444, the current-main REQUEST_CHANGES convergence review, and live control state. Scope is only the still-relevant facade re-entry strict-anchor/shared-registry repair on current main; preserve all newer recovery/trust behavior."
+  "notes": "Generation-6 stale takeover after inspecting generation-5's missing branch/PR, closed generation-4 PR #444, the current-main REQUEST_CHANGES convergence review, and live control state. Published draft PR #465 on exact head 704937ca3ee4272161375dafe138cf9dfcb26f08 with only the current-main facade re-entry strict-anchor/shared-registry repair and focused regression; preserve all newer recovery/trust behavior."
 }
