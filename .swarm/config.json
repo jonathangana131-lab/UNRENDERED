@@ -9,8 +9,8 @@
     "integration": 1200
   },
   "wip": {
-    "maxMajorEpics": 5,
-    "maxPrimaryImplementationLanes": 8,
+    "maxMajorEpics": 3,
+    "maxPrimaryImplementationLanes": 6,
     "reviewBacklogThrottle": 4,
     "integrationBacklogThrottle": 3
   },
@@ -32,5 +32,17 @@
     {"pattern": ".github/pull_request_template.md", "resource": "SWARM-PROTOCOL"},
     {"pattern": "src/shared/Reality/**", "resource": "REALITY-CONTRACT"},
     {"pattern": "src/server/Bootstrap.server.luau", "resource": "SERVER-AUTHORITY"}
-  ]
+  ],
+  "foundry": {
+    "enabled": true,
+    "policyVersion": "17.0",
+    "chatCapacityCeiling": 20,
+    "maxOpenProductPRs": 18,
+    "maxOpenBranches": 24,
+    "retirementWorkers": 4,
+    "verificationWorkers": 2,
+    "redMainEmergencyBuilders": 1,
+    "claimsRemainAuthoritative": true,
+    "activationDeletesBranches": false
+  }
 }

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-FOUNDRY-V17-ACTIVATION",
+  "slotId": "primary",
+  "workerId": "sol-20260814-foundry17",
+  "claimToken": "f017ac710a141700",
+  "claimedAt": "2026-08-14T09:50:00Z",
+  "heartbeatAt": "2026-08-14T09:50:00Z",
+  "leaseSeconds": 300,
+  "generation": 1,
+  "resources": [
+    "PROJECT-STATE",
+    "SWARM-PROTOCOL"
+  ],
+  "branch": "agent/swarm-foundry-v17-activation",
+  "pr": 507,
+  "notes": "Foundry 17 merged at exact PR head f6e7fd1a37d93dbf91509bde06a87b12f77f3b96; lease intentionally expires at 2026-08-14T09:55:00Z."
+}

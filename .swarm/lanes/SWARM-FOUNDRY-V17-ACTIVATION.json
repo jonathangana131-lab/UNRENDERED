@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-FOUNDRY-V17-ACTIVATION",
+  "epicId": "SWARM-CONTROL",
+  "title": "Activate Foundry 17 repository admission",
+  "objective": "Add bounded repository-pressure admission, preserve V16 claim authority, repair Mission Graph CAS contention, and publish ordinary ChatGPT Project operating instructions without weakening evidence or protected-resource gates.",
+  "priority": 10000,
+  "state": "DONE",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    ".github/workflows/ci.yml",
+    "Docs/PROJECT_STATE.md",
+    "Docs/QUALITY_STANDARD.md",
+    "Docs/SWARM_FOUNDRY_V17.md",
+    "Docs/SWARM_PROTOCOL.md",
+    "ProjectSource/UNRENDERED_PROJECT_INSTRUCTIONS.txt",
+    "ProjectSource/UNRENDERED_PROJECT_SOURCE.md",
+    "tools/swarm/**"
+  ],
+  "resources": [
+    "PROJECT-STATE",
+    "SWARM-PROTOCOL"
+  ],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "Activate and prove Foundry 17",
+      "exclusive": true,
+      "availableWhen": [
+        "READY",
+        "NEEDS_CHANGES"
+      ],
+      "priorityBoost": 1000,
+      "writeScopes": [
+        ".github/workflows/ci.yml",
+        "Docs/PROJECT_STATE.md",
+        "Docs/QUALITY_STANDARD.md",
+        "Docs/SWARM_FOUNDRY_V17.md",
+        "Docs/SWARM_PROTOCOL.md",
+        "ProjectSource/UNRENDERED_PROJECT_INSTRUCTIONS.txt",
+        "ProjectSource/UNRENDERED_PROJECT_SOURCE.md",
+        "tools/swarm/**"
+      ]
+    }
+  ],
+  "acceptance": [
+    "twenty chats are capacity rather than a fixed writer quota",
+    "repository congestion denies speculative branches while retaining one red-main exception",
+    "claims and protected-resource leases remain authoritative",
+    "activation deletes no branch or commit",
+    "the twenty-writer Mission Graph CAS race passes repeatedly",
+    "canonical CI and control-plane ownership checks pass"
+  ],
+  "pr": 507,
+  "notes": "Merged to main at 62e3d284635c3068a9673da283090c5cf615c18f after PR-head validation; live-trust recovery follows through this state transition.",
+  "tags": [
+    "control-repair",
+    "foundry-v17",
+    "congestion",
+    "activation"
+  ]
+}

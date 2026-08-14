@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260814-z7c2m8q4",
-  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-  "claimToken": "4c7a9e2d6f1b8035",
-  "acquiredAt": "2026-08-14T09:05:20Z",
-  "heartbeatAt": "2026-08-14T09:05:20Z",
-  "leaseSeconds": 1800,
-  "generation": 8,
-  "notes": "Generation-8 reacquisition after releasing V16.2 generation 7. Dedicated finite trusted-history continuity recovery; generic validation and immutable control bytes remain strict."
+  "workerId": "sol-20260814-foundry17",
+  "laneId": "SWARM-FOUNDRY-V17-ACTIVATION",
+  "claimToken": "f017ac710a141700",
+  "acquiredAt": "2026-08-14T09:50:00Z",
+  "heartbeatAt": "2026-08-14T09:50:00Z",
+  "leaseSeconds": 300,
+  "generation": 9,
+  "notes": "Foundry 17 activation lease; replaces the expired generation-8 history-recovery lease without changing immutable event truth and expires after merge at 2026-08-14T09:55:00Z."
 }

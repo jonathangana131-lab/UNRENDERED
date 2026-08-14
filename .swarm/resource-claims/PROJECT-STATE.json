@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "PROJECT-STATE",
-  "workerId": "sol-20260814-j7m2q9v4",
-  "laneId": "HG151-FINAL-AUDIT",
-  "claimToken": "6e4b1c9a7d2f8053",
-  "acquiredAt": "2026-08-14T08:26:20+00:00",
-  "heartbeatAt": "2026-08-14T08:26:20+00:00",
+  "workerId": "sol-20260814-foundry17",
+  "laneId": "SWARM-FOUNDRY-V17-ACTIVATION",
+  "claimToken": "f017ac710a141700",
+  "acquiredAt": "2026-08-14T09:50:00Z",
+  "heartbeatAt": "2026-08-14T09:50:00Z",
   "leaseSeconds": 300,
-  "generation": 1,
-  "notes": "Released without project-state changes because final-audit dependencies are unsatisfied. Lease reduced to protocol minimum without advancing heartbeat; stale/released after 2026-08-14T08:31:20+00:00."
+  "generation": 2,
+  "notes": "Foundry 17 activation lease; replaces the expired generation-1 final-audit lease and expires after merge at 2026-08-14T09:55:00Z."
 }
