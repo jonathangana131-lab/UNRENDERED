@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082623-m6q2v8k4-objectgenome-caster-radius-locality",
+  "timestamp": "2026-08-14T08:26:23+00:00",
+  "fromWorker": "sol-20260814-m6q2v8k4",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome validates caster wheelRadiusM only as positive and finite, with no relationship to the referenced moving component or object envelope. An otherwise-valid office-chair fixture can therefore carry an arbitrarily huge finite canonical wheel radius, forcing realization adapters to accept contradictory scale, clamp canonical truth, or invent an adapter-owned validity rule.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME", "HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Current src/shared/Objects/ObjectGenome.luau caster validation applies isPositiveFinite(mechanism.wheelRadiusM) and unit-axis checks, but no component/object locality or scale predicate for the radius.",
+    "The canonical office-chair fixture uses a 0.028m radius on a 0.09 x 0.08 x 0.04m caster component inside a 0.68 x 1.08 x 0.68m chair envelope, demonstrating the intended manufactured scale relationship.",
+    "Current tests/object_genome.luau contains no dedicated wheelRadiusM boundary regression; tests/object_genome_contract_lock.luau focuses schema/ownership/state shape and also has no caster-radius locality case.",
+    "PR #480 owns affordance radius locality, PR #466 owns caster swivel/roll-axis degeneracy, and retained decoder work such as PR #395 validates positive caster radius without relating it to construction geometry.",
+    "Repository PR/issue searches for wheelRadiusM, wheel radius, and caster wheel radius did not surface a dedicated caster-radius locality repair.",
+    "Draft PR #489 records the docs-only finding at exact head 330370641a24984e3de90d22f1195eb916933636; no executable ObjectGenome, Studio, viewport, networking, persistence, or physical-contact evidence is claimed."
+  ],
+  "metadata": {
+    "docsPr": 489,
+    "docsHeadSha": "330370641a24984e3de90d22f1195eb916933636",
+    "baseMainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "recommendedNext": "After the retained ObjectGenome lineage and scheduler explicitly unlock another source depth leaf, define v1 caster radius geometry semantics, add expected-red huge-finite and exact-bound regressions, then enforce one Roblox-independent project-owned locality rule in full genome validation and any standalone canonical caster-record preflight. Prefer a rule derived from moving-component dimensions and/or the object envelope over an arbitrary global magic cap."
+  }
+}
