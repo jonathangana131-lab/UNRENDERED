@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-j9p4m7x2",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:21:13+00:00",
-  "lastSeenAt": "2026-08-14T08:21:13+00:00",
+  "lastSeenAt": "2026-08-14T08:26:30+00:00",
   "laneId": "OPS-MAIN-HEALTH",
   "slotId": "tests-1",
   "branch": "agent/red-main/OPS-MAIN-HEALTH-tests-j9p4m7x2-g1",
-  "notes": "Registered to diagnose the stale RED health projection after canonical CI rerun success; implementation begins only after atomic tests-1 claim succeeds."
+  "notes": "No implementation claim acquired. OPS-MAIN-HEALTH primary/tests-1 and all standing capacity-mining roles were won by other workers. Canonical CI rerun 31781938150 attempt 2 is green on af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 while live control health remains pinned to the earlier failure; active red-main owners are handling convergence."
 }
