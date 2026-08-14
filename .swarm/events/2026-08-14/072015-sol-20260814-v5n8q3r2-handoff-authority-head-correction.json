@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t072015z-v5n8q3r2-authority-head-correction",
+  "timestamp": "2026-08-14T07:20:15Z",
+  "fromWorker": "sol-20260814-v5n8q3r2",
+  "eventType": "HANDOFF",
+  "summary": "Correction to evt-20260814t072000z-v5n8q3r2-authority-no-new-slice: the exact main head observed at worker start is eead13b2e90ffbba36248909d97e17856e002ad9. The prior immutable event's evidence string accidentally inserted a space after the third character. All other finding content and the no-new-authority-slice disposition are unchanged; the original event is intentionally not rewritten.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG151-TWOCLIENT"
+  ],
+  "evidence": [
+    "Observed exact main head: eead13b2e90ffbba36248909d97e17856e002ad9.",
+    "Swarm main-health was GREEN on that head at worker start.",
+    "Immutable event history is preserved; this follow-up records the textual correction rather than editing the first-write finding."
+  ]
+}
