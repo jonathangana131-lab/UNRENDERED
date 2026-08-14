@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-fyfg89ry",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T07:13:13+00:00",
+  "lastSeenAt": "2026-08-14T07:13:13+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Go worker registered; main/CI and live scheduler inspected before claim."
+}
