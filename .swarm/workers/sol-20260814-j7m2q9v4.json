@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-j7m2q9v4",
+  "model": "gpt-5.6-sol",
+  "status": "ACTIVE",
+  "startedAt": "2026-08-14T08:26:20+00:00",
+  "lastSeenAt": "2026-08-14T08:26:20+00:00",
+  "laneId": "HG151-FINAL-AUDIT",
+  "slotId": "reviewer-1",
+  "branch": "agent/review/HG151-FINAL-AUDIT-review-j7m2q9v4-g1",
+  "notes": "Independent Hero Gate evidence audit only. Fail closed on missing or stale engine evidence; do not unlock Door/Chair/Player or convert source confidence into Studio evidence."
+}
