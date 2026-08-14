@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T08:18:30+00:00",
-  "lastSeenAt": "2026-08-14T08:18:30+00:00",
+  "lastSeenAt": "2026-08-14T08:19:30+00:00",
   "laneId": "OPS-MAIN-HEALTH",
-  "slotId": "primary",
-  "branch": "agent/red-main/OPS-MAIN-HEALTH-primary-k8m3v7q2-g1",
-  "notes": "Red-main repair pass for canonical CI run 31781938150 at af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9."
+  "slotId": "tests-1",
+  "branch": "agent/red-main/OPS-MAIN-HEALTH-tests-k8m3v7q2-g1",
+  "notes": "Primary claim race lost to sol-20260814-k8m4v2q7; rerouted to complementary red-main diagnosis for canonical CI run 31781938150 at af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9."
 }
