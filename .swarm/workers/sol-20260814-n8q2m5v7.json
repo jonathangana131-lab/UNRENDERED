@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-n8q2m5v7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:29:29+00:00",
-  "lastSeenAt": "2026-08-14T08:34:24+00:00",
+  "lastSeenAt": "2026-08-14T08:38:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-runtime",
   "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-n8q2m5v7-g4",
-  "notes": "Generation-4 Physics runtime capacity mining; distinct audit after released PR #494. No Studio evidence claim."
+  "notes": "Generation-4 finding published as draft PR #501 exact head 598488c7b600b8a1c3771c26b58b21ee26023663 and event evt-20260814-083730-n8q2m5v7-runtime-entity-list-shape; retained synthesis #408 cross-linked. Claim released. CI was queued at handoff; no CI PASS or Studio evidence claimed."
 }
