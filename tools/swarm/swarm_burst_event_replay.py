@@ -15,6 +15,16 @@ RULES = {
         "repairPredecessorSha": "17829cc31434d92b252fafb1f406574f81281156",
         "repairCommitSha": "643de12b1fd3a008736d4815f6e3280c02ce5329",
     },
+    "evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract": {
+        "date": "2026-08-13",
+        "filename": "evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract.json",
+        "quarantinedGitBlobSha1": "817d7cafac3348ba914506fb86c9f933fbb92215",
+        "canonicalGitBlobSha1": "2ba79e60a82df62b1f0d460012a61463ea1a973f",
+        "introductionPredecessorSha": "dc3476753af55a76d44ab9135c7cfd6097fc70cc",
+        "introductionCommitSha": "17fe117485c6d5a7b11ed0b80085e34071025390",
+        "repairPredecessorSha": "c4c8330f65f03bac2233c798f87e8115c53c87f6",
+        "repairCommitSha": "5a81fa430c545502ee0c429f8175015266c9f849",
+    },
 }
 
 
@@ -29,9 +39,9 @@ def _git_relative(rule: dict[str, str]) -> str:
 def install(hardening_module) -> None:
     """Register exact historical bytes without changing transition semantics.
 
-    Snapshot-only validation must remain strict. The two finite compatibility
-    transitions are authorized only by validate_git_transition(), where reviewed
-    predecessor/commit identities and the exact Git path set are available.
+    Snapshot-only validation must remain strict. Finite compatibility transitions
+    are authorized only by validate_git_transition(), where reviewed predecessor/
+    commit identities and the exact Git path set are available.
     """
     registry = getattr(hardening_module, "_CANONICAL_IMMUTABLE_EVENTS", None)
     if not isinstance(registry, dict):
@@ -68,7 +78,7 @@ def validate_git_transition(
     before: Path,
     after: Path,
 ) -> dict | None:
-    """Cross only the two reviewed Fidelity event transitions in Git history.
+    """Cross only reviewed malformed-event transitions in Git history.
 
     A matching commit identity with different paths/bytes fails closed. Any other
     commit pair receives no compatibility and must use the ordinary strict
