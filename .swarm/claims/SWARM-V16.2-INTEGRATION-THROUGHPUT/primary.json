@@ -2,13 +2,14 @@
   "schemaVersion": 1,
   "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
   "slotId": "primary",
-  "workerId": "sol-20260814-v162merge",
-  "claimToken": "a62c9e3d7f1840b5",
-  "claimedAt": "2026-08-14T08:22:30Z",
-  "heartbeatAt": "2026-08-14T08:22:30Z",
+  "workerId": "sol-20260814-z7c2m8q4",
+  "claimToken": "6f8c1d3a9b2e7045",
+  "claimedAt": "2026-08-14T08:52:45Z",
+  "heartbeatAt": "2026-08-14T08:52:45Z",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
+  "takeoverOf": "sol-20260814-v162merge",
   "resources": ["SWARM-PROTOCOL"],
-  "branch": "agent/swarm-v16-2-integration-throughput",
-  "notes": "Canonical V16.2 integration-throughput rollout; claim first, branch already prepared while prior SWARM-PROTOCOL owner was live but no rollout PR will be published before this fenced claim."
+  "branch": "agent/control/SWARM-V16.2-INTEGRATION-THROUGHPUT-primary-z7c2m8q4-g2",
+  "notes": "Generation-2 stale-primary takeover after the previous 08:22:30 UTC heartbeat expired at 08:52:30 UTC. Absorb independent V16.2 review blockers and exact finite trusted-history compatibility without weakening strict generic validation."
 }
