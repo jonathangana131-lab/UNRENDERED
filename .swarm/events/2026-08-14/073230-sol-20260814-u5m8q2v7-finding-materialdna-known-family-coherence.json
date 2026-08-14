@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-073230-u5m8q2v7-materialdna-known-family-coherence",
+  "timestamp": "2026-08-14T07:32:30+00:00",
+  "fromWorker": "sol-20260814-u5m8q2v7",
+  "eventType": "FINDING",
+  "summary": "MaterialDNA validation can cross-wire already-known visual/physical/acoustic family keys across otherwise coherent built-in recipes because profile coherence labels are checked but the known semantic family/class keys are not related to the recipe family. Draft docs PR #472 records a bounded non-duplicate follow-up without changing product behavior.",
+  "affects": ["HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Audited MaterialDNA source at main eead13b2e90ffbba36248909d97e17856e002ad9 and the current MaterialDNA contract/tests/fixture catalog. validateRecipe() requires profile coherenceClass values to equal the recipe coherenceClass but does not relate visual.familyKey, physical.classKey, or acoustic.classKey to the known recipe family.",
+    "Exact source-level repro: start from the valid commercial wallpaper recipe and change only physical.classKey to the already-shipped physics.low-pile-carpet key while leaving wallpaper coherence labels, finish.vinyl-wallpaper, substrate.gypsum-board, and installation.pasted-wallpaper unchanged; no current compatibility predicate rejects that known-family contradiction.",
+    "The same defect class applies to the shipped acoustic.low-pile-carpet key. This is distinct from the existing cross-domain coherence regression, which mutates acoustic.coherenceClass itself, and from PR #283 fixture-content seals, which protect shipped fixture bytes rather than arbitrary caller recipes.",
+    "Existing MaterialDNA work for repairCount integer bounds, validation/diagnostic density bounds, percent key grammar, hostile unknown-key execution, and fixture drift was explicitly inspected and excluded as duplicate scope.",
+    "Draft PR #472 head 374da8e8cd52bec78ec0cc086ff3f362f5896001 adds only Docs/MATERIAL_DNA_KNOWN_FAMILY_COHERENCE_FINDING.md. Exact-head canonical CI run 31780067240 passes. No product source, schema, fixture, identity, Studio, physics, audio, networking, persistence, or multiplayer evidence is claimed.",
+    "While the finding was published, product main advanced through unrelated PR #462 to c09e3385702c76b8664fb1dcb2116321a0eaf083 with canonical main CI run 31779560841 passing. PR #472 remains mergeable with one effective docs file change.",
+    "Swarm run 31780067213 is independently fail-closed because authoritative swarm-control contains two newer malformed immutable x4m9p2c7 runtime-schema events with unsupported top-level pr/headSha fields; deterministic/adversarial engine tests pass before the read-only trust-bootstrap validation rejects those events. This finding does not edit or normalize those immutable bytes."
+  ],
+  "metadata": {
+    "supportPr": 472,
+    "supportHeadSha": "374da8e8cd52bec78ec0cc086ff3f362f5896001",
+    "canonicalCiRun": 31780067240,
+    "currentMainSha": "c09e3385702c76b8664fb1dcb2116321a0eaf083",
+    "currentMainCiRun": 31779560841,
+    "recommendedNext": "After the currently owned MaterialDNA validator leaves converge, add a narrow explicit known-family compatibility boundary and deterministic regressions for wallpaper plus known carpet physical/acoustic keys. Do not infer compatibility from string prefixes, do not create a generic material registry, preserve unknown future semantic keys until deliberately defined, and do not change schema/id/recipeVersion/MaterialRef or shipped fixture content."
+  }
+}
