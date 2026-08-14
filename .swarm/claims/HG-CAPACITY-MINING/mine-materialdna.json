@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-materialdna",
-  "workerId": "sol-20260813-k3r8v1m6",
-  "claimToken": "c6f1a83d4b7e9052",
-  "claimedAt": "2026-08-13T22:49:00+00:00",
-  "heartbeatAt": "2026-08-13T22:49:00+00:00",
+  "workerId": "sol-20260814-fyfg89ry",
+  "claimToken": "33fcaba0266237e6",
+  "claimedAt": "2026-08-14T07:19:00+00:00",
+  "heartbeatAt": "2026-08-14T07:19:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
+  "takeoverOf": "sol-20260813-k3r8v1m6",
   "resources": [],
-  "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-k3r8v1m6",
+  "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-fyfg89ry",
   "pr": null,
-  "notes": "Capacity mine MaterialDNA only: inspect current source/tests/retained PRs/events and existing counter lane for a concrete non-duplicate invariant, defect, test gap, or bounded follow-up lane. No major feature unlock and no Studio evidence claims."
+  "notes": "Stale capacity-mining takeover after inspecting the prior worker record and durable validation-budget finding. Determine whether that concrete MaterialDNA traversal/error-allocation gap already has a live bounded lane; if not, materialize the smallest non-duplicate scheduler follow-up without changing product source or claiming Studio evidence."
 }
