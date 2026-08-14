@@ -216,10 +216,24 @@ class RecoveryExtensionTests(unittest.TestCase):
                 "47e9d65cb46852f396cfe109836623f4063d0d03",
                 "6503ee1458957314660adab6ef1e56793e775175",
             ),
+            (
+                "evt-20260814-083730-h7v2m9c5-filing-cabinet-drawer-enclosure",
+                "2026-08-14",
+                "083730-sol-20260814-h7v2m9c5-finding-filing-cabinet-drawer-enclosure.json",
+                "ec007fde435a380e5ea25ba48354007acab5b208",
+                "2611077927a39ae20b172a579d2bb901a797f885",
+            ),
+            (
+                "evt-20260814-085700-q8m4n7v2-worldentity-current-main-convergence-pr504",
+                "2026-08-14",
+                "085700-sol-20260814-q8m4n7v2-worldentity-current-main-convergence-pr504.json",
+                "8de5bcceb9c7f341f384a7419bd2e6ce9685d9c3",
+                "eb01bde52bc7f284271c7fab40485fc7ab8b04ce",
+            ),
         )
         self.assertEqual(extension.DATED_MALFORMED_EVENT_QUARANTINE_ROWS, expected)
         normalized = extension.malformed_event_quarantine_rows_with_dates()
-        self.assertEqual(len(normalized), 55)
+        self.assertEqual(len(normalized), 57)
         self.assertEqual(len({row[0] for row in normalized}), len(normalized))
         self.assertEqual(len({(row[1], row[2]) for row in normalized}), len(normalized))
         for row in expected:
