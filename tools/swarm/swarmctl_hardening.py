@@ -144,7 +144,11 @@ def _canonical_rule(path: Path, obj: dict) -> tuple[str, dict] | None:
     path_match = _canonical_rule_for_path(path)
     if path_match is not None:
         expected_id, rule = path_match
-        if event_id != expected_id:
+        allowed_ids = {expected_id}
+        historical_id = rule.get("quarantinedEventId")
+        if isinstance(historical_id, str):
+            allowed_ids.add(historical_id)
+        if event_id not in allowed_ids:
             raise _base.core.ControlError(
                 f"{path}: audited immutable event path contains unexpected eventId {event_id!r}"
             )

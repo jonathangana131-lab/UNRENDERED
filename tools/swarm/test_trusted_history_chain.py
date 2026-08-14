@@ -667,6 +667,80 @@ class TrustedHistoryChainTests(unittest.TestCase):
             )
         burst_replay.install(hard)
 
+    def test_repaired_invalid_event_ids_are_exact_and_blob_fenced(self):
+        expected = {
+            "evt-5845475e-runtime-recipe-order-authenticity": {
+                "date": "2026-08-14",
+                "filename": "082920-sol-20260814-5845475e-runtime-recipe-order-authenticity.json",
+                "quarantinedGitBlobSha1": "c23d073c2325ab49b7517242504f40afdcd0f967",
+                "quarantinedEventId": "082920-sol-20260814-5845475e-runtime-recipe-order-authenticity",
+                "canonicalGitBlobSha1": "5e8ea154e6e78e4e2b97466e39aa154dc2bc50b7",
+                "introductionPredecessorSha": "dc2b293615ce4c0899e7abb2c04fd6c211e241f0",
+                "introductionCommitSha": "2fdfd3f477ec8ce2c0fb25d2ebdab9151b4c658e",
+                "repairPredecessorSha": "5759e566b9f0b72566171c455361c59f39b1d909",
+                "repairCommitSha": "6bde0422287494324a4ce797d26f9135da9e295c",
+            },
+            "evt-5845475e-runtime-order-review-request": {
+                "date": "2026-08-14",
+                "filename": "083040-sol-20260814-5845475e-runtime-order-review-request.json",
+                "quarantinedGitBlobSha1": "e74d33e697bdfd552ba1f16593658a3f2665e9bd",
+                "quarantinedEventId": "083040-sol-20260814-5845475e-runtime-order-review-request",
+                "canonicalGitBlobSha1": "4d15e5d9f3ab9a8e8d9a4bb558ab681bcb76ebb9",
+                "introductionPredecessorSha": "ff9212fb1212c0c95e26d56bd166b39296d78df5",
+                "introductionCommitSha": "ab4a4e206ffb8539e16d6b40a76d427ad72d21a5",
+                "repairPredecessorSha": "e588ad047aec2cca9bb8ffefe4ff4c8bdc029307",
+                "repairCommitSha": "ed73d49d7168bc6c6deb2d586db7725e9b4b7902",
+            },
+        }
+        self.assertEqual(len(burst_replay.RULES), 7)
+        for event_id, rule in expected.items():
+            self.assertEqual(burst_replay.RULES[event_id], rule)
+
+        canonical_id = "evt-20990101-000000-repaired-id"
+        malformed_id = "000000-sol-20990101-repaired-id"
+        date = "2099-01-01"
+        filename = "000000-sol-20990101-repaired-id.json"
+        relative = Path("events") / date / filename
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / relative
+            path.parent.mkdir(parents=True)
+            event = self.valid_event("finite malformed id")
+            event["eventId"] = malformed_id
+            write(path, event)
+            quarantined_blob = hard._git_blob_sha1(path)
+            event["eventId"] = canonical_id
+            write(path, event)
+            canonical_blob = hard._git_blob_sha1(path)
+            event["eventId"] = malformed_id
+            write(path, event)
+
+            registry_rule = {
+                "date": date,
+                "filename": filename,
+                "quarantinedGitBlobSha1": quarantined_blob,
+                "quarantinedEventId": malformed_id,
+                "canonicalGitBlobSha1": canonical_blob,
+            }
+            hard._CANONICAL_IMMUTABLE_EVENTS[canonical_id] = registry_rule
+            try:
+                quarantined = hard._validate_event_with_immutable_compat(path)
+                self.assertTrue(quarantined["_quarantined"])
+                self.assertEqual(quarantined["eventId"], canonical_id)
+
+                event["summary"] = "changed unlisted bytes"
+                write(path, event)
+                with self.assertRaises(core.ControlError):
+                    hard._validate_event_with_immutable_compat(path)
+
+                event["summary"] = "finite malformed id"
+                event["eventId"] = canonical_id
+                write(path, event)
+                canonical = hard._validate_event_with_immutable_compat(path)
+                self.assertEqual(canonical["eventId"], canonical_id)
+                self.assertNotIn("_quarantined", canonical)
+            finally:
+                del hard._CANONICAL_IMMUTABLE_EVENTS[canonical_id]
+
     def test_burst_quarantine_introduction_bridge_is_exact_and_inert(self):
         event_id = "evt-20990101-000000-test-quarantine-only"
         date = "2099-01-01"
