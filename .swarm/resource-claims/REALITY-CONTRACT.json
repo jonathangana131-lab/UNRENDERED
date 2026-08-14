@@ -6,7 +6,7 @@
   "claimToken": "c4e891b7a26d503f",
   "acquiredAt": "2026-08-14T07:46:00+00:00",
   "heartbeatAt": "2026-08-14T07:46:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 1,
-  "notes": "Bound to independent WorldEntity audit slot generation 1 / PR #477 only."
+  "notes": "WorldEntity audit generation 1 completed and released. Lease intentionally reduced to protocol minimum without heartbeat advance; REALITY-CONTRACT is stale/released after 2026-08-14T07:51:00+00:00 for current-main convergence work."
 }
