@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-j9v4q6m2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:20:20+00:00",
-  "lastSeenAt": "2026-08-14T08:29:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-diagnostics",
-  "branch": "agent/audit/HG-CAPACITY-MINING-mine-diagnostics-j9v4q6m2-g1",
-  "notes": "Fidelity mining completed as docs-only PR #490 with exact-head canonical CI PASS; Fidelity claim released. Now auditing diagnostics source/tests/retained PR lineages for one concrete non-duplicate source-only gap while red-main repair remains separately owned."
+  "lastSeenAt": "2026-08-14T08:33:30+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed two non-primary Hero-Gate capacity findings while red-main repair remained separately owned: FidelityManager private-state ownership draft PR #490 and diagnostics text-renderability draft PR #496. Both exact docs heads pass canonical CI; shared Swarm ownership remains fail-closed on the separately owned trust/bootstrap boundary. Claims released; awaiting independent review/reconciliation."
 }
