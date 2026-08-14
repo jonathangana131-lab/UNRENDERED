@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T08:24:00+00:00",
-  "lastSeenAt": "2026-08-14T08:24:00+00:00",
+  "lastSeenAt": "2026-08-14T08:28:30+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-n5v8c2q7-g2",
-  "notes": "Test-only current-main convergence of already-approved generation-10 WorldEntity ownership regressions."
+  "notes": "Expected-red current-main WorldEntity convergence support published as draft PR #493; awaiting exact-head CI evidence before handoff."
 }
