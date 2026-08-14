@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-14T08:20:08+00:00",
-  "lastSeenAt": "2026-08-14T08:20:08+00:00",
+  "lastSeenAt": "2026-08-14T08:21:40+00:00",
   "laneId": "OPS-MAIN-HEALTH",
-  "slotId": "primary",
-  "branch": "agent/red-main/OPS-MAIN-HEALTH-primary-k4x9m2p7-g1",
-  "notes": "Registered for canonical red-main recovery; implementation begins only after atomic claim succeeds."
+  "slotId": "tests-1",
+  "branch": "agent/red-main/OPS-MAIN-HEALTH-tests-k4x9m2p7-g1",
+  "notes": "Primary claim race lost atomically to sol-20260814-afb1aa7d; tests-1 diagnosis slot claimed successfully."
 }
