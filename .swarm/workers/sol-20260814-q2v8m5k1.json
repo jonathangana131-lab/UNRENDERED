@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-q2v8m5k1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:31:00+00:00",
-  "lastSeenAt": "2026-08-14T08:41:45+00:00",
+  "lastSeenAt": "2026-08-14T08:50:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-runtime",
   "branch": "agent/audit/HG-CAPACITY-MINING-runtime-q2v8m5k1-g1",
-  "notes": "Bounded PhysicsLabRuntime mining after prior generations #451/#467/#494/#501. Inspect retained synthesis #408 and current tests for a concrete non-duplicate invariant/test/integration gap only; do not implement competing runtime source or claim Studio evidence."
+  "notes": "Released runtime mining after PR #503 + structured finding publication and #408 integration handoff. Exact head b753f686f3e74e86e775dca48d9778f02388635d; CI was queued at release, so no pass is claimed. No Studio/runtime external evidence was run."
 }
