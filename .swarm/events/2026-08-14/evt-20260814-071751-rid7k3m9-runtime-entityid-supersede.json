@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-071751-rid7k3m9-runtime-entityid-supersede",
+  "timestamp": "2026-08-14T07:17:51+00:00",
+  "fromWorker": "sol-20260814-rid7k3m9",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Current-state independent audit finds no new entity-ID fence defect, but closed unmerged PR #402 is now a predecessor only. SUPERSEDE #402 in favor of retained synthesis PR #408, which preserves the reviewed entity-ID boundary and regressions; do not interpret this as approval of #408's separate realization-recipe seam or current integration gates.",
+  "affects": ["HG-PHYSICS-RUNTIME-ENTITYID-FENCE", "HG-PHYSICS-RUNTIME-SYNTHESIS"],
+  "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
+  "evidence": [
+    "PR #402 is closed unmerged at exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42 and already has an independent lane-local source PASS; reviving it would reintroduce overlapping runtime lineage risk.",
+    "PR #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754 retains assertEntityId() -> WorldEntity.isId before runtime registry lookup/diagnostic interpolation, and getFidelity()/step reach that guarded getRecord boundary before later entityId-dependent authority work.",
+    "Current main WorldEntity.isId still begins with type(value) == string before length/control-character checks, preserving the no-caller-metamethod rejection property required by the #402 audit.",
+    "tests/physics_lab_runtime_synthesis.luau on #408 retains hostile non-string __tostring adversaries for getRecord/getFidelity/step, authority population preservation, immediate valid retry, and bounded valid-unknown-ID diagnostics.",
+    "PR #408 canonical CI run 31539261229 passed on its exact product head. Its latest Swarm Control rerun 31751309806 failed at live trust/control validation rather than PhysicsLabRuntime behavior.",
+    "Separate capacity finding on #408 documents an unclosed realization-bearing EntityRecipe authenticity seam; this review neither duplicates nor clears that distinct blocker."
+  ],
+  "pr": 402,
+  "headSha": "4b75bd054eb6a1b3b03d0a868aea46df41d3db42",
+  "verdict": "SUPERSEDE"
+}
