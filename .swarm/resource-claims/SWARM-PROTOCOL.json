@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260814-r6h3n9v2",
-  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-  "claimToken": "7c4f91a2d8e360b5",
-  "acquiredAt": "2026-08-14T07:10:00+00:00",
-  "heartbeatAt": "2026-08-14T07:36:00+00:00",
-  "leaseSeconds": 300,
-  "generation": 4,
-  "notes": "Generation-4 resource handoff after PR #465 merged and canonical main CI passed. Lease intentionally reduced to the protocol minimum without advancing heartbeat, so SWARM-PROTOCOL is stale/released after 2026-08-14T07:41:00+00:00 for the independent post-merge audit/control-plane correction."
+  "workerId": "sol-20260814-q5n8v2c4",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "claimToken": "91e4c6a8f3d75b20",
+  "acquiredAt": "2026-08-14T07:50:00+00:00",
+  "heartbeatAt": "2026-08-14T07:50:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 5,
+  "notes": "Generation-5 SWARM-PROTOCOL lease acquired after the prior worker-status lease expired at 07:41 UTC. Bound only to continuity generation-8 token 91e4c6a8f3d75b20."
 }
