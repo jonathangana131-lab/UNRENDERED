@@ -5,9 +5,11 @@
   "title": "Swarm V16.2 integration throughput",
   "objective": "Turn persistent 20-30 worker burst output into canonical integration faster: merge-pressure scheduling, canonical child absorption, and strict pre-publication event validation without weakening V2.1 trust or external runtime authority.",
   "priority": 10000,
-  "state": "READY",
+  "state": "BLOCKED",
   "mode": "exclusive",
-  "dependencies": [],
+  "dependencies": [
+    {"laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY", "acceptableStates": ["DONE"]}
+  ],
   "writeScopes": [
     ".github/workflows/swarm-v16-*.yml",
     "Docs/SWARM_V16_2_INTEGRATION_THROUGHPUT.md",
@@ -61,6 +63,5 @@
     "independent exact-head review accepts scheduler and producer-fence boundaries",
     "post-merge live main refresh remains trustworthy"
   ],
-  "notes": "V16.2 rollout. Existing historical quarantine/replay remains finite compatibility only; this lane must not widen the live event schema or external runtime truth authority.",
-  "tags": ["swarm-v16.2", "integration", "merge-pressure", "event-producer", "control-plane"]
+  "notes": "Generation-2 successor PR #505 at d05ea5f44c1a264551a29af24ec5ce9fbfc0eab7 has GREEN canonical CI and GREEN V16.2 source/shadow tests, including canonical worker-status registration, shared merge-pressure actionability, and suppression of capacity mining while pressure is active. The lane remains BLOCKED because its required trusted V2.1 live-control/history preflight is red; the dedicated SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY lane must restore that boundary before V16.2 can enter independent review/integration. Independent review also identified that the repository-local event producer is not by itself a GitHub authorization boundary; do not claim direct-write prevention unless a real trusted publication permission path exists. #485 is superseded/closed."
 }
