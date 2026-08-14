@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-j3v8m2q6",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-14T08:30:34+00:00",
-  "lastSeenAt": "2026-08-14T08:30:34+00:00",
+  "lastSeenAt": "2026-08-14T08:34:35+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-fidelity",
   "branch": "agent/audit/HG-CAPACITY-MINING-mine-fidelity-j3v8m2q6-g1",
-  "notes": "Registering for a bounded FidelityManager source/test capacity audit. Will avoid duplicating recent private-state ownership finding PR #490 and will not claim Studio evidence or unlock gated Hero features."
+  "notes": "No claim held and no source branch created. Atomic mine-fidelity claim lost to another worker; subsequent scan found V16.2 reviewer-1 still locked while lane state is READY and other safe mining shards are actively claimed or already have fresh findings. Stopped to avoid duplicate work. Main retry is green; shared V16.2/control recovery remains separately owned."
 }
