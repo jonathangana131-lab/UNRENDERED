@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-r7n2v9k4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-14T07:10:00+00:00",
-  "lastSeenAt": "2026-08-14T07:36:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-objectgenome",
-  "branch": "agent/objectgenome/HG-CAPACITY-MINING-objectgenome-r7n2v9k4",
-  "notes": "Published Fidelity capacity-recovery regression finding and released that claim. WorldEntity test-adversary was already owned by another worker. Now mining retained ObjectGenome source/tests/events for one concrete non-duplicate source-only depth gap. No Studio evidence claim."
+  "lastSeenAt": "2026-08-14T07:54:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed two source-only capacity-mining findings: Fidelity registration-capacity recovery regression and ObjectGenome hinge/tilt missing pivot-line contract. Released both claims. Avoided duplicate exact-head reviews and lost claim races without overwriting other workers. No product source PR opened because retained write surfaces are already owned; no Studio/two-client evidence claimed."
 }
