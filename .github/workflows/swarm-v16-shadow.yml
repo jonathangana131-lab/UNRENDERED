@@ -1,4 +1,4 @@
-name: Swarm V16 Mission Graph Shadow
+name: Swarm V16.2 Mission Graph Shadow
 
 on:
   pull_request:
@@ -6,11 +6,15 @@ on:
     paths:
       - 'tools/swarm/v16cp/**'
       - 'tools/swarm/v16ctl.py'
+      - 'tools/swarm/event_producer.py'
       - 'tools/swarm/v16_objective_integrate.py'
       - 'tools/swarm/v16_legacy_trust_sync.py'
       - 'tools/swarm/test_swarm_v16*.py'
+      - 'tools/swarm/test_event_producer.py'
       - '.github/workflows/swarm-v16-*.yml'
       - 'Docs/SWARM_V16_MISSION_GRAPH.md'
+      - 'Docs/SWARM_V16_2_INTEGRATION_THROUGHPUT.md'
+      - 'ProjectSource/UNRENDERED_PROJECT_INSTRUCTIONS.txt'
   workflow_dispatch:
 
 permissions:
@@ -24,16 +28,40 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Compile V16 Python
-        run: python3 -m py_compile tools/swarm/v16cp/*.py tools/swarm/v16ctl.py tools/swarm/v16_objective_integrate.py tools/swarm/v16_legacy_trust_sync.py
-      - name: Deterministic V16 unit tests
+      - name: Compile V16.2 Python
+        run: python3 -m py_compile tools/swarm/v16cp/*.py tools/swarm/v16ctl.py tools/swarm/event_producer.py tools/swarm/v16_objective_integrate.py tools/swarm/v16_legacy_trust_sync.py
+      - name: Retained deterministic V16/V16.1 tests
         run: |
           python3 tools/swarm/test_swarm_v16.py
           python3 tools/swarm/test_swarm_v16_persistence.py
           python3 tools/swarm/test_swarm_v16_objective_integration.py
           python3 tools/swarm/test_swarm_v16_legacy_trust_sync.py
+      - name: V16.2 integration pressure and producer fences
+        run: |
+          python3 tools/swarm/test_swarm_v16_2.py
+          python3 tools/swarm/test_event_producer.py
       - name: Thirty-worker adversarial convergence
         run: python3 tools/swarm/v16ctl.py simulate --workers 30
+      - name: V16.2 thirty-worker merge-pressure burst
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import sys
+          sys.path.insert(0,'tools/swarm')
+          from v16cp.core import add_work_item, recommend, role_allocation, seed_graph
+          graph=seed_graph()
+          obj=graph['objectives']['physics-lab']
+          obj['canonicalBranch']='agent/physics/HG-PHYSICS-LAB-primary'
+          add_work_item(graph,work_item_id='v162-ci-integration',mission_id=obj['missionId'],objective_id='physics-lab',title='Integrate accepted Physics Lab candidate',outcome='absorb accepted child into canonical branch',role='integrator',branch='agent/physics/HG-PHYSICS-LAB-child')
+          item=graph['workItems']['v162-ci-integration']; item['status']='INTEGRATING'; item['integrationWorld']='NEXT'; item['branchState']='SELECTED'
+          workers=[f'sol-20260814-ci{i:02d}' for i in range(30)]
+          packets=recommend(graph,workers,30)
+          assert len(packets)==30
+          assert sum(p.packet.get('MODE')=='MERGE_PRESSURE' for p in packets)>=18
+          alloc=role_allocation(graph,30)
+          assert alloc['integrator']>alloc['builder']
+          print(alloc)
+          PY
       - name: Live legacy migration smoke test
         shell: bash
         run: |
