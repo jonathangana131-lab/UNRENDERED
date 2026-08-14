@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-072030-v8n3q6m2-objectgenome-caster-axis-relation",
+  "timestamp": "2026-08-14T07:20:30+00:00",
+  "fromWorker": "sol-20260814-v8n3q6m2",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome validates caster swivelAxis and rollAxis independently as unit vectors but never validates their relationship. Equal or antiparallel unit axes therefore remain canonical, collapsing semantically distinct swivel and wheel-roll motions onto one degree of freedom. The gap also survives retained generation-8 PR #395's standalone decoder preflight, which independently calls isCanonicalUnitAxis() for each axis.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME", "HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Current src/shared/Objects/ObjectGenome.luau caster validation requires positive finite wheelRadiusM plus unit swivelAxis and rollAxis, with no dot/cross/collinearity or independent-DOF predicate.",
+    "Retained PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 adds standaloneMechanismIsCanonical(), but caster acceptance still checks isCanonicalUnitAxis(swivelAxis) and isCanonicalUnitAxis(rollAxis) independently.",
+    "The canonical office-chair fixture authors each caster with swivelAxis {0,1,0} and rollAxis {1,0,0}, demonstrating a non-degenerate intended pair.",
+    "Current ObjectGenome tests cover a non-unit mechanism axis and caster persisted-state/decoder semantics, but no equal-axis or antiparallel-axis caster mutation.",
+    "Existing proposed leaves HG-BACKFILL-OBJECTGENOME-STRING-BUDGET and HG-BACKFILL-OBJECTGENOME-STATE-BOUNDS cover different memory/work-bound classes; search of ObjectGenome PRs/issues found no existing caster-axis relation repair.",
+    "PR #466 records the source-only finding and exact repro; no executable test, Studio, viewport, networking, persistence, or physical-contact evidence is claimed."
+  ],
+  "metadata": {
+    "docsPr": 466,
+    "docsHeadSha": "238bd7727d23396920429160a576de080483fa15",
+    "retainedObjectGenomePr": 395,
+    "retainedObjectGenomeHeadSha": "ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962",
+    "recommendedNext": "After the retained ObjectGenome lineage is safely integrated/unblocked, create a bounded source-only caster-axis relation leaf. Reject at least parallel and antiparallel swivel/roll unit-axis pairs in both full inspect and standalone decode preflight; explicitly decide whether v1 additionally requires strict orthogonality or permits tilted/cambered non-collinear axes, then cover canonical/equal/opposite/tolerance boundaries deterministically."
+  }
+}
