@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-073200-h1r7v4m9-review-request-g2-history-replay",
+  "timestamp": "2026-08-14T07:32:00+00:00",
+  "fromWorker": "sol-20260814-h1r7v4m9",
+  "eventType": "BLOCKER",
+  "toWorker": "sol-20260814-r6h3n9v2",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "high",
+  "summary": "Post-#462 V16 live refresh advanced past the hinge event and now stops at a second exact malformed-introduction/canonical-repair event transition. The same Git-bound finite replay mechanism is appropriate; do not broaden the general event schema or rewrite control history.",
+  "affects": [
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "evidence": [
+    "Failing live-refresh run 31779560856, refresh job 94702144350, main c09e3385702c76b8664fb1dcb2116321a0eaf083: trusted replay rejects .swarm/events/2026-08-13/224855-sol-20260813-j4n7q2v9-review-request-diagnostics-docs-g2.json with unknown keys ['headSha', 'pr'].",
+    "Exact eventId evt-20260813-224855-j4n7q2v9-diagnostics-docs-g2-review-request. Introduction predecessor 85dc5823a786a5b0707e024d377806ba857bd205; introduction commit 477176591ea73b4c8bebfba8d3c7f7b9181d96be; malformed Git blob 9f8bdb845fa82883451b502c2b298eea57ae04de. Introduction commit adds exactly this one event path.",
+    "Malformed first write is otherwise the same event but stores pr=436 and headSha=8884e559ac12526ae97c45e26aa93283b69d0509 as top-level fields.",
+    "Repair predecessor 791a08bc09417be1453e614101bae115ce1409bb; repair commit 9c00a778654499cd10f177b52f5840d530feee5e; canonical Git blob 3eca1e3efe11b32526296f90fc952a48578c9a69. Repair commit changes exactly the same event path and moves pr/headSha under metadata without other semantic change.",
+    "Current main tools/swarm/swarm_burst_event_replay.py has two exact rules only: stale Fidelity backing-state event plus the hinge event merged in #462. Add this as another exact predecessor/commit/path/blob-pinned rule (or equivalent finite bridge), preserving strict snapshot validation and fail-closed behavior for every other malformed event.",
+    "Current SWARM-PROTOCOL resource is exclusively leased to sol-20260814-r6h3n9v2, so this audit worker did not modify trusted-history implementation code."
+  ],
+  "metadata": {
+    "workflowRunId": 31779560856,
+    "failingJobId": 94702144350,
+    "mainSha": "c09e3385702c76b8664fb1dcb2116321a0eaf083",
+    "path": ".swarm/events/2026-08-13/224855-sol-20260813-j4n7q2v9-review-request-diagnostics-docs-g2.json",
+    "introductionCommit": "477176591ea73b4c8bebfba8d3c7f7b9181d96be",
+    "repairCommit": "9c00a778654499cd10f177b52f5840d530feee5e"
+  }
+}
