@@ -5,7 +5,7 @@
   "title": "Recover immutable event history continuity",
   "objective": "Define and prove an explicit trusted-history continuity/reset mechanism for already-laundered immutable control events without silently rewriting published event bytes or allowing a failed transition to become a later trusted baseline.",
   "priority": 9999,
-  "state": "BLOCKED",
+  "state": "READY",
   "mode": "exclusive",
   "dependencies": [
     {"laneId": "SWARM-RECOVERY-EVENT-COMPAT", "acceptableStates": ["DONE"]},
@@ -26,6 +26,6 @@
     "adversarial tests cover failed-transition laundering, descendant-baseline laundering, duplicate/replayed event identities, and recovery-boundary abuse",
     "canonical CI and live control validation are green only after the explicit recovery contract is exercised and independently reviewed"
   ],
-  "notes": "Generation-7 recovery is published as PR #420 at exact head e57c3439d8373d033e33ff40065a8c0c4f68274e. Canonical CI and all deterministic/adversarial Swarm engine tests are green; the dated 2026-08-12 quarantine closes the executable-looking immutable event with invalidEventCount=0. Live bootstrap sampling is now blocked by repeated producer use of worker lifecycle aliases such as ACTIVE/DONE. The higher-priority SWARM-RECOVERY-WORKER-STATUS-CONTRACT lane owns that shared producer/validator contract and is explicitly evaluating evidence-backed compatibility aliases without weakening claim/resource fencing. Continuity must resume only after that contract lane reaches DONE, then rerun exact bootstrap and request fresh independent history-integrity review. pr-ownership remains intentionally fail-closed while swarm-trust is bootstrap:true.",
+  "notes": "READY after both prerequisites reached DONE. Do not merge stale generation-7 PR #420 wholesale; resume from current main ec7755717c9512b8418e2cfc77f0da69610ea9ae. The current trusted first-parent replay stop is the quarantine-only first introduction of events/2026-08-13/evt-20260813-225000-8fa445-authority-current-main-no-new-gap.json: exact predecessor a3ec4ac5ca87ab5fd7058c22a33af44d69fd51bd, first-write commit 47e9d65cb46852f396cfe109836623f4063d0d03, exact Git blob 6503ee1458957314660adab6ef1e56793e775175. This is a single Git add, not a delete/re-add; generic transition_check calls it re-added only because the exact quarantine identity is pre-registered yet absent from the older trusted baseline. The safe next leaf is an exact Git-aware quarantine-only introduction bridge for this audited transition while generic snapshot semantics remain strict. Never legalize top-level recommendation, remove the quarantine registry row, edit the immutable event, or weaken the canonical-path guard. Merged #475 already pins the later August-14 malformed introduction/repair pairs. pr-ownership remains intentionally fail-closed until the separate trust ledger converges.",
   "tags": ["control-repair", "red-ci", "history-integrity", "hero-gate"]
 }

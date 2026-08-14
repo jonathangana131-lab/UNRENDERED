@@ -6,11 +6,11 @@
   "claimToken": "6d1a9c4f82b7e350",
   "claimedAt": "2026-08-14T07:42:00+00:00",
   "heartbeatAt": "2026-08-14T07:42:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 3,
   "resources": [],
   "branch": "agent/review/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-reviewer-1-q5n8v2c4-g3",
   "pr": 465,
   "takeoverOf": "sol-20260813-v16rvw2",
-  "notes": "Independent generation-3 current-main review of PR #465. Takeover is only of the deliberately stale reviewer-1 lease; no SWARM-PROTOCOL resource is acquired. Reviewer will resolve the lane write-scope metadata mismatch before issuing an integration verdict and will keep the separately identified generic byte-only takeover compatibility concern scheduler-separated."
+  "notes": "Generation-3 independent review completed with exact-head PASS recorded on PR #465. Scheduler write-scope discrepancy was corrected in the lane closure record, and the worker-status/facade prerequisite is DONE. Lease deliberately reduced to the protocol minimum without advancing heartbeat so this review generation is stale/released after 2026-08-14T07:47:00+00:00. No SWARM-PROTOCOL resource was acquired."
 }
