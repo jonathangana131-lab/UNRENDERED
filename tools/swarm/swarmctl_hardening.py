@@ -20,9 +20,19 @@ import swarmctl_hardening_base as _base
 from swarmctl_hardening_base import *  # re-export the proven engine API
 
 
-_STRICT_VALIDATE_EVENT = _base.core.validate_event
-_STRICT_READ_TREE = _base.read_tree
-_STRICT_TRANSITION_CHECK = _base.transition_check
+# Keep the first strict engine anchors on the shared base module. Re-executing this
+# facade in-process must never capture a prior facade wrapper as the new "strict"
+# authority or split compatibility state across module instances.
+if not hasattr(_base, "_V21_STRICT_VALIDATE_EVENT"):
+    _base._V21_STRICT_VALIDATE_EVENT = _base.core.validate_event
+if not hasattr(_base, "_V21_STRICT_READ_TREE"):
+    _base._V21_STRICT_READ_TREE = _base.read_tree
+if not hasattr(_base, "_V21_STRICT_TRANSITION_CHECK"):
+    _base._V21_STRICT_TRANSITION_CHECK = _base.transition_check
+
+_STRICT_VALIDATE_EVENT = _base._V21_STRICT_VALIDATE_EVENT
+_STRICT_READ_TREE = _base._V21_STRICT_READ_TREE
+_STRICT_TRANSITION_CHECK = _base._V21_STRICT_TRANSITION_CHECK
 
 # Exact pre-anchor worker-state defects crossed by the one-time reset. Each row is
 # an invalid commit followed by the exact schema-valid repair that must also be in
@@ -50,7 +60,7 @@ _FINITE_CLAIM_TAKEOVER_COMPAT = {
 # 2) malformed first-write bytes that were never valid V2 authority; those exact
 #    bytes are quarantine-only and can never be returned as an authoritative event.
 # No event file is edited/deleted by this recovery. Any unlisted byte variant fails.
-_CANONICAL_IMMUTABLE_EVENTS = {
+_LOCAL_CANONICAL_IMMUTABLE_EVENTS = {
     "evt-20260811-073500-q9m4r2-authority-rereview-approve": {
         "date": "2026-08-11",
         "filename": "evt-20260811-073500-q9m4r2-authority-rereview-approve.json",
@@ -83,6 +93,12 @@ _CANONICAL_IMMUTABLE_EVENTS = {
     **_recovery.quarantine_rules(),
     **_extension.quarantine_rules(),
 }
+
+# The registry itself is shared authority. A second facade execution must reuse the
+# same object so exact immutable-history identities cannot diverge between wrappers.
+if not hasattr(_base, "_V21_CANONICAL_IMMUTABLE_EVENTS"):
+    _base._V21_CANONICAL_IMMUTABLE_EVENTS = _LOCAL_CANONICAL_IMMUTABLE_EVENTS
+_CANONICAL_IMMUTABLE_EVENTS = _base._V21_CANONICAL_IMMUTABLE_EVENTS
 
 TRUST_BRANCH = "swarm-trust"
 TRUST_SCHEMA = 1
