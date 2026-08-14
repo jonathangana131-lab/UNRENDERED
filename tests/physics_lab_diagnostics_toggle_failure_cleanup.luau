@@ -26,31 +26,23 @@ local function run(): number
 	-- enabled-window assertion must be protected so the exact owned diagnostics
 	-- overlay can be destroyed before the original validation failure propagates.
 	local cycleProtection = string.find(sweepSource, "local cycleOk, cycleResult = pcall(function()", 1, true)
-	local enabled =
-		string.find(sweepSource, "local enabled = PhysicsLabStudioDiagnostics.enable(lab)", 1, true)
+	local enabled = string.find(sweepSource, "local enabled = PhysicsLabStudioDiagnostics.enable(lab)", 1, true)
 	local ownedRootStart, _, ownedRootName =
 		string.find(sweepSource, "local%s+([%a_][%w_]*)%s*=%s*diagnosticsRoot%(%s*lab%.model%s*%)")
 	local ownedRootLineEnd = ownedRootStart and string.find(sweepSource, "\n", ownedRootStart, true)
 	local ownedRootLine = if ownedRootStart ~= nil and ownedRootLineEnd ~= nil
 		then string.sub(sweepSource, ownedRootStart, ownedRootLineEnd - 1)
 		else ""
-	local ownedRootPinIsExact = false
-	local ownedRootAssertion = nil
+	local expectedOwnedRootLine = ""
 	if ownedRootName ~= nil then
-		ownedRootPinIsExact = string.match(
-			ownedRootLine,
-			"^%s*local%s+"
-				.. ownedRootName
-				.. "%s*=%s*diagnosticsRoot%(%s*lab%.model%s*%)%s*$"
-		) ~= nil
-		if ownedRootLineEnd ~= nil then
-			ownedRootAssertion = string.find(
-				sweepSource,
-				"assert(" .. ownedRootName .. " ~= nil",
-				ownedRootLineEnd,
-				true
-			)
-		end
+		expectedOwnedRootLine = "local " .. ownedRootName .. " = diagnosticsRoot(lab.model)"
+	end
+	local normalizedOwnedRootLine = string.gsub(ownedRootLine, "^%s+", "")
+	local ownedRootPinIsExact = ownedRootName ~= nil and normalizedOwnedRootLine == expectedOwnedRootLine
+	local ownedRootAssertion = nil
+	if ownedRootName ~= nil and ownedRootLineEnd ~= nil then
+		ownedRootAssertion =
+			string.find(sweepSource, "assert(" .. ownedRootName .. " ~= nil", ownedRootLineEnd, true)
 	end
 	local strictCleanup =
 		string.find(sweepSource, "local disabled = PhysicsLabStudioDiagnostics.disable(lab)", 1, true)
@@ -72,14 +64,13 @@ local function run(): number
 	local directCleanupSequence = nil
 	if failureGuard ~= nil and ownedRootName ~= nil then
 		directOwnedDestroy = string.find(sweepSource, ownedRootName .. ":Destroy()", failureGuard, true)
-		directCleanupSequence = string.find(
-			sweepSource,
-			"if not cycleOk then\n\t\t\t"
-				.. ownedRootName
-				.. ":Destroy()\n\t\t\terror(cycleResult, 0)\n\t\tend",
-			failureGuard,
-			true
-		)
+		local expectedCleanupSequence = table.concat({
+			"if not cycleOk then",
+			"\t\t\t" .. ownedRootName .. ":Destroy()",
+			"\t\t\terror(cycleResult, 0)",
+			"\t\tend",
+		}, "\n")
+		directCleanupSequence = string.find(sweepSource, expectedCleanupSequence, failureGuard, true)
 	end
 	local disabledAssertion = strictCleanup
 		and string.find(sweepSource, "assert(not disabled.enabled", strictCleanup, true)
