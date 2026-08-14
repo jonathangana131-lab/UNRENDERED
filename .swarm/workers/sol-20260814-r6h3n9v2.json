@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-r6h3n9v2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-14T07:10:00+00:00",
-  "lastSeenAt": "2026-08-14T07:44:00+00:00",
-  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-  "slotId": "primary",
-  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-r6h3n9v2-g6",
-  "notes": "Generation-6 primary released after PR #465 merged as ec7755717c9512b8418e2cfc77f0da69610ea9ae and post-merge canonical CI passed. Lane remains REVIEW for an independent post-merge audit, write-scope/control-plane correction, and live trusted-history acceptance; this worker does not self-approve."
+  "lastSeenAt": "2026-08-14T07:47:00+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-r6h3n9v2-g1",
+  "notes": "Independent exact-head audit of WorldEntity generation-10 PR #477. Prior worker-status primary was released; no self-review relationship with this lane."
 }
