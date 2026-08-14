@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-a6r2m8q5",
   "claimToken": "182706dcf2521fe6",
   "claimedAt": "2026-08-14T08:30:15+00:00",
-  "heartbeatAt": "2026-08-14T08:30:15+00:00",
+  "heartbeatAt": "2026-08-14T08:38:15+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/capacity/HG-CAPACITY-MINING-fidelity-a6r2m8q5-g1",
-  "pr": null,
-  "notes": "Bounded FidelityManager source/test/PR audit for a concrete non-duplicate Hero-Gate depth gap; docs-only publication if warranted."
+  "pr": 500,
+  "notes": "Published docs-only Fidelity high-cost F3/F4 admission-budget finding on PR #500 exact head 5e165dcdad034f2aba9dcaec8f3828d6895f2f12; awaiting exact-head CI/control validation. No product or Studio evidence change."
 }
