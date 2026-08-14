@@ -26,18 +26,10 @@ local function run(): number
 	-- enabled-window assertion must be protected so the owned diagnostics overlay
 	-- is disabled before the original validation failure is propagated.
 	local cycleProtection = string.find(sweepSource, "local cycleOk, cycleResult = pcall(function()", 1, true)
-	local enabled = string.find(
-		sweepSource,
-		"local enabled = PhysicsLabStudioDiagnostics.enable(lab)",
-		1,
-		true
-	)
-	local cleanup = string.find(
-		sweepSource,
-		"local disabled = PhysicsLabStudioDiagnostics.disable(lab)",
-		1,
-		true
-	)
+	local enabled =
+		string.find(sweepSource, "local enabled = PhysicsLabStudioDiagnostics.enable(lab)", 1, true)
+	local cleanup =
+		string.find(sweepSource, "local disabled = PhysicsLabStudioDiagnostics.disable(lab)", 1, true)
 	local failureGuard = cleanup and string.find(sweepSource, "if not cycleOk then", cleanup, true)
 	local propagate = failureGuard and string.find(sweepSource, "error(cycleResult, 0)", failureGuard, true)
 
