@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-q2v8m5k1",
   "claimToken": "c1a7e3f95b2d8046",
   "claimedAt": "2026-08-14T08:41:30+00:00",
-  "heartbeatAt": "2026-08-14T08:41:30+00:00",
+  "heartbeatAt": "2026-08-14T08:46:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/audit/HG-CAPACITY-MINING-runtime-q2v8m5k1-g1",
-  "pr": null,
-  "notes": "Bounded PhysicsLabRuntime mining after prior generations #451/#467/#494/#501. Inspect retained synthesis #408 and current tests for a concrete non-duplicate invariant/test/integration gap only; do not implement competing runtime source or claim Studio evidence."
+  "pr": 503,
+  "notes": "Published docs-only generation-5 finding PR #503 at exact head 19ed78e19a00f439e26cf9174930def81b83ce55. Distinct regression-integrity gap: retained #408 whole-manager fence explicitly protects caller-owned policy inputs and time, but tests attack only hostile PolicyInputs; add a hostile nowSeconds comparison-metamethod mutation adversary to pin the earlier time-validation window. No production/Studio changes; fresh exact-head GitHub CI required."
 }
