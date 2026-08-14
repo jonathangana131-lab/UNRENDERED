@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
+  "slotId": "audit",
+  "workerId": "sol-20260814-r7n2v9k4",
+  "claimToken": "8c4e1a7d2f9b6053",
+  "claimedAt": "2026-08-14T07:10:00+00:00",
+  "heartbeatAt": "2026-08-14T07:10:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-PHYSICS-RUNTIME-ENTITYID-FENCE-audit-r7n2v9k4",
+  "pr": null
+}
