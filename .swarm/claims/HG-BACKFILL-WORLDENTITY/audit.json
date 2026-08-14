@@ -5,12 +5,12 @@
   "workerId": "sol-20260814-q8m4n7v2",
   "claimToken": "7d3a9c1e5b2f6048",
   "claimedAt": "2026-08-14T08:48:00+00:00",
-  "heartbeatAt": "2026-08-14T08:48:00+00:00",
-  "leaseSeconds": 1800,
+  "heartbeatAt": "2026-08-14T08:52:00+00:00",
+  "leaseSeconds": 300,
   "generation": 3,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-q8m4n7v2-g3",
   "pr": 502,
   "takeoverOf": "sol-20260814-j4p8n6q2",
-  "notes": "Fresh independent review of expected-red current-main convergence support PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b. Validate one-file byte-identical retained registry-shape corpus and whether any semantic red is precise evidence for a current-main source-owning successor. No product/Studio evidence claim."
+  "notes": "Released after exact-head review evt-20260814-085100-q8m4n7v2-worldentity-main-convergence-pr502. PR #502 head 8f6837eba8d5ae814925e6a6387d6e02cb82341b is accepted as byte-identical expected-red current-main convergence evidence only and must not merge independently. Lane moved to NEEDS_CHANGES so primary can create the source-owning current-main successor that converges the full retained reviewed WorldEntity lineage. No Studio/viewport evidence claimed."
 }
