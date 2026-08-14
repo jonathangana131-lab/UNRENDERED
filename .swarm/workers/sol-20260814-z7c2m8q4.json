@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T08:19:30+00:00",
-  "lastSeenAt": "2026-08-14T08:52:45+00:00",
-  "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+  "lastSeenAt": "2026-08-14T09:05:20+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "slotId": "primary",
-  "branch": "agent/control/SWARM-V16.2-INTEGRATION-THROUGHPUT-primary-z7c2m8q4-g2",
-  "notes": "Owns generation-2 V16.2 primary and generation-7 SWARM-PROTOCOL stale-owner takeover. Absorbing exact independent review findings and finite trusted-history recovery; generic validation remains fail-closed."
+  "branch": "agent/control/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-primary-z7c2m8q4-g9",
+  "notes": "Owns history-continuity primary generation 9 and SWARM-PROTOCOL generation 8 after blocking/releasing V16.2. Restoring trusted first-parent replay with finite exact-byte compatibility only."
 }
