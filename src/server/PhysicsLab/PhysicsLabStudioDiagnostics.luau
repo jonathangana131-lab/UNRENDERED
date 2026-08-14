@@ -189,6 +189,7 @@ local function validateReadoutCompleteness(folder: Folder, entities: { ReadoutEx
 	for _, child in ipairs(folder:GetChildren()) do
 		assert(child:IsA("BillboardGui"), `unexpected diagnostics readout class: {child.ClassName}`)
 		local entityId = requireStringAttribute(child, "UNRENDERED_WorldEntityId")
+		assert(child.Enabled, `diagnostics readout is disabled: {entityId}`)
 		local expectedEntity = expectedEntities[entityId]
 		assert(
 			expectedEntity ~= nil,
@@ -203,6 +204,7 @@ local function validateReadoutCompleteness(folder: Folder, entities: { ReadoutEx
 
 		local label = child:FindFirstChild("Readout")
 		assert(label ~= nil and label:IsA("TextLabel"), `diagnostics readout has no TextLabel: {entityId}`)
+		assert(label.Visible, `diagnostics readout label is hidden: {entityId}`)
 		assert(#child:GetDescendants() == 1, `diagnostics readout has unexpected descendants: {entityId}`)
 		assert(
 			label.Text == expectedEntity.text,
@@ -409,6 +411,8 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 		RunService.Heartbeat:Wait()
 
 		local enabled = PhysicsLabStudioDiagnostics.enable(lab)
+		local ownedDiagnosticsRoot = diagnosticsRoot(lab.model)
+		assert(ownedDiagnosticsRoot ~= nil, "successful diagnostics enable did not retain its owned root")
 		local cycleOk, cycleResult = pcall(function()
 			assert(enabled.enabled, `diagnostics failed to enable at cycle {cycle}`)
 			assert(
@@ -433,10 +437,11 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 			end
 		end)
 
-		local disabled = PhysicsLabStudioDiagnostics.disable(lab)
 		if not cycleOk then
+			ownedDiagnosticsRoot:Destroy()
 			error(cycleResult, 0)
 		end
+		local disabled = PhysicsLabStudioDiagnostics.disable(lab)
 		assert(not disabled.enabled, `diagnostics remained enabled at cycle {cycle}`)
 		local offSnapshot = Validation.captureFull(lab.model)
 		local comparison = Validation.compare(baseline, offSnapshot, 0.001)
