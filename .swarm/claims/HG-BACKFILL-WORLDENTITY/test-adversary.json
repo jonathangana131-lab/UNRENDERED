@@ -6,11 +6,11 @@
   "claimToken": "b7e2c49a1f6d8035",
   "claimedAt": "2026-08-14T08:24:00+00:00",
   "heartbeatAt": "2026-08-14T08:28:30+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 2,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-n5v8c2q7-g2",
   "pr": 493,
   "takeoverOf": "sol-20260814-r6h3n9v2",
-  "notes": "Generation-2 stale takeover after inspecting released generation-1 test-adversary claim, PR #477 exact-head approval, and current-main convergence blocker. Draft expected-red support PR #493 transplants only the reviewed +48-line tests/world_entity.luau delta onto current main; no source, runner, architecture, or Studio evidence changes."
+  "notes": "Expected-red support complete. PR #493 and event evt-20260814-083000-n5v8c2q7-worldentity-main-convergence-red prove current-main production convergence is missing. Lease reduced to protocol minimum without heartbeat advance; stale/released after 2026-08-14T08:33:30+00:00."
 }
