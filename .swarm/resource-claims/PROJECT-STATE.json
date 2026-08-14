@@ -6,7 +6,7 @@
   "claimToken": "6e4b1c9a7d2f8053",
   "acquiredAt": "2026-08-14T08:26:20+00:00",
   "heartbeatAt": "2026-08-14T08:26:20+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 1,
-  "notes": "Held for the independent Hero Gate evidence audit; no strategic unlock mutation is authorized by the reviewer slot."
+  "notes": "Released without project-state changes because final-audit dependencies are unsatisfied. Lease reduced to protocol minimum without advancing heartbeat; stale/released after 2026-08-14T08:31:20+00:00."
 }
