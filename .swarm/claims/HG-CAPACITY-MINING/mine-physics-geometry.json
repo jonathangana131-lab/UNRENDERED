@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-k8m3v7q2",
   "claimToken": "1f6a9c3e5d2b7084",
   "claimedAt": "2026-08-14T08:24:20+00:00",
-  "heartbeatAt": "2026-08-14T08:24:20+00:00",
+  "heartbeatAt": "2026-08-14T08:28:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/capacity/HG-CAPACITY-MINING-physics-geometry-k8m3v7q2-g1",
-  "pr": null,
-  "notes": "Bounded Physics Lab geometry depth mining. Avoid duplicating PR #473 cabinet/ledge overlap and retained chair/cart geometry lanes. Docs/event only unless a separately materialized lane unlocks source work."
+  "pr": 492,
+  "notes": "Published docs-only Physics Lab door/wall-header installation-clearance finding on PR #492; exact head a8d952504b351ebdce0bbd6f9941182d6371289c. Awaiting exact-head CI/control validation; no source/Studio claims."
 }
