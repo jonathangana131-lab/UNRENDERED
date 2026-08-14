@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-v4q7m2c9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:14:00+00:00",
-  "lastSeenAt": "2026-08-14T07:31:00+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-v4q7m2c9-g2",
-  "notes": "Stacking a test-only expected-red regression on PR #468 exact head c3381f3f372603f9e587fec54a595a025cfce3d6 for disabled BillboardGui / hidden TextLabel machine-completeness false pass. No production or Studio evidence changes."
+  "lastSeenAt": "2026-08-14T07:35:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed diagnostics capacity mining plus test-adversary support. Published source finding evt-20260814-072900-v4q7m2c9-diagnostics-readout-visibility and expected-red evidence evt-20260814-073430-v4q7m2c9-diagnostics-readout-visibility-pr. Draft PR #474 exact head de4c4c778faebba8116000819c83dbfa1aa3db1a is one test-only commit above PR #468 head 0703a44ff68a96d5907d514f66480ac8aca0145a; static/control gates pass through deterministic tests and Pure Luau is intentionally red. Primary was notified by comment 5290749875. No Studio evidence claimed; claim released."
 }
