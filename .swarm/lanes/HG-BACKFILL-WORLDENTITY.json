@@ -5,7 +5,7 @@
   "title": "WorldEntity adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete identity, registry-shape, snapshot, aliasing, immutability, or persistence-boundary defects in the already-unlocked WorldEntity foundation without depending on Roblox Studio.",
   "priority": 5200,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Reality/WorldEntity.luau", "tests/world_entity*.luau"],
@@ -16,11 +16,11 @@
     {"slotId":"audit","role":"WorldEntity invariant and aliasing auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/world_entity*.luau","Docs/**"]}
   ],
   "acceptance": ["inspect current main before editing", "do not invent new architecture if no concrete gap exists", "any behavior change has a regression test", "preserve plain-data and deterministic identity boundaries", "report actionable findings through structured events"],
-  "pr": 437,
-  "notes": "Generation-9 successor PR #437 exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3 supersedes generation-8 #429 and earlier retained predecessors. It consumes the published duplicate-origin evidence gap by attaching the registry-owned frozen existing/incoming GenerationOrigin snapshots to DuplicateIdentityDiagnostic while preserving legacy recipe-key fields and extending retained-history byte accounting to the complete origin strings. The same-kind/same-recipe regression proves world/region/generator/version differences remain distinguishable, nested origin snapshots reject mutation, and first registration remains authoritative. Direct production delta from #429 head a5374aadce95ee0c3992c75d81b1d9b8619d0e7d is WorldEntity.luau +13/-2; focused regression is wired into tests/run.luau. Canonical CI run 31589487364 PASS and Swarm run 31589487351 engine-tests PASS on the exact head. pr-ownership remains fail-closed on unrelated immutable trusted-history/control-state validation, so keep PR #437 draft and lane NEEDS_CHANGES. Immutable review request evt-20260812-110510-q6n9v2m4-worldentity-g9-review-request asks for fresh independent exact-head source review now; do not integrate until that review passes and trusted ownership is green. No Studio/viewport/physical/two-client evidence is required or claimed for this source-only repair.",
+  "pr": 477,
+  "notes": "Generation-10 successor draft PR #477 exact head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96 supersedes retained generation-9 #437 for review. It keeps generation 9's complete duplicate-origin evidence production behavior and absorbs two independently reviewed ownership-boundary support regressions: #435 proves over-budget direct mutable duplicates are rejected by canonical metadata validation before duplicate handling/history and detached captureState/transition re-own and revalidate metadata; #461 proves a direct caller-mutable duplicate is owned before diagnostic formation so post-rejection caller mutation cannot alter returned/retained complete existing/incoming origin evidence, with diagnostic immutability and first-registration authority preserved. Relative to #437, generation 10 changes exactly two tests and adds no src/ delta. Canonical CI #1200 / 31780839241 PASS and Swarm #6031 engine-tests job 94706057528 PASS on the exact head. Trusted pr-ownership job 94706057541 remains fail-closed before evaluating this PR on unrelated .swarm/workers/sol-20260813-n4q7v2m9.json invalid worker status; keep #477 draft and do not integrate until separately owned control recovery is green. Handoff event evt-20260814-074330-k8m2q6v4-worldentity-g10-handoff requests fresh independent exact-head review now. No Studio/viewport/physical/two-client evidence is required or claimed for this source-only repair.",
   "blockers": [
-    "Fresh independent exact-head review of PR #437 is required before integration.",
-    "Repository-wide pr-ownership remains fail-closed on unrelated immutable trusted-history/control-state validation; do not bypass it or merge until the separately owned recovery restores green ownership validation."
+    "Fresh independent exact-head review of PR #477 is required before integration.",
+    "Repository-wide pr-ownership remains fail-closed on unrelated trusted control-history validation; do not bypass it or merge until the separately owned recovery restores green ownership validation."
   ],
   "tags": ["backfill", "hero-gate", "source-only"]
 }
