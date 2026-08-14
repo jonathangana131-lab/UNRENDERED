@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-075430-m4v8q2c7-materialdna-duplicate-prevented",
+  "timestamp": "2026-08-14T07:54:30+00:00",
+  "fromWorker": "sol-20260814-m4v8q2c7",
+  "eventType": "FINDING",
+  "summary": "Bounded MaterialDNA capacity mining stopped without a new proposal after live PR/lane archaeology showed the apparent next semantic-coherence gap is already recorded by docs-only PR #472, while repairCount, hostile-key, string/key bounds, fixture revision seals, and related validator work already have dedicated completed/active/proposed lineage. No duplicate implementation or second finding lane was created.",
+  "affects": ["HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "PR #472 already records the MaterialDNA known-family coherence gap: coherenceClass labels can remain internally equal while a physical/acoustic semantic family key is cross-wired to another shipped family.",
+    "PRs #313/#353 cover canonical maintenance.repairCount exactness; #272/#283 cover hostile unknown-key execution and shipped fixture revision/content sealing.",
+    "The existing proposed/blocked MaterialDNA backfill lanes separately cover remaining bounded validator/counter/key-cardinality work, so opening another docs or source branch here would duplicate scheduled depth rather than add a concrete new invariant."
+  ],
+  "metadata": {
+    "result": "NO_NEW_NON_DUPLICATE_GAP",
+    "existingFindingPr": 472,
+    "mainSha": "ec7755717c9512b8418e2cfc77f0da69610ea9ae",
+    "recommendedNext": "Leave MaterialDNA sequencing to its existing scheduled lineage; capacity should move to a different unclaimed foundation shard."
+  }
+}
