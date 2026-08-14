@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-v8n3q6m2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-14T07:14:00+00:00",
-  "lastSeenAt": "2026-08-14T07:25:00+00:00",
+  "lastSeenAt": "2026-08-14T07:39:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-fidelity",
   "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-v8n3q6m2",
-  "notes": "Completed and released ObjectGenome mining after publishing PR #466 + FINDING/REVIEW_REQUEST. Lost MaterialDNA claim race, then won FidelityManager mining. Bounded source/test/PR/event audit only; publish a concrete non-duplicate finding or explicit no-gap event. No Studio evidence or major-feature unlock."
+  "notes": "No active claim remains. Corrected and closed duplicate ObjectGenome PR #466 after finding prior durable caster-axis event; Fidelity mining produced no new non-duplicate leaf and was released. Post-pass found red Swarm live-main replay; independently gated red-main PR #470 had canonical CI + engine-tests green and two prior independent reviews, so it was marked ready and merged as main bc7e667b5bd13b37cc534a3ac2ea78cb4dcb6170. Exact post-merge live-refresh run 31780290081 and CI run 31780290076 were queued at handoff; no post-merge success or Studio evidence claimed. See evt-20260814-073900-v8n3q6m2-red-main-replay-pending-handoff."
 }
