@@ -8,12 +8,12 @@ Go
 
 When that happens, DO NOT ask what to work on and DO NOT stop after one small task.
 
-UNRENDERED uses Swarm V16 Mission Graph on top of the trusted V2.1 coordination/history foundation. GitHub is the durable shared brain across separate worker chats.
+UNRENDERED uses Swarm V16.2 Mission Graph on top of the trusted V2.1 coordination/history foundation. GitHub is the durable shared brain across separate worker chats. V16.2 retains V16.1 worker persistence and adds integration pressure: accepted/reviewed work outside the canonical product is unfinished work and outranks ordinary capacity mining.
 
 READ FIRST
 1. Uploaded `UNRENDERED_PROJECT_SOURCE.md` — long-term canon/engineering vision.
 2. `Docs/PROJECT_STATE.md` — strategic unlock board.
-3. `Docs/SWARM_V16_MISSION_GRAPH.md` — current V16 architecture.
+3. `Docs/SWARM_V16_MISSION_GRAPH.md` and `Docs/SWARM_V16_2_INTEGRATION_THROUGHPUT.md` — current V16 architecture/policy.
 4. `Docs/SWARM_CONTROL_PLANE.md` and `Docs/SWARM_PROTOCOL.md` — durable ownership/claim rules.
 5. `Docs/QUALITY_STANDARD.md`.
 6. Relevant roadmap/architecture/ADR documents.
@@ -30,40 +30,59 @@ An open issue is planned work, not automatically runnable work.
 CRITICAL PERSISTENCE RULE
 A worker does NOT decide that the repository is out of useful work merely because an exclusive claim is unavailable.
 
-V16 distinguishes:
+V16.2 distinguishes:
 - PRIMARY work: exclusive implementation/owned engineering work.
-- ASSIST work: non-exclusive review, integration, debugging, testing, evidence or capacity-mining against existing objectives.
-- STOP: allowed only when V16 finds no safe internal primary or assist work and the remaining work is done or genuinely external.
+- MERGE_PRESSURE work: integration/review/test/conflict work focused on accepted or near-accepted canonical candidates.
+- ASSIST work: non-exclusive review, integration, debugging, testing, evidence or bounded capacity-mining against existing objectives.
+- STOP: allowed only when V16.2 finds no safe internal primary, merge-pressure or assist work and the remaining work is done or genuinely external.
 
-**Voluntary idle is NOT allowed while V16 can produce a PRIMARY or ASSIST continuation.**
+**Voluntary idle is NOT allowed while V16.2 can produce a PRIMARY, MERGE_PRESSURE or ASSIST continuation.**
 
-A lost claim, green CI, merged PR, pending review, blocked first task, completed first task, another worker owning the obvious branch, or one empty recommendation scan is a routing event — not a stop condition.
+A lost claim, green CI, merged support PR, pending review, blocked first task, completed first task, another worker owning the obvious branch, or one empty recommendation scan is a routing event — not a stop condition.
 
 ON EVERY GO
 1. Check `main`/CI and live control state.
 2. Read PROJECT_STATE and current V16 Mission Graph.
 3. Generate/register a unique worker ID: `sol-YYYYMMDD-<nonce>`.
-4. Request V16 recommendations using the worker identity when supported so workers are deterministically spread across the queue.
-5. If a PRIMARY packet is returned, attempt the atomic claim.
-6. If the claim loses, consume another returned fallback immediately. Do not create a competing branch.
-7. If an ASSIST packet is returned, perform useful non-exclusive work on the existing objective/candidate.
-8. Acquire scarce-resource leases only for work that needs them.
-9. Re-read dependencies, events, branch/PR state and prior handoff before changing code.
-10. Validate with the strongest available CI/tests/repro/Studio/physics/network/visual evidence. Never claim an unrun test.
-11. Publish only high-signal durable findings/evidence/handoff that would change another worker's action.
-12. After the task is accepted, blocked, handed off, merged, superseded or ownership is lost: refresh V16 and request another continuation in the SAME chat execution window.
-13. Repeat until V16 has no safe internal continuation or the chat/runtime itself forcibly ends.
+4. Request V16.2 recommendations using the worker identity so workers are deterministically spread across the queue.
+5. If MERGE_PRESSURE is active, service it before ordinary capacity mining. Use the returned duty: INTEGRATE, RED_TEAM, TEST or CONFLICT_CHECK.
+6. If a PRIMARY packet is returned, attempt the atomic claim.
+7. If the claim loses, consume another returned fallback immediately. Do not create a competing branch.
+8. If an ASSIST packet is returned, perform useful non-exclusive work on the existing objective/candidate.
+9. Acquire scarce-resource leases only for work that needs them.
+10. Re-read dependencies, events, branch/PR state and prior handoff before changing code.
+11. Validate with the strongest available CI/tests/repro/Studio/physics/network/visual evidence. Never claim an unrun test.
+12. Publish only high-signal durable findings/evidence/handoff that would change another worker's action.
+13. After the task is accepted, blocked, handed off, merged, superseded or ownership is lost: refresh V16.2 and request another continuation in the SAME chat execution window.
+14. Repeat until V16.2 has no safe internal continuation or the chat/runtime itself forcibly ends.
+
+MERGE_PRESSURE — THE V16.2 DEFAULT WHEN GREEN WORK IS WAITING
+Green CI, review completion, or a good support branch is not the finish line. When accepted or near-accepted work remains outside MAIN/canonical integration, V16.2 routes most spare capacity toward convergence.
+
+MERGE_PRESSURE duties:
+- INTEGRATE: requires exact write ownership; absorb compatible accepted work into the canonical branch, resolve conflicts, run impacted acceptance and advance the Merge Train.
+- RED_TEAM: non-exclusive; attack the exact candidate for correctness/security/determinism/performance/UX/regressions.
+- TEST: non-exclusive; run or strengthen impacted acceptance without changing authority rules.
+- CONFLICT_CHECK: non-exclusive; compare accepted branches/candidates and identify a concrete safe composition plan.
+
+MERGE_PRESSURE rules:
+- no new branch by default;
+- no successor PR by default;
+- canonical branch is the destination;
+- preserve useful evidence, then supersede redundant child/support branches;
+- integration failure is a problem to solve, not a reason to stop;
+- never weaken trusted-history, runtime truth, Studio/two-client, server-authority, persistence, security or performance gates just to merge faster.
 
 ASSIST MODE — HOW SPARE WORKERS STAY USEFUL
-Depth Before Breadth intentionally limits the number of major implementation lanes. Extra workers must therefore help convergence instead of disappearing or opening random features.
+Depth Before Breadth intentionally limits the number of major implementation lanes. Extra workers help convergence instead of disappearing or opening random features.
 
 Assist priority:
-1. Integration: resolve real merge/integration failures on accepted work.
+1. MERGE_PRESSURE / integration: resolve real merge/integration failures on accepted work.
 2. Review/red-team: attack an existing candidate for correctness, determinism, security, performance, UX and regressions.
 3. CI/debugging: inspect a failing or pending gate and isolate the next concrete defect for the owner.
 4. Tests/evidence: add or run a bounded test, fuzz case, diagnostic or performance witness that closes an existing finish condition.
 5. Canonical support: attach a high-signal finding/evidence to the existing branch/PR.
-6. Capacity mining: inspect the highest-value active objective for a real unowned gap that can be formalized as a blocker.
+6. Capacity mining ONLY AFTER merge pressure is drained: inspect the highest-value active objective for a real unowned gap that can be formalized as a blocker.
 
 ASSIST does NOT grant implementation ownership:
 - do not create a new branch by default;
@@ -79,13 +98,17 @@ CLAIM / LEASE LAW
 - If a claim is stale, inspect/salvage branch, PR and events before takeover.
 - Takeover uses the fenced/conditional control path and advances ownership generation.
 - Returning workers re-read ownership before pushing.
-- If ownership is lost, stop writing that branch and immediately reroute to another PRIMARY or ASSIST continuation.
+- If ownership is lost, stop writing that branch and immediately reroute to another PRIMARY/MERGE_PRESSURE/ASSIST continuation.
 - If write ownership cannot be proven, fail closed for writes; read-only assist/review may continue.
 
-COMMUNICATION
+COMMUNICATION / EVENT PRODUCER FENCE
 Separate chats do not share memory. Durable structured events are the communication layer.
 
 Publish useful conclusions only: FINDING, BLOCKER / EXTERNAL_BLOCKER, DEPENDENCY_DISCOVERED, REVIEW_REQUEST / REVIEW_RESULT, HANDOFF, EVIDENCE_RESULT, DECISION, SUPERSEDED, INTEGRATION_RESULT and RECOVERY.
+
+**Do not hand-author and directly publish new `.swarm/events/**` bytes.** Before an immutable event is written, its exact candidate JSON must pass the trusted producer boundary in `tools/swarm/event_producer.py` / the same strict `swarmctl.validate_event` contract. Unknown top-level keys are not allowed. PR/head/recommendation context for ordinary events belongs under `metadata`; typed top-level `pr`/`headSha`/`verdict` remains valid only for a complete `REVIEW_RESULT` record.
+
+If candidate event validation fails, fix the candidate BEFORE publication. Never publish malformed bytes expecting trusted-history recovery to quarantine them later. Historical recovery tables are finite compatibility for old mistakes, not a producer API.
 
 Do not publish private reasoning or noisy status chatter.
 
@@ -134,7 +157,7 @@ Start tiny and absurdly finished: production contracts; permanent Physics/Body/M
 Do not make a giant map/monster roster to compensate for weak movement, materials, audio, physics or generation.
 
 STOP GATE
-A worker may voluntarily stop only when a fresh V16 continuation check proves no safe PRIMARY or ASSIST work remains and the unresolved remainder is genuinely external, or when the execution environment itself ends.
+A worker may voluntarily stop only when a fresh V16.2 continuation check proves no safe PRIMARY, MERGE_PRESSURE or ASSIST work remains and the unresolved remainder is genuinely external, or when the execution environment itself ends.
 
 Do not stop because:
 - another worker won your claim;
