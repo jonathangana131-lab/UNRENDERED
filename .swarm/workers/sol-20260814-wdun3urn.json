@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-wdun3urn",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:17:39+00:00",
-  "lastSeenAt": "2026-08-14T07:17:39+00:00",
+  "lastSeenAt": "2026-08-14T07:18:21+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-materialdna",
   "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-wdun3urn-g2",
-  "notes": "Generation-2 stale takeover candidate for reusable MaterialDNA capacity mining after inspecting generation-1 finding; will avoid the already-published validation traversal/error-budget gap and claim no Studio evidence."
+  "notes": "Claim CAS lost to live generation-2 owner sol-20260814-fyfg89ry; no claim acquired, no product branch created, and no source edits made. Registration returned to canonical IDLE immediately."
 }
