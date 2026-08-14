@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T08:20:30+00:00",
-  "lastSeenAt": "2026-08-14T08:20:30+00:00",
-  "laneId": "OPS-MAIN-HEALTH",
-  "slotId": "tests-1",
-  "branch": "agent/red-main/OPS-MAIN-HEALTH-tests-k3m8v5q2-g1",
-  "notes": "Red-main diagnosis/regression worker. Inspecting CI run 31781938150 attempt-1 toolchain-install failure versus current rerun before proposing any source change."
+  "lastSeenAt": "2026-08-14T08:23:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "branch": "agent/audit/HG-CAPACITY-MINING-materialdna-k3m8v5q2",
+  "notes": "Lost the OPS-MAIN-HEALTH tests claim race cleanly and rerouted. Mining MaterialDNA on current Hero Gate for one concrete non-duplicate source/test/contract gap; docs-only scope, no Studio or feature unlock claims."
 }
