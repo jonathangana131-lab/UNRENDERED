@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "SWARM-PROTOCOL",
+  "workerId": "sol-20260814-z7c2m8q4",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "claimToken": "4c7a9e2d6f1b8035",
+  "acquiredAt": "2026-08-14T09:05:20Z",
+  "heartbeatAt": "2026-08-14T09:05:20Z",
+  "leaseSeconds": 1800,
+  "generation": 8,
+  "notes": "Generation-8 reacquisition after releasing V16.2 generation 7. Dedicated finite trusted-history continuity recovery; generic validation and immutable control bytes remain strict."
+}
