@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-z7m2q9c4",
   "model": "gpt-5.6-sol",
-  "status": "READY",
+  "status": "WORKING",
   "startedAt": "2026-08-14T08:21:30+00:00",
-  "lastSeenAt": "2026-08-14T08:21:30+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Autonomous Go worker registered after main@af6a17aa full canonical CI rerun passed; selecting highest-value post-recovery non-conflicting work."
+  "lastSeenAt": "2026-08-14T08:23:20+00:00",
+  "laneId": "HG151-FINAL-AUDIT",
+  "slotId": "reviewer-1",
+  "branch": "agent/review/HG151-FINAL-AUDIT-reviewer-z7m2q9c4-g1",
+  "notes": "Claimed independent Hero Gate evidence audit with PROJECT-STATE lease after exact main CI rerun passed; auditing diagnostics/two-client acceptance without inferring composite PASS from partial evidence."
 }
