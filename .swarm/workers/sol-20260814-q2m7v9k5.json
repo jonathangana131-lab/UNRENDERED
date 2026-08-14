@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-q2m7v9k5",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T08:29:53+00:00",
+  "lastSeenAt": "2026-08-14T08:29:53+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/audit/HG-CAPACITY-MINING-mine-physics-geometry-q2m7v9k5-g1",
+  "notes": "Claiming a bounded source-only Physics Lab geometry audit. Will inspect current source/tests/recent findings for a concrete non-duplicate physical/installability invariant; no Hero unlock or Studio evidence claim."
+}
