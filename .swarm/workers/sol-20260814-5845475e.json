@@ -7,8 +7,6 @@
   "lastSeenAt": "2026-08-14T08:24:42+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-runtime",
-  "claimToken": "5c2a9e8f7b3146d0",
-  "generation": 3,
   "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-5845475e-g3",
-  "notes": "Generation-3 Physics runtime capacity mining after stale takeover; docs-only distinct-gap audit."
+  "notes": "Generation-3 Physics runtime capacity mining after stale takeover; docs-only distinct-gap audit. Recovery normalization removed duplicate claimToken/generation fields; authoritative claim remains unchanged."
 }
