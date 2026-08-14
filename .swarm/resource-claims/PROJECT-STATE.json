@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "PROJECT-STATE",
+  "workerId": "sol-20260814-j7m2q9v4",
+  "laneId": "HG151-FINAL-AUDIT",
+  "claimToken": "6e4b1c9a7d2f8053",
+  "acquiredAt": "2026-08-14T08:26:20+00:00",
+  "heartbeatAt": "2026-08-14T08:26:20+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "notes": "Held for the independent Hero Gate evidence audit; no strategic unlock mutation is authorized by the reviewer slot."
+}
