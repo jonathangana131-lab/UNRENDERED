@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-075300-r7n2v9k4-objectgenome-hinge-pivot-line",
+  "timestamp": "2026-08-14T07:53:00+00:00",
+  "fromWorker": "sol-20260814-r7n2v9k4",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "ObjectGenome schema v1 does not fully determine hinge/tilt geometry: a hinge or tilt mechanism stores movingComponentKey, frameComponentKey, a unit axis direction, and angular limits, but no project-owned pivot point/anchor that turns that direction into a unique rotation line. Two compliant Physical-World adapters can therefore consume the same canonical recipe and rotate the moving component around different lines while still honoring every currently documented field. Before articulated hinge/tilt realization becomes authoritative, serialize a project-owned pivot/anchor representation (or explicitly version an equivalent deterministic derivation rule) through an ObjectGenome schema/version decision, then add fixtures/tests that prove identical decoded geometry across adapters. Do not patch retained PR #395 in parallel solely for this mining finding.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-OBJECTGENOME"
+  ],
+  "evidence": [
+    "Retained ObjectGenome PR #395 exact head ebfd17e7a2d5cf2083b90e0122b70bc5c39d0962 declares HingeMechanism/TiltMechanism with movingComponentKey, frameComponentKey, axis, minDegrees, and maxDegrees only; there is no pivot/anchor point or pivot-line field in either record shape.",
+    "Docs/OBJECT_GENOME.md says mechanism axes are canonical unit direction vectors in the object-local basis and that mechanisms reference component keys plus plain axes/limits, while a later Roblox realization adapter may choose engine constraints. A direction vector alone does not identify where the rotation line passes through the authored object geometry.",
+    "The authored component transform is documented as the zero/reference pose, but neither the moving-component origin nor the frame-component origin is declared to be the hinge line. Inferring either location would therefore add adapter-defined physical meaning outside the canonical recipe.",
+    "Current tests exercise mechanism kinds, unit axes, limits, zero/reference decoding, exact shapes, and fixture fingerprints, but the v1 schema has no field on which a cross-adapter pivot-location invariant could be asserted.",
+    "This is distinct from the already-recorded caster swivel/roll axis relation finding, center-of-mass coherence, collection/state bounds, string budgets, and affordance-radius findings. No Roblox Studio, viewport, contact, performance-device, or two-client evidence is claimed."
+  ]
+}
