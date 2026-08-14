@@ -148,6 +148,9 @@ class LegacyTrustSyncTests(unittest.TestCase):
             self.assertIn("v16_legacy_trust_sync.py", workflow)
             self.assertIn("--control-branch swarm-control", workflow)
             self.assertIn("--trust-branch swarm-trust", workflow)
+        live_refresh = (root / ".github/workflows" / "swarm-v16-live-refresh.yml").read_text(encoding="utf-8")
+        self.assertIn("timeout-minutes: 120", live_refresh)
+        self.assertIn("actions/checkout@v6", live_refresh)
 
     def test_generated_projection_scope_is_only_generated_subtree(self):
         source = Path(sync.__file__).read_text(encoding="utf-8")
