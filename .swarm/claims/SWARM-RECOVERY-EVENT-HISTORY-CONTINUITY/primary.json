@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "slotId": "primary",
+  "workerId": "sol-20260814-q5n8v2c4",
+  "claimToken": "91e4c6a8f3d75b20",
+  "claimedAt": "2026-08-14T07:50:00+00:00",
+  "heartbeatAt": "2026-08-14T07:50:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 8,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/control/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-primary-q5n8v2c4-g8",
+  "notes": "Generation-8 current-main continuity repair. Exact first leaf is the Git-bound quarantine-only introduction of the 2026-08-13 225000 authority-current-main-no-new-gap event; generic snapshot transition semantics must remain strict. Do not revive stale PR #420 wholesale."
+}
