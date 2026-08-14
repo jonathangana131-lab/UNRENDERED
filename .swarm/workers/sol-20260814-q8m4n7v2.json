@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-q8m4n7v2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "REVIEWING",
   "startedAt": "2026-08-14T08:33:38+00:00",
-  "lastSeenAt": "2026-08-14T08:46:00+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Completed diagnostics audit generation 3 on PR #486 exact head 0a9005d079304a971f316d6cc0e37c8d6dd5017f. Published REQUEST_CHANGES event evt-20260814-084500-q8m4n7v2-diagnostics-g18-cleanup-matcher-review; production cleanup is correct, blocker is raw-source cleanup matcher inert-text false-pass. GitHub review 4935547340 is COMMENT because connected owner account cannot formally request changes on own PR. Audit claim released; no Studio/viewport evidence claimed."
+  "lastSeenAt": "2026-08-14T08:48:00+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-q8m4n7v2-g3",
+  "notes": "Fresh independent review of expected-red support PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b. Checking byte-identical retained registry-shape corpus and semantic red precision for current-main WorldEntity convergence; no product/Studio claim."
 }
