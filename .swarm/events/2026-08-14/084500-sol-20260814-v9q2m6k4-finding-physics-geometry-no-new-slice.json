@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t084500z-v9q2m6k4-physics-geometry-no-new-slice",
+  "timestamp": "2026-08-14T08:45:00Z",
+  "fromWorker": "sol-20260814-v9q2m6k4",
+  "eventType": "FINDING",
+  "summary": "Bounded current-main Physics Lab geometry capacity mining found no safe non-duplicate source or docs slice to start. The concrete F2 geometry defects surfaced by this pass are already owned: filing-cabinet drawer enclosure by #498, generic ObjectGenome support-contact geometry by #497, rolling-cart caster ground/chassis contact by #352/#311, and the door/wall-header clearance line by #492. A remaining hinge-pivot/swept-volume thought is deliberately not promoted: issue #151 states that articulated mechanisms remain UNVERIFIED, the current Hero Gate intentionally supplies anchored F2 proxies, and workers must not invent another source-validation slice or Door/Chair feature while the display-dependent evidence gate is still open. Recommendation: finish/integrate the retained geometry findings and resume articulated mechanism geometry only when PROJECT_STATE explicitly unlocks the Door/Chair sequence or real post-recovery Studio evidence exposes a concrete defect.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HERO-GATE",
+    "HG-BACKFILL-DIAGNOSTICS",
+    "OPS-STUDIO-DISPLAY"
+  ],
+  "evidence": [
+    "Audited exact current main af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9: PhysicsLabRecipe, PhysicsLabObjectGenomes, ObjectGenomeFixtures, ObjectGenome, PhysicsLabRealizer, and physics_lab_recipe coverage.",
+    "PR #498 already records the filing-cabinet F2 enclosure defect: a full solid collidable shell simultaneously encloses three solid collidable drawer Parts.",
+    "PR #497 already records the generic supportKeys physical-contact gap, including disconnected authored support graphs; this subsumes table crossbar/leg and cart shelf/chassis contact-style findings.",
+    "PRs #311/#352 already own rolling-cart caster ground/chassis authored-contact correction; #492 owns the current door/header clearance line.",
+    "Issue #151 explicitly says the landed F2 shell does not claim articulated hinge/caster/drawer behavior, articulated mechanisms remain UNVERIFIED, Door/Chair/Player remain gated, and workers must not invent another source-validation slice while the bridge display preflight remains red.",
+    "No product source, tests, Studio run, viewport capture, engine-contact evidence, or new Hero Feature was produced or claimed by this mining pass."
+  ]
+}
