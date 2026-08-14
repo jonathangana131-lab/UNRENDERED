@@ -5,12 +5,12 @@
   "workerId": "sol-20260814-u5m8q2v7",
   "claimToken": "4a52550e2587856d",
   "claimedAt": "2026-08-14T07:13:30+00:00",
-  "heartbeatAt": "2026-08-14T07:13:30+00:00",
+  "heartbeatAt": "2026-08-14T07:16:30+00:00",
   "leaseSeconds": 1800,
   "generation": 2,
   "takeoverOf": "sol-20260813-n4q7v2m9",
   "resources": [],
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-u5m8q2v7",
-  "pr": null,
-  "notes": "Stale test-adversary takeover after inspecting the generation-1 handoff. Salvage exact support head 4633472020ec5af8f8da6eead35bbd75eed7662e containing the isolated post-enable cleanup regression; no Studio/viewport evidence will be claimed."
+  "pr": 463,
+  "notes": "Stale test-adversary takeover after inspecting the generation-1 handoff. Salvaged exact support blobs onto current main as draft PR #463 at d28ddb166f74097ea1a53f6dee99014236c86897; expected-red test-only evidence for primary absorption, with no Studio/viewport evidence claimed."
 }
