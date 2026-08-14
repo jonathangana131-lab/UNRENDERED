@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "workerId": "sol-20260814-t5n8q3v6",
+  "claimToken": "9f2c7a41d8e6b305",
+  "claimedAt": "2026-08-14T07:16:00+00:00",
+  "heartbeatAt": "2026-08-14T07:16:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 17,
+  "resources": [],
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-t5n8q3v6-g17",
+  "pr": null,
+  "notes": "Generation-17 successor after inspecting generation-16 PR #441, current NEEDS_CHANGES lane state, and the published expected-red post-enable cleanup regression. Scope is the bounded runToggleEvidence failure-atomicity repair plus retained regression coverage; no Studio evidence claims."
+}
