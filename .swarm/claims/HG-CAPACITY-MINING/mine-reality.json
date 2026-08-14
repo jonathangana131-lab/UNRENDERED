@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-reality",
+  "workerId": "sol-20260814-r8q3v5m1",
+  "claimToken": "3f7a1c9e5d2b8064",
+  "claimedAt": "2026-08-14T08:08:00+00:00",
+  "heartbeatAt": "2026-08-14T08:08:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/audit/HG-CAPACITY-MINING-reality-r8q3v5m1",
+  "pr": null,
+  "notes": "Bounded current-main Reality identity/RNG source/test mining, excluding WorldEntity lineage authored earlier this session."
+}
