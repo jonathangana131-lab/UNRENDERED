@@ -5,12 +5,12 @@
   "workerId": "sol-20260814-5845475e",
   "claimToken": "5c2a9e8f7b3146d0",
   "claimedAt": "2026-08-14T08:24:30+00:00",
-  "heartbeatAt": "2026-08-14T08:24:30+00:00",
+  "heartbeatAt": "2026-08-14T08:29:10+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "takeoverOf": "sol-20260814-x4m9p2c7",
   "resources": [],
   "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-5845475e-g3",
-  "pr": null,
-  "notes": "Generation-3 stale takeover after inspecting generation-2 claim, PR #467, FINDING evt-20260814-072200-x4m9p2c7-runtime-schema-closure, and REVIEW_REQUEST evt-20260814-072500-x4m9p2c7-runtime-schema-review-request. Preserve prior schema-closure finding; mine current main for one distinct non-duplicate Physics runtime gap only. Docs-only publication; no Studio/engine evidence claims."
+  "pr": 494,
+  "notes": "Generation-3 distinct finding published as draft PR #494 head c6146bc721205f8bdd82bfc0970bf6be3b8a5d6c: retained synthesis #408 authenticates canonical entity set but not deterministic index-to-key order. Preserves #451 realization-value authenticity and #467 closed-shape findings; docs-only, no Studio/engine evidence claims. Awaiting exact-head CI and independent review request publication."
 }
