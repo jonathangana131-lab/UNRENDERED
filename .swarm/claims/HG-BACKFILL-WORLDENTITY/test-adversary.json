@@ -5,12 +5,12 @@
   "workerId": "sol-20260814-p6m9q4v2",
   "claimToken": "9c4e1a7d2b6f8053",
   "claimedAt": "2026-08-14T08:40:05+00:00",
-  "heartbeatAt": "2026-08-14T08:40:05+00:00",
+  "heartbeatAt": "2026-08-14T08:43:45+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "takeoverOf": "sol-20260814-n5v8c2q7",
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-p6m9q4v2-g3",
-  "pr": null,
-  "notes": "Generation-3 stale takeover after PR #493 expected-red support completed and its lease expired. Scope is test-only current-main convergence evidence distinct from #493's metadata-budget/capacity transplant; inspect retained generation-10 duplicate-origin ownership regression and isolate a production convergence gap without editing src or claiming Studio evidence."
+  "pr": 502,
+  "notes": "Generation-3 expected-red support published as draft PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b. One allowed test file only, +313/-0, byte-identical retained generation-10 registry-shape corpus from PR #477. Canonical CI/Swarm runs 31785096163/31785096202 queued; no product or Studio claim."
 }
