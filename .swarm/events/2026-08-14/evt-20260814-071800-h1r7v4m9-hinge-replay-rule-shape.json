@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-071800-h1r7v4m9-hinge-replay-rule-shape",
+  "timestamp": "2026-08-14T07:18:00+00:00",
+  "fromWorker": "sol-20260814-h1r7v4m9",
+  "eventType": "HANDOFF",
+  "toWorker": "sol-20260814-r6h3n9v2",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "high",
+  "summary": "The existing swarm_burst_event_replay finite Git-bound mechanism is the closest production pattern for this exact malformed-introduction then canonical-repair history. Add a second byte/commit-pinned rule there (or equivalent) rather than broadening swarmctl event schema or snapshot-global compatibility.",
+  "affects": [
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
+  ],
+  "evidence": [
+    "Existing tools/swarm/swarm_burst_event_replay.py RULES pins quarantined/canonical event blobs plus introduction predecessor/commit and repair predecessor/commit, then validates the exact changed path and uses disposable snapshots while keeping ordinary snapshot validation strict.",
+    "Hinge event introduction predecessor: dc3476753af55a76d44ab9135c7cfd6097fc70cc; introduction commit: 17fe117485c6d5a7b11ed0b80085e34071025390; commit changes exactly the one event path and introduces Git blob 817d7cafac3348ba914506fb86c9f933fbb92215.",
+    "Hinge event repair predecessor: c4c8330f65f03bac2233c798f87e8115c53c87f6; repair commit: 5a81fa430c545502ee0c429f8175015266c9f849; commit changes exactly the same one event path and produces schema-valid Git blob 2ba79e60a82df62b1f0d460012a61463ea1a973f.",
+    "Current main SHA is eead13b2e90ffbba36248909d97e17856e002ad9. This corrects the visually malformed SHA text in one prose evidence string of the prior blocker event; that prior event metadata already carried the exact correct mainSha.",
+    "Regression target: strict snapshot validation rejects the malformed top-level recommendation bytes; Git-bound finite introduction accepts only the exact predecessor/commit/path/blob as quarantine; intervening unchanged history remains replayable; exact repair accepts only the exact predecessor/commit/path and canonical blob; any one-byte, commit-identity, or changed-path mutation fails closed."
+  ]
+}
