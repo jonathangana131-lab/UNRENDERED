@@ -100,7 +100,12 @@ local function helperBodyFrom(sourceText: string): string?
 	local executable = executableContractSource(sourceText)
 	local helperStart = string.find(executable, "local function validateReadoutCompleteness(", 1, true)
 	local helperEnd = helperStart
-		and string.find(executable, "local function captureCanonicalWhileDiagnosticsEnabled(", helperStart, true)
+		and string.find(
+			executable,
+			"local function captureCanonicalWhileDiagnosticsEnabled(",
+			helperStart,
+			true
+		)
 	if helperStart == nil or helperEnd == nil or helperStart >= helperEnd then
 		return nil
 	end
@@ -149,7 +154,9 @@ local function run(): number
 	local helper = position("local function validateReadoutCompleteness(")
 	local helperEnd = helper
 		and string.find(source, "local function captureCanonicalWhileDiagnosticsEnabled(", helper, true)
-	local helperBody = if helper ~= nil and helperEnd ~= nil and helper < helperEnd
+	local helperBody = if helper ~= nil
+			and helperEnd ~= nil
+			and helper < helperEnd
 		then string.sub(source, helper, helperEnd - 1)
 		else nil
 	local function helperPosition(needle: string): number?
