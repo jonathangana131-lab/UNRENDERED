@@ -5,7 +5,7 @@
   "title": "WorldEntity adversarial depth pass",
   "objective": "Use otherwise-idle Sol capacity to find and fix concrete identity, registry-shape, snapshot, aliasing, immutability, or persistence-boundary defects in the already-unlocked WorldEntity foundation without depending on Roblox Studio.",
   "priority": 5200,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/shared/Reality/WorldEntity.luau", "tests/world_entity*.luau"],
@@ -16,12 +16,12 @@
     {"slotId":"audit","role":"WorldEntity invariant and aliasing auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/world_entity*.luau","Docs/**"]}
   ],
   "acceptance": ["inspect current main before editing", "do not invent new architecture if no concrete gap exists", "any behavior change has a regression test", "preserve plain-data and deterministic identity boundaries", "report actionable findings through structured events"],
-  "pr": 477,
-  "notes": "Retained generation-10 PR #477 exact head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96 has already passed independent source/test review (evt-20260814-075100-r6h3n9v2-worldentity-g10-audit) and exact-head canonical CI/Swarm engine tests, but it is a stale stacked lineage and is not integration-ready. Current-main convergence is now proven independently by two expected-red support replays: #493 exposed missing retained budget/capacity surface, and #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b replays the byte-identical retained registry-shape corpus on main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9. Canonical CI 31785096163 passes static/tooling/domain/swarm deterministic gates and then fails Pure Luau on retained WorldEntity identity/no-execute, numeric ceiling, state/metadata budget, registry population, and related rejection/atomicity contract categories. Review evt-20260814-085100-q8m4n7v2-worldentity-main-convergence-pr502 accepts #502 as expected-red evidence only; do not merge support PRs independently. Open #491 strict StableId authenticity and finding evt-20260814-084230-k8m4v2q7-worldentity-diagnostic-retention-gap remain separate follow-ups rather than reasons to broaden the convergence patch. No Studio/viewport/physical/two-client evidence is applicable or claimed for this source-only repair.",
+  "pr": 504,
+  "notes": "Current-main source-owning convergence draft PR #504 exact head 8cba30b13ba51f892ae182ce5a1bb20875543e37 now composes the full already-reviewed retained generation-10 WorldEntity source/test lineage directly onto main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 with exactly six lane-owned files and no stacked control-plane imports. Canonical CI run 31785876555 completed SUCCESS on that exact head, converting #493/#502 expected-red support evidence into a green current-main product successor. Swarm Control Plane run 31785876658 remains red only on external repository control-state trust/quarantine conditions: read-only engine trust bootstrap sees worker path/id mismatch .swarm/workers/swarm-worker-1776372221.json and trusted pr-ownership sees live digest 0f77b1d63de3219a06a37135f3622c6a9211a990a6a49cb3223bb72211b60e28 != separately trusted digest 056074cb274157545d308e4e52875d8ceb1a098ef30c64c4e610ec54bbf77f30. PR #504 changes no .swarm/workflow/trust files, so do not broaden this product successor to repair that control state. Evidence event evt-20260814-085700-q8m4n7v2-worldentity-current-main-convergence-pr504 records the exact result. #491 strict StableId authenticity, #464 bounded rejection labels, and evt-20260814-084230-k8m4v2q7-worldentity-diagnostic-retention-gap remain separate follow-ups. No Studio/viewport/physical/two-client evidence is applicable or claimed.",
   "blockers": [
-    "Primary must create a source-owning successor from current main that converges the full already-reviewed retained WorldEntity production/test lineage, not patch only the first exposed expected-red assertion and not merge #493/#502 independently.",
-    "The current-main successor must rerun exact-head canonical CI and Swarm engine tests and receive a fresh independent exact-head review before integration.",
-    "Repository-wide trusted pr-ownership/control-plane health must be evaluated using current canonical control tooling; do not import unrelated stale stacked control commits merely to green an old-lineage check."
+    "Fresh independent exact-head WorldEntity review is required for PR #504 head 8cba30b13ba51f892ae182ce5a1bb20875543e37 before product integration.",
+    "Repository-wide swarm trust/quarantine recovery must restore current canonical pr-ownership/control-plane health before merge policy can fully pass; do not alter the six-file WorldEntity product successor to solve this unrelated control-state mismatch.",
+    "Keep #491 strict StableId authenticity, #464 bounded rejection labels, and the duplicate-diagnostic retention coverage finding separate unless a scheduler-created follow-up explicitly unlocks them."
   ],
   "tags": ["backfill", "hero-gate", "source-only"]
 }
