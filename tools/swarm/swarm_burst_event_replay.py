@@ -15,6 +15,26 @@ RULES = {
         "repairPredecessorSha": "17829cc31434d92b252fafb1f406574f81281156",
         "repairCommitSha": "643de12b1fd3a008736d4815f6e3280c02ce5329",
     },
+    "evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract": {
+        "date": "2026-08-13",
+        "filename": "evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract.json",
+        "quarantinedGitBlobSha1": "817d7cafac3348ba914506fb86c9f933fbb92215",
+        "canonicalGitBlobSha1": "2ba79e60a82df62b1f0d460012a61463ea1a973f",
+        "introductionPredecessorSha": "dc3476753af55a76d44ab9135c7cfd6097fc70cc",
+        "introductionCommitSha": "17fe117485c6d5a7b11ed0b80085e34071025390",
+        "repairPredecessorSha": "c4c8330f65f03bac2233c798f87e8115c53c87f6",
+        "repairCommitSha": "5a81fa430c545502ee0c429f8175015266c9f849",
+    },
+    "evt-20260813-224855-j4n7q2v9-diagnostics-docs-g2-review-request": {
+        "date": "2026-08-13",
+        "filename": "224855-sol-20260813-j4n7q2v9-review-request-diagnostics-docs-g2.json",
+        "quarantinedGitBlobSha1": "9f8bdb845fa82883451b502c2b298eea57ae04de",
+        "canonicalGitBlobSha1": "3eca1e3efe11b32526296f90fc952a48578c9a69",
+        "introductionPredecessorSha": "85dc5823a786a5b0707e024d377806ba857bd205",
+        "introductionCommitSha": "477176591ea73b4c8bebfba8d3c7f7b9181d96be",
+        "repairPredecessorSha": "791a08bc09417be1453e614101bae115ce1409bb",
+        "repairCommitSha": "9c00a778654499cd10f177b52f5840d530feee5e",
+    },
 }
 
 
@@ -29,9 +49,9 @@ def _git_relative(rule: dict[str, str]) -> str:
 def install(hardening_module) -> None:
     """Register exact historical bytes without changing transition semantics.
 
-    Snapshot-only validation must remain strict. The two finite compatibility
-    transitions are authorized only by validate_git_transition(), where reviewed
-    predecessor/commit identities and the exact Git path set are available.
+    Snapshot-only validation must remain strict. Finite compatibility transitions
+    are authorized only by validate_git_transition(), where reviewed predecessor/
+    commit identities and the exact Git path set are available.
     """
     registry = getattr(hardening_module, "_CANONICAL_IMMUTABLE_EVENTS", None)
     if not isinstance(registry, dict):
@@ -68,7 +88,7 @@ def validate_git_transition(
     before: Path,
     after: Path,
 ) -> dict | None:
-    """Cross only the two reviewed Fidelity event transitions in Git history.
+    """Cross only reviewed malformed-event transitions in Git history.
 
     A matching commit identity with different paths/bytes fails closed. Any other
     commit pair receives no compatibility and must use the ordinary strict
