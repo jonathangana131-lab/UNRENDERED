@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083230-j9v4q6m2-diagnostics-text-renderability",
+  "timestamp": "2026-08-14T08:32:30+00:00",
+  "fromWorker": "sol-20260814-j9v4q6m2",
+  "eventType": "FINDING",
+  "summary": "Diagnostics generation 18 rejects disabled BillboardGui and hidden TextLabel readouts, but validateReadoutCompleteness still accepts an exact authoritative readout whose TextLabel.TextTransparency is 1. The label remains Visible and its BillboardGui Enabled, so identity/fidelity/fingerprint/repro text can be structurally exact yet fully transparent while capture counts the readout as complete.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS",
+    "HG-CAPACITY-MINING"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Retained diagnostics PR #486 exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22 validates child.Enabled and label.Visible plus exact identity, Adornee, shape, text, and count, but contains no TextTransparency predicate in validateReadoutCompleteness().",
+    "The absorbed readout contract test at #486 checks the new Enabled/Visible guards but contains no TextTransparency/text-renderability requirement.",
+    "A source-level mutation setting the exact Readout TextLabel.TextTransparency to 1 leaves Visible=true, BillboardGui.Enabled=true, exact authoritative Text, exact Adornee, one-label shape, and cardinality intact, so every current completeness predicate can still pass while the evidence text is fully transparent.",
+    "PR #487 is a separate test-integrity finding about inert source text satisfying the matcher; it does not own production renderability semantics. PR #484 owns cleanup matcher hardening. Repository PR/issue searches found no dedicated TextTransparency/readout-renderability repair.",
+    "Draft docs-only PR #496 records the gap and recommends a focused expected-red + smallest renderability predicate while keeping Studio viewport evidence mandatory. No local Luau, Studio, viewport, contact, persistence, networking, or two-client evidence is claimed."
+  ],
+  "metadata": {
+    "docsPr": 496,
+    "docsHeadSha": "db7e249b7592c625c9f849481c0df815576044af",
+    "retainedDiagnosticsPr": 486,
+    "retainedDiagnosticsHeadSha": "29a2f949eebbd509c2c839d48c3d75a7ff03dc22",
+    "recommendedNext": "After the retained diagnostics successor is explicitly unlocked/reconciled, add an expected-red readout regression for exact authoritative text with TextTransparency=1, then reject unequivocally non-rendering text at validateReadoutCompleteness without canonicalizing arbitrary typography. Incorporate PR #487's inert-source matcher hardening and retain mandatory real Studio viewport evidence."
+  }
+}
