@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-v4q7m2c9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:14:00+00:00",
-  "lastSeenAt": "2026-08-14T07:23:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-diagnostics",
-  "branch": "agent/mining/HG-CAPACITY-MINING-diagnostics-v4q7m2c9",
-  "notes": "Mining diagnostics source/tests/PR/event history for one concrete non-duplicate Reality-Grade depth gap; no feature unlock or Studio evidence claim."
+  "lastSeenAt": "2026-08-14T07:30:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed HG-CAPACITY-MINING/mine-diagnostics. Published evt-20260814-072900-v4q7m2c9-diagnostics-readout-visibility: generation-17 machine readout completeness can certify disabled/hidden presentation state. No product edits or Studio evidence claimed; claim released."
 }
