@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-v9q2m6k4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:40:00+00:00",
-  "lastSeenAt": "2026-08-14T08:41:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
+  "lastSeenAt": "2026-08-14T08:45:00+00:00",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/audit/HG-CAPACITY-MINING-physics-geometry-v9q2m6k4-g1",
-  "notes": "Claimed the unoccupied physics-geometry capacity slot. Auditing current-main geometry source/tests for a concrete non-duplicate invariant gap; no Door/Chair/Player unlock or Studio evidence claim."
+  "notes": "Completed bounded Physics Lab geometry capacity audit with no safe non-duplicate new slice. Published evt-20260814t084500z-v9q2m6k4-physics-geometry-no-new-slice; claim released to 300s. No product changes, PR, tests, Studio, viewport, or engine evidence claimed."
 }
