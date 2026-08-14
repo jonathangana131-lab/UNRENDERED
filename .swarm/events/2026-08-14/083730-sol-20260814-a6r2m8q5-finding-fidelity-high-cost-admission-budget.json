@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083730-a6r2m8q5-fidelity-high-cost-admission-budget",
+  "timestamp": "2026-08-14T08:37:30+00:00",
+  "fromWorker": "sol-20260814-a6r2m8q5",
+  "eventType": "FINDING",
+  "summary": "FidelityManager bounds total registered policy state but does not bound simultaneous expensive F3/F4 occupancy. Per-entity policy can admit the full registered population into interactive or hero fidelity without an aggregate high-cost admission envelope, so bounded records do not imply bounded expensive simulation demand.",
+  "affects": ["HG-BACKFILL-FIDELITY", "HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Current and retained FidelityManager evaluatePolicy() choose F0-F4 independently from one entity's inputs and do not consult aggregate F3/F4 occupancy before returning a high-cost desired level.",
+    "Default-policy visible=true plus significance=1 satisfies visibleHeroDemand and selects F4 regardless of distance; repeating that valid demand across every registered entity is not rejected or deferred by an F4 admission budget.",
+    "Docs/FIDELITY_MANAGER.md defines F3 as interactive physics/mechanisms/local audio and F4 as highest-cost hero representation, while its bounded-state section only caps total registered records and exposes observational occupancy metrics.",
+    "PR #419 adds a project-owned maximum total registration envelope but does not add F3/F4 occupancy quotas or cost admission; PR #385/#398 own transactional/input and cross-entity semantics instead.",
+    "PR #490 covers public mutable backing-state ownership and the quarantined fidelity-extra-keys finding covers undeclared schema fields; neither owns valid high-cost demand admission.",
+    "Repository PR/issue searches for Fidelity F3/F4 budgets, quotas, and simultaneous high-cost occupancy found no dedicated existing repair; PR #500 records the docs-only source-derived finding."
+  ],
+  "metadata": {
+    "docsPr": 500,
+    "docsHeadSha": "5e165dcdad034f2aba9dcaec8f3828d6895f2f12",
+    "baseMainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "retainedFidelityPr": 385,
+    "retainedFidelityHeadSha": "827ce0cf63ca5f322502de883beb9f43581c69f2",
+    "registrationCapacityPr": 419,
+    "registrationCapacityHeadSha": "1f017628bf49365663dfc2db3a30b81ba477a0a3",
+    "recommendedNext": "After the retained Fidelity lineage is safely integrated/unblocked, create a bounded source-only admission-budget leaf. Define deterministic project-owned F3/F4 admission envelopes or a single project-owned budget arbiter at the Fidelity boundary; preserve authoritative fidelity, hysteresis/hold/cooldown semantics, stable identity tie-breaking, and expose raw-demand versus admitted/deferred metrics. Choose practical budget values only from measured device/Studio evidence rather than this mining finding."
+  }
+}
