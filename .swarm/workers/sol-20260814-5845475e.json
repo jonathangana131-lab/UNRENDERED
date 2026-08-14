@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-5845475e",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:20:02+00:00",
-  "lastSeenAt": "2026-08-14T08:24:42+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-runtime",
-  "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-5845475e-g3",
-  "notes": "Generation-3 Physics runtime capacity mining after stale takeover; docs-only distinct-gap audit. Recovery normalization removed duplicate claimToken/generation fields; authoritative claim remains unchanged."
+  "lastSeenAt": "2026-08-14T08:31:35+00:00",
+  "notes": "Completed generation-3 HG-CAPACITY-MINING/mine-physics-runtime pass. Published draft PR #494 exact head c6146bc721205f8bdd82bfc0970bf6be3b8a5d6c documenting a distinct canonical index-to-key order authenticity gap in retained synthesis #408. Canonical CI passed; separate trusted-control/pr-ownership checks remain globally fail-closed. Claim released to 300s; review request event published."
 }
