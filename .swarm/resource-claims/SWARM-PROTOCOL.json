@@ -5,8 +5,8 @@
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "claimToken": "7c4f91a2d8e360b5",
   "acquiredAt": "2026-08-14T07:10:00+00:00",
-  "heartbeatAt": "2026-08-14T07:31:00+00:00",
+  "heartbeatAt": "2026-08-14T07:36:00+00:00",
   "leaseSeconds": 1800,
   "generation": 4,
-  "notes": "Generation-4 resource takeover after the generation-3 owner lease expired. Bound to worker-status generation-6 / PR #465 and the minimum fail-closed live-control prerequisite investigation; no unrelated protocol changes are permitted."
+  "notes": "Generation-4 resource takeover bound to worker-status generation-6 / PR #465. Scope remains the facade re-entry repair and its current-main resync only; the independently found byte-only takeover trust-boundary leaf is scheduler-separated and not being folded into this PR."
 }
