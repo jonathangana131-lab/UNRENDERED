@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k8m2q7v5",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:13:00+00:00",
-  "lastSeenAt": "2026-08-14T07:13:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/reality/HG-CAPACITY-MINING-worldentity-k8m2q7v5",
-  "notes": "Capacity-mining WorldEntity for one concrete bounded Hero Gate depth gap; no new feature architecture or Studio evidence claims."
+  "lastSeenAt": "2026-08-14T07:22:00+00:00",
+  "notes": "Completed HG-CAPACITY-MINING/mine-worldentity finding in draft PR #464. Exact-head canonical CI and Swarm engine-tests passed; pr-ownership remains blocked before lane enforcement by repository-wide swarm-control/swarm-trust digest drift. Handoff posted to PR #437; source and Studio behavior unchanged."
 }
