@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-s6p4m9q2",
   "claimToken": "4c8e1a7d2f9b6035",
   "claimedAt": "2026-08-14T08:22:30+00:00",
-  "heartbeatAt": "2026-08-14T08:25:45+00:00",
-  "leaseSeconds": 1800,
+  "heartbeatAt": "2026-08-14T08:31:30+00:00",
+  "leaseSeconds": 300,
   "generation": 18,
   "resources": [],
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-s6p4m9q2-g18",
   "pr": 486,
-  "notes": "Generation-18 successor PR #486 is published at exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22, stacked exactly on #468 head. It absorbs #479 cleanup-error-precedence and #474 readout-visibility regressions with a three-file source/test delta. Await fresh exact-head CI/Swarm validation, then independent review. No Studio/viewport/contact/performance-device/two-client evidence claims."
+  "notes": "Generation-18 implementation is complete and lane is REVIEW. PR #486 exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22: canonical CI 31783839918 PASS; Swarm engine-tests in 31783839952 PASS. pr-ownership is blocked before this PR's evaluation by separately owned live-control invalid priorityBoost in SWARM-V16.2-INTEGRATION-THROUGHPUT (active PR #485); do not bypass. Independent audit generation 2 is actively claimed by distinct worker sol-20260814-z7m2q9c4. Primary lease intentionally reduced to protocol-minimum handoff window so a future NEEDS_CHANGES successor can take over cleanly. No Studio/viewport/contact/performance-device/two-client evidence claims."
 }
