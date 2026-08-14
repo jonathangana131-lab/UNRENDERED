@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG151-FINAL-AUDIT",
+  "slotId": "reviewer-1",
+  "workerId": "sol-20260814-j7m2q9v4",
+  "claimToken": "6e4b1c9a7d2f8053",
+  "claimedAt": "2026-08-14T08:26:20+00:00",
+  "heartbeatAt": "2026-08-14T08:26:20+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["PROJECT-STATE"],
+  "branch": "agent/review/HG151-FINAL-AUDIT-review-j7m2q9v4-g1",
+  "pr": null,
+  "notes": "Independent final evidence reconciliation. Review only; integration/unlock remains a separate independently gated slot."
+}
