@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-071830-k8m2q7v5-worldentity-bounded-diagnostics",
+  "timestamp": "2026-08-14T07:18:30+00:00",
+  "fromWorker": "sol-20260814-k8m2q7v5",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "summary": "WorldEntity generation-9 safely prevents hostile non-string diagnostic metamethod execution, but invalid primitive strings can still be copied wholesale into fidelity and unknown-schema-key rejection text. PR #464 records a bounded diagnostic-label contract and focused regression targets for absorption by the existing WorldEntity successor; no source or Studio behavior is changed by the mining pass.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-WORLDENTITY"
+  ],
+  "severity": "medium",
+  "evidence": [
+    "Audited retained WorldEntity PR #437 exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3.",
+    "safeValueLabel() returns primitive strings verbatim; invalid fidelity rejection sites interpolate that label in fidelityRank(), ownRecord(), WorldEntity.new(), and WorldEntity.transition().",
+    "assertExactRecordShape() interpolates unknown string schema keys verbatim; canonical metadata and persistent-state byte budgets apply to accepted/owned data rather than these pre-ownership rejection labels.",
+    "Existing persistent-state path construction already summarizes long/control-character keys as <string-key>, demonstrating a project-owned bounded diagnostic pattern without rewriting accepted data.",
+    "Repository PR searches found existing no-execute/schema-shape and bounded-state/metadata work but no retained WorldEntity lane specifically closing oversized primitive-string rejection text.",
+    "Docs-only PR #464 exact head d7b370f25881e8bc3cb2f4efef6ed3904c62d315 defines bounded fidelity/schema-key diagnostic regressions and preserves fail-atomic retry/no-metamethod guarantees."
+  ],
+  "metadata": {
+    "findingPr": 464,
+    "findingHeadSha": "d7b370f25881e8bc3cb2f4efef6ed3904c62d315",
+    "auditedPr": 437,
+    "auditedHeadSha": "de1f14f9443237b57a7e68854d63dacbb5dfc2d3",
+    "recommendedNext": "Absorb a bounded diagnostic-label helper plus focused Pure Luau regressions into the existing HG-BACKFILL-WORLDENTITY successor after current #437/#453 reconciliation, or materialize one narrow WorldEntity source+test lane. Do not create a competing WorldEntity framework or infer Studio evidence."
+  }
+}
