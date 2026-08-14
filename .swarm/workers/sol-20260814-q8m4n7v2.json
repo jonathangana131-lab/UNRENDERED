@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-q8m4n7v2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-14T08:33:38+00:00",
-  "lastSeenAt": "2026-08-14T08:33:38+00:00",
-  "notes": "Go worker registered with canonical IDLE status while inspecting green main, live review/integration ownership, and trusted pr-ownership blockers. No lane claimed yet."
+  "lastSeenAt": "2026-08-14T08:34:12+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-worldentity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-q8m4n7v2-g2",
+  "notes": "Generation-2 WorldEntity capacity miner. Inspecting current main and active WorldEntity support/retained PRs for one concrete non-duplicate invariant or integration gap."
 }
