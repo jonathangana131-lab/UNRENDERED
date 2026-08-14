@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "audit",
-  "workerId": "sol-20260813-r7k4n9p2",
-  "claimToken": "c84e19a7d2f6503b",
-  "claimedAt": "2026-08-13T22:37:14+00:00",
-  "heartbeatAt": "2026-08-13T22:37:14+00:00",
+  "workerId": "sol-20260814-e7044bcf",
+  "claimToken": "4e1ffa298618c892",
+  "claimedAt": "2026-08-14T07:12:52+00:00",
+  "heartbeatAt": "2026-08-14T07:12:52+00:00",
   "leaseSeconds": 1800,
-  "generation": 1,
+  "generation": 2,
+  "takeoverOf": "sol-20260813-r7k4n9p2",
   "resources": [],
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-audit-r7k4n9p2",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-audit-e7044bcf",
   "pr": null,
-  "notes": "Independent exact-head audit of generation-16 primary PR #441, selected after the highest-score stale control repair takeover was blocked by the connector's fenced-update safety gate. No Studio evidence will be claimed."
+  "notes": "Stale audit-slot takeover after inspecting generation-1 claim/worker/branch state and its APPROVE event. A later HANDOFF on the same PR/head identifies an unreviewed post-enable cleanup defect, so this generation re-audits that exact failure path and updates the independent verdict if confirmed."
 }
