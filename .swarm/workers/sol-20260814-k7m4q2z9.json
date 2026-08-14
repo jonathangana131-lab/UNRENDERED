@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k7m4q2z9",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "STOPPED",
   "startedAt": "2026-08-14T08:18:00+00:00",
-  "lastSeenAt": "2026-08-14T08:18:00+00:00",
-  "laneId": "OPS-MAIN-HEALTH",
-  "slotId": "primary",
-  "branch": "agent/red-main/OPS-MAIN-HEALTH-k7m4q2z9",
-  "notes": "Investigating canonical main CI failure at af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9; current evidence points to HTTP 403 while downloading pinned Rokit release before repo validation steps."
+  "lastSeenAt": "2026-08-14T08:26:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "branch": "agent/audit/HG-CAPACITY-MINING-mine-authority-k7m4q2z9-g1",
+  "notes": "Lost both OPS-MAIN-HEALTH red-main slots to concurrent claim winners after diagnosing canonical CI run 31781938150 as a Rokit v1.2.0 release-download HTTP 403 before repository gates. Published evt-20260814t082030z-k7m4q2z9-red-main-rokit-403 for active owners. Then claimed HG-CAPACITY-MINING/mine-authority and published evt-20260814t082600z-k7m4q2z9-authority-no-new-slice: no new safe non-duplicate authority source slice; retain #348/#394/#412, preserve the existing subtree-aware Rojo finding, and wait for OPS-STUDIO-DISPLAY before HG151-TWOCLIENT. No product branch/source edit, local tests, Studio run, or two-client evidence claimed."
 }
