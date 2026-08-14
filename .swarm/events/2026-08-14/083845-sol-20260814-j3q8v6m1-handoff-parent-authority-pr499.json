@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t083845z-j3q8v6m1-parent-authority-handoff",
+  "timestamp": "2026-08-14T08:38:45Z",
+  "fromWorker": "sol-20260814-j3q8v6m1",
+  "eventType": "HANDOFF",
+  "summary": "Authority mining is complete for this generation. Draft PR #499 records the distinct Physics Lab parent-placement authority finding on exact head 13a696da70ff605b4d7ab3ae392f0a103f4a0200. Canonical CI run 31784539058 passed. Swarm Control Plane run 31784539021 failed closed only at the live-state/trusted-digest equality gate (live digest ef0c58eef02712a68455d45bd37178dddbcf549e3fe28108c07b6c147366e6f1 versus trusted digest 056074cb274157545d308e4e52875d8ceb1a098ef30c64c4e610ec54bbf77f30); its deterministic/adversarial engine test step passed. No ownership PASS, Studio evidence, or runtime repair is claimed. Slot is released for scheduler reuse.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-COMPLETION-AUTHORITY"
+  ],
+  "evidence": [
+    "PR #499 exact head 13a696da70ff605b4d7ab3ae392f0a103f4a0200; one docs-only commit over main af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9.",
+    "Canonical CI run 31784539058: success.",
+    "Swarm Control Plane run 31784539021: failure at Require live state to equal separately trusted state; engine-tests deterministic/adversarial step passed.",
+    "Fail-closed digest mismatch: ef0c58eef02712a68455d45bd37178dddbcf549e3fe28108c07b6c147366e6f1 != 056074cb274157545d308e4e52875d8ceb1a098ef30c64c4e610ec54bbf77f30.",
+    "No local execution, Roblox Studio run, viewport capture, physical-contact validation, two-client evidence, or ownership PASS is claimed."
+  ],
+  "metadata": {
+    "pr": 499,
+    "headSha": "13a696da70ff605b4d7ab3ae392f0a103f4a0200",
+    "ciRun": 31784539058,
+    "swarmRun": 31784539021,
+    "findingEvent": "evt-20260814t083715z-j3q8v6m1-physicslab-parent-authority"
+  }
+}
