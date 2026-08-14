@@ -5,6 +5,7 @@ import unittest
 from v16cp.core import (
     add_work_item,
     canonical_absorption_plan,
+    health_report,
     merge_pressure_report,
     recommend,
     role_allocation,
@@ -63,6 +64,34 @@ class V16_2IntegrationPressureTests(unittest.TestCase):
         allocation = role_allocation(graph, 30)
         self.assertGreater(allocation["integrator"], allocation["builder"])
         self.assertEqual(sum(allocation.values()), 30)
+
+    def test_status_health_uses_pressure_aware_allocation(self):
+        graph = self.graph_with_integration()
+        expected = role_allocation(graph, 30)
+        report = health_report(graph, 30)
+        self.assertEqual(report["allocation"], expected)
+        self.assertEqual(report["policyVersion"], "16.2")
+        self.assertTrue(report["mergePressure"]["active"])
+
+    def test_non_integrator_duties_inspect_exact_source_candidate(self):
+        graph = self.graph_with_integration()
+        workers = [f"sol-20260814-branch{i:02d}" for i in range(80)]
+        packets = recommend(graph, workers, 80)
+        seen_non_integrator = 0
+        seen_integrator = 0
+        for packet in packets:
+            if packet.packet.get("MODE") != "MERGE_PRESSURE":
+                continue
+            duty = packet.packet["MERGE_PRESSURE_DUTY"]
+            self.assertEqual(packet.packet["INTEGRATION_DESTINATION"], "agent/physics/HG-PHYSICS-LAB-primary")
+            if duty == "INTEGRATE":
+                seen_integrator += 1
+                self.assertEqual(packet.packet["JOIN_BRANCH"], "agent/physics/HG-PHYSICS-LAB-primary")
+            else:
+                seen_non_integrator += 1
+                self.assertEqual(packet.packet["JOIN_BRANCH"], "agent/physics/HG-PHYSICS-LAB-child")
+        self.assertGreater(seen_non_integrator, 0)
+        self.assertGreater(seen_integrator, 0)
 
     def test_30_worker_burst_remains_productive(self):
         graph = self.graph_with_integration()
