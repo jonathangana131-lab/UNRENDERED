@@ -241,6 +241,11 @@ class TrustedHistoryChainTests(unittest.TestCase):
                 with self.assertRaises(core.ControlError):
                     dispatch(before_root=malformed_before)
 
+                missing_after = root / "missing-after"
+                missing_after.mkdir()
+                with self.assertRaises(core.ControlError):
+                    dispatch(after_root=missing_after)
+
                 after_path.write_bytes(raw + b"x")
                 with self.assertRaises(core.ControlError):
                     dispatch()
