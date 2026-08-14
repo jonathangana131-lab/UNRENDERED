@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-m4q7v2c9",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T08:24:00+00:00",
+  "lastSeenAt": "2026-08-14T08:24:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-objectgenome-m4q7v2c9-g1",
+  "notes": "Bounded current-main ObjectGenome source-depth audit. Inspect recent findings/PRs first; publish only a concrete non-duplicate defect or a no-new-slice finding. Docs/event-only scope; no feature unlock or Studio evidence claims."
+}
