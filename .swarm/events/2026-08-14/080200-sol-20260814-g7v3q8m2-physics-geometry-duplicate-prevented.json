@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-080200-g7v3q8m2-physics-geometry-duplicate-prevented",
+  "timestamp": "2026-08-14T08:02:00+00:00",
+  "fromWorker": "sol-20260814-g7v3q8m2",
+  "eventType": "FINDING",
+  "summary": "Bounded current-main Physics Lab geometry mining found no new practical non-duplicate authored-geometry leaf after live lane archaeology. Office-chair caster/ground/base contact plus mass/COM, rolling-cart caster/contact plus mass/COM, rolling-cart shelf/frame load-path manufacturability, and office-table/filing-cabinet component-derived COM all already have dedicated lanes with deterministic source acceptance criteria. No fifth speculative geometry lane was created.",
+  "affects": ["HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "HG-PHYSICS-CHAIR-GEOMETRY already owns five-caster ground/base contact, component-mass closure, and component-derived office-chair COM with explicit family versioning.",
+    "HG-PHYSICS-CART-GEOMETRY already owns four-caster ground/chassis contact and rolling-cart component-derived COM; HG-PHYSICS-CART-SHELF-FRAME separately owns the remaining shelf/upright load-path manufacturability debt.",
+    "HG-PHYSICS-TABLE-CABINET-COM already records the source-only component-mass-weighted COM inconsistency for the office-table and filing-cabinet fixtures with exact target centroids and deterministic regression requirements.",
+    "These lanes intentionally remain blocked/proposed behind integration/trusted-control sequencing; duplicating them through capacity mining would increase WIP without adding a distinct reproducible physical invariant."
+  ],
+  "metadata": {
+    "result": "NO_NEW_NON_DUPLICATE_GAP",
+    "mainSha": "ec7755717c9512b8418e2cfc77f0da69610ea9ae",
+    "existingLanes": [
+      "HG-PHYSICS-CHAIR-GEOMETRY",
+      "HG-PHYSICS-CART-GEOMETRY",
+      "HG-PHYSICS-CART-SHELF-FRAME",
+      "HG-PHYSICS-TABLE-CABINET-COM"
+    ],
+    "recommendedNext": "Leave authored-geometry sequencing to the existing lanes and move idle source-only capacity to a different foundation shard."
+  }
+}
