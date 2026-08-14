@@ -6,11 +6,11 @@
   "claimToken": "8f3a1c6d9b2e7054",
   "claimedAt": "2026-08-14T08:34:00+00:00",
   "heartbeatAt": "2026-08-14T08:34:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 2,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-j4p8n6q2-g2",
   "pr": 493,
   "takeoverOf": "sol-20260814-r6h3n9v2",
-  "notes": "Generation-2 stale audit takeover after generation-1 completed PR #477 review and released. Scope: independently audit expected-red current-main convergence support PR #493 and determine exact successor obligation; no Studio evidence."
+  "notes": "Review complete and released. PR #493 exact head 98fb8c2b3555dbaa8a11616009554126f1722681 approved as expected-red convergence evidence only; integrationReady=false. GitHub review 4935445457 and REVIEW_RESULT evt-20260814-083900-j4p8n6q2-worldentity-main-convergence-audit. Required successor: current-main source owner converges full retained WorldEntity production/test lineage, not constants-only."
 }
