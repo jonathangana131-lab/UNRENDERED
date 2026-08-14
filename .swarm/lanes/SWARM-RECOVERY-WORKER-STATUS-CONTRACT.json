@@ -5,14 +5,14 @@
   "title": "Repair worker and event schema contract drift",
   "objective": "Stop repeated Swarm control validation failures caused by worker-facing producer conventions drifting from the strict validator: workers emit intuitive lifecycle aliases such as CLAIMING/DONE and immutable REVIEW_RESULT events already carry typed pr/headSha/verdict fields that the current generic event validator rejects. Make the accepted lifecycle/event contract explicit, preserve strict typing and unknown-field fail-closed behavior, and restore live control validity without weakening authoritative claim/resource fencing.",
   "priority": 10000,
-  "state": "REVIEW",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [],
-  "writeScopes": ["tools/swarm/swarmctl.py", "tools/swarm/test_swarmctl.py", "tools/swarm/test_swarmctl_hardening.py", "Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md"],
+  "writeScopes": ["tools/swarm/swarmctl.py", "tools/swarm/swarmctl_hardening.py", "tools/swarm/test_swarmctl.py", "tools/swarm/test_swarmctl_hardening.py", "Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md"],
   "resources": ["SWARM-PROTOCOL"],
   "slots": [
-    {"slotId":"primary","role":"Critical control schema contract repair","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":1000,"writeScopes":["tools/swarm/swarmctl.py","tools/swarm/test_swarmctl.py","tools/swarm/test_swarmctl_hardening.py","Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md"]},
-    {"slotId":"reviewer-1","role":"Independent control schema recovery verifier","exclusive":true,"availableWhen":["REVIEW","INTEGRATION_READY"],"priorityBoost":900,"requiresIndependentFrom":"primary","writeScopes":["tools/swarm/swarmctl.py","tools/swarm/test_swarmctl.py","tools/swarm/test_swarmctl_hardening.py","Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md"]}
+    {"slotId":"primary","role":"Critical control schema contract repair","exclusive":true,"availableWhen":["READY","NEEDS_CHANGES"],"priorityBoost":1000,"writeScopes":["tools/swarm/swarmctl.py","tools/swarm/swarmctl_hardening.py","tools/swarm/test_swarmctl.py","tools/swarm/test_swarmctl_hardening.py","Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md"]},
+    {"slotId":"reviewer-1","role":"Independent control schema recovery verifier","exclusive":true,"availableWhen":["REVIEW","INTEGRATION_READY"],"priorityBoost":900,"requiresIndependentFrom":"primary","writeScopes":["tools/swarm/swarmctl.py","tools/swarm/swarmctl_hardening.py","tools/swarm/test_swarmctl.py","tools/swarm/test_swarmctl_hardening.py","Docs/SWARM_PROTOCOL.md","Docs/SWARM_CONTROL_PLANE.md"]}
   ],
   "acceptance": [
     "the supported canonical worker-status vocabulary is explicitly documented where every Go worker reads it, with only evidence-backed compatibility aliases accepted",
@@ -23,11 +23,6 @@
     "live swarm-control validation returns PASS on authoritative history without rewriting immutable events"
   ],
   "pr": 465,
-  "notes": "Generation-6 current-main convergence PR #465 is resynced onto main bc7e667b5bd13b37cc534a3ac2ea78cb4dcb6170 at exact head 7891daa0da19a204613e0c3fbda2e57e89171b6b. Effective delta remains only the still-relevant facade re-entry isolation requested by the generation-2 convergence review: first strict validate/read/transition anchors are retained across repeated facade execution and the immutable-event registry remains one shared object, with a focused runpy re-entry regression. Exact-head canonical CI PASS, Swarm deterministic/adversarial engine tests PASS, and read-only exact trust-bootstrap candidate PASS. Ordinary pr-ownership remains fail-closed on the pre-existing live-control/trust-ledger mismatch and must not be weakened. Independent review is also required to resolve an ownership-metadata inconsistency: these lane notes require the production facade repair in tools/swarm/swarmctl_hardening.py, but the lane/slot writeScopes currently omit that file. The primary worker deliberately did not widen its own authority retroactively; reviewer/control-plane correction is required before integration. The separately identified generic byte-only finite takeover compatibility concern remains scheduler-separated and is not folded into #465.",
-  "blockers": [
-    "Independent review/control-plane correction must resolve the mismatch between the convergence-mandated tools/swarm/swarmctl_hardening.py change and this lane's currently narrower declared writeScopes; the primary worker must not self-widen its own PR authority.",
-    "Live swarm-control validation must PASS under the accepted recovery validator without rewriting immutable events.",
-    "The trusted-history bootstrap must move the accepted validator to main without weakening the ordinary pr-ownership fence."
-  ],
+  "notes": "DONE as the worker-status/facade prerequisite only. Generation-6 PR #465 exact head 7891daa0da19a204613e0c3fbda2e57e89171b6b passed canonical CI, deterministic/adversarial Swarm engine tests, and the read-only exact live trust-bootstrap candidate with invalidEventCount=0, invalidWorkerCount=0, and hardening validation PASS; it merged as ec7755717c9512b8418e2cfc77f0da69610ea9ae. Generation-3 independent review found no source blocker in the narrow facade re-entry repair. Scheduler metadata is corrected here to include tools/swarm/swarmctl_hardening.py in the lane and both slot writeScopes because that production path was explicitly mandated by the lane notes; the merge raced ahead of this administrative correction and that timing is recorded rather than hidden. The ordinary pr-ownership fence remains fail-closed on the separate stale trust ledger. Full first-parent trust replay remains red at an audited quarantine-only immutable-event introduction and is owned by successor SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY. The separately identified generic byte-only finite takeover compatibility concern also remains scheduler-separated. This DONE state does not declare the broader red-control incident resolved.",
   "tags": ["control-repair", "red-ci", "worker-lifecycle", "event-schema", "hero-gate"]
 }
