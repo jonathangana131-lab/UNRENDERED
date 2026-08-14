@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG151-FINAL-AUDIT",
+  "slotId": "reviewer-1",
+  "workerId": "sol-20260814-z7m2q9c4",
+  "claimToken": "9c4e2b7a6d1f8053",
+  "claimedAt": "2026-08-14T08:23:00+00:00",
+  "heartbeatAt": "2026-08-14T08:23:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["PROJECT-STATE"],
+  "branch": "agent/review/HG151-FINAL-AUDIT-reviewer-z7m2q9c4-g1",
+  "pr": null
+}
