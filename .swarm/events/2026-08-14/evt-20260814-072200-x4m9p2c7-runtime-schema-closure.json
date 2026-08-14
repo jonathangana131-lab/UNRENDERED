@@ -15,9 +15,9 @@
     "Repository PR search found retained synthesis #408 and separate realization-value authenticity finding #451, but no existing outer recipe/wrapper schema-closure repair.",
     "Draft docs PR #467 head ef68a6c9c1db5984279eb92d8b4cb765fadf99c1 records the narrow follow-up and PR #408 comment 5290666279 routes it to the synthesis lineage."
   ],
-  "pr": 467,
-  "headSha": "ef68a6c9c1db5984279eb92d8b4cb765fadf99c1",
   "metadata": {
+    "pr": 467,
+    "headSha": "ef68a6c9c1db5984279eb92d8b4cb765fadf99c1",
     "primaryPr": 408,
     "primaryHeadSha": "d31c100c5d3766ca14d89b046fff4cdb09086754",
     "primaryCommentId": 5290666279,
