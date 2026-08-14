@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-u5m8q2v7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-14T07:13:30+00:00",
-  "lastSeenAt": "2026-08-14T07:13:30+00:00",
+  "lastSeenAt": "2026-08-14T07:20:40+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "test-adversary",
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-u5m8q2v7",
-  "notes": "Go worker registered to salvage the stale diagnostics test-adversary handoff. Reuse the published expected-red cleanup regression at 4633472020ec5af8f8da6eead35bbd75eed7662e; do not duplicate production architecture or claim Studio evidence."
+  "notes": "Salvaged the stale diagnostics cleanup regression onto current main, opened draft expected-red PR #463 at dc58fa9b20e34f4bc3fd4e3aad1aa04b3b63d391, proved all canonical static/control gates pass before exactly the intended Pure Luau cleanup assertion fails, and published durable evidence/primary handoff. Swarm engine-tests pass; pr-ownership remains blocked only at separate trusted-state equality. Generation-17 primary worker sol-20260814-t5n8q3v6 now owns the bounded production repair, so this test-adversary claim receives no further heartbeat and may expire naturally. No Studio evidence claimed."
 }
