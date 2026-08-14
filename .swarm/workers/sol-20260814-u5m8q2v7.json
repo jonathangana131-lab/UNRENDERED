@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-u5m8q2v7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "DONE",
   "startedAt": "2026-08-14T07:13:30+00:00",
-  "lastSeenAt": "2026-08-14T07:21:39+00:00",
+  "lastSeenAt": "2026-08-14T07:33:20+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-materialdna",
   "branch": "agent/materials/HG-CAPACITY-MINING-materialdna-u5m8q2v7",
-  "notes": "Diagnostics test-adversary work is handed off and released. Continuing the same Go session in the unclaimed MaterialDNA capacity-mining slot to identify one concrete non-duplicate source/test depth gap; docs/event only, no production or Studio evidence claims."
+  "notes": "Completed two safe Go-cycle contributions. Diagnostics: salvaged stale expected-red cleanup regression as draft PR #463 at dc58fa9b20e34f4bc3fd4e3aad1aa04b3b63d391; all static/control gates pass before exactly the intended Pure Luau failure, and generation-17 primary owns production repair. MaterialDNA: published non-duplicate known-family coherence finding as draft docs PR #472 at 374da8e8cd52bec78ec0cc086ff3f362f5896001 with canonical CI 31780067240 PASS and durable FINDING event evt-20260814-073230-u5m8q2v7-materialdna-known-family-coherence. Product main is green at c09e3385702c76b8664fb1dcb2116321a0eaf083. Live Swarm bootstrap is independently fail-closed on two newer malformed immutable x4m9p2c7 events plus trusted-state recovery; no immutable event bytes, product source, or Studio evidence were altered/claimed."
 }
