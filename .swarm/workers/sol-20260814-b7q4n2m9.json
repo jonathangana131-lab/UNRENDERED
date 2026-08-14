@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-b7q4n2m9",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T08:29:30+00:00",
+  "lastSeenAt": "2026-08-14T08:29:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "branch": "agent/capacity/HG-CAPACITY-MINING-objectgenome-b7q4n2m9",
+  "notes": "Capacity mining worker after both red-main slots were already live-owned. Scope is bounded ObjectGenome source/test audit only; no Hero unlock or Studio evidence claim."
+}
