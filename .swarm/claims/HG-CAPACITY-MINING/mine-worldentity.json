@@ -6,9 +6,10 @@
   "claimToken": "6a4e91c7d2b8053f",
   "claimedAt": "2026-08-14T08:22:00+00:00",
   "heartbeatAt": "2026-08-14T08:28:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 1,
   "resources": [],
   "branch": "agent/mining/HG-CAPACITY-MINING-mine-worldentity-z4p7m3n8-g1",
-  "pr": 491
+  "pr": 491,
+  "notes": "Mining pass complete: docs-only PR #491 exact head 2951a627d7f327013bb1daee81e2d44dae6102c3 and FINDING event evt-20260814-082815-z4p7m3n8-worldentity-stableid-authenticity published. Canonical CI run 31783890686 passed; Swarm run 31783890675 remains fail-closed on separately owned live/trusted control mismatch. Lease intentionally reduced to protocol minimum without heartbeat advance; stale/released after 2026-08-14T08:33:00+00:00."
 }
