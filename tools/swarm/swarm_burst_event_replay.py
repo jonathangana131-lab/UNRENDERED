@@ -55,6 +55,28 @@ RULES = {
         "repairPredecessorSha": "1955d0207630d2d2062ea39a027f03636e8b8175",
         "repairCommitSha": "0d8d4cfcc4519c4bebb96f914a1e70615cce41ea",
     },
+    "evt-5845475e-runtime-recipe-order-authenticity": {
+        "date": "2026-08-14",
+        "filename": "082920-sol-20260814-5845475e-runtime-recipe-order-authenticity.json",
+        "quarantinedGitBlobSha1": "c23d073c2325ab49b7517242504f40afdcd0f967",
+        "quarantinedEventId": "082920-sol-20260814-5845475e-runtime-recipe-order-authenticity",
+        "canonicalGitBlobSha1": "5e8ea154e6e78e4e2b97466e39aa154dc2bc50b7",
+        "introductionPredecessorSha": "dc2b293615ce4c0899e7abb2c04fd6c211e241f0",
+        "introductionCommitSha": "2fdfd3f477ec8ce2c0fb25d2ebdab9151b4c658e",
+        "repairPredecessorSha": "5759e566b9f0b72566171c455361c59f39b1d909",
+        "repairCommitSha": "6bde0422287494324a4ce797d26f9135da9e295c",
+    },
+    "evt-5845475e-runtime-order-review-request": {
+        "date": "2026-08-14",
+        "filename": "083040-sol-20260814-5845475e-runtime-order-review-request.json",
+        "quarantinedGitBlobSha1": "e74d33e697bdfd552ba1f16593658a3f2665e9bd",
+        "quarantinedEventId": "083040-sol-20260814-5845475e-runtime-order-review-request",
+        "canonicalGitBlobSha1": "4d15e5d9f3ab9a8e8d9a4bb558ab681bcb76ebb9",
+        "introductionPredecessorSha": "ff9212fb1212c0c95e26d56bd166b39296d78df5",
+        "introductionCommitSha": "ab4a4e206ffb8539e16d6b40a76d427ad72d21a5",
+        "repairPredecessorSha": "e588ad047aec2cca9bb8ffefe4ff4c8bdc029307",
+        "repairCommitSha": "ed73d49d7168bc6c6deb2d586db7725e9b4b7902",
+    },
 }
 
 # These events were malformed at first write and remain intentionally inert. Their
@@ -104,12 +126,18 @@ def install(hardening_module) -> None:
     if not isinstance(registry, dict):
         raise RuntimeError("immutable event registry unavailable")
     for event_id, rule in RULES.items():
-        registry[event_id] = {
+        installed = {
             "date": rule["date"],
             "filename": rule["filename"],
             "quarantinedGitBlobSha1": rule["quarantinedGitBlobSha1"],
             "canonicalGitBlobSha1": rule["canonicalGitBlobSha1"],
         }
+        if "quarantinedEventId" in rule:
+            historical_id = rule["quarantinedEventId"]
+            if not isinstance(historical_id, str) or not historical_id or historical_id == event_id:
+                raise RuntimeError(f"invalid quarantined eventId alias for {event_id}")
+            installed["quarantinedEventId"] = historical_id
+        registry[event_id] = installed
     for event_id, rule in QUARANTINE_ONLY_RULES.items():
         expected = {
             "date": rule["date"],
