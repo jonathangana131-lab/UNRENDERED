@@ -6,10 +6,10 @@
   "claimToken": "6e4b1c9a7d2f8053",
   "claimedAt": "2026-08-14T08:26:20+00:00",
   "heartbeatAt": "2026-08-14T08:26:20+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 1,
   "resources": ["PROJECT-STATE"],
   "branch": "agent/review/HG151-FINAL-AUDIT-review-j7m2q9v4-g1",
   "pr": null,
-  "notes": "Independent final evidence reconciliation. Review only; integration/unlock remains a separate independently gated slot."
+  "notes": "Released without source changes after live re-read showed HG151-DIAGNOSTICS and HG151-TWOCLIENT are READY behind OPS-STUDIO-DISPLAY, not DONE. Final-audit dependencies are therefore unsatisfied; lease reduced to protocol minimum without advancing heartbeat and becomes stale at 2026-08-14T08:31:20+00:00."
 }
