@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "083040-sol-20260814-5845475e-runtime-order-review-request",
+  "timestamp": "2026-08-14T08:30:40+00:00",
+  "fromWorker": "sol-20260814-5845475e",
+  "eventType": "REVIEW_REQUEST",
+  "summary": "Request independent review of draft PR #494 exact head c6146bc721205f8bdd82bfc0970bf6be3b8a5d6c. Canonical CI run 31784067955 is SUCCESS. Review the docs-only indexed recipe-order authenticity finding against retained synthesis #408 and verify it is distinct from #451 realization-value authenticity and #467 closed-shape closure. Swarm control remains fail-closed on separate trusted-state/bootstrap checks; no merge authorization or Studio evidence is claimed.",
+  "affects": ["HG-CAPACITY-MINING", "HG-PHYSICS-RUNTIME-SYNTHESIS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "metadata": {
+    "pr": 494,
+    "headSha": "c6146bc721205f8bdd82bfc0970bf6be3b8a5d6c",
+    "canonicalCiRun": 31784067955,
+    "canonicalCiConclusion": "success",
+    "swarmRun": 31784068044,
+    "swarmState": "fail-closed: pr-ownership Require live state to equal separately trusted state failed; engine-tests deterministic/adversarial tests passed but read-only exact trust-bootstrap candidate failed",
+    "primaryPr": 408,
+    "primaryCommentId": 5291215402,
+    "reviewFocus": "Confirm PhysicsLabRecipe makes array sequence deterministic by index; confirm #408 accepts a pure permutation because validation is key-map based; confirm #451 changes values while this does not; confirm #467 closes array shape but not canonical index-to-key identity; verify the proposed regression is bounded/source-only and claims no engine evidence."
+  }
+}
