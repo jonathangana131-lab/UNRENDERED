@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
-  "workerId": "sol-20260814-r6h3n9v2",
-  "claimToken": "4e7c2a91b5d8603f",
-  "claimedAt": "2026-08-14T07:57:02+00:00",
-  "heartbeatAt": "2026-08-14T07:57:02+00:00",
-  "leaseSeconds": 300,
-  "generation": 1,
+  "workerId": "sol-20260814-a9q4v2m7",
+  "claimToken": "6e2b9c4a7d1f8053",
+  "claimedAt": "2026-08-14T08:03:00+00:00",
+  "heartbeatAt": "2026-08-14T08:03:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
   "resources": [],
-  "branch": "agent/mining/HG-CAPACITY-MINING-mine-authority-r6h3n9v2-g1",
+  "branch": "agent/audit/HG-CAPACITY-MINING-authority-a9q4v2m7-g2",
   "pr": null,
-  "notes": "Authority mining was preempted before branch creation or source work when PR #478 merged into main and triggered higher-priority post-merge trusted-history verification. Lease intentionally reduced to protocol minimum without heartbeat advance; stale/released after 2026-08-14T08:02:02+00:00."
+  "notes": "Generation-2 stale takeover after generation-1 explicitly expired without branch/source work; bounded current-main authority/multiplayer source/test mining only."
 }
