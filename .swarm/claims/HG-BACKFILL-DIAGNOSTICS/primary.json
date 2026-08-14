@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-s6p4m9q2",
   "claimToken": "4c8e1a7d2f9b6035",
   "claimedAt": "2026-08-14T08:22:30+00:00",
-  "heartbeatAt": "2026-08-14T08:22:30+00:00",
+  "heartbeatAt": "2026-08-14T08:25:45+00:00",
   "leaseSeconds": 1800,
   "generation": 18,
   "resources": [],
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-s6p4m9q2-g18",
-  "pr": null,
-  "notes": "Generation-18 stale takeover after inspecting expired generation-17 claim/PR #468, lane NEEDS_CHANGES, and support PRs #474/#479. Preserve #468 lineage; absorb cleanup-error-precedence and readout-visibility regressions with the smallest source/test repair. Fresh exact-head CI and independent review required. No Studio/viewport/contact/performance-device/two-client evidence claims."
+  "pr": 486,
+  "notes": "Generation-18 successor PR #486 is published at exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22, stacked exactly on #468 head. It absorbs #479 cleanup-error-precedence and #474 readout-visibility regressions with a three-file source/test delta. Await fresh exact-head CI/Swarm validation, then independent review. No Studio/viewport/contact/performance-device/two-client evidence claims."
 }
