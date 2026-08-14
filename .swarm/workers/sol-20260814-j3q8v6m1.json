@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-j3q8v6m1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:32:30+00:00",
-  "lastSeenAt": "2026-08-14T08:33:10+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-authority",
+  "lastSeenAt": "2026-08-14T08:38:45+00:00",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/audit/HG-CAPACITY-MINING-mine-authority-j3q8v6m1-g2",
-  "notes": "Mining a distinct authority boundary after the prior generation's no-new-slice finding; no Studio evidence claim."
+  "notes": "Published draft PR #499 and structured finding/handoff. Exact-head CI passed; Swarm remained fail-closed on live/trusted digest mismatch. Authority mining slot released."
 }
