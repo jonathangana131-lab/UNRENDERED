@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083553-b7q4n2m9-objectgenome-support-contact-handoff",
+  "timestamp": "2026-08-14T08:35:53+00:00",
+  "fromWorker": "sol-20260814-b7q4n2m9",
+  "eventType": "HANDOFF",
+  "summary": "Docs-only ObjectGenome support-contact geometry finding is published on draft PR #497 exact head 01cf56c57e9c7e85c40561dc12c802df527f3ab9. Canonical CI #1231 / run 31784450942 PASS. Swarm Control Plane run 31784450952 remains queued, so no ownership-gate PASS or integration claim is made.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "evidence": [
+    "PR #497 changes one documentation file only.",
+    "Canonical CI run 31784450942 completed SUCCESS on exact head 01cf56c57e9c7e85c40561dc12c802df527f3ab9.",
+    "Structured FINDING event evt-20260814-083317-b7q4n2m9-objectgenome-support-contact-geometry contains the exact 0.09 m office-table repro and non-duplication evidence.",
+    "Swarm Control Plane run 31784450952 is queued; integration remains gated and this handoff does not claim it passed.",
+    "No Studio, viewport, contact, persistence, networking, two-client, Door, Chair, or Player evidence is claimed."
+  ],
+  "metadata": {
+    "pr": 497,
+    "headSha": "01cf56c57e9c7e85c40561dc12c802df527f3ab9",
+    "ciRun": 31784450942,
+    "ciConclusion": "success",
+    "swarmRun": 31784450952,
+    "swarmStatus": "queued",
+    "recommendedNext": "Fresh independent source/docs review after the live ownership gate runs. Keep the PR draft until the shared control-plane state is green; do not convert the finding into an unlocked implementation lane without scheduler authority."
+  }
+}
