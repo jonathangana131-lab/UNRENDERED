@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "ACTIVE",
   "startedAt": "2026-08-14T08:31:00+00:00",
-  "lastSeenAt": "2026-08-14T08:31:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-fidelity",
-  "branch": "agent/audit/HG-CAPACITY-MINING-fidelity-j4p8n6q2-g1",
-  "notes": "Capacity miner: bounded FidelityManager source/test audit on current main; no Studio evidence or feature unlock."
+  "lastSeenAt": "2026-08-14T08:34:30+00:00",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-j4p8n6q2-g2",
+  "notes": "Independent audit of expected-red current-main convergence support PR #493; REALITY-CONTRACT generation 4 held. No Studio evidence or feature unlock."
 }
