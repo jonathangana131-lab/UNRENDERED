@@ -6,10 +6,10 @@
   "claimToken": "b7e3c9a14d6f2058",
   "claimedAt": "2026-08-14T08:31:00Z",
   "heartbeatAt": "2026-08-14T08:32:00Z",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 1,
   "resources": [],
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n8q4v2m6-g1",
   "pr": 495,
-  "notes": "Complementary generation-18 diagnostics adversarial regression published as draft PR #495 on top of #486. It absorbs #484's exact owned-root pin/no-fallback matcher; production #486 already satisfies the stronger contract. Source/test only; no Studio/viewport evidence claim."
+  "notes": "Released/superseded: active generation-18 PR #486 advanced to head 0a9005d079304a971f316d6cc0e37c8d6dd5017f and absorbed the same stronger #484 owned-root/no-fallback regression. Support PR #495 closed unmerged to avoid duplicate integration. Lease intentionally reduced to protocol minimum without heartbeat advance."
 }
