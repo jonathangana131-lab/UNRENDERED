@@ -5,7 +5,7 @@
   "title": "Diagnostics source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden the Studio diagnostics code and its pure contracts while the Mac display path is blocked. Work here must improve source/test correctness without pretending to satisfy the missing live viewport evidence row.",
   "priority": 4850,
-  "state": "REVIEW",
+  "state": "NEEDS_CHANGES",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/**diagnostic*.luau", "tests/hero_gate_contract_integration.luau"],
@@ -17,9 +17,11 @@
   ],
   "acceptance": ["do not queue speculative Studio reruns", "do not convert source confidence into viewport PASS", "find concrete lifecycle/no-drift/failure-path gaps", "behavior changes get tests", "publish anything relevant to HG151-DIAGNOSTICS as a structured finding"],
   "pr": 468,
-  "notes": "Generation-17 successor PR #468 is ready for independent exact-head review at 0703a44ff68a96d5907d514f66480ac8aca0145a. It preserves generation-16 clone-completeness hardening, repairs runToggleEvidence post-enable failure atomicity by cleanup-protecting the complete enabled canonical validation window, and absorbs the #463/#469 adversarial cleanup regressions. Canonical CI run 31779941737 is fully green on the exact head, including Pure Luau and Rojo build; Swarm run 31779941639 engine-tests is green. The separate pr-ownership job remains fail-closed on pre-existing live worker record sol-20260813-n4q7v2m9 with invalid status and is owned by control recovery. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
+  "notes": "Recovered scheduler state from stale REVIEW to NEEDS_CHANGES after finding the already-published independent exact-head REQUEST_CHANGES review on generation-17 PR #468 head 0703a44ff68a96d5907d514f66480ac8aca0145a. The review proves the new enabled-window pcall is insufficient because failure cleanup still calls strict disable(lab) outside protection: diagnosticsRoot() can throw before destroying the exact owned overlay, and post-destroy capture(lab) can mask the original enabled-window error. The required successor must own a cleanup-only failure path tied to the exact overlay instance created by successful enable, avoid strict root rediscovery/canonical recapture before destruction, and rethrow the original failure; keep full disable/off-state validation on the success path. Separately, expected-red test-adversary PR #474 head de4c4c778faebba8116000819c83dbfa1aa3db1a proves validateReadoutCompleteness() can count disabled BillboardGui / hidden TextLabel readouts as complete and must be absorbed by the successor. Previous exact-head CI/engine PASS remains evidence for the old head only and does not close either semantic gap. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
   "blockers": [
-    "Fresh independent exact-head diagnostics source/test review is required before integration; the generation-17 implementer must not self-approve.",
+    "Generation-17 PR #468 must be superseded or updated by a successor that performs cleanup-only destruction through the exact overlay instance created by enable() on failure, without fallible strict root rediscovery/canonical recapture masking the original enabled-window error; add focused regression for cleanup failure topology and original-error precedence.",
+    "Absorb expected-red PR #474 readout visibility regression and make completeness fail closed when owned BillboardGui.Enabled is false or TextLabel.Visible is false; do not merge the support PR independently.",
+    "Fresh exact-head canonical CI and Swarm engine tests plus a new independent diagnostics source/test review are required after both repairs.",
     "Repository-wide pr-ownership remains fail-closed behind separately owned trusted-history/control recovery; do not bypass it.",
     "HG151 live viewport/Studio diagnostics evidence remains externally blocked by the Mac display path; source confidence must not be converted into viewport PASS."
   ],
