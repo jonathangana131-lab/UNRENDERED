@@ -128,14 +128,14 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-14T11:06:37.653872+00:00",
+  "generatedAt": "2026-08-14T11:24:20.822767+00:00",
   "mainHealth": {
     "conclusion": "success",
-    "headSha": "d40a56b5d82a47e8c5017749dece49b923bb20f7",
+    "headSha": "12477397dc4c495988e3e6b46bd4da693662161b",
     "schemaVersion": 1,
     "status": "GREEN",
-    "updatedAt": "2026-08-14T11:06:27+00:00",
-    "workflowRunId": 31794838706
+    "updatedAt": "2026-08-14T11:24:12+00:00",
+    "workflowRunId": 31796029800
   },
   "metrics": {
     "activeClaims": 0,
@@ -157,12 +157,12 @@
       "REVIEW_RESULT": 211,
       "SUPERSEDED": 2
     },
-    "generatedAt": "2026-08-14T11:06:37.653872+00:00",
+    "generatedAt": "2026-08-14T11:24:20.822767+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
       "BLOCKED_EXTERNAL": 1,
-      "DONE": 16,
+      "DONE": 17,
       "LOCKED": 1,
       "NEEDS_CHANGES": 1,
       "PROPOSED": 10,
@@ -174,7 +174,7 @@
     "readySlots": 15,
     "reviewBacklog": 2,
     "schemaVersion": 1,
-    "staleClaims": 26
+    "staleClaims": 27
   },
   "readySlots": [
     {
@@ -1101,6 +1101,15 @@
       "workerId": "sol-20260814-j7m2q9v4"
     },
     {
+      "branch": "agent/swarm-foundry-v17-activation",
+      "expiredAt": "2026-08-14T09:55:00+00:00",
+      "generation": 1,
+      "laneId": "SWARM-FOUNDRY-V17-ACTIVATION",
+      "pr": 507,
+      "slotId": "primary",
+      "workerId": "sol-20260814-foundry17"
+    },
+    {
       "branch": "agent/control/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-primary-z7c2m8q4-g9",
       "expiredAt": "2026-08-14T09:35:20+00:00",
       "generation": 9,
@@ -1164,14 +1173,14 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "58b01340df39d76c3cd6459a72a8996f55d3e05e59f8e7145f2666e9778aa081",
+  "stateDigest": "7616fa607d02c43431883d25577ca19926a80cf8f9d116465dc84b1c5b2df2a4",
   "summary": {
     "activeClaims": 0,
     "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
-    "lanes": 60,
+    "lanes": 61,
     "readySlots": 15,
-    "staleClaims": 26,
+    "staleClaims": 27,
     "workers": 457
   }
 }

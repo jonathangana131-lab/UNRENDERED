@@ -18,12 +18,12 @@
     "REVIEW_RESULT": 211,
     "SUPERSEDED": 2
   },
-  "generatedAt": "2026-08-14T11:06:37.653872+00:00",
+  "generatedAt": "2026-08-14T11:24:20.822767+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED": 20,
     "BLOCKED_EXTERNAL": 1,
-    "DONE": 16,
+    "DONE": 17,
     "LOCKED": 1,
     "NEEDS_CHANGES": 1,
     "PROPOSED": 10,
@@ -35,5 +35,5 @@
   "readySlots": 15,
   "reviewBacklog": 2,
   "schemaVersion": 1,
-  "staleClaims": 26
+  "staleClaims": 27
 }
