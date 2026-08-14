@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-r6h3n9v2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T07:10:00+00:00",
+  "lastSeenAt": "2026-08-14T07:10:00+00:00",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "slotId": "primary",
+  "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-r6h3n9v2-g6",
+  "notes": "Generation-6 stale recovery candidate after inspecting the expired generation-5 claim, closed generation-4 PR #444, current-main convergence review, and current Hero-Gate control blockers. Presence only until the atomic claim/resource takeover succeeds."
+}
