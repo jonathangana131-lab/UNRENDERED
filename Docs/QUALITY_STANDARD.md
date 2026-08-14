@@ -33,7 +33,7 @@ A feature may be merged incrementally before Reality-Grade, but the Feature Epic
 
 Do not create 20 half-finished systems because 20 workers are available.
 
-The project should normally allow only **3–5 active major Feature Epics**. Extra workers deepen those epics through implementation, testing, visual/audio polish, tooling, performance, review, fuzzing, and integration.
+The project allows at most **3 active major Feature Epics**. Extra admitted workers deepen those epics through implementation, testing, visual/audio polish, tooling, performance, review, fuzzing, and integration; excess chats park instead of creating breadth.
 
 An issue being open does **not** mean it is unlocked. `Docs/PROJECT_STATE.md` is the authoritative list of currently unlocked work.
 
