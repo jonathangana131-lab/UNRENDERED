@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
-  "workerId": "sol-20260814-t5n8q3v6",
-  "claimToken": "9f2c7a41d8e6b305",
-  "claimedAt": "2026-08-14T07:16:00+00:00",
-  "heartbeatAt": "2026-08-14T07:30:30+00:00",
+  "workerId": "sol-20260814-s6p4m9q2",
+  "claimToken": "4c8e1a7d2f9b6035",
+  "claimedAt": "2026-08-14T08:22:30+00:00",
+  "heartbeatAt": "2026-08-14T08:22:30+00:00",
   "leaseSeconds": 1800,
-  "generation": 17,
+  "generation": 18,
   "resources": [],
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-t5n8q3v6-g17",
-  "pr": 468,
-  "notes": "Generation-17 successor PR #468 is ready for independent review at exact head 0703a44ff68a96d5907d514f66480ac8aca0145a. Canonical CI 31779941737 is fully green and Swarm engine-tests 31779941639 are green. The #463/#469 cleanup adversaries are absorbed. Await a distinct diagnostics audit/review verdict; repository-wide pr-ownership remains separately blocked on legacy invalid worker status. No Studio/viewport/contact/performance-device/two-client evidence claims."
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-s6p4m9q2-g18",
+  "pr": null,
+  "notes": "Generation-18 stale takeover after inspecting expired generation-17 claim/PR #468, lane NEEDS_CHANGES, and support PRs #474/#479. Preserve #468 lineage; absorb cleanup-error-precedence and readout-visibility regressions with the smallest source/test repair. Fresh exact-head CI and independent review required. No Studio/viewport/contact/performance-device/two-client evidence claims."
 }
