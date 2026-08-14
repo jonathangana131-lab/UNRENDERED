@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-073120-k8m2q7v5-cabinet-ledge-overlap",
+  "timestamp": "2026-08-14T07:31:20+00:00",
+  "fromWorker": "sol-20260814-k8m2q7v5",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "summary": "Physics Lab authors cabinet-a partially inside the collidable ledge. The cabinet shell and ledge have positive world-space overlap of approximately 0.09 m x 0.65 m x 0.11 m, so the F2 realizer creates two anchored collision volumes in the same space. Draft PR #473 records a bounded placement-clearance successor contract and deterministic regression target.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-PHYSICS-GEOMETRY"
+  ],
+  "severity": "medium",
+  "evidence": [
+    "Current PhysicsLabRecipe authors ledge size (2.2, 0.65, 1.8) m at (3.6, 0.325, 2.8) m, yielding x=[2.50,4.70], y=[0.00,0.65], z=[1.90,3.70].",
+    "Current cabinet-a placement is (4.85, 0.66, 3.90) m at 180-degree yaw. The retained filingCabinet shell is centered at the ObjectGenome origin with dimensions (0.48, 1.32, 0.62) m, yielding x=[4.61,5.09], y=[0.00,1.32], z=[3.59,4.21].",
+    "Intersection depth is therefore 0.09 m on X, 0.65 m on Y, and 0.11 m on Z, approximately 0.006435 m^3 of overlapping bounding volume. 180-degree yaw preserves the shell's axis-aligned extents.",
+    "PhysicsLabRealizer realizes primitives and ObjectGenome components as anchored CanCollide=true Parts, so the overlap is physically represented rather than only semantic/visual.",
+    "Retained physics_lab_recipe coverage validates deterministic identity/material/ObjectGenome binding plus door and cart internal geometry, but contains no cabinet-a versus ledge world-placement clearance assertion.",
+    "Repository PR searches for cabinet/ledge overlap and cabinet-a/ledge closure found no existing retained PR addressing this placement collision.",
+    "Docs-only PR #473 exact head 402904f92cd0d60a60c66526cfbb843a97c5f038 defines a narrow no-positive-volume-overlap/versioning/regression contract; no source or Studio result is claimed."
+  ],
+  "metadata": {
+    "findingPr": 473,
+    "findingHeadSha": "402904f92cd0d60a60c66526cfbb843a97c5f038",
+    "recommendedNext": "After current retained Physics geometry integration/trust gates permit a successor, materialize one bounded PhysicsLabRecipe + physics_lab_recipe test lane that removes cabinet/ledge positive-volume overlap, advances the canonical lab recipe/generator revision, preserves StableIds/ObjectGenome identity, and proves deterministic world-space clearance. Do not fold this into Hero Door/Chair/Player work or claim Studio contact evidence from source-only repair."
+  }
+}
