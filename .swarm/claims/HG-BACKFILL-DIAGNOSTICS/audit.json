@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "workerId": "sol-20260814-q8m4n7v2",
+  "claimToken": "c4f8a1d72b6e9053",
+  "claimedAt": "2026-08-14T08:42:00+00:00",
+  "heartbeatAt": "2026-08-14T08:42:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 3,
+  "takeoverOf": "sol-20260814-z7m2q9c4",
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-q8m4n7v2-g3",
+  "pr": 486,
+  "notes": "Fresh independent exact-head review of diagnostics generation-18 PR #486 head 0a9005d079304a971f316d6cc0e37c8d6dd5017f after absorption of #484 cleanup matcher and #487 inert-text matcher blockers. No Studio/viewport evidence. Reviewer is distinct from primary sol-20260814-s6p4m9q2."
+}
