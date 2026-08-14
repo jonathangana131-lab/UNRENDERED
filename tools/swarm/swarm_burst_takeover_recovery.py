@@ -42,6 +42,34 @@ GIT_RULES = {
         "afterGitBlobSha1": "13edc7064471e5e8705b1f04a2f2a7ad8a75191f",
         "takeoverOf": "sol-20260812-q6n9v2m4",
     },
+    "claims/HG-CAPACITY-MINING/mine-authority.json": {
+        "predecessorSha": "8c11228ad0295b4262df1dfd458dce730e8fa4b2",
+        "commitSha": "55f5013b11d76ae056519a87027b63760b816c6f",
+        "beforeGitBlobSha1": "0fd887f2f7ace8cae0d823126b508cee5ea593bd",
+        "afterGitBlobSha1": "19cc4c10387b7d6d56026b560b327b1d884090fd",
+        "takeoverOf": "sol-20260814-r6h3n9v2",
+    },
+    "claims/HG-BACKFILL-DIAGNOSTICS/primary.json": {
+        "predecessorSha": "90a5e01349aa3aec0debeff621e3ee75cc6d19d9",
+        "commitSha": "ce2324bd22af80993ceb92e9af61e39ab8ccfc6d",
+        "beforeGitBlobSha1": "9cca8772895351c6f7b04c3717aadd1f0cfcd231",
+        "afterGitBlobSha1": "263c0d08c7f8ea2417aadb0d811503b8ee254cee",
+        "takeoverOf": "sol-20260814-t5n8q3v6",
+    },
+    "claims/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY/primary.json": {
+        "predecessorSha": "b578b42b0f5fc34e46c6d8d0f07e3136badd4ed7",
+        "commitSha": "8a2c4e26000fa3cefdd233a04ffdf2b8cf0b1add",
+        "beforeGitBlobSha1": "4d0f1a35cf4d8d6384b209f103c6183b1504ad93",
+        "afterGitBlobSha1": "1e9908edec975a41c2a5ddcf3ec867f516c3fbe5",
+        "takeoverOf": "sol-20260814-q5n8v2c4",
+    },
+    "claims/HG-BACKFILL-DIAGNOSTICS/audit.json": {
+        "predecessorSha": "1c886c3aa3d9a7ae9e502ad4c838ff32f2483eb7",
+        "commitSha": "5f3c31707482a6b3992b9815545b3c0eb8061381",
+        "beforeGitBlobSha1": "fdd42664e3bfa2d1b6f28cd6d6cd8902ac149f84",
+        "afterGitBlobSha1": "ed12ece93e9749dab92b0da8e222dbbf700708c0",
+        "takeoverOf": "sol-20260814-r6h3n9v2",
+    },
 }
 
 
