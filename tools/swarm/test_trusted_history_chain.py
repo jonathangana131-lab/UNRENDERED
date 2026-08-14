@@ -93,6 +93,54 @@ class TrustedHistoryChainTests(unittest.TestCase):
             trusted_sha = commit("trusted"); middle_sha = commit("middle"); control_sha = commit("control")
             self.assertEqual(chain.first_parent_commits(repo, trusted_sha, control_sha), [middle_sha, control_sha])
 
+    def test_incremental_snapshot_matches_exact_git_tree(self):
+        with tempfile.TemporaryDirectory() as temp:
+            repo = Path(temp) / "repo"
+            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+            subprocess.run(["git", "-C", str(repo), "config", "user.name", "test"], check=True)
+            subprocess.run(["git", "-C", str(repo), "config", "user.email", "test@example.invalid"], check=True)
+            swarm = repo / ".swarm"
+            (swarm / "nested").mkdir(parents=True)
+            (swarm / "config.json").write_text('{"revision":1}\n', encoding="utf-8")
+            (swarm / "nested" / "delete.json").write_text('{"delete":true}\n', encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo), "add", ".swarm"], check=True)
+            subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", "trusted"], check=True)
+            trusted_sha = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+
+            (swarm / "config.json").write_text('{"revision":2}\n', encoding="utf-8")
+            (swarm / "nested" / "delete.json").unlink()
+            (swarm / "nested" / "added.json").write_text('{"added":true}\n', encoding="utf-8")
+            (swarm / "config-link").symlink_to("config.json")
+            subprocess.run(["git", "-C", str(repo), "add", "-A", ".swarm"], check=True)
+            subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", "candidate"], check=True)
+            candidate_sha = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+
+            snapshots = Path(temp) / "snapshots"
+            actual = chain._archive_swarm(repo, trusted_sha, snapshots / "actual")
+            expected = chain._archive_swarm(repo, candidate_sha, snapshots / "expected")
+            changed = chain._sync_swarm_snapshot(repo, actual, trusted_sha, candidate_sha)
+            self.assertEqual(
+                changed,
+                (
+                    ".swarm/config-link",
+                    ".swarm/config.json",
+                    ".swarm/nested/added.json",
+                    ".swarm/nested/delete.json",
+                ),
+            )
+
+            def inventory(root: Path) -> dict[str, tuple[str, bytes | str]]:
+                result: dict[str, tuple[str, bytes | str]] = {}
+                for path in sorted(root.rglob("*")):
+                    relative = path.relative_to(root).as_posix()
+                    if path.is_symlink():
+                        result[relative] = ("symlink", path.readlink().as_posix())
+                    elif path.is_file():
+                        result[relative] = ("file", path.read_bytes())
+                return result
+
+            self.assertEqual(inventory(actual), inventory(expected))
+
     def test_failed_control_recovery_is_exact_finite_and_event_fenced(self):
         self.assertEqual(len(failed_recovery.FAILED_CONTROL_RECOVERY_PAIRS), 1)
         row = failed_recovery.FAILED_CONTROL_RECOVERY_PAIRS[0]
