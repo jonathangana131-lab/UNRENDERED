@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-h7v2q9m4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T07:15:26+00:00",
+  "lastSeenAt": "2026-08-14T07:15:26+00:00",
+  "notes": "Unclaimed red-control audit worker. The exclusive SWARM-PROTOCOL lease is held by another live worker, so this worker is restricted to read-only provenance analysis and a durable handoff for the failing trusted-history refresh path."
+}
