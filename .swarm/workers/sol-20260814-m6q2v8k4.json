@@ -2,11 +2,9 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-m6q2v8k4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:21:23+00:00",
-  "lastSeenAt": "2026-08-14T08:22:05+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-objectgenome",
+  "lastSeenAt": "2026-08-14T08:28:10+00:00",
   "branch": "agent/audit/HG-CAPACITY-MINING-mine-objectgenome-m6q2v8k4-g1",
-  "notes": "Lost the mine-authority claim race cleanly, then atomically claimed the available ObjectGenome capacity-mining slot. Audit is docs-only and must not duplicate PR #480 affordance-radius work or any active ObjectGenome source lane."
+  "notes": "Published docs-only ObjectGenome caster-radius locality finding as draft PR #489 at exact head 330370641a24984e3de90d22f1195eb916933636. Canonical CI #1218 / run 31783866226 passed end-to-end. Swarm run 31783866282 remains fail-closed at separately owned trusted-state equality / read-only trust-bootstrap gates before live ownership enforcement. Structured FINDING event evt-20260814-082623-m6q2v8k4-objectgenome-caster-radius-locality published. Releasing mining claim; no Hero Feature unlock or Studio evidence claimed."
 }
