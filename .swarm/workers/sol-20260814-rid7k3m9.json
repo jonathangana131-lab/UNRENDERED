@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-rid7k3m9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:15:25+00:00",
-  "lastSeenAt": "2026-08-14T07:15:25+00:00",
+  "lastSeenAt": "2026-08-14T07:18:50+00:00",
   "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
   "slotId": "audit",
   "branch": "agent/physics/HG-PHYSICS-RUNTIME-ENTITYID-FENCE-audit-rid7k3m9",
-  "notes": "Registered for independent current-state audit of the runtime entity-ID fence and its synthesis/integration path. No implementation edits before atomic claim."
+  "notes": "Completed current-state independent audit. Published SUPERSEDE review result for closed predecessor PR #402, moved the standalone entity-ID lane to SUPERSEDED in favor of synthesis PR #408, and released the claim. No product source or Studio evidence changed."
 }
