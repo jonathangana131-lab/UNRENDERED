@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "IDLE",
   "startedAt": "2026-08-14T08:18:00+00:00",
-  "lastSeenAt": "2026-08-14T08:22:30+00:00",
+  "lastSeenAt": "2026-08-14T08:43:00+00:00",
   "laneId": null,
   "slotId": null,
   "branch": null,
-  "notes": "Main-health diagnosis completed: canonical main rerun is green on the same SHA after a transient Rokit HTTP 403. Normalized unsupported READY registration status to canonical IDLE."
+  "notes": "Go pass complete. Diagnosed canonical main RED as transient Rokit HTTP 403; exact same main SHA rerun passed full canonical CI, so no bogus source fix. Published recovery evidence and released OPS-MAIN-HEALTH. Found post-anchor immutable event first-write/rewrite provenance for two runtime-order events and published forward-only fail-closed finding to V16.2 owner. Read-only WorldEntity adversary pass found valid-record combined-diagnostic retention coverage gap and handed it to fresh generation-3 owner after losing claim race cleanly. No live major claim remains; high-priority recovery is SWARM-PROTOCOL-fenced and all authoritative product/review slots are owned or externally blocked."
 }
