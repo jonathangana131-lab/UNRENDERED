@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-v5n8q3r2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T07:12:00+00:00",
+  "lastSeenAt": "2026-08-14T07:12:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Go worker registered; main is green. Taking a stale independent diagnostics audit lease after inspecting PR #441, the lane, and the latest failure-cleanup handoff. No Studio evidence will be claimed."
+}
