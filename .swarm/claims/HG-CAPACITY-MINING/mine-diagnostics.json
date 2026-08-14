@@ -6,10 +6,10 @@
   "claimToken": "5b8d2f71c4a9e603",
   "claimedAt": "2026-08-14T08:36:30+00:00",
   "heartbeatAt": "2026-08-14T08:36:30+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 1,
   "resources": [],
   "branch": "agent/audit/HG-CAPACITY-MINING-diagnostics-q2v8m5k1-g1",
   "pr": null,
-  "notes": "Bounded diagnostics source/test/PR audit for a concrete non-duplicate Hero-Gate depth gap; avoid overlapping generation-18 live-root adaptation and external Studio evidence work."
+  "notes": "Released after bounded diagnostics mining. No additional non-duplicate source slice was found: generation-18 PR #486 exact head 0a9005d079304a971f316d6cc0e37c8d6dd5017f already absorbs both recorded test-seal blockers, canonical CI 31784534603 is green, and PR #496 already owns the separate TextTransparency renderability finding. Structured finding evt-20260814t083900z-q2v8m5k1-diagnostics-no-new-slice published. Lease intentionally reduced to protocol minimum without heartbeat advance."
 }
