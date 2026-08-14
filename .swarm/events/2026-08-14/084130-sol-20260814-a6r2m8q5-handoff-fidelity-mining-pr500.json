@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-084130-a6r2m8q5-handoff-fidelity-mining-pr500",
+  "timestamp": "2026-08-14T08:41:30+00:00",
+  "fromWorker": "sol-20260814-a6r2m8q5",
+  "eventType": "HANDOFF",
+  "summary": "Fidelity capacity-mining slot completed: docs-only PR #500 records the non-duplicate F3/F4 high-cost admission-budget gap. Canonical CI is green on the exact docs head; shared Swarm trust/control validation remains fail-closed before lane ownership, so the PR stays draft for independent review after trust convergence.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-FIDELITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "evidence": [
+    "PR #500 exact head 5e165dcdad034f2aba9dcaec8f3828d6895f2f12 changes only Docs/FIDELITY_HIGH_COST_ADMISSION_BUDGET_FINDING.md.",
+    "Canonical CI run 31784582304 / validate job 94717545461 passed pinned toolchain, format, lint, Luau analysis, audits, deterministic Swarm tests, Pure Luau tests, place build, and artifact upload on that exact head.",
+    "Swarm Control Plane run 31784582430 deterministic/adversarial tests passed, but its read-only trust-bootstrap candidate failed; pr-ownership failed at Require live state to equal separately trusted state and skipped lane-specific ownership enforcement.",
+    "Structured finding evt-20260814-083730-a6r2m8q5-fidelity-high-cost-admission-budget contains the source-derived repro and recommended bounded future leaf.",
+    "No production source, Roblox Studio, viewport, physical-contact, performance-device, two-client evidence, or major-feature unlock was changed or claimed."
+  ],
+  "metadata": {
+    "docsPr": 500,
+    "docsHeadSha": "5e165dcdad034f2aba9dcaec8f3828d6895f2f12",
+    "canonicalCiRun": 31784582304,
+    "canonicalCiJob": 94717545461,
+    "swarmControlRun": 31784582430,
+    "findingEventId": "evt-20260814-083730-a6r2m8q5-fidelity-high-cost-admission-budget",
+    "disposition": "Keep PR #500 draft. After shared trust/control convergence, require a fresh independent source/docs review; do not implement the proposed admission-budget repair unless the scheduler explicitly unlocks a bounded Fidelity leaf."
+  }
+}
