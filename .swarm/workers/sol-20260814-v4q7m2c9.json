@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-v4q7m2c9",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:14:00+00:00",
-  "lastSeenAt": "2026-08-14T07:39:00+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-cleanup-tests-v4q7m2c9-g3",
-  "notes": "Writing a test-only expected-red regression on PR #468 exact head 0703a44ff68a96d5907d514f66480ac8aca0145a for independent review blocker evt-20260814-073700-y7q3m5v8-diagnostics-g17-review. Cleanup must destroy the exact owned overlay without fallible root rediscovery or strict recapture masking the original enabled-window error; separate from PR #474 visibility work."
+  "lastSeenAt": "2026-08-14T07:53:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed diagnostics source-depth and adversarial support. Published evt-20260814-072900-v4q7m2c9-diagnostics-readout-visibility plus draft expected-red PR #474/evidence evt-20260814-073430-v4q7m2c9-diagnostics-readout-visibility-pr. Then converted independent cleanup review blocker evt-20260814-073700-y7q3m5v8-diagnostics-g17-review into draft expected-red PR #479 exact head fc7ab3dd9c0cc51a086546e32f384b28302ae2cb and evidence evt-20260814-075230-v4q7m2c9-diagnostics-cleanup-error-precedence-pr; canonical static/control gates pass through deterministic tests and Pure Luau fails exactly the three intended cleanup-precedence assertions. Primary #468 notified by comments 5290749875 and 5290902674. Fidelity mining was deduped without duplicate publication. No Studio/viewport evidence claimed; all claims released."
 }
