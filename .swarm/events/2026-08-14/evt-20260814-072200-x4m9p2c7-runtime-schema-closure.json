@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-072200-x4m9p2c7-runtime-schema-closure",
+  "timestamp": "2026-08-14T07:22:00+00:00",
+  "fromWorker": "sol-20260814-x4m9p2c7",
+  "eventType": "FINDING",
+  "summary": "PhysicsLabRuntime generation-16 synthesis candidate authenticates nested WorldEntity record/origin schemas exactly but leaves the top-level PhysicsLabRecipe and EntityRecipe wrapper schemas open to undeclared fields. This is distinct from PR #451's realization-value authenticity gap; draft PR #467 records the bounded schema-closure follow-up.",
+  "affects": ["HG-PHYSICS-RUNTIME-SYNTHESIS", "HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "PR #408 exact product head d31c100c5d3766ca14d89b046fff4cdb09086754: assertCanonicalRecipe() calls assertPlainTable() for the top-level recipe and each raw EntityRecipe wrapper but does not enumerate/reject unknown keys at either boundary.",
+    "The same helper applies assertExactStringKeys() to nested WorldEntityRecord and GenerationOrigin tables, so exact schema rejection is already an intentional lower-level invariant rather than a new architecture.",
+    "tests/physics_lab_runtime_synthesis.luau covers hostile metatable wrappers and hostile unknown keys on record/origin, but has no extra-field regression for the top-level recipe or primitive/object EntityRecipe wrappers.",
+    "Repository PR search found retained synthesis #408 and separate realization-value authenticity finding #451, but no existing outer recipe/wrapper schema-closure repair.",
+    "Draft docs PR #467 head ef68a6c9c1db5984279eb92d8b4cb765fadf99c1 records the narrow follow-up and PR #408 comment 5290666279 routes it to the synthesis lineage."
+  ],
+  "pr": 467,
+  "headSha": "ef68a6c9c1db5984279eb92d8b4cb765fadf99c1",
+  "metadata": {
+    "primaryPr": 408,
+    "primaryHeadSha": "d31c100c5d3766ca14d89b046fff4cdb09086754",
+    "primaryCommentId": 5290666279,
+    "recommendedNext": "Absorb fixed allowed-key sets for the top-level PhysicsLabRecipe and primitive/object EntityRecipe wrappers plus extra-field adversarial regressions into #408 or a narrow dependent source/test leaf. Preserve #451's separate realization-value authenticity requirement and claim no Studio evidence."
+  }
+}
