@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-075429-r6h3n9v2-diagnostics-review-state-recovery",
+  "timestamp": "2026-08-14T07:54:29+00:00",
+  "fromWorker": "sol-20260814-r6h3n9v2",
+  "eventType": "RECOVERY",
+  "summary": "Reconciled HG-BACKFILL-DIAGNOSTICS from stale REVIEW to NEEDS_CHANGES after finding the already-published independent exact-head REQUEST_CHANGES verdict on generation-17 PR #468. No duplicate review or Studio evidence was created.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "Generation-17 PR #468 exact head 0703a44ff68a96d5907d514f66480ac8aca0145a still calls strict disable(lab) outside the enabled-window pcall after successful enable().",
+    "Existing independent review on that exact head REQUEST_CHANGES because strict diagnosticsRoot() can throw before destroying the owned overlay, and post-destroy capture(lab) can mask the original enabled-window failure.",
+    "Expected-red support PR #474 exact head de4c4c778faebba8116000819c83dbfa1aa3db1a separately proves validateReadoutCompleteness() can count disabled BillboardGui or hidden TextLabel readouts as complete; that regression must be absorbed rather than merged independently.",
+    "Lane state was updated to NEEDS_CHANGES with explicit cleanup-only failure-path, visibility, fresh-CI/review, trusted pr-ownership, and external Studio-display blockers."
+  ],
+  "metadata": {
+    "primaryPr": 468,
+    "primaryHeadSha": "0703a44ff68a96d5907d514f66480ac8aca0145a",
+    "supportPr": 474,
+    "supportHeadSha": "de4c4c778faebba8116000819c83dbfa1aa3db1a",
+    "recoveredState": "NEEDS_CHANGES"
+  }
+}
