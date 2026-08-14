@@ -38,6 +38,8 @@ export type DuplicateIdentityDiagnostic = {
 	incomingKind: string,
 	existingRecipeKey: string,
 	incomingRecipeKey: string,
+	existingOrigin: GenerationOrigin,
+	incomingOrigin: GenerationOrigin,
 }
 
 export type Registry = {
@@ -50,6 +52,11 @@ export type Registry = {
 	duplicateDiagnostics: () -> { DuplicateIdentityDiagnostic },
 }
 
+type PersistentStateBudget = {
+	nodes: number,
+	stringBytes: number,
+}
+
 WorldEntity.Fidelity = table.freeze({
 	F0 = "F0",
 	F1 = "F1",
@@ -59,6 +66,16 @@ WorldEntity.Fidelity = table.freeze({
 })
 
 WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY = 64
+WorldEntity.MAX_DUPLICATE_DIAGNOSTIC_CAPACITY = 1024
+WorldEntity.MAX_CANONICAL_METADATA_STRING_BYTES = 65536
+WorldEntity.MAX_PERSISTENT_STATE_DEPTH = 64
+WorldEntity.MAX_PERSISTENT_STATE_NODES = 4096
+WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES = 65536
+
+local MAX_SAFE_INTEGER = 9007199254740991
+local MAX_GENERATOR_VERSION = 2147483647
+local CANONICAL_METADATA_LIMIT_ERROR = "WorldEntity canonical metadata exceeds owned string byte budget"
+local STATE_LIMIT_ERROR = "persistentState exceeds structural limits"
 
 local FIDELITY_RANK: { [string]: number } = table.freeze({
 	F0 = 0,
@@ -94,6 +111,16 @@ local ORIGIN_KEYS: { [string]: boolean } = table.freeze({
 	recipeKey = true,
 })
 
+local function safeValueLabel(value: unknown): string
+	local valueType = type(value)
+	if valueType == "string" then
+		return value :: string
+	elseif valueType == "number" or valueType == "boolean" or valueType == "nil" then
+		return tostring(value)
+	end
+	return `<{valueType}>`
+end
+
 local function assertNonEmpty(name: string, value: string): ()
 	assert(value ~= "", `{name} must not be empty`)
 	assert(string.find(value, "%c") == nil, `{name} must not contain control characters`)
@@ -106,26 +133,29 @@ local function checkedNonEmpty(name: string, value: unknown): string
 	return stringValue
 end
 
-local function assertFiniteNumber(path: string, value: number): ()
-	assert(value == value and value > -math.huge and value < math.huge, `{path} must be finite`)
-end
-
-local function checkedFiniteNumber(path: string, value: unknown): number
+local function assertFiniteNumber(path: string, value: unknown): number
 	assert(type(value) == "number", `{path} must be a number`)
 	local numericValue = value :: number
-	assertFiniteNumber(path, numericValue)
+	assert(
+		numericValue == numericValue and numericValue > -math.huge and numericValue < math.huge,
+		`{path} must be finite`
+	)
 	return numericValue
 end
 
 local function assertNonNegativeInteger(path: string, value: unknown): number
-	assert(type(value) == "number", `{path} must be a number`)
-	local numericValue = value :: number
-	assertFiniteNumber(path, numericValue)
+	local numericValue = assertFiniteNumber(path, value)
 	assert(
 		numericValue >= 0 and numericValue == math.floor(numericValue),
 		`{path} must be a non-negative integer`
 	)
+	assert(numericValue <= MAX_SAFE_INTEGER, `{path} must not exceed the maximum safe integer`)
 	return numericValue
+end
+
+local function incrementRevision(path: string, value: number): number
+	assert(value < MAX_SAFE_INTEGER, `{path} has exhausted the safe integer revision range`)
+	return value + 1
 end
 
 local function assertExactRecordShape(value: unknown, allowedKeys: { [string]: boolean }, path: string): any
@@ -133,20 +163,53 @@ local function assertExactRecordShape(value: unknown, allowedKeys: { [string]: b
 	local source = value :: any
 	assert(getmetatable(source) == nil, `{path} must not have a metatable`)
 	for key in pairs(source) do
-		assert(
-			type(key) == "string" and allowedKeys[key] == true,
-			`{path} contains unknown schema key {tostring(key)}`
-		)
+		if type(key) ~= "string" then
+			error(`{path} contains unknown non-string schema key of type {type(key)}`)
+		end
+		assert(allowedKeys[key] == true, `{path} contains unknown schema key {key}`)
 	end
 	return source
 end
 
-local function clonePlainValue(value: unknown, path: string, seen: { [any]: boolean }): unknown
+local function consumePersistentStateNode(budget: PersistentStateBudget, depth: number): ()
+	assert(depth <= WorldEntity.MAX_PERSISTENT_STATE_DEPTH, STATE_LIMIT_ERROR)
+	budget.nodes += 1
+	assert(budget.nodes <= WorldEntity.MAX_PERSISTENT_STATE_NODES, STATE_LIMIT_ERROR)
+end
+
+local function consumePersistentStateString(budget: PersistentStateBudget, value: string): ()
+	budget.stringBytes += #value
+	assert(budget.stringBytes <= WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES, STATE_LIMIT_ERROR)
+end
+
+local function persistentStatePathForKey(path: string, key: string | number): string
+	if type(key) == "number" then
+		return `{path}[{key}]`
+	end
+	local stringKey = key :: string
+	if #stringKey <= 64 and string.find(stringKey, "%c") == nil then
+		return `{path}.{stringKey}`
+	end
+	return `{path}.<string-key>`
+end
+
+local function clonePlainValue(
+	value: unknown,
+	path: string,
+	seen: { [any]: boolean },
+	budget: PersistentStateBudget,
+	depth: number
+): unknown
+	consumePersistentStateNode(budget, depth)
+
 	local valueType = type(value)
-	if valueType == "nil" or valueType == "boolean" or valueType == "string" then
+	if valueType == "nil" or valueType == "boolean" then
+		return value
+	elseif valueType == "string" then
+		consumePersistentStateString(budget, value :: string)
 		return value
 	elseif valueType == "number" then
-		assertFiniteNumber(path, value :: number)
+		assertFiniteNumber(path, value)
 		return value
 	elseif valueType ~= "table" then
 		error(`{path} must contain plain data, got {valueType}`)
@@ -167,7 +230,9 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 		local keyType = type(key)
 		if keyType == "string" then
 			hasStringKeys = true
-			assert(key ~= "", `{path} contains an empty string key`)
+			local stringKey = key :: string
+			assert(stringKey ~= "", `{path} contains an empty string key`)
+			consumePersistentStateString(budget, stringKey)
 		elseif keyType == "number" then
 			hasNumericKeys = true
 			local numericKey = key :: number
@@ -181,7 +246,8 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 		else
 			error(`{path} keys must be strings or positive integers, got {keyType}`)
 		end
-		copy[key] = clonePlainValue(nested, `{path}.{tostring(key)}`, seen)
+		local nestedPath = persistentStatePathForKey(path, key :: any)
+		copy[key] = clonePlainValue(nested, nestedPath, seen, budget, depth + 1)
 	end
 
 	assert(not (hasStringKeys and hasNumericKeys), `{path} must not mix string and numeric keys`)
@@ -193,20 +259,39 @@ local function clonePlainValue(value: unknown, path: string, seen: { [any]: bool
 	return table.freeze(copy)
 end
 
-local function cloneState(state: PlainData?): PlainData
+local function cloneState(state: PlainData): PlainData
 	local source: any = state
-	if source == nil then
-		source = {}
-	end
 	assert(type(source) == "table", "persistentState must be a table")
 	assert(getmetatable(source) == nil, "persistentState must not contain metatables")
+
+	-- Bound the root scan before schema validation. This keeps pathological top-level
+	-- tables inside project-owned work limits instead of allowing a malformed root
+	-- shape to force an unbounded preflight traversal.
+	local rootEntryCount = 0
+	for _ in pairs(source) do
+		rootEntryCount += 1
+		assert(rootEntryCount + 1 <= WorldEntity.MAX_PERSISTENT_STATE_NODES, STATE_LIMIT_ERROR)
+	end
+
 	for key in pairs(source) do
 		assert(
 			type(key) == "string" and key ~= "",
 			"persistentState top-level keys must be non-empty strings"
 		)
 	end
-	return clonePlainValue(source, "persistentState", {}) :: PlainData
+
+	local budget: PersistentStateBudget = {
+		nodes = 0,
+		stringBytes = 0,
+	}
+	return clonePlainValue(source, "persistentState", {}, budget, 0) :: PlainData
+end
+
+local function cloneOptionalState(state: PlainData?): PlainData
+	if state == nil then
+		return cloneState({})
+	end
+	return cloneState(state)
 end
 
 local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
@@ -217,10 +302,10 @@ local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
 		regionId = checkedNonEmpty("origin.regionId", source.regionId)
 	end
 	local generator = checkedNonEmpty("origin.generator", source.generator)
-	local generatorVersion = checkedFiniteNumber("origin.generatorVersion", source.generatorVersion)
+	local generatorVersion = assertNonNegativeInteger("origin.generatorVersion", source.generatorVersion)
 	assert(
-		generatorVersion >= 1 and generatorVersion == math.floor(generatorVersion),
-		"origin.generatorVersion must be a positive integer"
+		generatorVersion >= 1 and generatorVersion <= MAX_GENERATOR_VERSION,
+		`origin.generatorVersion must be in [1, {MAX_GENERATOR_VERSION}]`
 	)
 	local recipeKey = checkedNonEmpty("origin.recipeKey", source.recipeKey)
 
@@ -231,6 +316,19 @@ local function cloneOrigin(origin: GenerationOrigin): GenerationOrigin
 		generatorVersion = generatorVersion,
 		recipeKey = recipeKey,
 	})
+end
+
+local function generationOriginStringBytes(origin: GenerationOrigin): number
+	local stringBytes = #origin.worldId + #origin.generator + #origin.recipeKey
+	if origin.regionId ~= nil then
+		stringBytes += #origin.regionId
+	end
+	return stringBytes
+end
+
+local function assertCanonicalMetadataBudget(kind: string, origin: GenerationOrigin): ()
+	local stringBytes = #kind + generationOriginStringBytes(origin)
+	assert(stringBytes <= WorldEntity.MAX_CANONICAL_METADATA_STRING_BYTES, CANONICAL_METADATA_LIMIT_ERROR)
 end
 
 local function cloneRecord(
@@ -260,9 +358,17 @@ function WorldEntity.isFidelity(value: unknown): boolean
 end
 
 function WorldEntity.fidelityRank(fidelity: Fidelity): number
-	local rank = FIDELITY_RANK[fidelity]
-	assert(rank ~= nil, `invalid fidelity {tostring(fidelity)}`)
+	local rank = if type(fidelity) == "string" then FIDELITY_RANK[fidelity] else nil
+	assert(rank ~= nil, `invalid fidelity {safeValueLabel(fidelity)}`)
 	return rank
+end
+
+local function assertRegistryEntityId(entityId: unknown): WorldEntityId
+	assert(
+		WorldEntity.isId(entityId),
+		"WorldEntity registry entityId must be a non-empty stable identifier without control characters"
+	)
+	return entityId :: WorldEntityId
 end
 
 local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
@@ -273,7 +379,9 @@ local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
 	)
 	local kind = checkedNonEmpty("WorldEntityRecord.kind", source.kind)
 	assert(type(source.origin) == "table", "WorldEntityRecord.origin must be a table")
-	assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {tostring(source.fidelity)}`)
+	local origin = cloneOrigin(source.origin :: GenerationOrigin)
+	assertCanonicalMetadataBudget(kind, origin)
+	assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {safeValueLabel(source.fidelity)}`)
 	assert(type(source.persistentState) == "table", "WorldEntityRecord.persistentState must be a table")
 
 	local stateRevision = assertNonNegativeInteger("WorldEntityRecord.stateRevision", source.stateRevision)
@@ -283,7 +391,7 @@ local function ownRecord(record: WorldEntityRecord): WorldEntityRecord
 	return table.freeze({
 		id = source.id,
 		kind = kind,
-		origin = cloneOrigin(source.origin :: GenerationOrigin),
+		origin = origin,
 		fidelity = source.fidelity :: Fidelity,
 		persistentState = cloneState(source.persistentState :: PlainData),
 		stateRevision = stateRevision,
@@ -300,12 +408,13 @@ function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord
 	local kind = checkedNonEmpty("WorldEntity.kind", source.kind)
 	assert(type(source.origin) == "table", "WorldEntity.origin must be a table")
 	local origin = cloneOrigin(source.origin :: GenerationOrigin)
+	assertCanonicalMetadataBudget(kind, origin)
 
 	local fidelity: Fidelity
 	if source.fidelity == nil then
 		fidelity = "F0"
 	else
-		assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {tostring(source.fidelity)}`)
+		assert(WorldEntity.isFidelity(source.fidelity), `invalid fidelity {safeValueLabel(source.fidelity)}`)
 		fidelity = source.fidelity :: Fidelity
 	end
 
@@ -320,19 +429,20 @@ function WorldEntity.new(spec: NewWorldEntity): WorldEntityRecord
 		kind = kind,
 		origin = origin,
 		fidelity = fidelity,
-		persistentState = cloneState(persistentState),
+		persistentState = cloneOptionalState(persistentState),
 		stateRevision = 0,
 		representationRevision = 0,
 	})
 end
 
 function WorldEntity.captureState(record: WorldEntityRecord, capturedState: PlainData): WorldEntityRecord
+	local ownedRecord = ownRecord(record)
 	return cloneRecord(
-		record,
-		record.fidelity,
+		ownedRecord,
+		ownedRecord.fidelity,
 		cloneState(capturedState),
-		record.stateRevision + 1,
-		record.representationRevision
+		incrementRevision("WorldEntityRecord.stateRevision", ownedRecord.stateRevision),
+		ownedRecord.representationRevision
 	)
 end
 
@@ -341,18 +451,19 @@ function WorldEntity.transition(
 	target: Fidelity,
 	capturedState: PlainData?
 ): WorldEntityRecord
-	assert(WorldEntity.isFidelity(target), `invalid fidelity {tostring(target)}`)
-	if target == record.fidelity then
+	local ownedRecord = ownRecord(record)
+	assert(WorldEntity.isFidelity(target), `invalid fidelity {safeValueLabel(target)}`)
+	if target == ownedRecord.fidelity then
 		if capturedState == nil then
-			return record
+			return ownedRecord
 		end
-		return WorldEntity.captureState(record, capturedState)
+		return WorldEntity.captureState(ownedRecord, capturedState)
 	end
 
-	local currentRank = WorldEntity.fidelityRank(record.fidelity)
+	local currentRank = WorldEntity.fidelityRank(ownedRecord.fidelity)
 	local targetRank = WorldEntity.fidelityRank(target)
-	local nextState = record.persistentState
-	local nextStateRevision = record.stateRevision
+	local nextState = ownedRecord.persistentState
+	local nextStateRevision = ownedRecord.stateRevision
 
 	if targetRank < currentRank then
 		assert(
@@ -360,7 +471,7 @@ function WorldEntity.transition(
 			"demotion requires captured persistent state before representation teardown"
 		)
 		nextState = cloneState(capturedState)
-		nextStateRevision += 1
+		nextStateRevision = incrementRevision("WorldEntityRecord.stateRevision", ownedRecord.stateRevision)
 	else
 		assert(
 			capturedState == nil,
@@ -368,24 +479,32 @@ function WorldEntity.transition(
 		)
 	end
 
-	return cloneRecord(record, target, nextState, nextStateRevision, record.representationRevision + 1)
+	return cloneRecord(
+		ownedRecord,
+		target,
+		nextState,
+		nextStateRevision,
+		incrementRevision("WorldEntityRecord.representationRevision", ownedRecord.representationRevision)
+	)
 end
 
 function WorldEntity.createRegistry(duplicateDiagnosticCapacity: number?): Registry
-	local capacity = duplicateDiagnosticCapacity or WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY
-	assertFiniteNumber("duplicateDiagnosticCapacity", capacity)
+	local capacity = if duplicateDiagnosticCapacity == nil
+		then WorldEntity.DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY
+		else assertNonNegativeInteger("duplicateDiagnosticCapacity", duplicateDiagnosticCapacity)
 	assert(
-		capacity >= 0 and capacity == math.floor(capacity),
-		"duplicateDiagnosticCapacity must be a non-negative integer"
+		capacity <= WorldEntity.MAX_DUPLICATE_DIAGNOSTIC_CAPACITY,
+		`duplicateDiagnosticCapacity must not exceed {WorldEntity.MAX_DUPLICATE_DIAGNOSTIC_CAPACITY}`
 	)
 
 	local records: { [WorldEntityId]: WorldEntityRecord } = {}
 	local duplicates: { DuplicateIdentityDiagnostic } = {}
 
-	local function getRegistered(entityId: WorldEntityId): WorldEntityRecord
-		local record = records[entityId]
-		assert(record ~= nil, `unknown WorldEntityId: {entityId}`)
-		return record
+	local function getRegistered(entityId: WorldEntityId): (WorldEntityRecord, WorldEntityId)
+		local canonicalId = assertRegistryEntityId(entityId)
+		local record = records[canonicalId]
+		assert(record ~= nil, `unknown WorldEntityId: {canonicalId}`)
+		return record, canonicalId
 	end
 
 	local function register(record: WorldEntityRecord): (boolean, DuplicateIdentityDiagnostic?)
@@ -398,8 +517,17 @@ function WorldEntity.createRegistry(duplicateDiagnosticCapacity: number?): Regis
 				incomingKind = ownedRecord.kind,
 				existingRecipeKey = existing.origin.recipeKey,
 				incomingRecipeKey = ownedRecord.origin.recipeKey,
+				existingOrigin = existing.origin,
+				incomingOrigin = ownedRecord.origin,
 			})
-			if capacity > 0 then
+			local retainedStringBytes = #diagnostic.entityId
+				+ #diagnostic.existingKind
+				+ #diagnostic.incomingKind
+				+ #diagnostic.existingRecipeKey
+				+ #diagnostic.incomingRecipeKey
+				+ generationOriginStringBytes(diagnostic.existingOrigin)
+				+ generationOriginStringBytes(diagnostic.incomingOrigin)
+			if capacity > 0 and retainedStringBytes <= WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES then
 				if #duplicates >= capacity then
 					table.remove(duplicates, 1)
 				end
@@ -413,12 +541,14 @@ function WorldEntity.createRegistry(duplicateDiagnosticCapacity: number?): Regis
 	end
 
 	local function get(entityId: WorldEntityId): WorldEntityRecord?
-		return records[entityId]
+		local canonicalId = assertRegistryEntityId(entityId)
+		return records[canonicalId]
 	end
 
 	local function captureRegistered(entityId: WorldEntityId, capturedState: PlainData): WorldEntityRecord
-		local nextRecord = WorldEntity.captureState(getRegistered(entityId), capturedState)
-		records[entityId] = nextRecord
+		local current, canonicalId = getRegistered(entityId)
+		local nextRecord = WorldEntity.captureState(current, capturedState)
+		records[canonicalId] = nextRecord
 		return nextRecord
 	end
 
@@ -427,14 +557,16 @@ function WorldEntity.createRegistry(duplicateDiagnosticCapacity: number?): Regis
 		target: Fidelity,
 		capturedState: PlainData?
 	): WorldEntityRecord
-		local nextRecord = WorldEntity.transition(getRegistered(entityId), target, capturedState)
-		records[entityId] = nextRecord
+		local current, canonicalId = getRegistered(entityId)
+		local nextRecord = WorldEntity.transition(current, target, capturedState)
+		records[canonicalId] = nextRecord
 		return nextRecord
 	end
 
 	local function unregister(entityId: WorldEntityId): WorldEntityRecord?
-		local existing = records[entityId]
-		records[entityId] = nil
+		local canonicalId = assertRegistryEntityId(entityId)
+		local existing = records[canonicalId]
+		records[canonicalId] = nil
 		return existing
 	end
 
