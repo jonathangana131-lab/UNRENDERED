@@ -5,7 +5,7 @@
   "title": "Repair worker and event schema contract drift",
   "objective": "Stop repeated Swarm control validation failures caused by worker-facing producer conventions drifting from the strict validator: workers emit intuitive lifecycle aliases such as CLAIMING/DONE and immutable REVIEW_RESULT events already carry typed pr/headSha/verdict fields that the current generic event validator rejects. Make the accepted lifecycle/event contract explicit, preserve strict typing and unknown-field fail-closed behavior, and restore live control validity without weakening authoritative claim/resource fencing.",
   "priority": 10000,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["tools/swarm/swarmctl.py", "tools/swarm/test_swarmctl.py", "tools/swarm/test_swarmctl_hardening.py", "Docs/SWARM_PROTOCOL.md", "Docs/SWARM_CONTROL_PLANE.md"],
@@ -22,9 +22,10 @@
     "core and hardening control-plane tests cover worker aliases, typed review events, unknown-status rejection, unknown-event-field rejection, and unchanged claim/resource fencing",
     "live swarm-control validation returns PASS on authoritative history without rewriting immutable events"
   ],
-  "pr": 444,
-  "notes": "Generation-4 PR #444 exact head cadfd75b0913a9b22bac09f726807fd0e98194f0 had canonical CI and control engine/adversarial tests PASS, but it is now stale/non-mergeable against main 8134a3962be80e8ba6ec2c27207e44db63e6765c. Current-main convergence review generation 2 by sol-20260813-v16rvw2 records REQUEST_CHANGES in typed event evt-20260813-223500-v16rvw2-worker-status-current-main-review. Worker-status aliases and typed REVIEW_RESULT semantics are already absorbed on main. Preserve #444's still-relevant facade re-entry isolation only by re-cutting it narrowly on current main: retain first strict base validate/read/transition anchors and one shared immutable-event registry across repeated facade execution, add a focused re-entry regression, and preserve all newer recovery manifest/extension, quarantine provenance, trusted-snapshot and trust-ledger behavior. GitHub cannot record formal self REQUEST_CHANGES because swarm workers publish through the repository owner account; review rationale is attached to PR #444 as comment review 4932229184. Live swarm-control validation and accepted trusted-history bootstrap remain required; ordinary pr-ownership must not be weakened.",
+  "pr": 465,
+  "notes": "Generation-6 current-main convergence PR #465 is resynced onto main bc7e667b5bd13b37cc534a3ac2ea78cb4dcb6170 at exact head 7891daa0da19a204613e0c3fbda2e57e89171b6b. Effective delta remains only the still-relevant facade re-entry isolation requested by the generation-2 convergence review: first strict validate/read/transition anchors are retained across repeated facade execution and the immutable-event registry remains one shared object, with a focused runpy re-entry regression. Exact-head canonical CI PASS, Swarm deterministic/adversarial engine tests PASS, and read-only exact trust-bootstrap candidate PASS. Ordinary pr-ownership remains fail-closed on the pre-existing live-control/trust-ledger mismatch and must not be weakened. Independent review is also required to resolve an ownership-metadata inconsistency: these lane notes require the production facade repair in tools/swarm/swarmctl_hardening.py, but the lane/slot writeScopes currently omit that file. The primary worker deliberately did not widen its own authority retroactively; reviewer/control-plane correction is required before integration. The separately identified generic byte-only finite takeover compatibility concern remains scheduler-separated and is not folded into #465.",
   "blockers": [
+    "Independent review/control-plane correction must resolve the mismatch between the convergence-mandated tools/swarm/swarmctl_hardening.py change and this lane's currently narrower declared writeScopes; the primary worker must not self-widen its own PR authority.",
     "Live swarm-control validation must PASS under the accepted recovery validator without rewriting immutable events.",
     "The trusted-history bootstrap must move the accepted validator to main without weakening the ordinary pr-ownership fence."
   ],
