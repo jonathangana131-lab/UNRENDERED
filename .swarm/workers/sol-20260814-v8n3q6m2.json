@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T07:14:00+00:00",
-  "lastSeenAt": "2026-08-14T07:14:00+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-v8n3q6m2",
-  "notes": "Stale-claim salvage of the diagnostics test-adversary lane after inspecting the prior DONE worker, published support branch, durable HANDOFF event, and PR #441 integration target. No Studio/viewport evidence will be claimed."
+  "lastSeenAt": "2026-08-14T07:15:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-objectgenome",
+  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-v8n3q6m2",
+  "notes": "Won the ObjectGenome capacity-mining slot after losing two higher-priority claim races. Bounded source/test/PR/event audit only; publish a concrete non-duplicate finding or explicitly record no actionable gap. No Studio evidence or major-feature unlock."
 }
