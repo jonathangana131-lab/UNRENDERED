@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-071844-u5m8q2v7-diagnostics-toggle-failure-cleanup-pr",
+  "timestamp": "2026-08-14T07:18:44+00:00",
+  "fromWorker": "sol-20260814-u5m8q2v7",
+  "eventType": "EVIDENCE_RESULT",
+  "summary": "Stale diagnostics test-adversary generation 1 was salvaged onto current main and published as draft PR #463. After applying only the exact StyLua wrapping reported by the first run, current head dc58fa9b20e34f4bc3fd4e3aad1aa04b3b63d391 passes every canonical static/control gate through Pure Luau, where exactly the intended post-enable cleanup regression fails; this is expected-red evidence for primary absorption, not an independently mergeable change.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "Draft PR #463 targets current main eead13b2e90ffbba36248909d97e17856e002ad9 from branch agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-u5m8q2v7; current exact head is dc58fa9b20e34f4bc3fd4e3aad1aa04b3b63d391 and changes exactly tests/physics_lab_diagnostics_toggle_failure_cleanup.luau plus registration in tests/hero_gate_contract_integration.luau.",
+    "First replay head d28ddb166f74097ea1a53f6dee99014236c86897 reproduced the generation-1 support blobs exactly; CI run 31779285078 stopped at StyLua with two mechanical line-wrapping diffs and no semantic gate result. Those exact formatter changes were applied without changing assertions.",
+    "Canonical CI run 31779389843 on dc58fa9b20e34f4bc3fd4e3aad1aa04b3b63d391 passes format, lint, Luau analysis, canonical randomness, shared-domain boundary, plain-data value, and swarm deterministic checks. Pure Luau then fails exactly one newly registered assertion: diagnostics-toggle-failure-cleanup failed enabled-window validation disables diagnostics before propagating the original failure. The rest of the emitted test corpus continues to pass.",
+    "Earlier Swarm run 31779285072 on the byte-identical semantic replay reports engine-tests PASS and pr-ownership fail-closed at Require live state to equal separately trusted state before ownership enforcement; that shared trusted-state gate is unrelated to the regression semantics.",
+    "Primary generation-16 PR #441 exact head b8ca3302cc3012011fb911ad3df5dc878130c133 received follow-up comment 5290625190 linking #463 and instructing absorption with the bounded production cleanup repair while preserving generation-16 clone-proof hardening.",
+    "No local Pure Luau execution, Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence is claimed."
+  ],
+  "metadata": {
+    "primaryPr": 441,
+    "primaryHeadSha": "b8ca3302cc3012011fb911ad3df5dc878130c133",
+    "supportPr": 463,
+    "supportHeadSha": "dc58fa9b20e34f4bc3fd4e3aad1aa04b3b63d391",
+    "canonicalCiRun": 31779389843,
+    "primaryCommentId": 5290625190,
+    "expectedRed": true,
+    "recommendedNext": "Diagnostics primary or successor should absorb equivalent cleanup regression together with a bounded production failure-atomicity repair. Guarantee owned-overlay cleanup on every post-enable failure path, preserve the original validation error when cleanup succeeds, retain generation-16 clone-proof hardening, and do not claim Studio PASS from this source-only evidence."
+  }
+}
