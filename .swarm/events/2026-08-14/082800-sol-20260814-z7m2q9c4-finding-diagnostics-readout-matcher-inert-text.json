@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082800-z7m2q9c4-diagnostics-readout-matcher-inert-text",
+  "timestamp": "2026-08-14T08:28:00+00:00",
+  "fromWorker": "sol-20260814-z7m2q9c4",
+  "eventType": "FINDING",
+  "summary": "The active diagnostics readout source-contract matcher strips only ordinary line comments before token searches. Required executable readout predicates can therefore be removed while equivalent text remains inside inert long comments, long-bracket strings, quoted strings, or backtick strings and still false-pass the matcher. Expected-red visibility PR #474 inherits the same proof weakness.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS", "HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "PR #468 exact head 0703a44ff68a96d5907d514f66480ac8aca0145a tests/physics_lab_diagnostics_readout_contract.luau builds its searchable source with string.gsub(rawSource, \"%-%-[^\\n]*\", \"\"), removing only ordinary line comments.",
+    "The same matcher then uses string.find/token searches for exact Adornee, exact text, shape/count, and other readout invariants without masking long comments, long-bracket strings, quoted strings, or backtick strings.",
+    "Expected-red PR #474 head de4c4c778faebba8116000819c83dbfa1aa3db1a adds BillboardGui.Enabled and TextLabel.Visible source checks from that same line-comment-only source string, so its semantic visibility regression can also false-pass inert helper text after absorption.",
+    "The active diagnostics enabled-integrity regression already contains stronger inert-source masking for a different helper, proving the repository has encountered and hardened this source-contract false-pass class before; that protection does not cover the readout matcher.",
+    "Repository PR/issue searches for physics_lab_diagnostics_readout_contract inert-text or matcher-hardening ownership returned no dedicated existing repair.",
+    "Draft docs-only PR #487 exact head 577c350de48e9b62cc1ff1ca37bdb4a795245948 records the finding; no production, Studio, viewport, networking, persistence, physics-contact, or two-client behavior is changed or claimed."
+  ],
+  "metadata": {
+    "docsPr": 487,
+    "docsHeadSha": "577c350de48e9b62cc1ff1ca37bdb4a795245948",
+    "activeDiagnosticsPr": 468,
+    "activeDiagnosticsHeadSha": "0703a44ff68a96d5907d514f66480ac8aca0145a",
+    "visibilitySupportPr": 474,
+    "visibilitySupportHeadSha": "de4c4c778faebba8116000819c83dbfa1aa3db1a",
+    "recommendedNext": "When the active diagnostics successor absorbs #474, harden physics_lab_diagnostics_readout_contract.luau to mask all inert Luau text and add long-comment/long-bracket/quoted/backtick false-pass mutants. Keep this source/test repair separate from live viewport acceptance."
+  }
+}
