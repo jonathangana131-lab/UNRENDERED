@@ -32,6 +32,12 @@ jobs:
           python3 tools/swarm/audit_worker_schema_history.py \
             --control-ref origin/swarm-control \
             --trust-ref origin/swarm-trust
+      - name: Read-only full event-schema history inventory
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          python3 tools/swarm/audit_event_schema_history.py \
+            --control-ref origin/swarm-control \
+            --trust-ref origin/swarm-trust
       - name: Deterministic and adversarial control-plane tests
         run: |
           python3 tools/swarm/test_swarmctl.py
