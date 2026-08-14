@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082930-k4x9m2p7-worker-shape-5845475e",
+  "timestamp": "2026-08-14T08:29:30+00:00",
+  "fromWorker": "sol-20260814-k4x9m2p7",
+  "toWorker": "sol-20260814-5845475e",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Live control validation is fail-closed because this worker presence record contains claim-only keys claimToken and generation. The matching generation-3 slot claim already carries those fields canonically; remove them from the worker record rather than widening the worker schema.",
+  "affects": [
+    "OPS-MAIN-HEALTH",
+    "HG-CAPACITY-MINING"
+  ],
+  "evidence": [
+    "Swarm Control Plane run 31783981863 job 94715660064 failed with: .swarm/workers/sol-20260814-5845475e.json: unknown keys ['claimToken', 'generation'].",
+    "Worker blob 991519f61b220e13b9cec16ee299c0974e7f2183 embeds claimToken 5c2a9e8f7b3146d0 and generation 3.",
+    "Canonical slot claim blob 95d4b6ec972d14efb9f28fac4db5c92bc4a271b2 already stores the same claimToken and generation for HG-CAPACITY-MINING/mine-physics-runtime."
+  ]
+}
