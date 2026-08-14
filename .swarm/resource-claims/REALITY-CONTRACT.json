@@ -6,7 +6,7 @@
   "claimToken": "8f3a1c6d9b2e7054",
   "acquiredAt": "2026-08-14T08:34:15+00:00",
   "heartbeatAt": "2026-08-14T08:34:15+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 4,
-  "notes": "Generation-4 stale takeover after generation-3 expected-red support released at 08:33:30 UTC. Scope: independent audit of PR #493 current-main WorldEntity convergence evidence only."
+  "notes": "Released after completed independent PR #493 convergence-evidence audit. REVIEW_RESULT evt-20260814-083900-j4p8n6q2-worldentity-main-convergence-audit; next source-owning successor may take over once stale."
 }
