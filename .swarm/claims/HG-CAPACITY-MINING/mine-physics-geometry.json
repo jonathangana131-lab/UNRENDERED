@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-v9q2m6k4",
   "claimToken": "93e6b1c4f7a25d08",
   "claimedAt": "2026-08-14T08:40:30+00:00",
-  "heartbeatAt": "2026-08-14T08:40:30+00:00",
-  "leaseSeconds": 1800,
+  "heartbeatAt": "2026-08-14T08:45:00+00:00",
+  "leaseSeconds": 300,
   "generation": 1,
   "resources": [],
   "branch": "agent/audit/HG-CAPACITY-MINING-physics-geometry-v9q2m6k4-g1",
   "pr": null,
-  "notes": "Bounded current-main Physics Lab geometry audit for a concrete non-duplicate Hero-Gate depth gap. Avoid overlaps with door-header clearance #492, cart/chair retained geometry lineages, and external Studio evidence."
+  "notes": "Capacity pass complete with no safe non-duplicate new slice. #498 owns filing-cabinet enclosure; #497 owns generic support-contact geometry; #311/#352 own cart caster contact; #492 owns door/header clearance. Hinge pivot/sweep was intentionally not promoted because #151 keeps articulated mechanisms UNVERIFIED and forbids speculative source slices while Door/Chair/Player remain gated. FINDING event evt-20260814t084500z-v9q2m6k4-physics-geometry-no-new-slice published; releasing slot."
 }
