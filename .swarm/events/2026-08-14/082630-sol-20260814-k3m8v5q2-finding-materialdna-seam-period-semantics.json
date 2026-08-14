@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082630-k3m8v5q2-materialdna-seam-period-semantics",
+  "timestamp": "2026-08-14T08:26:30+00:00",
+  "fromWorker": "sol-20260814-k3m8v5q2",
+  "eventType": "FINDING",
+  "summary": "MaterialDNA treats installation.seamPeriodMeters as optional and validates it only when present, while its already-known wallpaper/carpet compatibility rules select installation methods whose shipped ordinary fixtures carry explicit regular seam periods. Removing only seamPeriodMeters from an otherwise-valid known wallpaper or compatible carpet recipe remains canonical, but the contract never defines whether nil means seam-free, unresolved, representation-owned, or adapter-defaulted.",
+  "affects": ["HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Current src/shared/Materials/MaterialDNA.luau validateInstallation() calls validatePositive(... seamPeriodMeters ...) only when the field is non-nil; validateCompatibility() then constrains known wallpaper/carpet installation methods without adding any seam-period predicate.",
+    "Current MaterialFixtureCatalog authors installation.pasted-wallpaper with seamPeriodMeters=0.53 and installation.glued-carpet-roll with seamPeriodMeters=3.6576, while factory-coated painted metal omits the field, demonstrating method/family-specific intended use rather than a universally required scalar.",
+    "Current Docs/MATERIAL_DNA_CONTRACT.md describes installation/batch and bounded validation but does not define the canonical meaning of a nil seamPeriodMeters value.",
+    "Repository issue/PR searches for seamPeriodMeters returned no dedicated existing owner; this is separate from repairCount exactness, bounded-validator diagnostics, percent key grammar, hostile-key/fixture-drift, and known visual/physical/acoustic family coherence work.",
+    "PR #488 records the exact source-derived repro and bounded follow-up; one docs file only, with no local Luau, Studio, viewport, networking, persistence, or physical-contact execution claim."
+  ],
+  "metadata": {
+    "docsPr": 488,
+    "docsHeadSha": "0197dad8d8065dc48b9de94ec75cea99b4e4000b",
+    "auditedMainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "recommendedNext": "After current higher-priority MaterialDNA validator lineage is integrated, explicitly define nil seam-period semantics. If known seamed installation methods own regular seam spacing canonically, require an explicit positive seam period for those methods only and add deterministic missing/present regressions; do not infer the rule from key string prefixes or require seams for every installation method."
+  }
+}
