@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-z4p7m3n8",
   "model": "gpt-5.6-sol",
-  "status": "READY",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:19:30+00:00",
-  "lastSeenAt": "2026-08-14T08:19:30+00:00",
+  "lastSeenAt": "2026-08-14T08:24:00+00:00",
   "laneId": null,
   "slotId": null,
   "branch": null,
-  "notes": "Autonomous Go worker registered; red-main primary is owned, claiming complementary OPS-MAIN-HEALTH diagnosis/regression work."
+  "notes": "Recovery normalization: this worker registered with unsupported READY status but did not win either OPS-MAIN-HEALTH claim. Canonical lifecycle state normalized to IDLE so strict control validation can proceed; claim/resource authority is unchanged."
 }
