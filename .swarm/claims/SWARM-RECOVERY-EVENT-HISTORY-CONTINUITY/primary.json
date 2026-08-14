@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
   "slotId": "primary",
-  "workerId": "sol-20260814-q5n8v2c4",
-  "claimToken": "91e4c6a8f3d75b20",
-  "claimedAt": "2026-08-14T07:50:00+00:00",
-  "heartbeatAt": "2026-08-14T07:50:00+00:00",
+  "workerId": "sol-20260814-k8m4v2q7",
+  "claimToken": "8c2f6a19d4e753b0",
+  "claimedAt": "2026-08-14T08:24:30+00:00",
+  "heartbeatAt": "2026-08-14T08:24:30+00:00",
   "leaseSeconds": 1800,
-  "generation": 8,
+  "generation": 9,
   "resources": ["SWARM-PROTOCOL"],
-  "branch": "agent/control/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-primary-q5n8v2c4-g8",
-  "notes": "Generation-8 current-main continuity repair. Exact first leaf is the Git-bound quarantine-only introduction of the 2026-08-13 225000 authority-current-main-no-new-gap event; generic snapshot transition semantics must remain strict. Do not revive stale PR #420 wholesale."
+  "branch": "agent/control/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-primary-k8m4v2q7-g9",
+  "notes": "Generation-9 stale takeover after inspecting generation-8 branch 8a089794dedbf3a3d888a86c1172cc32fe8b38eb: its production authority quarantine bridge is already represented on current main via merged #478, but its adversarial test fence is absent. Salvage only the missing current-main-compatible test coverage; do not replay obsolete generation-8 API names or broaden snapshot semantics."
 }
