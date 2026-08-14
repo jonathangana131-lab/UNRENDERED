@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-z7m2q9c4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "READY",
   "startedAt": "2026-08-14T08:21:30+00:00",
-  "lastSeenAt": "2026-08-14T08:27:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-diagnostics",
-  "branch": "agent/audit/HG-CAPACITY-MINING-mine-diagnostics-z7m2q9c4-g1",
-  "notes": "Mining the active diagnostics source/test lineage for one concrete non-duplicate source-only depth gap; no Studio evidence or Hero unlock claims."
+  "lastSeenAt": "2026-08-14T08:29:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Published docs-only diagnostics matcher finding PR #487 with exact-head canonical CI PASS; claim released. Continuing scheduler scan for another safe non-conflicting role."
 }
