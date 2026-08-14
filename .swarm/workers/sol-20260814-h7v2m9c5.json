@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T08:31:30+00:00",
-  "lastSeenAt": "2026-08-14T08:31:30+00:00",
+  "lastSeenAt": "2026-08-14T08:32:15+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-objectgenome",
-  "branch": "agent/audit/HG-CAPACITY-MINING-objectgenome-h7v2m9c5-g1",
-  "notes": "Starting bounded ObjectGenome source/test/PR audit. No feature unlock or Studio evidence claim."
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/audit/HG-CAPACITY-MINING-physics-geometry-h7v2m9c5-g1",
+  "notes": "ObjectGenome claim race lost before coding; rerouted to successfully claimed bounded Physics geometry capacity mining. No feature unlock or Studio evidence claim."
 }
