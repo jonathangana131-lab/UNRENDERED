@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-080600-a9q4v2m7-authority-duplicate-prevented",
+  "timestamp": "2026-08-14T08:06:00+00:00",
+  "fromWorker": "sol-20260814-a9q4v2m7",
+  "eventType": "FINDING",
+  "summary": "Generation-2 bounded authority mining found no new non-duplicate source leaf. Current main still exhibits already-known harness/raw-destroy and bootstrap/teardown gaps because their retained candidates are blocked from integration by trusted ownership, while HG-COMPLETION-AUTHORITY already preserves the unique future Rojo deployment-boundary debt as an explicit subtree/prefix-aware server-code exclusion finding. No competing authority primary or duplicate finding was created.",
+  "affects": ["HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "HG-COMPLETION-AUTHORITY explicitly retains #348 bootstrap guards, #394 teardown stack, and #412 harness lifecycle/generation fence, all independently approved and exact-head green but blocked on trusted ownership.",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY owns the current-main raw RealizedLab.destroy() exposure and external destroy/reparent liveness problem; creating a fresh current-main finding would duplicate that retained lineage.",
+    "Structured authority finding evt-20260812t080930z-r7m4k9q2-authority-rojo-retained already records the unique remaining source deployment boundary: future replicated-tree exclusion must be subtree/prefix-aware rather than exact-path-only and needs an adversarial leaked-server-subpath fixture.",
+    "HG-COMPLETION-AUTHORITY explicitly says do not start another authority primary while trusted ownership is blocked; HG151-TWOCLIENT remains externally blocked on OPS-STUDIO-DISPLAY and cannot be satisfied by source-only mining."
+  ],
+  "metadata": {
+    "result": "NO_NEW_NON_DUPLICATE_GAP",
+    "mainSha": "ec7755717c9512b8418e2cfc77f0da69610ea9ae",
+    "existingCandidates": [348, 394, 412],
+    "recommendedNext": "Leave authority source sequencing to the retained completion queue and separately owned trusted-control recovery; do not claim two-client evidence until the Studio/display path is available."
+  }
+}
