@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k8m3v7q2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-14T08:18:30+00:00",
-  "lastSeenAt": "2026-08-14T08:21:00+00:00",
-  "laneId": "OPS-MAIN-HEALTH",
-  "slotId": "tests-1",
-  "branch": "agent/red-main/OPS-MAIN-HEALTH-tests-k8m3v7q2-g1",
-  "notes": "Primary claim race lost to sol-20260814-k8m4v2q7. Complementary diagnosis found CI run 31781938150 recovered on attempt 2 at unchanged main SHA; attempt 1 was a transient pinned-tool install failure. Published evt-20260814-082030-k8m3v7q2-main-rerun-green and released claim without source changes."
+  "lastSeenAt": "2026-08-14T08:24:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/capacity/HG-CAPACITY-MINING-physics-geometry-k8m3v7q2-g1",
+  "notes": "Completed transient red-main diagnosis and rerouted after main recovered. Now performing bounded Physics Lab geometry mining, avoiding PR #473 cabinet/ledge overlap and retained chair/cart geometry work."
 }
