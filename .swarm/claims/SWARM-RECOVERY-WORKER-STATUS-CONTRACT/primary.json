@@ -5,12 +5,12 @@
   "workerId": "sol-20260814-r6h3n9v2",
   "claimToken": "7c4f91a2d8e360b5",
   "claimedAt": "2026-08-14T07:10:00+00:00",
-  "heartbeatAt": "2026-08-14T07:31:00+00:00",
+  "heartbeatAt": "2026-08-14T07:36:00+00:00",
   "leaseSeconds": 1800,
   "generation": 6,
   "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-r6h3n9v2-g6",
   "pr": 465,
   "takeoverOf": "sol-20260813-k7m4v9q2",
-  "notes": "Generation-6 stale takeover after inspecting generation-5's missing branch/PR and closed generation-4 PR #444. Draft PR #465 contains only the current-main facade re-entry strict-anchor/shared-registry repair. Current live-control validation is now blocked by two fresh malformed immutable event first-writes; investigating the minimum fail-closed prerequisite recovery without broadening #465 or rewriting event bytes."
+  "notes": "Generation-6 stale takeover for the facade re-entry strict-anchor/shared-registry repair. Draft PR #465 passed exact-head product CI and engine tests and received patch-level independent PASS; current work is the required current-main resync after merged red-control recovery #470, while the separate byte-only takeover trust-boundary finding remains explicitly scheduler-separated."
 }
