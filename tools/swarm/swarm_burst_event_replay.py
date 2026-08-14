@@ -57,9 +57,9 @@ RULES = {
     },
 }
 
-# This event was malformed at first write and remains intentionally inert. Its
-# identity is already pinned by swarm_history_recovery_extension; the extra Git
-# coordinates here authorize only its exact historical introduction transition.
+# These events were malformed at first write and remain intentionally inert. Their
+# identities are already pinned by swarm_history_recovery_extension; the extra Git
+# coordinates here authorize only their exact historical introduction transitions.
 QUARANTINE_ONLY_RULES = {
     "evt-20260813-225000-8fa445-authority-current-main-no-new-gap": {
         "date": "2026-08-13",
@@ -67,6 +67,20 @@ QUARANTINE_ONLY_RULES = {
         "quarantineOnlyGitBlobSha1": "6503ee1458957314660adab6ef1e56793e775175",
         "introductionPredecessorSha": "a3ec4ac5ca87ab5fd7058c22a33af44d69fd51bd",
         "introductionCommitSha": "47e9d65cb46852f396cfe109836623f4063d0d03",
+    },
+    "evt-20260813-224945-f4q9n2c7-fidelity-extra-keys": {
+        "date": "2026-08-13",
+        "filename": "evt-20260813-224945-f4q9n2c7-fidelity-extra-keys.json",
+        "quarantineOnlyGitBlobSha1": "0dd395b2757e7e3685b5c79aa6d6852ee50e85f3",
+        "introductionPredecessorSha": "9857896b91f14e402c869cbd873cfa1bd158b738",
+        "introductionCommitSha": "407732f50438acc4f11da30cca17c348936e73f8",
+    },
+    "evt-20260813-225110-j4n7q2v9-diagnostics-docs-g3-review-request": {
+        "date": "2026-08-13",
+        "filename": "225110-sol-20260813-j4n7q2v9-review-request-diagnostics-docs-g3.json",
+        "quarantineOnlyGitBlobSha1": "835076ffce9bf4f355aa9f9b6d85f54177543421",
+        "introductionPredecessorSha": "ebf8b6e120b2ec4a684fa4c365aaafc87b144f22",
+        "introductionCommitSha": "af25c84703c1bde8beb84cdb1853ebd07aea6bea",
     },
 }
 
@@ -102,10 +116,8 @@ def install(hardening_module) -> None:
             "filename": rule["filename"],
             "quarantineOnlyGitBlobSha1": rule["quarantineOnlyGitBlobSha1"],
         }
-        existing = registry.get(event_id)
-        if existing is not None and existing != expected:
+        if registry.get(event_id) != expected:
             raise RuntimeError(f"quarantine-only event registry mismatch for {event_id}")
-        registry[event_id] = expected
 
 
 def _require_exact_changed_path(hardening_module, rule: dict[str, str], changed_paths: tuple[str, ...]) -> None:
