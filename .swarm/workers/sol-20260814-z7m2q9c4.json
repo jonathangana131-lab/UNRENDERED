@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-z7m2q9c4",
+  "model": "gpt-5.6-sol",
+  "status": "READY",
+  "startedAt": "2026-08-14T08:21:30+00:00",
+  "lastSeenAt": "2026-08-14T08:21:30+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Autonomous Go worker registered after main@af6a17aa full canonical CI rerun passed; selecting highest-value post-recovery non-conflicting work."
+}
