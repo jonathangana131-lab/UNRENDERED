@@ -24,7 +24,7 @@
       "role": "V16.2 scheduler and producer-fence integrator",
       "exclusive": true,
       "availableWhen": ["READY", "CLAIMED", "IMPLEMENTING", "NEEDS_CHANGES"],
-      "priorityBoost": 1200,
+      "priorityBoost": 1000,
       "writeScopes": [
         ".github/workflows/swarm-v16-*.yml",
         "Docs/SWARM_V16_2_INTEGRATION_THROUGHPUT.md",
