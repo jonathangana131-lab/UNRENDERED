@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-080000-r7n2v9k4-worldentity-registry-population-bound",
+  "timestamp": "2026-08-14T08:00:00+00:00",
+  "fromWorker": "sol-20260814-r7n2v9k4",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "summary": "Retained WorldEntity generation-9 bounds each owned record's metadata/state and bounds duplicate-diagnostic history, but WorldEntity.createRegistry() has no project-owned ceiling on the number of unique authoritative records it can retain. Repeated valid unique registrations therefore grow the registry's owned record population without an aggregate envelope. Before this registry is reused as general active-world authority, make the population budget explicit at the correct ownership layer: either give the registry a required/configurable maxRegisteredEntities with a hard project ceiling and fail-atomic capacity rejection, or make an upper-layer active-region/fidelity authority contract mandatory and impossible to bypass. Do not add an arbitrary global-universe cap or patch retained PR #437 in parallel solely from this mining finding.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-WORLDENTITY"
+  ],
+  "evidence": [
+    "Audited retained WorldEntity PR #437 exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3. createRegistry() accepts only duplicateDiagnosticCapacity; its private records table has no cardinality budget, and register() stores every structurally valid unique ownedRecord with no aggregate-capacity check.",
+    "The same source explicitly bounds per-record canonical metadata to 65536 bytes, persistent state to depth 64 / 4096 nodes / 65536 string bytes, and duplicate history to a maximum of 1024 entries. Those local bounds prevent one record/history ring from being unbounded but do not bound N unique retained records.",
+    "tests/world_entity.luau proves duplicate-history capacity and unregister/re-register behavior, but has no unique-record maximum or maximum+1 fail-atomic population regression because the production registry exports no such contract.",
+    "Current PhysicsLabRuntime is not claimed vulnerable to practical unbounded growth: it constructs a fixed recipe population and separately configures FidelityManager to the exact recipe entity count. The gap is the reusable WorldEntity registry boundary itself, which can be called without FidelityManager and is intended to remain a production domain authority primitive.",
+    "FidelityManager already demonstrates the intended bounded-envelope pattern with configurable maxRegisteredEntities plus a hard project ceiling; this finding does not require duplicating that policy if WorldEntity population ownership is instead made explicitly upper-layer and non-bypassable.",
+    "Repository PR/event searches found retained WorldEntity work for persistent-state bounds, canonical metadata bounds, duplicate diagnostic count/bytes, origin evidence, no-op transition cost, and rejection-label bounds, but no retained WorldEntity unique-record population ceiling finding.",
+    "No local tests, Roblox Studio, viewport, physical-contact, performance-device, persistence backend, or two-client execution was run or claimed; this is a connector/source contract audit only."
+  ]
+}
