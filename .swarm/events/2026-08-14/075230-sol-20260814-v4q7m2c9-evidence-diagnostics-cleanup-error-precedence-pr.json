@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-075230-v4q7m2c9-diagnostics-cleanup-error-precedence-pr",
+  "timestamp": "2026-08-14T07:52:30+00:00",
+  "fromWorker": "sol-20260814-v4q7m2c9",
+  "eventType": "EVIDENCE_RESULT",
+  "summary": "Independent generation-17 diagnostics review blocker was converted into test-only expected-red support PR #479. On exact support head fc7ab3dd9c0cc51a086546e32f384b28302ae2cb, canonical CI passes every static/control gate through deterministic swarm tests and then Pure Luau fails on exactly three cleanup-error-precedence requirements: pin the exact owned overlay after enable, destroy that pinned overlay before original-error propagation, and move strict disable/off validation to the success path. The retained no-rediscovery/no-strict-recapture failure-path check and complete enabled-window protection check pass. PR #479 must be absorbed by the diagnostics primary and must not merge independently.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "Independent review event evt-20260814-073700-y7q3m5v8-diagnostics-g17-review requests changes on PR #468 exact head 0703a44ff68a96d5907d514f66480ac8aca0145a because unconditional strict disable can fail or recapture malformed state before exact overlay destruction and can mask the original enabled-window error.",
+    "Draft PR #479 exact support head fc7ab3dd9c0cc51a086546e32f384b28302ae2cb targets PR #468's generation-17 branch and changes exactly one existing source-contract test file; no production source is modified.",
+    "Canonical CI run 31781445967 on fc7ab3dd9c0cc51a086546e32f384b28302ae2cb passes pinned toolchain, Rojo sourcemap, Roblox type definitions, StyLua, Selene, Luau analysis, canonical randomness audit, shared-domain boundary audit, plain shared-domain Roblox-value audit, and deterministic swarm tests. Pure Luau is the first failing semantic gate.",
+    "Pure Luau fails exactly: successful enable pins the exact owned diagnostics root before fallible enabled-window validation; failed enabled-window validation destroys the pinned owned root before propagating the original failure; strict disable and off-state validation are success-path work after the failure precedence guard. The existing failure-cleanup no-rediscovery/no-strict-recapture check and complete enabled-window-protection check both pass.",
+    "Earlier support heads 3e2ede20c3849aa9b1e84a200ad3e2c313460122 and d7604552d3545e496d2483848ff19fcba42d2952 stopped at StyLua and are excluded as semantic evidence; exact formatter output was applied before the final expected-red run.",
+    "Swarm Control Plane run 31781445950 on the final support head reports engine-tests PASS and pr-ownership FAIL on the pre-existing live control-state error .swarm/workers/sol-20260813-n4q7v2m9.json: invalid worker status. The support PR does not mutate or bypass that repository-wide blocker.",
+    "Primary PR #468 received comment 5290902674 with the bounded absorption topology. Separate draft PR #474 remains the visibility/inspectability support seam and is not conflated with this cleanup-error-precedence blocker.",
+    "No local Luau/Lune execution, Roblox Studio, viewport, physical-contact, performance-device, networking, persistence, or two-client evidence is claimed."
+  ],
+  "metadata": {
+    "primaryPr": 468,
+    "primaryHeadSha": "0703a44ff68a96d5907d514f66480ac8aca0145a",
+    "supportPr": 479,
+    "supportHeadSha": "fc7ab3dd9c0cc51a086546e32f384b28302ae2cb",
+    "canonicalCiRun": 31781445967,
+    "swarmRun": 31781445950,
+    "primaryCommentId": 5290902674,
+    "reviewEventId": "evt-20260814-073700-y7q3m5v8-diagnostics-g17-review",
+    "expectedRed": true,
+    "recommendedNext": "Diagnostics primary should absorb PR #479's focused cleanup contract with the smallest production repair: save the exact owned overlay immediately after enable; on protected enabled-window failure destroy that exact Instance directly and rethrow the original cycleResult without fallible root rediscovery or strict canonical recapture; only the success path may run strict disable/off validation. Preserve generation-17 canonical live-overlay validation and all retained identity/readout contracts. Do not merge #479 independently and do not promote HG151-DIAGNOSTICS viewport evidence from source-only results."
+  }
+}
