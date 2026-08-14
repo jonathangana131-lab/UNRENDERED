@@ -28,14 +28,11 @@ local function run(): number
 	local cycleProtection = string.find(sweepSource, "local cycleOk, cycleResult = pcall(function()", 1, true)
 	local enabled =
 		string.find(sweepSource, "local enabled = PhysicsLabStudioDiagnostics.enable(lab)", 1, true)
-	local ownedRootStart, _, ownedRootName = string.find(
-		sweepSource,
-		"local%s+([%a_][%w_]*)%s*=%s*diagnosticsRoot%(%s*lab%.model%s*%)"
-	)
+	local ownedRootStart, _, ownedRootName =
+		string.find(sweepSource, "local%s+([%a_][%w_]*)%s*=%s*diagnosticsRoot%(%s*lab%.model%s*%)")
 	local strictCleanup =
 		string.find(sweepSource, "local disabled = PhysicsLabStudioDiagnostics.disable(lab)", 1, true)
-	local protectionClose = cycleProtection
-		and string.find(sweepSource, "\n\t\tend)", cycleProtection, true)
+	local protectionClose = cycleProtection and string.find(sweepSource, "\n\t\tend)", cycleProtection, true)
 	local enabledCountAssertion = cycleProtection
 		and string.find(sweepSource, "enabled.diagnosticInstanceCount > 0", cycleProtection, true)
 	local canonicalCapture = cycleProtection
