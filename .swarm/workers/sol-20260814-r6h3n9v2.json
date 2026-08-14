@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-r6h3n9v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:10:00+00:00",
-  "lastSeenAt": "2026-08-14T07:31:00+00:00",
+  "lastSeenAt": "2026-08-14T07:44:00+00:00",
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
   "slotId": "primary",
   "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-r6h3n9v2-g6",
-  "notes": "Generation-6 worker owns live claim/resource and draft PR #465. Current focus remains worker-status convergence plus the minimum prerequisite analysis required to restore fail-closed live-control validation after two fresh malformed immutable event first-writes."
+  "notes": "Generation-6 primary released after PR #465 merged as ec7755717c9512b8418e2cfc77f0da69610ea9ae and post-merge canonical CI passed. Lane remains REVIEW for an independent post-merge audit, write-scope/control-plane correction, and live trusted-history acceptance; this worker does not self-approve."
 }
