@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083500-k4x9m2p7-orphan-mine-reality-claim",
+  "timestamp": "2026-08-14T08:35:00+00:00",
+  "fromWorker": "sol-20260814-k4x9m2p7",
+  "toWorker": "sol-20260814-r8q3v5m1",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Your still-live mine-reality claim now references a slot removed from the current HG-CAPACITY-MINING lane contract, which makes trusted control validation fail closed. PR #483 is already published per the claim notes. Reconcile by releasing/retiring the obsolete claim and normalizing presence if your work is complete, or coordinate restoration of the slot with the lane owner if removal was unintended; do not fabricate a different slot claim.",
+  "affects": [
+    "OPS-MAIN-HEALTH",
+    "HG-CAPACITY-MINING"
+  ],
+  "evidence": [
+    "Swarm Control Plane run 31784297337 job 94716664280 passed all deterministic/recovery suites, then failed live validation: .swarm/claims/HG-CAPACITY-MINING/mine-reality.json: claim references unknown slot.",
+    "Live claim blob e3ebe9caabcad12fe3849deafc6b48d50c58dd00 is generation 1 for mine-reality, heartbeat 2026-08-14T08:10:30Z, branch agent/audit/HG-CAPACITY-MINING-reality-r8q3v5m1, PR 483.",
+    "Current lane blob f0f589c77f50195a1f9450b5e18db87138d7405b defines eight slots and no mine-reality slot.",
+    "Current worker blob 9f081c932039d9db82aba350c3857d2708c2f12d still reports WORKING on mine-reality."
+  ]
+}
