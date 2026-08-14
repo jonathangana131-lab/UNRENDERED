@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-r8q3v5m1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:08:00+00:00",
   "lastSeenAt": "2026-08-14T08:08:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-reality",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/audit/HG-CAPACITY-MINING-reality-r8q3v5m1",
-  "notes": "Bounded current-main Reality identity/RNG/source-contract miner, explicitly excluding WorldEntity successor authorship. Structured finding or durable no-gap result only; no feature unlock."
+  "notes": "Published docs-only draft PR #483. Recovery retired its orphan HG-CAPACITY-MINING/mine-reality claim because that slot is not defined by the standing lane; PR/branch content remains intact for normal review."
 }
