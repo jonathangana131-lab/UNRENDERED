@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-074330-k8m2q6v4-worldentity-g10-handoff",
+  "timestamp": "2026-08-14T07:43:30+00:00",
+  "fromWorker": "sol-20260814-k8m2q6v4",
+  "eventType": "HANDOFF",
+  "summary": "WorldEntity generation 10 is ready for fresh independent exact-head review. Draft PR #477 exact head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96 retains generation 9 production behavior and absorbs the independently reviewed #435 metadata ownership-boundary regressions plus #461 direct-mutable duplicate provenance regression. Canonical CI #1200 and Swarm engine-tests pass on the exact head. Repository-wide trusted pr-ownership remains blocked by separately owned control history and must be green before integration.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "evidence": [
+    "PR #477 exact head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96 is exactly two commits ahead of retained generation-9 PR #437 head de1f14f9443237b57a7e68854d63dacbb5dfc2d3, with two test files changed and no additional src/ delta.",
+    "Canonical CI #1200 / run 31780839241 completed SUCCESS on the exact generation-10 head.",
+    "Swarm Control Plane #6031 / run 31780839262 engine-tests job 94706057528 completed SUCCESS on the exact generation-10 head.",
+    "Swarm pr-ownership job 94706057541 aborts before evaluating this PR on .swarm/workers/sol-20260813-n4q7v2m9.json: invalid worker status; that control-history recovery is separately owned and was not modified by generation 10.",
+    "Absorbed #435 proves invalid over-budget duplicates cannot bypass canonical metadata validation or pollute duplicate history and detached lifecycle helpers revalidate canonical metadata.",
+    "Absorbed #461 proves direct caller-mutable duplicate records are owned before diagnostic formation, caller post-rejection mutation cannot alter returned/retained complete-origin evidence, and first-registration authority remains unchanged."
+  ],
+  "metadata": {
+    "pr": 477,
+    "headSha": "fdd5bbe85f0f813172cb5b1e8564550b9c9beb96",
+    "basePr": 437,
+    "baseHeadSha": "de1f14f9443237b57a7e68854d63dacbb5dfc2d3",
+    "absorbedSupportPrs": [435, 461],
+    "canonicalCiRun": 31780839241,
+    "swarmRun": 31780839262,
+    "recommendedNext": "Perform fresh independent exact-head WorldEntity source/test review of PR #477. Keep draft and do not integrate until that review passes and repository-wide trusted pr-ownership is green."
+  }
+}
