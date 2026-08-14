@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082815-z4p7m3n8-worldentity-stableid-authenticity",
+  "timestamp": "2026-08-14T08:28:15+00:00",
+  "fromWorker": "sol-20260814-z4p7m3n8",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "summary": "WorldEntity generation-10 retains strong hostile-ID execution fences but its canonical identity predicate still accepts arbitrary printable strings instead of authenticating the project StableId v1 contract. Draft PR #491 records the non-duplicate contract gap and the required compatibility decision without changing source or claiming Hero Gate engine evidence.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-WORLDENTITY"
+  ],
+  "severity": "medium",
+  "evidence": [
+    "Audited retained WorldEntity PR #477 exact head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96.",
+    "WorldEntity.isId() accepts any non-empty string up to 256 bytes without control characters; WorldEntity construction/ownership and registry lookup/mutation fences use that predicate.",
+    "Docs/ARCHITECTURE.md states WorldEntityId is supplied by the project StableId contract, while Docs/DETERMINISM_CONTRACT.md fixes StableId v1 text to <namespace>:v1:<32 lowercase hex digits> and StableId.is() exposes that validator.",
+    "PhysicsLabRecipe already creates canonical entity IDs with StableId.fromParts(\"entity\", ...), so the permanent Hero Gate fixture follows the stronger identity contract while the WorldEntity boundary itself does not authenticate it.",
+    "Merged PR #282 tightened aliases inside DeterminismContract.isStableId(); this finding is distinct because WorldEntity does not invoke the canonical validator. PR #378's hostile/non-string registry fence is also distinct because it uses the permissive WorldEntity.isId() predicate.",
+    "Existing WorldEntity tests contain readable legacy-shaped IDs such as entity:0000000000000001, so source tightening requires an explicit namespace/legacy compatibility decision rather than an unreviewed validator swap.",
+    "Docs-only PR #491 exact head 2951a627d7f327013bb1daee81e2d44dae6102c3 records the repro, non-duplication analysis, compatibility caution, and focused Pure Luau regression targets."
+  ],
+  "metadata": {
+    "findingPr": 491,
+    "findingHeadSha": "2951a627d7f327013bb1daee81e2d44dae6102c3",
+    "auditedPr": 477,
+    "auditedHeadSha": "fdd5bbe85f0f813172cb5b1e8564550b9c9beb96",
+    "recommendedNext": "Keep PR #491 docs-only. After the retained WorldEntity lineage is synchronized, explicitly decide whether WorldEntity requires StableId namespace entity, any canonical project StableId namespace, or a bounded legacy compatibility path; then materialize one narrow source+Pure-Luau leaf without rewriting StableId v1 bytes or weakening existing hostile-ID, duplicate, lifecycle, and budget fences."
+  }
+}
