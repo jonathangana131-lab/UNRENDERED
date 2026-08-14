@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082630-j9v4q6m2-fidelity-private-state",
+  "timestamp": "2026-08-14T08:26:30+00:00",
+  "fromWorker": "sol-20260814-j9v4q6m2",
+  "eventType": "FINDING",
+  "summary": "FidelityManager returns its invariant-bearing config, per-entity state map, and mutable metrics on the caller-reachable manager table. The facade is not frozen and backing state is not closure-private, so a caller crossing static typing can mutate registrations/accounting/temporal state behind validated methods; for example resetting _metrics.registered after filling a capacity-1 manager permits a second registration while retained state and aggregate counts diverge.",
+  "affects": [
+    "HG-BACKFILL-FIDELITY",
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+    "HG-CAPACITY-MINING"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Current main and retained PR #385 construct ManagerImpl with public config/_states/_metrics fields and return setmetatable(self, FidelityManager) without freezing the facade or moving mutable backing state behind a closure-private capability.",
+    "register() enforces maxRegisteredEntities by reading self._metrics.registered, then writes self._states and aggregate counts; caller mutation of _metrics therefore bypasses the advertised bounded registration envelope and corrupts accounting without crossing a validation boundary.",
+    "Retained PR #385 exact head 827ce0cf63ca5f322502de883beb9f43581c69f2 hardens config/input validation and transition atomicity but retains the same manager storage shape.",
+    "PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 adds the configured capacity ceiling but is stacked on #385 and does not hide/freeze manager-owned backing state.",
+    "The prior fidelity-extra-keys finding is a separate PolicyConfig/PolicyInputs schema-closure issue; PR/issue searches did not surface a dedicated FidelityManager private-state/frozen-facade repair.",
+    "Draft PR #490 records the source-only finding and bounded follow-up; no Luau execution, Roblox Studio, viewport, contact, networking, persistence, or two-client evidence is claimed."
+  ],
+  "metadata": {
+    "docsPr": 490,
+    "docsHeadSha": "eb315457e35899395d892e9fcf4e51da8ec52a96",
+    "retainedFidelityPr": 385,
+    "retainedFidelityHeadSha": "827ce0cf63ca5f322502de883beb9f43581c69f2",
+    "capacitySuccessorPr": 419,
+    "capacitySuccessorHeadSha": "1f017628bf49365663dfc2db3a30b81ba477a0a3",
+    "recommendedNext": "After retained Fidelity source lineages are explicitly unlocked and reconciled, hide mutable manager backing state behind a project-owned capability boundary and freeze the public facade. Add adversarial regressions proving public mutation cannot alter registrations/counts, pending/cooldown state, transition fences, or policy config while preserving #385/#419 semantics and O(1) operations."
+  }
+}
