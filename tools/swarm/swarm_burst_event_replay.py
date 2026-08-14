@@ -35,6 +35,26 @@ RULES = {
         "repairPredecessorSha": "791a08bc09417be1453e614101bae115ce1409bb",
         "repairCommitSha": "9c00a778654499cd10f177b52f5840d530feee5e",
     },
+    "evt-20260814-072200-x4m9p2c7-runtime-schema-closure": {
+        "date": "2026-08-14",
+        "filename": "evt-20260814-072200-x4m9p2c7-runtime-schema-closure.json",
+        "quarantinedGitBlobSha1": "d91e2997f73bda1adcf0e6c7f255e84f17b4e135",
+        "canonicalGitBlobSha1": "336ab9a01a87e43e3a04ca735f9113025eb93c97",
+        "introductionPredecessorSha": "5647d4a704f984f51ac93db940861db5358bb096",
+        "introductionCommitSha": "0c77f717f7331324c2834df98326b20254e83ce0",
+        "repairPredecessorSha": "d817944a152104882a1717cb58046082d39ee2cb",
+        "repairCommitSha": "1955d0207630d2d2062ea39a027f03636e8b8175",
+    },
+    "evt-20260814-072500-x4m9p2c7-runtime-schema-review-request": {
+        "date": "2026-08-14",
+        "filename": "evt-20260814-072500-x4m9p2c7-runtime-schema-review-request.json",
+        "quarantinedGitBlobSha1": "9ef24b34d1965a18d3d9efff97a083e9c671b396",
+        "canonicalGitBlobSha1": "4406f0a30a5ec4b3026fc28ea7cd6d3e39f8c30c",
+        "introductionPredecessorSha": "577074756bee83842842bd14481bc1fe059ab55b",
+        "introductionCommitSha": "03471b25b2bcfe3068b7a15767cb3e782f28d6e2",
+        "repairPredecessorSha": "1955d0207630d2d2062ea39a027f03636e8b8175",
+        "repairCommitSha": "0d8d4cfcc4519c4bebb96f914a1e70615cce41ea",
+    },
 }
 
 
