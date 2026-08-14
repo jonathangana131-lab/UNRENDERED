@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t072509z-h1hu556z-worldentity-mutable-duplicate",
+  "timestamp": "2026-08-14T07:25:09Z",
+  "fromWorker": "sol-20260814-h1hu556z",
+  "eventType": "HANDOFF",
+  "summary": "WorldEntity test-adversary slot published support PR #461 at exact head 144f3042b3f7c7277924d03363e076ed3052c898. The regression exercises duplicate registration through the direct caller-mutable record boundary, proves post-rejection caller mutation cannot alter returned or retained complete-origin diagnostics, proves nested/top-level diagnostic immutability, and preserves first-registration authority. Canonical CI and Swarm engine-tests pass. Primary PR #437 received review handoff to absorb the test delta. Shared pr-ownership remains blocked by an unrelated unsupported DONE worker status owned by the active worker-status recovery lane.",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "affects": [
+    "HG-BACKFILL-WORLDENTITY",
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
+  ],
+  "evidence": [
+    "Support PR #461 exact head: 144f3042b3f7c7277924d03363e076ed3052c898; one test file changed and no production source changed.",
+    "Canonical CI run 31779623351 / #1182 completed SUCCESS on the exact support head.",
+    "Swarm run 31779623220 engine-tests job 94702335452 completed SUCCESS on the exact support head.",
+    "Swarm pr-ownership job 94702335352 aborts on .swarm/workers/sol-20260813-n4q7v2m9.json with invalid worker status DONE before evaluating this PR's ownership.",
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT/primary is actively claimed by sol-20260814-r6h3n9v2 on PR #465, so this worker did not edit the malformed worker record.",
+    "Primary PR #437 exact head de1f14f9443237b57a7e68854d63dacbb5dfc2d3 received independent review comment 4934925440 recommending absorption of #461 before final review/merge."
+  ]
+}
