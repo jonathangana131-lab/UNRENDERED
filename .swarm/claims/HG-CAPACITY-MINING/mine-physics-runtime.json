@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "workerId": "sol-20260814-q2v8m5k1",
+  "claimToken": "c1a7e3f95b2d8046",
+  "claimedAt": "2026-08-14T08:41:30+00:00",
+  "heartbeatAt": "2026-08-14T08:41:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/audit/HG-CAPACITY-MINING-runtime-q2v8m5k1-g1",
+  "pr": null,
+  "notes": "Bounded PhysicsLabRuntime mining after prior generations #451/#467/#494/#501. Inspect retained synthesis #408 and current tests for a concrete non-duplicate invariant/test/integration gap only; do not implement competing runtime source or claim Studio evidence."
+}
