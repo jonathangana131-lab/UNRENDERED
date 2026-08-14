@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T07:10:00+00:00",
-  "lastSeenAt": "2026-08-14T08:02:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-materialdna",
-  "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-r7n2v9k4",
-  "notes": "Completed and released Fidelity, ObjectGenome, and WorldEntity mining findings. Continuing on the unclaimed MaterialDNA capacity slot because live capacity remains. Source-only mining; no product write, Studio, viewport, or visual evidence claim."
+  "lastSeenAt": "2026-08-14T08:03:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Preempted and released MaterialDNA capacity mining when red-control recovery became current. Integrated emergency PR #475 after exact-head canonical CI PASS, Swarm engine/read-only-bootstrap PASS, and independent exact-head history review; closed stale competing PR #476 after its independent BLOCK. Watching mandatory post-merge V16 live refresh on main@8a481f74a442f499163574a1eb510604ac3a8c3a. No Studio/viewport/two-client evidence claimed."
 }
