@@ -39,6 +39,47 @@ class CliExitPropagationRegressionTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, 2)
 
 
+class FacadeReentryIsolationRegressionTests(unittest.TestCase):
+    def test_reentry_reuses_first_strict_anchors_and_shared_event_registry(self):
+        strict_validate = hard._STRICT_VALIDATE_EVENT
+        strict_read = hard._STRICT_READ_TREE
+        strict_transition = hard._STRICT_TRANSITION_CHECK
+        registry = hard._CANONICAL_IMMUTABLE_EVENTS
+        sentinel_id = "evt-20990101-reentry-shared-registry-sentinel"
+        sentinel_rule = {
+            "date": "2099-01-01",
+            "filename": "reentry-shared-registry-sentinel.json",
+            "canonicalGitBlobSha1": "0" * 40,
+        }
+        previous_validate = hard._base.core.validate_event
+        previous_read = hard._base.read_tree
+        previous_transition = hard._base.transition_check
+        previous_dashboard = hard._base.dashboard
+
+        self.assertIs(hard._base._V21_STRICT_VALIDATE_EVENT, strict_validate)
+        self.assertIs(hard._base._V21_STRICT_READ_TREE, strict_read)
+        self.assertIs(hard._base._V21_STRICT_TRANSITION_CHECK, strict_transition)
+        self.assertIs(hard._base._V21_CANONICAL_IMMUTABLE_EVENTS, registry)
+        self.assertIsNot(strict_validate, previous_validate)
+        self.assertIsNot(strict_read, previous_read)
+        self.assertIsNot(strict_transition, previous_transition)
+
+        registry[sentinel_id] = sentinel_rule
+        try:
+            rerun = runpy.run_module("swarmctl_hardening", run_name="__swarm_reentry_regression__")
+            self.assertIs(rerun["_STRICT_VALIDATE_EVENT"], strict_validate)
+            self.assertIs(rerun["_STRICT_READ_TREE"], strict_read)
+            self.assertIs(rerun["_STRICT_TRANSITION_CHECK"], strict_transition)
+            self.assertIs(rerun["_CANONICAL_IMMUTABLE_EVENTS"], registry)
+            self.assertIs(rerun["_CANONICAL_IMMUTABLE_EVENTS"][sentinel_id], sentinel_rule)
+        finally:
+            registry.pop(sentinel_id, None)
+            hard._base.core.validate_event = previous_validate
+            hard._base.read_tree = previous_read
+            hard._base.transition_check = previous_transition
+            hard._base.dashboard = previous_dashboard
+
+
 class ImmutableHistoricalEventCompatibilityTests(unittest.TestCase):
     EVENT_ID = "evt-20260811-080520-test-legacy-review"
 
