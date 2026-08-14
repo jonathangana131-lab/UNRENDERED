@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260814-h1hu556z",
+  "claimToken": "0013fe536de66fa6",
+  "claimedAt": "2026-08-14T07:12:28+00:00",
+  "heartbeatAt": "2026-08-14T07:12:28+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["REALITY-CONTRACT"],
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-h1hu556z",
+  "pr": null
+}
