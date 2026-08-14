@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-073430-v4q7m2c9-diagnostics-readout-visibility-pr",
+  "timestamp": "2026-08-14T07:34:30+00:00",
+  "fromWorker": "sol-20260814-v4q7m2c9",
+  "eventType": "EVIDENCE_RESULT",
+  "summary": "Diagnostics readout-visibility finding was converted into test-only expected-red support PR #474, exactly one commit above generation-17 PR #468 head 0703a44ff68a96d5907d514f66480ac8aca0145a. Canonical static/control gates through deterministic swarm tests pass; Pure Luau then fails as intended because the current validateReadoutCompleteness() helper has no fail-closed guard for disabled BillboardGui or hidden TextLabel readouts. The support PR must be absorbed with a bounded primary repair and must not merge independently.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "Draft PR #474 targets the active generation-17 branch agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-t5n8q3v6-g17; base exact head 0703a44ff68a96d5907d514f66480ac8aca0145a, support exact head de4c4c778faebba8116000819c83dbfa1aa3db1a, exactly one commit and one changed file with +17/-0.",
+    "The support change adds two expectations to tests/physics_lab_diagnostics_readout_contract.luau, scoped to validateReadoutCompleteness(): reject disabled BillboardGui readouts and reject hidden TextLabel readouts. Existing identity, authoritative membership, Adornee, text, tree-shape, stable-ordering, and count assertions are unchanged.",
+    "Exact production source at generation-17 head 0703a44ff68a96d5907d514f66480ac8aca0145a proves validateReadoutCompleteness() checks BillboardGui class, WorldEntityId membership/uniqueness, exact Adornee, Readout TextLabel class, descendant shape, exact label text, and exact count, but contains no child.Enabled or label.Visible fail-closed guard.",
+    "Canonical CI run 31780251725 attempt 2 on de4c4c778faebba8116000819c83dbfa1aa3db1a passes pinned toolchain, sourcemap, type definitions, StyLua, Selene, Luau analysis, canonical randomness, shared-domain boundary, plain shared-domain Roblox-value audit, and deterministic swarm tests; Pure Luau is the first failing semantic gate. The initial CI attempt failed during pinned-toolchain installation with exit 22 and is explicitly excluded as semantic evidence.",
+    "Swarm Control Plane run 31780264796 on the same support head reports engine-tests PASS. pr-ownership remains fail-closed in the repository-wide trusted/live control-state gate already blocking the diagnostics primary; this support branch does not bypass it.",
+    "Primary PR #468 received comment 5290749875 linking PR #474 and the structured source finding for bounded absorption. No local test execution, Roblox Studio, viewport, physical-contact, performance-device, networking, persistence, or two-client evidence is claimed."
+  ],
+  "metadata": {
+    "primaryPr": 468,
+    "primaryHeadSha": "0703a44ff68a96d5907d514f66480ac8aca0145a",
+    "supportPr": 474,
+    "supportHeadSha": "de4c4c778faebba8116000819c83dbfa1aa3db1a",
+    "canonicalCiRun": 31780251725,
+    "canonicalCiAttempt": 2,
+    "swarmRun": 31780264796,
+    "primaryCommentId": 5290749875,
+    "expectedRed": true,
+    "recommendedNext": "Diagnostics primary should absorb the two focused readout-visibility expectations together with the smallest fail-closed production repair in validateReadoutCompleteness(), preserving exact WorldEntity identity, Adornee, text, tree-shape, count, generation-17 cleanup atomicity, and clone-proof canonical validation. Do not merge PR #474 independently and do not convert this source-only evidence into HG151-DIAGNOSTICS viewport PASS."
+  }
+}
