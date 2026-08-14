@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-m4v8q2c7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-14T07:53:00+00:00",
-  "lastSeenAt": "2026-08-14T07:53:00+00:00",
+  "lastSeenAt": "2026-08-14T07:55:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-materialdna",
   "branch": "agent/audit/HG-CAPACITY-MINING-materialdna-m4v8q2c7",
-  "notes": "Bounded current-main MaterialDNA source/test miner; publish one concrete non-duplicate structured finding or a durable no-gap result. Docs-only scope, no feature unlock."
+  "notes": "Stopped without product branch after duplicate-prevention archaeology. Existing PR #472 already records the known-family coherence gap; repairCount, hostile-key, string/key bounds, fixture seals and validator work already have dedicated lineage. Durable finding evt-20260814-075430-m4v8q2c7-materialdna-duplicate-prevented records NO_NEW_NON_DUPLICATE_GAP. Claim released."
 }
