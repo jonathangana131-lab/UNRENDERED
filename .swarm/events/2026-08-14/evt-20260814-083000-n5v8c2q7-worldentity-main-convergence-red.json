@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083000-n5v8c2q7-worldentity-main-convergence-red",
+  "timestamp": "2026-08-14T08:30:00+00:00",
+  "fromWorker": "sol-20260814-n5v8c2q7",
+  "eventType": "EVIDENCE_RESULT",
+  "summary": "Current-main expected-red support PR #493 proves the retained WorldEntity generation-10 lineage has not converged into main: the byte-identical reviewed +48-line world_entity regression delta passes all pre-test canonical gates but Pure Luau fails because main lacks MAX_PERSISTENT_STATE_STRING_BYTES. A source-owning successor must absorb the approved production/test lineage onto current main; support PR #493 must not merge independently.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "evidence": [
+    "Current main af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 and PR #477 head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96 diverge; current main still uses tests/world_entity.luau blob 263918915475c897d8580a08f606ad50f160575d while the retained approved lineage uses blob 10a7eaf9448f021d86fdef8621c923b2550e7934.",
+    "Draft support PR #493 exact head 98fb8c2b3555dbaa8a11616009554126f1722681 changes exactly tests/world_entity.luau +48/-0 and transplants that reviewed blob byte-for-byte onto current main; no source, runner, control-plane, Studio, networking, persistence, or representation files change.",
+    "Canonical CI run 31784010511 passes pinned toolchain, format, lint, Luau analysis, randomness audit, shared-domain audit, plain-value audit, and deterministic Swarm tests before Pure Luau fails at tests/world_entity:465 with 'attempt to perform arithmetic (add) on nil and number'.",
+    "The failing assertion reads WorldEntity.MAX_PERSISTENT_STATE_STRING_BYTES and adds 1; the nil value is direct current-main evidence that the approved lineage's canonical metadata-budget surface is absent from main.",
+    "Swarm Control Plane run 31784010559 fails independently at trusted-state/bootstrap gates before PR ownership; that shared-control failure is not used as WorldEntity product evidence."
+  ],
+  "metadata": {
+    "pr": 493,
+    "headSha": "98fb8c2b3555dbaa8a11616009554126f1722681",
+    "baseSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "canonicalCiRunId": 31784010511,
+    "swarmRunId": 31784010559,
+    "retainedPr": 477,
+    "requiredNext": "source-owning-current-main-successor-absorbs-retained-worldentity-lineage"
+  }
+}
