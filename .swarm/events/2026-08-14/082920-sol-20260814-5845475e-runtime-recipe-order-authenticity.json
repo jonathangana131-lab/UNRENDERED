@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "082920-sol-20260814-5845475e-runtime-recipe-order-authenticity",
+  "timestamp": "2026-08-14T08:29:20+00:00",
+  "fromWorker": "sol-20260814-5845475e",
+  "eventType": "FINDING",
+  "summary": "Retained PhysicsLabRuntime synthesis #408 authenticates the canonical entity set by key but not the permanent PhysicsLabRecipe's deterministic index-to-key sequence. Swapping two otherwise-unchanged canonical entries passes the current constructor fence, distinct from #451 realization-value authenticity and #467 closed container shape. Draft PR #494 records the bounded indexed-order follow-up.",
+  "affects": ["HG-PHYSICS-RUNTIME-SYNTHESIS", "HG-PHYSICS-RUNTIME-RECIPE-CLOSED-SHAPE", "HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "tests/physics_lab_recipe.luau on main af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 compares two PhysicsLabRecipe.build() results by array index and requires each indexed kind/key/entity id to match, explicitly asserting 'lab entity sequence is deterministic'.",
+    "PR #408 exact product head d31c100c5d3766ca14d89b046fff4cdb09086754 builds CANONICAL_ENTITIES_BY_KEY and validates candidate entity recipes by entityRecipe.key; it does not compare each candidate key with CANONICAL_RECIPE.entities[index].key.",
+    "A two-entry permutation leaves the candidate array dense and complete, every wrapper/record canonical for its own key, all provenance/state/revision values unchanged, and every realization-bearing value unchanged; therefore it is not covered by #451 or #467.",
+    "Current PhysicsLabRealizer builds PhysicsLabRecipe.build() internally, so no live Workspace corruption or engine evidence is claimed.",
+    "Draft docs PR #494 exact head c6146bc721205f8bdd82bfc0970bf6be3b8a5d6c records the smallest bounded regression: reject a pure canonical-entry swap before authority construction and preserve immediate canonical retry."
+  ],
+  "metadata": {
+    "pr": 494,
+    "headSha": "c6146bc721205f8bdd82bfc0970bf6be3b8a5d6c",
+    "primaryPr": 408,
+    "primaryHeadSha": "d31c100c5d3766ca14d89b046fff4cdb09086754",
+    "previousFindings": [451, 467],
+    "recommendedNext": "When the retained runtime synthesis lineage resumes, require candidate.entities[index].key to equal CANONICAL_RECIPE.entities[index].key after dense closed-shape and primitive-string checks, retain all existing per-key authenticity checks, and add a pure swap/permutation rejection plus immediate canonical retry regression. No Studio evidence claim."
+  }
+}
