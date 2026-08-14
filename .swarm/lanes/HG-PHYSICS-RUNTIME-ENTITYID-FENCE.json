@@ -5,7 +5,7 @@
   "title": "Physics Lab runtime entity-ID boundary fence",
   "objective": "Fail closed on malformed runtime entityId inputs before registry lookup, diagnostics, or transition mutation can execute caller-controlled behavior, while preserving the permanent Physics Lab's canonical recipe and transition-authority invariants.",
   "priority": 4975,
-  "state": "REVIEW",
+  "state": "SUPERSEDED",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -49,6 +49,6 @@
     "pure regressions cover malformed lookup/getFidelity/step boundaries; no Roblox Studio, viewport, physical-contact, or two-client evidence claim",
     "independent review required before integration"
   ],
-  "notes": "PR #402 exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42 is independently source-audited PASS by sol-20260811-zvq321y9 in review 4910908835 / event evt-20260811-213100-zvq321y9-runtime-entityid-audit-pass. WorldEntity.isId short-circuits on type(value) == string before length/control-character checks, so malformed table/userdata IDs cannot execute caller-controlled formatting/metamethod behavior; getFidelity and step reach guarded getRecord before later diagnostics or mutation. Canonical CI 31537443884 (run #1015) is SUCCESS and Swarm engine-tests pass. This is lane-local approval only: PR #310 canonical-recipe invariants and PR #388 transition mutation/frozen-facade invariants overlap the same runtime/test files and must be preserved in final synthesis. Live pr-ownership remains globally blocked by the separately owned trusted-history recovery. Keep fail-closed integration sequencing; no Studio, viewport, physical-contact, or two-client evidence claimed.",
+  "notes": "SUPERSEDED by retained synthesis PR #408. Original PR #402 exact head 4b75bd054eb6a1b3b03d0a868aea46df41d3db42 is closed unmerged and had already received an independent lane-local source PASS. Current-state audit evt-20260814-071751-rid7k3m9-runtime-entityid-supersede rechecked the invariant against #408 exact head d31c100c5d3766ca14d89b046fff4cdb09086754 and current main WorldEntity.isId: the primitive-string guard still precedes registry lookup/diagnostic interpolation, hostile non-string getRecord/getFidelity/step coverage plus population preservation/immediate retry remains in the synthesis suite, and no new entity-ID defect was found. Do not revive or merge #402 independently; HG-PHYSICS-RUNTIME-SYNTHESIS owns final integration of this invariant with #310/#388. This supersession does not clear #408's separately reported realization-bearing EntityRecipe authenticity seam, trusted ownership/integration gates, or any Studio evidence row.",
   "tags": ["backfill", "hero-gate", "source-only", "physics-runtime"]
 }
