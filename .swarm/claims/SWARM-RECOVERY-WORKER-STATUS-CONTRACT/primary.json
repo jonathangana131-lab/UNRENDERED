@@ -6,11 +6,11 @@
   "claimToken": "7c4f91a2d8e360b5",
   "claimedAt": "2026-08-14T07:10:00+00:00",
   "heartbeatAt": "2026-08-14T07:36:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 6,
   "resources": ["SWARM-PROTOCOL"],
   "branch": "agent/control/SWARM-RECOVERY-WORKER-STATUS-CONTRACT-primary-r6h3n9v2-g6",
   "pr": 465,
   "takeoverOf": "sol-20260813-k7m4v9q2",
-  "notes": "Generation-6 stale takeover for the facade re-entry strict-anchor/shared-registry repair. Draft PR #465 passed exact-head product CI and engine tests and received patch-level independent PASS; current work is the required current-main resync after merged red-control recovery #470, while the separate byte-only takeover trust-boundary finding remains explicitly scheduler-separated."
+  "notes": "Generation-6 primary handoff after PR #465 merged as ec7755717c9512b8418e2cfc77f0da69610ea9ae and post-merge canonical CI passed. Lease intentionally reduced to the protocol minimum without advancing heartbeat, so this primary is stale/released after 2026-08-14T07:41:00+00:00. Lane remains REVIEW: independent audit/control-plane correction must resolve the write-scope mismatch and live trusted-history acceptance before DONE."
 }
