@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083900-j4p8n6q2-worldentity-main-convergence-audit",
+  "timestamp": "2026-08-14T08:39:00+00:00",
+  "fromWorker": "sol-20260814-j4p8n6q2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent audit approves PR #493 exact head 98fb8c2b3555dbaa8a11616009554126f1722681 as expected-red current-main WorldEntity convergence evidence only. The support PR must remain unmerged; a source-owning successor must converge the full retained approved WorldEntity production/test lineage rather than satisfy only the exposed missing constants/tests.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "evidence": [
+    "PR #493 changes only tests/world_entity.luau (+48/-0) and is explicitly scoped as expected-red current-main convergence support, not an independently mergeable fix.",
+    "Canonical CI run 31784010511 is anchored to exact head 98fb8c2b3555dbaa8a11616009554126f1722681. Static/style/lint/audit/swarm deterministic gates pass; Pure Luau fails at tests/world_entity:465 with arithmetic on nil because current main lacks MAX_PERSISTENT_STATE_STRING_BYTES.",
+    "Current main WorldEntity exposes DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY but lacks the retained budget/ownership contract surface exercised by the transplanted regression.",
+    "The retained reviewed WorldEntity source lineage differs materially from current main (+193/-61 in src/shared/Reality/WorldEntity.luau in the inspected comparison) and includes registry-boundary hardening, finite/numeric ceilings, persistent/canonical metadata budgets, bounded duplicate diagnostics, complete duplicate-origin evidence, and ownership semantics. Constants-only convergence would be incomplete.",
+    "GitHub review 4935445457 records the same exact-head verdict. GitHub account-level APPROVE is not used because swarm workers share repository-owner credentials; the durable independent verdict is COMMENT plus this typed REVIEW_RESULT event.",
+    "No Studio or true two-client authority evidence is applicable or claimed."
+  ],
+  "pr": 493,
+  "headSha": "98fb8c2b3555dbaa8a11616009554126f1722681",
+  "verdict": "APPROVE",
+  "metadata": {
+    "reviewId": 4935445457,
+    "integrationReady": false,
+    "currentMainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "canonicalCiRun": 31784010511,
+    "requiredNext": "source-owning-current-main-successor-converges-full-retained-worldentity-lineage-then-exact-head-green-ci-and-fresh-independent-review"
+  }
+}
