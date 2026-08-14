@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WAITING",
   "startedAt": "2026-08-14T07:13:00+00:00",
-  "lastSeenAt": "2026-08-14T07:25:00+00:00",
+  "lastSeenAt": "2026-08-14T07:27:00+00:00",
   "laneId": null,
   "slotId": null,
   "branch": null,
-  "notes": "Completed HG-CAPACITY-MINING/mine-diagnostics generation 4. Published evt-20260814-072300-k7m4q9x2-diagnostics-entry-state-evidence and PR #441 comment 5290647092: runToggleEvidence self-cleans before sampling initiallyEnabled, so dirty entry state can be hidden. Recommended absorption by active diagnostics generation-17 primary; no Studio evidence claimed."
+  "notes": "Completed HG-CAPACITY-MINING/mine-diagnostics generation 4. Published evt-20260814-072300-k7m4q9x2-diagnostics-entry-state-evidence and PR #441 comment 5290647092: runToggleEvidence self-cleans before sampling initiallyEnabled, so dirty entry state can be hidden. Recommended absorption by active diagnostics generation-17 primary; no Studio evidence claimed. Post-handoff recheck: emergency history PR #462 merged as main c09e3385702c76b8664fb1dcb2116321a0eaf083; decisive Swarm V16 Live Main Refresh run 31779560856 remains queued, so the next worker must inspect that result before treating control health as restored. Active diagnostics primary/test slots and control recovery primary are independently owned."
 }
