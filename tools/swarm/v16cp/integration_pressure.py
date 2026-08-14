@@ -24,6 +24,20 @@ def _stable_slot(worker_id: str, size: int) -> int:
     return int.from_bytes(hashlib.sha256(worker_id.encode()).digest()[:8], "big") % size
 
 
+def _actionable_objective(graph: Mapping[str, Any], item: Mapping[str, Any]) -> Mapping[str, Any] | None:
+    obj = graph.get("objectives", {}).get(item.get("objectiveId"))
+    if not obj or obj.get("status") in {"DONE", "EXTERNAL_BLOCKED"}:
+        return None
+    blocker = graph.get("blockers", {}).get(item.get("blockerId")) if item.get("blockerId") else None
+    if blocker and blocker.get("state") == "EXTERNAL":
+        return None
+    return obj
+
+
+def _without_capacity_mining(packets: Sequence[MissionPacket]) -> list[MissionPacket]:
+    return [packet for packet in packets if packet.packet.get("MODE") != "CAPACITY_MINING_ASSIST"]
+
+
 def integration_candidates(graph: Mapping[str, Any]) -> list[tuple[float, Mapping[str, Any]]]:
     weights = {"INTEGRATING": 1600.0, "REVIEW": 1050.0}
     severity = {"P0": 900.0, "P1": 550.0, "P2": 180.0, "P3": 40.0}
@@ -32,11 +46,8 @@ def integration_candidates(graph: Mapping[str, Any]) -> list[tuple[float, Mappin
         state = str(item.get("status") or "")
         if state not in weights:
             continue
-        obj = graph.get("objectives", {}).get(item.get("objectiveId"))
-        if not obj or obj.get("status") in {"DONE", "EXTERNAL_BLOCKED"}:
-            continue
-        blocker = graph.get("blockers", {}).get(item.get("blockerId")) if item.get("blockerId") else None
-        if blocker and blocker.get("state") == "EXTERNAL":
+        obj = _actionable_objective(graph, item)
+        if obj is None:
             continue
         score = weights[state]
         score += severity.get(str(obj.get("severity") or "P3"), 0.0)
@@ -56,19 +67,23 @@ def canonical_absorption_plan(graph: Mapping[str, Any]) -> list[dict[str, Any]]:
         if not canonical:
             continue
         children = [
-            item for item in graph.get("workItems", {}).values()
+            item
+            for item in graph.get("workItems", {}).values()
             if item.get("objectiveId") == oid
             and item.get("status") in {"REVIEW", "INTEGRATING"}
             and item.get("branch")
             and str(item.get("branch")) != canonical
+            and _actionable_objective(graph, item) is not None
         ]
         if children:
-            plans.append({
-                "objectiveId": oid,
-                "canonicalBranch": canonical,
-                "childWorkItemIds": [str(item.get("workItemId")) for item in children],
-                "action": "ABSORB_INTO_CANONICAL",
-            })
+            plans.append(
+                {
+                    "objectiveId": oid,
+                    "canonicalBranch": canonical,
+                    "childWorkItemIds": [str(item.get("workItemId")) for item in children],
+                    "action": "ABSORB_INTO_CANONICAL",
+                }
+            )
     plans.sort(key=lambda p: (-len(p["childWorkItemIds"]), p["objectiveId"]))
     return plans
 
@@ -78,7 +93,10 @@ def merge_pressure_report(graph: Mapping[str, Any]) -> dict[str, Any]:
     queue = list((graph.get("mergeTrain") or {}).get("queue") or [])
     absorption = canonical_absorption_plan(graph)
     active = bool(candidates or queue or absorption)
-    objectives = sorted({str(item.get("objectiveId")) for _, item in candidates} | {p["objectiveId"] for p in absorption})
+    objectives = sorted(
+        {str(item.get("objectiveId")) for _, item in candidates}
+        | {p["objectiveId"] for p in absorption}
+    )
     return {
         "policyVersion": V16_2_POLICY_VERSION,
         "active": active,
@@ -114,17 +132,22 @@ def health_report(graph: Mapping[str, Any], workers: int = 30, now=None) -> dict
     return report
 
 
-def _pressure_packet(graph: Mapping[str, Any], item: Mapping[str, Any], worker_id: str, score: float) -> MissionPacket:
+def _pressure_packet(
+    graph: Mapping[str, Any],
+    item: Mapping[str, Any],
+    worker_id: str,
+    score: float,
+) -> MissionPacket:
     obj = graph["objectives"][item["objectiveId"]]
     mission = graph["missions"][item["missionId"]]
     canonical = str(obj.get("canonicalBranch") or item.get("branch") or "")
     source = str(item.get("branch") or canonical)
-    duty = ("INTEGRATE", "RED_TEAM", "TEST", "CONFLICT_CHECK")[_stable_slot(worker_id + "::" + item["workItemId"], 4)]
+    duty = ("INTEGRATE", "RED_TEAM", "TEST", "CONFLICT_CHECK")[
+        _stable_slot(worker_id + "::" + item["workItemId"], 4)
+    ]
     exclusive = duty == "INTEGRATE"
     # Integration writes target the canonical destination. Review/test/conflict
-    # workers must inspect the exact source candidate that contains the changes
-    # awaiting absorption; otherwise they can produce false-green evidence on a
-    # destination branch that does not contain the candidate yet.
+    # workers inspect the exact source candidate containing the pending changes.
     working_branch = canonical if exclusive else source
     data = {
         "SWARM_POLICY_VERSION": V16_2_POLICY_VERSION,
@@ -155,11 +178,27 @@ def _pressure_packet(graph: Mapping[str, Any], item: Mapping[str, Any], worker_i
         "TRUTH_GATE": "MERGE_PRESSURE cannot promote Studio, multiplayer, device, server-authority, or other external truth without explicit evidence.",
         "AFTER_TASK": "refresh; continue merge pressure while accepted work remains outside MAIN",
     }
-    return MissionPacket(item["missionId"], item["objectiveId"], item["workItemId"], "integrator" if exclusive else "reviewer", score, data)
+    return MissionPacket(
+        item["missionId"],
+        item["objectiveId"],
+        item["workItemId"],
+        "integrator" if exclusive else "reviewer",
+        score,
+        data,
+    )
 
 
-def worker_plan(graph: Mapping[str, Any], worker_id: str, limit: int = 8, now=None) -> list[MissionPacket]:
+def worker_plan(
+    graph: Mapping[str, Any], worker_id: str, limit: int = 8, now=None
+) -> list[MissionPacket]:
     base = list(_persist.worker_plan(graph, worker_id, max(limit, 8), now))
+    pressure = merge_pressure_report(graph)
+    if not pressure["active"]:
+        return base[:limit]
+
+    # Capacity mining is suppressed for every worker while any merge pressure
+    # remains, including workers deliberately kept outside the pressure share.
+    base = _without_capacity_mining(base)
     candidates = integration_candidates(graph)
     if not candidates:
         return base[:limit]
@@ -176,10 +215,6 @@ def worker_plan(graph: Mapping[str, Any], worker_id: str, limit: int = 8, now=No
     out = [first]
     seen = {(first.work_item_id, first.packet.get("MODE"))}
     for packet in base:
-        # Capacity mining is intentionally suppressed while merge pressure is
-        # active; review/debug/integration fallbacks remain useful.
-        if packet.packet.get("MODE") == "CAPACITY_MINING_ASSIST":
-            continue
         key = (packet.work_item_id, packet.packet.get("MODE"))
         if key in seen:
             continue
@@ -190,7 +225,12 @@ def worker_plan(graph: Mapping[str, Any], worker_id: str, limit: int = 8, now=No
     return out
 
 
-def recommend(graph: Mapping[str, Any], worker_ids: Sequence[str] = (), limit: int = 30, now=None) -> list[MissionPacket]:
+def recommend(
+    graph: Mapping[str, Any],
+    worker_ids: Sequence[str] = (),
+    limit: int = 30,
+    now=None,
+) -> list[MissionPacket]:
     if limit < 1:
         return []
     if worker_ids:
@@ -200,19 +240,39 @@ def recommend(graph: Mapping[str, Any], worker_ids: Sequence[str] = (), limit: i
             if not plan:
                 continue
             packet = plan[0]
-            data = dict(packet.packet); data["ASSIGNED_WORKER"] = worker
-            out.append(MissionPacket(packet.mission_id, packet.objective_id, packet.work_item_id, packet.role, packet.priority_score, data))
+            data = dict(packet.packet)
+            data["ASSIGNED_WORKER"] = worker
+            out.append(
+                MissionPacket(
+                    packet.mission_id,
+                    packet.objective_id,
+                    packet.work_item_id,
+                    packet.role,
+                    packet.priority_score,
+                    data,
+                )
+            )
         return out
 
     pressure = integration_candidates(graph)
     if not pressure:
-        return _persist.recommend(graph, worker_ids, limit, now)
-    out = [_pressure_packet(graph, item, f"operator-{i}", score + 2500.0) for i, (score, item) in enumerate(pressure[:limit])]
+        base = list(_persist.recommend(graph, worker_ids, limit, now))
+        if merge_pressure_report(graph)["active"]:
+            base = _without_capacity_mining(base)
+        return base[:limit]
+    out = [
+        _pressure_packet(graph, item, f"operator-{i}", score + 2500.0)
+        for i, (score, item) in enumerate(pressure[:limit])
+    ]
     if len(out) < limit:
         for packet in _persist.recommend(graph, (), limit, now):
             if packet.packet.get("MODE") == "CAPACITY_MINING_ASSIST":
                 continue
-            if any(existing.work_item_id == packet.work_item_id and existing.packet.get("MODE") == packet.packet.get("MODE") for existing in out):
+            if any(
+                existing.work_item_id == packet.work_item_id
+                and existing.packet.get("MODE") == packet.packet.get("MODE")
+                for existing in out
+            ):
                 continue
             out.append(packet)
             if len(out) >= limit:
@@ -224,7 +284,13 @@ def continuation_status(graph: Mapping[str, Any], worker_id: str, now=None) -> d
     plan = worker_plan(graph, worker_id, 8, now)
     pressure = merge_pressure_report(graph)
     if not plan:
-        return {"status": "STOP", "stopAuthorized": True, "next": None, "fallbacks": [], "mergePressure": pressure}
+        return {
+            "status": "STOP",
+            "stopAuthorized": True,
+            "next": None,
+            "fallbacks": [],
+            "mergePressure": pressure,
+        }
     first = plan[0]
     mode = first.packet.get("MODE", "PRIMARY")
     return {
