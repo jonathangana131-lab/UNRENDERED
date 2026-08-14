@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """Validate first-parent control history after a separately trusted anchor.
 
-Normal history is strict. A finite post-bootstrap recovery row may bridge one exact
-known-invalid commit only when its predecessor, immediate repair, and Git changed
-paths all match reviewed immutable identities. The invalid snapshot is never passed
-to transition_check and never becomes authority; strict transition validation runs
-from the last valid predecessor directly to the exact repaired snapshot.
+Normal history is strict. Finite recovery may cross only exact reviewed Git
+transitions whose predecessor, commit, changed paths, and immutable byte identities
+all match. Disposable compatibility snapshots never become authority.
 """
 from __future__ import annotations
 
@@ -17,13 +15,14 @@ import tempfile
 from pathlib import Path
 from typing import Iterable
 
+import swarm_burst_event_replay as burst_event_replay
+import swarm_burst_takeover_recovery as burst_takeover_recovery
 import swarm_failed_control_recovery as failed_recovery
 import swarmctl_hardening as hard
-import swarm_burst_takeover_recovery as burst_takeover_recovery
 
-# Trusted first-parent replay encounters the first malformed burst takeover before
-# the later state originally pinned by the hardening facade. Replace only that
-# finite replay row; normal/live transition validation remains strict.
+# Register only exact historical byte identities. The takeover registry remains
+# finite, while burst event transition compatibility is invoked explicitly below
+# with exact first-parent Git identities; neither install wraps transition_check.
 burst_takeover_recovery.install(hard)
 
 _SHA_RE = re.compile(r"[a-f0-9]{40}")
@@ -53,7 +52,7 @@ def first_parent_commits(git_root: Path, trusted_sha: str, control_sha: str) -> 
 
 
 def validate_snapshot_chain(snapshot_roots: Iterable[Path]) -> list[dict]:
-    """Pure snapshot replay remains exception-free for adversarial regression tests."""
+    """Pure snapshot replay is deliberately exception-free."""
     roots = [Path(root) for root in snapshot_roots]
     if not roots:
         raise hard.core.ControlError("trusted history chain requires at least one snapshot")
@@ -136,7 +135,20 @@ def validate_git_chain(git_root: Path, trusted_sha: str, control_sha: str) -> di
                 last_valid_root = roots[next_sha]
                 index += 2
                 continue
-            results.append(hard.transition_check(last_valid_root, roots[current_sha]))
+
+            changed_paths = _changed_paths(git_root, last_valid_sha, current_sha)
+            finite_event = burst_event_replay.validate_git_transition(
+                hard,
+                last_valid_sha,
+                current_sha,
+                changed_paths,
+                last_valid_root,
+                roots[current_sha],
+            )
+            if finite_event is not None:
+                results.append(finite_event)
+            else:
+                results.append(hard.transition_check(last_valid_root, roots[current_sha]))
             last_valid_sha = current_sha
             last_valid_root = roots[current_sha]
             index += 1
