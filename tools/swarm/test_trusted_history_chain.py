@@ -10,6 +10,7 @@ import unittest
 
 from test_swarmctl_hardening_base import Fx, NOW, core, write
 import swarm_burst_event_replay as burst_replay
+import swarm_burst_takeover_recovery as burst_takeover
 import swarm_failed_control_recovery as failed_recovery
 import swarm_history_recovery_extension as extension
 import swarm_history_recovery_manifest as recovery
@@ -53,6 +54,23 @@ class BurstReplayHardeningFake:
         return [self.event_id] if (Path(root) / self.relative).is_file() else []
 
 
+class FiniteTakeoverHardeningFake:
+    def __init__(self, relative: Path, previous_worker: str):
+        self.relative = relative
+        self.previous_worker = previous_worker
+        self.core = core
+
+    @staticmethod
+    def _git_blob_sha1(path: Path) -> str:
+        return hard._git_blob_sha1(path)
+
+    def transition_check(self, _before: Path, after: Path) -> dict:
+        claim = core.load_json(Path(after) / self.relative, max_bytes=32_000)
+        if claim.get("takeoverOf") != self.previous_worker:
+            raise core.ControlError("takeoverOf must identify previous worker")
+        return {"status": "PASS"}
+
+
 class TrustedHistoryChainTests(unittest.TestCase):
     def valid_event(self, summary: str) -> dict:
         return {"schemaVersion":1,"eventId":"evt-20260811-214000-chain-regression","timestamp":NOW,"fromWorker":"sol-20260811-a81f","eventType":"FINDING","severity":"normal","summary":summary,"affects":[]}
@@ -92,6 +110,109 @@ class TrustedHistoryChainTests(unittest.TestCase):
                 return subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"], text=True).strip()
             trusted_sha = commit("trusted"); middle_sha = commit("middle"); control_sha = commit("control")
             self.assertEqual(chain.first_parent_commits(repo, trusted_sha, control_sha), [middle_sha, control_sha])
+
+    def test_worldentity_takeover_bridge_is_exact_git_and_blob_pinned(self):
+        relative = Path("claims/HG-BACKFILL-WORLDENTITY/primary.json")
+        rule = burst_takeover.GIT_RULES[relative.as_posix()]
+        self.assertEqual(
+            rule,
+            {
+                "predecessorSha": "2e354e477e0ed7566b5832ed2a16a7dafa0c027f",
+                "commitSha": "72c2530d3cfe8d8fdff08c06472e67b52266e217",
+                "beforeGitBlobSha1": "b1deb0f37009dd90d7b2f120dd78f6ef43aaa8a4",
+                "afterGitBlobSha1": "13edc7064471e5e8705b1f04a2f2a7ad8a75191f",
+                "takeoverOf": "sol-20260812-q6n9v2m4",
+            },
+        )
+        before_raw = b'''{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "primary",
+  "workerId": "sol-20260812-q6n9v2m4",
+  "claimToken": "e5c27a914bd3608f",
+  "claimedAt": "2026-08-12T10:45:45+00:00",
+  "heartbeatAt": "2026-08-12T11:06:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 9,
+  "resources": ["REALITY-CONTRACT"],
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-origin-evidence-q6n9v2m4",
+  "pr": 437
+}
+'''
+        after_raw = b'''{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "slotId": "primary",
+  "workerId": "sol-20260814-k8m2q6v4",
+  "claimToken": "5a9c2e7d4b1f8063",
+  "claimedAt": "2026-08-14T07:40:00+00:00",
+  "heartbeatAt": "2026-08-14T07:40:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 10,
+  "resources": ["REALITY-CONTRACT"],
+  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-primary-k8m2q6v4-g10",
+  "pr": null
+}
+'''
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            before = root / "before"
+            after = root / "after"
+            before_path = before / relative
+            after_path = after / relative
+            before_path.parent.mkdir(parents=True)
+            after_path.parent.mkdir(parents=True)
+            before_path.write_bytes(before_raw)
+            after_path.write_bytes(after_raw)
+            fake = FiniteTakeoverHardeningFake(relative, rule["takeoverOf"])
+            changed = (f".swarm/{relative.as_posix()}",)
+
+            with self.assertRaises(core.ControlError):
+                fake.transition_check(before, after)
+            result = burst_takeover.validate_git_transition(
+                fake,
+                rule["predecessorSha"],
+                rule["commitSha"],
+                changed,
+                before,
+                after,
+            )
+            self.assertEqual(result["status"], "PASS")
+            self.assertEqual(result["finiteHistoricalTakeoverCompat"], [relative.as_posix()])
+            self.assertEqual(
+                result["historicalGitTransition"],
+                {"predecessorSha": rule["predecessorSha"], "commitSha": rule["commitSha"]},
+            )
+            self.assertIsNone(
+                burst_takeover.validate_git_transition(
+                    fake,
+                    "f" * 40,
+                    rule["commitSha"],
+                    changed,
+                    before,
+                    after,
+                )
+            )
+            with self.assertRaises(core.ControlError):
+                burst_takeover.validate_git_transition(
+                    fake,
+                    rule["predecessorSha"],
+                    rule["commitSha"],
+                    changed + (".swarm/workers/unrelated.json",),
+                    before,
+                    after,
+                )
+            after_path.write_bytes(after_raw + b" ")
+            with self.assertRaises(core.ControlError):
+                burst_takeover.validate_git_transition(
+                    fake,
+                    rule["predecessorSha"],
+                    rule["commitSha"],
+                    changed,
+                    before,
+                    after,
+                )
 
     def test_incremental_snapshot_matches_exact_git_tree(self):
         with tempfile.TemporaryDirectory() as temp:
