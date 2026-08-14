@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-z7m2q9c4",
   "model": "gpt-5.6-sol",
-  "status": "READY",
+  "status": "REVIEWING",
   "startedAt": "2026-08-14T08:21:30+00:00",
-  "lastSeenAt": "2026-08-14T08:29:00+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Published docs-only diagnostics matcher finding PR #487 with exact-head canonical CI PASS; claim released. Continuing scheduler scan for another safe non-conflicting role."
+  "lastSeenAt": "2026-08-14T08:30:20+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-z7m2q9c4-g2",
+  "notes": "Independent exact-head source/test review of diagnostics generation-18 PR #486; checking absorbed cleanup/visibility support plus newer adversarial test-integrity findings."
 }
