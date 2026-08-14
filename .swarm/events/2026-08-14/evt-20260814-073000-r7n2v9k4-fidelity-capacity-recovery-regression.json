@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-073000-r7n2v9k4-fidelity-capacity-recovery-regression",
+  "timestamp": "2026-08-14T07:30:00+00:00",
+  "fromWorker": "sol-20260814-r7n2v9k4",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "low",
+  "summary": "Retained Fidelity capacity PR #419 proves rejection at the registration ceiling and ordinary unregister behavior separately, but does not prove that capacity is recoverable after a rejected registration. Add one narrow source-only lifecycle regression to the existing authorized Fidelity lineage: with maxRegisteredEntities=1, register A, reject B at capacity, unregister A, then register B successfully while conserving registered/F-level counts and preserving the cumulative registrationCapacityRejections counter. Current #419 source appears correct; this is a missing regression, not a source defect and not justification for a parallel Fidelity implementation lane.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+    "HG-FIDELITY-MANAGER-STATE-ENCAPSULATION"
+  ],
+  "evidence": [
+    "PR #419 exact head 1f017628bf49365663dfc2db3a30b81ba477a0a3 has a one-slot capacity test that registers entity A, rejects entity B, and checks registered/F-level/rejection metrics; the same suite has ordinary unregister coverage elsewhere, but no capacityManager:unregister lifecycle sequence after a capacity rejection.",
+    "At #419, unregister removes the entity state and decrements both metrics.registered and the current fidelity bucket; register gates capacity from the current metrics.registered value, so source inspection indicates headroom should be restored correctly after unregister.",
+    "The missing regression should assert: after A is unregistered, registered=0 and its fidelity count=0 while registrationCapacityRejections remains 1; registering B at a distinct level then succeeds with registered=1, only B's bucket incremented, and the cumulative rejection counter unchanged.",
+    "This case is distinct from the already-owned Fidelity backing-state encapsulation and PolicyConfig/PolicyInputs closed-shape findings, and should be folded into the retained #419/next serialized Fidelity test lineage rather than opening competing FidelityManager WIP.",
+    "No Roblox Studio, viewport, contact, performance-device, or two-client evidence is claimed by this source/test mining finding."
+  ]
+}
