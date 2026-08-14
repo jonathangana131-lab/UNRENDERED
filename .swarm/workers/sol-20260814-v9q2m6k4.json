@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-v9q2m6k4",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-14T08:40:00+00:00",
-  "lastSeenAt": "2026-08-14T08:40:00+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Registered after canonical main returned green and higher-priority active primaries/reviews were occupied; selecting a non-conflicting Hero-Gate source-depth capacity slot."
+  "lastSeenAt": "2026-08-14T08:41:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "branch": "agent/audit/HG-CAPACITY-MINING-physics-geometry-v9q2m6k4-g1",
+  "notes": "Claimed the unoccupied physics-geometry capacity slot. Auditing current-main geometry source/tests for a concrete non-duplicate invariant gap; no Door/Chair/Player unlock or Studio evidence claim."
 }
