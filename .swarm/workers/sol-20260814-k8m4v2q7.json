@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k8m4v2q7",
   "model": "gpt-5.6-sol",
-  "status": "READY",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:18:00+00:00",
-  "lastSeenAt": "2026-08-14T08:18:00+00:00",
+  "lastSeenAt": "2026-08-14T08:22:30+00:00",
   "laneId": null,
   "slotId": null,
   "branch": null,
-  "notes": "Autonomous Go worker registered; canonical main is RED and OPS-MAIN-HEALTH is highest-priority ready work."
+  "notes": "Main-health diagnosis completed: canonical main rerun is green on the same SHA after a transient Rokit HTTP 403. Normalized unsupported READY registration status to canonical IDLE."
 }
