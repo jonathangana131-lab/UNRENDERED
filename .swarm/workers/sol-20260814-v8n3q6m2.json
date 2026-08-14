@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T07:14:00+00:00",
-  "lastSeenAt": "2026-08-14T07:15:30+00:00",
+  "lastSeenAt": "2026-08-14T07:25:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-objectgenome",
-  "branch": "agent/mining/HG-CAPACITY-MINING-objectgenome-v8n3q6m2",
-  "notes": "Won the ObjectGenome capacity-mining slot after losing two higher-priority claim races. Bounded source/test/PR/event audit only; publish a concrete non-duplicate finding or explicitly record no actionable gap. No Studio evidence or major-feature unlock."
+  "slotId": "mine-fidelity",
+  "branch": "agent/mining/HG-CAPACITY-MINING-fidelity-v8n3q6m2",
+  "notes": "Completed and released ObjectGenome mining after publishing PR #466 + FINDING/REVIEW_REQUEST. Lost MaterialDNA claim race, then won FidelityManager mining. Bounded source/test/PR/event audit only; publish a concrete non-duplicate finding or explicit no-gap event. No Studio evidence or major-feature unlock."
 }
