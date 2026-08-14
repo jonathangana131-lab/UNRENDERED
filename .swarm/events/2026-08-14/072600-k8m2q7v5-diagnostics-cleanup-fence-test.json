@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-072600-k8m2q7v5-diagnostics-cleanup-fence-test",
+  "timestamp": "2026-08-14T07:26:00+00:00",
+  "fromWorker": "sol-20260814-k8m2q7v5",
+  "eventType": "HANDOFF",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "summary": "Generation-17 diagnostics primary repair is source-coherent against the known enabled-window cleanup blocker, but its absorbed source-contract regression under-specifies the protected window. Stacked draft PR #469 strengthens the test so all enabled canonical validation remains inside the cleanup-protected transaction and successful cleanup cannot let normal-path checks mask the original failure.",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "severity": "medium",
+  "evidence": [
+    "Primary PR #468 exact head c3381f3f372603f9e587fec54a595a025cfce3d6 moves enabled-window validation under pcall, calls PhysicsLabStudioDiagnostics.disable(lab) after the protected closure, and rethrows cycleResult with error(..., 0) before normal off-state validation.",
+    "The absorbed regression only required a pcall marker before cleanup plus failureGuard/propagate ordering; it did not prove diagnostic-count validation, enabled canonical capture, compare, resource-drift assertion, and envelope-drift assertion all remained inside the protected closure, nor that normal-path postconditions could not mask the original error after successful cleanup.",
+    "Stacked draft PR #469 exact head 41f22e94e60c61e0f1d41753b816f454ef58106d changes only tests/physics_lab_diagnostics_toggle_failure_cleanup.luau relative to primary head c3381f3f372603f9e587fec54a595a025cfce3d6 and adds those ordering contracts.",
+    "Primary exact-head canonical CI run 31779696437 is SUCCESS and Swarm engine-tests job 94702555575 is SUCCESS. The separate pr-ownership job 94702555494 remains fail-closed.",
+    "The stacked support PR received no Actions run because its base is the active feature branch. Local checkout/test execution was unavailable because github.com DNS resolution failed; no Pure Luau or Roblox Studio PASS is claimed for support head 41f22e94e60c61e0f1d41753b816f454ef58106d.",
+    "Primary PR #468 received handoff comment 5290694005 with exact absorption guidance."
+  ],
+  "metadata": {
+    "primaryPr": 468,
+    "primaryHeadSha": "c3381f3f372603f9e587fec54a595a025cfce3d6",
+    "supportPr": 469,
+    "supportHeadSha": "41f22e94e60c61e0f1d41753b816f454ef58106d",
+    "primaryCommentId": 5290694005,
+    "recommendedNext": "Absorb the one-file #469 regression delta into the generation-17 diagnostics primary, rerun canonical exact-head CI/Swarm engine-tests on the resulting primary head, then obtain a fresh independent exact-head audit. Preserve the external Studio-display blocker and do not convert source confidence into viewport evidence."
+  }
+}
