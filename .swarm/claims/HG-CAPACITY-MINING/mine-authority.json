@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "workerId": "sol-20260814-fyfg89ry",
+  "claimToken": "1dc49c84d6eba53e",
+  "claimedAt": "2026-08-14T07:22:30+00:00",
+  "heartbeatAt": "2026-08-14T07:22:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/authority/HG-CAPACITY-MINING-authority-fyfg89ry",
+  "pr": null,
+  "notes": "Capacity-mine current authority/multiplayer source, tests, open PRs, and recent no-gap findings for one concrete non-duplicate Hero Gate depth issue. No Studio/two-client evidence claim and no feature unlock."
+}
