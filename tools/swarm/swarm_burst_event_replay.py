@@ -57,6 +57,19 @@ RULES = {
     },
 }
 
+# This event was malformed at first write and remains intentionally inert. Its
+# identity is already pinned by swarm_history_recovery_extension; the extra Git
+# coordinates here authorize only its exact historical introduction transition.
+QUARANTINE_ONLY_RULES = {
+    "evt-20260813-225000-8fa445-authority-current-main-no-new-gap": {
+        "date": "2026-08-13",
+        "filename": "evt-20260813-225000-8fa445-authority-current-main-no-new-gap.json",
+        "quarantineOnlyGitBlobSha1": "6503ee1458957314660adab6ef1e56793e775175",
+        "introductionPredecessorSha": "a3ec4ac5ca87ab5fd7058c22a33af44d69fd51bd",
+        "introductionCommitSha": "47e9d65cb46852f396cfe109836623f4063d0d03",
+    },
+}
+
 
 def _relative(rule: dict[str, str]) -> str:
     return f"events/{rule['date']}/{rule['filename']}"
@@ -83,6 +96,16 @@ def install(hardening_module) -> None:
             "quarantinedGitBlobSha1": rule["quarantinedGitBlobSha1"],
             "canonicalGitBlobSha1": rule["canonicalGitBlobSha1"],
         }
+    for event_id, rule in QUARANTINE_ONLY_RULES.items():
+        expected = {
+            "date": rule["date"],
+            "filename": rule["filename"],
+            "quarantineOnlyGitBlobSha1": rule["quarantineOnlyGitBlobSha1"],
+        }
+        existing = registry.get(event_id)
+        if existing is not None and existing != expected:
+            raise RuntimeError(f"quarantine-only event registry mismatch for {event_id}")
+        registry[event_id] = expected
 
 
 def _require_exact_changed_path(hardening_module, rule: dict[str, str], changed_paths: tuple[str, ...]) -> None:
@@ -97,6 +120,49 @@ def _real_after_metadata(hardening_module, result: dict, after: Path) -> dict:
     # Compatibility validates a disposable tree. Audit metadata must describe the
     # immutable real after-snapshot that actually participates in trusted history.
     result["quarantinedHistoricalEvents"] = len(hardening_module.quarantined_history(Path(after)))
+    return result
+
+
+def _validate_quarantine_only_introduction(
+    hardening_module,
+    event_id: str,
+    rule: dict[str, str],
+    before_sha: str,
+    after_sha: str,
+    changed_paths: tuple[str, ...],
+    before: Path,
+    after: Path,
+) -> dict | None:
+    if before_sha != rule["introductionPredecessorSha"] or after_sha != rule["introductionCommitSha"]:
+        return None
+    _require_exact_changed_path(hardening_module, rule, changed_paths)
+    relative = _relative(rule)
+    before_path = before / relative
+    after_path = after / relative
+    if before_path.exists() or not after_path.is_file():
+        raise hardening_module.core.ControlError("finite quarantine-only event introduction path shape mismatch")
+    if hardening_module._git_blob_sha1(after_path) != rule["quarantineOnlyGitBlobSha1"]:
+        raise hardening_module.core.ControlError("finite quarantine-only event introduction blob mismatch")
+
+    with tempfile.TemporaryDirectory(prefix="swarm-burst-event-quarantine-intro-") as temp:
+        compat_after = Path(temp) / "after"
+        shutil.copytree(after, compat_after)
+        (compat_after / relative).unlink()
+        result = hardening_module.transition_check(before, compat_after)
+
+    event = hardening_module._validate_event_with_immutable_compat(after_path)
+    if (
+        event.get("_quarantined") is not True
+        or event.get("quarantineOnly") is not True
+        or event.get("eventId") != event_id
+    ):
+        raise hardening_module.core.ControlError("finite quarantine-only event introduction became authoritative")
+    _real_after_metadata(hardening_module, result, after)
+    result["finiteHistoricalQuarantineOnlyIntroductionCompat"] = [relative]
+    result["historicalGitTransition"] = {
+        "predecessorSha": before_sha,
+        "commitSha": after_sha,
+    }
     return result
 
 
@@ -116,6 +182,20 @@ def validate_git_transition(
     """
     before = Path(before)
     after = Path(after)
+
+    for event_id, rule in QUARANTINE_ONLY_RULES.items():
+        result = _validate_quarantine_only_introduction(
+            hardening_module,
+            event_id,
+            rule,
+            before_sha,
+            after_sha,
+            changed_paths,
+            before,
+            after,
+        )
+        if result is not None:
+            return result
 
     for event_id, rule in RULES.items():
         relative = _relative(rule)
