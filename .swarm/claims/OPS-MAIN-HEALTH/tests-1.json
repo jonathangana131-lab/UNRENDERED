@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "OPS-MAIN-HEALTH",
+  "slotId": "tests-1",
+  "workerId": "sol-20260814-k4x9m2p7",
+  "claimToken": "11c5e009ed32af0b",
+  "claimedAt": "2026-08-14T08:21:30+00:00",
+  "heartbeatAt": "2026-08-14T08:21:30+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/red-main/OPS-MAIN-HEALTH-tests-k4x9m2p7-g1",
+  "pr": null
+}
