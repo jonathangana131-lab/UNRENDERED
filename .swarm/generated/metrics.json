@@ -1,8 +1,7 @@
 {
   "activeClaims": 0,
   "activeEpics": [
-    "HERO-GATE",
-    "SWARM-V2"
+    "HERO-GATE"
   ],
   "eventCounts": {
     "BLOCKER": 28,
@@ -19,21 +18,21 @@
     "REVIEW_RESULT": 211,
     "SUPERSEDED": 2
   },
-  "generatedAt": "2026-08-14T13:22:28.227074+00:00",
+  "generatedAt": "2026-08-14T13:23:55.383005+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED": 20,
     "BLOCKED_EXTERNAL": 1,
-    "DONE": 16,
+    "DONE": 17,
     "LOCKED": 1,
     "NEEDS_CHANGES": 1,
     "PROPOSED": 10,
-    "READY": 8,
+    "READY": 7,
     "REVIEW": 1,
     "SUPERSEDED": 3
   },
   "note": "Gross lines written are diagnostic, not a success metric.",
-  "readySlots": 5,
+  "readySlots": 15,
   "reviewBacklog": 2,
   "schemaVersion": 1,
   "staleClaims": 27

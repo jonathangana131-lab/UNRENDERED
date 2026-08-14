@@ -1,14 +1,14 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-14T13:22:28.227074+00:00`
+Generated: `2026-08-14T13:23:55.383005+00:00`
 
-Canonical main: **RED** `3b616ff74483bfad7370ab4d98402bc6d7e9d8a4`
+Canonical main: **GREEN** `3b616ff74483bfad7370ab4d98402bc6d7e9d8a4`
 
-State digest: `e0c21e1d9401dd84129e39ef9ade59a205a66808587be3cab400c3b3c4739708`
+State digest: `89d4fd634142a934e1247facfc1fcb8e3ea940f0a20cd7a5ea9f96f5254f4cf8`
 
 ## Summary
 
-- ready slots: **5**
+- ready slots: **15**
 - active claims: **0**
 - stale claims: **27**
 - blocked-external lanes: **1**
@@ -16,10 +16,20 @@ State digest: `e0c21e1d9401dd84129e39ef9ade59a205a66808587be3cab400c3b3c4739708`
 ## Ready slots
 
 - `SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY/primary` — **Trusted history continuity implementation** — score 11049 — dependencies satisfied; resources available; unblocks 1 downstream lane(s)
-- `OPS-MAIN-HEALTH/primary` — **Red-main repair implementer** — score 11000 — dependencies satisfied; resources available
 - `SWARM-RECOVERY-HEALTH-VALIDATION-FENCE/primary` — **Critical validation-fence repair** — score 11000 — dependencies satisfied; resources available
 - `SWARM-V22-THROUGHPUT/primary` — **Implement and prove Swarm V2.2 throughput policy** — score 11000 — dependencies satisfied; resources available
-- `OPS-MAIN-HEALTH/tests-1` — **Red-main diagnosis/regression** — score 10700 — dependencies satisfied
+- `HG-BACKFILL-WORLDENTITY/test-adversary` — **WorldEntity adversarial regression author** — score 5420 — dependencies satisfied
+- `HG-BACKFILL-WORLDENTITY/audit` — **WorldEntity invariant and aliasing auditor** — score 5320 — dependencies satisfied
+- `HG-BACKFILL-DIAGNOSTICS/primary` — **Diagnostics source hardening** — score 5150 — dependencies satisfied; resources available
+- `HG-BACKFILL-DIAGNOSTICS/test-adversary` — **Diagnostics lifecycle and no-drift test author** — score 5070 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-worldentity` — **Mine WorldEntity for next concrete depth lane** — score 3680 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-objectgenome` — **Mine ObjectGenome for next concrete depth lane** — score 3670 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-materialdna` — **Mine MaterialDNA for next concrete depth lane** — score 3660 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-fidelity` — **Mine FidelityManager for next concrete depth lane** — score 3650 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-physics-runtime` — **Mine Physics runtime for next concrete depth lane** — score 3640 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-physics-geometry` — **Mine Physics geometry for next concrete depth lane** — score 3630 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-diagnostics` — **Mine diagnostics source for next concrete depth lane** — score 3620 — dependencies satisfied
+- `HG-CAPACITY-MINING/mine-authority` — **Mine authority/multiplayer source for next concrete depth lane** — score 3610 — dependencies satisfied
 
 ## Active claims
 
