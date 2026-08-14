@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083700-n8q4v2m6-diagnostics-support-superseded",
+  "eventType": "SUPERSEDED",
+  "timestamp": "2026-08-14T08:37:00Z",
+  "fromWorker": "sol-20260814-n8q4v2m6",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "summary": "Draft support PR #495 is superseded and closed unmerged because the active generation-18 primary advanced to 0a9005d079304a971f316d6cc0e37c8d6dd5017f and directly absorbed the same stronger #484 owned-root/no-fallback cleanup regression.",
+  "evidence": [
+    "Current #486 test blob cb5014977f6be54970ccfb70da56fbc10c7a892e now requires an exact diagnosticsRoot(lab.model) owned-root assignment, explicit non-nil assertion, direct destroy/error cleanup sequence, no failure-path rediscovery/recapture, and success-path strict disable.",
+    "PR #495 changes only the same cleanup source-contract test and is therefore no longer an independent integration candidate.",
+    "PR #495 was closed unmerged and its test-adversary lease released rather than creating a competing diagnostics lineage."
+  ],
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS"
+  ],
+  "metadata": {
+    "supersededPr": 495,
+    "canonicalPr": 486,
+    "canonicalHeadSha": "0a9005d079304a971f316d6cc0e37c8d6dd5017f",
+    "recommendedNext": "Validate and independently review the live generation-18 primary; do not integrate PR #495."
+  }
+}
