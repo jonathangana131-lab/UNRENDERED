@@ -1,36 +1,37 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-14T00:17:24.595143+00:00`
+Generated: `2026-08-14T07:33:54.593466+00:00`
 
-Canonical main: **GREEN** `eead13b2e90ffbba36248909d97e17856e002ad9`
+Canonical main: **GREEN** `bc7e667b5bd13b37cc534a3ac2ea78cb4dcb6170`
 
-State digest: `0503b4c3d34ca0edf7994ed1d58a5a0802a4d8fbb45d55450ebb77b0d3bc5da6`
+State digest: `c86b2363da0e8af163e0de27201bd906935cb6bc21c4801b42a0cd8c8bfacf8f`
 
 ## Summary
 
-- ready slots: **12**
-- active claims: **0**
-- stale claims: **16**
+- ready slots: **9**
+- active claims: **5**
+- stale claims: **11**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
+- `HG-BACKFILL-WORLDENTITY/primary` — **WorldEntity source hardening** — score 5500 — dependencies satisfied; resources available
 - `HG-BACKFILL-WORLDENTITY/test-adversary` — **WorldEntity adversarial regression author** — score 5420 — dependencies satisfied
-- `HG-PHYSICS-RUNTIME-ENTITYID-FENCE/audit` — **Independent runtime entity-ID boundary audit** — score 5095 — dependencies satisfied
-- `HG-BACKFILL-DIAGNOSTICS/test-adversary` — **Diagnostics lifecycle and no-drift test author** — score 5070 — dependencies satisfied
-- `HG-BACKFILL-DIAGNOSTICS/audit` — **Diagnostics failure-path and capture-contract auditor** — score 4970 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-worldentity` — **Mine WorldEntity for next concrete depth lane** — score 3680 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-objectgenome` — **Mine ObjectGenome for next concrete depth lane** — score 3670 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-materialdna` — **Mine MaterialDNA for next concrete depth lane** — score 3660 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-fidelity` — **Mine FidelityManager for next concrete depth lane** — score 3650 — dependencies satisfied
-- `HG-CAPACITY-MINING/mine-physics-runtime` — **Mine Physics runtime for next concrete depth lane** — score 3640 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-physics-geometry` — **Mine Physics geometry for next concrete depth lane** — score 3630 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-diagnostics` — **Mine diagnostics source for next concrete depth lane** — score 3620 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-authority` — **Mine authority/multiplayer source for next concrete depth lane** — score 3610 — dependencies satisfied
 
 ## Active claims
 
-_None._
+- `HG-BACKFILL-DIAGNOSTICS/audit` → `sol-20260814-y7q3m5v8`; lease to `2026-08-14T08:01:40+00:00`
+- `HG-BACKFILL-DIAGNOSTICS/primary` → `sol-20260814-t5n8q3v6`; lease to `2026-08-14T08:00:30+00:00`
+- `HG-BACKFILL-DIAGNOSTICS/test-adversary` → `sol-20260814-v4q7m2c9`; lease to `2026-08-14T08:03:00+00:00`
+- `HG-CAPACITY-MINING/mine-physics-runtime` → `sol-20260814-x4m9p2c7`; lease to `2026-08-14T07:52:30+00:00`
+- `SWARM-RECOVERY-WORKER-STATUS-CONTRACT/primary` → `sol-20260814-r6h3n9v2`; lease to `2026-08-14T08:01:00+00:00`
 
 ## Blocked lanes
 
@@ -55,6 +56,7 @@ _None._
 - `HG-PHYSICS-CART-GEOMETRY` — **BLOCKED** — dependencies satisfied
 - `HG-PHYSICS-CART-SHELF-FRAME` — **BLOCKED** — waiting for HG-PHYSICS-CART-GEOMETRY (BLOCKED)
 - `HG-PHYSICS-CHAIR-GEOMETRY` — **BLOCKED** — dependencies satisfied
+- `HG-PHYSICS-RUNTIME-ENTITYID-FENCE` — **SUPERSEDED** — dependencies satisfied
 - `HG-PHYSICS-RUNTIME-SYNTHESIS` — **BLOCKED** — dependencies satisfied
 - `OPS-STUDIO-DISPLAY` — **BLOCKED_EXTERNAL** — External Mac GUI/display recovery is required before fresh diagnostics or two-client evidence retries.
 - `SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY` — **BLOCKED** — waiting for SWARM-RECOVERY-WORKER-STATUS-CONTRACT (NEEDS_CHANGES)
