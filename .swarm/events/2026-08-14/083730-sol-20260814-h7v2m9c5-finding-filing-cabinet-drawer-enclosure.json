@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083730-h7v2m9c5-filing-cabinet-drawer-enclosure",
+  "timestamp": "2026-08-14T08:37:30Z",
+  "fromWorker": "sol-20260814-h7v2m9c5",
+  "eventType": "FINDING",
+  "summary": "Physics-geometry capacity mining found a concrete non-duplicate F2 filing-cabinet self-geometry defect on current main: the three canonical drawer components are fully enclosed within the cabinet's full-envelope solid shell, while PhysicsLabRealizer instantiates every component as an anchored collidable Part. Draft PR #498 records the source-only finding and a bounded successor contract; this is not an implementation unlock or Studio evidence claim.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-PHYSICS-GEOMETRY",
+    "HG-BACKFILL-OBJECTGENOME",
+    "Physics Lab"
+  ],
+  "severity": "medium",
+  "evidence": [
+    "Audited main af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9. src/shared/Objects/ObjectGenomeFixtures.luau defines filingCabinet.shell at local center (0,0,0) m with dimensions (0.48,1.32,0.62) m, giving bounds x=[-0.24,0.24], y=[-0.66,0.66], z=[-0.31,0.31].",
+    "The top/middle/bottom drawer components are each (0.42,0.28,0.52) m at local z=-0.01 m and y=0.38/0.05/-0.28 m, so every drawer face lies strictly inside the shell bounds: x=[-0.21,0.21], z=[-0.27,0.25], with y ranges [0.24,0.52], [-0.09,0.19], and [-0.42,-0.14]. The authored 180-degree world yaw preserves containment.",
+    "src/server/PhysicsLab/PhysicsLabRealizer.luau iterates genome.components and creates a Part at each exact component size/transform with Anchored=true, CanCollide=true, CanQuery=true, and CanTouch=true. F2 therefore realizes the full-envelope shell and all three enclosed drawer solids simultaneously.",
+    "This is distinct from PR #473's external cabinet-a versus lab ledge placement overlap and from the existing chair, rolling-cart, cart shelf/frame, commercial-door, and table/cabinet COM findings. Repository PR/issue searches did not surface a dedicated current filing-cabinet shell/drawer enclosure repair; superseded PR #167 only contains old dynamic-drawer implementation history and is not a framework to revive.",
+    "Draft PR #498 adds Docs/PHYSICS_LAB_FILING_CABINET_DRAWER_ENCLOSURE_FINDING.md only at exact head 9c5e6aca9f9e2a62c7a0ac898f99437fb32a80a5. No production source, test, schema/version, recipe behavior, persistence, networking, authority, Hero unlock, local Luau execution, or Roblox Studio evidence is changed or claimed."
+  ],
+  "metadata": {
+    "slotId": "mine-physics-geometry",
+    "claimToken": "6f3a91d8c2b740e5",
+    "pr": 498,
+    "headSha": "9c5e6aca9f9e2a62c7a0ac898f99437fb32a80a5",
+    "sourceMainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "recommendedNext": "If explicitly promoted by the scheduler, keep the current ObjectGenome/Physics Lab architecture and define manufacturable carcass/proxy semantics so closed drawers are physically representable without positive-volume solid-shell enclosure; add deterministic Pure Luau geometry/mechanism regression coverage. Do not infer Studio articulation/contact/viewport evidence until a real Studio run exists."
+  }
+}
