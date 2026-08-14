@@ -5,12 +5,12 @@
   "workerId": "sol-20260814-n8q2m5v7",
   "claimToken": "dfa79a8955349c09",
   "claimedAt": "2026-08-14T08:34:24+00:00",
-  "heartbeatAt": "2026-08-14T08:34:24+00:00",
+  "heartbeatAt": "2026-08-14T08:37:00+00:00",
   "leaseSeconds": 300,
   "generation": 4,
   "takeoverOf": "sol-20260814-5845475e",
   "resources": [],
   "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-n8q2m5v7-g4",
-  "pr": null,
-  "notes": "Generation-4 reusable Physics runtime capacity mining after inspecting released generation-3 PR #494 and its indexed-order authenticity finding. Audit a distinct retained runtime boundary only; do not duplicate #451 realization values, #467 schema closure, or #494 ordering, and do not claim Studio evidence."
+  "pr": 501,
+  "notes": "Published distinct entity-list container-shape finding in draft PR #501 exact head 598488c7b600b8a1c3771c26b58b21ee26023663 after inspecting retained #408 and prior #451/#467/#494 findings. Docs-only; no Studio evidence claim."
 }
