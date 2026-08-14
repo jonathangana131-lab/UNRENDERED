@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-071526-h7v2q9m4-hinge-history-refresh-blocker",
+  "timestamp": "2026-08-14T07:15:26+00:00",
+  "fromWorker": "sol-20260814-h7v2q9m4",
+  "eventType": "BLOCKER",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "severity": "high",
+  "summary": "Current main ee ad13b2 refresh is fail-closed in trusted_history_chain because historical hinge-anchor event evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract was first published with unknown top-level key recommendation, then rewritten in place into canonical metadata.recommendation. The live repaired bytes are schema-valid, but strict first-parent replay cannot cross the malformed first-write snapshot. Do not broaden the event schema or rewrite swarm-control history; extend the existing exact Git-bound immutable-event replay/quarantine mechanism after the active SWARM-PROTOCOL owner releases or absorbs this finding.",
+  "affects": [
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
+  ],
+  "evidence": [
+    "Failing main refresh run 31756805983 job 94634219488 exits in tools/swarm/trusted_history_chain.py when swarmctl_hardening.read_tree rejects .swarm/events/2026-08-13/evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract.json: unknown keys ['recommendation'].",
+    "Malformed introduction is exact commit 17fe117485c6d5a7b11ed0b80085e34071025390 with first parent dc3476753af55a76d44ab9135c7cfd6097fc70cc; the commit changes exactly the one event path and its Git blob is 817d7cafac3348ba914506fb86c9f933fbb92215.",
+    "Canonical repair is exact commit 5a81fa430c545502ee0c429f8175015266c9f849 with first parent c4c8330f65f03bac2233c798f87e8115c53c87f6; the commit changes exactly the same event path and its repaired Git blob is 2ba79e60a82df62b1f0d460012a61463ea1a973f.",
+    "The only semantic repair moves recommendation under metadata; event identity, timestamp, worker, type, lane, severity, summary, affects and evidence remain unchanged. The malformed bytes must remain inert historical quarantine rather than accepted authority.",
+    "tools/swarm/swarm_burst_event_replay.py already implements the required finite pattern: exact event path/blob registration plus exact introduction predecessor/commit and repair predecessor/commit Git transitions, with disposable compatibility snapshots and strict transition_check underneath.",
+    "The exclusive SWARM-PROTOCOL lease is currently held by sol-20260814-r6h3n9v2 on SWARM-RECOVERY-WORKER-STATUS-CONTRACT generation 6, so this audit deliberately did not edit main or compete for control ownership."
+  ]
+}
