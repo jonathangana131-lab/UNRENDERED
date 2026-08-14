@@ -6,9 +6,10 @@
   "claimToken": "e6b17a4c93d2058f",
   "claimedAt": "2026-08-14T08:22:00+00:00",
   "heartbeatAt": "2026-08-14T08:22:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 1,
   "resources": [],
   "branch": "agent/audit/HG-CAPACITY-MINING-mine-authority-k7m4q2z9-g1",
-  "pr": null
+  "pr": null,
+  "notes": "Audit completed via evt-20260814t082600z-k7m4q2z9-authority-no-new-slice. No new authority source slice or product branch was created. Lease intentionally reduced to protocol minimum without heartbeat advance; stale/released after 2026-08-14T08:27:00Z."
 }
