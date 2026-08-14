@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "REALITY-CONTRACT",
+  "workerId": "sol-20260814-r6h3n9v2",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "claimToken": "c4e891b7a26d503f",
+  "acquiredAt": "2026-08-14T07:46:00+00:00",
+  "heartbeatAt": "2026-08-14T07:46:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "notes": "Bound to independent WorldEntity audit slot generation 1 / PR #477 only."
+}
