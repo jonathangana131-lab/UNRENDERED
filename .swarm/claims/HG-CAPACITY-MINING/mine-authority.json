@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "workerId": "sol-20260814-r6h3n9v2",
+  "claimToken": "4e7c2a91b5d8603f",
+  "claimedAt": "2026-08-14T07:57:02+00:00",
+  "heartbeatAt": "2026-08-14T07:57:02+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/mining/HG-CAPACITY-MINING-mine-authority-r6h3n9v2-g1",
+  "pr": null,
+  "notes": "Bounded Hero-Gate authority/multiplayer source-depth audit while the higher-priority trusted-history primary is actively owned but not yet in REVIEW. Docs/findings only; inspect existing authority lanes/PRs/events before proposing any non-duplicate leaf."
+}
