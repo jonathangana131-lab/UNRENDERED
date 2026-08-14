@@ -105,12 +105,27 @@ def role_allocation(graph: Mapping[str, Any], workers: int = 30) -> dict[str, in
     return {"builder": builder, "reviewer": reviewer, "integrator": workers - builder - reviewer}
 
 
+def health_report(graph: Mapping[str, Any], workers: int = 30, now=None) -> dict[str, Any]:
+    """Preserve the established health model while reporting V16.2 allocation."""
+    report = dict(_sched.health_report(graph, workers, now))
+    report["allocation"] = role_allocation(graph, workers)
+    report["mergePressure"] = merge_pressure_report(graph)
+    report["policyVersion"] = V16_2_POLICY_VERSION
+    return report
+
+
 def _pressure_packet(graph: Mapping[str, Any], item: Mapping[str, Any], worker_id: str, score: float) -> MissionPacket:
     obj = graph["objectives"][item["objectiveId"]]
     mission = graph["missions"][item["missionId"]]
     canonical = str(obj.get("canonicalBranch") or item.get("branch") or "")
+    source = str(item.get("branch") or canonical)
     duty = ("INTEGRATE", "RED_TEAM", "TEST", "CONFLICT_CHECK")[_stable_slot(worker_id + "::" + item["workItemId"], 4)]
     exclusive = duty == "INTEGRATE"
+    # Integration writes target the canonical destination. Review/test/conflict
+    # workers must inspect the exact source candidate that contains the changes
+    # awaiting absorption; otherwise they can produce false-green evidence on a
+    # destination branch that does not contain the candidate yet.
+    working_branch = canonical if exclusive else source
     data = {
         "SWARM_POLICY_VERSION": V16_2_POLICY_VERSION,
         "MODE": "MERGE_PRESSURE",
@@ -119,9 +134,10 @@ def _pressure_packet(graph: Mapping[str, Any], item: Mapping[str, Any], worker_i
         "MISSION": mission["title"],
         "CURRENT_STATE": obj["status"],
         "CANONICAL_BRANCH": canonical,
-        "JOIN_BRANCH": canonical,
-        "SOURCE_BRANCH": str(item.get("branch") or ""),
-        "CANONICAL_ABSORPTION_REQUIRED": bool(item.get("branch") and canonical and item.get("branch") != canonical),
+        "INTEGRATION_DESTINATION": canonical,
+        "JOIN_BRANCH": working_branch,
+        "SOURCE_BRANCH": source,
+        "CANONICAL_ABSORPTION_REQUIRED": bool(source and canonical and source != canonical),
         "CLAIM_REQUIRED": exclusive,
         "WRITE_AUTHORITY": "exact work-item ownership required" if exclusive else False,
         "NON_EXCLUSIVE_ASSIST": not exclusive,
@@ -132,7 +148,7 @@ def _pressure_packet(graph: Mapping[str, Any], item: Mapping[str, Any], worker_i
         "SAFE_ACTIONS": [
             "absorb accepted child work into the canonical branch",
             "resolve compatible conflicts instead of reporting and stopping",
-            "run impacted exact-head acceptance on the composed candidate",
+            "run impacted exact-head acceptance on the exact candidate/composed head appropriate to the duty",
             "preserve useful evidence then supersede redundant support branches",
             "promote only after all applicable truth/authority gates remain satisfied",
         ],
