@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T08:20:20+00:00",
-  "lastSeenAt": "2026-08-14T08:24:30+00:00",
+  "lastSeenAt": "2026-08-14T08:29:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-fidelity",
-  "branch": "agent/audit/HG-CAPACITY-MINING-mine-fidelity-j9v4q6m2-g1",
-  "notes": "Auditing retained FidelityManager lineages for a non-duplicate source-only Reality-Grade gap. Current candidate: manager-owned config/state/metrics remain caller-reachable through the mutable returned table, bypassing validated capability methods. No product source or Studio evidence is being changed/claimed."
+  "slotId": "mine-diagnostics",
+  "branch": "agent/audit/HG-CAPACITY-MINING-mine-diagnostics-j9v4q6m2-g1",
+  "notes": "Fidelity mining completed as docs-only PR #490 with exact-head canonical CI PASS; Fidelity claim released. Now auditing diagnostics source/tests/retained PR lineages for one concrete non-duplicate source-only gap while red-main repair remains separately owned."
 }
