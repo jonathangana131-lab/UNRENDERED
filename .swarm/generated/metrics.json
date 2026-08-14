@@ -1,30 +1,30 @@
 {
-  "activeClaims": 3,
+  "activeClaims": 14,
   "activeEpics": [
     "HERO-GATE",
-    "SWARM-V2"
+    "SWARM-V16"
   ],
   "eventCounts": {
     "BLOCKER": 28,
     "DECISION": 2,
     "DEPENDENCY_DISCOVERED": 17,
-    "EVIDENCE_RESULT": 23,
+    "EVIDENCE_RESULT": 26,
     "EXTERNAL_BLOCKER": 1,
-    "FINDING": 258,
+    "FINDING": 285,
     "HANDOFF": 75,
     "INTEGRATION_RESULT": 11,
     "QUESTION": 1,
-    "RECOVERY": 14,
-    "REVIEW_REQUEST": 69,
-    "REVIEW_RESULT": 207,
+    "RECOVERY": 15,
+    "REVIEW_REQUEST": 70,
+    "REVIEW_RESULT": 208,
     "SUPERSEDED": 1
   },
-  "generatedAt": "2026-08-14T07:57:27.753156+00:00",
+  "generatedAt": "2026-08-14T08:35:30.506687+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED": 19,
     "BLOCKED_EXTERNAL": 1,
-    "DONE": 15,
+    "DONE": 16,
     "LOCKED": 1,
     "NEEDS_CHANGES": 1,
     "PROPOSED": 10,
@@ -33,7 +33,7 @@
     "SUPERSEDED": 3
   },
   "note": "Gross lines written are diagnostic, not a success metric.",
-  "readySlots": 2,
+  "readySlots": 1,
   "reviewBacklog": 2,
   "schemaVersion": 1,
   "staleClaims": 13

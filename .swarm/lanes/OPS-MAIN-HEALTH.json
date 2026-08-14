@@ -5,7 +5,7 @@
   "title": "Repair canonical red main",
   "objective": "Restore canonical main CI before normal feature implementation continues. This emergency lane is automatically READY while canonical CI is red and DONE when canonical CI is green.",
   "priority": 10000,
-  "state": "READY",
+  "state": "DONE",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": [
@@ -77,5 +77,5 @@
     "red-main",
     "control-repair"
   ],
-  "notes": "Canonical CI run 31781938150 for af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 concluded failure."
+  "notes": "Canonical CI run 31781938150 for af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 concluded success."
 }

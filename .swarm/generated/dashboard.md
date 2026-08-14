@@ -1,28 +1,38 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-14T07:57:27.753156+00:00`
+Generated: `2026-08-14T08:35:30.506687+00:00`
 
-Canonical main: **RED** `af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9`
+Canonical main: **GREEN** `af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9`
 
-State digest: `e52f8e13dda8aa5857e3c3ab1e23a3f6fe15600102d1428481ec0dacf47422d2`
+State digest: `03913b2b86932fa871b872e1b818faccd6be3026888134f7066da2559be265df`
 
 ## Summary
 
-- ready slots: **2**
-- active claims: **3**
+- ready slots: **1**
+- active claims: **14**
 - stale claims: **13**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
-- `OPS-MAIN-HEALTH/primary` — **Red-main repair implementer** — score 11000 — dependencies satisfied; resources available
-- `OPS-MAIN-HEALTH/tests-1` — **Red-main diagnosis/regression** — score 10700 — dependencies satisfied
+- `HG-BACKFILL-WORLDENTITY/test-adversary` — **WorldEntity adversarial regression author** — score 5420 — dependencies satisfied
 
 ## Active claims
 
-- `HG-BACKFILL-DIAGNOSTICS/audit` → `sol-20260814-r6h3n9v2`; lease to `2026-08-14T07:58:00+00:00`
-- `HG-BACKFILL-DIAGNOSTICS/primary` → `sol-20260814-t5n8q3v6`; lease to `2026-08-14T08:00:30+00:00`
-- `SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY/primary` → `sol-20260814-q5n8v2c4`; lease to `2026-08-14T08:20:00+00:00`
+- `HG-BACKFILL-DIAGNOSTICS/primary` → `sol-20260814-s6p4m9q2`; lease to `2026-08-14T09:03:00+00:00`
+- `HG-BACKFILL-DIAGNOSTICS/test-adversary` → `sol-20260814-n8q4v2m6`; lease to `2026-08-14T09:02:00+00:00`
+- `HG-BACKFILL-WORLDENTITY/audit` → `sol-20260814-j4p8n6q2`; lease to `2026-08-14T09:04:00+00:00`
+- `HG-CAPACITY-MINING/mine-authority` → `sol-20260814-j3q8v6m1`; lease to `2026-08-14T09:03:00+00:00`
+- `HG-CAPACITY-MINING/mine-diagnostics` → `sol-20260814-q2v8m5k1`; lease to `2026-08-14T09:06:30+00:00`
+- `HG-CAPACITY-MINING/mine-fidelity` → `sol-20260814-a6r2m8q5`; lease to `2026-08-14T09:00:15+00:00`
+- `HG-CAPACITY-MINING/mine-materialdna` → `sol-20260814-k3m8v5q2`; lease to `2026-08-14T08:56:10+00:00`
+- `HG-CAPACITY-MINING/mine-objectgenome` → `sol-20260814-b7q4n2m9`; lease to `2026-08-14T09:04:30+00:00`
+- `HG-CAPACITY-MINING/mine-physics-geometry` → `sol-20260814-h7v2m9c5`; lease to `2026-08-14T09:05:30+00:00`
+- `HG-CAPACITY-MINING/mine-physics-runtime` → `sol-20260814-n8q2m5v7`; lease to `2026-08-14T08:39:24+00:00`
+- `HG-CAPACITY-MINING/mine-worldentity` → `sol-20260814-q8m4n7v2`; lease to `2026-08-14T09:04:12+00:00`
+- `OPS-MAIN-HEALTH/primary` → `sol-20260814-afb1aa7d`; lease to `2026-08-14T08:50:05+00:00`
+- `OPS-MAIN-HEALTH/tests-1` → `sol-20260814-k4x9m2p7`; lease to `2026-08-14T08:51:30+00:00`
+- `SWARM-V16.2-INTEGRATION-THROUGHPUT/primary` → `sol-20260814-v162merge`; lease to `2026-08-14T08:52:30+00:00`
 
 ## Blocked lanes
 

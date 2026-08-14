@@ -1,8 +1,8 @@
 {
-  "conclusion": "failure",
+  "conclusion": "success",
   "headSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
   "schemaVersion": 1,
-  "status": "RED",
-  "updatedAt": "2026-08-14T07:57:19+00:00",
+  "status": "GREEN",
+  "updatedAt": "2026-08-14T08:19:56+00:00",
   "workflowRunId": 31781938150
 }
