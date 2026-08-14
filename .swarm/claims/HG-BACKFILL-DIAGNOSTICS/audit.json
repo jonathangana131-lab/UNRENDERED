@@ -6,10 +6,10 @@
   "claimToken": "9b6e2d4c71a5f830",
   "claimedAt": "2026-08-14T07:53:00+00:00",
   "heartbeatAt": "2026-08-14T07:53:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 1,
   "resources": [],
   "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-r6h3n9v2-g1",
   "pr": 468,
-  "notes": "Independent exact-head generation-17 diagnostics failure-path/capture-contract audit. Review only unless a concrete in-scope regression gap is found; never convert source confidence into Studio/viewport evidence."
+  "notes": "Audit slot released after discovering an already-published independent exact-head REQUEST_CHANGES verdict and reconciling the stale lane state to NEEDS_CHANGES. Recovery event evt-20260814-075429-r6h3n9v2-diagnostics-review-state-recovery records the cleanup-only and readout-visibility blockers. Lease intentionally reduced to protocol minimum without heartbeat advance; stale/released after 2026-08-14T07:58:00+00:00."
 }
