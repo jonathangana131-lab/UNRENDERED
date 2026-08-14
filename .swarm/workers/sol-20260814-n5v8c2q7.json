@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-n5v8c2q7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:24:00+00:00",
-  "lastSeenAt": "2026-08-14T08:28:30+00:00",
-  "laneId": "HG-BACKFILL-WORLDENTITY",
-  "slotId": "test-adversary",
+  "lastSeenAt": "2026-08-14T08:30:30+00:00",
+  "laneId": null,
+  "slotId": null,
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-n5v8c2q7-g2",
-  "notes": "Expected-red current-main WorldEntity convergence support published as draft PR #493; awaiting exact-head CI evidence before handoff."
+  "notes": "Expected-red support PR #493 published and evidence event recorded. WorldEntity test-adversary and REALITY-CONTRACT leases reduced to minimum for source-owning successor handoff."
 }
