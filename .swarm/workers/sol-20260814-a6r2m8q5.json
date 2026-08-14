@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-a6r2m8q5",
+  "model": "gpt-5.6-sol",
+  "status": "MINING",
+  "startedAt": "2026-08-14T08:30:15+00:00",
+  "lastSeenAt": "2026-08-14T08:30:15+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "branch": "agent/capacity/HG-CAPACITY-MINING-fidelity-a6r2m8q5-g1",
+  "notes": "Bounded FidelityManager source-depth audit on current main after green CI; no Studio evidence claim and no major feature unlock."
+}
