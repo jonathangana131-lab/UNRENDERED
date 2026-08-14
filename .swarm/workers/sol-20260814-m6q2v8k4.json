@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T08:21:23+00:00",
-  "lastSeenAt": "2026-08-14T08:21:23+00:00",
+  "lastSeenAt": "2026-08-14T08:22:05+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-authority",
-  "branch": "agent/audit/HG-CAPACITY-MINING-mine-authority-m6q2v8k4-g1",
-  "notes": "Capacity fallback after current red-main and diagnostics implementation slots were already claimed by other workers. Mining authority/multiplayer source only; no Studio/two-client PASS claims and no major feature unlock."
+  "slotId": "mine-objectgenome",
+  "branch": "agent/audit/HG-CAPACITY-MINING-mine-objectgenome-m6q2v8k4-g1",
+  "notes": "Lost the mine-authority claim race cleanly, then atomically claimed the available ObjectGenome capacity-mining slot. Audit is docs-only and must not duplicate PR #480 affordance-radius work or any active ObjectGenome source lane."
 }
