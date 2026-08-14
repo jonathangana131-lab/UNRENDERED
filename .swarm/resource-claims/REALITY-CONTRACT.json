@@ -5,8 +5,8 @@
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "claimToken": "9c4e1a7d2b6f8053",
   "acquiredAt": "2026-08-14T08:40:12+00:00",
-  "heartbeatAt": "2026-08-14T08:44:15+00:00",
-  "leaseSeconds": 1800,
+  "heartbeatAt": "2026-08-14T08:48:15+00:00",
+  "leaseSeconds": 300,
   "generation": 5,
-  "notes": "Held for HG-BACKFILL-WORLDENTITY/test-adversary generation 3. Draft PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b is published as expected-red test-only current-main convergence evidence; canonical CI/Swarm runs 31785096163/31785096202 are queued."
+  "notes": "Released after draft PR #502 publication and source preflight handoff. No source edits or Studio evidence claimed. Exact PR CI/Swarm runs 31785096163/31785096202 are still queued, so executable evidence is intentionally not claimed; next source-owning WorldEntity successor may take over after stale at 2026-08-14T08:53:15+00:00."
 }
