@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083730-n8q2m5v7-runtime-entity-list-shape",
+  "timestamp": "2026-08-14T08:37:30Z",
+  "fromWorker": "sol-20260814-n8q2m5v7",
+  "eventType": "FINDING",
+  "summary": "Retained Physics Lab runtime synthesis #408 authenticates canonical entries but does not close the recipe.entities container key-space: a plain canonically ordered list with an added hash field is ignored by both length and ipairs traversal and can pass the canonical-recipe fence. Draft docs PR #501 records the bounded dense-array-shape follow-up. This is distinct from #451 realization values, #467 outer wrapper schema closure, and #494 ordering.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": ["HG-PHYSICS-RUNTIME-SYNTHESIS"],
+  "evidence": [
+    "At #408 exact product head d31c100c5d3766ca14d89b046fff4cdb09086754, assertCanonicalRecipe() requires recipe.entities to be a plain table, checks #entities against the canonical population, then traverses entries only with ipairs(). It does not inspect all container keys.",
+    "The synthesis regression tests reject a metatable-backed entity-list wrapper and exercise population/key/id/provenance/state/revision mismatches, but the inspected corpus does not add an otherwise inert hash/non-array field to the plain entities container.",
+    "PR #467 closes undeclared fields at the top-level recipe and individual EntityRecipe wrappers; PR #494 closes canonical entry ordering. Neither finding covers undeclared keys on the array container itself.",
+    "Draft PR #501 exact head 598488c7b600b8a1c3771c26b58b21ee26023663 changes only Docs/PHYSICS_LAB_RUNTIME_ENTITY_LIST_SHAPE.md. No local Luau/Lune or Roblox Studio execution is claimed; canonical GitHub CI is required for publication evidence."
+  ],
+  "metadata": {
+    "pr": 501,
+    "headSha": "598488c7b600b8a1c3771c26b58b21ee26023663",
+    "retainedSynthesisPr": 408
+  }
+}
