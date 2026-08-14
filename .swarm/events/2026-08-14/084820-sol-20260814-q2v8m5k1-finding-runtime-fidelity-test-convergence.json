@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t084820z-q2v8m5k1-runtime-fidelity-test-convergence",
+  "timestamp": "2026-08-14T08:48:20Z",
+  "fromWorker": "sol-20260814-q2v8m5k1",
+  "eventType": "FINDING",
+  "summary": "Retained PhysicsLabRuntime synthesis #408 and FidelityManager generation-4 #385 have a concrete test-convergence conflict. #408's runtime pre-hook regression explicitly requires its metatable-backed hostile PolicyInputs proxy to execute __index (policyReads > 0) while runtime mutation remains fenced. #385 intentionally strengthens FidelityManager so metatable-backed PolicyInputs and hostile nowSeconds reject before caller metamethod execution, with zero-call assertions. Composing the accepted lineages unchanged therefore makes the older runtime test expected-red for the stronger desired reason. PR #503 records the safe reconciliation: update the runtime malformed policy/time expectations to the #385 no-execute boundary, preserve population/authority/retry assertions, and retain runtime capture/observer/reentrant callback tests as direct transaction-guard evidence. Do not weaken #385 merely to satisfy stale #408 evidence.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-PHYSICS-RUNTIME-SYNTHESIS",
+    "HG-BACKFILL-FIDELITY"
+  ],
+  "evidence": [
+    "PR #408 exact retained head d31c100c5d3766ca14d89b046fff4cdb09086754: tests/physics_lab_runtime.luau constructs metatable-backed hostileInputs, increments policyReads in __index, attempts runtime:dispose(), and explicitly expects policyReads > 0 before canonical retry.",
+    "PR #385 exact retained head 827ce0cf63ca5f322502de883beb9f43581c69f2: FidelityManager.validateInputs requires a metatable-free plain table before field reads; isFinite/validators establish primitive numeric/boolean types before operators.",
+    "PR #385 tests/fidelity_manager_rejected_step_atomicity.luau explicitly requires metatable-backed policy inputs and hostile nowSeconds to reject with zero caller metamethod executions, followed by valid monotonic retries.",
+    "Docs-only PR #503 exact head b753f686f3e74e86e775dca48d9778f02388635d records the integration seam and smallest reconciliation. No production source or Studio evidence is changed or claimed."
+  ]
+}
