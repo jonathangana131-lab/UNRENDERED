@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-t5n8q3v6",
   "claimToken": "9f2c7a41d8e6b305",
   "claimedAt": "2026-08-14T07:16:00+00:00",
-  "heartbeatAt": "2026-08-14T07:23:00+00:00",
+  "heartbeatAt": "2026-08-14T07:30:30+00:00",
   "leaseSeconds": 1800,
   "generation": 17,
   "resources": [],
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-t5n8q3v6-g17",
   "pr": 468,
-  "notes": "Generation-17 successor published as draft PR #468 at c3381f3f372603f9e587fec54a595a025cfce3d6. It repairs runToggleEvidence post-enable failure atomicity and absorbs support PR #463 cleanup regression while preserving generation-16 clone-proof hardening. Await exact-head CI/engine-tests and fresh independent review; no Studio evidence claims."
+  "notes": "Generation-17 successor PR #468 is ready for independent review at exact head 0703a44ff68a96d5907d514f66480ac8aca0145a. Canonical CI 31779941737 is fully green and Swarm engine-tests 31779941639 are green. The #463/#469 cleanup adversaries are absorbed. Await a distinct diagnostics audit/review verdict; repository-wide pr-ownership remains separately blocked on legacy invalid worker status. No Studio/viewport/contact/performance-device/two-client evidence claims."
 }
