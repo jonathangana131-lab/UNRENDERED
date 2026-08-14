@@ -1348,7 +1348,7 @@
   "migration": {
     "activationMainSHA": "a90eb0285075a290fb5d6724e66eb08aaa4559b7",
     "destructiveActionsAllowed": false,
-    "legacyControlSHA": "677f292cab0ee344bb0584d6d1d5a873d5130101",
+    "legacyControlSHA": "c464c9d687214522f2e54ae22d2839bed984822d",
     "legacyImported": true,
     "legacyLaneIds": [
       "HERO-DOOR",
@@ -1410,7 +1410,7 @@
       "SWARM-V21-PR-OWNERSHIP-RECOVERY",
       "SWARM-V22-THROUGHPUT"
     ],
-    "liveRefreshMainSHA": "936907e49dd468b76439eb5b2d1c72b2de89d597",
+    "liveRefreshMainSHA": "839489dc499746191987e8ba2aabf93e3cef8100",
     "phase": "ACTIVE"
   },
   "missions": {
@@ -9579,10 +9579,10 @@
       "userValue": 8
     }
   },
-  "revision": 35,
+  "revision": 36,
   "schemaVersion": 16,
   "solutions": {},
-  "updatedAt": "2026-08-14T12:58:46Z",
+  "updatedAt": "2026-08-14T13:17:40Z",
   "workItems": {
     "legacy-hg-authority-harness-lifecycle-capability-audit": {
       "blockerId": "",
