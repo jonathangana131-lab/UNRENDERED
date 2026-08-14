@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-s6p4m9q2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T08:22:00+00:00",
+  "lastSeenAt": "2026-08-14T08:22:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "primary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-s6p4m9q2-g18",
+  "notes": "Generation-18 stale-claim takeover candidate for diagnostics NEEDS_CHANGES. Will preserve generation-17 lineage, absorb reviewed cleanup-error-precedence and readout-visibility regressions, and make no Studio/viewport PASS claims."
+}
