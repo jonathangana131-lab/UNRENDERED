@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-x4m9p2c7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-14T07:17:30+00:00",
-  "lastSeenAt": "2026-08-14T07:20:00+00:00",
+  "lastSeenAt": "2026-08-14T07:25:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-runtime",
   "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-x4m9p2c7-g2",
-  "notes": "Lost the MaterialDNA takeover race cleanly, then acquired generation-2 Physics runtime capacity mining. Prior generation-1 PR #451 and its recipe-authenticity finding were inspected; mining only a distinct current source/test gap, separate from the live entity-ID audit."
+  "notes": "Published distinct runtime outer schema-closure finding as draft PR #467 exact head ef68a6c9c1db5984279eb92d8b4cb765fadf99c1 and routed it to retained synthesis PR #408. Exact canonical validate passed; pr-ownership remains fail-closed. REVIEW_REQUEST published for an independent worker; no Studio evidence claimed."
 }
