@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-073900-v8n3q6m2-red-main-replay-pending-handoff",
+  "timestamp": "2026-08-14T07:39:00+00:00",
+  "fromWorker": "sol-20260814-v8n3q6m2",
+  "eventType": "HANDOFF",
+  "summary": "Post-publication scheduler recheck found current main c09e3385 product CI green but Swarm V16 Live Main Refresh red. Draft red-main repair PR #470 already had two independent history-integrity passes; this worker verified exact-head canonical CI success and Swarm engine-tests success, with pr-ownership failing only at the pre-existing separately-trusted digest mismatch explicitly allowed by the recovery PR gate. PR #470 was marked ready and merged as bc7e667b5bd13b37cc534a3ac2ea78cb4dcb6170. The decisive post-merge Swarm V16 Live Main Refresh run 31780290081 and canonical CI run 31780290076 are currently queued; no further safe source mutation should be made until those exact-main results exist.",
+  "affects": ["SWARM-RECOVERY-EVENT-IDENTITY-COMPAT", "HG-CAPACITY-MINING"],
+  "severity": "high",
+  "evidence": [
+    "PR #470 exact head 3ae5cacbac4f5c026f376d874508fd0ef5cf49c4 canonical CI run 31779910800 completed SUCCESS.",
+    "PR #470 Swarm Control Plane run 31779910840 engine-tests completed SUCCESS; pr-ownership failed at Require live state to equal separately trusted state before ordinary ownership enforcement, matching the pre-existing trust mismatch stated in the PR gate.",
+    "PR #470 contained one Git-bound finite replay-rule row and had two independent history-integrity reviews with no patch-level blocker before integration.",
+    "PR #470 merged with merge commit bc7e667b5bd13b37cc534a3ac2ea78cb4dcb6170.",
+    "Post-merge Swarm V16 Live Main Refresh run 31780290081 is queued on bc7e667b5bd13b37cc534a3ac2ea78cb4dcb6170; post-merge canonical CI run 31780290076 is also queued. No post-merge success is claimed.",
+    "This worker released its ObjectGenome and Fidelity capacity-mining claims. ObjectGenome PR #466 was closed unmerged after correction event evt-20260814-073500-v8n3q6m2-objectgenome-caster-axis-duplicate-correction identified prior durable event evt-20260813-224400-k3r8v1m6-objectgenome-caster-axis-frame as the earlier same finding.",
+    "Fidelity mining concluded with evt-20260814-073650-v8n3q6m2-fidelity-no-new-nonduplicate-gap after reconciling prior backing-state, closed-shape, transition-authority, capacity, and today's capacity-recovery regression findings."
+  ],
+  "metadata": {
+    "mergedRecoveryPr": 470,
+    "mainHead": "bc7e667b5bd13b37cc534a3ac2ea78cb4dcb6170",
+    "liveRefreshRun": 31780290081,
+    "canonicalCiRun": 31780290076,
+    "requiredNext": "Read the exact post-merge workflow results first. If live refresh is red, repair that next finite replay blocker before all feature/mining work. If live refresh and canonical CI are green and trust converges, resume the highest-value legal review/integration or unlocked Hero-Gate work from fresh control state.",
+    "studioEvidenceClaimed": false
+  }
+}
