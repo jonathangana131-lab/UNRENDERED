@@ -21,6 +21,7 @@ from typing import Callable, Iterable
 import swarm_burst_event_replay as burst_event_replay
 import swarm_burst_takeover_recovery as burst_takeover_recovery
 import swarm_failed_control_recovery as failed_recovery
+import swarm_lane_history_replay as lane_history_replay
 import swarm_worker_status_replay as worker_status_replay
 import swarmctl_hardening as hard
 
@@ -270,6 +271,7 @@ def validate_git_chain(
         snapshot_sha = {root_a: trusted_sha, root_b: trusted_sha}
 
         results: list[dict] = []
+        active_lane_compat: dict[str, dict] = {}
         active_worker_compat: dict[str, dict] = {}
         last_valid_sha = trusted_sha
         last_valid_root = root_a
@@ -280,10 +282,21 @@ def validate_git_chain(
             next_sha = commits[index + 1] if index + 1 < len(commits) else ""
             row = _recovery_pair(last_valid_sha, current_sha, next_sha) if next_sha else None
             if row is not None:
-                if worker_status_replay.is_boundary(current_sha) or worker_status_replay.is_boundary(next_sha):
-                    raise hard.core.ControlError("finite failed-control bridge overlaps worker-status compatibility boundary")
+                if any(
+                    replay.is_boundary(commit_sha)
+                    for replay in (lane_history_replay, worker_status_replay)
+                    for commit_sha in (current_sha, next_sha)
+                ):
+                    raise hard.core.ControlError("finite failed-control bridge overlaps snapshot compatibility boundary")
                 _sync_swarm_snapshot(git_root, standby_root, snapshot_sha[standby_root], next_sha)
                 snapshot_sha[standby_root] = next_sha
+                lane_history_replay.normalize_active_snapshot(
+                    hard,
+                    git_root,
+                    next_sha,
+                    standby_root,
+                    active_lane_compat,
+                )
                 worker_status_replay.normalize_active_snapshot(
                     hard,
                     git_root,
@@ -308,6 +321,15 @@ def validate_git_chain(
             )
             snapshot_sha[standby_root] = current_sha
             changed_paths = _changed_paths(git_root, last_valid_sha, current_sha)
+            lane_compat = lane_history_replay.advance_transition(
+                hard,
+                git_root,
+                last_valid_sha,
+                current_sha,
+                changed_paths,
+                standby_root,
+                active_lane_compat,
+            )
             worker_compat = worker_status_replay.advance_transition(
                 hard,
                 git_root,
@@ -342,6 +364,8 @@ def validate_git_chain(
                     result = hard.transition_check(last_valid_root, standby_root)
             if worker_compat["activated"] or worker_compat["normalized"] or worker_compat["repaired"]:
                 result["finiteHistoricalWorkerStatusCompat"] = worker_compat
+            if lane_compat["activated"] or lane_compat["normalized"] or lane_compat["repaired"]:
+                result["finiteHistoricalLaneCompat"] = lane_compat
             results.append(result)
             last_valid_sha = current_sha
             last_valid_root, standby_root = standby_root, last_valid_root
@@ -349,9 +373,9 @@ def validate_git_chain(
             if progress and (index == len(commits) or index % 25 == 0):
                 progress(index, len(commits), current_sha)
 
-        if active_worker_compat:
+        if active_lane_compat or active_worker_compat:
             raise hard.core.ControlError(
-                "candidate control tip still contains active finite worker-status compatibility"
+                "candidate control tip still contains active finite snapshot compatibility"
             )
 
     return {
