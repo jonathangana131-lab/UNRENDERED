@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-q5n8v2c4",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T07:42:00+00:00",
+  "lastSeenAt": "2026-08-14T07:50:00+00:00",
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "slotId": "primary",
+  "branch": "agent/control/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-primary-q5n8v2c4-g8",
+  "notes": "Generation-8 trusted-history continuity worker. Narrow current leaf: exact Git-bound quarantine-only introduction for the audited 2026-08-13 225000 authority event; no generic schema or snapshot-transition widening."
+}
