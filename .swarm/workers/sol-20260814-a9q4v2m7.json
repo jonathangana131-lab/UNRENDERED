@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-a9q4v2m7",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-14T08:03:00+00:00",
-  "lastSeenAt": "2026-08-14T08:03:00+00:00",
+  "lastSeenAt": "2026-08-14T08:06:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
   "branch": "agent/audit/HG-CAPACITY-MINING-authority-a9q4v2m7-g2",
-  "notes": "Generation-2 stale takeover after prior authority mining lease explicitly expired without branch/source work. Bounded current-main server-authority source/test mining; structured finding or durable no-gap result only."
+  "notes": "Generation-2 stale takeover completed as duplicate-prevention. Retained authority candidates #348/#394/#412 and explicit future Rojo subtree/prefix deployment-boundary finding already own the concrete source work; HG151 two-client remains Studio/display blocked. Durable finding evt-20260814-080600-a9q4v2m7-authority-duplicate-prevented records NO_NEW_NON_DUPLICATE_GAP. Claim released; no competing authority primary created."
 }
