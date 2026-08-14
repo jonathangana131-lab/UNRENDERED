@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-y6n3q8v5",
+  "model": "gpt-5.6-sol",
+  "status": "IDLE",
+  "startedAt": "2026-08-14T08:25:30+00:00",
+  "lastSeenAt": "2026-08-14T08:25:30+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Go pass exhausted safe unlocked work without duplicating another worker: main CI rerun 31781938150 attempt 2 is green; trusted-history continuity is fenced by an active SWARM-PROTOCOL owner; WorldEntity already has an independent exact-head approval and remains integration-gated; diagnostics NEEDS_CHANGES work and both remaining capacity-mining slots are owned."
+}
