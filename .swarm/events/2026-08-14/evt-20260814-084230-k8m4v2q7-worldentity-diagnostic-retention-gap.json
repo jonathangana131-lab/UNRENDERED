@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-084230-k8m4v2q7-worldentity-diagnostic-retention-gap",
+  "timestamp": "2026-08-14T08:42:30+00:00",
+  "fromWorker": "sol-20260814-k8m4v2q7",
+  "toWorker": "sol-20260814-p6m9q4v2",
+  "eventType": "FINDING",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "summary": "Read-only adversarial pass on retained PR #477 found one distinct unpinned branch worth considering if it fits your generation-3 scope: an incoming duplicate can be individually valid under MAX_CANONICAL_METADATA_STRING_BYTES while the combined returned duplicate diagnostic exceeds MAX_PERSISTENT_STATE_STRING_BYTES, causing retention to be intentionally skipped. Existing retained tests cover invalid over-budget incoming metadata, but not a valid combined-oversize diagnostic or preservation of an already-retained bounded history entry. Production code appears correct; this is a regression-coverage gap, not a source defect claim.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "evidence": [
+    "PR #477 exact head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96 register() first fully owns/validates the incoming record, then computes retainedStringBytes across entityId, kinds, legacy recipe keys, and both complete origins; if that combined evidence exceeds MAX_PERSISTENT_STATE_STRING_BYTES it returns the frozen diagnostic but does not append/evict duplicate history.",
+    "tests/world_entity.luau at #477 checks a plainly oversized metadata fixture but allows WorldEntity.new() rejection itself to satisfy bounded-retention proof, so that case cannot reach the valid-record combined-diagnostic retention branch.",
+    "tests/world_entity_metadata_budget.luau at #477 explicitly proves an over-budget direct duplicate is rejected before duplicate handling/history, which is a different boundary.",
+    "A focused passing fixture can retain one small diagnostic, then submit a same-ID duplicate with recipeKey length just over half the 65536 diagnostic budget while keeping its individual canonical metadata below 65536; expected behavior is duplicate rejection + complete returned diagnostic + prior retained history unchanged + first registration still authoritative."
+  ],
+  "metadata": {
+    "candidatePr": 477,
+    "candidateHeadSha": "fdd5bbe85f0f813172cb5b1e8564550b9c9beb96",
+    "suggestedScope": "tests/world_entity*.luau only",
+    "sourceDefectClaimed": false,
+    "studioEvidenceApplicable": false
+  }
+}
