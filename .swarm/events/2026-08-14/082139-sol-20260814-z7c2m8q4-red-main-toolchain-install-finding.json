@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082139-z7c2m8q4-red-main-toolchain-install-finding",
+  "timestamp": "2026-08-14T08:21:39+00:00",
+  "fromWorker": "sol-20260814-z7c2m8q4",
+  "eventType": "FINDING",
+  "summary": "Current canonical red main fails before project code validation in the pinned Roblox toolchain install step; the merge that produced the head changed only swarm replay/test files, and prior exact-head CI has shown the same installer can fail transiently before a clean retry. Prefer one clean rerun/diagnosis before changing production code.",
+  "affects": ["OPS-MAIN-HEALTH"],
+  "laneId": "OPS-MAIN-HEALTH",
+  "severity": "medium",
+  "evidence": [
+    "Canonical CI run 31781938150 on main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 failed at step 3 Install pinned Roblox toolchain; every later semantic/build step was skipped.",
+    "Merged PR #478 produced this main head and changed only tools/swarm/swarm_burst_event_replay.py plus tools/swarm/test_trusted_history_chain.py; it did not change ci.yml, rokit.toml, or product source.",
+    "Current .github/workflows/ci.yml bootstraps Rokit through a network curl pipe without retry flags before running rokit install.",
+    "PR #474 records an earlier exact-head first CI attempt that stopped in pinned-toolchain installation with curl exit 22, followed by a retry that passed the toolchain and reached the intended Pure Luau semantic gate."
+  ],
+  "metadata": {
+    "failedMainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "failedCiRun": 31781938150,
+    "failedStep": "Install pinned Roblox toolchain",
+    "recommendedNext": "Rerun the exact main head once and inspect whether the installer repeats. If it passes, treat the original red as transient. If it repeats, harden only the bootstrap boundary (for example bounded curl retry) under OPS-MAIN-HEALTH rather than changing gameplay/source contracts."
+  }
+}
