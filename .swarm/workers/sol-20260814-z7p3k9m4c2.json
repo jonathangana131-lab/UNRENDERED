@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-z7p3k9m4c2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:20:32+00:00",
-  "lastSeenAt": "2026-08-14T08:20:50+00:00",
-  "laneId": "HG-BACKFILL-DIAGNOSTICS",
-  "slotId": "test-adversary",
-  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-test-adversary-z7p3k9m4c2-g1",
-  "notes": "Claimed the complementary diagnostics test-adversary slot after red-main rerun succeeded; source-only Hero Gate hardening only, no Studio PASS claims."
+  "lastSeenAt": "2026-08-14T08:29:15+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Published expected-red diagnostics adversary PR #484 at bc7aabd14dd883cad32148efa9554c3dfd1ac6f3; exact-head static/control gates pass through deterministic swarm tests, Pure Luau fails at strengthened cleanup obligations as intended. Handoff comment 5291204199 asks generation-18 primary #486 to absorb the one-file hardened test; no Studio PASS claimed."
 }
