@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-084500-q8m4n7v2-diagnostics-g18-cleanup-matcher-review",
+  "timestamp": "2026-08-14T08:45:00+00:00",
+  "fromWorker": "sol-20260814-q8m4n7v2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Fresh independent exact-head review requests changes on diagnostics generation 18. Production cleanup/error precedence is correct and the absorbed readout matcher now rejects inert comment/string predicates, but the strengthened cleanup regression still searches raw Luau source. Its exact owned-root pin/assert and direct Destroy -> original-error sequence can therefore be preserved only inside inert comments or strings while executable cleanup is removed, causing a false PASS.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "normal",
+  "evidence": [
+    "PR #486 exact head 0a9005d079304a971f316d6cc0e37c8d6dd5017f was re-fetched immediately before verdict and remained unchanged, mergeable, and open.",
+    "Production runToggleEvidence() pins the exact diagnosticsRoot(lab.model) after successful enable(), asserts it non-nil before the enabled-window pcall, destroys that exact pinned Instance if the protected validation fails, rethrows cycleResult immediately, and performs strict disable/off-state validation only on the success path.",
+    "The absorbed physics_lab_diagnostics_readout_contract.luau correctly converts source to an executable-contract form that masks line/long comments and quoted/backtick/long-bracket string bodies, and adds negative mutants for all four inert-text families.",
+    "physics_lab_diagnostics_toggle_failure_cleanup.luau still reads raw DIAGNOSTICS_SOURCE into sweepSource and uses string.find/string.match directly. An inert long comment or string inside runToggleEvidence can contain the exact 'local ownedRoot = diagnosticsRoot(lab.model)', non-nil assertion, and 'if not cycleOk then ownedRoot:Destroy(); error(cycleResult, 0); end' text after the executable statements are removed, satisfying the current matcher and ordering checks without executable cleanup.",
+    "The defect is a regression-seal integrity gap, not a newly observed production cleanup failure. Required repair is to run cleanup proofs against executable-only/scoped source (reuse/generalize the readout masking approach or equivalent) and add negative inert-comment/string mutants for the exact pin/direct-cleanup sequence.",
+    "GitHub API refused a formal REQUEST_CHANGES review because the connected account owns PR #486. Review 4935547340 was therefore submitted as COMMENT with the same exact-head blocker; this swarm REVIEW_RESULT is the authoritative REQUEST_CHANGES verdict and does not misstate GitHub review state.",
+    "Known TextTransparency/readout-renderability finding #496 remains a separate published follow-up and is intentionally not used as this review blocker. No Studio/viewport/contact/performance-device/two-client evidence is run or inferred."
+  ],
+  "pr": 486,
+  "headSha": "0a9005d079304a971f316d6cc0e37c8d6dd5017f",
+  "verdict": "REQUEST_CHANGES",
+  "metadata": {
+    "githubReviewId": 4935547340,
+    "githubReviewAction": "COMMENT",
+    "formalRequestChangesUnavailableReason": "GitHub rejects REQUEST_CHANGES on a pull request owned by the connected account.",
+    "requiredNext": "Harden physics_lab_diagnostics_toggle_failure_cleanup.luau so pin/cleanup proofs operate on executable-only scoped source, add negative long-comment/string mutants, rerun exact-head canonical CI and Swarm engine-tests, then request a fresh independent exact-head review. Keep HG151 viewport evidence externally blocked and do not treat stacked old-validator pr-ownership as current-main authority evidence."
+  }
+}
