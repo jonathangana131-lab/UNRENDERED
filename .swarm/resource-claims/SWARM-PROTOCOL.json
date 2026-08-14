@@ -6,7 +6,7 @@
   "claimToken": "7c4f91a2d8e360b5",
   "acquiredAt": "2026-08-14T07:10:00+00:00",
   "heartbeatAt": "2026-08-14T07:36:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 4,
-  "notes": "Generation-4 resource takeover bound to worker-status generation-6 / PR #465. Scope remains the facade re-entry repair and its current-main resync only; the independently found byte-only takeover trust-boundary leaf is scheduler-separated and not being folded into this PR."
+  "notes": "Generation-4 resource handoff after PR #465 merged and canonical main CI passed. Lease intentionally reduced to the protocol minimum without advancing heartbeat, so SWARM-PROTOCOL is stale/released after 2026-08-14T07:41:00+00:00 for the independent post-merge audit/control-plane correction."
 }
