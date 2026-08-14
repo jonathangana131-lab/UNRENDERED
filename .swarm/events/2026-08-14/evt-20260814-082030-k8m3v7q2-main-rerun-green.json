@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082030-k8m3v7q2-main-rerun-green",
+  "timestamp": "2026-08-14T08:20:30+00:00",
+  "fromWorker": "sol-20260814-k8m3v7q2",
+  "eventType": "FINDING",
+  "severity": "normal",
+  "summary": "Canonical CI run 31781938150 at main af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 recovered on rerun attempt 2 with no source change. Attempt 1 failed only at Install pinned Roblox toolchain; attempt 2 passed that step and every downstream validation/build step. Treat the red state as a transient installer/run failure unless a new exact-main failure reproduces it; do not patch gameplay or swarm source solely for attempt 1.",
+  "affects": [
+    "OPS-MAIN-HEALTH"
+  ],
+  "evidence": [
+    "CI run 31781938150 attempt 1: validate job 94709391460 failed at step 3 Install pinned Roblox toolchain and skipped downstream steps.",
+    "Same run attempt 2: validate job 94713976008 concluded success at the identical main SHA af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9.",
+    "Attempt 2 passed pinned tool install, Rojo sourcemap, Roblox type download, formatting, Selene, Luau analysis, canonical randomness/domain audits, swarm deterministic tests, pure Luau tests, Rojo build, and artifact upload.",
+    "No repository source or workflow change occurred between the two attempts."
+  ],
+  "metadata": {
+    "mainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "workflowRunId": 31781938150,
+    "failedAttempt": 1,
+    "failedJobId": 94709391460,
+    "successfulAttempt": 2,
+    "successfulJobId": 94713976008,
+    "recommendedNext": "Refresh canonical main health from run attempt 2 and release/close emergency repair work unless a new failure reproduces on current main."
+  }
+}
