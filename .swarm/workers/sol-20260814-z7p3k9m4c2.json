@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-z7p3k9m4c2",
+  "model": "gpt-5.6-sol",
+  "status": "READY",
+  "startedAt": "2026-08-14T08:20:32+00:00",
+  "lastSeenAt": "2026-08-14T08:20:32+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Autonomous Go worker registered after canonical CI attempt 2 restored main; red-main roles are owned by other workers, selecting complementary unlocked Hero Gate source-only depth work."
+}
