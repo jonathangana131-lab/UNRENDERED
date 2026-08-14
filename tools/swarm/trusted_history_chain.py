@@ -8,12 +8,15 @@ all match. Disposable compatibility snapshots never become authority.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
 import re
 import subprocess
+import sys
 import tempfile
-from pathlib import Path
-from typing import Iterable
+from pathlib import Path, PurePosixPath
+from typing import Callable, Iterable
 
 import swarm_burst_event_replay as burst_event_replay
 import swarm_burst_takeover_recovery as burst_takeover_recovery
@@ -33,6 +36,14 @@ def _git(git_root: Path, *args: str) -> str:
     if result.returncode != 0:
         raise hard.core.ControlError(f"git {' '.join(args)} failed ({result.returncode}): {result.stderr.strip()}")
     return result.stdout.strip()
+
+
+def _git_bytes(git_root: Path, *args: str) -> bytes:
+    result = subprocess.run(["git", "-C", str(git_root), *args], check=False, capture_output=True)
+    if result.returncode != 0:
+        error = result.stderr.decode("utf-8", errors="replace").strip()
+        raise hard.core.ControlError(f"git {' '.join(args)} failed ({result.returncode}): {error}")
+    return result.stdout
 
 
 def first_parent_commits(git_root: Path, trusted_sha: str, control_sha: str) -> list[str]:
@@ -66,6 +77,8 @@ def _archive_swarm(git_root: Path, commit_sha: str, destination: Path) -> Path:
     extract = subprocess.run(["tar", "-x", "-C", str(destination)], stdin=archive.stdout, check=False, capture_output=True, text=False)
     archive.stdout.close()
     archive_stderr = archive.stderr.read().decode("utf-8", errors="replace") if archive.stderr else ""
+    if archive.stderr:
+        archive.stderr.close()
     archive_returncode = archive.wait()
     if archive_returncode != 0:
         raise hard.core.ControlError(f"git archive {commit_sha} failed ({archive_returncode}): {archive_stderr.strip()}")
@@ -80,6 +93,136 @@ def _archive_swarm(git_root: Path, commit_sha: str, destination: Path) -> Path:
 def _changed_paths(git_root: Path, before_sha: str, after_sha: str) -> tuple[str, ...]:
     output = _git(git_root, "diff", "--name-only", before_sha, after_sha)
     return tuple(sorted(line for line in output.splitlines() if line))
+
+
+def _changed_entries(git_root: Path, before_sha: str, after_sha: str) -> tuple[tuple[str, str], ...]:
+    raw = _git_bytes(
+        git_root,
+        "diff",
+        "--name-status",
+        "-z",
+        "--no-renames",
+        before_sha,
+        after_sha,
+        "--",
+        ".swarm",
+    )
+    fields = raw.split(b"\0")
+    if fields and fields[-1] == b"":
+        fields.pop()
+    if len(fields) % 2:
+        raise hard.core.ControlError("malformed NUL-delimited Git path delta")
+    entries: list[tuple[str, str]] = []
+    for offset in range(0, len(fields), 2):
+        try:
+            status = fields[offset].decode("ascii")
+            path = fields[offset + 1].decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise hard.core.ControlError("control history contains a non-UTF-8 path delta") from exc
+        if status not in {"A", "D", "M", "T"}:
+            raise hard.core.ControlError(f"unsupported control history path status {status!r}")
+        relative = PurePosixPath(path)
+        if (
+            len(relative.parts) < 2
+            or relative.parts[0] != ".swarm"
+            or any(part in {"", ".", ".."} for part in relative.parts)
+        ):
+            raise hard.core.ControlError(f"unsafe control history path {path!r}")
+        entries.append((status, path))
+    return tuple(entries)
+
+
+def _tree_entry(git_root: Path, commit_sha: str, path: str) -> tuple[str, str, str]:
+    raw = _git_bytes(git_root, "ls-tree", "-z", commit_sha, "--", path)
+    records = [record for record in raw.split(b"\0") if record]
+    if len(records) != 1 or b"\t" not in records[0]:
+        raise hard.core.ControlError(f"{commit_sha}: expected one Git tree entry for {path}")
+    metadata, returned_path = records[0].split(b"\t", 1)
+    try:
+        mode, object_type, object_sha = metadata.decode("ascii").split(" ", 2)
+        decoded_path = returned_path.decode("utf-8")
+    except (UnicodeDecodeError, ValueError) as exc:
+        raise hard.core.ControlError(f"{commit_sha}: malformed Git tree entry for {path}") from exc
+    if decoded_path != path or not _SHA_RE.fullmatch(object_sha):
+        raise hard.core.ControlError(f"{commit_sha}: Git tree identity mismatch for {path}")
+    return mode, object_type, object_sha
+
+
+def _blob(git_root: Path, object_sha: str) -> bytes:
+    return _git_bytes(git_root, "cat-file", "blob", object_sha)
+
+
+def _git_blob_sha1(raw: bytes) -> str:
+    return hashlib.sha1(f"blob {len(raw)}\0".encode("ascii") + raw).hexdigest()
+
+
+def _destination(snapshot_root: Path, path: str) -> Path:
+    relative = PurePosixPath(path)
+    return snapshot_root.joinpath(*relative.parts[1:])
+
+
+def _remove_path(snapshot_root: Path, destination: Path, path: str) -> None:
+    if destination.is_dir() and not destination.is_symlink():
+        raise hard.core.ControlError(f"refusing directory deletion for control file delta {path}")
+    if not destination.exists() and not destination.is_symlink():
+        raise hard.core.ControlError(f"control file delta deletes missing path {path}")
+    destination.unlink()
+    parent = destination.parent
+    while parent != snapshot_root:
+        try:
+            parent.rmdir()
+        except OSError:
+            break
+        parent = parent.parent
+
+
+def _replace_path(snapshot_root: Path, destination: Path, path: str, mode: str, object_type: str, raw: bytes) -> None:
+    if object_type != "blob" or mode not in {"100644", "100755", "120000"}:
+        raise hard.core.ControlError(f"unsupported Git object {mode} {object_type} for {path}")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if destination.is_dir() and not destination.is_symlink():
+        raise hard.core.ControlError(f"refusing file replacement over directory for {path}")
+    descriptor, temporary_name = tempfile.mkstemp(prefix=".history-sync-", dir=destination.parent)
+    temporary = Path(temporary_name)
+    try:
+        if mode == "120000":
+            os.close(descriptor)
+            temporary.unlink()
+            try:
+                target = raw.decode("utf-8")
+            except UnicodeDecodeError as exc:
+                raise hard.core.ControlError(f"non-UTF-8 symlink target for {path}") from exc
+            temporary.symlink_to(target)
+        else:
+            with os.fdopen(descriptor, "wb") as handle:
+                handle.write(raw)
+                handle.flush()
+            temporary.chmod(0o755 if mode == "100755" else 0o644)
+        os.replace(temporary, destination)
+    finally:
+        if temporary.exists() or temporary.is_symlink():
+            temporary.unlink()
+    materialized = os.readlink(destination).encode("utf-8") if destination.is_symlink() else destination.read_bytes()
+    if _git_blob_sha1(materialized) != _git_blob_sha1(raw):
+        raise hard.core.ControlError(f"materialized Git blob mismatch for {path}")
+
+
+def _sync_swarm_snapshot(git_root: Path, snapshot_root: Path, before_sha: str, after_sha: str) -> tuple[str, ...]:
+    """Move one disposable snapshot to an exact commit using byte-checked Git deltas."""
+
+    changed: list[str] = []
+    for status, path in _changed_entries(git_root, before_sha, after_sha):
+        destination = _destination(snapshot_root, path)
+        if status == "D":
+            _remove_path(snapshot_root, destination, path)
+        else:
+            mode, object_type, object_sha = _tree_entry(git_root, after_sha, path)
+            raw = _blob(git_root, object_sha)
+            if _git_blob_sha1(raw) != object_sha:
+                raise hard.core.ControlError(f"Git blob digest mismatch for {path}")
+            _replace_path(snapshot_root, destination, path, mode, object_type, raw)
+        changed.append(path)
+    return tuple(sorted(changed))
 
 
 def _recovery_pair(predecessor_sha: str, invalid_sha: str, repair_sha: str) -> dict | None:
@@ -110,32 +253,49 @@ def _validate_recovery_bridge(git_root: Path, row: dict, predecessor_root: Path,
     }
 
 
-def validate_git_chain(git_root: Path, trusted_sha: str, control_sha: str) -> dict:
+def validate_git_chain(
+    git_root: Path,
+    trusted_sha: str,
+    control_sha: str,
+    progress: Callable[[int, int, str], None] | None = None,
+) -> dict:
     git_root = git_root.resolve()
     commits = first_parent_commits(git_root, trusted_sha, control_sha)
     recovered: list[str] = []
     with tempfile.TemporaryDirectory(prefix="swarm-history-chain-") as temp:
         temp_root = Path(temp)
-        roots: dict[str, Path] = {trusted_sha: _archive_swarm(git_root, trusted_sha, temp_root / "000000-trusted")}
-        for index, commit_sha in enumerate(commits, start=1):
-            roots[commit_sha] = _archive_swarm(git_root, commit_sha, temp_root / f"{index:06d}-{commit_sha[:12]}")
+        root_a = _archive_swarm(git_root, trusted_sha, temp_root / "snapshot-a")
+        root_b = _archive_swarm(git_root, trusted_sha, temp_root / "snapshot-b")
+        snapshot_sha = {root_a: trusted_sha, root_b: trusted_sha}
 
         results: list[dict] = []
         last_valid_sha = trusted_sha
-        last_valid_root = roots[trusted_sha]
+        last_valid_root = root_a
+        standby_root = root_b
         index = 0
         while index < len(commits):
             current_sha = commits[index]
             next_sha = commits[index + 1] if index + 1 < len(commits) else ""
             row = _recovery_pair(last_valid_sha, current_sha, next_sha) if next_sha else None
             if row is not None:
-                results.append(_validate_recovery_bridge(git_root, row, last_valid_root, roots[next_sha]))
+                _sync_swarm_snapshot(git_root, standby_root, snapshot_sha[standby_root], next_sha)
+                snapshot_sha[standby_root] = next_sha
+                results.append(_validate_recovery_bridge(git_root, row, last_valid_root, standby_root))
                 recovered.append(current_sha)
                 last_valid_sha = next_sha
-                last_valid_root = roots[next_sha]
+                last_valid_root, standby_root = standby_root, last_valid_root
                 index += 2
+                if progress:
+                    progress(index, len(commits), next_sha)
                 continue
 
+            _sync_swarm_snapshot(
+                git_root,
+                standby_root,
+                snapshot_sha[standby_root],
+                current_sha,
+            )
+            snapshot_sha[standby_root] = current_sha
             changed_paths = _changed_paths(git_root, last_valid_sha, current_sha)
             finite_takeover = burst_takeover_recovery.validate_git_transition(
                 hard,
@@ -143,7 +303,7 @@ def validate_git_chain(git_root: Path, trusted_sha: str, control_sha: str) -> di
                 current_sha,
                 changed_paths,
                 last_valid_root,
-                roots[current_sha],
+                standby_root,
             )
             if finite_takeover is not None:
                 results.append(finite_takeover)
@@ -154,15 +314,17 @@ def validate_git_chain(git_root: Path, trusted_sha: str, control_sha: str) -> di
                     current_sha,
                     changed_paths,
                     last_valid_root,
-                    roots[current_sha],
+                    standby_root,
                 )
                 if finite_event is not None:
                     results.append(finite_event)
                 else:
-                    results.append(hard.transition_check(last_valid_root, roots[current_sha]))
+                    results.append(hard.transition_check(last_valid_root, standby_root))
             last_valid_sha = current_sha
-            last_valid_root = roots[current_sha]
+            last_valid_root, standby_root = standby_root, last_valid_root
             index += 1
+            if progress and (index == len(commits) or index % 25 == 0):
+                progress(index, len(commits), current_sha)
 
     return {
         "status": "PASS",
@@ -180,7 +342,20 @@ def main() -> int:
     parser.add_argument("--trusted-sha", required=True)
     parser.add_argument("--control-sha", required=True)
     args = parser.parse_args()
-    print(json.dumps(validate_git_chain(args.git_root, args.trusted_sha, args.control_sha), indent=2, sort_keys=True))
+    def report(completed: int, total: int, commit_sha: str) -> None:
+        print(
+            f"trusted-history progress {completed}/{total} at {commit_sha}",
+            file=sys.stderr,
+            flush=True,
+        )
+
+    print(
+        json.dumps(
+            validate_git_chain(args.git_root, args.trusted_sha, args.control_sha, progress=report),
+            indent=2,
+            sort_keys=True,
+        )
+    )
     return 0
 
 
