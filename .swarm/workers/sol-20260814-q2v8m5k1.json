@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-q2v8m5k1",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T08:31:00+00:00",
+  "lastSeenAt": "2026-08-14T08:31:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-q2v8m5k1-g1",
+  "notes": "Diagnostics generation-18 adversarial test completion; evaluate and absorb strengthened cleanup-pin regression without changing Studio evidence status."
+}
