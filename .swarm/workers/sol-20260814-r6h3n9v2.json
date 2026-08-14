@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-r6h3n9v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:10:00+00:00",
-  "lastSeenAt": "2026-08-14T08:00:10+00:00",
+  "lastSeenAt": "2026-08-14T08:11:00+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-r6h3n9v2-g1",
-  "notes": "Independent WorldEntity adversarial completion pass against PR #477 generation-10 head. REALITY-CONTRACT generation 2 is bound to this role; test-only unless the primary successor absorbs accepted evidence."
+  "notes": "WorldEntity test-adversary preempted before source changes by red trusted-history failure. Claim/resource released; exact Git-bound WorldEntity generation-9->10 takeover replay finding published as evt-20260814-081020-r6h3n9v2-worldentity-takeover-replay-gap and linked to continuity PR #482."
 }
