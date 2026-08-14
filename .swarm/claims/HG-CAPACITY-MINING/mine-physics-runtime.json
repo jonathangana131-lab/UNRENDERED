@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-q2v8m5k1",
   "claimToken": "c1a7e3f95b2d8046",
   "claimedAt": "2026-08-14T08:41:30+00:00",
-  "heartbeatAt": "2026-08-14T08:46:00+00:00",
+  "heartbeatAt": "2026-08-14T08:48:00+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/audit/HG-CAPACITY-MINING-runtime-q2v8m5k1-g1",
   "pr": 503,
-  "notes": "Published docs-only generation-5 finding PR #503 at exact head 19ed78e19a00f439e26cf9174930def81b83ce55. Distinct regression-integrity gap: retained #408 whole-manager fence explicitly protects caller-owned policy inputs and time, but tests attack only hostile PolicyInputs; add a hostile nowSeconds comparison-metamethod mutation adversary to pin the earlier time-validation window. No production/Studio changes; fresh exact-head GitHub CI required."
+  "notes": "Published corrected docs-only generation-5 integration finding PR #503 at exact head b753f686f3e74e86e775dca48d9778f02388635d. Concrete seam: retained #408 runtime test requires hostile PolicyInputs __index execution (policyReads > 0), while retained FidelityManager #385 intentionally rejects metatable-backed PolicyInputs and hostile nowSeconds with zero metamethod execution. Compose by updating the stale runtime test to the stronger no-execute boundary while retaining runtime callback/transaction guard coverage; do not weaken #385. No production/Studio changes; fresh exact-head CI queued."
 }
