@@ -2,11 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k8m2q7v5",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:13:00+00:00",
-  "lastSeenAt": "2026-08-14T07:28:00+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-geometry",
-  "branch": "agent/physics/HG-CAPACITY-MINING-geometry-k8m2q7v5",
-  "notes": "Mine current Physics Lab geometry/recipe/realization lineage for one concrete non-duplicate Reality-Grade depth gap; docs-only mining scope, no Studio evidence claims."
+  "lastSeenAt": "2026-08-14T07:32:00+00:00",
+  "notes": "Completed Physics geometry capacity-mining finding in draft PR #473: cabinet-a/ledge positive-volume overlap. Exact-head CI validate job and Swarm engine-tests passed; pr-ownership remains fail-closed at the separate live-vs-trusted-state gate before lane enforcement. No Studio evidence claimed."
 }
