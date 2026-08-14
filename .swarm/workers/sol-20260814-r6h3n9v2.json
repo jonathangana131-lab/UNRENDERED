@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-r6h3n9v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:10:00+00:00",
-  "lastSeenAt": "2026-08-14T07:47:00+00:00",
+  "lastSeenAt": "2026-08-14T07:52:00+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-r6h3n9v2-g1",
-  "notes": "Independent exact-head audit of WorldEntity generation-10 PR #477. Prior worker-status primary was released; no self-review relationship with this lane."
+  "notes": "WorldEntity generation-10 exact-head audit completed and released. REVIEW_RESULT evt-20260814-075100-r6h3n9v2-worldentity-g10-audit and GitHub review 4935095722 record the independent verdict; integration remains gated on current-main convergence and trusted pr-ownership GREEN."
 }
