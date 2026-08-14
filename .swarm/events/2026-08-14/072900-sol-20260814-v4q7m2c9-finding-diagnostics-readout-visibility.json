@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-072900-v4q7m2c9-diagnostics-readout-visibility",
+  "timestamp": "2026-08-14T07:29:00+00:00",
+  "fromWorker": "sol-20260814-v4q7m2c9",
+  "eventType": "FINDING",
+  "summary": "The retained diagnostics successor proves one-to-one readout identity, exact Adornee, exact text, and tree shape, but its machine-readable completeness boundary does not prove that those readouts are actually displayable. A BillboardGui with Enabled=false or a TextLabel with Visible=false can still satisfy validateReadoutCompleteness() and be counted as an inspectable diagnostics readout. This is a source/evidence-integrity gap only; it does not claim the blocked Studio viewport row has passed or failed.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS", "HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Active diagnostics generation-17 PR #468 exact head c3381f3f372603f9e587fec54a595a025cfce3d6 validates each owned BillboardGui by canonical WorldEntityId, authoritative membership, unique identity, exact Adornee, one Readout TextLabel descendant, exact label text, and exact entity/readout count.",
+    "The same validateReadoutCompleteness() boundary does not inspect BillboardGui.Enabled, TextLabel.Visible, or another explicit presentation-state predicate before returning the diagnostic instance count.",
+    "enable() explicitly realizes presentation state such as AlwaysOnTop, MaxDistance, Size, StudsOffsetWorldSpace, label Size, Font, TextSize, TextWrapped, and text alignment, but capture() can certify completeness after those live presentation properties are altered because its expectation contains only worldEntityId, adornee, and text.",
+    "tests/physics_lab_diagnostics_readout_contract.luau at PR #468 head locks identity, Adornee, TextLabel shape, exact text, canonical projection, stable ordering, and exact counts, but contains no disabled-BillboardGui or hidden-TextLabel rejection contract.",
+    "Search of current diagnostics lanes and open PRs found no dedicated readout-visibility/inspectability leaf. Existing diagnostics work separately owns exact Instance binding, enabled canonical-world validation, clone completeness, bounded toggles, final-state fencing, and generation-17 post-enable cleanup.",
+    "No Roblox Studio, viewport, physical-contact, performance-device, networking, persistence, or two-client evidence was run or claimed by this mining pass."
+  ],
+  "metadata": {
+    "inspectedPr": 468,
+    "inspectedHeadSha": "c3381f3f372603f9e587fec54a595a025cfce3d6",
+    "recommendedNext": "Absorb this into the active diagnostics lineage only after/alongside the generation-17 cleanup without creating a competing framework. Make the machine completeness boundary fail closed on the minimum project-owned presentation state required for an inspectable readout (at least enabled BillboardGui and visible TextLabel), retain exact identity/Adornee/text/count authority, and add a focused source-contract regression that rejects disabled/hidden readout mutants. Keep real Studio viewport observation mandatory; source checks must not promote HG151-DIAGNOSTICS to PASS."
+  }
+}
