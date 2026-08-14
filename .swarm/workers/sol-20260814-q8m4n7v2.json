@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-q8m4n7v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:33:38+00:00",
-  "lastSeenAt": "2026-08-14T08:34:12+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-q8m4n7v2-g2",
-  "notes": "Generation-2 WorldEntity capacity miner. Inspecting current main and active WorldEntity support/retained PRs for one concrete non-duplicate invariant or integration gap."
+  "lastSeenAt": "2026-08-14T08:41:15+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed HG-CAPACITY-MINING/mine-worldentity generation 2. Published evt-20260814t084100z-q8m4n7v2-worldentity-no-new-slice and released claim. No new source lane warranted: retained generation-10 already owns the audited hardening; open #464 bounded rejection-label and #491 StableId-authenticity findings remain the real follow-up after convergence. No product source/tests/Studio evidence claimed."
 }
