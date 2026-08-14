@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260814-v162merge",
+  "workerId": "sol-20260814-z7c2m8q4",
   "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
-  "claimToken": "a62c9e3d7f1840b5",
-  "acquiredAt": "2026-08-14T08:22:30Z",
-  "heartbeatAt": "2026-08-14T08:22:30Z",
+  "claimToken": "6f8c1d3a9b2e7045",
+  "acquiredAt": "2026-08-14T08:52:45Z",
+  "heartbeatAt": "2026-08-14T08:52:45Z",
   "leaseSeconds": 1800,
-  "generation": 6,
-  "notes": "Generation-6 takeover after generation-5 heartbeat 07:50 UTC + 1800s lease expired at 08:20 UTC. Scope is V16.2 integration-throughput and producer-fence rollout only."
+  "generation": 7,
+  "notes": "Generation-7 stale-owner takeover after generation-6 heartbeat 08:22:30 UTC + 1800s lease expired at 08:52:30 UTC. Continue V16.2 integration-throughput fixes from independent exact-head review findings; do not weaken trusted-history or event-schema boundaries."
 }
