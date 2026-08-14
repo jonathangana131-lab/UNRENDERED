@@ -409,29 +409,34 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 		RunService.Heartbeat:Wait()
 
 		local enabled = PhysicsLabStudioDiagnostics.enable(lab)
-		assert(enabled.enabled, `diagnostics failed to enable at cycle {cycle}`)
-		assert(
-			enabled.diagnosticInstanceCount > 0,
-			`diagnostics created no inspectable readouts at cycle {cycle}`
-		)
-		local onSnapshot = captureCanonicalWhileDiagnosticsEnabled(lab)
-		local onComparison = Validation.compare(baseline, onSnapshot, 0.001)
-		for countName, delta in pairs(onComparison.delta) do
+		local cycleOk, cycleResult = pcall(function()
+			assert(enabled.enabled, `diagnostics failed to enable at cycle {cycle}`)
 			assert(
-				delta == 0,
-				`diagnostics-on canonical resource drift at cycle {cycle}: {countName}={delta}`
+				enabled.diagnosticInstanceCount > 0,
+				`diagnostics created no inspectable readouts at cycle {cycle}`
 			)
-		end
-		assert(
-			onComparison.envelope.ok,
-			onComparison.envelope.reason or "diagnostics-on canonical envelope drifted"
-		)
-		maxDiagnosticInstances = math.max(maxDiagnosticInstances, enabled.diagnosticInstanceCount)
-		if sample == nil then
-			sample = enabled.entities[1]
-		end
+			local onSnapshot = captureCanonicalWhileDiagnosticsEnabled(lab)
+			local onComparison = Validation.compare(baseline, onSnapshot, 0.001)
+			for countName, delta in pairs(onComparison.delta) do
+				assert(
+					delta == 0,
+					`diagnostics-on canonical resource drift at cycle {cycle}: {countName}={delta}`
+				)
+			end
+			assert(
+				onComparison.envelope.ok,
+				onComparison.envelope.reason or "diagnostics-on canonical envelope drifted"
+			)
+			maxDiagnosticInstances = math.max(maxDiagnosticInstances, enabled.diagnosticInstanceCount)
+			if sample == nil then
+				sample = enabled.entities[1]
+			end
+		end)
 
 		local disabled = PhysicsLabStudioDiagnostics.disable(lab)
+		if not cycleOk then
+			error(cycleResult, 0)
+		end
 		assert(not disabled.enabled, `diagnostics remained enabled at cycle {cycle}`)
 		local offSnapshot = Validation.captureFull(lab.model)
 		local comparison = Validation.compare(baseline, offSnapshot, 0.001)
