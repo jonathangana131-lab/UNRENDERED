@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-r7n2v9k4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-14T07:10:00+00:00",
-  "lastSeenAt": "2026-08-14T08:03:00+00:00",
+  "lastSeenAt": "2026-08-14T08:04:00+00:00",
   "laneId": null,
   "slotId": null,
   "branch": null,
-  "notes": "Preempted and released MaterialDNA capacity mining when red-control recovery became current. Integrated emergency PR #475 after exact-head canonical CI PASS, Swarm engine/read-only-bootstrap PASS, and independent exact-head history review; closed stale competing PR #476 after its independent BLOCK. Watching mandatory post-merge V16 live refresh on main@8a481f74a442f499163574a1eb510604ac3a8c3a. No Studio/viewport/two-client evidence claimed."
+  "notes": "Session integrated emergency trusted-history PR #475 and closed superseded #476; concurrent worker-status recovery #465 also merged, making current main ec7755717c9512b8418e2cfc77f0da69610ea9ae. Post-merge V16 replay exposed quarantine-only authority event history as the next exact red-control blocker. Active draft PR #478 owns that repair; exact head 9f41147ef4b987542880f745ed891a9a936deeb5 has canonical CI PASS and engine/read-only-bootstrap PASS but independent review requests adding the other two known quarantine-only introduction rows plus focused fail-closed regressions before integration. Not duplicating its active primary. Earlier this session published three source-only capacity findings: Fidelity capacity recovery regression, ObjectGenome hinge/tilt missing pivot-line contract, and WorldEntity unique-record population bound. All claims released. No local/Studio/viewport/contact/performance/persistence/two-client evidence claimed."
 }
