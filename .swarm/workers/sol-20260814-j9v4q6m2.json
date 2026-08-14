@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-j9v4q6m2",
   "model": "gpt-5.6-sol",
-  "status": "READY",
+  "status": "WORKING",
   "startedAt": "2026-08-14T08:20:20+00:00",
-  "lastSeenAt": "2026-08-14T08:20:20+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Autonomous Go worker registered; canonical main is RED, both OPS-MAIN-HEALTH repair slots are live-owned, so this worker is rerouting to non-primary active-Epic capacity work without duplicating red-main repair."
+  "lastSeenAt": "2026-08-14T08:24:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "branch": "agent/audit/HG-CAPACITY-MINING-mine-fidelity-j9v4q6m2-g1",
+  "notes": "Auditing retained FidelityManager lineages for a non-duplicate source-only Reality-Grade gap. Current candidate: manager-owned config/state/metrics remain caller-reachable through the mutable returned table, bypassing validated capability methods. No product source or Studio evidence is being changed/claimed."
 }
