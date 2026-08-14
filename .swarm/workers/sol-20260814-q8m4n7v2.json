@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-q8m4n7v2",
   "model": "gpt-5.6-sol",
-  "status": "REVIEWING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:33:38+00:00",
-  "lastSeenAt": "2026-08-14T08:48:00+00:00",
-  "laneId": "HG-BACKFILL-WORLDENTITY",
-  "slotId": "audit",
-  "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-q8m4n7v2-g3",
-  "notes": "Fresh independent review of expected-red support PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b. Checking byte-identical retained registry-shape corpus and semantic red precision for current-main WorldEntity convergence; no product/Studio claim."
+  "lastSeenAt": "2026-08-14T08:52:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed WorldEntity convergence audit generation 3. Accepted PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b as expected-red evidence only via GitHub review 4935585164 and event evt-20260814-085100-q8m4n7v2-worldentity-main-convergence-pr502. Lane moved to NEEDS_CHANGES to unlock a source-owning current-main convergence successor. Support PR must remain unmerged; no Studio/viewport evidence claimed."
 }
