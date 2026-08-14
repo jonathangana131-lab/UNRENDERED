@@ -5,12 +5,12 @@
   "workerId": "sol-20260814-j3q8v6m1",
   "claimToken": "8d3f6a1c9b2e7054",
   "claimedAt": "2026-08-14T08:33:00+00:00",
-  "heartbeatAt": "2026-08-14T08:37:00+00:00",
-  "leaseSeconds": 1800,
+  "heartbeatAt": "2026-08-14T08:38:45+00:00",
+  "leaseSeconds": 300,
   "generation": 2,
   "takeoverOf": "sol-20260814-k7m4q2z9",
   "resources": [],
   "branch": "agent/audit/HG-CAPACITY-MINING-mine-authority-j3q8v6m1-g2",
   "pr": 499,
-  "notes": "Distinct source-only Physics Lab parent-authority finding published as draft PR #499; no runtime implementation or Studio evidence claim."
+  "notes": "Released after docs-only parent-authority finding PR #499. Exact-head CI 31784539058 PASS; Swarm 31784539021 fail-closed on unrelated live/trusted digest mismatch. No Studio or ownership PASS claim."
 }
