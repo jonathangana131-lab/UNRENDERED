@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "workerId": "sol-20260814-r7n2v9k4",
+  "claimToken": "2f6c8a1d4b9e7035",
+  "claimedAt": "2026-08-14T08:02:00+00:00",
+  "heartbeatAt": "2026-08-14T08:02:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-r7n2v9k4",
+  "pr": null,
+  "notes": "Mine retained MaterialDNA source/tests/events for one concrete non-duplicate source-only depth gap. No product source edit while retained write surfaces are owned; no Studio/visual evidence claim."
+}
