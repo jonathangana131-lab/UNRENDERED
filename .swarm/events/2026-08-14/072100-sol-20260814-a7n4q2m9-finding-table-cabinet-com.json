@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-072100-a7n4q2m9-table-cabinet-com",
+  "timestamp": "2026-08-14T07:21:00Z",
+  "fromWorker": "sol-20260814-a7n4q2m9",
+  "eventType": "FINDING",
+  "summary": "Physics-geometry capacity mining found a concrete non-duplicate authored-metadata defect in the production ObjectGenome fixtures used by the Physics Lab: officeTable and filingCabinet each declare a total mass exactly equal to their modeled component-mass sum, but their declared centerOfMassM does not equal the component-mass-weighted centroid. A bounded PROPOSED follow-up lane, HG-PHYSICS-TABLE-CABINET-COM, now records the source-only repair/test contract. It remains scheduler-gated and is not an implementation unlock.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-PHYSICS-GEOMETRY",
+    "HG-BACKFILL-OBJECTGENOME",
+    "HG-PHYSICS-TABLE-CABINET-COM"
+  ],
+  "severity": "medium",
+  "evidence": [
+    "Inspected current main eead13b2e90ffbba36248909d97e17856e002ad9. ObjectGenomeFixtures.officeTable declares massKg=27.0 and centerOfMassM=(0,0.08,0); its four 2.4 kg legs at y=-0.03, 2.0 kg crossbar at y=0.15, and 15.4 kg top at y=0.33 also sum exactly to 27.0 kg, but yield mass-weighted y=0.1886666666666667 m.",
+    "ObjectGenomeFixtures.filingCabinet declares massKg=36.6 and centerOfMassM=(0,-0.06,0.01); its 24.0 kg shell plus three 4.2 kg drawers sum exactly to 36.6 kg, but the component-weighted centroid is approximately (0,0.01721311475409836,-0.003442622950819673) m.",
+    "Current tests/object_genome.luau verifies each fixture validates, locks stable identity/full-recipe fingerprint, and checks an adversarial component-mass-sum mismatch, but it does not recompute production fixture centerOfMassM from component masses/positions. Current tests/physics_lab_recipe.luau has an explicit mass/COM regression only for the commercial door.",
+    "ObjectGenome.inspect accepting these two fixtures is therefore not evidence that their authored COM metadata matches their fully-accounted modeled mass distribution. Existing chair and rolling-cart geometry lanes already use component-weighted COM consistency as the source-only closure criterion for the same style of fixture metadata.",
+    "Repository PR search found no office-table or filing-cabinet COM repair lineage. The new finding is intentionally distinct from HG-PHYSICS-CHAIR-GEOMETRY, HG-PHYSICS-CART-GEOMETRY, HG-PHYSICS-CART-SHELF-FRAME, and retained scale/validation PR #423.",
+    "PhysicsLabValidation already checks realized BasePart size/pose against the current canonical recipe, so this finding is about the recipe's authored physical metadata itself, not a duplicate representation-drift validator.",
+    "No product source or test file was changed under the capacity-mining slot. No local Pure Luau test, Roblox Studio run, contact/settling test, viewport capture, performance-device run, or two-client evidence was run or claimed."
+  ],
+  "metadata": {
+    "proposedLane": "HG-PHYSICS-TABLE-CABINET-COM",
+    "sourceMainSha": "eead13b2e90ffbba36248909d97e17856e002ad9",
+    "recommendedNext": "Scheduler may promote HG-PHYSICS-TABLE-CABINET-COM only when it is safe relative to the retained ObjectGenome/geometry integration backlog. Repair both fixture COM values in one bounded source-only slice, advance each familyVersion, update identity/fingerprint goldens, and add production-data centroid regressions. Do not treat this PROPOSED leaf as permission to bypass Docs/PROJECT_STATE.md or to claim Studio evidence."
+  }
+}
