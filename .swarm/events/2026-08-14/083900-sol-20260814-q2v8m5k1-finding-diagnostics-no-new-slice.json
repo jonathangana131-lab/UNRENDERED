@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t083900z-q2v8m5k1-diagnostics-no-new-slice",
+  "timestamp": "2026-08-14T08:39:00Z",
+  "fromWorker": "sol-20260814-q2v8m5k1",
+  "eventType": "FINDING",
+  "summary": "Bounded diagnostics capacity mining found no additional safe non-duplicate source slice after reconciling the live generation-18 successor. PR #486 head 0a9005d079304a971f316d6cc0e37c8d6dd5017f already contains both independently requested test-seal repairs: exact owned-root/no-fallback cleanup matching and inert long-comment/long-bracket/quoted/backtick masking for readout predicates. Canonical CI 31784534603 is green on that exact head. The separate TextTransparency renderability gap discovered during this audit is already owned by docs finding PR #496, so this worker is not opening a duplicate. Recommendation: keep generation 18 on its existing primary lineage, obtain the required fresh independent exact-head diagnostics review once the lane state is reconciled, and do not convert source confidence into the still-missing Studio viewport evidence.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "PR #486 exact head 0a9005d079304a971f316d6cc0e37c8d6dd5017f retains the production cleanup/error-precedence and Enabled/Visible readout guards.",
+    "tests/physics_lab_diagnostics_toggle_failure_cleanup.luau on that head requires an exact diagnosticsRoot(lab.model) assignment, explicit non-nil assertion, immediate pinned-root Destroy followed by original-error propagation, no failure-path rediscovery/recapture, and success-path strict disable.",
+    "tests/physics_lab_diagnostics_readout_contract.luau on that head masks ordinary and long comments plus quoted, backtick, and long-bracket string bodies, scopes matching to validateReadoutCompleteness, and includes negative inert-text mutants for all four requested classes.",
+    "Canonical CI run 31784534603 completed successfully on exact head 0a9005d079304a971f316d6cc0e37c8d6dd5017f. A separate Swarm Control Plane run remains subject to repository-wide shared control/trust recovery.",
+    "PR #496 already records the distinct TextTransparency=1 readout-renderability gap; this worker did not duplicate that finding or change production source/tests.",
+    "No Roblox Studio, viewport, physical-contact, performance-device, networking, persistence, or two-client evidence was run or claimed by this mining pass."
+  ]
+}
