@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+  "epicId": "SWARM-V16",
+  "title": "Swarm V16.2 integration throughput",
+  "objective": "Turn persistent 20-30 worker burst output into canonical integration faster: merge-pressure scheduling, canonical child absorption, and strict pre-publication event validation without weakening V2.1 trust or external runtime authority.",
+  "priority": 10000,
+  "state": "READY",
+  "mode": "exclusive",
+  "dependencies": [],
+  "writeScopes": [
+    ".github/workflows/swarm-v16-*.yml",
+    "Docs/SWARM_V16_2_INTEGRATION_THROUGHPUT.md",
+    "ProjectSource/UNRENDERED_PROJECT_INSTRUCTIONS.txt",
+    "tools/swarm/v16cp/**",
+    "tools/swarm/event_producer.py",
+    "tools/swarm/test_event_producer.py",
+    "tools/swarm/test_swarm_v16_2.py"
+  ],
+  "resources": ["SWARM-PROTOCOL"],
+  "slots": [
+    {
+      "slotId": "primary",
+      "role": "V16.2 scheduler and producer-fence integrator",
+      "exclusive": true,
+      "availableWhen": ["READY", "CLAIMED", "IMPLEMENTING", "NEEDS_CHANGES"],
+      "priorityBoost": 1200,
+      "writeScopes": [
+        ".github/workflows/swarm-v16-*.yml",
+        "Docs/SWARM_V16_2_INTEGRATION_THROUGHPUT.md",
+        "ProjectSource/UNRENDERED_PROJECT_INSTRUCTIONS.txt",
+        "tools/swarm/v16cp/**",
+        "tools/swarm/event_producer.py",
+        "tools/swarm/test_event_producer.py",
+        "tools/swarm/test_swarm_v16_2.py"
+      ]
+    },
+    {
+      "slotId": "reviewer-1",
+      "role": "Independent V16.2 convergence/trust reviewer",
+      "exclusive": true,
+      "availableWhen": ["REVIEW", "INTEGRATION_READY"],
+      "priorityBoost": 1000,
+      "requiresIndependentFrom": "primary",
+      "writeScopes": [
+        ".github/workflows/swarm-v16-*.yml",
+        "Docs/SWARM_V16_2_INTEGRATION_THROUGHPUT.md",
+        "tools/swarm/v16cp/**",
+        "tools/swarm/event_producer.py",
+        "tools/swarm/test_event_producer.py",
+        "tools/swarm/test_swarm_v16_2.py"
+      ]
+    }
+  ],
+  "acceptance": [
+    "exact-head canonical CI and V16.2 shadow suite pass",
+    "retained V16/V16.1 persistence and 30-worker adversarial suites remain green",
+    "at least 18 of 30 synthetic workers remain productively routed under merge pressure",
+    "strict event producer rejects malformed top-level pr/headSha/recommendation before sink invocation",
+    "trusted V2.1 live-control/history preflight remains fail-closed and green",
+    "independent exact-head review accepts scheduler and producer-fence boundaries",
+    "post-merge live main refresh remains trustworthy"
+  ],
+  "notes": "V16.2 rollout. Existing historical quarantine/replay remains finite compatibility only; this lane must not widen the live event schema or external runtime truth authority.",
+  "tags": ["swarm-v16.2", "integration", "merge-pressure", "event-producer", "control-plane"]
+}
