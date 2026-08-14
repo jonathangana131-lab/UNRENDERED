@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-geometry",
+  "workerId": "sol-20260814-g7v3q8m2",
+  "claimToken": "9c4e1a7d5b2f8063",
+  "claimedAt": "2026-08-14T08:00:00+00:00",
+  "heartbeatAt": "2026-08-14T08:00:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/audit/HG-CAPACITY-MINING-physics-geometry-g7v3q8m2",
+  "pr": null,
+  "notes": "Bounded current-main Physics Lab geometry source/test mining; publish structured finding or durable no-gap result only."
+}
