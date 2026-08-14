@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k8m2q6v4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-14T07:40:00+00:00",
-  "lastSeenAt": "2026-08-14T07:40:00+00:00",
+  "lastSeenAt": "2026-08-14T07:44:30+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "primary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-primary-k8m2q6v4-g10",
-  "notes": "Stale generation-9 primary takeover to absorb reviewed WorldEntity ownership-boundary regressions into a retained generation-10 successor."
+  "notes": "Published retained generation-10 successor draft PR #477 exact head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96, absorbing reviewed support #435 and #461 with no additional production delta. Canonical CI #1200 and Swarm engine-tests passed exact head. Lane moved to REVIEW via handoff evt-20260814-074330-k8m2q6v4-worldentity-g10-handoff. Trusted pr-ownership remains blocked by separately owned control-history recovery. Primary claim and REALITY-CONTRACT released for fresh independent review."
 }
