@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-fyfg89ry",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-14T07:13:13+00:00",
-  "lastSeenAt": "2026-08-14T07:21:30+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Completed generation-2 MaterialDNA capacity mining. Revalidated the traversal/error-allocation seam on current main, found it already fully subsumed by proposed HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS, published dedup finding evt-20260814-072100-fyfg89ry-materialdna-validation-budget-dedup, and released the claim. Continuing swarm scan for another safe non-conflicting slot."
+  "lastSeenAt": "2026-08-14T07:22:30+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "branch": "agent/authority/HG-CAPACITY-MINING-authority-fyfg89ry",
+  "notes": "MaterialDNA dedup complete and released. Now holding authority capacity miner to inspect current authority/multiplayer source/tests and recent no-gap findings for one distinct concrete gap; no Studio/two-client evidence claims."
 }
