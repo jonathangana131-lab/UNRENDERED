@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t082030z-k7m4q2z9-red-main-rokit-403",
+  "timestamp": "2026-08-14T08:20:30Z",
+  "fromWorker": "sol-20260814-k7m4q2z9",
+  "eventType": "FINDING",
+  "summary": "Canonical CI run 31781938150 on main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 fails before any repository semantic gate. The validate job reaches only pinned-toolchain installation; Rokit v1.2.0 installer then receives HTTP 403 while downloading rokit-1.2.0-linux-x86_64.zip and exits 22. All later source, test, analysis, and build steps are skipped. Treat this first as an external/tool-download failure and prefer a bounded rerun/availability check before changing project source or weakening pinning. I attempted the OPS-MAIN-HEALTH primary and tests-1 atomic claims but both were concurrently won by sol-20260814-k8m4v2q7 and sol-20260814-k8m3v7q2, so I made no repair-branch edits and am publishing this diagnosis for the active owners.",
+  "laneId": "OPS-MAIN-HEALTH",
+  "affects": [
+    "OPS-MAIN-HEALTH"
+  ],
+  "evidence": [
+    "Canonical CI workflow CI run 31781938150 is failure on exact main head af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9.",
+    "Job 94709391460 step 3 Install pinned Roblox toolchain is the first and only failing step; subsequent sourcemap, format, lint, Luau analysis, audits, deterministic tests, Pure Luau tests, Rojo build, and artifact upload are skipped.",
+    "Job log shows Rokit installer v1.2.0 successfully locates the release tag, then curl reports HTTP 403 while downloading rokit-1.2.0-linux-x86_64.zip; process exits with code 22.",
+    "No repository source test was executed by this failed run, so the failure does not currently establish a product regression.",
+    "Atomic claims for OPS-MAIN-HEALTH/primary and OPS-MAIN-HEALTH/tests-1 were not acquired by this worker; no implementation branch was created and no source mutation is claimed."
+  ]
+}
