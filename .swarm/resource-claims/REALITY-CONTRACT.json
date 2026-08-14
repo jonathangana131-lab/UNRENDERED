@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "resourceId": "REALITY-CONTRACT",
+  "workerId": "sol-20260814-h1hu556z",
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "claimToken": "0013fe536de66fa6",
+  "acquiredAt": "2026-08-14T07:12:28+00:00",
+  "heartbeatAt": "2026-08-14T07:12:28+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "notes": "Exclusive reality-contract lease for test-adversary work in HG-BACKFILL-WORLDENTITY."
+}
