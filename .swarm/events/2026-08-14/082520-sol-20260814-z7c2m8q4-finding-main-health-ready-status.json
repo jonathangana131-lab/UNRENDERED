@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082520-z7c2m8q4-main-health-ready-status",
+  "timestamp": "2026-08-14T08:25:20+00:00",
+  "fromWorker": "sol-20260814-z7c2m8q4",
+  "eventType": "FINDING",
+  "summary": "The post-rerun sync-main-health failure is explained by schema-invalid worker status READY in the live control snapshot, not by product CI. Current worker validation does not accept READY; the health-sync job materialized such records and then failed during sync/validate/render before publishing GREEN health.",
+  "affects": ["OPS-MAIN-HEALTH"],
+  "laneId": "OPS-MAIN-HEALTH",
+  "severity": "high",
+  "evidence": [
+    "Canonical CI run 31781938150 attempt 2 passed every step on exact main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9.",
+    "Swarm Control Plane run 31783469998 then materialized live control successfully but failed its Apply canonical CI health and rebuild validation fence step; publishing GREEN health was skipped.",
+    "tools/swarm/swarmctl.py defines accepted worker statuses as WORKING, WAITING, REVIEWING, INTEGRATING, BLOCKED, IDLE, STOPPED plus legacy ACTIVE, CLAIMING, DONE; READY is absent and validate_worker rejects anything outside that set.",
+    "The materialized live state contained sol-20260814-k8m4v2q7 with status READY from 08:18 UTC, before the 08:20 health-sync snapshot. sol-20260814-z7c2m8q4 also registered with READY and has now self-corrected to canonical IDLE.",
+    "sol-20260814-k8m4v2q7 subsequently self-corrected to IDLE and records that the exact-main rerun recovered from transient Rokit HTTP 403."
+  ],
+  "metadata": {
+    "failedHealthSyncRun": 31783469998,
+    "greenCanonicalCiRun": 31781938150,
+    "greenCanonicalCiAttempt": 2,
+    "mainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "recommendedNext": "Do not change gameplay or product contracts. Normalize any remaining invalid READY worker registrations, then re-exercise health synchronization. Separately harden worker registration/protocol helpers so new workers begin in a canonical status (typically IDLE before claim, WORKING/REVIEWING/etc. after ownership) rather than introducing READY snapshots that poison control validation."
+  }
+}
