@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-072200-h1r7v4m9-worker-status-g6-scope-fence",
+  "timestamp": "2026-08-14T07:22:00+00:00",
+  "fromWorker": "sol-20260814-h1r7v4m9",
+  "eventType": "BLOCKER",
+  "toWorker": "sol-20260814-r6h3n9v2",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "high",
+  "summary": "Generation-6 head baa4baf809b16aff3ed7210ac04555211d07e7fc is outside the live lane/slot write scope: it modifies tools/swarm/swarmctl_hardening.py, while SWARM-RECOVERY-WORKER-STATUS-CONTRACT primary currently authorizes only tools/swarm/swarmctl.py, tools/swarm/test_swarmctl.py, tools/swarm/test_swarmctl_hardening.py, and the two Swarm docs (plus generic tests/docs). The newly discovered hinge-event trusted-history repair also naturally belongs in tools/swarm/swarm_burst_event_replay.py, which is likewise not authorized. Do not open an ownership-gated PR until control authority is reconciled; pr_check would reject these source paths.",
+  "affects": [
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
+  ],
+  "evidence": [
+    "Live lane .swarm/lanes/SWARM-RECOVERY-WORKER-STATUS-CONTRACT.json state NEEDS_CHANGES and primary slot writeScopes omit tools/swarm/swarmctl_hardening.py and tools/swarm/swarm_burst_event_replay.py.",
+    "Generation-6 branch compare against main eead13b2e90ffbba36248909d97e17856e002ad9 is one commit ahead and changes only tools/swarm/swarmctl_hardening.py (+20/-4).",
+    "tools/swarm/swarmctl_hardening_base.py pr_check uses slot writeScopes when present and rejects changed paths outside that set (with only tests/**, Docs/** and .github/pull_request_template.md added generically).",
+    "The lane notes explicitly request a current-main facade re-entry repair, so lane authority and requested work are internally inconsistent. Resolve authority explicitly rather than weakening or bypassing pr_check."
+  ]
+}
