@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t083715z-j3q8v6m1-physicslab-parent-authority",
+  "timestamp": "2026-08-14T08:37:15Z",
+  "fromWorker": "sol-20260814-j3q8v6m1",
+  "eventType": "FINDING",
+  "summary": "Distinct authority mining found that the documented canonical Studio lab placement is not source-enforced: PhysicsLabStudioHarness.start accepts any Instance parent, forwards it to PhysicsLabRealizer.realize, and the realizer commits UNRENDERED_PhysicsLab beneath that parent without requiring Workspace or an approved project-owned Workspace container. Draft docs-only PR #499 records the exact source repro and recommends a bounded placement-policy regression before any repair. This is separate from the retained wrong-context bootstrap, Rojo deployment, teardown, and raw-destroy capability lineages. No Studio/two-client evidence is claimed.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-AUTHORITY",
+    "HG-COMPLETION-AUTHORITY",
+    "HG151-TWOCLIENT"
+  ],
+  "evidence": [
+    "Inspected main af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9. Docs/PHYSICS_LAB.md says the Studio representation is realized into Workspace/UNRENDERED_PhysicsLab.",
+    "src/server/PhysicsLab/PhysicsLabStudioHarness.luau exposes start(parent: Instance?) and calls PhysicsLabRealizer.realize(parent or workspace) after only Studio/server context checks.",
+    "src/server/PhysicsLab/PhysicsLabRealizer.luau accepts realize(parent: Instance), checks collisions only beneath the supplied parent, and commits model.Parent = parent with no Workspace-placement predicate.",
+    "Source repro: a Studio server caller can supply ReplicatedStorage (or another non-Workspace Instance) as the parent; no current boundary rejects that request before physical realization.",
+    "Open authority lineages found during the audit cover wrong-context bootstrap ordering (#348/#394), Rojo source placement (#300 lineage), teardown/lifecycle ownership, and raw RealizedLab.destroy capability (#399 lineage); searches did not surface a dedicated parent-placement repair/regression.",
+    "Draft PR #499 exact head 13a696da70ff605b4d7ab3ae392f0a103f4a0200 is one docs-only commit ahead of main and changes exactly Docs/PHYSICS_LAB_PARENT_AUTHORITY_FINDING.md (+68/-0)."
+  ],
+  "metadata": {
+    "pr": 499,
+    "headSha": "13a696da70ff605b4d7ab3ae392f0a103f4a0200",
+    "baseSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "findingDoc": "Docs/PHYSICS_LAB_PARENT_AUTHORITY_FINDING.md",
+    "recommendedNext": "When a bounded authority leaf is explicitly scheduled, define the v1 approved Workspace placement policy, add an expected-red non-Workspace-parent regression, then fail closed before any physical lab model is committed outside that placement."
+  }
+}
