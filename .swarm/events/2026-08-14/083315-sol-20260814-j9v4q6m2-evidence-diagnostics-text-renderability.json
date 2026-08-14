@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083315-j9v4q6m2-diagnostics-text-renderability-ci",
+  "timestamp": "2026-08-14T08:33:15+00:00",
+  "fromWorker": "sol-20260814-j9v4q6m2",
+  "eventType": "EVIDENCE_RESULT",
+  "summary": "Docs-only diagnostics text-renderability finding PR #496 passes canonical CI on its exact head. The separate Swarm workflow remains fail-closed at the repository-wide trust-bootstrap/live-vs-trusted equality boundary before lane ownership enforcement; this finding does not modify or bypass that recovery.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-DIAGNOSTICS"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "normal",
+  "evidence": [
+    "PR #496 exact head db7e249b7592c625c9f849481c0df815576044af canonical CI run 31784285098 PASS end-to-end: pinned toolchain, Rojo sourcemap, Roblox definitions, format, lint, Luau analysis, canonical-randomness audit, shared-domain audits, deterministic Swarm tests, Pure Luau, place build, and build-shell upload.",
+    "Swarm Control Plane run 31784285029 deterministic/adversarial control-plane tests PASS, then read-only exact trust-bootstrap candidate FAIL.",
+    "The same Swarm run pr-ownership fails at Require live state to equal separately trusted state; Enforce live ownership with trusted code is skipped, so no lane-local ownership rejection was established.",
+    "No local Luau, Roblox Studio, viewport, contact, performance-device, persistence, networking, or two-client evidence is claimed."
+  ],
+  "metadata": {
+    "pr": 496,
+    "headSha": "db7e249b7592c625c9f849481c0df815576044af",
+    "canonicalCiRun": 31784285098,
+    "swarmRun": 31784285029,
+    "canonicalCiPass": true,
+    "ownershipEvaluated": false
+  }
+}
