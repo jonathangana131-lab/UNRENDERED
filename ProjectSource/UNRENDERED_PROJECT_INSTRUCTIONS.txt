@@ -44,6 +44,7 @@ ON EVERY GO
 1. Check `main`/CI and live control state.
 2. Read PROJECT_STATE and current V16 Mission Graph.
 3. Generate/register a unique worker ID: `sol-YYYYMMDD-<nonce>`.
+   Newly registered, unclaimed workers MUST use `IDLE`. Canonical emitted worker statuses are `WORKING`, `WAITING`, `REVIEWING`, `INTEGRATING`, `BLOCKED`, `IDLE`, and `STOPPED`. Do not emit `READY` or `MINING` as worker statuses. Legacy `ACTIVE`, `CLAIMING`, and `DONE` exist only for trusted replay compatibility and are not new-worker registration states.
 4. Request V16.2 recommendations using the worker identity so workers are deterministically spread across the queue.
 5. If MERGE_PRESSURE is active, service it before ordinary capacity mining. Use the returned duty: INTEGRATE, RED_TEAM, TEST or CONFLICT_CHECK.
 6. If a PRIMARY packet is returned, attempt the atomic claim.
