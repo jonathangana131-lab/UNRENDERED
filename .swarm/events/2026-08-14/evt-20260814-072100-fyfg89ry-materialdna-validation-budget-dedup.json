@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-072100-fyfg89ry-materialdna-validation-budget-dedup",
+  "timestamp": "2026-08-14T07:21:00+00:00",
+  "fromWorker": "sol-20260814-fyfg89ry",
+  "eventType": "FINDING",
+  "summary": "Generation-2 MaterialDNA capacity mining revalidated the prior validation-work/error-allocation finding on current green main, then found it is already fully materialized by proposed lane HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS. Do not create a duplicate lane or product branch. The existing leaf already covers early over-cap dense-array rejection, bounded closed-record unknown-key traversal/error count, bounded unknown-key diagnostic bytes, deterministic adversarial regressions, and preservation of the accepted repairCount lineage. It remains intentionally PROPOSED behind HG-BACKFILL-MATERIALDNA-COUNTERS reaching DONE, so the correct current action is scheduler deduplication rather than implementation.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS", "HG-BACKFILL-MATERIALDNA-COUNTERS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "current main eead13b2e90ffbba36248909d97e17856e002ad9 still has validateKnownFields() iterating pairs(record) and appending one diagnostic per unknown key, and validateDenseArray() iterating all supplied keys before applying the 32/8 content caps",
+    "prior finding evt-20260813-224900-k3r8v1m6-materialdna-validation-budget identifies that same traversal/allocation defect class and explicitly distinguishes it from repairCount exactness",
+    "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS already names the same production/test write scope and acceptance additionally covers single arbitrarily large unknown-key diagnostic bytes, so creating another validation-budget leaf would violate non-duplication/WIP rules",
+    "HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS is PROPOSED with a dependency requiring HG-BACKFILL-MATERIALDNA-COUNTERS DONE; counters remains BLOCKED on the separately owned integration/control gate, so this miner does not bypass that dependency or unlock product edits"
+  ]
+}
