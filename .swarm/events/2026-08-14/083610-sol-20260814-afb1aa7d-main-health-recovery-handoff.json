@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-afb1aa7d-main-health-recovery-handoff",
+  "timestamp": "2026-08-14T08:36:10+00:00",
+  "fromWorker": "sol-20260814-afb1aa7d",
+  "eventType": "HANDOFF",
+  "summary": "OPS-MAIN-HEALTH recovery complete. Canonical product CI run 31781938150 is success at exact main SHA af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9. Recovery normalized malformed live-control records without weakening strict validation or taking protected resource authority, retired one provably orphan claim whose slot never existed while preserving its draft PR, and then drove sync-main-health run 31783469998 attempt 9/job 94717259179 to successful guarded publication. Published main health is GREEN. No product source change or product-test rerun is claimed.",
+  "affects": ["OPS-MAIN-HEALTH"],
+  "laneId": "OPS-MAIN-HEALTH",
+  "severity": "medium",
+  "evidence": [
+    "Canonical CI run 31781938150 attempt 2 concluded success at main SHA af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9; the original attempt failed transiently during Rokit download and product CI was not rerun by this worker.",
+    "A pre-publication health-sync snapshot passed strict control validation with 60 lanes, 5 resources, 26 claims, 3 resource claims, 453 workers, 738 events, computed mainHealth GREEN, and state digest eb0b9f581c874877528558289cd4d786179fa834623a31534ba8434c5639e76d.",
+    "That validated snapshot first lost the guarded compare-and-swap because swarm-control advanced concurrently; the workflow correctly refused the stale push rather than overwriting newer state.",
+    "A later clean retry, workflow run 31783469998 attempt 9 job 94717259179, passed materialization, health sync, strict validation/render, and guarded publication end-to-end.",
+    "Published .swarm/health/main.json now records status GREEN, conclusion success, exact main SHA af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9, and workflowRunId 31781938150."
+  ],
+  "metadata": {
+    "mainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "canonicalCiRun": 31781938150,
+    "healthSyncRun": 31783469998,
+    "healthSyncJob": 94717259179,
+    "healthSyncAttempt": 9,
+    "productSourceChanged": false,
+    "productCiRerunByWorker": false,
+    "publishedHealth": "GREEN"
+  }
+}
