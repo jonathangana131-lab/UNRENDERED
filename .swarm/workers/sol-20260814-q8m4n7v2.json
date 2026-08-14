@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-q8m4n7v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:33:38+00:00",
-  "lastSeenAt": "2026-08-14T08:53:00+00:00",
-  "laneId": "HG-BACKFILL-WORLDENTITY",
-  "slotId": "primary",
-  "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-converge-q8m4n7v2-g1",
-  "notes": "Current-main source-owning convergence successor. Porting the full already-reviewed retained WorldEntity production/test lineage from PR #477 onto main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 without merging disposable expected-red support PRs #493/#502 or unrelated stacked control commits."
+  "lastSeenAt": "2026-08-14T08:58:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed source-owning current-main WorldEntity convergence. Published draft PR #504 exact head 8cba30b13ba51f892ae182ce5a1bb20875543e37 from main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 using exactly six already-reviewed retained generation-10 product/test blobs. Exact-head canonical CI 31785876555 succeeded. Evidence evt-20260814-085700-q8m4n7v2-worldentity-current-main-convergence-pr504 recorded; lane moved to REVIEW and primary claim released. Separate Swarm Control Plane 31785876658 remains externally red on trust/quarantine state; no product broadening or Studio evidence claimed."
 }
