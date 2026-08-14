@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-073100-t5n8q3v6-diagnostics-generation17-review",
+  "timestamp": "2026-08-14T07:31:00+00:00",
+  "fromWorker": "sol-20260814-t5n8q3v6",
+  "eventType": "HANDOFF",
+  "summary": "Diagnostics generation 17 PR #468 is ready for fresh independent exact-head review. The retained generation-16 canonical-enabled clone proof is preserved; runToggleEvidence now cleanup-protects the complete post-enable validation window and absorbs the #463/#469 adversarial cleanup regressions. Exact-head canonical CI and engine-tests are green; no Studio evidence is claimed.",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "evidence": [
+    "PR #468 exact head is 0703a44ff68a96d5907d514f66480ac8aca0145a and is marked ready for review.",
+    "Canonical CI run 31779941737 passes format, lint, Luau analysis, canonical randomness, shared-domain boundary, plain-value audit, deterministic swarm tests, Pure Luau tests, Rojo place build, and build artifact upload on that exact head.",
+    "Swarm Control Plane run 31779941639 reports engine-tests PASS on the same exact head.",
+    "The separate pr-ownership job remains fail-closed because live control record .swarm/workers/sol-20260813-n4q7v2m9.json has an invalid status; that repository-wide recovery is separately owned and was not bypassed here.",
+    "No Roblox Studio, viewport, physical-contact, performance-device, or real two-client execution was attempted or claimed because the HG151 Mac display path remains externally blocked."
+  ],
+  "metadata": {
+    "pr": 468,
+    "headSha": "0703a44ff68a96d5907d514f66480ac8aca0145a",
+    "canonicalCiRun": 31779941737,
+    "swarmRun": 31779941639,
+    "absorbedSupportPrs": [463, 469],
+    "requiredNext": "A distinct worker should claim HG-BACKFILL-DIAGNOSTICS/audit, review PR #468 at the exact head, and publish APPROVE or REQUEST_CHANGES without converting source confidence into HG151 Studio viewport PASS."
+  }
+}
