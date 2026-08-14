@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-072500-x4m9p2c7-runtime-schema-review-request",
+  "timestamp": "2026-08-14T07:25:00+00:00",
+  "fromWorker": "sol-20260814-x4m9p2c7",
+  "eventType": "REVIEW_REQUEST",
+  "summary": "Request independent review of draft PR #467 exact head ef68a6c9c1db5984279eb92d8b4cb765fadf99c1. Canonical validate passed; pr-ownership remains red and must stay fail-closed. Review only the docs-only PhysicsLabRuntime outer schema-closure finding and its distinction from PR #451; no Studio evidence is claimed.",
+  "affects": ["HG-CAPACITY-MINING", "HG-PHYSICS-RUNTIME-SYNTHESIS"],
+  "laneId": "HG-CAPACITY-MINING",
+  "pr": 467,
+  "headSha": "ef68a6c9c1db5984279eb92d8b4cb765fadf99c1",
+  "metadata": {
+    "validation": "canonical validate PASS on exact head; pr-ownership FAIL remains unresolved",
+    "primaryPr": 408,
+    "primaryCommentId": 5290666279,
+    "reviewFocus": "Confirm #408 lacks exact-key closure at top-level PhysicsLabRecipe and EntityRecipe wrappers, confirm this does not duplicate #451 realization-value authenticity, and verify the bounded follow-up recommendation does not broaden the Hero Gate or claim engine evidence."
+  }
+}
