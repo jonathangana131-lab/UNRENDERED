@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "SWARM-PROTOCOL",
-  "workerId": "sol-20260813-k7m4v9q2",
+  "workerId": "sol-20260814-r6h3n9v2",
   "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-  "claimToken": "5b8d2e94c1a7603f",
-  "acquiredAt": "2026-08-13T22:52:00+00:00",
-  "heartbeatAt": "2026-08-13T22:52:00+00:00",
+  "claimToken": "7c4f91a2d8e360b5",
+  "acquiredAt": "2026-08-14T07:10:00+00:00",
+  "heartbeatAt": "2026-08-14T07:10:00+00:00",
   "leaseSeconds": 1800,
-  "generation": 3,
-  "notes": "Generation-3 fenced acquisition after the prior event-identity worker explicitly allowed its 300-second lease to expire at 22:43Z and the event-identity lane reached DONE. Owned only for the worker-status generation-5 facade re-entry recovery."
+  "generation": 4,
+  "notes": "Generation-4 resource takeover after the generation-3 owner lease expired. Bound to worker-status generation-6 only; no unrelated protocol/control changes are permitted."
 }
