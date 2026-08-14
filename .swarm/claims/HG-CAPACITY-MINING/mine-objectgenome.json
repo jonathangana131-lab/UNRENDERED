@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-p7m4q2v8",
   "claimToken": "7c2e5a91d4b6083f",
   "claimedAt": "2026-08-14T07:45:30+00:00",
-  "heartbeatAt": "2026-08-14T07:45:30+00:00",
+  "heartbeatAt": "2026-08-14T07:50:10+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/audit/HG-CAPACITY-MINING-objectgenome-p7m4q2v8",
-  "pr": null,
-  "notes": "Bounded current-main ObjectGenome source/test mining; publish structured finding only, no product write unless scheduler explicitly unlocks a discovered leaf later."
+  "pr": 480,
+  "notes": "Published docs-only ObjectGenome affordance-radius locality finding PR #480 at exact head e85dfa8b39475235117ed6d1d0212b67788e520d; validating before structured handoff/release."
 }
