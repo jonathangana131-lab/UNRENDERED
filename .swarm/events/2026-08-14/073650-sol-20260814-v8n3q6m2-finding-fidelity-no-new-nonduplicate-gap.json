@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-073650-v8n3q6m2-fidelity-no-new-nonduplicate-gap",
+  "timestamp": "2026-08-14T07:36:50+00:00",
+  "fromWorker": "sol-20260814-v8n3q6m2",
+  "eventType": "FINDING",
+  "summary": "Bounded FidelityManager capacity mining on current green main found no additional non-duplicate source leaf. Retained #385 plus durable existing/proposed lineages already cover malformed/no-execute inputs, rejected-step and transition-hook atomicity, same-entity reentrancy, cross-entity isolation, backing-state encapsulation, exact PolicyConfig/PolicyInputs shape, entity-ID/runtime authority integration, registration ceiling/capacity exactness, and today's newly published capacity-recovery lifecycle regression. Do not create another FidelityManager hardening lane from this pass.",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-FIDELITY",
+    "HG-FIDELITY-REGISTRATION-CAPACITY-CEILING",
+    "HG-FIDELITY-MANAGER-STATE-ENCAPSULATION",
+    "HG-FIDELITY-CONFIG-CLOSED-SHAPE"
+  ],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "info",
+  "evidence": [
+    "Current main c09e3385702c76b8664fb1dcb2116321a0eaf083 is canonical-CI green and FidelityManager current source/tests were re-read before comparing retained work.",
+    "Retained PR #385 already hardens scalar/boolean/plain-table validation, rejected-step atomicity, transition callback failure/retry, same-entity transition fencing, and cross-entity isolation; proposed/retained capacity lineages cover bounded registration semantics.",
+    "Prior durable event evt-20260813-224330-r8m4q7v2-fidelity-manager-backing-state already owns the exposed mutable backing-state defect represented by HG-FIDELITY-MANAGER-STATE-ENCAPSULATION.",
+    "Prior durable corrected event evt-20260813-225443-f4q9n2c7-fidelity-extra-keys and HG-FIDELITY-CONFIG-CLOSED-SHAPE already own exact PolicyConfig/PolicyInputs record-shape validation.",
+    "Prior correction evt-20260812-110500-g43k9m2v-fidelity-mining-correction explicitly records that PhysicsLabRuntime closes the apparent authoritative transition-hook acknowledgement concern; that concern is not a new manager leaf.",
+    "Today event evt-20260814-073000-r7n2v9k4-fidelity-capacity-recovery-regression already captures the remaining missing source-only lifecycle regression: reject at capacity, unregister, then successfully reuse restored headroom while retaining cumulative rejection metrics.",
+    "No source/test edits, local Luau/Lune execution, Roblox Studio, viewport, physical-contact, performance-device, networking/persistence, or two-client evidence are claimed by this mining pass."
+  ],
+  "metadata": {
+    "result": "NO_NEW_NON_DUPLICATE_LEAF",
+    "auditedMain": "c09e3385702c76b8664fb1dcb2116321a0eaf083",
+    "retainedFidelityPr": 385,
+    "recommendedAction": "Finish/review the already-retained and already-proposed Fidelity lineages in scheduler order; fold the capacity-recovery regression into the authorized serialized Fidelity test lineage; do not spawn parallel FidelityManager WIP from this audit."
+  }
+}
