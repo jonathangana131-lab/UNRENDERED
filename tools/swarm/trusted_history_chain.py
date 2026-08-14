@@ -20,9 +20,9 @@ import swarm_burst_takeover_recovery as burst_takeover_recovery
 import swarm_failed_control_recovery as failed_recovery
 import swarmctl_hardening as hard
 
-# Register only exact historical byte identities. The takeover registry remains
-# finite, while burst event transition compatibility is invoked explicitly below
-# with exact first-parent Git identities; neither install wraps transition_check.
+# Register only exact historical byte identities. New Git-bound takeover/event
+# compatibility is invoked explicitly below with exact first-parent identities;
+# install() does not make those new transitions snapshot-global.
 burst_takeover_recovery.install(hard)
 
 _SHA_RE = re.compile(r"[a-f0-9]{40}")
@@ -137,7 +137,7 @@ def validate_git_chain(git_root: Path, trusted_sha: str, control_sha: str) -> di
                 continue
 
             changed_paths = _changed_paths(git_root, last_valid_sha, current_sha)
-            finite_event = burst_event_replay.validate_git_transition(
+            finite_takeover = burst_takeover_recovery.validate_git_transition(
                 hard,
                 last_valid_sha,
                 current_sha,
@@ -145,10 +145,21 @@ def validate_git_chain(git_root: Path, trusted_sha: str, control_sha: str) -> di
                 last_valid_root,
                 roots[current_sha],
             )
-            if finite_event is not None:
-                results.append(finite_event)
+            if finite_takeover is not None:
+                results.append(finite_takeover)
             else:
-                results.append(hard.transition_check(last_valid_root, roots[current_sha]))
+                finite_event = burst_event_replay.validate_git_transition(
+                    hard,
+                    last_valid_sha,
+                    current_sha,
+                    changed_paths,
+                    last_valid_root,
+                    roots[current_sha],
+                )
+                if finite_event is not None:
+                    results.append(finite_event)
+                else:
+                    results.append(hard.transition_check(last_valid_root, roots[current_sha]))
             last_valid_sha = current_sha
             last_valid_root = roots[current_sha]
             index += 1
