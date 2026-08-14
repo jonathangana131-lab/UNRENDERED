@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-h1r7v4m9",
+  "model": "gpt-5.6-sol",
+  "status": "WAITING",
+  "startedAt": "2026-08-14T07:14:00+00:00",
+  "lastSeenAt": "2026-08-14T07:14:00+00:00",
+  "notes": "Read-only red-main control audit. Exclusive SWARM-PROTOCOL is owned by sol-20260814-r6h3n9v2, so this worker will not edit overlapping protocol code; it is publishing exact trusted-history failure evidence for the active recovery owner."
+}
