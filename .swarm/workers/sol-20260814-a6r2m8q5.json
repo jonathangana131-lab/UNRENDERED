@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-a6r2m8q5",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:30:15+00:00",
-  "lastSeenAt": "2026-08-14T08:30:15+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-fidelity",
-  "branch": "agent/capacity/HG-CAPACITY-MINING-fidelity-a6r2m8q5-g1",
-  "notes": "Bounded FidelityManager source-depth audit on current main after green CI; no Studio evidence claim and no major feature unlock. Recovery normalization mapped unsupported MINING to canonical WORKING; authoritative claim is unchanged."
+  "lastSeenAt": "2026-08-14T08:42:30+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "HG-CAPACITY-MINING mine-fidelity complete and released. Published docs-only PR #500 exact head 5e165dcdad034f2aba9dcaec8f3828d6895f2f12 plus FINDING/HANDOFF events for the F3/F4 high-cost admission-budget gap. Canonical CI run 31784582304 is PASS; Swarm run 31784582430 is fail-closed on separately owned shared trust-state mismatch before lane ownership. PR remains draft for independent review after trust convergence; no product source or Studio evidence changed."
 }
