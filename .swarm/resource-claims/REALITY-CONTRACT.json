@@ -6,7 +6,7 @@
   "claimToken": "b7e2c49a1f6d8035",
   "acquiredAt": "2026-08-14T08:24:00+00:00",
   "heartbeatAt": "2026-08-14T08:28:30+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 3,
-  "notes": "Generation-3 takeover after released generation-2 lease expired at 08:05:10 UTC. Bound to HG-BACKFILL-WORLDENTITY/test-adversary generation 2; support PR #493 is expected-red and test-only."
+  "notes": "Expected-red WorldEntity convergence support complete. Lease reduced to protocol minimum without heartbeat advance; REALITY-CONTRACT is stale/released after 2026-08-14T08:33:30+00:00."
 }
