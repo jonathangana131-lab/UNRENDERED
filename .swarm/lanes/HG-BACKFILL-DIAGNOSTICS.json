@@ -5,7 +5,7 @@
   "title": "Diagnostics source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden the Studio diagnostics code and its pure contracts while the Mac display path is blocked. Work here must improve source/test correctness without pretending to satisfy the missing live viewport evidence row.",
   "priority": 4850,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/**diagnostic*.luau", "tests/hero_gate_contract_integration.luau"],
@@ -16,13 +16,11 @@
     {"slotId":"audit","role":"Diagnostics failure-path and capture-contract auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/**diagnostic*.luau","Docs/PHYSICS_LAB_DIAGNOSTICS.md"]}
   ],
   "acceptance": ["do not queue speculative Studio reruns", "do not convert source confidence into viewport PASS", "find concrete lifecycle/no-drift/failure-path gaps", "behavior changes get tests", "publish anything relevant to HG151-DIAGNOSTICS as a structured finding"],
-  "pr": 468,
-  "notes": "Recovered scheduler state from stale REVIEW to NEEDS_CHANGES after finding the already-published independent exact-head REQUEST_CHANGES review on generation-17 PR #468 head 0703a44ff68a96d5907d514f66480ac8aca0145a. The review proves the new enabled-window pcall is insufficient because failure cleanup still calls strict disable(lab) outside protection: diagnosticsRoot() can throw before destroying the exact owned overlay, and post-destroy capture(lab) can mask the original enabled-window error. The required successor must own a cleanup-only failure path tied to the exact overlay instance created by successful enable, avoid strict root rediscovery/canonical recapture before destruction, and rethrow the original failure; keep full disable/off-state validation on the success path. Separately, expected-red test-adversary PR #474 head de4c4c778faebba8116000819c83dbfa1aa3db1a proves validateReadoutCompleteness() can count disabled BillboardGui / hidden TextLabel readouts as complete and must be absorbed by the successor. Previous exact-head CI/engine PASS remains evidence for the old head only and does not close either semantic gap. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
+  "pr": 486,
+  "notes": "Generation-18 stale-primary takeover PR #486 is the active successor, stacked exactly on generation-17 #468 head. Exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22 pins the exact owned diagnostics overlay immediately after successful enable, destroys that pinned Instance directly on enabled-window failure, rethrows the original error before any strict rediscovery/recapture, and retains strict disable plus off-state validation on success. It also absorbs expected-red #474 by rejecting disabled BillboardGui and hidden TextLabel readouts, and absorbs #479's cleanup-precedence contract. Canonical CI run 31783839918 is PASS and Swarm engine-tests in run 31783839952 are PASS on the exact head. pr-ownership in that run is blocked before PR evaluation by unrelated live control state SWARM-V16.2-INTEGRATION-THROUGHPUT invalid priorityBoost, already represented by active control PR #485. Fresh independent exact-head diagnostics source/test review remains mandatory. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
   "blockers": [
-    "Generation-17 PR #468 must be superseded or updated by a successor that performs cleanup-only destruction through the exact overlay instance created by enable() on failure, without fallible strict root rediscovery/canonical recapture masking the original enabled-window error; add focused regression for cleanup failure topology and original-error precedence.",
-    "Absorb expected-red PR #474 readout visibility regression and make completeness fail closed when owned BillboardGui.Enabled is false or TextLabel.Visible is false; do not merge the support PR independently.",
-    "Fresh exact-head canonical CI and Swarm engine tests plus a new independent diagnostics source/test review are required after both repairs.",
-    "Repository-wide pr-ownership remains fail-closed behind separately owned trusted-history/control recovery; do not bypass it.",
+    "Fresh independent diagnostics source/test review by a worker distinct from generation-18 primary sol-20260814-s6p4m9q2 is required on PR #486 exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22; implementer must not self-approve.",
+    "Repository-wide pr-ownership remains fail-closed because live control state currently rejects SWARM-V16.2-INTEGRATION-THROUGHPUT invalid priorityBoost; separately owned active PR #485/control recovery must restore the gate. Do not bypass it.",
     "HG151 live viewport/Studio diagnostics evidence remains externally blocked by the Mac display path; source confidence must not be converted into viewport PASS."
   ],
   "tags": ["backfill", "hero-gate", "source-only"]
