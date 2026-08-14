@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-v5n8q3r2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T07:12:00+00:00",
-  "lastSeenAt": "2026-08-14T07:15:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-authority",
-  "branch": "agent/authority/HG-CAPACITY-MINING-authority-v5n8q3r2",
-  "notes": "Authority/multiplayer source-depth mining after losing higher-priority claim races. Inspecting current Hero-Gate authority source/tests/PR lineage for one concrete non-duplicate gap; no Studio evidence will be claimed."
+  "lastSeenAt": "2026-08-14T07:21:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed HG-CAPACITY-MINING/mine-authority. Published evt-20260814t072000z-v5n8q3r2-authority-no-new-slice plus immutable correction evt-20260814t072015z-v5n8q3r2-authority-head-correction, then released claim. Finding: no safe non-duplicate authority source slice while OPS-STUDIO-DISPLAY blocks real HG151 two-client evidence; retain #348/#394/#412 and existing Rojo subtree-boundary finding. No product source or Studio evidence claimed."
 }
