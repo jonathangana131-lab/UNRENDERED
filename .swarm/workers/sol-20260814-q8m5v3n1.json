@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-q8m5v3n1",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-14T08:31:30+00:00",
-  "lastSeenAt": "2026-08-14T08:31:30+00:00",
+  "lastSeenAt": "2026-08-14T08:36:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-objectgenome",
   "branch": "agent/audit/HG-CAPACITY-MINING-objectgenome-q8m5v3n1-g1",
-  "notes": "Bounded ObjectGenome capacity-mining pass. Will inspect current main, recent ObjectGenome findings/PRs, and tests for a concrete non-duplicate depth gap only; no Hero unlock or Studio evidence claim."
+  "notes": "Stopped without implementation: target claim was already live-owned and other legal review/depth slots were occupied, proposed, or blocked. No authoritative claim was obtained; no production/docs/test files were modified."
 }
