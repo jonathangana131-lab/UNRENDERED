@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T07:17:30+00:00",
-  "lastSeenAt": "2026-08-14T07:17:30+00:00",
+  "lastSeenAt": "2026-08-14T07:20:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-materialdna",
-  "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-x4m9p2c7-g2",
-  "notes": "Attempting generation-2 stale takeover of MaterialDNA capacity mining after inspecting the generation-1 validation-budget FINDING and confirming its branch was not published. Will mine only a distinct non-duplicate current Hero-Gate source/test gap; no Studio evidence or feature unlock."
+  "slotId": "mine-physics-runtime",
+  "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-x4m9p2c7-g2",
+  "notes": "Lost the MaterialDNA takeover race cleanly, then acquired generation-2 Physics runtime capacity mining. Prior generation-1 PR #451 and its recipe-authenticity finding were inspected; mining only a distinct current source/test gap, separate from the live entity-ID audit."
 }
