@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k4x9m2p7",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:20:08+00:00",
-  "lastSeenAt": "2026-08-14T08:21:40+00:00",
-  "laneId": "OPS-MAIN-HEALTH",
-  "slotId": "tests-1",
-  "branch": "agent/red-main/OPS-MAIN-HEALTH-tests-k4x9m2p7-g1",
-  "notes": "Primary claim race lost atomically to sol-20260814-afb1aa7d; tests-1 diagnosis slot claimed successfully."
+  "lastSeenAt": "2026-08-14T08:37:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "OPS-MAIN-HEALTH tests-1 complete. Product main CI is GREEN on af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9/run 31781938150. Diagnosed and durably routed fail-closed live-control defects including READY/MINING worker statuses, claim-only keys in worker presence, invalid event IDs, V16.2 priorityBoost overflow, and nonexistent-slot claim admission. Malformed records self-normalized or were retired; generated validation reached PASS at 2026-08-14T08:35:30Z. No production source change or PR from this worker."
 }
