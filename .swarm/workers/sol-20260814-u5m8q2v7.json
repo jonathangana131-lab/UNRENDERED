@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-u5m8q2v7",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T07:13:30+00:00",
+  "lastSeenAt": "2026-08-14T07:13:30+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-u5m8q2v7",
+  "notes": "Go worker registered to salvage the stale diagnostics test-adversary handoff. Reuse the published expected-red cleanup regression at 4633472020ec5af8f8da6eead35bbd75eed7662e; do not duplicate production architecture or claim Studio evidence."
+}
