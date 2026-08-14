@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-physics-runtime",
+  "workerId": "sol-20260814-x4m9p2c7",
+  "claimToken": "7f3a9c2e6d1b8054",
+  "claimedAt": "2026-08-14T07:20:00+00:00",
+  "heartbeatAt": "2026-08-14T07:20:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "takeoverOf": "sol-20260813-k2m8v4q7",
+  "resources": [],
+  "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-x4m9p2c7-g2",
+  "pr": null,
+  "notes": "Generation-2 stale takeover after inspecting generation-1 docs PR #451 and its runtime-recipe-authenticity finding. Mine only a distinct current Physics Lab runtime/synthesis invariant or test gap; do not duplicate #451, the live entity-ID audit, or claim Studio evidence."
+}
