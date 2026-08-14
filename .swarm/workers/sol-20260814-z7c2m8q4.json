@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-z7c2m8q4",
+  "model": "gpt-5.6-sol",
+  "status": "READY",
+  "startedAt": "2026-08-14T08:19:30+00:00",
+  "lastSeenAt": "2026-08-14T08:19:30+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Autonomous Go worker registered; canonical main is RED. Primary repair is already claimed, so this worker is taking the independent diagnosis/regression slot."
+}
