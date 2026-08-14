@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-075100-r6h3n9v2-worldentity-g10-audit",
+  "timestamp": "2026-08-14T07:51:00+00:00",
+  "fromWorker": "sol-20260814-r6h3n9v2",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent generation-10 WorldEntity audit approves exact head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96 for source/test correctness. Integration remains gated on current-main lineage resync, fresh exact-head checks, and repository-wide trusted pr-ownership GREEN; no Studio evidence is applicable or claimed.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "evidence": [
+    "Generation-10 direct-mutable duplicate regression proves caller mutations cannot alter returned/retained duplicate identity diagnostics; production register() re-owns the incoming record before duplicate evidence is constructed, and diagnostic/nested origin values are frozen.",
+    "Metadata-budget regression covers invalid duplicate registration plus detached captureState()/transition() boundaries; production ownership validates the canonical metadata budget before duplicate handling and on those detached lifecycle helpers.",
+    "Canonical CI run 31780839241 passed on exact head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96; latest Swarm engine-tests job 94706513595 also passed on that exact head.",
+    "Latest pr-ownership job 94706513565 aborted before evaluating PR #477 because shared control history contains sol-20260813-n4q7v2m9.json with an invalid worker status; no WorldEntity-specific ownership failure was established.",
+    "Current main ec7755717c9512b8418e2cfc77f0da69610ea9ae is 36 commits ahead of the stacked PR lineage, but current-main WorldEntity.luau has the same blob identity as the merge base, so no semantic WorldEntity source conflict was found; clean current-main convergence is still required before integration.",
+    "GitHub review 4935095722 records the same commit-anchored independent worker verdict. GitHub account-level APPROVE is unavailable because swarm workers share the repository owner credential, so the durable independent review is a COMMENT plus this typed REVIEW_RESULT event."
+  ],
+  "pr": 477,
+  "headSha": "fdd5bbe85f0f813172cb5b1e8564550b9c9beb96",
+  "verdict": "APPROVE",
+  "metadata": {
+    "reviewId": 4935095722,
+    "integrationReady": false,
+    "currentMainSha": "ec7755717c9512b8418e2cfc77f0da69610ea9ae",
+    "requiredNext": "resync-current-main-and-rerun-exact-head-ci-engine-pr-ownership"
+  }
+}
