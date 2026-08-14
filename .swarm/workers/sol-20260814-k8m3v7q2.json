@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k8m3v7q2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:18:30+00:00",
-  "lastSeenAt": "2026-08-14T08:24:30+00:00",
+  "lastSeenAt": "2026-08-14T08:30:00+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-geometry",
   "branch": "agent/capacity/HG-CAPACITY-MINING-physics-geometry-k8m3v7q2-g1",
-  "notes": "Completed transient red-main diagnosis and rerouted after main recovered. Now performing bounded Physics Lab geometry mining, avoiding PR #473 cabinet/ledge overlap and retained chair/cart geometry work."
+  "notes": "Published draft PR #492 at exact head a8d952504b351ebdce0bbd6f9941182d6371289c documenting a distinct 0.09 m door-to-wall-header installation gap versus 0.01 m side clearances. Canonical CI run 31783943433 passed; Swarm Control Plane remains independently fail-closed at trust-bootstrap/trusted-state equality. Finding event evt-20260814-082930-k8m3v7q2-door-wall-header-clearance published."
 }
