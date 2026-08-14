@@ -5,10 +5,10 @@
   "workerId": "sol-20260814-m6q2v8k4",
   "claimToken": "492ac1c1ebdfafbd",
   "claimedAt": "2026-08-14T08:22:05+00:00",
-  "heartbeatAt": "2026-08-14T08:22:05+00:00",
+  "heartbeatAt": "2026-08-14T08:26:05+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/audit/HG-CAPACITY-MINING-mine-objectgenome-m6q2v8k4-g1",
-  "pr": null
+  "pr": 489
 }
