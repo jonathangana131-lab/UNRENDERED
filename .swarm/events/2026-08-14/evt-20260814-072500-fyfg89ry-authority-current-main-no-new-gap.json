@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-072500-fyfg89ry-authority-current-main-no-new-gap",
+  "timestamp": "2026-08-14T07:25:00+00:00",
+  "fromWorker": "sol-20260814-fyfg89ry",
+  "eventType": "FINDING",
+  "severity": "info",
+  "summary": "Current-main authority capacity mining found no new non-duplicate source/test gap. The previous authority no-gap finding remains current because the 20 commits from main@8134a3962be80e8ba6ec2c27207e44db63e6765c through green main@eead13b2e90ffbba36248909d97e17856e002ad9 change only swarm-control tooling/workflow/project-instruction files and no server/client/bootstrap/Physics Lab authority production or test path. Retain the already-owned #348 wrong-context bootstrap, #394 teardown stack, and #412 harness lifecycle capability lineages; do not spawn another overlapping authority primary while they remain blocked on integration/control recovery.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-AUTHORITY", "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY"],
+  "laneId": "HG-CAPACITY-MINING",
+  "evidence": [
+    "compare 8134a3962be80e8ba6ec2c27207e44db63e6765c..eead13b2e90ffbba36248909d97e17856e002ad9 is 20 commits ahead / 0 behind and lists only .github/workflows/swarm-v16-shadow.yml, ProjectSource instructions, and tools/swarm control-plane files; no authority source/test file changed",
+    "current main server bootstrap still asserts server context before Studio-owned PhysicsLabStudioHarness.start(workspace); current client bootstrap remains client-only and does not instantiate canonical Physics Lab authority",
+    "HG-BACKFILL-AUTHORITY remains BLOCKED with retained PR #348 for wrong-context guards and #394 for teardown/restart fixture evidence; both explicitly preserve source-only evidence boundaries",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY remains BLOCKED with retained PR #412 covering the raw RealizedLab.destroy ownership seam and generation-fenced cleanup",
+    "prior evt-20260813-225430-v6n2q9r4-authority-no-new-gap already found no additional authority defect after considering descendant-liveness/deployment-exclusion follow-ups; no product delta since then invalidates that conclusion"
+  ]
+}
