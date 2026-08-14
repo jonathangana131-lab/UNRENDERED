@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082900-z7p3k9m4c2-diagnostics-owned-root-adversary",
+  "timestamp": "2026-08-14T08:29:00+00:00",
+  "fromWorker": "sol-20260814-z7p3k9m4c2",
+  "eventType": "EVIDENCE_RESULT",
+  "summary": "Diagnostics test-adversary generation 1 published draft PR #484 at exact head bc7aabd14dd883cad32148efa9554c3dfd1ac6f3, hardening the expected-red cleanup contract against fallback or dead-wrapper owned-root pins. Canonical static/control gates pass through deterministic swarm tests and Pure Luau then turns red exactly at the strengthened cleanup obligations against the intentionally unfixed #479 base; generation-18 primary PR #486 already satisfies the strengthened production shape by source inspection and received an absorption handoff.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "Draft PR #484 is stacked exactly on #479 head fc7ab3dd9c0cc51a086546e32f384b28302ae2cb; exact support head bc7aabd14dd883cad32148efa9554c3dfd1ac6f3 changes only tests/physics_lab_diagnostics_toggle_failure_cleanup.luau (+35/-1).",
+    "The hardened matcher requires the owned-root assignment line to be exactly diagnosticsRoot(lab.model), requires an explicit non-nil assertion before fallible enabled-window validation, and requires the failure guard to destroy that pinned root immediately before error(cycleResult, 0). This rejects fallback/coalescing pins and dead or conditional direct-destroy token false-passes.",
+    "Canonical CI run 31783877752 passes toolchain installation, Rojo sourcemap, pinned Roblox definitions, StyLua, Selene with zero errors/warnings/parse errors, luau-lsp analysis, canonical randomness, shared-domain boundary, plain-data value audit, and deterministic swarm tests. Pure Luau is EXPECTED RED against the #479 production base at the exact strengthened cleanup obligations while the existing no-rediscovery/no-recapture and enabled-window protection checks continue to pass.",
+    "Swarm Control Plane run 31783877767 reports engine-tests PASS. pr-ownership remains fail-closed on separate shared control corruption: .swarm/lanes/SWARM-V16.2-INTEGRATION-THROUGHPUT.json: invalid priorityBoost; this support work does not bypass or modify that recovery path.",
+    "Generation-18 primary PR #486 exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22 already uses an exact diagnosticsRoot(lab.model) pin, explicit non-nil assertion, immediate pinned-root Destroy(), original cycleResult rethrow, and success-only strict disable. Comment 5291204199 requests absorbing #484's strengthened test before integration.",
+    "No local Pure Luau run, Roblox Studio, viewport, physical-contact, performance-device, or two-client evidence is claimed."
+  ],
+  "metadata": {
+    "primaryPr": 486,
+    "primaryHeadSha": "29a2f949eebbd509c2c839d48c3d75a7ff03dc22",
+    "supportPr": 484,
+    "supportHeadSha": "bc7aabd14dd883cad32148efa9554c3dfd1ac6f3",
+    "supportBasePr": 479,
+    "supportBaseHeadSha": "fc7ab3dd9c0cc51a086546e32f384b28302ae2cb",
+    "canonicalCiRun": 31783877752,
+    "swarmRun": 31783877767,
+    "primaryCommentId": 5291204199,
+    "expectedRed": true,
+    "recommendedNext": "Generation-18 diagnostics primary should absorb PR #484's one-file strengthened regression test before integration. Keep #484 draft/non-independent, preserve source-only evidence boundaries, and leave the unrelated invalid-priorityBoost shared control recovery fail-closed to its owner."
+  }
+}
