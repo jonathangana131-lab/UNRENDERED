@@ -6,11 +6,11 @@
   "claimToken": "5c2a9e8f7b3146d0",
   "claimedAt": "2026-08-14T08:24:30+00:00",
   "heartbeatAt": "2026-08-14T08:29:10+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 3,
   "takeoverOf": "sol-20260814-x4m9p2c7",
   "resources": [],
   "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-5845475e-g3",
   "pr": 494,
-  "notes": "Generation-3 distinct finding published as draft PR #494 head c6146bc721205f8bdd82bfc0970bf6be3b8a5d6c: retained synthesis #408 authenticates canonical entity set but not deterministic index-to-key order. Preserves #451 realization-value authenticity and #467 closed-shape findings; docs-only, no Studio/engine evidence claims. Awaiting exact-head CI and independent review request publication."
+  "notes": "Released after publishing distinct indexed recipe-order authenticity finding. Draft PR #494 exact head c6146bc721205f8bdd82bfc0970bf6be3b8a5d6c; canonical CI run 31784067955 SUCCESS. FINDING and REVIEW_REQUEST events published; finding also posted to retained synthesis #408 comment 5291215402. Swarm run 31784068044 remains fail-closed on separate trusted-state/bootstrap checks; its deterministic/adversarial control-plane test step passed. No Studio/engine evidence claims."
 }
