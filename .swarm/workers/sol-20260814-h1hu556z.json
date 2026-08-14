@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-h1hu556z",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-14T07:12:28+00:00",
-  "lastSeenAt": "2026-08-14T07:12:28+00:00",
+  "lastSeenAt": "2026-08-14T07:25:09+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-h1hu556z",
-  "notes": "Registered for highest-score ready WorldEntity adversarial regression slot; no product edits before claim/resource fencing."
+  "notes": "Published draft stacked support PR #461 at exact head 144f3042b3f7c7277924d03363e076ed3052c898. Canonical CI #1182 and Swarm engine-tests passed. Primary PR #437 received absorption handoff review 4934925440. Shared pr-ownership remains blocked by an unrelated invalid DONE worker status under active SWARM-RECOVERY-WORKER-STATUS-CONTRACT ownership. HANDOFF event evt-20260814t072509z-h1hu556z-worldentity-mutable-duplicate is durable; REALITY-CONTRACT and test-adversary claim released."
 }
