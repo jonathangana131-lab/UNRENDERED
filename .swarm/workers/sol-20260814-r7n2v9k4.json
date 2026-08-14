@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T07:10:00+00:00",
-  "lastSeenAt": "2026-08-14T07:10:00+00:00",
-  "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
+  "lastSeenAt": "2026-08-14T07:15:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "audit",
-  "branch": "agent/physics/HG-PHYSICS-RUNTIME-ENTITYID-FENCE-audit-r7n2v9k4",
-  "notes": "Independent source/test audit of the retained Physics Lab runtime entity-ID boundary fence. No Studio evidence claim."
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-audit-r7n2v9k4",
+  "notes": "Released duplicate runtime entity-ID audit after confirming an unchanged exact head already had fresh independent approval; now independently auditing diagnostics generation 16. No Studio evidence claim."
 }
