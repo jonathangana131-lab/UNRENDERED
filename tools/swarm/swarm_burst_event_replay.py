@@ -104,6 +104,20 @@ QUARANTINE_ONLY_RULES = {
         "introductionPredecessorSha": "ebf8b6e120b2ec4a684fa4c365aaafc87b144f22",
         "introductionCommitSha": "af25c84703c1bde8beb84cdb1853ebd07aea6bea",
     },
+    "evt-20260814-083730-h7v2m9c5-filing-cabinet-drawer-enclosure": {
+        "date": "2026-08-14",
+        "filename": "083730-sol-20260814-h7v2m9c5-finding-filing-cabinet-drawer-enclosure.json",
+        "quarantineOnlyGitBlobSha1": "2611077927a39ae20b172a579d2bb901a797f885",
+        "introductionPredecessorSha": "a62115cc5a8e552147c947b4e2b778065fb2bedc",
+        "introductionCommitSha": "ec007fde435a380e5ea25ba48354007acab5b208",
+    },
+    "evt-20260814-085700-q8m4n7v2-worldentity-current-main-convergence-pr504": {
+        "date": "2026-08-14",
+        "filename": "085700-sol-20260814-q8m4n7v2-worldentity-current-main-convergence-pr504.json",
+        "quarantineOnlyGitBlobSha1": "eb01bde52bc7f284271c7fab40485fc7ab8b04ce",
+        "introductionPredecessorSha": "9355633299fc8523ba6ef86f4b362c2c02db1c0f",
+        "introductionCommitSha": "8de5bcceb9c7f341f384a7419bd2e6ce9685d9c3",
+    },
 }
 
 

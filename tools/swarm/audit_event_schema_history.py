@@ -9,6 +9,7 @@ import tempfile
 from pathlib import Path
 
 import audit_worker_schema_history as common
+import swarm_burst_event_replay as event_replay
 import swarm_burst_takeover_recovery as recovery
 import swarmctl_hardening as hard
 
@@ -76,6 +77,7 @@ def main() -> int:
 
     active: dict[str, dict] = {}
     intervals: list[dict] = []
+    introduction_gaps: list[dict] = []
     event_deltas = 0
     invalid_deltas = 0
     registered_invalid_deltas = 0
@@ -87,6 +89,37 @@ def main() -> int:
             event_deltas += 1
             current = common.object_at(after, path)
             description = None if current is None else strict_description(current[1], path, current[0])
+            registered = None if description is None else registered_identity(path, description["blob"])
+            if current is not None and common.object_at(before, path) is None and registered is not None:
+                expected_id, identity_label = registered
+                if identity_label == "quarantineOnlyGitBlobSha1":
+                    rule = event_replay.QUARANTINE_ONLY_RULES.get(expected_id)
+                else:
+                    rule = event_replay.RULES.get(expected_id)
+                relative = path.removeprefix(".swarm/")
+                expected_path = None if rule is None else f"events/{rule['date']}/{rule['filename']}"
+                exact_bridge = bool(
+                    rule is not None
+                    and expected_path == relative
+                    and rule.get(identity_label) == description["blob"]
+                    and rule.get("introductionPredecessorSha") == before
+                    and rule.get("introductionCommitSha") == after
+                    and transition_paths == (path,)
+                )
+                if not exact_bridge:
+                    introduction_gaps.append(
+                        {
+                            "path": relative,
+                            "eventId": expected_id,
+                            "eventType": description["eventType"],
+                            "identityLabel": identity_label,
+                            "gitBlobSha1": description["blob"],
+                            "introductionPredecessorSha": before,
+                            "introductionCommitSha": after,
+                            "introductionChangedPaths": transition_paths,
+                            "existingRule": rule,
+                        }
+                    )
             previous = active.pop(path, None)
             if previous is not None:
                 previous.update(
@@ -102,7 +135,6 @@ def main() -> int:
             if description is None or description["error"] is None:
                 continue
             invalid_deltas += 1
-            registered = registered_identity(path, description["blob"])
             if registered is not None:
                 registered_invalid_deltas += 1
                 continue
@@ -131,6 +163,8 @@ def main() -> int:
             "eventDeltaCount": event_deltas,
             "strictInvalidDeltaCount": invalid_deltas,
             "registeredInvalidDeltaCount": registered_invalid_deltas,
+            "registeredIntroductionGapCount": len(introduction_gaps),
+            "registeredIntroductionGaps": introduction_gaps,
             "unregisteredInvalidIntervalCount": len(intervals),
             "unregisteredInvalidIntervals": intervals,
         },
