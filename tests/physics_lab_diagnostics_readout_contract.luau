@@ -23,6 +23,11 @@ local function run(): number
 	end
 
 	local helper = position("local function validateReadoutCompleteness(")
+	local helperEnd = position("local function captureCanonicalWhileDiagnosticsEnabled(")
+	local helperBody = nil
+	if helper ~= nil and helperEnd ~= nil and helper < helperEnd then
+		helperBody = string.sub(source, helper, helperEnd - 1)
+	end
 	local function helperPosition(needle: string): number?
 		if helper == nil then
 			return nil
@@ -45,6 +50,10 @@ local function run(): number
 	local readoutCountIncrement = helperPosition("readoutCount += 1")
 	local exactEntityCount = helperPosition("readoutCount == #entities")
 	local exactInstanceCount = helperPosition("return 1 + 2 * readoutCount")
+	local billboardEnabledGuard = helperBody ~= nil
+		and string.find(helperBody, "assert%s*%(%s*child%.Enabled") ~= nil
+	local labelVisibleGuard = helperBody ~= nil
+		and string.find(helperBody, "assert%s*%(%s*label%.Visible") ~= nil
 	local preflightProjection = position("key = record.origin.recipeKey")
 	local captureProjection = position(
 		"text = readoutText(record.origin.recipeKey, record.id, record.fidelity, fingerprint, reproKey)"
@@ -109,6 +118,14 @@ local function run(): number
 			and labelClass < exactBillboardShape
 			and exactBillboardShape < exactTextProjection
 			and exactTextProjection < readoutCountIncrement
+	)
+	expect(
+		"capture rejects disabled BillboardGui readouts instead of counting invisible diagnostics as complete",
+		billboardEnabledGuard
+	)
+	expect(
+		"capture rejects hidden TextLabel readouts instead of counting invisible diagnostics as complete",
+		labelVisibleGuard
 	)
 	expect(
 		"realization and capture project the authoritative recipe key through the shared formatter",
