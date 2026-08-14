@@ -128,19 +128,20 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-14T13:18:15.244526+00:00",
+  "generatedAt": "2026-08-14T13:22:28.227074+00:00",
   "mainHealth": {
-    "conclusion": "success",
-    "headSha": "839489dc499746191987e8ba2aabf93e3cef8100",
+    "conclusion": "failure",
+    "headSha": "3b616ff74483bfad7370ab4d98402bc6d7e9d8a4",
     "schemaVersion": 1,
-    "status": "GREEN",
-    "updatedAt": "2026-08-14T13:18:04+00:00",
-    "workflowRunId": 31804042144
+    "status": "RED",
+    "updatedAt": "2026-08-14T13:22:17+00:00",
+    "workflowRunId": 31804391218
   },
   "metrics": {
     "activeClaims": 0,
     "activeEpics": [
-      "HERO-GATE"
+      "HERO-GATE",
+      "SWARM-V2"
     ],
     "eventCounts": {
       "BLOCKER": 28,
@@ -157,21 +158,21 @@
       "REVIEW_RESULT": 211,
       "SUPERSEDED": 2
     },
-    "generatedAt": "2026-08-14T13:18:15.244526+00:00",
+    "generatedAt": "2026-08-14T13:22:28.227074+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
       "BLOCKED_EXTERNAL": 1,
-      "DONE": 17,
+      "DONE": 16,
       "LOCKED": 1,
       "NEEDS_CHANGES": 1,
       "PROPOSED": 10,
-      "READY": 7,
+      "READY": 8,
       "REVIEW": 1,
       "SUPERSEDED": 3
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 15,
+    "readySlots": 5,
     "reviewBacklog": 2,
     "schemaVersion": 1,
     "staleClaims": 27
@@ -192,6 +193,24 @@
         "Docs/ADR/**",
         "Docs/ADR*.md",
         "Docs/ADRs/**"
+      ]
+    },
+    {
+      "laneId": "OPS-MAIN-HEALTH",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [],
+      "role": "Red-main repair implementer",
+      "score": 11000,
+      "slotId": "primary",
+      "writeScopes": [
+        "src/**",
+        "tests/**",
+        "scripts/**",
+        "tools/**",
+        ".github/**",
+        "Docs/**",
+        "default.project.json",
+        "rokit.toml"
       ]
     },
     {
@@ -230,147 +249,21 @@
       ]
     },
     {
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "reason": "dependencies satisfied",
-      "resources": [
-        "REALITY-CONTRACT"
-      ],
-      "role": "WorldEntity adversarial regression author",
-      "score": 5420,
-      "slotId": "test-adversary",
-      "writeScopes": [
-        "src/shared/Reality/WorldEntity.luau",
-        "tests/world_entity*.luau"
-      ]
-    },
-    {
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "reason": "dependencies satisfied",
-      "resources": [
-        "REALITY-CONTRACT"
-      ],
-      "role": "WorldEntity invariant and aliasing auditor",
-      "score": 5320,
-      "slotId": "audit",
-      "writeScopes": [
-        "src/shared/Reality/WorldEntity.luau",
-        "tests/world_entity*.luau"
-      ]
-    },
-    {
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "reason": "dependencies satisfied; resources available",
-      "resources": [],
-      "role": "Diagnostics source hardening",
-      "score": 5150,
-      "slotId": "primary",
-      "writeScopes": [
-        "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
-        "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
-        "tests/**diagnostic*.luau",
-        "tests/hero_gate_contract_integration.luau"
-      ]
-    },
-    {
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "laneId": "OPS-MAIN-HEALTH",
       "reason": "dependencies satisfied",
       "resources": [],
-      "role": "Diagnostics lifecycle and no-drift test author",
-      "score": 5070,
-      "slotId": "test-adversary",
+      "role": "Red-main diagnosis/regression",
+      "score": 10700,
+      "slotId": "tests-1",
       "writeScopes": [
-        "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
-        "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
-        "tests/**diagnostic*.luau",
-        "tests/hero_gate_contract_integration.luau"
-      ]
-    },
-    {
-      "laneId": "HG-CAPACITY-MINING",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Mine WorldEntity for next concrete depth lane",
-      "score": 3680,
-      "slotId": "mine-worldentity",
-      "writeScopes": [
-        "Docs/**"
-      ]
-    },
-    {
-      "laneId": "HG-CAPACITY-MINING",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Mine ObjectGenome for next concrete depth lane",
-      "score": 3670,
-      "slotId": "mine-objectgenome",
-      "writeScopes": [
-        "Docs/**"
-      ]
-    },
-    {
-      "laneId": "HG-CAPACITY-MINING",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Mine MaterialDNA for next concrete depth lane",
-      "score": 3660,
-      "slotId": "mine-materialdna",
-      "writeScopes": [
-        "Docs/**"
-      ]
-    },
-    {
-      "laneId": "HG-CAPACITY-MINING",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Mine FidelityManager for next concrete depth lane",
-      "score": 3650,
-      "slotId": "mine-fidelity",
-      "writeScopes": [
-        "Docs/**"
-      ]
-    },
-    {
-      "laneId": "HG-CAPACITY-MINING",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Mine Physics runtime for next concrete depth lane",
-      "score": 3640,
-      "slotId": "mine-physics-runtime",
-      "writeScopes": [
-        "Docs/**"
-      ]
-    },
-    {
-      "laneId": "HG-CAPACITY-MINING",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Mine Physics geometry for next concrete depth lane",
-      "score": 3630,
-      "slotId": "mine-physics-geometry",
-      "writeScopes": [
-        "Docs/**"
-      ]
-    },
-    {
-      "laneId": "HG-CAPACITY-MINING",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Mine diagnostics source for next concrete depth lane",
-      "score": 3620,
-      "slotId": "mine-diagnostics",
-      "writeScopes": [
-        "Docs/**"
-      ]
-    },
-    {
-      "laneId": "HG-CAPACITY-MINING",
-      "reason": "dependencies satisfied",
-      "resources": [],
-      "role": "Mine authority/multiplayer source for next concrete depth lane",
-      "score": 3610,
-      "slotId": "mine-authority",
-      "writeScopes": [
-        "Docs/**"
+        "src/**",
+        "tests/**",
+        "scripts/**",
+        "tools/**",
+        ".github/**",
+        "Docs/**",
+        "default.project.json",
+        "rokit.toml"
       ]
     }
   ],
@@ -1173,13 +1066,13 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "a0865d037397ab30b717ba777d5643fd0241c8079f88ff55508d606cede8076d",
+  "stateDigest": "e0c21e1d9401dd84129e39ef9ade59a205a66808587be3cab400c3b3c4739708",
   "summary": {
     "activeClaims": 0,
     "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
     "lanes": 61,
-    "readySlots": 15,
+    "readySlots": 5,
     "staleClaims": 27,
     "workers": 457
   }
