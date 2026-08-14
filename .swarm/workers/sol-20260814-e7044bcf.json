@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-e7044bcf",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-14T07:12:52+00:00",
-  "lastSeenAt": "2026-08-14T07:19:12+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-physics-runtime",
-  "branch": "agent/physics/HG-CAPACITY-MINING-runtime-e7044bcf-g2",
-  "notes": "Diagnostics review-state reconciliation completed and audit claim released. Continuing with stale Physics-runtime capacity-mining recovery after inspecting the expired claim, worker record, surviving branch, and completed docs finding PR #451."
+  "lastSeenAt": "2026-08-14T07:21:10+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed two stale-state recoveries: reconciled HG-BACKFILL-DIAGNOSTICS from stale REVIEW to NEEDS_CHANGES after exact-head REQUEST_CHANGES evidence, and released stale mine-physics-runtime after confirming PR #451's finding was already handed to retained synthesis PR #408. Higher-priority control repair, WorldEntity/backfill, diagnostics successor/adversary, runtime Entity-ID audit, and standing mining roles were actively claimed by other workers; no Studio evidence or new Hero feature was claimed."
 }
