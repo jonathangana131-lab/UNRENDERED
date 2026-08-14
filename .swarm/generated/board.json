@@ -128,14 +128,14 @@
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-14T12:41:49.439886+00:00",
+  "generatedAt": "2026-08-14T12:57:53.673472+00:00",
   "mainHealth": {
     "conclusion": "success",
-    "headSha": "472ce18a87847bb2774b7053786f849dda3d6a31",
+    "headSha": "936907e49dd468b76439eb5b2d1c72b2de89d597",
     "schemaVersion": 1,
     "status": "GREEN",
-    "updatedAt": "2026-08-14T12:41:40+00:00",
-    "workflowRunId": 31801385239
+    "updatedAt": "2026-08-14T12:57:45+00:00",
+    "workflowRunId": 31802527549
   },
   "metrics": {
     "activeClaims": 0,
@@ -157,7 +157,7 @@
       "REVIEW_RESULT": 211,
       "SUPERSEDED": 2
     },
-    "generatedAt": "2026-08-14T12:41:49.439886+00:00",
+    "generatedAt": "2026-08-14T12:57:53.673472+00:00",
     "integrationBacklog": 0,
     "laneStates": {
       "BLOCKED": 20,
@@ -1173,7 +1173,7 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "5767dec079961c79577be49fbbda69218dd5959956a31a04ae35d9ce3b2604eb",
+  "stateDigest": "f249dc64ecb6ddcbc6fcae2342330892e607130e6c65de0f922012648cdb4775",
   "summary": {
     "activeClaims": 0,
     "activeResourceClaims": 0,
