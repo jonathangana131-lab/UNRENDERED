@@ -5,7 +5,7 @@
   "title": "Diagnostics source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden the Studio diagnostics code and its pure contracts while the Mac display path is blocked. Work here must improve source/test correctness without pretending to satisfy the missing live viewport evidence row.",
   "priority": 4850,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/**diagnostic*.luau", "tests/hero_gate_contract_integration.luau"],
@@ -16,12 +16,12 @@
     {"slotId":"audit","role":"Diagnostics failure-path and capture-contract auditor","exclusive":true,"availableWhen":["READY","REVIEW"],"priorityBoost":120,"writeScopes":["tests/**diagnostic*.luau","Docs/PHYSICS_LAB_DIAGNOSTICS.md"]}
   ],
   "acceptance": ["do not queue speculative Studio reruns", "do not convert source confidence into viewport PASS", "find concrete lifecycle/no-drift/failure-path gaps", "behavior changes get tests", "publish anything relevant to HG151-DIAGNOSTICS as a structured finding"],
-  "pr": 441,
-  "notes": "Generation-16 PR #441 exact head b8ca3302cc3012011fb911ad3df5dc878130c133 remains the retained diagnostics lineage. Its matcher-only delta is coherent and canonical CI 31591562616 plus Swarm engine-tests are green, but a later independent exact-head review (review 4932341783) REQUEST_CHANGES on the retained production runToggleEvidence() failure-atomicity gap. After enable(lab) succeeds, captureCanonicalWhileDiagnosticsEnabled / Validation.compare / enabled-window assertions execute before disable(lab); any failure in that region can escape while the owned diagnostics overlay remains live. Support branch agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n4q7v2m9 exact head 4633472020ec5af8f8da6eead35bbd75eed7662e records the isolated expected-red cleanup regression for absorption. A successor must guarantee cleanup on every post-enable failure path while preserving the original validation error and clean retry, then obtain fresh exact-head green CI and independent review. Global pr-ownership remains a separate integration gate. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
+  "pr": 468,
+  "notes": "Generation-17 successor PR #468 is ready for independent exact-head review at 0703a44ff68a96d5907d514f66480ac8aca0145a. It preserves generation-16 clone-completeness hardening, repairs runToggleEvidence post-enable failure atomicity by cleanup-protecting the complete enabled canonical validation window, and absorbs the #463/#469 adversarial cleanup regressions. Canonical CI run 31779941737 is fully green on the exact head, including Pure Luau and Rojo build; Swarm run 31779941639 engine-tests is green. The separate pr-ownership job remains fail-closed on pre-existing live worker record sol-20260813-n4q7v2m9 with invalid status and is owned by control recovery. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
   "blockers": [
-    "Repair runToggleEvidence() so every failure after diagnostics enable and before normal disable destroys/disables the exact owned overlay before rethrowing the original failure; retain/absorb the published expected-red cleanup regression and prove clean retry.",
-    "Fresh exact-head canonical CI and independent review are required after the cleanup repair.",
-    "Repository-wide pr-ownership remains fail-closed behind the separately owned trusted-history/control recovery; do not bypass it."
+    "Fresh independent exact-head diagnostics source/test review is required before integration; the generation-17 implementer must not self-approve.",
+    "Repository-wide pr-ownership remains fail-closed behind separately owned trusted-history/control recovery; do not bypass it.",
+    "HG151 live viewport/Studio diagnostics evidence remains externally blocked by the Mac display path; source confidence must not be converted into viewport PASS."
   ],
   "tags": ["backfill", "hero-gate", "source-only"]
 }
