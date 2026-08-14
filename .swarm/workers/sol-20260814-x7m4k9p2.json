@@ -2,11 +2,9 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-x7m4k9p2",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:28:25+00:00",
-  "lastSeenAt": "2026-08-14T08:28:25+00:00",
-  "laneId": "OPS-MAIN-HEALTH",
-  "slotId": "primary",
+  "lastSeenAt": "2026-08-14T08:37:27+00:00",
   "branch": "agent/red-main/OPS-MAIN-HEALTH-syncmainhealth-x7m4k9p2",
-  "notes": "Red-main worker investigating failing Swarm Control Plane sync-main-health on canonical main af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9."
+  "notes": "No lane claim acquired; OPS-MAIN-HEALTH primary/tests were already held. Performed independent red-main diagnosis only. Confirmed malformed live worker records were causing fail-closed sync-main-health (including unsupported READY status and claim-only keys in worker presence); existing owners already published corrective findings. Canonical main af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 later recorded sync-main-health success at 2026-08-14T08:35:34Z. No production source modified."
 }
