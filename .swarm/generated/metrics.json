@@ -4,10 +4,10 @@
     "HERO-GATE"
   ],
   "eventCounts": {
-    "BLOCKER": 27,
+    "BLOCKER": 28,
     "DECISION": 2,
     "DEPENDENCY_DISCOVERED": 17,
-    "EVIDENCE_RESULT": 21,
+    "EVIDENCE_RESULT": 22,
     "EXTERNAL_BLOCKER": 1,
     "FINDING": 255,
     "HANDOFF": 74,
@@ -15,25 +15,25 @@
     "QUESTION": 1,
     "RECOVERY": 13,
     "REVIEW_REQUEST": 69,
-    "REVIEW_RESULT": 205,
+    "REVIEW_RESULT": 206,
     "SUPERSEDED": 1
   },
-  "generatedAt": "2026-08-14T07:33:54.593466+00:00",
+  "generatedAt": "2026-08-14T07:40:14.803967+00:00",
   "integrationBacklog": 0,
   "laneStates": {
     "BLOCKED": 20,
     "BLOCKED_EXTERNAL": 1,
     "DONE": 15,
     "LOCKED": 1,
-    "NEEDS_CHANGES": 2,
+    "NEEDS_CHANGES": 1,
     "PROPOSED": 10,
     "READY": 6,
-    "REVIEW": 1,
+    "REVIEW": 2,
     "SUPERSEDED": 3
   },
   "note": "Gross lines written are diagnostic, not a success metric.",
-  "readySlots": 9,
+  "readySlots": 10,
   "reviewBacklog": 3,
   "schemaVersion": 1,
-  "staleClaims": 11
+  "staleClaims": 10
 }

@@ -1,22 +1,23 @@
 # UNRENDERED Swarm Control Plane
 
-Generated: `2026-08-14T07:33:54.593466+00:00`
+Generated: `2026-08-14T07:40:14.803967+00:00`
 
-Canonical main: **GREEN** `bc7e667b5bd13b37cc534a3ac2ea78cb4dcb6170`
+Canonical main: **GREEN** `8a481f74a442f499163574a1eb510604ac3a8c3a`
 
-State digest: `c86b2363da0e8af163e0de27201bd906935cb6bc21c4801b42a0cd8c8bfacf8f`
+State digest: `fa5f56a6450a12030a0ea81a8a89bfd20cd8bab4521520092155945b7b4a12fd`
 
 ## Summary
 
-- ready slots: **9**
+- ready slots: **10**
 - active claims: **5**
-- stale claims: **11**
+- stale claims: **10**
 - blocked-external lanes: **1**
 
 ## Ready slots
 
-- `HG-BACKFILL-WORLDENTITY/primary` — **WorldEntity source hardening** — score 5500 — dependencies satisfied; resources available
+- `SWARM-RECOVERY-WORKER-STATUS-CONTRACT/reviewer-1` — **Independent control schema recovery verifier** — score 10950 — dependencies satisfied; unblocks 1 downstream lane(s)
 - `HG-BACKFILL-WORLDENTITY/test-adversary` — **WorldEntity adversarial regression author** — score 5420 — dependencies satisfied
+- `HG-BACKFILL-DIAGNOSTICS/audit` — **Diagnostics failure-path and capture-contract auditor** — score 4970 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-worldentity` — **Mine WorldEntity for next concrete depth lane** — score 3680 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-objectgenome` — **Mine ObjectGenome for next concrete depth lane** — score 3670 — dependencies satisfied
 - `HG-CAPACITY-MINING/mine-materialdna` — **Mine MaterialDNA for next concrete depth lane** — score 3660 — dependencies satisfied
@@ -27,11 +28,11 @@ State digest: `c86b2363da0e8af163e0de27201bd906935cb6bc21c4801b42a0cd8c8bfacf8f`
 
 ## Active claims
 
-- `HG-BACKFILL-DIAGNOSTICS/audit` → `sol-20260814-y7q3m5v8`; lease to `2026-08-14T08:01:40+00:00`
 - `HG-BACKFILL-DIAGNOSTICS/primary` → `sol-20260814-t5n8q3v6`; lease to `2026-08-14T08:00:30+00:00`
-- `HG-BACKFILL-DIAGNOSTICS/test-adversary` → `sol-20260814-v4q7m2c9`; lease to `2026-08-14T08:03:00+00:00`
+- `HG-BACKFILL-DIAGNOSTICS/test-adversary` → `sol-20260814-v4q7m2c9`; lease to `2026-08-14T08:09:00+00:00`
+- `HG-BACKFILL-WORLDENTITY/primary` → `sol-20260814-k8m2q6v4`; lease to `2026-08-14T08:10:00+00:00`
 - `HG-CAPACITY-MINING/mine-physics-runtime` → `sol-20260814-x4m9p2c7`; lease to `2026-08-14T07:52:30+00:00`
-- `SWARM-RECOVERY-WORKER-STATUS-CONTRACT/primary` → `sol-20260814-r6h3n9v2`; lease to `2026-08-14T08:01:00+00:00`
+- `SWARM-RECOVERY-WORKER-STATUS-CONTRACT/primary` → `sol-20260814-r6h3n9v2`; lease to `2026-08-14T08:06:00+00:00`
 
 ## Blocked lanes
 
@@ -59,6 +60,6 @@ State digest: `c86b2363da0e8af163e0de27201bd906935cb6bc21c4801b42a0cd8c8bfacf8f`
 - `HG-PHYSICS-RUNTIME-ENTITYID-FENCE` — **SUPERSEDED** — dependencies satisfied
 - `HG-PHYSICS-RUNTIME-SYNTHESIS` — **BLOCKED** — dependencies satisfied
 - `OPS-STUDIO-DISPLAY` — **BLOCKED_EXTERNAL** — External Mac GUI/display recovery is required before fresh diagnostics or two-client evidence retries.
-- `SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY` — **BLOCKED** — waiting for SWARM-RECOVERY-WORKER-STATUS-CONTRACT (NEEDS_CHANGES)
+- `SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY` — **BLOCKED** — waiting for SWARM-RECOVERY-WORKER-STATUS-CONTRACT (REVIEW)
 
 > Generated state is disposable. Atomic claims/resource leases are ownership authority.
