@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-g7v3q8m2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-14T08:00:00+00:00",
-  "lastSeenAt": "2026-08-14T08:00:00+00:00",
+  "lastSeenAt": "2026-08-14T08:02:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-physics-geometry",
   "branch": "agent/audit/HG-CAPACITY-MINING-physics-geometry-g7v3q8m2",
-  "notes": "Bounded current-main Physics Lab geometry source/test miner; structured finding or durable no-gap result only, no production implementation unlock."
+  "notes": "Stopped after duplicate-prevention mining. Chair caster/COM, cart caster/COM, cart shelf/frame load path, and table/cabinet component-derived COM already have dedicated geometry lanes. Durable finding evt-20260814-080200-g7v3q8m2-physics-geometry-duplicate-prevented records NO_NEW_NON_DUPLICATE_GAP. Claim released; no product implementation or new geometry lane created."
 }
