@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083200-n8q4v2m6-diagnostics-owned-root-pin",
+  "eventType": "FINDING",
+  "timestamp": "2026-08-14T08:32:00Z",
+  "fromWorker": "sol-20260814-n8q4v2m6",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "summary": "Generation-18 PR #486 already implements the exact owned diagnostics-root pin and direct failure cleanup, but its absorbed cleanup regression predates #484 and does not prove the pin cannot substitute a fallback value. Draft stacked PR #495 absorbs the stronger #484 matcher without production changes; #486 production already satisfies it.",
+  "evidence": [
+    "PR #486 exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22 binds ownedDiagnosticsRoot exactly from diagnosticsRoot(lab.model), asserts non-nil before the enabled-window pcall, and directly destroys that pinned root immediately before rethrowing cycleResult on failure.",
+    "The #486 version of tests/physics_lab_diagnostics_toggle_failure_cleanup.luau is the weaker pre-#484 matcher and does not require an exact assignment line, explicit non-nil assertion ordering, or an immediate destroy/error sequence.",
+    "Open support PR #484 exact head 19f54dc79c3414ed549d59b8ffacf8ec159b840c contains the stronger one-file adversarial matcher; draft PR #495 replays that exact test blob on top of #486 with no production source changes."
+  ],
+  "affects": [
+    "HG-BACKFILL-DIAGNOSTICS",
+    "HG151-DIAGNOSTICS"
+  ],
+  "metadata": {
+    "basePr": 486,
+    "supportPr": 495,
+    "baseHeadSha": "29a2f949eebbd509c2c839d48c3d75a7ff03dc22",
+    "supportHeadSha": "7eedf0944924f0fea6c113e48548b35475feb64c",
+    "recommendedNext": "If exact-head CI and Swarm engine-tests are green, absorb/cherry-pick PR #495's single test commit into the generation-18 successor before final integration, then supersede #484. This source-only regression does not satisfy the missing Studio viewport row."
+  }
+}
