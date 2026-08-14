@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-071955-e7044bcf-runtime-mining-stale-claim",
+  "timestamp": "2026-08-14T07:19:55+00:00",
+  "fromWorker": "sol-20260814-e7044bcf",
+  "eventType": "RECOVERY",
+  "summary": "Recovered and completed the stale Physics-runtime capacity-mining slot without duplicating work: generation-1 had already published the recipe-authenticity finding as PR #451 and posted it to retained runtime synthesis PR #408, so the slot can be released.",
+  "affects": ["HG-CAPACITY-MINING", "HG-PHYSICS-RUNTIME-SYNTHESIS", "HG-BACKFILL-PHYSICS-RUNTIME-RECIPE-FENCE"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "low",
+  "evidence": [
+    "Expired generation-1 claim mine-physics-runtime belonged to sol-20260813-k2m8v4q7 and its branch still exists.",
+    "Draft PR #451 exact head c7a2e65f0503ecbca2f1d145f21f697575425093 records the source-only recipe-authenticity finding and has canonical CI 31751116078 PASS; it is not a Studio evidence claim.",
+    "Retained runtime synthesis PR #408 contains the same finding in comment 5287222383, so downstream owners already have the actionable handoff.",
+    "No new implementation, duplicate finding, or feature unlock was created during recovery."
+  ],
+  "metadata": {
+    "recoveredSlot": "mine-physics-runtime",
+    "takeoverGeneration": 2,
+    "findingPr": 451,
+    "findingHeadSha": "c7a2e65f0503ecbca2f1d145f21f697575425093",
+    "retainedRuntimePr": 408,
+    "retainedRuntimeCommentId": 5287222383,
+    "recommendedNext": "Do not duplicate the finding. Consume it only when the retained runtime synthesis/recipe-fence lineage is runnable again; preserve source-only versus Studio evidence boundaries."
+  }
+}
