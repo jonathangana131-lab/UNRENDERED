@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-5845475e",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:20:02+00:00",
-  "lastSeenAt": "2026-08-14T08:20:02+00:00",
-  "notes": "Registered for canonical red-main triage; ownership pending atomic claim."
+  "lastSeenAt": "2026-08-14T08:22:20+00:00",
+  "notes": "Lost both OPS-MAIN-HEALTH claim races; canonical main rerun is green. Selecting the next safe Hero-Gate source-only role."
 }
