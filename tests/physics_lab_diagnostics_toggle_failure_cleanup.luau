@@ -39,17 +39,11 @@ local function run(): number
 	if ownedRootName ~= nil then
 		ownedRootPinIsExact = string.match(
 			ownedRootLine,
-			"^%s*local%s+"
-				.. ownedRootName
-				.. "%s*=%s*diagnosticsRoot%(%s*lab%.model%s*%)%s*$"
+			"^%s*local%s+" .. ownedRootName .. "%s*=%s*diagnosticsRoot%(%s*lab%.model%s*%)%s*$"
 		) ~= nil
 		if ownedRootLineEnd ~= nil then
-			ownedRootAssertion = string.find(
-				sweepSource,
-				"assert(" .. ownedRootName .. " ~= nil",
-				ownedRootLineEnd,
-				true
-			)
+			ownedRootAssertion =
+				string.find(sweepSource, "assert(" .. ownedRootName .. " ~= nil", ownedRootLineEnd, true)
 		end
 	end
 	local strictCleanup =
