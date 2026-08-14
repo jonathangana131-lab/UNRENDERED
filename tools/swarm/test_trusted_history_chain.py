@@ -264,19 +264,25 @@ class TrustedHistoryChainTests(unittest.TestCase):
         }
         self.assertEqual(burst_takeover.GIT_RULES, expected)
 
-    def test_worker_status_replay_is_exact_finite_and_history_only(self):
+    def test_worker_schema_replay_is_exact_finite_and_history_only(self):
         inventory = json.dumps(worker_replay.RULES, sort_keys=True, separators=(",", ":")).encode()
-        self.assertEqual(len(worker_replay.RULES), 8)
+        self.assertEqual(len(worker_replay.RULES), 9)
         self.assertEqual(
             hashlib.sha256(inventory).hexdigest(),
-            "127bd9355741241d54e2972e291d267a031844773ae351555cb4ae7a463a38f2",
+            "8a984e5f2ff1aec297caf77fce216da310a400fe1aac5ef55fcaa1529cb3c1f1",
         )
         self.assertEqual(
             {(rule["invalidStatus"], rule["canonicalStatus"]) for rule in worker_replay.RULES},
-            {("READY", "IDLE"), ("READY", "WORKING"), ("READY", "REVIEWING"), ("MINING", "WORKING")},
+            {
+                ("READY", "IDLE"),
+                ("READY", "WORKING"),
+                ("READY", "REVIEWING"),
+                ("MINING", "WORKING"),
+                ("WORKING", "WORKING"),
+            },
         )
-        self.assertEqual(len({rule["introductionCommitSha"] for rule in worker_replay.RULES}), 8)
-        self.assertEqual(len({rule["repairCommitSha"] for rule in worker_replay.RULES}), 8)
+        self.assertEqual(len({rule["introductionCommitSha"] for rule in worker_replay.RULES}), 9)
+        self.assertEqual(len({rule["repairCommitSha"] for rule in worker_replay.RULES}), 9)
 
         with tempfile.TemporaryDirectory() as temp:
             repo = Path(temp) / "repo"
@@ -288,14 +294,24 @@ class TrustedHistoryChainTests(unittest.TestCase):
             worker_path = repo / git_relative
             worker_path.parent.mkdir(parents=True)
 
-            def commit_worker(status: str, message: str) -> str:
-                worker_path.write_text(json.dumps({"status": status}, indent=2) + "\n", encoding="utf-8")
+            def commit_worker(status: str, message: str, extra: dict | None = None) -> str:
+                worker = {
+                    "schemaVersion": core.SCHEMA_VERSION,
+                    "workerId": relative.stem,
+                    "model": "gpt-5.6-sol",
+                    "status": status,
+                    "startedAt": "2099-01-01T00:00:00Z",
+                    "lastSeenAt": "2099-01-01T00:01:00Z",
+                    **(extra or {}),
+                }
+                worker_path.write_text(json.dumps(worker, indent=2) + "\n", encoding="utf-8")
                 subprocess.run(["git", "-C", str(repo), "add", str(git_relative)], check=True)
                 subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", message], check=True)
                 return subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
 
             base_sha = commit_worker("IDLE", "base")
-            intro_sha = commit_worker("READY", "invalid introduction")
+            invalid_extra = {"claimToken": "test-token", "generation": 3}
+            intro_sha = commit_worker("READY", "invalid introduction", invalid_extra)
             marker = repo / ".swarm" / "marker.json"
             marker.write_text('{"middle":true}\n', encoding="utf-8")
             subprocess.run(["git", "-C", str(repo), "add", ".swarm/marker.json"], check=True)
@@ -317,9 +333,11 @@ class TrustedHistoryChainTests(unittest.TestCase):
                 "invalidGitBlobSha1": invalid_blob,
                 "invalidStatus": "READY",
                 "canonicalStatus": "WORKING",
+                "invalidExtraFields": invalid_extra,
                 "repairCommitSha": repair_sha,
                 "repairGitBlobSha1": repair_blob,
                 "repairStatus": "WORKING",
+                "repairExtraFields": {},
             }
 
             def snapshot(sha: str, name: str) -> Path:
@@ -357,7 +375,10 @@ class TrustedHistoryChainTests(unittest.TestCase):
                     active,
                 )
                 self.assertEqual(intro["activated"], [relative.as_posix()])
-                self.assertEqual(json.loads((intro_root / relative).read_text())["status"], "WORKING")
+                normalized_intro = json.loads((intro_root / relative).read_text())
+                self.assertEqual(normalized_intro["status"], "WORKING")
+                self.assertNotIn("claimToken", normalized_intro)
+                self.assertNotIn("generation", normalized_intro)
 
                 middle_root = snapshot(middle_sha, "middle")
                 middle = worker_replay.advance_transition(
@@ -370,7 +391,10 @@ class TrustedHistoryChainTests(unittest.TestCase):
                     active,
                 )
                 self.assertEqual(middle["normalized"], [relative.as_posix()])
-                self.assertEqual(json.loads((middle_root / relative).read_text())["status"], "WORKING")
+                normalized_middle = json.loads((middle_root / relative).read_text())
+                self.assertEqual(normalized_middle["status"], "WORKING")
+                self.assertNotIn("claimToken", normalized_middle)
+                self.assertNotIn("generation", normalized_middle)
 
                 repair_root = snapshot(repair_sha, "repair")
                 repaired = worker_replay.advance_transition(
@@ -397,7 +421,10 @@ class TrustedHistoryChainTests(unittest.TestCase):
                     active,
                 )
                 self.assertEqual(strict["normalized"], [])
-                self.assertEqual(json.loads((future_root / relative).read_text())["status"], "READY")
+                future = json.loads((future_root / relative).read_text())
+                self.assertEqual(future["status"], "READY")
+                self.assertEqual(future["claimToken"], "test-token")
+                self.assertEqual(future["generation"], 3)
             finally:
                 worker_replay.RULES = original_rules
 
