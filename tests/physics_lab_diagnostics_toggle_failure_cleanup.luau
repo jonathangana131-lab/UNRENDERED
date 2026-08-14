@@ -49,8 +49,10 @@ local function run(): number
 		and string.find(sweepSource, "diagnostics-on canonical envelope drifted", cycleProtection, true)
 	local failureGuard = cleanup and string.find(sweepSource, "if not cycleOk then", cleanup, true)
 	local propagate = failureGuard and string.find(sweepSource, "error(cycleResult, 0)", failureGuard, true)
-	local disabledAssertion = cleanup and string.find(sweepSource, "assert(not disabled.enabled", cleanup, true)
-	local offCapture = cleanup and string.find(sweepSource, "Validation.captureFull(lab.model)", cleanup, true)
+	local disabledAssertion = cleanup
+		and string.find(sweepSource, "assert(not disabled.enabled", cleanup, true)
+	local offCapture = cleanup
+		and string.find(sweepSource, "Validation.captureFull(lab.model)", cleanup, true)
 
 	expect(
 		"failed enabled-window validation disables diagnostics before propagating the original failure",
