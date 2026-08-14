@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-071443-e7044bcf-diagnostics-review-state-recovery",
+  "timestamp": "2026-08-14T07:14:43+00:00",
+  "fromWorker": "sol-20260814-e7044bcf",
+  "eventType": "RECOVERY",
+  "summary": "Reconciled HG-BACKFILL-DIAGNOSTICS from stale REVIEW to NEEDS_CHANGES after confirming the later independent REQUEST_CHANGES verdict on generation-16 PR #441. No duplicate review or Studio evidence was created.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "medium",
+  "evidence": [
+    "Generation-16 PR #441 exact head b8ca3302cc3012011fb911ad3df5dc878130c133 remains draft and production runToggleEvidence() executes enabled-window capture/comparison/assertions after enable(lab) but before disable(lab).",
+    "PR review 4932341783 independently REQUEST_CHANGES on that exact head because a post-enable validation failure can escape while the owned diagnostics overlay remains live.",
+    "Support branch agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n4q7v2m9 head 4633472020ec5af8f8da6eead35bbd75eed7662e records the isolated expected-red cleanup regression for absorption by the next primary successor.",
+    "Lane state was updated to NEEDS_CHANGES with explicit cleanup, fresh-CI/review, and global pr-ownership blockers."
+  ],
+  "metadata": {
+    "primaryPr": 441,
+    "primaryHeadSha": "b8ca3302cc3012011fb911ad3df5dc878130c133",
+    "blockingReviewId": 4932341783,
+    "supportBranch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n4q7v2m9",
+    "supportHeadSha": "4633472020ec5af8f8da6eead35bbd75eed7662e",
+    "recoveredState": "NEEDS_CHANGES"
+  }
+}
