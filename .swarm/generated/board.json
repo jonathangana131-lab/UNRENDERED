@@ -1,132 +1,5 @@
 {
-  "activeClaims": [
-    {
-      "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-s6p4m9q2-g18",
-      "expiresAt": "2026-08-14T09:03:00+00:00",
-      "generation": 18,
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "pr": 486,
-      "slotId": "primary",
-      "workerId": "sol-20260814-s6p4m9q2"
-    },
-    {
-      "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n8q4v2m6-g1",
-      "expiresAt": "2026-08-14T09:02:00+00:00",
-      "generation": 1,
-      "laneId": "HG-BACKFILL-DIAGNOSTICS",
-      "pr": 495,
-      "slotId": "test-adversary",
-      "workerId": "sol-20260814-n8q4v2m6"
-    },
-    {
-      "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-j4p8n6q2-g2",
-      "expiresAt": "2026-08-14T09:04:00+00:00",
-      "generation": 2,
-      "laneId": "HG-BACKFILL-WORLDENTITY",
-      "pr": 493,
-      "slotId": "audit",
-      "workerId": "sol-20260814-j4p8n6q2"
-    },
-    {
-      "branch": "agent/audit/HG-CAPACITY-MINING-mine-authority-j3q8v6m1-g2",
-      "expiresAt": "2026-08-14T09:03:00+00:00",
-      "generation": 2,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": null,
-      "slotId": "mine-authority",
-      "workerId": "sol-20260814-j3q8v6m1"
-    },
-    {
-      "branch": "agent/audit/HG-CAPACITY-MINING-diagnostics-q2v8m5k1-g1",
-      "expiresAt": "2026-08-14T09:06:30+00:00",
-      "generation": 1,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": null,
-      "slotId": "mine-diagnostics",
-      "workerId": "sol-20260814-q2v8m5k1"
-    },
-    {
-      "branch": "agent/capacity/HG-CAPACITY-MINING-fidelity-a6r2m8q5-g1",
-      "expiresAt": "2026-08-14T09:00:15+00:00",
-      "generation": 1,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": null,
-      "slotId": "mine-fidelity",
-      "workerId": "sol-20260814-a6r2m8q5"
-    },
-    {
-      "branch": "agent/audit/HG-CAPACITY-MINING-materialdna-k3m8v5q2",
-      "expiresAt": "2026-08-14T08:56:10+00:00",
-      "generation": 1,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": 488,
-      "slotId": "mine-materialdna",
-      "workerId": "sol-20260814-k3m8v5q2"
-    },
-    {
-      "branch": "agent/capacity/HG-CAPACITY-MINING-objectgenome-b7q4n2m9",
-      "expiresAt": "2026-08-14T09:04:30+00:00",
-      "generation": 1,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": 497,
-      "slotId": "mine-objectgenome",
-      "workerId": "sol-20260814-b7q4n2m9"
-    },
-    {
-      "branch": "agent/audit/HG-CAPACITY-MINING-physics-geometry-h7v2m9c5-g1",
-      "expiresAt": "2026-08-14T09:05:30+00:00",
-      "generation": 1,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": null,
-      "slotId": "mine-physics-geometry",
-      "workerId": "sol-20260814-h7v2m9c5"
-    },
-    {
-      "branch": "agent/physics/HG-CAPACITY-MINING-mine-physics-runtime-n8q2m5v7-g4",
-      "expiresAt": "2026-08-14T08:39:24+00:00",
-      "generation": 4,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": null,
-      "slotId": "mine-physics-runtime",
-      "workerId": "sol-20260814-n8q2m5v7"
-    },
-    {
-      "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-q8m4n7v2-g2",
-      "expiresAt": "2026-08-14T09:04:12+00:00",
-      "generation": 2,
-      "laneId": "HG-CAPACITY-MINING",
-      "pr": null,
-      "slotId": "mine-worldentity",
-      "workerId": "sol-20260814-q8m4n7v2"
-    },
-    {
-      "branch": "agent/red-main/OPS-MAIN-HEALTH-afb1aa7d",
-      "expiresAt": "2026-08-14T08:50:05+00:00",
-      "generation": 1,
-      "laneId": "OPS-MAIN-HEALTH",
-      "pr": null,
-      "slotId": "primary",
-      "workerId": "sol-20260814-afb1aa7d"
-    },
-    {
-      "branch": "agent/red-main/OPS-MAIN-HEALTH-tests-k4x9m2p7-g1",
-      "expiresAt": "2026-08-14T08:51:30+00:00",
-      "generation": 1,
-      "laneId": "OPS-MAIN-HEALTH",
-      "pr": null,
-      "slotId": "tests-1",
-      "workerId": "sol-20260814-k4x9m2p7"
-    },
-    {
-      "branch": "agent/swarm-v16-2-integration-throughput",
-      "expiresAt": "2026-08-14T08:52:30+00:00",
-      "generation": 1,
-      "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
-      "pr": null,
-      "slotId": "primary",
-      "workerId": "sol-20260814-v162merge"
-    }
-  ],
+  "activeClaims": [],
   "blockedLanes": [
     {
       "laneId": "HERO-DOOR",
@@ -247,59 +120,115 @@
       "laneId": "OPS-STUDIO-DISPLAY",
       "reason": "External Mac GUI/display recovery is required before fresh diagnostics or two-client evidence retries.",
       "state": "BLOCKED_EXTERNAL"
+    },
+    {
+      "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+      "reason": "waiting for SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY (READY)",
+      "state": "BLOCKED"
     }
   ],
   "controlBranch": "swarm-control",
-  "generatedAt": "2026-08-14T08:35:30.506687+00:00",
+  "generatedAt": "2026-08-14T09:56:13.254837+00:00",
   "mainHealth": {
     "conclusion": "success",
-    "headSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "headSha": "62e3d284635c3068a9673da283090c5cf615c18f",
     "schemaVersion": 1,
     "status": "GREEN",
-    "updatedAt": "2026-08-14T08:19:56+00:00",
-    "workflowRunId": 31781938150
+    "updatedAt": "2026-08-14T09:56:03+00:00",
+    "workflowRunId": 31790105600
   },
   "metrics": {
-    "activeClaims": 14,
+    "activeClaims": 0,
     "activeEpics": [
-      "HERO-GATE",
-      "SWARM-V16"
+      "HERO-GATE"
     ],
     "eventCounts": {
       "BLOCKER": 28,
       "DECISION": 2,
-      "DEPENDENCY_DISCOVERED": 17,
+      "DEPENDENCY_DISCOVERED": 18,
       "EVIDENCE_RESULT": 26,
       "EXTERNAL_BLOCKER": 1,
-      "FINDING": 285,
-      "HANDOFF": 75,
+      "FINDING": 294,
+      "HANDOFF": 79,
       "INTEGRATION_RESULT": 11,
       "QUESTION": 1,
       "RECOVERY": 15,
       "REVIEW_REQUEST": 70,
-      "REVIEW_RESULT": 208,
-      "SUPERSEDED": 1
+      "REVIEW_RESULT": 211,
+      "SUPERSEDED": 2
     },
-    "generatedAt": "2026-08-14T08:35:30.506687+00:00",
+    "generatedAt": "2026-08-14T09:56:13.254837+00:00",
     "integrationBacklog": 0,
     "laneStates": {
-      "BLOCKED": 19,
+      "BLOCKED": 20,
       "BLOCKED_EXTERNAL": 1,
       "DONE": 16,
       "LOCKED": 1,
       "NEEDS_CHANGES": 1,
       "PROPOSED": 10,
-      "READY": 8,
+      "READY": 7,
       "REVIEW": 1,
       "SUPERSEDED": 3
     },
     "note": "Gross lines written are diagnostic, not a success metric.",
-    "readySlots": 1,
+    "readySlots": 15,
     "reviewBacklog": 2,
     "schemaVersion": 1,
-    "staleClaims": 13
+    "staleClaims": 26
   },
   "readySlots": [
+    {
+      "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+      "reason": "dependencies satisfied; resources available; unblocks 1 downstream lane(s)",
+      "resources": [
+        "SWARM-PROTOCOL"
+      ],
+      "role": "Trusted history continuity implementation",
+      "score": 11049,
+      "slotId": "primary",
+      "writeScopes": [
+        "tools/swarm/**",
+        ".github/workflows/swarm-control.yml",
+        "Docs/ADR/**",
+        "Docs/ADR*.md",
+        "Docs/ADRs/**"
+      ]
+    },
+    {
+      "laneId": "SWARM-RECOVERY-HEALTH-VALIDATION-FENCE",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [
+        "SWARM-PROTOCOL"
+      ],
+      "role": "Critical validation-fence repair",
+      "score": 11000,
+      "slotId": "primary",
+      "writeScopes": [
+        ".github/workflows/swarm-control.yml",
+        "tools/swarm/test_swarmctl_hardening.py",
+        "tools/swarm/test_swarmctl_hardening_base.py"
+      ]
+    },
+    {
+      "laneId": "SWARM-V22-THROUGHPUT",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [
+        "SWARM-PROTOCOL"
+      ],
+      "role": "Implement and prove Swarm V2.2 throughput policy",
+      "score": 11000,
+      "slotId": "primary",
+      "writeScopes": [
+        "tools/swarm/**",
+        ".github/workflows/swarm-control.yml",
+        ".github/workflows/ci.yml",
+        ".github/pull_request_template.md",
+        "Docs/SWARM_PROTOCOL.md",
+        "Docs/SWARM_CONTROL_PLANE.md",
+        "Docs/SWARM_V22_COMPLETION_THROUGHPUT.md",
+        "Docs/ADR/0004-swarm-control-plane.md"
+      ]
+    },
     {
       "laneId": "HG-BACKFILL-WORLDENTITY",
       "reason": "dependencies satisfied",
@@ -313,103 +242,139 @@
         "src/shared/Reality/WorldEntity.luau",
         "tests/world_entity*.luau"
       ]
+    },
+    {
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "reason": "dependencies satisfied",
+      "resources": [
+        "REALITY-CONTRACT"
+      ],
+      "role": "WorldEntity invariant and aliasing auditor",
+      "score": 5320,
+      "slotId": "audit",
+      "writeScopes": [
+        "src/shared/Reality/WorldEntity.luau",
+        "tests/world_entity*.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "reason": "dependencies satisfied; resources available",
+      "resources": [],
+      "role": "Diagnostics source hardening",
+      "score": 5150,
+      "slotId": "primary",
+      "writeScopes": [
+        "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
+        "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
+        "tests/**diagnostic*.luau",
+        "tests/hero_gate_contract_integration.luau"
+      ]
+    },
+    {
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Diagnostics lifecycle and no-drift test author",
+      "score": 5070,
+      "slotId": "test-adversary",
+      "writeScopes": [
+        "src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau",
+        "src/server/PhysicsLab/PhysicsLabStudioHarness.luau",
+        "tests/**diagnostic*.luau",
+        "tests/hero_gate_contract_integration.luau"
+      ]
+    },
+    {
+      "laneId": "HG-CAPACITY-MINING",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Mine WorldEntity for next concrete depth lane",
+      "score": 3680,
+      "slotId": "mine-worldentity",
+      "writeScopes": [
+        "Docs/**"
+      ]
+    },
+    {
+      "laneId": "HG-CAPACITY-MINING",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Mine ObjectGenome for next concrete depth lane",
+      "score": 3670,
+      "slotId": "mine-objectgenome",
+      "writeScopes": [
+        "Docs/**"
+      ]
+    },
+    {
+      "laneId": "HG-CAPACITY-MINING",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Mine MaterialDNA for next concrete depth lane",
+      "score": 3660,
+      "slotId": "mine-materialdna",
+      "writeScopes": [
+        "Docs/**"
+      ]
+    },
+    {
+      "laneId": "HG-CAPACITY-MINING",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Mine FidelityManager for next concrete depth lane",
+      "score": 3650,
+      "slotId": "mine-fidelity",
+      "writeScopes": [
+        "Docs/**"
+      ]
+    },
+    {
+      "laneId": "HG-CAPACITY-MINING",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Mine Physics runtime for next concrete depth lane",
+      "score": 3640,
+      "slotId": "mine-physics-runtime",
+      "writeScopes": [
+        "Docs/**"
+      ]
+    },
+    {
+      "laneId": "HG-CAPACITY-MINING",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Mine Physics geometry for next concrete depth lane",
+      "score": 3630,
+      "slotId": "mine-physics-geometry",
+      "writeScopes": [
+        "Docs/**"
+      ]
+    },
+    {
+      "laneId": "HG-CAPACITY-MINING",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Mine diagnostics source for next concrete depth lane",
+      "score": 3620,
+      "slotId": "mine-diagnostics",
+      "writeScopes": [
+        "Docs/**"
+      ]
+    },
+    {
+      "laneId": "HG-CAPACITY-MINING",
+      "reason": "dependencies satisfied",
+      "resources": [],
+      "role": "Mine authority/multiplayer source for next concrete depth lane",
+      "score": 3610,
+      "slotId": "mine-authority",
+      "writeScopes": [
+        "Docs/**"
+      ]
     }
   ],
   "recentEvents": [
-    {
-      "affects": [
-        "OPS-MAIN-HEALTH",
-        "HG-CAPACITY-MINING"
-      ],
-      "eventId": "evt-20260814-083500-k4x9m2p7-orphan-mine-reality-claim",
-      "eventType": "FINDING",
-      "evidence": [
-        "Swarm Control Plane run 31784297337 job 94716664280 passed all deterministic/recovery suites, then failed live validation: .swarm/claims/HG-CAPACITY-MINING/mine-reality.json: claim references unknown slot.",
-        "Live claim blob e3ebe9caabcad12fe3849deafc6b48d50c58dd00 is generation 1 for mine-reality, heartbeat 2026-08-14T08:10:30Z, branch agent/audit/HG-CAPACITY-MINING-reality-r8q3v5m1, PR 483.",
-        "Current lane blob f0f589c77f50195a1f9450b5e18db87138d7405b defines eight slots and no mine-reality slot.",
-        "Current worker blob 9f081c932039d9db82aba350c3857d2708c2f12d still reports WORKING on mine-reality."
-      ],
-      "fromWorker": "sol-20260814-k4x9m2p7",
-      "laneId": "HG-CAPACITY-MINING",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Your still-live mine-reality claim now references a slot removed from the current HG-CAPACITY-MINING lane contract, which makes trusted control validation fail closed. PR #483 is already published per the claim notes. Reconcile by releasing/retiring the obsolete claim and normalizing presence if your work is complete, or coordinate restoration of the slot with the lane owner if removal was unintended; do not fabricate a different slot claim.",
-      "timestamp": "2026-08-14T08:35:00+00:00",
-      "toWorker": "sol-20260814-r8q3v5m1"
-    },
-    {
-      "affects": [
-        "OPS-MAIN-HEALTH",
-        "HG-CAPACITY-MINING",
-        "SWARM-V16.2-INTEGRATION-THROUGHPUT"
-      ],
-      "eventId": "evt-20260814-083620-k4x9m2p7-nonexistent-slot-admission",
-      "eventType": "FINDING",
-      "evidence": [
-        "Swarm Control Plane run 31784297337 job 94716664280 passed all deterministic/recovery suites, then failed live validation: .swarm/claims/HG-CAPACITY-MINING/mine-reality.json: claim references unknown slot.",
-        "Live claim blob e3ebe9caabcad12fe3849deafc6b48d50c58dd00 was admitted at 2026-08-14T08:08:00Z for mine-reality and remains lease-live through 08:40:30Z based on its heartbeat/lease.",
-        "Current lane blob f0f589c77f50195a1f9450b5e18db87138d7405b defines no mine-reality slot.",
-        "Lane file history shows its latest/creation change is 9eb6b2fe9a095c42a9ffae0f5bc86227ba19d311 (2026-08-11, add standing capacity-mining roles); there is no later slot-removal change, so the invalid claim was created against an already nonexistent slot.",
-        "SWARM-PROTOCOL resource is currently generation 6 held by sol-20260814-v162merge specifically for V16.2 producer-fence rollout."
-      ],
-      "fromWorker": "sol-20260814-k4x9m2p7",
-      "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Producer-fence recurrence: control accepted a live HG-CAPACITY-MINING/mine-reality claim even though that slot has never existed in the standing lane contract. This is not lane churn; claim admission must validate lane existence and exact slot membership before publishing worker/claim state.",
-      "timestamp": "2026-08-14T08:36:20+00:00",
-      "toWorker": "sol-20260814-v162merge"
-    },
-    {
-      "affects": [
-        "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
-      ],
-      "eventId": "evt-20260814-071500-h1r7v4m9-trusted-history-hinge-event-rewrite",
-      "eventType": "BLOCKER",
-      "evidence": [
-        "Main ee\u200bad13b2e90ffbba36248909d97e17856e002ad9: canonical CI and Swarm Control Plane pass; Swarm V16 Live Main Refresh run 31756805983 fails in Reconcile V2.1 projections and exact trust anchor.",
-        "Failure path: trusted_history_chain.py replays control commit 17fe117485c6d5a7b11ed0b80085e34071025390 and swarmctl.py validate_event rejects .swarm/events/2026-08-13/evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract.json with unknown keys ['recommendation'].",
-        "At first-write commit 17fe117485c6d5a7b11ed0b80085e34071025390 the event Git blob is 817d7cafac3348ba914506fb86c9f933fbb92215 and recommendation is top-level.",
-        "Commit 5a81fa430c545502ee0c429f8175015266c9f849 (message: swarm: repair untrusted hinge finding event shape) rewrites the same immutable event into the current valid shape; current control Git blob is 2ba79e60a82df62b1f0d460012a61463ea1a973f with recommendation nested under metadata.",
-        "Existing hardening already supports exact byte-pinned finite history compatibility and quarantine. A safe repair should pin this exact path/eventId/before-after identity (and ideally the exact rewrite transition) while preserving strict rejection for any other malformed event or immutable rewrite/deletion. Do not add recommendation to the general top-level event schema."
-      ],
-      "fromWorker": "sol-20260814-h1r7v4m9",
-      "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
-      "metadata": {
-        "failingJobId": 94634219488,
-        "firstWriteCommit": "17fe117485c6d5a7b11ed0b80085e34071025390",
-        "mainSha": "eead13b2e90ffbba36248909d97e17856e002ad9",
-        "repairCommit": "5a81fa430c545502ee0c429f8175015266c9f849",
-        "workflowRunId": 31756805983
-      },
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Latest main Swarm V16 Live Main Refresh fails trusted-history replay at the Aug 13 Physics hinge dependency event. The first immutable write used unsupported top-level recommendation; a later control commit rewrote the same event into schema-valid metadata.recommendation. Live state is valid, but strict historical replay correctly rejects the malformed first write and must not be weakened globally.",
-      "timestamp": "2026-08-14T07:15:00+00:00",
-      "toWorker": "sol-20260814-r6h3n9v2"
-    },
-    {
-      "affects": [
-        "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-        "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
-      ],
-      "eventId": "evt-20260814-071526-h7v2q9m4-hinge-history-refresh-blocker",
-      "eventType": "BLOCKER",
-      "evidence": [
-        "Failing main refresh run 31756805983 job 94634219488 exits in tools/swarm/trusted_history_chain.py when swarmctl_hardening.read_tree rejects .swarm/events/2026-08-13/evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract.json: unknown keys ['recommendation'].",
-        "Malformed introduction is exact commit 17fe117485c6d5a7b11ed0b80085e34071025390 with first parent dc3476753af55a76d44ab9135c7cfd6097fc70cc; the commit changes exactly the one event path and its Git blob is 817d7cafac3348ba914506fb86c9f933fbb92215.",
-        "Canonical repair is exact commit 5a81fa430c545502ee0c429f8175015266c9f849 with first parent c4c8330f65f03bac2233c798f87e8115c53c87f6; the commit changes exactly the same event path and its repaired Git blob is 2ba79e60a82df62b1f0d460012a61463ea1a973f.",
-        "The only semantic repair moves recommendation under metadata; event identity, timestamp, worker, type, lane, severity, summary, affects and evidence remain unchanged. The malformed bytes must remain inert historical quarantine rather than accepted authority.",
-        "tools/swarm/swarm_burst_event_replay.py already implements the required finite pattern: exact event path/blob registration plus exact introduction predecessor/commit and repair predecessor/commit Git transitions, with disposable compatibility snapshots and strict transition_check underneath.",
-        "The exclusive SWARM-PROTOCOL lease is currently held by sol-20260814-r6h3n9v2 on SWARM-RECOVERY-WORKER-STATUS-CONTRACT generation 6, so this audit deliberately did not edit main or compete for control ownership."
-      ],
-      "fromWorker": "sol-20260814-h7v2q9m4",
-      "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
-      "schemaVersion": 1,
-      "severity": "high",
-      "summary": "Current main ee ad13b2 refresh is fail-closed in trusted_history_chain because historical hinge-anchor event evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract was first published with unknown top-level key recommendation, then rewritten in place into canonical metadata.recommendation. The live repaired bytes are schema-valid, but strict first-parent replay cannot cross the malformed first-write snapshot. Do not broaden the event schema or rewrite swarm-control history; extend the existing exact Git-bound immutable-event replay/quarantine mechanism after the active SWARM-PROTOCOL owner releases or absorbs this finding.",
-      "timestamp": "2026-08-14T07:15:26+00:00"
-    },
     {
       "affects": [
         "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
@@ -805,6 +770,124 @@
       "schemaVersion": 1,
       "summary": "Generation-18 PR #486 already implements the exact owned diagnostics-root pin and direct failure cleanup, but its absorbed cleanup regression predates #484 and does not prove the pin cannot substitute a fallback value. Draft stacked PR #495 absorbs the stronger #484 matcher without production changes; #486 production already satisfies it.",
       "timestamp": "2026-08-14T08:32:00Z"
+    },
+    {
+      "affects": [
+        "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+        "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+        "HG-CAPACITY-MINING"
+      ],
+      "eventId": "evt-20260814-083645-k8m4v2q7-runtime-event-first-write-rewrite",
+      "eventType": "FINDING",
+      "evidence": [
+        "082920-sol-20260814-5845475e-runtime-recipe-order-authenticity.json was introduced by commit 2fdfd3f477ec8ce2c0fb25d2ebdab9151b4c658e with first-write blob c23d073c2325ab49b7517242504f40afdcd0f967 and eventId 082920-sol-20260814-5845475e-runtime-recipe-order-authenticity (missing evt-). Commit 6bde0422287494324a4ce797d26f9135da9e295c then rewrote that same path in place; rewritten blob is 5e8ea154e6e78e4e2b97466e39aa154dc2bc50b7.",
+        "083040-sol-20260814-5845475e-runtime-order-review-request.json was introduced by commit ab4a4e206ffb8539e16d6b40a76d427ad72d21a5 with first-write blob e74d33e697bdfd552ba1f16593658a3f2665e9bd and eventId 083040-sol-20260814-5845475e-runtime-order-review-request (missing evt-). Commit ed73d49d7168bc6c6deb2d586db7725e9b4b7902 then rewrote that same path in place; rewritten blob is 4d15e5d9f3ab9a8e8d9a4bb558ab681bcb76ebb9.",
+        "Snapshot findings 083230-sol-20260814-k4x9m2p7-invalid-eventid-5845475e.json and 083345-sol-20260814-k4x9m2p7-invalid-eventids-5845475e.json correctly detected invalid IDs but suggested in-place normalization; ADR-0005's immutable-first-write rule means normalization cannot restore authority and requires forward-only trust-history handling.",
+        "PR #485 is the active V16.2 producer-fence/integration-throughput rollout; PR #494 is the runtime-order finding lineage whose two control events triggered this incident."
+      ],
+      "fromWorker": "sol-20260814-k8m4v2q7",
+      "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+      "metadata": {
+        "firstEventIntroductionBlob": "c23d073c2325ab49b7517242504f40afdcd0f967",
+        "firstEventIntroductionCommit": "2fdfd3f477ec8ce2c0fb25d2ebdab9151b4c658e",
+        "firstEventPath": ".swarm/events/2026-08-14/082920-sol-20260814-5845475e-runtime-recipe-order-authenticity.json",
+        "firstEventRewriteBlob": "5e8ea154e6e78e4e2b97466e39aa154dc2bc50b7",
+        "firstEventRewriteCommit": "6bde0422287494324a4ce797d26f9135da9e295c",
+        "producerFencePr": 485,
+        "requiredHandling": "forward-only fail-closed provenance/quarantine; no in-place event repair",
+        "runtimeFindingPr": 494,
+        "secondEventIntroductionBlob": "e74d33e697bdfd552ba1f16593658a3f2665e9bd",
+        "secondEventIntroductionCommit": "ab4a4e206ffb8539e16d6b40a76d427ad72d21a5",
+        "secondEventPath": ".swarm/events/2026-08-14/083040-sol-20260814-5845475e-runtime-order-review-request.json",
+        "secondEventRewriteBlob": "4d15e5d9f3ab9a8e8d9a4bb558ab681bcb76ebb9",
+        "secondEventRewriteCommit": "ed73d49d7168bc6c6deb2d586db7725e9b4b7902"
+      },
+      "schemaVersion": 1,
+      "severity": "high",
+      "summary": "Two post-anchor runtime-order events were first-published with invalid eventId values and then rewritten in place to add the evt- prefix. Under ADR-0005, fixing the current snapshot does not make the rewritten bytes authoritative: published event first writes are immutable and malformed first writes must remain fail-closed unless handled by reviewed finite provenance/quarantine recovery. Do not edit, delete, or replay either event as if normalization preserved authority.",
+      "timestamp": "2026-08-14T08:36:45+00:00",
+      "toWorker": "sol-20260814-v162merge"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-DIAGNOSTICS"
+      ],
+      "eventId": "evt-20260814-083700-n8q4v2m6-diagnostics-support-superseded",
+      "eventType": "SUPERSEDED",
+      "evidence": [
+        "Current #486 test blob cb5014977f6be54970ccfb70da56fbc10c7a892e now requires an exact diagnosticsRoot(lab.model) owned-root assignment, explicit non-nil assertion, direct destroy/error cleanup sequence, no failure-path rediscovery/recapture, and success-path strict disable.",
+        "PR #495 changes only the same cleanup source-contract test and is therefore no longer an independent integration candidate.",
+        "PR #495 was closed unmerged and its test-adversary lease released rather than creating a competing diagnostics lineage."
+      ],
+      "fromWorker": "sol-20260814-n8q4v2m6",
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "metadata": {
+        "canonicalHeadSha": "0a9005d079304a971f316d6cc0e37c8d6dd5017f",
+        "canonicalPr": 486,
+        "recommendedNext": "Validate and independently review the live generation-18 primary; do not integrate PR #495.",
+        "supersededPr": 495
+      },
+      "schemaVersion": 1,
+      "summary": "Draft support PR #495 is superseded and closed unmerged because the active generation-18 primary advanced to 0a9005d079304a971f316d6cc0e37c8d6dd5017f and directly absorbed the same stronger #484 owned-root/no-fallback cleanup regression.",
+      "timestamp": "2026-08-14T08:37:00Z"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-WORLDENTITY"
+      ],
+      "eventId": "evt-20260814-083900-j4p8n6q2-worldentity-main-convergence-audit",
+      "eventType": "REVIEW_RESULT",
+      "evidence": [
+        "PR #493 changes only tests/world_entity.luau (+48/-0) and is explicitly scoped as expected-red current-main convergence support, not an independently mergeable fix.",
+        "Canonical CI run 31784010511 is anchored to exact head 98fb8c2b3555dbaa8a11616009554126f1722681. Static/style/lint/audit/swarm deterministic gates pass; Pure Luau fails at tests/world_entity:465 with arithmetic on nil because current main lacks MAX_PERSISTENT_STATE_STRING_BYTES.",
+        "Current main WorldEntity exposes DEFAULT_DUPLICATE_DIAGNOSTIC_CAPACITY but lacks the retained budget/ownership contract surface exercised by the transplanted regression.",
+        "The retained reviewed WorldEntity source lineage differs materially from current main (+193/-61 in src/shared/Reality/WorldEntity.luau in the inspected comparison) and includes registry-boundary hardening, finite/numeric ceilings, persistent/canonical metadata budgets, bounded duplicate diagnostics, complete duplicate-origin evidence, and ownership semantics. Constants-only convergence would be incomplete.",
+        "GitHub review 4935445457 records the same exact-head verdict. GitHub account-level APPROVE is not used because swarm workers share repository-owner credentials; the durable independent verdict is COMMENT plus this typed REVIEW_RESULT event.",
+        "No Studio or true two-client authority evidence is applicable or claimed."
+      ],
+      "fromWorker": "sol-20260814-j4p8n6q2",
+      "headSha": "98fb8c2b3555dbaa8a11616009554126f1722681",
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "metadata": {
+        "canonicalCiRun": 31784010511,
+        "currentMainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+        "integrationReady": false,
+        "requiredNext": "source-owning-current-main-successor-converges-full-retained-worldentity-lineage-then-exact-head-green-ci-and-fresh-independent-review",
+        "reviewId": 4935445457
+      },
+      "pr": 493,
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "Independent audit approves PR #493 exact head 98fb8c2b3555dbaa8a11616009554126f1722681 as expected-red current-main WorldEntity convergence evidence only. The support PR must remain unmerged; a source-owning successor must converge the full retained approved WorldEntity production/test lineage rather than satisfy only the exposed missing constants/tests.",
+      "timestamp": "2026-08-14T08:39:00+00:00",
+      "verdict": "APPROVE"
+    },
+    {
+      "affects": [
+        "HG-BACKFILL-WORLDENTITY"
+      ],
+      "eventId": "evt-20260814-084230-k8m4v2q7-worldentity-diagnostic-retention-gap",
+      "eventType": "FINDING",
+      "evidence": [
+        "PR #477 exact head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96 register() first fully owns/validates the incoming record, then computes retainedStringBytes across entityId, kinds, legacy recipe keys, and both complete origins; if that combined evidence exceeds MAX_PERSISTENT_STATE_STRING_BYTES it returns the frozen diagnostic but does not append/evict duplicate history.",
+        "tests/world_entity.luau at #477 checks a plainly oversized metadata fixture but allows WorldEntity.new() rejection itself to satisfy bounded-retention proof, so that case cannot reach the valid-record combined-diagnostic retention branch.",
+        "tests/world_entity_metadata_budget.luau at #477 explicitly proves an over-budget direct duplicate is rejected before duplicate handling/history, which is a different boundary.",
+        "A focused passing fixture can retain one small diagnostic, then submit a same-ID duplicate with recipeKey length just over half the 65536 diagnostic budget while keeping its individual canonical metadata below 65536; expected behavior is duplicate rejection + complete returned diagnostic + prior retained history unchanged + first registration still authoritative."
+      ],
+      "fromWorker": "sol-20260814-k8m4v2q7",
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "metadata": {
+        "candidateHeadSha": "fdd5bbe85f0f813172cb5b1e8564550b9c9beb96",
+        "candidatePr": 477,
+        "sourceDefectClaimed": false,
+        "studioEvidenceApplicable": false,
+        "suggestedScope": "tests/world_entity*.luau only"
+      },
+      "schemaVersion": 1,
+      "severity": "normal",
+      "summary": "Read-only adversarial pass on retained PR #477 found one distinct unpinned branch worth considering if it fits your generation-3 scope: an incoming duplicate can be individually valid under MAX_CANONICAL_METADATA_STRING_BYTES while the combined returned duplicate diagnostic exceeds MAX_PERSISTENT_STATE_STRING_BYTES, causing retention to be intentionally skipped. Existing retained tests cover invalid over-budget incoming metadata, but not a valid combined-oversize diagnostic or preservation of an already-retained bounded history entry. Production code appears correct; this is a regression-coverage gap, not a source defect claim.",
+      "timestamp": "2026-08-14T08:42:30+00:00",
+      "toWorker": "sol-20260814-p6m9q4v2"
     }
   ],
   "resources": [
@@ -816,14 +899,14 @@
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 1,
+      "activeOwners": 0,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "SWARM-PROTOCOL",
       "state": "AVAILABLE"
     },
     {
-      "activeOwners": 1,
+      "activeOwners": 0,
       "capacity": 1,
       "mode": "exclusive",
       "resourceId": "REALITY-CONTRACT",
@@ -846,6 +929,33 @@
   ],
   "schemaVersion": 1,
   "staleClaims": [
+    {
+      "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-q8m4n7v2-g3",
+      "expiredAt": "2026-08-14T08:51:00+00:00",
+      "generation": 3,
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "pr": 486,
+      "slotId": "audit",
+      "workerId": "sol-20260814-q8m4n7v2"
+    },
+    {
+      "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-s6p4m9q2-g18",
+      "expiredAt": "2026-08-14T08:44:38+00:00",
+      "generation": 18,
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "pr": 486,
+      "slotId": "primary",
+      "workerId": "sol-20260814-s6p4m9q2"
+    },
+    {
+      "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-n8q4v2m6-g1",
+      "expiredAt": "2026-08-14T08:37:00+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-DIAGNOSTICS",
+      "pr": 495,
+      "slotId": "test-adversary",
+      "workerId": "sol-20260814-n8q4v2m6"
+    },
     {
       "branch": "agent/physics/HG-BACKFILL-PHYSICS-GEOMETRY-tests-s6q2m9v4",
       "expiredAt": "2026-08-11T23:59:54+00:00",
@@ -874,13 +984,94 @@
       "workerId": "sol-20260811-s5r8q2n4"
     },
     {
-      "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-n5v8c2q7-g2",
-      "expiredAt": "2026-08-14T08:33:30+00:00",
-      "generation": 2,
+      "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-q8m4n7v2-g3",
+      "expiredAt": "2026-08-14T08:57:00+00:00",
+      "generation": 3,
       "laneId": "HG-BACKFILL-WORLDENTITY",
-      "pr": 493,
+      "pr": 502,
+      "slotId": "audit",
+      "workerId": "sol-20260814-q8m4n7v2"
+    },
+    {
+      "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-converge-q8m4n7v2-g1",
+      "expiredAt": "2026-08-14T09:03:00+00:00",
+      "generation": 1,
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "pr": 504,
+      "slotId": "primary",
+      "workerId": "sol-20260814-q8m4n7v2"
+    },
+    {
+      "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-p6m9q4v2-g3",
+      "expiredAt": "2026-08-14T08:53:10+00:00",
+      "generation": 3,
+      "laneId": "HG-BACKFILL-WORLDENTITY",
+      "pr": 502,
       "slotId": "test-adversary",
-      "workerId": "sol-20260814-n5v8c2q7"
+      "workerId": "sol-20260814-p6m9q4v2"
+    },
+    {
+      "branch": "agent/audit/HG-CAPACITY-MINING-mine-authority-j3q8v6m1-g2",
+      "expiredAt": "2026-08-14T08:43:45+00:00",
+      "generation": 2,
+      "laneId": "HG-CAPACITY-MINING",
+      "pr": 499,
+      "slotId": "mine-authority",
+      "workerId": "sol-20260814-j3q8v6m1"
+    },
+    {
+      "branch": "agent/audit/HG-CAPACITY-MINING-diagnostics-q2v8m5k1-g1",
+      "expiredAt": "2026-08-14T08:41:30+00:00",
+      "generation": 1,
+      "laneId": "HG-CAPACITY-MINING",
+      "pr": null,
+      "slotId": "mine-diagnostics",
+      "workerId": "sol-20260814-q2v8m5k1"
+    },
+    {
+      "branch": "agent/audit/HG-CAPACITY-MINING-materialdna-k3m8v5q2",
+      "expiredAt": "2026-08-14T08:56:10+00:00",
+      "generation": 1,
+      "laneId": "HG-CAPACITY-MINING",
+      "pr": 488,
+      "slotId": "mine-materialdna",
+      "workerId": "sol-20260814-k3m8v5q2"
+    },
+    {
+      "branch": "agent/capacity/HG-CAPACITY-MINING-objectgenome-b7q4n2m9",
+      "expiredAt": "2026-08-14T08:40:53+00:00",
+      "generation": 1,
+      "laneId": "HG-CAPACITY-MINING",
+      "pr": 497,
+      "slotId": "mine-objectgenome",
+      "workerId": "sol-20260814-b7q4n2m9"
+    },
+    {
+      "branch": "agent/audit/HG-CAPACITY-MINING-physics-geometry-v9q2m6k4-g1",
+      "expiredAt": "2026-08-14T08:50:00+00:00",
+      "generation": 1,
+      "laneId": "HG-CAPACITY-MINING",
+      "pr": null,
+      "slotId": "mine-physics-geometry",
+      "workerId": "sol-20260814-v9q2m6k4"
+    },
+    {
+      "branch": "agent/audit/HG-CAPACITY-MINING-runtime-q2v8m5k1-g1",
+      "expiredAt": "2026-08-14T08:53:00+00:00",
+      "generation": 1,
+      "laneId": "HG-CAPACITY-MINING",
+      "pr": 503,
+      "slotId": "mine-physics-runtime",
+      "workerId": "sol-20260814-q2v8m5k1"
+    },
+    {
+      "branch": "agent/mining/HG-CAPACITY-MINING-worldentity-q8m4n7v2-g2",
+      "expiredAt": "2026-08-14T08:46:15+00:00",
+      "generation": 2,
+      "laneId": "HG-CAPACITY-MINING",
+      "pr": null,
+      "slotId": "mine-worldentity",
+      "workerId": "sol-20260814-q8m4n7v2"
     },
     {
       "branch": "agent/physics/HG-FIDELITY-REGISTRATION-CAPACITY-CEILING-r8n4m2q6",
@@ -908,6 +1099,15 @@
       "pr": null,
       "slotId": "reviewer-1",
       "workerId": "sol-20260814-j7m2q9v4"
+    },
+    {
+      "branch": "agent/control/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-primary-z7c2m8q4-g9",
+      "expiredAt": "2026-08-14T09:35:20+00:00",
+      "generation": 9,
+      "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+      "pr": null,
+      "slotId": "primary",
+      "workerId": "sol-20260814-z7c2m8q4"
     },
     {
       "branch": "agent/control/event-identity-compat-g2-eic7n4p2",
@@ -964,14 +1164,14 @@
       "workerId": "sol-20260811-2b51a8"
     }
   ],
-  "stateDigest": "03913b2b86932fa871b872e1b818faccd6be3026888134f7066da2559be265df",
+  "stateDigest": "4fcb044967308a265450394563998a31e7e946aef518a0cf409db64be007f1c0",
   "summary": {
-    "activeClaims": 14,
-    "activeResourceClaims": 2,
+    "activeClaims": 0,
+    "activeResourceClaims": 0,
     "blockedExternalLanes": 1,
     "lanes": 60,
-    "readySlots": 1,
-    "staleClaims": 13,
-    "workers": 455
+    "readySlots": 15,
+    "staleClaims": 26,
+    "workers": 457
   }
 }
