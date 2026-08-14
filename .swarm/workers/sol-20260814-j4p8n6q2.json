@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-j4p8n6q2",
   "model": "gpt-5.6-sol",
-  "status": "ACTIVE",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:31:00+00:00",
-  "lastSeenAt": "2026-08-14T08:34:30+00:00",
+  "lastSeenAt": "2026-08-14T08:39:15+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "audit",
   "branch": "agent/review/HG-BACKFILL-WORLDENTITY-audit-j4p8n6q2-g2",
-  "notes": "Independent audit of expected-red current-main convergence support PR #493; REALITY-CONTRACT generation 4 held. No Studio evidence or feature unlock."
+  "notes": "Completed PR #493 exact-head independent audit. Approved as expected-red convergence evidence only, integrationReady=false; full retained WorldEntity production/test lineage must converge on a source-owning current-main successor. GitHub review 4935445457; typed REVIEW_RESULT published. Claims released with short stale lease."
 }
