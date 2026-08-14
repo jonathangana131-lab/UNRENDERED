@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083200-z7m2q9c4-diagnostics-g18-test-seal-review",
+  "timestamp": "2026-08-14T08:32:00+00:00",
+  "fromWorker": "sol-20260814-z7m2q9c4",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head review requests changes on diagnostics generation 18. Production cleanup/error precedence and readout visibility guards are correct by source inspection, but the regression seal is incomplete: cleanup support #484 must be absorbed to reject fallback owned-root pins, and the readout contract matcher must mask inert long-comment/string text so newly added visibility assertions cannot false-pass without executable predicates.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS", "HG151-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "severity": "normal",
+  "evidence": [
+    "PR #486 exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22 pins diagnosticsRoot(lab.model), asserts the pinned root non-nil before the enabled-window pcall, destroys that exact pinned Instance on failure, rethrows cycleResult, and performs strict disable/off-state validation only on success.",
+    "PR #486 production validateReadoutCompleteness() now rejects child.Enabled == false and label.Visible == false, closing the semantic visibility gap from #474.",
+    "Exact-head canonical CI run 31783839918 PASS and Swarm run 31783839952 engine-tests PASS; the separate pr-ownership job is blocked before PR evaluation by unrelated shared control state and is not bypassed.",
+    "Current generation-18 cleanup regression captures a variable using a prefix match for diagnosticsRoot(lab.model) and later searches for that variable's Destroy token; support PR #484 head bc7aabd14dd883cad32148efa9554c3dfd1ac6f3 proves a fallback/coalescing root assignment can false-pass and supplies exact-pin/assert/immediate-destroy test hardening that current production already satisfies.",
+    "Generation-18 physics_lab_diagnostics_readout_contract.luau derives searchable source by stripping only ordinary line comments; long comments, long-bracket strings, quoted strings, and backtick strings remain searchable, so executable Enabled/Visible/Adornee/text predicates can be removed while inert token text still satisfies the matcher. Finding PR #487 records this non-duplicate test-integrity gap.",
+    "GitHub review 4935380471 records the independent REQUEST_CHANGES verdict on the exact generation-18 head. No Studio/viewport/contact/performance-device/two-client evidence is run or inferred."
+  ],
+  "pr": 486,
+  "headSha": "29a2f949eebbd509c2c839d48c3d75a7ff03dc22",
+  "verdict": "REQUEST_CHANGES",
+  "metadata": {
+    "reviewId": 4935380471,
+    "cleanupSupportPr": 484,
+    "cleanupSupportHeadSha": "bc7aabd14dd883cad32148efa9554c3dfd1ac6f3",
+    "readoutMatcherFindingPr": 487,
+    "requiredNext": "Absorb #484 cleanup matcher hardening and harden the readout source-contract matcher against inert-text false passes; rerun exact-head canonical CI and Swarm engine-tests, then request a fresh independent review. Keep pr-ownership fail-closed on shared control recovery and do not promote source confidence to HG151 viewport PASS."
+  }
+}
