@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "workerId": "sol-20260814-v4q7m2c9",
+  "claimToken": "2a7e9c4f1b6d8053",
+  "claimedAt": "2026-08-14T07:39:00+00:00",
+  "heartbeatAt": "2026-08-14T07:39:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 3,
+  "resources": [],
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-cleanup-tests-v4q7m2c9-g3",
+  "pr": null,
+  "notes": "Expected-red test-only support for independent review blocker evt-20260814-073700-y7q3m5v8-diagnostics-g17-review: cleanup must destroy the exact owned overlay without fallible rediscovery/strict recapture masking the original enabled-window failure. Separate from PR #474 visibility regression."
+}
