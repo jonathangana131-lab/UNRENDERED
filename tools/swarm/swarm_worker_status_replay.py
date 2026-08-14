@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Finite Git-bound normalization for malformed post-anchor worker statuses.
+"""Finite Git-bound normalization for malformed post-anchor worker snapshots.
 
 The live schema remains strict. During first-parent history replay only, exact
-reviewed worker blobs are copied into disposable snapshots and their unsupported
-status token is replaced with one canonical status. Commit, path, blob, repair,
-and prior-parent identities are all pinned; an unlisted byte or reintroduction
-fails closed.
+reviewed worker blobs are copied into disposable snapshots and their finite
+schema defects are normalized. Commit, path, blob, invalid values, repair, and
+prior-parent identities are all pinned; an unlisted byte or reintroduction fails
+closed.
 """
 from __future__ import annotations
 
@@ -105,6 +105,22 @@ RULES = (
         "repairGitBlobSha1": "273db6d6238f1d1a1a98105a860f78c2028b9c48",
         "repairStatus": "WORKING",
     },
+    {
+        "path": "workers/sol-20260814-5845475e.json",
+        "introductionPredecessorSha": "6bfb415bd83ce65e186ff81d52106b06b75545bc",
+        "introductionCommitSha": "74cf90a9e9066422689151f3766d274dd7a12b91",
+        "invalidGitBlobSha1": "991519f61b220e13b9cec16ee299c0974e7f2183",
+        "invalidStatus": "WORKING",
+        "canonicalStatus": "WORKING",
+        "invalidExtraFields": {
+            "claimToken": "5c2a9e8f7b3146d0",
+            "generation": 3,
+        },
+        "repairCommitSha": "8c572a18de41462b1d6d21f1df5c1d964c3ecbf6",
+        "repairGitBlobSha1": "d31975c9b5f7f666f72e24bafc3aad4d2accb421",
+        "repairStatus": "WORKING",
+        "repairExtraFields": {},
+    },
 )
 
 _SHA_RE = re.compile(r"^[a-f0-9]{40}$")
@@ -155,6 +171,10 @@ def _assert_repair(git_root: Path, commit_sha: str, rule: dict) -> None:
     obj = json.loads(raw)
     if obj.get("status") != rule["repairStatus"]:
         raise RuntimeError(f"{rule['path']}: finite worker repair status mismatch")
+    tracked_extra = set(rule.get("invalidExtraFields", {}))
+    actual_extra = {key: obj[key] for key in tracked_extra if key in obj}
+    if actual_extra != rule.get("repairExtraFields", {}):
+        raise RuntimeError(f"{rule['path']}: finite worker repair extra-field mismatch")
 
 
 def normalize_active_snapshot(hardening_module, git_root: Path, commit_sha: str, root: Path, active: dict[str, dict]) -> list[str]:
@@ -170,11 +190,20 @@ def normalize_active_snapshot(hardening_module, git_root: Path, commit_sha: str,
             raise hardening_module.core.ControlError(
                 f"{relative}: finite worker invalid status identity mismatch"
             )
+        expected_extra = rule.get("invalidExtraFields", {})
+        actual_extra = {key: obj[key] for key in expected_extra if key in obj}
+        if actual_extra != expected_extra:
+            raise hardening_module.core.ControlError(
+                f"{relative}: finite worker invalid extra-field identity mismatch"
+            )
         obj["status"] = rule["canonicalStatus"]
+        for key in expected_extra:
+            del obj[key]
         destination = _destination(root, relative)
         if not destination.is_file():
             raise hardening_module.core.ControlError(f"{relative}: finite worker snapshot path missing")
         destination.write_text(json.dumps(obj, indent=2) + "\n", encoding="utf-8")
+        hardening_module.core.validate_worker(destination)
         normalized.append(relative)
     return normalized
 
