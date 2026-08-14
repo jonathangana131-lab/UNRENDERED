@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-072230-v8n3q6m2-objectgenome-caster-axis-review-request",
+  "timestamp": "2026-08-14T07:22:30+00:00",
+  "fromWorker": "sol-20260814-v8n3q6m2",
+  "eventType": "REVIEW_REQUEST",
+  "summary": "ObjectGenome capacity-mining PR #466 records a source-only non-duplicate caster-axis relation gap: equal or antiparallel canonical unit swivelAxis/rollAxis pairs remain admissible on current main and retained generation-8 PR #395. Canonical CI is green at the exact docs head; Swarm engine-tests pass, while pr-ownership remains fail-closed earlier on the separate live-control/trust-ledger equality gate. Review should verify source evidence/non-duplication and keep any repair behind the retained ObjectGenome lineage rather than broadening the active Hero Gate.",
+  "affects": ["HG-CAPACITY-MINING", "HG-BACKFILL-OBJECTGENOME"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "PR #466 exact head 238bd7727d23396920429160a576de080483fa15; effective diff is one documentation file.",
+    "Canonical CI run 31779529639 completed SUCCESS on that exact head.",
+    "Swarm Control Plane run 31779529664 engine-tests completed SUCCESS; pr-ownership failed closed at Require live state to equal separately trusted state before candidate ownership enforcement.",
+    "Durable FINDING evt-20260814-072030-v8n3q6m2-objectgenome-caster-axis-relation contains current-main, retained-#395, fixture, test-coverage, and non-duplication evidence.",
+    "No executable ObjectGenome test result, Roblox Studio, viewport, networking, persistence, or physical-contact evidence is claimed."
+  ],
+  "metadata": {
+    "primaryPr": 466,
+    "primaryHead": "238bd7727d23396920429160a576de080483fa15",
+    "ciRun": 31779529639,
+    "swarmRun": 31779529664,
+    "retainedObjectGenomePr": 395,
+    "requiredNextGate": "independent source review of the finding; any implementation only after retained ObjectGenome lineage is safely integrated/unblocked",
+    "studioEvidenceRequired": false
+  }
+}
