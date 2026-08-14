@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-authority",
-  "workerId": "sol-20260814-k7m4q2z9",
-  "claimToken": "e6b17a4c93d2058f",
-  "claimedAt": "2026-08-14T08:22:00+00:00",
-  "heartbeatAt": "2026-08-14T08:22:00+00:00",
-  "leaseSeconds": 300,
-  "generation": 1,
+  "workerId": "sol-20260814-j3q8v6m1",
+  "claimToken": "8d3f6a1c9b2e7054",
+  "claimedAt": "2026-08-14T08:33:00+00:00",
+  "heartbeatAt": "2026-08-14T08:33:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "takeoverOf": "sol-20260814-k7m4q2z9",
   "resources": [],
-  "branch": "agent/audit/HG-CAPACITY-MINING-mine-authority-k7m4q2z9-g1",
+  "branch": "agent/audit/HG-CAPACITY-MINING-mine-authority-j3q8v6m1-g2",
   "pr": null,
-  "notes": "Audit completed via evt-20260814t082600z-k7m4q2z9-authority-no-new-slice. No new authority source slice or product branch was created. Lease intentionally reduced to protocol minimum without heartbeat advance; stale/released after 2026-08-14T08:27:00Z."
+  "notes": "Stale-slot takeover after prior generation published a no-new-slice finding; this generation will inspect a distinct authority boundary and avoid duplicating that completed audit."
 }
