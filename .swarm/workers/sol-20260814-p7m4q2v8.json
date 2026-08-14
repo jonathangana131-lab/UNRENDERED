@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-p7m4q2v8",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-14T07:45:30+00:00",
-  "lastSeenAt": "2026-08-14T07:45:30+00:00",
+  "lastSeenAt": "2026-08-14T07:51:30+00:00",
   "laneId": "HG-CAPACITY-MINING",
   "slotId": "mine-objectgenome",
   "branch": "agent/audit/HG-CAPACITY-MINING-objectgenome-p7m4q2v8",
-  "notes": "Bounded current-main ObjectGenome source/test miner. Goal is one concrete non-duplicate depth finding or a durable no-gap finding; no product writes or feature unlocks."
+  "notes": "Published docs-only ObjectGenome affordance-radius locality finding draft PR #480 exact head e85dfa8b39475235117ed6d1d0212b67788e520d. Canonical CI #1208 / 31781446922 PASS and Swarm engine-tests job 94707904205 PASS. Structured FINDING evt-20260814-075100-p7m4q2v8-objectgenome-affordance-radius is durable. Shared pr-ownership remains fail-closed at separately owned trusted-state equality; mining claim released. No production/source implementation or feature unlock performed."
 }
