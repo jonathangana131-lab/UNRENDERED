@@ -3,10 +3,10 @@
   "resourceId": "REALITY-CONTRACT",
   "workerId": "sol-20260814-r6h3n9v2",
   "laneId": "HG-BACKFILL-WORLDENTITY",
-  "claimToken": "c4e891b7a26d503f",
-  "acquiredAt": "2026-08-14T07:46:00+00:00",
-  "heartbeatAt": "2026-08-14T07:46:00+00:00",
-  "leaseSeconds": 300,
-  "generation": 1,
-  "notes": "WorldEntity audit generation 1 completed and released. Lease intentionally reduced to protocol minimum without heartbeat advance; REALITY-CONTRACT is stale/released after 2026-08-14T07:51:00+00:00 for current-main convergence work."
+  "claimToken": "8d3a6f1c9b2e7054",
+  "acquiredAt": "2026-08-14T08:00:10+00:00",
+  "heartbeatAt": "2026-08-14T08:00:10+00:00",
+  "leaseSeconds": 1800,
+  "generation": 2,
+  "notes": "Generation-2 REALITY-CONTRACT takeover from this worker's expired audit lease, now bound only to HG-BACKFILL-WORLDENTITY/test-adversary generation 1."
 }
