@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-j3v8m2q6",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T08:30:34+00:00",
+  "lastSeenAt": "2026-08-14T08:30:34+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-fidelity",
+  "branch": "agent/audit/HG-CAPACITY-MINING-mine-fidelity-j3v8m2q6-g1",
+  "notes": "Registering for a bounded FidelityManager source/test capacity audit. Will avoid duplicating recent private-state ownership finding PR #490 and will not claim Studio evidence or unlock gated Hero features."
+}
