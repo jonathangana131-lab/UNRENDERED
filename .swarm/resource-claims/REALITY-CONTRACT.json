@@ -5,8 +5,8 @@
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "claimToken": "0013fe536de66fa6",
   "acquiredAt": "2026-08-14T07:12:28+00:00",
-  "heartbeatAt": "2026-08-14T07:14:58+00:00",
+  "heartbeatAt": "2026-08-14T07:23:29+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
-  "notes": "Exclusive reality-contract lease for test-adversary work in HG-BACKFILL-WORLDENTITY; PR #461 published for exact-head validation."
+  "notes": "Exclusive reality-contract lease for test-adversary work in HG-BACKFILL-WORLDENTITY; PR #461 exact head 144f3042b3f7c7277924d03363e076ed3052c898 has canonical CI success and Swarm engine-tests success; shared pr-ownership is blocked by unrelated invalid worker status."
 }
