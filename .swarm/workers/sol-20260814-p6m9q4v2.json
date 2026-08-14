@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-p6m9q4v2",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:39:47+00:00",
-  "lastSeenAt": "2026-08-14T08:44:20+00:00",
+  "lastSeenAt": "2026-08-14T08:48:20+00:00",
   "laneId": "HG-BACKFILL-WORLDENTITY",
   "slotId": "test-adversary",
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-tests-p6m9q4v2-g3",
-  "notes": "Draft PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b is published as expected-red test-only current-main convergence evidence. Canonical CI/Swarm runs 31785096163/31785096202 are queued; holding claim/resource only through exact evidence capture."
+  "notes": "Completed publication of expected-red support draft PR #502 exact head 8f6837eba8d5ae814925e6a6387d6e02cb82341b. One allowed test file only (+313/-0), byte-identical retained generation-10 registry-shape corpus; static source preflight recorded on PR. Claims/resources released on short stale leases. Canonical CI/Swarm runs 31785096163/31785096202 were still queued behind repository-wide Actions load at release, so no executable result is claimed."
 }
