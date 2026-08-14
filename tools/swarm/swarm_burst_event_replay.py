@@ -25,6 +25,16 @@ RULES = {
         "repairPredecessorSha": "c4c8330f65f03bac2233c798f87e8115c53c87f6",
         "repairCommitSha": "5a81fa430c545502ee0c429f8175015266c9f849",
     },
+    "evt-20260813-224855-j4n7q2v9-diagnostics-docs-g2-review-request": {
+        "date": "2026-08-13",
+        "filename": "224855-sol-20260813-j4n7q2v9-review-request-diagnostics-docs-g2.json",
+        "quarantinedGitBlobSha1": "9f8bdb845fa82883451b502c2b298eea57ae04de",
+        "canonicalGitBlobSha1": "3eca1e3efe11b32526296f90fc952a48578c9a69",
+        "introductionPredecessorSha": "85dc5823a786a5b0707e024d377806ba857bd205",
+        "introductionCommitSha": "477176591ea73b4c8bebfba8d3c7f7b9181d96be",
+        "repairPredecessorSha": "791a08bc09417be1453e614101bae115ce1409bb",
+        "repairCommitSha": "9c00a778654499cd10f177b52f5840d530feee5e",
+    },
 }
 
 
