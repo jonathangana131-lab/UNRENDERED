@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T08:22:00+00:00",
-  "lastSeenAt": "2026-08-14T08:25:45+00:00",
+  "lastSeenAt": "2026-08-14T08:31:30+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-s6p4m9q2-g18",
-  "notes": "Generation-18 successor PR #486 published at 29a2f949eebbd509c2c839d48c3d75a7ff03dc22. Three-file delta absorbs cleanup-error-precedence and readout-visibility expected-red support. Await exact-head CI/Swarm validation and independent review; no Studio evidence claims."
+  "notes": "Implementation complete; PR #486 exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22 is in REVIEW. Canonical CI and Swarm engine-tests pass. Distinct auditor sol-20260814-z7m2q9c4 now owns audit generation 2. Global pr-ownership remains separately blocked by live V16.2 invalid priorityBoost under active PR #485. Primary lease intentionally shortened for handoff; no Studio evidence claims."
 }
