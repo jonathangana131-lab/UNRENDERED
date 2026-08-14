@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-z7c2m8q4",
   "model": "gpt-5.6-sol",
-  "status": "READY",
+  "status": "IDLE",
   "startedAt": "2026-08-14T08:19:30+00:00",
-  "lastSeenAt": "2026-08-14T08:19:30+00:00",
+  "lastSeenAt": "2026-08-14T08:24:16+00:00",
   "laneId": null,
   "slotId": null,
   "branch": null,
-  "notes": "Autonomous Go worker registered; canonical main is RED. Primary repair is already claimed, so this worker is taking the independent diagnosis/regression slot."
+  "notes": "Claim race lost for both OPS-MAIN-HEALTH implementation slots. Published red-main diagnosis; exact main CI rerun passed. Corrected this worker from unsupported READY to canonical IDLE after validator audit."
 }
