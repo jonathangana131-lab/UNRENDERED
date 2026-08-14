@@ -30,6 +30,22 @@ local function run(): number
 		string.find(sweepSource, "local enabled = PhysicsLabStudioDiagnostics.enable(lab)", 1, true)
 	local ownedRootStart, _, ownedRootName =
 		string.find(sweepSource, "local%s+([%a_][%w_]*)%s*=%s*diagnosticsRoot%(%s*lab%.model%s*%)")
+	local ownedRootLineEnd = ownedRootStart and string.find(sweepSource, "\n", ownedRootStart, true)
+	local ownedRootLine = if ownedRootStart ~= nil and ownedRootLineEnd ~= nil
+		then string.sub(sweepSource, ownedRootStart, ownedRootLineEnd - 1)
+		else ""
+	local ownedRootPinIsExact = false
+	local ownedRootAssertion = nil
+	if ownedRootName ~= nil then
+		ownedRootPinIsExact = string.match(
+			ownedRootLine,
+			"^%s*local%s+" .. ownedRootName .. "%s*=%s*diagnosticsRoot%(%s*lab%.model%s*%)%s*$"
+		) ~= nil
+		if ownedRootLineEnd ~= nil then
+			ownedRootAssertion =
+				string.find(sweepSource, "assert(" .. ownedRootName .. " ~= nil", ownedRootLineEnd, true)
+		end
+	end
 	local strictCleanup =
 		string.find(sweepSource, "local disabled = PhysicsLabStudioDiagnostics.disable(lab)", 1, true)
 	local protectionClose = cycleProtection and string.find(sweepSource, "\n\t\tend)", cycleProtection, true)
@@ -47,8 +63,17 @@ local function run(): number
 		and string.find(sweepSource, "if not cycleOk then", protectionClose, true)
 	local propagate = failureGuard and string.find(sweepSource, "error(cycleResult, 0)", failureGuard, true)
 	local directOwnedDestroy = nil
+	local directCleanupSequence = nil
 	if failureGuard ~= nil and ownedRootName ~= nil then
 		directOwnedDestroy = string.find(sweepSource, ownedRootName .. ":Destroy()", failureGuard, true)
+		directCleanupSequence = string.find(
+			sweepSource,
+			"if not cycleOk then\n\t\t\t"
+				.. ownedRootName
+				.. ":Destroy()\n\t\t\terror(cycleResult, 0)\n\t\tend",
+			failureGuard,
+			true
+		)
 	end
 	local disabledAssertion = strictCleanup
 		and string.find(sweepSource, "assert(not disabled.enabled", strictCleanup, true)
@@ -65,15 +90,24 @@ local function run(): number
 		"successful enable pins the exact owned diagnostics root before fallible enabled-window validation",
 		enabled ~= nil
 			and ownedRootStart ~= nil
+			and ownedRootPinIsExact
+			and ownedRootAssertion ~= nil
 			and cycleProtection ~= nil
 			and enabled < ownedRootStart
-			and ownedRootStart < cycleProtection
+			and ownedRootStart < ownedRootAssertion
+			and ownedRootAssertion < cycleProtection
+	)
+
+	expect(
+		"owned-root pin cannot substitute a fallback value for the live diagnostics overlay",
+		ownedRootStart ~= nil and ownedRootPinIsExact and ownedRootAssertion ~= nil
 	)
 
 	expect(
 		"failed enabled-window validation destroys the pinned owned root before propagating the original failure",
 		failureGuard ~= nil
 			and directOwnedDestroy ~= nil
+			and directCleanupSequence ~= nil
 			and propagate ~= nil
 			and failureGuard < directOwnedDestroy
 			and directOwnedDestroy < propagate
