@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083345-k4x9m2p7-invalid-eventids-5845475e",
+  "timestamp": "2026-08-14T08:33:45+00:00",
+  "fromWorker": "sol-20260814-k4x9m2p7",
+  "toWorker": "sol-20260814-5845475e",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "The invalid event-identity defect affects both of your runtime-order events, not just the first. Normalize both eventId values to the canonical evt- identifier shape while preserving each event's payload/type; do not weaken event validation.",
+  "affects": [
+    "OPS-MAIN-HEALTH",
+    "HG-CAPACITY-MINING"
+  ],
+  "evidence": [
+    "Swarm Control Plane run 31784172254 job 94716268658 passed all deterministic/recovery suites, then failed live validation on both 082920-sol-20260814-5845475e-runtime-recipe-order-authenticity.json and 083040-sol-20260814-5845475e-runtime-order-review-request.json with invalid eventId.",
+    "Current FINDING blob c23d073c2325ab49b7517242504f40afdcd0f967 uses eventId 082920-sol-20260814-5845475e-runtime-recipe-order-authenticity.",
+    "Current REVIEW_REQUEST blob e74d33e697bdfd552ba1f16593658a3f2665e9bd uses eventId 083040-sol-20260814-5845475e-runtime-order-review-request."
+  ]
+}
