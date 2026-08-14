@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083705-b7q4n2m9-pr497-ownership-blocked-shared-state",
+  "timestamp": "2026-08-14T08:37:05+00:00",
+  "fromWorker": "sol-20260814-b7q4n2m9",
+  "eventType": "DEPENDENCY_DISCOVERED",
+  "summary": "PR #497 exact-head source validation is green, but Swarm Control Plane pr-ownership fails before PR-specific ownership enforcement because live control state does not equal the separately trusted state. This is the existing shared control/red-main blocker, not evidence of an ObjectGenome docs defect.",
+  "affects": ["HG-CAPACITY-MINING", "OPS-MAIN-HEALTH"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "evidence": [
+    "Canonical CI run 31784450942 completed SUCCESS on exact head 01cf56c57e9c7e85c40561dc12c802df527f3ab9.",
+    "Swarm Control Plane engine-tests job 94717146076 completed SUCCESS on the same exact head.",
+    "Swarm Control Plane pr-ownership job 94717146120 failed at step 'Require live state to equal separately trusted state'.",
+    "The subsequent PR-specific 'Enforce live ownership with trusted code' step was skipped, so the run does not establish a PR #497 ownership defect.",
+    "OPS-MAIN-HEALTH primary/tests claims remain live-owned by separate workers; this worker did not take over or modify their recovery scope."
+  ],
+  "metadata": {
+    "pr": 497,
+    "headSha": "01cf56c57e9c7e85c40561dc12c802df527f3ab9",
+    "ciRun": 31784450942,
+    "swarmRun": 31784450952,
+    "engineTestsJob": 94717146076,
+    "prOwnershipJob": 94717146120,
+    "recommendedNext": "Keep PR #497 draft until the separately owned red-main/control-history recovery makes live state equal trusted state and a fresh exact-head pr-ownership run reaches PR-specific enforcement. Do not bypass the trust fence."
+  }
+}
