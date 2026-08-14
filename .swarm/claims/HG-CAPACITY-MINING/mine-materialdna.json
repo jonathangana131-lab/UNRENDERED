@@ -5,10 +5,10 @@
   "workerId": "sol-20260814-k3m8v5q2",
   "claimToken": "a41d6e9b2c735f80",
   "claimedAt": "2026-08-14T08:23:30+00:00",
-  "heartbeatAt": "2026-08-14T08:23:30+00:00",
+  "heartbeatAt": "2026-08-14T08:26:10+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/audit/HG-CAPACITY-MINING-materialdna-k3m8v5q2",
-  "pr": null
+  "pr": 488
 }
