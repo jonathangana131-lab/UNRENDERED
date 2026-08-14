@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+  "slotId": "primary",
+  "workerId": "sol-20260814-v162merge",
+  "claimToken": "a62c9e3d7f1840b5",
+  "claimedAt": "2026-08-14T08:22:30Z",
+  "heartbeatAt": "2026-08-14T08:22:30Z",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/swarm-v16-2-integration-throughput",
+  "notes": "Canonical V16.2 integration-throughput rollout; claim first, branch already prepared while prior SWARM-PROTOCOL owner was live but no rollout PR will be published before this fenced claim."
+}
