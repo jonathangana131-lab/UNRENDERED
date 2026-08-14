@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t084100z-q8m4n7v2-worldentity-no-new-slice",
+  "timestamp": "2026-08-14T08:41:00Z",
+  "fromWorker": "sol-20260814-q8m4n7v2",
+  "eventType": "FINDING",
+  "summary": "Generation-2 WorldEntity capacity mining found no safe non-duplicate source slice to start. The retained generation-10 WorldEntity lineage already owns the concrete lifecycle revision ceilings/exhaustion, bounded persistent-state depth/node/string work, detached-record ownership and validation, canonical metadata budgets, bounded duplicate history/origin evidence, registry identity preflight, and hostile non-string no-execute contracts. Two real WorldEntity gaps are already published and still unconsumed instead: open draft #464 records bounded rejection-label work for oversized invalid fidelity/schema-key diagnostics, and open draft #491 records the StableId authenticity mismatch between permissive WorldEntity.isId() and the canonical StableId contract. Recommendation: do not create another parallel WorldEntity primary. Finish/integrate the active HG-BACKFILL-WORLDENTITY generation-10 convergence first, then consume #464 and #491 through an explicit non-overlapping successor or scheduler-created one-shot lane with compatibility policy made explicit for legacy test IDs.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-CAPACITY-MINING",
+    "HG-BACKFILL-WORLDENTITY"
+  ],
+  "evidence": [
+    "main af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 remains the latest product main observed in this pass and canonical main CI is green.",
+    "Retained generation-10 PR #477 exact source head fdd5bbe85f0f813172cb5b1e8564550b9c9beb96 bounds revisions at MAX_SAFE_INTEGER with explicit exhaustion refusal; persistentState at depth 64 / 4096 nodes / 65536 string bytes; canonical metadata at 65536 string bytes; duplicate diagnostic count at 1024 plus retained string-byte fencing; and direct record operations own/validate before derive.",
+    "Candidate revision-overflow mining was rejected as duplicate after PR #386/#378/#397 history showed exact safe-integer ceilings, increment-to-maximum behavior, exhaustion refusal, and fail-atomic registered lifecycle coverage.",
+    "Candidate rejection-path amplification was rejected as duplicate after open draft #464 was found; retained generation-10 source still has safeValueLabel() returning primitive strings verbatim and assertExactRecordShape() interpolating unknown string keys, exactly the already-published bounded-label finding.",
+    "Candidate identity-format mining was rejected as duplicate after open draft #491 was found; that finding already documents WorldEntity.isId() accepting printable non-StableId strings despite ARCHITECTURE requiring project StableId identity.",
+    "Persistent-state structural limits, canonical metadata limits, duplicate diagnostic retention limits, detached-record validation, hostile-schema/no-execute behavior, and registry numeric ceilings were all traced to existing retained or predecessor WorldEntity PRs rather than proposed again.",
+    "No product source, tests, Studio run, viewport evidence, physics evidence, two-client run, Door/Chair/Player unlock, or new architecture was produced or claimed by this mining pass."
+  ]
+}
