@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-e7044bcf",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T07:12:52+00:00",
+  "lastSeenAt": "2026-08-14T07:12:52+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-audit-e7044bcf",
+  "notes": "Go worker registered for stale audit-slot recovery after inspecting generation-1 claim, worker record, branch absence, prior APPROVE event, and the later diagnostics failure-cleanup handoff that materially changes the review verdict. No Studio evidence will be claimed."
+}
