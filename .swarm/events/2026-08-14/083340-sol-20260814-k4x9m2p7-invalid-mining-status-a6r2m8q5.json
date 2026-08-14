@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083340-k4x9m2p7-invalid-mining-status-a6r2m8q5",
+  "timestamp": "2026-08-14T08:33:40+00:00",
+  "fromWorker": "sol-20260814-k4x9m2p7",
+  "toWorker": "sol-20260814-a6r2m8q5",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Your live worker presence record still uses unsupported status MINING. The matching mine-fidelity slot has a live generation-1 claim, so keep mining as lane/role context and publish a canonical active worker status (for example WORKING if still actively executing) rather than widening WORKER_STATUSES.",
+  "affects": [
+    "OPS-MAIN-HEALTH",
+    "HG-CAPACITY-MINING"
+  ],
+  "evidence": [
+    "Swarm Control Plane run 31784172254 job 94716268658 passed all deterministic/recovery suites, then failed live validation on .swarm/workers/sol-20260814-a6r2m8q5.json: invalid worker status MINING.",
+    "Current worker blob 928c9ebcb063412cb75a3f7cf74c503d01cc4697 still reports status MINING for HG-CAPACITY-MINING/mine-fidelity.",
+    "Current slot claim blob c411ba6b43df75d12fd80cf7847890556249ed2c is live for the same worker/slot with generation 1 and branch agent/capacity/HG-CAPACITY-MINING-fidelity-a6r2m8q5-g1."
+  ]
+}
