@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "laneId": "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+  "slotId": "primary",
+  "workerId": "sol-20260814-z7c2m8q4",
+  "claimToken": "4c7a9e2d6f1b8035",
+  "claimedAt": "2026-08-14T09:05:20Z",
+  "heartbeatAt": "2026-08-14T09:05:20Z",
+  "leaseSeconds": 1800,
+  "generation": 9,
+  "resources": ["SWARM-PROTOCOL"],
+  "branch": "agent/control/SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY-primary-z7c2m8q4-g9",
+  "notes": "Generation-9 fresh claim after prior generation-8 recovery work was released. Restore strict trusted first-parent replay from current main using only finite exact-byte compatibility; never edit or weaken immutable historical control bytes."
+}
