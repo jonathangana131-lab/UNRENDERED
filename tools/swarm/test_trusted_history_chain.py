@@ -9,12 +9,13 @@ import tempfile
 from pathlib import Path
 import unittest
 
-from test_swarmctl_hardening_base import Fx, NOW, core, write
+from test_swarmctl_hardening_base import Fx, NOW, core, lane as lane_fixture, write
 import swarm_burst_event_replay as burst_replay
 import swarm_burst_takeover_recovery as burst_takeover
 import swarm_failed_control_recovery as failed_recovery
 import swarm_history_recovery_extension as extension
 import swarm_history_recovery_manifest as recovery
+import swarm_lane_history_replay as lane_replay
 import swarm_worker_status_replay as worker_replay
 import swarmctl_hardening as hard
 import trusted_history_chain as chain
@@ -399,6 +400,138 @@ class TrustedHistoryChainTests(unittest.TestCase):
                 self.assertEqual(json.loads((future_root / relative).read_text())["status"], "READY")
             finally:
                 worker_replay.RULES = original_rules
+
+    def test_lane_priority_replay_is_exact_finite_and_history_only(self):
+        self.assertEqual(
+            lane_replay.RULES,
+            (
+                {
+                    "path": "lanes/SWARM-V16.2-INTEGRATION-THROUGHPUT.json",
+                    "introductionPredecessorSha": "01000bcf7f3e1c91b5e03f6e192d96840826681c",
+                    "introductionCommitSha": "57024a8dac6533ffe6906db96409b21393dcfe77",
+                    "invalidGitBlobSha1": "3d0bd0536ec2caf0c39958124effb9ef6a2a74a8",
+                    "slotId": "primary",
+                    "invalidPriorityBoost": 1200,
+                    "canonicalPriorityBoost": 1000,
+                    "repairCommitSha": "d694e5b6b32e92535428d97592ddedf9a9da8a66",
+                    "repairGitBlobSha1": "ca2f3f46506855f436f2491ee0e474927368fdac",
+                    "repairPriorityBoost": 1000,
+                },
+            ),
+        )
+
+        with tempfile.TemporaryDirectory() as temp:
+            repo = Path(temp) / "repo"
+            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+            subprocess.run(["git", "-C", str(repo), "config", "user.name", "test"], check=True)
+            subprocess.run(["git", "-C", str(repo), "config", "user.email", "test@example.invalid"], check=True)
+            relative = Path("lanes/SYNTH-LANE.json")
+            git_relative = Path(".swarm") / relative
+            lane_path = repo / git_relative
+            lane_path.parent.mkdir(parents=True)
+            value = lane_fixture("SYNTH-LANE")
+
+            def commit_lane(boost: int, message: str) -> str:
+                value["slots"][0]["priorityBoost"] = boost
+                lane_path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+                subprocess.run(["git", "-C", str(repo), "add", str(git_relative)], check=True)
+                subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", message], check=True)
+                return subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+
+            base_sha = commit_lane(1000, "base")
+            intro_sha = commit_lane(1200, "invalid introduction")
+            marker = repo / ".swarm" / "marker.json"
+            marker.write_text('{"middle":true}\n', encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo), "add", ".swarm/marker.json"], check=True)
+            subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", "middle"], check=True)
+            middle_sha = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+            repair_sha = commit_lane(1000, "repair")
+            invalid_blob = subprocess.check_output(
+                ["git", "-C", str(repo), "rev-parse", f"{intro_sha}:{git_relative.as_posix()}"],
+                text=True,
+            ).strip()
+            repair_blob = subprocess.check_output(
+                ["git", "-C", str(repo), "rev-parse", f"{repair_sha}:{git_relative.as_posix()}"],
+                text=True,
+            ).strip()
+            rule = {
+                "path": relative.as_posix(),
+                "introductionPredecessorSha": base_sha,
+                "introductionCommitSha": intro_sha,
+                "invalidGitBlobSha1": invalid_blob,
+                "slotId": "primary",
+                "invalidPriorityBoost": 1200,
+                "canonicalPriorityBoost": 1000,
+                "repairCommitSha": repair_sha,
+                "repairGitBlobSha1": repair_blob,
+                "repairPriorityBoost": 1000,
+            }
+
+            def snapshot(sha: str, name: str) -> Path:
+                root = Path(temp) / name
+                destination = root / relative
+                destination.parent.mkdir(parents=True)
+                destination.write_bytes(
+                    subprocess.check_output(["git", "-C", str(repo), "show", f"{sha}:{git_relative.as_posix()}"])
+                )
+                return root
+
+            original_rules = lane_replay.RULES
+            lane_replay.RULES = (rule,)
+            try:
+                active = {}
+                intro_root = snapshot(intro_sha, "lane-intro")
+                introduced = lane_replay.advance_transition(
+                    hard,
+                    repo,
+                    base_sha,
+                    intro_sha,
+                    (git_relative.as_posix(),),
+                    intro_root,
+                    active,
+                )
+                self.assertEqual(introduced["activated"], [relative.as_posix()])
+                self.assertEqual(json.loads((intro_root / relative).read_text())["slots"][0]["priorityBoost"], 1000)
+
+                middle_root = snapshot(middle_sha, "lane-middle")
+                middle = lane_replay.advance_transition(
+                    hard,
+                    repo,
+                    intro_sha,
+                    middle_sha,
+                    (".swarm/marker.json",),
+                    middle_root,
+                    active,
+                )
+                self.assertEqual(middle["normalized"], [relative.as_posix()])
+
+                repair_root = snapshot(repair_sha, "lane-repair")
+                repaired = lane_replay.advance_transition(
+                    hard,
+                    repo,
+                    middle_sha,
+                    repair_sha,
+                    (git_relative.as_posix(),),
+                    repair_root,
+                    active,
+                )
+                self.assertEqual(repaired["repaired"], [relative.as_posix()])
+                self.assertEqual(active, {})
+
+                future_root = snapshot(intro_sha, "lane-future-strict")
+                lane_replay.advance_transition(
+                    hard,
+                    repo,
+                    repair_sha,
+                    "e" * 40,
+                    (git_relative.as_posix(),),
+                    future_root,
+                    active,
+                )
+                with self.assertRaises(core.ControlError):
+                    core.validate_lane(future_root / relative)
+            finally:
+                lane_replay.RULES = original_rules
 
     def test_incremental_snapshot_matches_exact_git_tree(self):
         with tempfile.TemporaryDirectory() as temp:

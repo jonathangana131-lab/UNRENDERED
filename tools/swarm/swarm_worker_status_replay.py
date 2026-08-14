@@ -124,7 +124,7 @@ def _git_bytes(git_root: Path, *args: str) -> bytes:
     return result.stdout
 
 
-def _blob_identity(git_root: Path, commit_sha: str, relative: str) -> tuple[str, bytes]:
+def git_blob_identity(git_root: Path, commit_sha: str, relative: str) -> tuple[str, bytes]:
     git_path = f".swarm/{relative}"
     raw_entry = _git_bytes(git_root, "ls-tree", "-z", commit_sha, "--", git_path)
     records = [record for record in raw_entry.split(b"\0") if record]
@@ -149,7 +149,7 @@ def _destination(root: Path, relative: str) -> Path:
 
 
 def _assert_repair(git_root: Path, commit_sha: str, rule: dict) -> None:
-    blob_sha, raw = _blob_identity(git_root, commit_sha, rule["path"])
+    blob_sha, raw = git_blob_identity(git_root, commit_sha, rule["path"])
     if blob_sha != rule["repairGitBlobSha1"]:
         raise RuntimeError(f"{rule['path']}: finite worker repair blob mismatch")
     obj = json.loads(raw)
@@ -160,7 +160,7 @@ def _assert_repair(git_root: Path, commit_sha: str, rule: dict) -> None:
 def normalize_active_snapshot(hardening_module, git_root: Path, commit_sha: str, root: Path, active: dict[str, dict]) -> list[str]:
     normalized: list[str] = []
     for relative, rule in sorted(active.items()):
-        blob_sha, raw = _blob_identity(git_root, commit_sha, relative)
+        blob_sha, raw = git_blob_identity(git_root, commit_sha, relative)
         if blob_sha != rule["invalidGitBlobSha1"]:
             raise hardening_module.core.ControlError(
                 f"{relative}: active finite worker blob changed before exact repair"
