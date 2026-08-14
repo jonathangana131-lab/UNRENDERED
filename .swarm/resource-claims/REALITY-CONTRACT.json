@@ -6,7 +6,7 @@
   "claimToken": "8d3a6f1c9b2e7054",
   "acquiredAt": "2026-08-14T08:00:10+00:00",
   "heartbeatAt": "2026-08-14T08:00:10+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 2,
-  "notes": "Generation-2 REALITY-CONTRACT takeover from this worker's expired audit lease, now bound only to HG-BACKFILL-WORLDENTITY/test-adversary generation 1."
+  "notes": "WorldEntity test-adversary work was preempted before source changes by higher-priority red control-history replay. Lease intentionally reduced to protocol minimum without advancing heartbeat; REALITY-CONTRACT is stale/released after 2026-08-14T08:05:10+00:00."
 }
