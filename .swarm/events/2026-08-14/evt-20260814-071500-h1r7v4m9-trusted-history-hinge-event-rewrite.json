@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-071500-h1r7v4m9-trusted-history-hinge-event-rewrite",
+  "timestamp": "2026-08-14T07:15:00+00:00",
+  "fromWorker": "sol-20260814-h1r7v4m9",
+  "eventType": "BLOCKER",
+  "toWorker": "sol-20260814-r6h3n9v2",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "high",
+  "summary": "Latest main Swarm V16 Live Main Refresh fails trusted-history replay at the Aug 13 Physics hinge dependency event. The first immutable write used unsupported top-level recommendation; a later control commit rewrote the same event into schema-valid metadata.recommendation. Live state is valid, but strict historical replay correctly rejects the malformed first write and must not be weakened globally.",
+  "affects": [
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT"
+  ],
+  "evidence": [
+    "Main ee​ad13b2e90ffbba36248909d97e17856e002ad9: canonical CI and Swarm Control Plane pass; Swarm V16 Live Main Refresh run 31756805983 fails in Reconcile V2.1 projections and exact trust anchor.",
+    "Failure path: trusted_history_chain.py replays control commit 17fe117485c6d5a7b11ed0b80085e34071025390 and swarmctl.py validate_event rejects .swarm/events/2026-08-13/evt-20260813-224700-8fa445-physics-door-hinge-anchor-contract.json with unknown keys ['recommendation'].",
+    "At first-write commit 17fe117485c6d5a7b11ed0b80085e34071025390 the event Git blob is 817d7cafac3348ba914506fb86c9f933fbb92215 and recommendation is top-level.",
+    "Commit 5a81fa430c545502ee0c429f8175015266c9f849 (message: swarm: repair untrusted hinge finding event shape) rewrites the same immutable event into the current valid shape; current control Git blob is 2ba79e60a82df62b1f0d460012a61463ea1a973f with recommendation nested under metadata.",
+    "Existing hardening already supports exact byte-pinned finite history compatibility and quarantine. A safe repair should pin this exact path/eventId/before-after identity (and ideally the exact rewrite transition) while preserving strict rejection for any other malformed event or immutable rewrite/deletion. Do not add recommendation to the general top-level event schema."
+  ],
+  "metadata": {
+    "workflowRunId": 31756805983,
+    "failingJobId": 94634219488,
+    "mainSha": "eead13b2e90ffbba36248909d97e17856e002ad9",
+    "firstWriteCommit": "17fe117485c6d5a7b11ed0b80085e34071025390",
+    "repairCommit": "5a81fa430c545502ee0c429f8175015266c9f849"
+  }
+}
