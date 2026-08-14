@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "workerId": "sol-20260814-y7q3m5v8",
+  "claimToken": "2e7a4c91d6b8053f",
+  "claimedAt": "2026-08-14T07:31:40+00:00",
+  "heartbeatAt": "2026-08-14T07:31:40+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-y7q3m5v8",
+  "pr": 468,
+  "notes": "Independent exact-head diagnostics source/test audit; no production write planned unless a concrete audit regression is found."
+}
