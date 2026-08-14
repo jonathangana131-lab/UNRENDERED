@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-fyfg89ry",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "STOPPED",
   "startedAt": "2026-08-14T07:13:13+00:00",
-  "lastSeenAt": "2026-08-14T07:22:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-authority",
-  "branch": "agent/authority/HG-CAPACITY-MINING-authority-fyfg89ry",
-  "notes": "MaterialDNA dedup complete and released. Now holding authority capacity miner to inspect current authority/multiplayer source/tests and recent no-gap findings for one distinct concrete gap; no Studio/two-client evidence claims."
+  "lastSeenAt": "2026-08-14T07:27:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed and released two capacity-mining leases. MaterialDNA: revalidated validation-work/error-allocation seam and published dedup finding because HG-BACKFILL-MATERIALDNA-DENSE-BOUNDS already fully owns it. Authority: verified no authority source/test delta since prior no-gap audit and published current-main no-new-gap finding; #348/#394/#412 remain retained blocked lineages. Re-read live swarm: WorldEntity adversary is owned on PR #461; diagnostics primary generation 17 is owned; diagnostics support PR #463 is published expected-red and its test claim released; runtime audit and other capacity shards are owned. No Studio/two-client evidence claimed. Stopping rather than duplicate active work or rerun exhausted reusable miners."
 }
