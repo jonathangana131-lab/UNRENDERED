@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T08:22:00+00:00",
-  "lastSeenAt": "2026-08-14T08:31:30+00:00",
+  "lastSeenAt": "2026-08-14T08:39:38+00:00",
   "laneId": "HG-BACKFILL-DIAGNOSTICS",
   "slotId": "primary",
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-primary-s6p4m9q2-g18",
-  "notes": "Implementation complete; PR #486 exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22 is in REVIEW. Canonical CI and Swarm engine-tests pass. Distinct auditor sol-20260814-z7m2q9c4 now owns audit generation 2. Global pr-ownership remains separately blocked by live V16.2 invalid priorityBoost under active PR #485. Primary lease intentionally shortened for handoff; no Studio evidence claims."
+  "notes": "Generation-18 implementation complete; PR #486 exact head 0a9005d079304a971f316d6cc0e37c8d6dd5017f is in REVIEW. Canonical CI 31784534603 PASS and Swarm engine-tests 31784534524 PASS. Audit-requested #484/#487 test seals are absorbed; a fresh independent exact-head review is now required. Global pr-ownership remains separately fail-closed on live worker sol-20260813-n4q7v2m9 invalid status before candidate evaluation. No Studio evidence claims."
 }
