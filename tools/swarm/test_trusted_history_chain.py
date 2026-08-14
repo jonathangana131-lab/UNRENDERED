@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import subprocess
 import tempfile
 from pathlib import Path
@@ -14,6 +15,7 @@ import swarm_burst_takeover_recovery as burst_takeover
 import swarm_failed_control_recovery as failed_recovery
 import swarm_history_recovery_extension as extension
 import swarm_history_recovery_manifest as recovery
+import swarm_worker_status_replay as worker_replay
 import swarmctl_hardening as hard
 import trusted_history_chain as chain
 
@@ -260,6 +262,143 @@ class TrustedHistoryChainTests(unittest.TestCase):
             },
         }
         self.assertEqual(burst_takeover.GIT_RULES, expected)
+
+    def test_worker_status_replay_is_exact_finite_and_history_only(self):
+        inventory = json.dumps(worker_replay.RULES, sort_keys=True, separators=(",", ":")).encode()
+        self.assertEqual(len(worker_replay.RULES), 8)
+        self.assertEqual(
+            hashlib.sha256(inventory).hexdigest(),
+            "127bd9355741241d54e2972e291d267a031844773ae351555cb4ae7a463a38f2",
+        )
+        self.assertEqual(
+            {(rule["invalidStatus"], rule["canonicalStatus"]) for rule in worker_replay.RULES},
+            {("READY", "IDLE"), ("READY", "WORKING"), ("READY", "REVIEWING"), ("MINING", "WORKING")},
+        )
+        self.assertEqual(len({rule["introductionCommitSha"] for rule in worker_replay.RULES}), 8)
+        self.assertEqual(len({rule["repairCommitSha"] for rule in worker_replay.RULES}), 8)
+
+        with tempfile.TemporaryDirectory() as temp:
+            repo = Path(temp) / "repo"
+            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+            subprocess.run(["git", "-C", str(repo), "config", "user.name", "test"], check=True)
+            subprocess.run(["git", "-C", str(repo), "config", "user.email", "test@example.invalid"], check=True)
+            relative = Path("workers/sol-20990101-test1234.json")
+            git_relative = Path(".swarm") / relative
+            worker_path = repo / git_relative
+            worker_path.parent.mkdir(parents=True)
+
+            def commit_worker(status: str, message: str) -> str:
+                worker_path.write_text(json.dumps({"status": status}, indent=2) + "\n", encoding="utf-8")
+                subprocess.run(["git", "-C", str(repo), "add", str(git_relative)], check=True)
+                subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", message], check=True)
+                return subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+
+            base_sha = commit_worker("IDLE", "base")
+            intro_sha = commit_worker("READY", "invalid introduction")
+            marker = repo / ".swarm" / "marker.json"
+            marker.write_text('{"middle":true}\n', encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo), "add", ".swarm/marker.json"], check=True)
+            subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", "middle"], check=True)
+            middle_sha = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+            repair_sha = commit_worker("WORKING", "repair")
+            invalid_blob = subprocess.check_output(
+                ["git", "-C", str(repo), "rev-parse", f"{intro_sha}:{git_relative.as_posix()}"],
+                text=True,
+            ).strip()
+            repair_blob = subprocess.check_output(
+                ["git", "-C", str(repo), "rev-parse", f"{repair_sha}:{git_relative.as_posix()}"],
+                text=True,
+            ).strip()
+            rule = {
+                "path": relative.as_posix(),
+                "introductionPredecessorSha": base_sha,
+                "introductionCommitSha": intro_sha,
+                "invalidGitBlobSha1": invalid_blob,
+                "invalidStatus": "READY",
+                "canonicalStatus": "WORKING",
+                "repairCommitSha": repair_sha,
+                "repairGitBlobSha1": repair_blob,
+                "repairStatus": "WORKING",
+            }
+
+            def snapshot(sha: str, name: str) -> Path:
+                root = Path(temp) / name
+                destination = root / relative
+                destination.parent.mkdir(parents=True)
+                destination.write_bytes(
+                    subprocess.check_output(["git", "-C", str(repo), "show", f"{sha}:{git_relative.as_posix()}"])
+                )
+                return root
+
+            original_rules = worker_replay.RULES
+            worker_replay.RULES = (rule,)
+            try:
+                with self.assertRaises(core.ControlError):
+                    worker_replay.advance_transition(
+                        hard,
+                        repo,
+                        "f" * 40,
+                        intro_sha,
+                        (git_relative.as_posix(),),
+                        snapshot(intro_sha, "wrong-parent"),
+                        {},
+                    )
+
+                active = {}
+                intro_root = snapshot(intro_sha, "intro")
+                intro = worker_replay.advance_transition(
+                    hard,
+                    repo,
+                    base_sha,
+                    intro_sha,
+                    (git_relative.as_posix(),),
+                    intro_root,
+                    active,
+                )
+                self.assertEqual(intro["activated"], [relative.as_posix()])
+                self.assertEqual(json.loads((intro_root / relative).read_text())["status"], "WORKING")
+
+                middle_root = snapshot(middle_sha, "middle")
+                middle = worker_replay.advance_transition(
+                    hard,
+                    repo,
+                    intro_sha,
+                    middle_sha,
+                    (".swarm/marker.json",),
+                    middle_root,
+                    active,
+                )
+                self.assertEqual(middle["normalized"], [relative.as_posix()])
+                self.assertEqual(json.loads((middle_root / relative).read_text())["status"], "WORKING")
+
+                repair_root = snapshot(repair_sha, "repair")
+                repaired = worker_replay.advance_transition(
+                    hard,
+                    repo,
+                    middle_sha,
+                    repair_sha,
+                    (git_relative.as_posix(),),
+                    repair_root,
+                    active,
+                )
+                self.assertEqual(repaired["repaired"], [relative.as_posix()])
+                self.assertEqual(active, {})
+                self.assertEqual(json.loads((repair_root / relative).read_text())["status"], "WORKING")
+
+                future_root = snapshot(intro_sha, "future-strict")
+                strict = worker_replay.advance_transition(
+                    hard,
+                    repo,
+                    repair_sha,
+                    "e" * 40,
+                    (git_relative.as_posix(),),
+                    future_root,
+                    active,
+                )
+                self.assertEqual(strict["normalized"], [])
+                self.assertEqual(json.loads((future_root / relative).read_text())["status"], "READY")
+            finally:
+                worker_replay.RULES = original_rules
 
     def test_incremental_snapshot_matches_exact_git_tree(self):
         with tempfile.TemporaryDirectory() as temp:
