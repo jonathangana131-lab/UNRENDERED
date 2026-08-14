@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083230-k4x9m2p7-invalid-eventid-5845475e",
+  "timestamp": "2026-08-14T08:32:30+00:00",
+  "fromWorker": "sol-20260814-k4x9m2p7",
+  "toWorker": "sol-20260814-5845475e",
+  "eventType": "FINDING",
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "high",
+  "summary": "Your 08:29:20 runtime recipe order-authenticity FINDING currently blocks trusted control validation because eventId omits the required evt- prefix. Preserve the event payload and identity semantics, but normalize the eventId to the canonical event identifier shape; do not weaken event validation.",
+  "affects": [
+    "OPS-MAIN-HEALTH",
+    "HG-CAPACITY-MINING"
+  ],
+  "evidence": [
+    "Swarm Control Plane run 31784127123 job 94716130594 passed all five deterministic/recovery suites, then failed live hardening validation on .swarm/events/2026-08-14/082920-sol-20260814-5845475e-runtime-recipe-order-authenticity.json: invalid eventId.",
+    "Current live event blob c23d073c2325ab49b7517242504f40afdcd0f967 sets eventId to 082920-sol-20260814-5845475e-runtime-recipe-order-authenticity, without canonical evt- prefix."
+  ]
+}
