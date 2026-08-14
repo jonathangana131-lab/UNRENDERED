@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t083315z-n8r4c6z2-worldentity-takeover-history",
+  "timestamp": "2026-08-14T08:33:15Z",
+  "fromWorker": "sol-20260814-n8r4c6z2",
+  "eventType": "FINDING",
+  "summary": "The canonical red Swarm V16 Live Main Refresh failure is the archived HG-BACKFILL-WORLDENTITY primary generation-9 -> generation-10 takeover, not product/Physics Lab code. The generation-10 claim advanced generation and worker after a long-expired generation-9 lease but omitted takeoverOf, so the strict historical transition checker rejects it. Current swarmctl_hardening.py already has a finite byte-pinned missing-takeoverOf compatibility mechanism for one unrelated historical claim; the safe repair shape is to extend that finite mechanism to this exact WorldEntity before/after byte pair and old worker only, with adversarial regression proving mutated/unlisted transitions still fail closed. Do not relax the generic takeover rule or edit historical swarm-control claim bytes.",
+  "laneId": "OPS-MAIN-HEALTH",
+  "affects": [
+    "OPS-MAIN-HEALTH",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY",
+    "HG-BACKFILL-WORLDENTITY"
+  ],
+  "evidence": [
+    "Main workflow run 31781938149 fails in Reconcile V2.1 projections and exact trust anchor while trusted_history_chain.py calls transition_check; exact exception: claim claims/HG-BACKFILL-WORLDENTITY/primary.json: takeoverOf must identify previous worker.",
+    "Trusted historical before ref 2e354e477e0ed7566b5832ed2a16a7dafa0c027f has HG-BACKFILL-WORLDENTITY/primary generation 9, worker sol-20260812-q6n9v2m4, heartbeatAt 2026-08-12T11:06:30+00:00, leaseSeconds 1800, PR 437.",
+    "Historical takeover commit 72c2530d3cfe8d8fdff08c06472e67b52266e217 has generation 10, worker sol-20260814-k8m2q6v4, claimedAt/heartbeatAt 2026-08-14T07:40:00+00:00, and no takeoverOf field. The predecessor lease had expired by roughly 44 hours, so this is a finite missing-breadcrumb history defect rather than a live-lease authorization case.",
+    "Exact UTF-8 claim-file SHA-256 identities derived from the archived Git contents are before=4ed85f44e50a4b7fbf6775eac40c44991f721ba536ab31d1c4b8ff12f27c4310 and after=5a7ca4906dc6811f3aca4fc050cc1a1a39841cc2a4588f57d05e8944d7aec043.",
+    "main tools/swarm/swarmctl_hardening.py _FINITE_CLAIM_TAKEOVER_COMPAT currently contains only claims/SWARM-RECOVERY-EVENT-IDENTITY-COMPAT/repair.json and injects takeoverOf only into a disposable replay copy before rerunning the unchanged strict transition checker.",
+    "A minimal compatible repair therefore has an existing project pattern: byte-pin claims/HG-BACKFILL-WORLDENTITY/primary.json to the exact before/after SHA-256 pair and inject takeoverOf=sol-20260812-q6n9v2m4 only during replay; add exact-positive plus changed-before/changed-after/unlisted-transition negative tests. No historical control bytes, live takeover semantics, Roblox source, or Hero Gate evidence need change."
+  ]
+}
