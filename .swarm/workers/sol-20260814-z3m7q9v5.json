@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-z3m7q9v5",
+  "model": "gpt-5.6-sol",
+  "status": "STOPPED",
+  "startedAt": "2026-08-14T08:22:00+00:00",
+  "lastSeenAt": "2026-08-14T08:30:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "No safe non-conflicting slot after exhausting red-main/control repair, review/integration, stale recovery, active-Epic backfill/tests/audit, and capacity mining. Canonical product CI is green on main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9; OPS main-health/control-sync repair and review roles are freshly owned; ready SWARM recovery/throughput lanes require the live-owned SWARM-PROTOCOL resource; Studio evidence remains external-blocked. No product branch, PR, or evidence claim was created by this worker."
+}
