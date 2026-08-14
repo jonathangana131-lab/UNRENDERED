@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-PHYSICS-RUNTIME-ENTITYID-FENCE",
+  "slotId": "audit",
+  "workerId": "sol-20260814-rid7k3m9",
+  "claimToken": "8f3c1a6d4e2b7095",
+  "claimedAt": "2026-08-14T07:15:25+00:00",
+  "heartbeatAt": "2026-08-14T07:15:25+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/physics/HG-PHYSICS-RUNTIME-ENTITYID-FENCE-audit-rid7k3m9",
+  "pr": 402,
+  "notes": "Independent review slot. Revalidate the already-approved entity-ID fence against current source lineage and the retained synthesis PR #408; publish only current, non-duplicate integration findings."
+}
