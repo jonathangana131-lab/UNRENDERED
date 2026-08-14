@@ -46,7 +46,8 @@ local function run(): number
 		and string.find(sweepSource, "diagnostics-on canonical resource drift", cycleProtection, true)
 	local envelopeDriftAssertion = cycleProtection
 		and string.find(sweepSource, "diagnostics-on canonical envelope drifted", cycleProtection, true)
-	local failureGuard = protectionClose and string.find(sweepSource, "if not cycleOk then", protectionClose, true)
+	local failureGuard = protectionClose
+		and string.find(sweepSource, "if not cycleOk then", protectionClose, true)
 	local propagate = failureGuard and string.find(sweepSource, "error(cycleResult, 0)", failureGuard, true)
 	local directOwnedDestroy = nil
 	if failureGuard ~= nil and ownedRootName ~= nil then
