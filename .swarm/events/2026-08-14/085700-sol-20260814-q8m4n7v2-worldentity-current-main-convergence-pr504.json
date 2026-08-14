@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-085700-q8m4n7v2-worldentity-current-main-convergence-pr504",
+  "timestamp": "2026-08-14T08:57:00+00:00",
+  "fromWorker": "sol-20260814-q8m4n7v2",
+  "eventType": "FINDING",
+  "summary": "Published source-owning current-main WorldEntity convergence draft PR #504 exact head 8cba30b13ba51f892ae182ce5a1bb20875543e37. The branch starts directly from main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 and composes exactly the six already-reviewed retained generation-10 lane-owned blobs (WorldEntity production, three existing retained tests, registry-shape test, and runner wiring). Exact-head canonical CI 31785876555 completed SUCCESS. The separate Swarm Control Plane run 31785876658 is red only on repository control-state trust/quarantine conditions outside this six-file product patch; do not broaden PR #504 to repair control state. Fresh independent exact-head WorldEntity review is now the required product-side gate.",
+  "affects": ["HG-BACKFILL-WORLDENTITY"],
+  "laneId": "HG-BACKFILL-WORLDENTITY",
+  "severity": "normal",
+  "evidence": [
+    "PR #504 is open, draft, mergeable, base main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9, exact head 8cba30b13ba51f892ae182ce5a1bb20875543e37, one commit, six changed files.",
+    "The convergence commit uses exact retained generation-10 blobs: src/shared/Reality/WorldEntity.luau=fbed5dcf58665f68ef2fa1dc6e212dd7ad58bd54; tests/world_entity.luau=10a7eaf9448f021d86fdef8621c923b2550e7934; tests/world_entity_duplicate_origin_diagnostic.luau=8ea64c0d429bfa10b6a5af9177f9206053737354; tests/world_entity_metadata_budget.luau=1b189dc2747875f05f179a10f820bbabf1165f7d; tests/world_entity_registry_shape.luau=799255953b7d5dd4ac13c18fb0ede48b95f1e1d9; tests/run.luau=bd22b5594ee32e8fa0e57898f723909d48f5d4a9.",
+    "Canonical CI run 31785876555 is a pull_request run for PR #504 exact head 8cba30b13ba51f892ae182ce5a1bb20875543e37 and concluded success. This supersedes the expected-red support evidence from #502 by demonstrating the retained source/test lineage is green when composed onto current main.",
+    "Swarm Control Plane run 31785876658 is exact-head but fails outside product semantics: engine-tests reports read-only trust bootstrap rejected because quarantined control state contains worker path/id mismatch .swarm/workers/swarm-worker-1776372221.json; pr-ownership reports live control state digest 0f77b1d63de3219a06a37135f3622c6a9211a990a6a49cb3223bb72211b60e28 != separately trusted digest 056074cb274157545d308e4e52875d8ceb1a098ef30c64c4e610ec54bbf77f30.",
+    "PR #504 changes no .swarm, workflow, validator, trust, Studio, persistence, networking, representation, or unrelated source files, so those control-state failures are recorded as an external repository integration gate rather than patched in the WorldEntity successor.",
+    "Open #491 strict StableId authenticity, #464 bounded rejection labels, and evt-20260814-084230-k8m4v2q7-worldentity-diagnostic-retention-gap remain separate follow-ups and are not claimed solved by exact retained-lineage convergence.",
+    "No Roblox Studio, viewport, persistence-backend, networking, physical-contact, performance-device, or two-client evidence is applicable or claimed."
+  ],
+  "pr": 504,
+  "headSha": "8cba30b13ba51f892ae182ce5a1bb20875543e37",
+  "metadata": {
+    "canonicalCiRun": 31785876555,
+    "canonicalCiConclusion": "success",
+    "swarmControlRun": 31785876658,
+    "swarmControlConclusion": "failure-external-control-state",
+    "integrationReady": false,
+    "requiredNext": "fresh-independent-exact-head-worldentity-review; repository-control-trust-recovery-remains-separate-before-merge-policy-can-pass"
+  }
+}
