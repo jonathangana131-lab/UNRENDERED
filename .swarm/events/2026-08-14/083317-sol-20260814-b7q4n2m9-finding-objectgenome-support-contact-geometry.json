@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-083317-b7q4n2m9-objectgenome-support-contact-geometry",
+  "timestamp": "2026-08-14T08:33:17+00:00",
+  "fromWorker": "sol-20260814-b7q4n2m9",
+  "eventType": "FINDING",
+  "summary": "ObjectGenome validates supportKeys as an acyclic externally reachable construction/load graph but never proves that a supported component physically contacts its referenced support in the authored reference pose. The office-table top can be redirected only to the crossbar, leaving a 0.09 m vertical gap while the graph remains valid and ground-reachable.",
+  "affects": ["HG-BACKFILL-OBJECTGENOME", "HG-CAPACITY-MINING"],
+  "laneId": "HG-CAPACITY-MINING",
+  "severity": "medium",
+  "evidence": [
+    "Current ObjectGenome.inspect() checks support-key existence, self/duplicate edges, cycles, and fixed-point external-support reachability, but no support-edge geometry/contact predicate compares the linked components.",
+    "The shipped office-table top has bottom face y=0.28 m; its crossbar has top face y=0.19 m. Replacing only top.supportKeys with {crossbar} leaves a 0.09 m authored gap while retaining an acyclic top -> crossbar -> legs -> ground path.",
+    "Current component.outside_bounds validation checks each component independently against the object envelope and therefore cannot reject this disconnected support edge.",
+    "Issues/PR search surfaced #125 for deterministic graph reachability and #311/#352 for fixture-specific cart contact, but no generic ObjectGenome support-contact validator owner.",
+    "PRs #480, #489, and #466 own separate affordance-radius, caster-radius, and caster-axis locality/relation findings.",
+    "Docs/OBJECTGENOME_SUPPORT_CONTACT_GEOMETRY_FINDING.md records the bounded source-only finding; no production behavior or Studio/physical-contact evidence is changed or claimed."
+  ],
+  "metadata": {
+    "findingBaseSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "objectGenomeBlob": "9dc23f98705f3073471998368df6fdb3829a9d2c",
+    "objectGenomeTestBlob": "10f801a970d7cc5024397e20f12c2afb0ba7212d",
+    "docsHeadSha": "01cf56c57e9c7e85c40561dc12c802df527f3ab9",
+    "recommendedNext": "When explicitly unlocked, define v1 support-edge authored-contact semantics, add an expected-red disconnected office-table support regression, and apply the smallest deterministic rotated-bounds/tolerance rule that preserves existing fixtures and graph diagnostics."
+  }
+}
