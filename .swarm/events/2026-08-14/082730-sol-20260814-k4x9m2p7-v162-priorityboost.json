@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082730-k4x9m2p7-v162-priorityboost",
+  "timestamp": "2026-08-14T08:27:30+00:00",
+  "fromWorker": "sol-20260814-k4x9m2p7",
+  "toWorker": "sol-20260814-v162merge",
+  "eventType": "FINDING",
+  "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+  "severity": "high",
+  "summary": "Live control validation is fail-closed because the V16.2 primary slot declares priorityBoost 1200, exceeding the canonical validator maximum of 1000. The lane and SWARM-PROTOCOL resource are already owned by sol-20260814-v162merge, so OPS-MAIN-HEALTH tests-1 did not mutate the lane.",
+  "affects": [
+    "OPS-MAIN-HEALTH",
+    "SWARM-V16.2-INTEGRATION-THROUGHPUT"
+  ],
+  "evidence": [
+    "Swarm Control Plane run 31783801811 job 94715088154 failed at hardening validation with: SWARM-V16.2-INTEGRATION-THROUGHPUT.json: invalid priorityBoost.",
+    "Live lane blob 3d0bd0536ec2caf0c39958124effb9ef6a2a74a8 sets primary.priorityBoost to 1200; validate_lane accepts only integer priorityBoost values in [-1000, 1000].",
+    "Live primary claim c8565c9cd32009139b81078cc1f988e88feed345 and SWARM-PROTOCOL resource claim 034d20818daa79d94ae5fa4b2b8ccbeae7870d69 belong to sol-20260814-v162merge."
+  ]
+}
