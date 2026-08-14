@@ -5,7 +5,7 @@
   "title": "Diagnostics source-only depth pass",
   "objective": "Use otherwise-idle Sol capacity to harden the Studio diagnostics code and its pure contracts while the Mac display path is blocked. Work here must improve source/test correctness without pretending to satisfy the missing live viewport evidence row.",
   "priority": 4850,
-  "state": "NEEDS_CHANGES",
+  "state": "REVIEW",
   "mode": "exclusive",
   "dependencies": [],
   "writeScopes": ["src/server/PhysicsLab/PhysicsLabStudioDiagnostics.luau", "src/server/PhysicsLab/PhysicsLabStudioHarness.luau", "tests/**diagnostic*.luau", "tests/hero_gate_contract_integration.luau"],
@@ -17,12 +17,10 @@
   ],
   "acceptance": ["do not queue speculative Studio reruns", "do not convert source confidence into viewport PASS", "find concrete lifecycle/no-drift/failure-path gaps", "behavior changes get tests", "publish anything relevant to HG151-DIAGNOSTICS as a structured finding"],
   "pr": 486,
-  "notes": "Generation-18 PR #486 exact head 29a2f949eebbd509c2c839d48c3d75a7ff03dc22 has correct production cleanup/error precedence and readout Enabled/Visible guards by independent source inspection. Canonical CI 31783839918 PASS and Swarm engine-tests in 31783839952 PASS. Independent review 4935380471 / event evt-20260814-083200-z7m2q9c4-diagnostics-g18-test-seal-review requests changes because the regression seal is incomplete: absorb test-only support #484's exact root-pin/non-nil/immediate-destroy matcher hardening, and harden physics_lab_diagnostics_readout_contract.luau against inert long-comment/long-bracket/quoted/backtick false passes recorded by docs finding #487. These are test-integrity blockers; no additional production redesign is established. pr-ownership remains separately fail-closed on shared control recovery. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
+  "notes": "Generation-18 PR #486 exact head 0a9005d079304a971f316d6cc0e37c8d6dd5017f has absorbed the independent audit's two test-integrity blockers without further production redesign: #484 exact root-pin/non-nil/immediate Destroy->original-error matcher hardening and #487 inert-text-resistant readout contract matching with negative long-comment, long-bracket-string, quoted-string, and backtick-string mutants covering visibility plus authoritative Adornee/text predicates. Canonical CI 31784534603 PASS on the exact head, including Pure Luau regression mutants and place build; Swarm engine-tests in run 31784534524 PASS. The same run's pr-ownership aborts before this PR's ownership evaluation on unrelated live control record .swarm/workers/sol-20260813-n4q7v2m9.json: invalid worker status. Fresh independent exact-head diagnostics source/test review remains mandatory. No Studio/viewport/contact/performance-device/two-client evidence is claimed.",
   "blockers": [
-    "Absorb PR #484 cleanup regression hardening so the source-contract test rejects fallback/coalescing owned-root pins and requires the exact root pin, non-nil assertion, and immediate Destroy/error sequence that generation-18 production already implements.",
-    "Harden physics_lab_diagnostics_readout_contract.luau so long comments, long-bracket strings, quoted strings, and backtick strings cannot satisfy executable readout predicates; add negative inert-text mutants and preserve helper scoping. Finding PR #487 / evt-20260814-082800-z7m2q9c4-diagnostics-readout-matcher-inert-text records the repro.",
-    "After both test-seal repairs, rerun exact-head canonical CI and Swarm engine-tests and obtain a fresh independent diagnostics source/test review.",
-    "Repository-wide pr-ownership remains fail-closed on separately owned shared control recovery; do not bypass it.",
+    "Fresh independent diagnostics source/test review by a worker distinct from generation-18 primary sol-20260814-s6p4m9q2 is required on PR #486 exact head 0a9005d079304a971f316d6cc0e37c8d6dd5017f; the prior audit applies to the earlier head and the implementer must not self-approve.",
+    "Repository-wide pr-ownership remains fail-closed before candidate ownership evaluation because live control record .swarm/workers/sol-20260813-n4q7v2m9.json has an invalid worker status; separately owned worker-status/control recovery must restore the shared gate. Do not bypass it.",
     "HG151 live viewport/Studio diagnostics evidence remains externally blocked by the Mac display path; source confidence must not be converted into viewport PASS."
   ],
   "tags": ["backfill", "hero-gate", "source-only"]
