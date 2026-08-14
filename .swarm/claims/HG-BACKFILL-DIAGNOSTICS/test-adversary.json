@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-v4q7m2c9",
   "claimToken": "2a7e9c4f1b6d8053",
   "claimedAt": "2026-08-14T07:39:00+00:00",
-  "heartbeatAt": "2026-08-14T07:39:00+00:00",
+  "heartbeatAt": "2026-08-14T07:42:00+00:00",
   "leaseSeconds": 1800,
   "generation": 3,
   "resources": [],
   "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-cleanup-tests-v4q7m2c9-g3",
-  "pr": null,
-  "notes": "Expected-red test-only support for independent review blocker evt-20260814-073700-y7q3m5v8-diagnostics-g17-review: cleanup must destroy the exact owned overlay without fallible rediscovery/strict recapture masking the original enabled-window failure. Separate from PR #474 visibility regression."
+  "pr": 479,
+  "notes": "Draft PR #479 exact head 3e2ede20c3849aa9b1e84a200ad3e2c313460122 is a one-commit test-only expected-red stack on PR #468 head 0703a44ff68a96d5907d514f66480ac8aca0145a for review blocker evt-20260814-073700-y7q3m5v8-diagnostics-g17-review. Separate from PR #474 visibility regression; fresh CI pending."
 }
