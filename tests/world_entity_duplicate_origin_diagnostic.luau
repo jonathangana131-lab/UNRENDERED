@@ -74,7 +74,11 @@ local function run(): number
 	end)
 
 	local authoritative = WorldEntity.get(registry, entityId) :: any
-	expectEqual("duplicate origin cannot replace first registration", authoritative.origin.worldId, "world:alpha")
+	expectEqual(
+		"duplicate origin cannot replace first registration",
+		authoritative.origin.worldId,
+		"world:alpha"
+	)
 
 	local mutableEntityId = "entity:duplicate-origin-mutable-boundary"
 	local mutableExistingOrigin = {
@@ -129,8 +133,16 @@ local function run(): number
 	mutableIncoming.origin.recipeKey = "fixture/caller-mutated"
 
 	expectEqual("returned mutable diagnostic keeps entity id", mutableDiagnostic.entityId, mutableEntityId)
-	expectEqual("returned mutable diagnostic keeps existing kind", mutableDiagnostic.existingKind, "filing-cabinet")
-	expectEqual("returned mutable diagnostic keeps incoming kind", mutableDiagnostic.incomingKind, "rolling-cart")
+	expectEqual(
+		"returned mutable diagnostic keeps existing kind",
+		mutableDiagnostic.existingKind,
+		"filing-cabinet"
+	)
+	expectEqual(
+		"returned mutable diagnostic keeps incoming kind",
+		mutableDiagnostic.incomingKind,
+		"rolling-cart"
+	)
 	expectOrigin("returned mutable existing origin", mutableDiagnostic.existingOrigin, mutableExistingOrigin)
 	expectOrigin("returned mutable incoming origin", mutableDiagnostic.incomingOrigin, mutableIncomingOrigin)
 	expectFrozen("returned mutable diagnostic rejects top-level mutation", function()
@@ -146,8 +158,16 @@ local function run(): number
 	local mutableRetained = WorldEntity.duplicateDiagnostics(mutableRegistry)[1] :: any
 	expectEqual("mutable-boundary diagnostic is retained", mutableRetained ~= nil, true)
 	expectEqual("retained mutable diagnostic keeps entity id", mutableRetained.entityId, mutableEntityId)
-	expectEqual("retained mutable diagnostic keeps existing kind", mutableRetained.existingKind, "filing-cabinet")
-	expectEqual("retained mutable diagnostic keeps incoming kind", mutableRetained.incomingKind, "rolling-cart")
+	expectEqual(
+		"retained mutable diagnostic keeps existing kind",
+		mutableRetained.existingKind,
+		"filing-cabinet"
+	)
+	expectEqual(
+		"retained mutable diagnostic keeps incoming kind",
+		mutableRetained.incomingKind,
+		"rolling-cart"
+	)
 	expectOrigin("retained mutable existing origin", mutableRetained.existingOrigin, mutableExistingOrigin)
 	expectOrigin("retained mutable incoming origin", mutableRetained.incomingOrigin, mutableIncomingOrigin)
 	expectFrozen("retained mutable diagnostic rejects top-level mutation", function()
@@ -162,7 +182,11 @@ local function run(): number
 
 	local mutableAuthoritative = WorldEntity.get(mutableRegistry, mutableEntityId) :: any
 	expectEqual("mutable duplicate cannot replace first kind", mutableAuthoritative.kind, "filing-cabinet")
-	expectEqual("mutable duplicate cannot replace first worldId", mutableAuthoritative.origin.worldId, "world:existing")
+	expectEqual(
+		"mutable duplicate cannot replace first worldId",
+		mutableAuthoritative.origin.worldId,
+		"world:existing"
+	)
 	expectEqual(
 		"mutable duplicate cannot replace first recipe key",
 		mutableAuthoritative.origin.recipeKey,
