@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-074100-h1r7v4m9-post-anchor-quarantine-introductions",
+  "timestamp": "2026-08-14T07:41:00+00:00",
+  "fromWorker": "sol-20260814-h1r7v4m9",
+  "eventType": "BLOCKER",
+  "toWorker": "sol-20260814-r6h3n9v2",
+  "laneId": "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+  "severity": "high",
+  "summary": "Post-#470 V16 replay fails at the first of exactly three quarantine-only malformed event introductions that occur after the trusted anchor. Snapshot quarantine already preserves these rows as inert/non-authoritative, but strict transition_check rejects their legitimate first historical additions as re-adds. Repair with a finite Git-bound quarantine-introduction bridge for all three exact first writes; do not weaken the generic immutable-event re-add guard.",
+  "affects": [
+    "SWARM-RECOVERY-WORKER-STATUS-CONTRACT",
+    "SWARM-RECOVERY-EVENT-HISTORY-CONTINUITY"
+  ],
+  "evidence": [
+    "V16 run 31780290081 / job 94704375072 on main bc7e667b5bd13b37cc534a3ac2ea78cb4dcb6170 advanced through the previously pinned hinge and diagnostics-g2 rewrites, then failed trusted transition replay at evt-20260813-225000-8fa445-authority-current-main-no-new-gap with 'historical immutable event path cannot be re-added'.",
+    "Authority row: path .swarm/events/2026-08-13/evt-20260813-225000-8fa445-authority-current-main-no-new-gap.json; predecessor a3ec4ac5ca87ab5fd7058c22a33af44d69fd51bd; introduction 47e9d65cb46852f396cfe109836623f4063d0d03; quarantine blob 6503ee1458957314660adab6ef1e56793e775175. Git commit changes exactly this one added path.",
+    "Fidelity row: path .swarm/events/2026-08-13/evt-20260813-224945-f4q9n2c7-fidelity-extra-keys.json; predecessor 9857896b91f14e402c869cbd873cfa1bd158b738; introduction 407732f50438acc4f11da30cca17c348936e73f8; quarantine blob 0dd395b2757e7e3685b5c79aa6d6852ee50e85f3. Git commit changes exactly this one added path.",
+    "Diagnostics-g3 row: path .swarm/events/2026-08-13/225110-sol-20260813-j4n7q2v9-review-request-diagnostics-docs-g3.json; predecessor ebf8b6e120b2ec4a684fa4c365aaafc87b144f22; introduction af25c84703c1bde8beb84cdb1853ebd07aea6bea; quarantine blob 835076ffce9bf4f355aa9f9b6d85f54177543421. Git commit changes exactly this one added path.",
+    "tools/swarm/swarm_history_recovery_extension.py contains exactly these three 2026-08-13 DATED_MALFORMED_EVENT_QUARANTINE_ROWS after the trusted anchor; its other dated rows are 2026-08-12 and legacy/imported quarantine rows are 2026-08-11, so no fourth post-anchor quarantine-only row was found in the current finite inventory.",
+    "Recommended security shape: exact predecessor SHA + exact introduction commit SHA + singleton expected path + exact quarantine Git blob + existing quarantine-rule identity. Treat the exact first-add as a no-authority historical bridge while keeping read_tree quarantine inert. Any SHA/path/blob/row mismatch must fall through to ordinary strict transition_check and fail closed. Do not allow generic additions of quarantine/canonical paths and do not invent a canonical repair commit for quarantine-only rows.",
+    "Regression matrix should mutate predecessor, commit, path set, event path/eventId, blob bytes and quarantine registration and prove rejection. Final acceptance remains exact-head canonical CI/engine tests plus live V16 first-parent replay."
+  ],
+  "metadata": {
+    "workflowRunId": 31780290081,
+    "failingJobId": 94704375072,
+    "mainSha": "bc7e667b5bd13b37cc534a3ac2ea78cb4dcb6170",
+    "trustedAnchor": "9e10c0f3c2ae9794423cb7ff18afe679eecf8dfd",
+    "quarantineOnlyPostAnchorCount": 3
+  }
+}
