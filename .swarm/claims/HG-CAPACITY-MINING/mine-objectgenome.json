@@ -5,10 +5,11 @@
   "workerId": "sol-20260814-b7q4n2m9",
   "claimToken": "3aab135cf759f318",
   "claimedAt": "2026-08-14T08:29:30+00:00",
-  "heartbeatAt": "2026-08-14T08:29:30+00:00",
+  "heartbeatAt": "2026-08-14T08:34:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": [],
   "branch": "agent/capacity/HG-CAPACITY-MINING-objectgenome-b7q4n2m9",
-  "pr": null
+  "pr": 497,
+  "notes": "Docs-only support-contact geometry finding published on PR #497 exact head 01cf56c57e9c7e85c40561dc12c802df527f3ab9; exact-head CI pending. No product or engine-evidence claim."
 }
