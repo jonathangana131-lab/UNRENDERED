@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814t082600z-k7m4q2z9-authority-no-new-slice",
+  "timestamp": "2026-08-14T08:26:00Z",
+  "fromWorker": "sol-20260814-k7m4q2z9",
+  "eventType": "FINDING",
+  "summary": "Fresh authority/multiplayer capacity mining on main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 found no new safe non-duplicate source-only slice. Current server/client authority source is unchanged in the audited shard, the retained source candidates already own bootstrap context and teardown/lifecycle hardening, and the only distinct deployment-boundary gap is already durably recorded from PR #300 as a future subtree/prefix-aware replicated-tree exclusion. HG151 true two-client authority still requires real Studio server plus two distinct clients and remains dependency-blocked on OPS-STUDIO-DISPLAY. Do not spawn a parallel authority framework or speculative Studio retry from this finding.",
+  "laneId": "HG-CAPACITY-MINING",
+  "affects": [
+    "HG-BACKFILL-AUTHORITY",
+    "HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY",
+    "HG-COMPLETION-AUTHORITY",
+    "HG151-TWOCLIENT",
+    "OPS-STUDIO-DISPLAY"
+  ],
+  "evidence": [
+    "The prior current-main authority no-gap event audited main@8134a3962be80e8ba6ec2c27207e44db63e6765c. Main advances from that point to af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 through swarm/control/history commits; commit search in that interval surfaced no authority gameplay/server/client/PhysicsLab product change.",
+    "Current src/server/Bootstrap.server.luau still asserts server context and starts PhysicsLabStudioHarness only in Studio; src/client/Bootstrap.client.luau still only asserts client context and reports NetworkProtocol, with no competing canonical lab authority path.",
+    "HG-BACKFILL-AUTHORITY remains BLOCKED and retains #348 for bootstrap-context fencing plus #394 for teardown fixture coverage; HG-AUTHORITY-HARNESS-LIFECYCLE-CAPABILITY remains BLOCKED and retains independently approved #412 for the raw destroy/lifecycle capability seam.",
+    "HG-COMPLETION-AUTHORITY explicitly instructs the swarm to retain #348/#394/#412 and not spawn another authority primary while ownership recovery is blocked. It separately preserves PR #300's unique Rojo deployment-boundary intent, but #300's exact-path counter is known insufficient because a replicated src/server/... descendant can escape it; the future repair must be subtree/prefix-aware with a leaked-server-subpath adversary.",
+    "Current default.project.json maps src/shared under ReplicatedStorage, src/server under ServerScriptService, and src/client under StarterPlayerScripts; tests/authority_rojo_boundary.luau is not on current main, consistent with the retained-not-integrated #300 lineage rather than a newly discovered gap.",
+    "Issue #151 and lane HG151-TWOCLIENT require one real Studio server, at least two distinct clients, independent client reports, canonical agreement, exactly one lab root, and teardown-safe evaluator evidence. OPS-STUDIO-DISPLAY must be DONE before that lane is runnable.",
+    "No local Luau/Lune test, Roblox Studio run, replication session, viewport capture, two-client run, or engine PASS was executed or claimed by this mining pass."
+  ]
+}
