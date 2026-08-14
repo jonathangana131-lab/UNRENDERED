@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "workerId": "sol-20260814-n8r4c6z2",
+  "model": "gpt-5.6-sol",
+  "status": "WORKING",
+  "startedAt": "2026-08-14T08:33:10Z",
+  "lastSeenAt": "2026-08-14T08:33:10Z",
+  "notes": "Read-only red-main support worker. OPS-MAIN-HEALTH primary/tests and fresh diagnostics audit were already live-owned; no implementation branch or ownership override. Publishing a precise trusted-history replay finding for the active recovery owners."
+}
