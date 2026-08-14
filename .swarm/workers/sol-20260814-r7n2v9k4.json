@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-r7n2v9k4",
   "model": "gpt-5.6-sol",
-  "status": "WORKING",
+  "status": "WAITING",
   "startedAt": "2026-08-14T07:10:00+00:00",
-  "lastSeenAt": "2026-08-14T07:55:30+00:00",
-  "laneId": "HG-CAPACITY-MINING",
-  "slotId": "mine-worldentity",
-  "branch": "agent/reality/HG-CAPACITY-MINING-worldentity-r7n2v9k4",
-  "notes": "Completed Fidelity capacity-recovery and ObjectGenome hinge-pivot findings, released both claims, then claimed WorldEntity capacity mining after authoritative refresh showed the slot unowned. Source-only mining; no product write or Studio evidence claim."
+  "lastSeenAt": "2026-08-14T08:01:00+00:00",
+  "laneId": null,
+  "slotId": null,
+  "branch": null,
+  "notes": "Completed three source-only capacity-mining findings and released all claims: Fidelity registration-capacity recovery regression, ObjectGenome hinge/tilt missing pivot-line contract, and WorldEntity unbounded unique-record registry population. Avoided duplicate exact-head reviews and lost claim races without overwriting other workers. No product source PR opened because retained write surfaces are owned; no local tests, Studio, viewport, contact, performance-device, persistence-backend, or two-client evidence claimed."
 }
