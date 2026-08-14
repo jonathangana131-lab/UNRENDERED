@@ -6,10 +6,10 @@
   "claimToken": "c1a7e3f95b2d8046",
   "claimedAt": "2026-08-14T08:41:30+00:00",
   "heartbeatAt": "2026-08-14T08:48:00+00:00",
-  "leaseSeconds": 1800,
+  "leaseSeconds": 300,
   "generation": 1,
   "resources": [],
   "branch": "agent/audit/HG-CAPACITY-MINING-runtime-q2v8m5k1-g1",
   "pr": 503,
-  "notes": "Published corrected docs-only generation-5 integration finding PR #503 at exact head b753f686f3e74e86e775dca48d9778f02388635d. Concrete seam: retained #408 runtime test requires hostile PolicyInputs __index execution (policyReads > 0), while retained FidelityManager #385 intentionally rejects metatable-backed PolicyInputs and hostile nowSeconds with zero metamethod execution. Compose by updating the stale runtime test to the stronger no-execute boundary while retaining runtime callback/transaction guard coverage; do not weaken #385. No production/Studio changes; fresh exact-head CI queued."
+  "notes": "Released after publishing corrected generation-5 runtime/Fidelity convergence finding. PR #503 exact head b753f686f3e74e86e775dca48d9778f02388635d records that retained #408 runtime test requires policyReads > 0 while retained #385 intentionally requires zero hostile PolicyInputs/nowSeconds metamethod execution. Structured event evt-20260814t084820z-q2v8m5k1-runtime-fidelity-test-convergence published and #408 notified. Canonical CI 31785366022 and Swarm runs were queued at release; no pass is claimed. Lease intentionally reduced to protocol minimum without heartbeat advance."
 }
