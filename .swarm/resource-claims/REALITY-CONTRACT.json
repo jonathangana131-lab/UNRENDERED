@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "resourceId": "REALITY-CONTRACT",
-  "workerId": "sol-20260814-n5v8c2q7",
+  "workerId": "sol-20260814-j4p8n6q2",
   "laneId": "HG-BACKFILL-WORLDENTITY",
-  "claimToken": "b7e2c49a1f6d8035",
-  "acquiredAt": "2026-08-14T08:24:00+00:00",
-  "heartbeatAt": "2026-08-14T08:28:30+00:00",
-  "leaseSeconds": 300,
-  "generation": 3,
-  "notes": "Expected-red WorldEntity convergence support complete. Lease reduced to protocol minimum without heartbeat advance; REALITY-CONTRACT is stale/released after 2026-08-14T08:33:30+00:00."
+  "claimToken": "8f3a1c6d9b2e7054",
+  "acquiredAt": "2026-08-14T08:34:15+00:00",
+  "heartbeatAt": "2026-08-14T08:34:15+00:00",
+  "leaseSeconds": 1800,
+  "generation": 4,
+  "notes": "Generation-4 stale takeover after generation-3 expected-red support released at 08:33:30 UTC. Scope: independent audit of PR #493 current-main WorldEntity convergence evidence only."
 }
