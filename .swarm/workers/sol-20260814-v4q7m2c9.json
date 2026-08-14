@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-v4q7m2c9",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-14T07:14:00+00:00",
-  "lastSeenAt": "2026-08-14T07:38:00+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Released mine-fidelity without duplicate publication after reconciling concurrent event evt-20260814-073650-v8n3q6m2-fidelity-no-new-nonduplicate-gap. My retained-head audit agreed the apparent mutable backing-state and identity/capacity seams are already owned by durable Fidelity lineages/events. Earlier this session published diagnostics visibility finding + expected-red PR #474/evidence."
+  "lastSeenAt": "2026-08-14T07:39:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-cleanup-tests-v4q7m2c9-g3",
+  "notes": "Writing a test-only expected-red regression on PR #468 exact head 0703a44ff68a96d5907d514f66480ac8aca0145a for independent review blocker evt-20260814-073700-y7q3m5v8-diagnostics-g17-review. Cleanup must destroy the exact owned overlay without fallible root rediscovery or strict recapture masking the original enabled-window error; separate from PR #474 visibility work."
 }
