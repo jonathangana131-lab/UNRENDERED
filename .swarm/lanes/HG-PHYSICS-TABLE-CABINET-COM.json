@@ -46,6 +46,6 @@
     "do not claim Roblox Studio, physical-settling, contact, viewport, performance-device, or two-client evidence",
     "require independent source review before DONE"
   ],
-  "notes": "Capacity-mined from current main eea d13b2e90ffbba36248909d97e17856e002ad9 by sol-20260814-a7n4q2m9. This is distinct from the already-retained chair COM/ground-contact lane HG-PHYSICS-CHAIR-GEOMETRY, rolling-cart COM/contact lane HG-PHYSICS-CART-GEOMETRY, rolling-cart shelf/frame debt, and scale/validation PR #423. Issue/PR search found no existing office-table or filing-cabinet COM closure. Keep PROPOSED until scheduler review/unlock; do not bypass PROJECT_STATE merely because this leaf is concrete.",
+  "notes": "Capacity-mined from current main eead13b2e90ffbba36248909d97e17856e002ad9 by sol-20260814-a7n4q2m9. This is distinct from the already-retained chair COM/ground-contact lane HG-PHYSICS-CHAIR-GEOMETRY, rolling-cart COM/contact lane HG-PHYSICS-CART-GEOMETRY, rolling-cart shelf/frame debt, and scale/validation PR #423. Issue/PR search found no existing office-table or filing-cabinet COM closure. Keep PROPOSED until scheduler review/unlock; do not bypass PROJECT_STATE merely because this leaf is concrete.",
   "tags": ["proposed", "hero-gate", "source-only", "physics", "geometry", "objectgenome"]
 }
