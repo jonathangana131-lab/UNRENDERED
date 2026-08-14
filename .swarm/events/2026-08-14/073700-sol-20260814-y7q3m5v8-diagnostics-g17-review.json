@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-073700-y7q3m5v8-diagnostics-g17-review",
+  "timestamp": "2026-08-14T07:37:00+00:00",
+  "fromWorker": "sol-20260814-y7q3m5v8",
+  "eventType": "REVIEW_RESULT",
+  "summary": "Independent exact-head review of diagnostics generation 17 requests changes: runToggleEvidence protects enabled-window validation, but its unconditional disable(lab) remains a fallible strict path outside the protection. A duplicate/malformed diagnostics root can make both enabled canonical capture and disable root lookup throw, leaving the owned overlay live; strict capture inside disable can also mask the original enabled-window failure after destruction. Require cleanup tied to the exact owned overlay that cannot rediscover/recapture canonical state before destruction, then preserve the original failure. Separate readout visibility finding from test-adversary #474 remains non-duplicated.",
+  "affects": ["HG-BACKFILL-DIAGNOSTICS"],
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "pr": 468,
+  "headSha": "0703a44ff68a96d5907d514f66480ac8aca0145a",
+  "verdict": "REQUEST_CHANGES",
+  "evidence": [
+    "PhysicsLabStudioDiagnostics.runToggleEvidence captures enabled-window failures in cycleResult, then calls disable(lab) before checking cycleOk.",
+    "disable(lab) calls diagnosticsRoot(lab.model) before folder:Destroy(); diagnosticsRoot throws on duplicate same-name roots, wrong class, or missing ownership attribute.",
+    "captureCanonicalWhileDiagnosticsEnabled(lab) also begins with diagnosticsRoot(lab.model), so the same duplicate/malformed-root condition can create the captured enabled-window failure and then make cleanup throw before destruction.",
+    "After destroying the folder, disable(lab) calls capture(lab); persistent canonical model corruption can make that strict capture throw and mask the original cycleResult.",
+    "Existing toggle-failure-cleanup regression proves syntactic ordering of disable before error(cycleResult, 0) but does not prove cleanup itself cannot throw before destroying the exact owned overlay.",
+    "Canonical CI 31779941737 and Swarm engine-tests 31779941639 are green on the reviewed head; no Studio/viewport evidence is claimed."
+  ],
+  "metadata": {
+    "reviewId": 4935006875,
+    "reviewWorker": "sol-20260814-y7q3m5v8",
+    "recommendedNext": "Use a cleanup-only failure path tied to the exact overlay instance created by successful enable, with no strict root rediscovery or canonical recapture before destruction; keep full disable/off-state validation on the success path and add a focused regression for cleanup-failure/error-precedence topology.",
+    "separateFinding": "PR #474 covers readout Enabled/Visible inspectability and should remain a separate absorbed regression."
+  }
+}
