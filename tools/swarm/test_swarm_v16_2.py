@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
 
+from v16cp import integration_pressure as pressure
 from v16cp.core import (
     add_work_item,
     canonical_absorption_plan,
@@ -59,6 +61,20 @@ class V16_2IntegrationPressureTests(unittest.TestCase):
         self.assertEqual(plan[0]["action"], "ABSORB_INTO_CANONICAL")
         self.assertEqual(plan[0]["childWorkItemIds"], ["v162-physics-child"])
 
+    def test_absorption_and_candidates_share_actionability_rules(self):
+        graph = self.graph_with_integration()
+        graph["objectives"]["physics-lab"]["status"] = "EXTERNAL_BLOCKED"
+        self.assertEqual(pressure.integration_candidates(graph), [])
+        self.assertEqual(canonical_absorption_plan(graph), [])
+        self.assertFalse(merge_pressure_report(graph)["active"])
+
+        graph = self.graph_with_integration()
+        graph["blockers"]["v162-external"] = {"state": "EXTERNAL"}
+        graph["workItems"]["v162-physics-child"]["blockerId"] = "v162-external"
+        self.assertEqual(pressure.integration_candidates(graph), [])
+        self.assertEqual(canonical_absorption_plan(graph), [])
+        self.assertFalse(merge_pressure_report(graph)["active"])
+
     def test_pressure_shifts_majority_toward_integrators(self):
         graph = self.graph_with_integration()
         allocation = role_allocation(graph, 30)
@@ -93,14 +109,45 @@ class V16_2IntegrationPressureTests(unittest.TestCase):
         self.assertGreater(seen_non_integrator, 0)
         self.assertGreater(seen_integrator, 0)
 
+    def test_capacity_mining_is_suppressed_for_workers_outside_pressure_share(self):
+        graph = self.graph_with_integration()
+        worker = next(
+            f"sol-20260814-outside{i:03d}"
+            for i in range(500)
+            if pressure._stable_slot(f"sol-20260814-outside{i:03d}::v162-pressure", 10) >= 7
+        )
+        original_worker_plan = pressure._persist.worker_plan
+        pressure._persist.worker_plan = lambda *_args, **_kwargs: [
+            pressure.MissionPacket(
+                "hero-gate-reality-grade",
+                "physics-lab",
+                "capacity-mining-fixture",
+                "miner",
+                1.0,
+                {"MODE": "CAPACITY_MINING_ASSIST", "STOP_AUTHORIZED": False},
+            )
+        ]
+        try:
+            plan = pressure.worker_plan(graph, worker, 8)
+        finally:
+            pressure._persist.worker_plan = original_worker_plan
+        self.assertFalse(any(packet.packet.get("MODE") == "CAPACITY_MINING_ASSIST" for packet in plan))
+
+    def test_worker_registration_instruction_uses_canonical_status(self):
+        root = Path(__file__).resolve().parents[2]
+        text = (root / "ProjectSource" / "UNRENDERED_PROJECT_INSTRUCTIONS.txt").read_text()
+        self.assertIn("Newly registered, unclaimed workers MUST use `IDLE`.", text)
+        self.assertIn("Do not emit `READY` or `MINING` as worker statuses.", text)
+
     def test_30_worker_burst_remains_productive(self):
         graph = self.graph_with_integration()
         workers = [f"sol-20260814-v162{i:02d}" for i in range(30)]
         packets = recommend(graph, workers, 30)
         self.assertEqual(len(packets), 30)
-        pressure = [p for p in packets if p.packet.get("MODE") == "MERGE_PRESSURE"]
-        self.assertGreaterEqual(len(pressure), 18)
+        pressure_packets = [p for p in packets if p.packet.get("MODE") == "MERGE_PRESSURE"]
+        self.assertGreaterEqual(len(pressure_packets), 18)
         self.assertTrue(all(p.packet.get("STOP_AUTHORIZED") is False for p in packets))
+        self.assertFalse(any(p.packet.get("MODE") == "CAPACITY_MINING_ASSIST" for p in packets))
 
 
 if __name__ == "__main__":
