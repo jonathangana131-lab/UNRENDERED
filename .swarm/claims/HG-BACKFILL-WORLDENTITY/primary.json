@@ -5,11 +5,11 @@
   "workerId": "sol-20260814-q8m4n7v2",
   "claimToken": "5a8d2c7f1e9b4063",
   "claimedAt": "2026-08-14T08:53:00+00:00",
-  "heartbeatAt": "2026-08-14T08:53:00+00:00",
+  "heartbeatAt": "2026-08-14T08:55:30+00:00",
   "leaseSeconds": 1800,
   "generation": 1,
   "resources": ["REALITY-CONTRACT"],
   "branch": "agent/reality/HG-BACKFILL-WORLDENTITY-converge-q8m4n7v2-g1",
-  "pr": null,
-  "notes": "Current-main source-owning convergence successor. Compose the full already-reviewed retained WorldEntity production/test lineage from PR #477 onto main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9, preserve current-main unrelated changes, do not merge support PRs #493/#502, run exact-head canonical validation, and publish a draft PR for fresh independent review."
+  "pr": 504,
+  "notes": "Published current-main source-owning convergence draft PR #504 exact head 8cba30b13ba51f892ae182ce5a1bb20875543e37. Branch starts directly at main@af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9 and composes exactly six retained generation-10 lane-owned blobs: WorldEntity production, world_entity, duplicate-origin, metadata-budget, registry-shape tests, and runner wiring. No stale stacked control/workflow files imported. Await exact-head canonical CI/Swarm evaluation before review handoff; no Studio evidence claim."
 }
