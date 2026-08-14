@@ -7,9 +7,9 @@
   "summary": "Request independent review of draft PR #467 exact head ef68a6c9c1db5984279eb92d8b4cb765fadf99c1. Canonical validate passed; pr-ownership remains red and must stay fail-closed. Review only the docs-only PhysicsLabRuntime outer schema-closure finding and its distinction from PR #451; no Studio evidence is claimed.",
   "affects": ["HG-CAPACITY-MINING", "HG-PHYSICS-RUNTIME-SYNTHESIS"],
   "laneId": "HG-CAPACITY-MINING",
-  "pr": 467,
-  "headSha": "ef68a6c9c1db5984279eb92d8b4cb765fadf99c1",
   "metadata": {
+    "pr": 467,
+    "headSha": "ef68a6c9c1db5984279eb92d8b4cb765fadf99c1",
     "validation": "canonical validate PASS on exact head; pr-ownership FAIL remains unresolved",
     "primaryPr": 408,
     "primaryCommentId": 5290666279,
