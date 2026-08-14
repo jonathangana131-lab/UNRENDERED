@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-q8m4n7v2",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "REVIEWING",
   "startedAt": "2026-08-14T08:33:38+00:00",
-  "lastSeenAt": "2026-08-14T08:41:15+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Completed HG-CAPACITY-MINING/mine-worldentity generation 2. Published evt-20260814t084100z-q8m4n7v2-worldentity-no-new-slice and released claim. No new source lane warranted: retained generation-10 already owns the audited hardening; open #464 bounded rejection-label and #491 StableId-authenticity findings remain the real follow-up after convergence. No product source/tests/Studio evidence claimed."
+  "lastSeenAt": "2026-08-14T08:42:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "audit",
+  "branch": "agent/review/HG-BACKFILL-DIAGNOSTICS-audit-q8m4n7v2-g3",
+  "notes": "Independent exact-head review of PR #486 generation-18 diagnostics head 0a9005d079304a971f316d6cc0e37c8d6dd5017f. Reviewing production failure cleanup plus absorbed #484/#487 test-integrity seals; no Studio/viewport evidence."
 }
