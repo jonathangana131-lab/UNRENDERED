@@ -4,6 +4,8 @@ local runPhysicsLabDiagnosticsBounds = require("./physics_lab_diagnostics_bounds
 local runPhysicsLabDiagnosticsEnabledIntegrity = require("./physics_lab_diagnostics_enabled_integrity")
 local runPhysicsLabDiagnosticsFinalState = require("./physics_lab_diagnostics_final_state")
 local runPhysicsLabDiagnosticsReadoutContract = require("./physics_lab_diagnostics_readout_contract")
+local runPhysicsLabDiagnosticsToggleFailureCleanup =
+	require("./physics_lab_diagnostics_toggle_failure_cleanup")
 
 local StableId = ProductionLoader.requireShared("Core/StableId")
 local MaterialDNA = ProductionLoader.requireShared("Materials/MaterialDNA")
@@ -172,6 +174,7 @@ local function run(): number
 	failures += runPhysicsLabDiagnosticsEnabledIntegrity()
 	failures += runPhysicsLabDiagnosticsFinalState()
 	failures += runPhysicsLabDiagnosticsReadoutContract()
+	failures += runPhysicsLabDiagnosticsToggleFailureCleanup()
 	return failures
 end
 
