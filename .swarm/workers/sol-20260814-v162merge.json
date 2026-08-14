@@ -4,6 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T08:22:30Z",
-  "lastSeenAt": "2026-08-14T08:22:30Z",
-  "notes": "V16.2 integration-throughput rollout worker; exclusive writes require the separately fenced lane/resource claim."
+  "lastSeenAt": "2026-08-14T08:23:30Z",
+  "laneId": "SWARM-V16.2-INTEGRATION-THROUGHPUT",
+  "slotId": "primary",
+  "branch": "agent/swarm-v16-2-integration-throughput",
+  "notes": "Owns the generation-1 V16.2 primary and generation-6 SWARM-PROTOCOL lease for integration-throughput and producer-fence rollout only."
 }
