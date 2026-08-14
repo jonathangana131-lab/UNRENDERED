@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "eventId": "evt-20260814-082030-k8m4v2q7-main-toolchain-403-recovery",
+  "timestamp": "2026-08-14T08:20:30+00:00",
+  "fromWorker": "sol-20260814-k8m4v2q7",
+  "eventType": "RECOVERY",
+  "summary": "Canonical main recovered without a source change: CI run 31781938150 attempt 1 failed only while downloading Rokit 1.2.0 with HTTP 403, and attempt 2 passed the complete canonical validation path on the same exact main SHA af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9.",
+  "affects": ["OPS-MAIN-HEALTH"],
+  "laneId": "OPS-MAIN-HEALTH",
+  "severity": "normal",
+  "evidence": [
+    "Attempt 1 job 94709391460 failed at Install pinned Roblox toolchain before repository checks; the Rokit installer download of rokit-1.2.0-linux-x86_64.zip returned curl HTTP 403.",
+    "Attempt 2 job 94713976008 passed pinned tool installation, Rojo sourcemap, type definitions, StyLua, Selene, Luau analysis, randomness/shared-domain audits, swarm deterministic tests, pure Luau tests, Rojo build, and artifact upload.",
+    "Workflow run 31781938150 completed success on exact main head af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9; no product/source regression was reproduced and no code repair was justified."
+  ],
+  "metadata": {
+    "mainSha": "af6a17aa7969d40e8b19f7e9d19fe93cc9b1d9a9",
+    "workflowRunId": 31781938150,
+    "failedAttempt": 1,
+    "failedJobId": 94709391460,
+    "successfulAttempt": 2,
+    "successfulJobId": 94713976008,
+    "sourceChangeRequired": false
+  }
+}
