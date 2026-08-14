@@ -2,8 +2,11 @@
   "schemaVersion": 1,
   "workerId": "sol-20260814-k8m2q7v5",
   "model": "gpt-5.6-sol",
-  "status": "IDLE",
+  "status": "WORKING",
   "startedAt": "2026-08-14T07:13:00+00:00",
-  "lastSeenAt": "2026-08-14T07:22:00+00:00",
-  "notes": "Completed HG-CAPACITY-MINING/mine-worldentity finding in draft PR #464. Exact-head canonical CI and Swarm engine-tests passed; pr-ownership remains blocked before lane enforcement by repository-wide swarm-control/swarm-trust digest drift. Handoff posted to PR #437; source and Studio behavior unchanged."
+  "lastSeenAt": "2026-08-14T07:24:00+00:00",
+  "laneId": "HG-BACKFILL-DIAGNOSTICS",
+  "slotId": "test-adversary",
+  "branch": "agent/diagnostics/HG-BACKFILL-DIAGNOSTICS-tests-k8m2q7v5-g17",
+  "notes": "Generation-17 diagnostics test-adversary: verify post-enable failure cleanup, original-error preservation, no-drift, and immediate retry against the active primary repair; no Studio evidence claims."
 }
