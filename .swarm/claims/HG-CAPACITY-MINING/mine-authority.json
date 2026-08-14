@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-authority",
+  "workerId": "sol-20260814-v5n8q3r2",
+  "claimToken": "5b8e1a3d7c2f9046",
+  "claimedAt": "2026-08-14T07:15:00+00:00",
+  "heartbeatAt": "2026-08-14T07:15:00+00:00",
+  "leaseSeconds": 1800,
+  "generation": 1,
+  "resources": [],
+  "branch": "agent/authority/HG-CAPACITY-MINING-authority-v5n8q3r2",
+  "pr": null,
+  "notes": "Mine current Hero-Gate authority/multiplayer source, tests, PR lineage, and handoffs for one concrete non-duplicate source-only depth gap while Studio GUI/two-client evidence remains externally blocked."
+}
