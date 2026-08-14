@@ -4,9 +4,9 @@
   "model": "gpt-5.6-sol",
   "status": "WORKING",
   "startedAt": "2026-08-14T07:13:13+00:00",
-  "lastSeenAt": "2026-08-14T07:13:13+00:00",
-  "laneId": null,
-  "slotId": null,
-  "branch": null,
-  "notes": "Go worker registered; main/CI and live scheduler inspected before claim."
+  "lastSeenAt": "2026-08-14T07:19:00+00:00",
+  "laneId": "HG-CAPACITY-MINING",
+  "slotId": "mine-materialdna",
+  "branch": "agent/materialdna/HG-CAPACITY-MINING-materialdna-fyfg89ry",
+  "notes": "Generation-2 stale takeover. Inspect prior MaterialDNA validation-budget finding and live lanes/PRs; materialize only a non-duplicate bounded follow-up if still missing."
 }
