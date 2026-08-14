@@ -1,37 +1,47 @@
-# Physics Lab Runtime hostile-time pre-hook fence finding
+# Physics Lab Runtime / FidelityManager pre-hook convergence finding
 
-Status: bounded Hero-Gate source-depth finding. This document records a regression-integrity gap in the retained `PhysicsLabRuntime` synthesis lineage; it does not change production behavior or claim Roblox Studio evidence.
+Status: bounded Hero-Gate integration finding. This document records a concrete regression conflict between two retained Physics Lab source lineages. It does not change production behavior or claim Roblox Studio evidence.
 
-## Context
+## Retained lineages
 
-Retained runtime synthesis PR #408 deliberately fences the *entire* `FidelityManager.step()` call with `transitionInFlight` before invoking the manager. Its production comment names both caller-owned policy inputs **and time** as values whose hostile operators/metamethods must not receive a pre-hook mutation window.
+Runtime synthesis PR #408 retains `PhysicsLabRuntime.step()` from the runtime-transaction lineage. It sets private `transitionInFlight` before entering `FidelityManager.step()`, wraps that whole manager call in `pcall`, clears the guard on failure, and keeps callback/runtime mutation fail-closed.
 
-That ordering matters because `FidelityManager.step()` validates `nowSeconds` before policy evaluation and before accepted manager mutation. The validation performs numeric equality/order checks (`isFinite(nowSeconds)` and monotonic comparison). A dynamically supplied non-number table can therefore execute comparison metamethods even though the public Luau type is `number`.
+Its retained `tests/physics_lab_runtime.luau` contains a pre-hook adversary built for the older FidelityManager behavior. A metatable-backed `PolicyInputs` object increments `policyReads` from `__index`, attempts `runtime:dispose()`, and the test explicitly requires `policyReads > 0` while proving the runtime guard blocks the mutation and remains retryable.
 
-The current production runtime is protected: `transitionInFlight` is already set before calling the manager, so a hostile time metamethod that calls `runtime:dispose()` or recursively mutates the runtime reaches `assertMutationAllowed()` and fails closed; the outer `pcall` then clears the guard for retry.
+FidelityManager generation-4 PR #385 deliberately strengthens the lower boundary. Its retained source requires `PolicyInputs` to be a metatable-free plain table before reading fields, requires numeric values such as `nowSeconds` to establish primitive-number type before numeric operators, and its adversarial suite requires hostile policy-input and hostile-time metamethod counts to remain exactly zero.
 
-## Concrete regression gap
+## Concrete convergence conflict
 
-`tests/physics_lab_runtime.luau` directly proves the policy-input half of that pre-hook contract with a metatable-backed `PolicyInputs` value whose `__index` attempts `runtime:dispose()`. It verifies rejection, preserved registry/Fidelity populations, preserved fidelity authority, and an immediate valid retry.
+The two retained behaviors are individually safe, but their current regressions are not composition-compatible.
 
-The retained suite does **not** exercise the earlier `nowSeconds` validation half of the same documented fence.
+If #385's accepted FidelityManager hardening is composed underneath #408 without reconciling the runtime test, the metatable-backed `PolicyInputs` value is rejected by `validateInputs()` before `__index` executes. That is the stronger desired boundary, but #408's assertion that the hostile policy metatable **must** be exercised (`policyReads > 0`) becomes expected-red.
 
-That leaves a narrow regression-integrity seam: a future refactor could move or add time preflight outside the runtime transaction guard while leaving policy-input evaluation protected. The existing hostile-policy regression would still pass even though a hostile time value could again invoke caller code before mutation fencing is active.
+This is not evidence that #385 should be weakened or that #408's whole-manager transaction fence should be removed. It is a stale test expectation at the integration seam between two retained lineages.
 
-## Minimal adversary
+The same composition also makes a proposed hostile-`nowSeconds` runtime metamethod adversary inappropriate: #385 already rejects hostile time with zero metamethod execution before numeric comparison. Regression coverage should preserve that stronger no-execute boundary rather than deliberately force a caller metamethod to run.
 
-A focused pure regression should create a fresh runtime and pass a metatable-backed value as `nowSeconds` whose comparison metamethod attempts a prohibited runtime mutation such as `runtime:dispose()`.
+## Smallest safe reconciliation
 
-The required assertions are:
+When the runtime and FidelityManager lineages are composed, update the runtime pre-hook regression to match the stronger lower-layer contract:
 
-1. the malformed time call rejects;
-2. the hostile comparison metamethod is actually reached, proving the intended pre-hook window was exercised;
-3. the attempted runtime mutation is rejected while the private transaction guard is active;
-4. registry and FidelityManager populations remain the full canonical recipe population;
-5. the target WorldEntity fidelity remains authoritative and synchronized;
-6. the outer failure unwind clears `transitionInFlight` so an immediate canonical numeric-time retry succeeds.
+1. keep a metatable-backed hostile `PolicyInputs` value, but require zero `__index` execution;
+2. keep the malformed call rejection assertion;
+3. prove registry and FidelityManager populations remain the full canonical recipe population;
+4. prove the target WorldEntity fidelity remains authoritative and synchronized;
+5. prove an immediate canonical retry succeeds, preserving `PhysicsLabRuntime` failure-unwind semantics;
+6. add or retain a hostile `nowSeconds` composition assertion that requires zero comparison/arithmetic metamethod execution, matching #385 rather than the older manager behavior;
+7. retain the existing capture/observer/dispose/reentrant callback tests as the direct runtime transaction-guard evidence for caller code that is legitimately invoked inside the transition transaction.
 
-Use the smallest Luau metamethod shape that deterministically exercises the production time-validation comparison path. Do not weaken `FidelityManager`'s fail-closed malformed-time behavior merely to make the fixture convenient.
+Do not delete the private whole-manager guard merely because malformed policy/time values become no-execute. The guard still scopes the full manager operation and the runtime-owned transition callback path, while the lower manager now provides a stricter rejection boundary for malformed plain-data inputs.
+
+## Why this matters
+
+A merge that simply combines production source and runs the retained suites will fail for the wrong reason: the stronger no-execute FidelityManager contract violates an older test's requirement to execute hostile caller code. Treating that failure as a product regression could pressure an integrator to weaken #385 just to satisfy stale runtime evidence.
+
+The convergence fix should instead update the runtime regression so both safety layers are represented accurately:
+
+- malformed policy/time values are rejected before caller metamethod execution by FidelityManager;
+- runtime transaction/callback mutations remain fenced and retryable by PhysicsLabRuntime.
 
 ## Non-duplication
 
@@ -42,14 +52,12 @@ This finding is distinct from the existing runtime capacity findings:
 - #494 — canonical entity sequence/order authenticity;
 - #501 — exact dense `recipe.entities` container shape.
 
-It also does not replace the existing hostile-policy-input regression. That test covers a later caller-owned evaluation surface; this finding pins the separately documented and earlier hostile-time validation surface.
-
-FidelityManager source hardening is not proposed here. Retained runtime production already establishes the correct whole-manager transaction fence; the missing piece is adversarial coverage that prevents later refactors from silently narrowing it.
+It is also distinct from #385 itself. #385 owns the lower FidelityManager no-execute behavior; this finding records the stale retained **runtime** regression that must be reconciled when #385 and #408 converge.
 
 ## Recommended integration
 
-Do not create a competing Physics Lab runtime framework. Add the hostile-time regression to the retained runtime synthesis lineage (#408) or its current-main convergence successor alongside the existing hostile-policy pre-hook regression.
+Do not create a competing Physics Lab runtime or FidelityManager framework. Absorb this test reconciliation into the retained #408/#385 current-main convergence path, alongside the already accepted runtime and fidelity invariants.
 
-Require fresh exact-head canonical CI and independent source/test review after absorption. Keep the regression source-only: it does not require Roblox Studio, viewport, physical-contact, device-performance, persistence, networking, or two-client evidence.
+Require fresh exact-head canonical CI and independent source/test review after composition. This is source/test integration work only; it does not require Roblox Studio, viewport, physical-contact, device-performance, persistence, networking, or two-client evidence.
 
 Door, Chair, and Player remain locked behind the Physics Lab Hero Gate.
