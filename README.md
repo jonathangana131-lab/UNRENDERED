@@ -15,7 +15,11 @@ The game is not a sequence of Backrooms levels. It is a malformed interior unive
 - Atmosphere, materials, furniture, entities, Still Lifes, audio, UI, and multiplayer are core systems, not late polish.
 - Main stays buildable.
 
-Start with `Docs/GAME_VISION.md`, `Docs/ARCHITECTURE.md`, `Docs/ROADMAP.md`, and `Docs/SWARM_PROTOCOL.md`.
+For Codex, ChatGPT, and other coding agents, start with root `AGENTS.md`. A broad prompt such as `Go`, `continue`, or `work on UNRENDERED` means to refresh live GitHub, make real product progress, test/review it, merge accepted work, refresh, and continue. The old custom swarm scheduler/claim/lease system is retired for normal development.
+
+Product direction and quality live in `Docs/GAME_VISION.md`, `Docs/ARCHITECTURE.md`, `Docs/ROADMAP.md`, `Docs/QUALITY_STANDARD.md`, and `Docs/PROJECT_STATE.md`.
+
+Historical swarm documents remain in `Docs/` only as prior coordination evidence; they are not current execution authority.
 
 ChatGPT Project files are in `ProjectSource/`.
 
