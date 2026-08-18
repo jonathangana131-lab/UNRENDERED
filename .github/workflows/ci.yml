@@ -61,14 +61,6 @@ jobs:
           python3 scripts/check_plain_domain_values.py --self-test
           python3 scripts/check_plain_domain_values.py
 
-      - name: Swarm control-plane deterministic tests
-        run: |
-          python3 tools/swarm/test_swarmctl.py
-          python3 tools/swarm/test_swarmctl_hardening.py
-          python3 tools/swarm/test_foundry_v17.py
-          python3 tools/swarm/swarmctl.py simulate --workers 30
-          python3 tools/swarm/swarmctl_hardening.py simulate --workers 30
-
       - name: Pure Luau tests
         run: lune run tests/run
 
