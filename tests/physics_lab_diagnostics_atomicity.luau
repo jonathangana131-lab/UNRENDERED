@@ -28,6 +28,11 @@ local function run(): number
 	local billboardConfiguration = position("billboard.AlwaysOnTop = true")
 	local labelOwnership = position("label.Parent = billboard")
 	local labelConfiguration = position("label.BackgroundTransparency = 0.2")
+	local stateRevisionPlan = position("stateRevision = record.stateRevision")
+	local representationRevisionPlan = position("representationRevision = record.representationRevision")
+	local renderedRevisionLine = position("stateRevision=%d | representationRevision=%d")
+	local renderedStateRevision = position("plan.stateRevision,")
+	local renderedRepresentationRevision = position("plan.representationRevision,")
 	local capture = position("return PhysicsLabStudioDiagnostics.capture(lab)")
 	local transactionEnd = position("\tend)\n\n\tif not ok then")
 	local rollback = position("folder:Destroy()")
@@ -36,6 +41,14 @@ local function run(): number
 	expect(
 		"all readout dependencies are preflighted before the owned root is parented",
 		preflight ~= nil and parentMutation ~= nil and preflight < parentMutation
+	)
+	expect(
+		"authoritative revisions are captured into readout plans before Instance mutation",
+		stateRevisionPlan ~= nil
+			and representationRevisionPlan ~= nil
+			and parentMutation ~= nil
+			and stateRevisionPlan < parentMutation
+			and representationRevisionPlan < parentMutation
 	)
 	expect(
 		"Instance realization begins inside a protected transaction",
@@ -60,6 +73,14 @@ local function run(): number
 	expect(
 		"TextLabel is owned before fallible configuration",
 		labelOwnership ~= nil and labelConfiguration ~= nil and labelOwnership < labelConfiguration
+	)
+	expect(
+		"visible diagnostics readouts render authoritative state and representation revisions",
+		renderedRevisionLine ~= nil
+			and renderedStateRevision ~= nil
+			and renderedRepresentationRevision ~= nil
+			and renderedRevisionLine < renderedStateRevision
+			and renderedStateRevision < renderedRepresentationRevision
 	)
 	expect(
 		"post-realization capture remains inside the protected transaction",
