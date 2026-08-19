@@ -36,6 +36,8 @@ type ReadoutPlan = {
 	key: string,
 	worldEntityId: string,
 	fidelity: string,
+	representationRevision: number,
+	stateRevision: number,
 	adornee: BasePart,
 }
 
@@ -102,6 +104,8 @@ local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Mod
 			key = representation.Name,
 			worldEntityId = record.id,
 			fidelity = record.fidelity,
+			representationRevision = record.representationRevision,
+			stateRevision = record.stateRevision,
 			adornee = adorneeFor(representation),
 		}
 		table.freeze(plan)
@@ -191,7 +195,7 @@ function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab)
 			billboard.Name = string.format("Entity_%03d_%s", index, plan.key)
 			billboard.AlwaysOnTop = true
 			billboard.MaxDistance = 120
-			billboard.Size = UDim2.fromOffset(560, 116)
+			billboard.Size = UDim2.fromOffset(560, 136)
 			billboard.StudsOffsetWorldSpace = Vector3.new(0, 2, 0)
 			billboard.Adornee = plan.adornee
 
@@ -206,10 +210,12 @@ function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab)
 			label.TextXAlignment = Enum.TextXAlignment.Left
 			label.TextYAlignment = Enum.TextYAlignment.Top
 			label.Text = string.format(
-				"%s | %s | fidelity=%s\nfingerprint=%s\nrepro=%s",
+				"%s | %s | fidelity=%s\nreprRev=%d | stateRev=%d\nfingerprint=%s\nrepro=%s",
 				plan.key,
 				plan.worldEntityId,
 				plan.fidelity,
+				plan.representationRevision,
+				plan.stateRevision,
 				fingerprint,
 				reproKey
 			)
