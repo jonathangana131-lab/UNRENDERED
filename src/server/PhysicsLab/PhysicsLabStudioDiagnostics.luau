@@ -173,6 +173,27 @@ local function readoutName(index: number, key: string): string
 	return string.format("Entity_%03d_%s", index, key)
 end
 
+local function readoutText(
+	key: string,
+	worldEntityId: string,
+	fidelity: string,
+	representationRevision: number,
+	stateRevision: number,
+	fingerprint: string,
+	reproKey: string
+): string
+	return string.format(
+		"%s | %s | fidelity=%s\nreprRev=%d | stateRev=%d\nfingerprint=%s\nrepro=%s",
+		key,
+		worldEntityId,
+		fidelity,
+		representationRevision,
+		stateRevision,
+		fingerprint,
+		reproKey
+	)
+end
+
 local function assertReadoutShape(folder: Folder, entities: { EntityDiagnostic }): number
 	local readouts = folder:GetChildren()
 	assert(
@@ -204,6 +225,52 @@ local function assertReadoutShape(folder: Folder, entities: { EntityDiagnostic }
 		`diagnostics descendant cardinality disagrees with represented entities: expected {#entities * 2}, got {descendantCount}`
 	)
 	return 1 + descendantCount
+end
+
+local function assertReadoutContent(
+	folder: Folder,
+	entities: { EntityDiagnostic },
+	representations: { Instance },
+	fingerprint: string,
+	reproKey: string
+): ()
+	assert(
+		#representations == #entities,
+		"diagnostics readout content validation lost representation/entity alignment"
+	)
+
+	local readouts = folder:GetChildren()
+	table.sort(readouts, function(a: Instance, b: Instance): boolean
+		return a.Name < b.Name
+	end)
+
+	for index, entity in ipairs(entities) do
+		local readout = readouts[index]
+		assert(readout ~= nil and readout:IsA("BillboardGui"), `invalid diagnostics billboard: {entity.key}`)
+
+		local representation = representations[index]
+		local expectedAdornee = adorneeFor(representation)
+		assert(
+			readout.Adornee == expectedAdornee,
+			`diagnostics billboard adornee disagrees with authoritative representation: {entity.worldEntityId}`
+		)
+
+		local label = readout:FindFirstChild("Readout")
+		assert(label ~= nil and label:IsA("TextLabel"), `missing diagnostics TextLabel: {readout.Name}`)
+		local expectedText = readoutText(
+			entity.key,
+			entity.worldEntityId,
+			entity.fidelity,
+			entity.representationRevision,
+			entity.stateRevision,
+			fingerprint,
+			reproKey
+		)
+		assert(
+			label.Text == expectedText,
+			`diagnostics readout text disagrees with authoritative evidence: {entity.worldEntityId}`
+		)
+	end
 end
 
 local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model): { ReadoutPlan }
@@ -239,8 +306,9 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 	local model = lab.model
 	local folder = diagnosticsRoot(model)
 	local entities: { EntityDiagnostic } = {}
+	local representations = directRepresentations(lab, model)
 
-	for _, representation in ipairs(directRepresentations(lab, model)) do
+	for _, representation in ipairs(representations) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
 		assertRepresentationMetadata(
@@ -272,9 +340,12 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 	end
 
 	table.freeze(entities)
+	local fingerprint = requireStringAttribute(model, "UNRENDERED_ResolvedRegionFingerprint")
+	local reproKey = requireStringAttribute(model, "UNRENDERED_ResolvedRegionReproKey")
 	local diagnosticInstanceCount = 0
 	if folder ~= nil then
 		diagnosticInstanceCount = assertReadoutShape(folder, entities)
+		assertReadoutContent(folder, entities, representations, fingerprint, reproKey)
 	end
 
 	local snapshot: Snapshot = {
@@ -282,8 +353,8 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 		enabled = folder ~= nil,
 		worldId = requireStringAttribute(model, "UNRENDERED_WorldId"),
 		regionId = requireStringAttribute(model, "UNRENDERED_RegionId"),
-		resolvedRegionFingerprint = requireStringAttribute(model, "UNRENDERED_ResolvedRegionFingerprint"),
-		resolvedRegionReproKey = requireStringAttribute(model, "UNRENDERED_ResolvedRegionReproKey"),
+		resolvedRegionFingerprint = fingerprint,
+		resolvedRegionReproKey = reproKey,
 		diagnosticInstanceCount = diagnosticInstanceCount,
 		entities = entities,
 	}
@@ -331,8 +402,7 @@ function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab)
 			label.TextWrapped = true
 			label.TextXAlignment = Enum.TextXAlignment.Left
 			label.TextYAlignment = Enum.TextYAlignment.Top
-			label.Text = string.format(
-				"%s | %s | fidelity=%s\nreprRev=%d | stateRev=%d\nfingerprint=%s\nrepro=%s",
+			label.Text = readoutText(
 				plan.key,
 				plan.worldEntityId,
 				plan.fidelity,
