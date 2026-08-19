@@ -252,9 +252,12 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 	local cycleCount = cycles or 20
 	assert(cycleCount >= 1 and cycleCount % 1 == 0, "diagnostics cycle count must be a positive integer")
 
-	PhysicsLabStudioDiagnostics.disable(lab)
-	local baseline = Validation.captureFull(lab.model)
 	local initial = PhysicsLabStudioDiagnostics.capture(lab)
+	assert(
+		not initial.enabled and initial.diagnosticInstanceCount == 0,
+		"Physics Lab diagnostics must be off before toggle evidence begins"
+	)
+	local baseline = Validation.captureFull(lab.model)
 	local checkpoints = {}
 	local maxDiagnosticInstances = 0
 	local sample: EntityDiagnostic? = nil
