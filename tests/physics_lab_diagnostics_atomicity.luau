@@ -34,9 +34,17 @@ local function run(): number
 	local representationRevisionMatch =
 		position("expectedRepresentationRevision == representedRepresentationRevision", metadataHelper)
 	local stateRevisionMatch = position("expectedStateRevision == representedStateRevision", metadataHelper)
+	local enumerationFunction = position("local function directRepresentations")
+	local representedCountRead = position(
+		'requireNonNegativeIntegerAttribute(model, "UNRENDERED_RepresentedCount")',
+		enumerationFunction
+	)
+	local enumerationCountMatch = position("#representations == representedCount", enumerationFunction)
 	local preflightFunction = position("local function preflightReadouts")
 	local captureFunction = position("function PhysicsLabStudioDiagnostics.capture")
 	local enableFunction = position("function PhysicsLabStudioDiagnostics.enable")
+	local preflightEnumeration = position("directRepresentations(model)", preflightFunction)
+	local captureEnumeration = position("directRepresentations(model)", captureFunction)
 	local preflightMetadataCheck = position("assertRepresentationMetadata(", preflightFunction)
 	local captureMetadataCheck = position("assertRepresentationMetadata(", captureFunction)
 	local preflight = position("local plans = preflightReadouts(lab, model)")
@@ -75,6 +83,30 @@ local function run(): number
 			and recipeKeyMatch ~= nil
 			and representationRevisionMatch ~= nil
 			and stateRevisionMatch ~= nil
+	)
+	expect(
+		"representation enumeration fails closed when identity-tagged children do not match represented count",
+		enumerationFunction ~= nil
+			and representedCountRead ~= nil
+			and enumerationCountMatch ~= nil
+			and enumerationFunction < representedCountRead
+			and representedCountRead < enumerationCountMatch
+	)
+	expect(
+		"readout preflight uses the represented-count cardinality guard before diagnostics realization",
+		preflightFunction ~= nil
+			and preflightEnumeration ~= nil
+			and enableFunction ~= nil
+			and preflightFunction < preflightEnumeration
+			and preflightEnumeration < enableFunction
+	)
+	expect(
+		"machine-readable capture uses the same represented-count cardinality guard",
+		captureFunction ~= nil
+			and captureEnumeration ~= nil
+			and enableFunction ~= nil
+			and captureFunction < captureEnumeration
+			and captureEnumeration < enableFunction
 	)
 	expect(
 		"readout preflight validates physical metadata before diagnostics realization",
