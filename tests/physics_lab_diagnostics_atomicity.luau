@@ -34,17 +34,21 @@ local function run(): number
 	local representationRevisionMatch =
 		position("expectedRepresentationRevision == representedRepresentationRevision", metadataHelper)
 	local stateRevisionMatch = position("expectedStateRevision == representedStateRevision", metadataHelper)
-	local enumerationFunction = position("local function directRepresentations")
+	local enumerationFunction = position(
+		"local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model: Model): { Instance }"
+	)
 	local representedCountRead = position(
 		'requireNonNegativeIntegerAttribute(model, "UNRENDERED_RepresentedCount")',
 		enumerationFunction
 	)
 	local enumerationCountMatch = position("#representations == representedCount", enumerationFunction)
+	local uniqueRepresentationIds = position("not seenEntityIds[entityId]", enumerationFunction)
+	local authoritativeRepresentationMembership = position("lab.isRepresented(entityId)", enumerationFunction)
 	local preflightFunction = position("local function preflightReadouts")
 	local captureFunction = position("function PhysicsLabStudioDiagnostics.capture")
 	local enableFunction = position("function PhysicsLabStudioDiagnostics.enable")
-	local preflightEnumeration = position("directRepresentations(model)", preflightFunction)
-	local captureEnumeration = position("directRepresentations(model)", captureFunction)
+	local preflightEnumeration = position("directRepresentations(lab, model)", preflightFunction)
+	local captureEnumeration = position("directRepresentations(lab, model)", captureFunction)
 	local preflightMetadataCheck = position("assertRepresentationMetadata(", preflightFunction)
 	local captureMetadataCheck = position("assertRepresentationMetadata(", captureFunction)
 	local preflight = position("local plans = preflightReadouts(lab, model)")
@@ -93,7 +97,17 @@ local function run(): number
 			and representedCountRead < enumerationCountMatch
 	)
 	expect(
-		"readout preflight uses the represented-count cardinality guard before diagnostics realization",
+		"representation enumeration rejects duplicate ids and non-authoritative membership",
+		enumerationFunction ~= nil
+			and uniqueRepresentationIds ~= nil
+			and authoritativeRepresentationMembership ~= nil
+			and enumerationFunction < uniqueRepresentationIds
+			and uniqueRepresentationIds < representedCountRead
+			and enumerationFunction < authoritativeRepresentationMembership
+			and authoritativeRepresentationMembership < representedCountRead
+	)
+	expect(
+		"readout preflight uses the authoritative represented-set guard before diagnostics realization",
 		preflightFunction ~= nil
 			and preflightEnumeration ~= nil
 			and enableFunction ~= nil
@@ -101,7 +115,7 @@ local function run(): number
 			and preflightEnumeration < enableFunction
 	)
 	expect(
-		"machine-readable capture uses the same represented-count cardinality guard",
+		"machine-readable capture uses the same authoritative represented-set guard",
 		captureFunction ~= nil
 			and captureEnumeration ~= nil
 			and enableFunction ~= nil
