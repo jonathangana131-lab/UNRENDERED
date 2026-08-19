@@ -111,8 +111,15 @@ end
 
 local function directRepresentations(model: Model): { Instance }
 	local representations = {}
+	local seenEntityIds: { [string]: boolean } = {}
 	for _, child in ipairs(model:GetChildren()) do
 		if child.Name ~= DIAGNOSTICS_ROOT_NAME and child:GetAttribute("UNRENDERED_WorldEntityId") ~= nil then
+			local entityId = requireStringAttribute(child, "UNRENDERED_WorldEntityId")
+			assert(
+				seenEntityIds[entityId] ~= true,
+				`diagnostics representation enumeration contains duplicate WorldEntityId: {entityId}`
+			)
+			seenEntityIds[entityId] = true
 			table.insert(representations, child)
 		end
 	end
