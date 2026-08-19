@@ -88,7 +88,8 @@ local function assertRepresentationMetadata(
 		`diagnostics representation revision disagrees with authoritative WorldEntity: {entityId}`
 	)
 
-	local representedStateRevision = requireNonNegativeIntegerAttribute(representation, "UNRENDERED_StateRevision")
+	local representedStateRevision =
+		requireNonNegativeIntegerAttribute(representation, "UNRENDERED_StateRevision")
 	assert(
 		expectedStateRevision == representedStateRevision,
 		`diagnostics state revision disagrees with authoritative WorldEntity: {entityId}`
