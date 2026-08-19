@@ -35,6 +35,10 @@ local function run(): number
 		position("expectedRepresentationRevision == representedRepresentationRevision", metadataHelper)
 	local stateRevisionMatch = position("expectedStateRevision == representedStateRevision", metadataHelper)
 	local enumerationFunction = position("local function directRepresentations")
+	local enumerationEntityIdRead =
+		position('requireStringAttribute(child, "UNRENDERED_WorldEntityId")', enumerationFunction)
+	local duplicateEntityIdGuard = position("seenEntityIds[entityId] ~= true", enumerationFunction)
+	local duplicateEntityIdRegistration = position("seenEntityIds[entityId] = true", enumerationFunction)
 	local representedCountRead = position(
 		'requireNonNegativeIntegerAttribute(model, "UNRENDERED_RepresentedCount")',
 		enumerationFunction
@@ -83,6 +87,18 @@ local function run(): number
 			and recipeKeyMatch ~= nil
 			and representationRevisionMatch ~= nil
 			and stateRevisionMatch ~= nil
+	)
+	expect(
+		"representation enumeration rejects duplicate entity identities before trusting cardinality",
+		enumerationFunction ~= nil
+			and enumerationEntityIdRead ~= nil
+			and duplicateEntityIdGuard ~= nil
+			and duplicateEntityIdRegistration ~= nil
+			and representedCountRead ~= nil
+			and enumerationFunction < enumerationEntityIdRead
+			and enumerationEntityIdRead < duplicateEntityIdGuard
+			and duplicateEntityIdGuard < duplicateEntityIdRegistration
+			and duplicateEntityIdRegistration < representedCountRead
 	)
 	expect(
 		"representation enumeration fails closed when identity-tagged children do not match represented count",
