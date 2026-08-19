@@ -104,11 +104,25 @@ FidelityManager.__index = FidelityManager
 
 type ManagerImpl = {
 	config: PolicyConfig,
-	_states: { [string]: EntityState },
-	_metrics: MutableMetrics,
 }
 
 export type Manager = typeof(setmetatable({} :: ManagerImpl, FidelityManager))
+
+type PrivateState = {
+	states: { [string]: EntityState },
+	metrics: MutableMetrics,
+}
+
+-- Mutable manager state is intentionally capability-private. The weak keys keep
+-- the backing records bounded by manager lifetime without exposing a second
+-- write path around registration, timing, transition, or metrics invariants.
+local PRIVATE_STATE = setmetatable({}, { __mode = "k" }) :: any
+
+local function privateState(self: Manager): PrivateState
+	local state = PRIVATE_STATE[self] :: PrivateState?
+	assert(state ~= nil, "invalid FidelityManager capability")
+	return state
+end
 
 local LEVEL_INDEX: { [FidelityLevel]: number } = {
 	F0 = 0,
@@ -421,10 +435,15 @@ function FidelityManager.new(config: PolicyConfig?): Manager
 	local resolvedConfig = copyConfig(sourceConfig)
 	validateConfig(resolvedConfig)
 
-	local self: ManagerImpl = {
-		config = table.freeze(resolvedConfig),
-		_states = {},
-		_metrics = {
+	local manager = setmetatable(
+		{
+			config = table.freeze(resolvedConfig),
+		} :: ManagerImpl,
+		FidelityManager
+	) :: Manager
+	PRIVATE_STATE[manager] = {
+		states = {},
+		metrics = {
 			registered = 0,
 			counts = { F0 = 0, F1 = 0, F2 = 0, F3 = 0, F4 = 0 },
 			transitions = 0,
@@ -438,15 +457,16 @@ function FidelityManager.new(config: PolicyConfig?): Manager
 			registrationCapacityRejections = 0,
 		},
 	}
-
-	return setmetatable(self, FidelityManager)
+	table.freeze(manager)
+	return manager
 end
 
 function FidelityManager.register(self: Manager, entityId: string, currentLevel: FidelityLevel?): ()
 	entityId = assertEntityId(entityId)
-	assert(self._states[entityId] == nil, `entity already registered: {entityId}`)
-	if self._metrics.registered >= self.config.maxRegisteredEntities then
-		self._metrics.registrationCapacityRejections += 1
+	local private = privateState(self)
+	assert(private.states[entityId] == nil, `entity already registered: {entityId}`)
+	if private.metrics.registered >= self.config.maxRegisteredEntities then
+		private.metrics.registrationCapacityRejections += 1
 		error(`fidelity registration capacity reached: {self.config.maxRegisteredEntities}`)
 	end
 
@@ -458,35 +478,36 @@ function FidelityManager.register(self: Manager, entityId: string, currentLevel:
 	end
 	assert(isLevel(level), "currentLevel must be F0-F4")
 
-	self._states[entityId] = {
+	private.states[entityId] = {
 		observedLevel = level,
 		pendingLevel = nil,
 		pendingSince = nil,
 		lastTransitionAt = -math.huge,
 		lastEvaluatedAt = -math.huge,
 	}
-	self._metrics.registered += 1
-	adjustCount(self._metrics.counts, level, 1)
+	private.metrics.registered += 1
+	adjustCount(private.metrics.counts, level, 1)
 end
 
 function FidelityManager.unregister(self: Manager, entityId: string): ()
 	entityId = assertEntityId(entityId)
-	local state = self._states[entityId]
+	local private = privateState(self)
+	local state = private.states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
-	self._metrics.registered -= 1
-	adjustCount(self._metrics.counts, state.observedLevel, -1)
-	self._states[entityId] = nil
+	private.metrics.registered -= 1
+	adjustCount(private.metrics.counts, state.observedLevel, -1)
+	private.states[entityId] = nil
 end
 
 function FidelityManager.getObservedLevel(self: Manager, entityId: string): FidelityLevel
 	entityId = assertEntityId(entityId)
-	local state = self._states[entityId]
+	local state = privateState(self).states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
 	return state.observedLevel
 end
 
 local function synchronizeObservedLevel(
-	self: Manager,
+	private: PrivateState,
 	state: EntityState,
 	currentLevel: FidelityLevel,
 	nowSeconds: number
@@ -495,9 +516,9 @@ local function synchronizeObservedLevel(
 		return
 	end
 
-	adjustCount(self._metrics.counts, state.observedLevel, -1)
-	adjustCount(self._metrics.counts, currentLevel, 1)
-	self._metrics.externalSynchronizations += 1
+	adjustCount(private.metrics.counts, state.observedLevel, -1)
+	adjustCount(private.metrics.counts, currentLevel, 1)
+	private.metrics.externalSynchronizations += 1
 	state.observedLevel = currentLevel
 	state.pendingLevel = nil
 	state.pendingSince = nil
@@ -513,7 +534,8 @@ function FidelityManager.step(
 	applyTransition: TransitionHook?
 ): StepResult
 	entityId = assertEntityId(entityId)
-	local state = self._states[entityId]
+	local private = privateState(self)
+	local state = private.states[entityId]
 	assert(state ~= nil, `entity not registered: {entityId}`)
 	assert(isLevel(currentLevel), "currentLevel must be F0-F4")
 	assert(
@@ -527,7 +549,7 @@ function FidelityManager.step(
 	local desired: FidelityLevel, reason: PolicyReason = evaluatePolicy(inputs, self.config, currentLevel)
 
 	state.lastEvaluatedAt = nowSeconds
-	synchronizeObservedLevel(self, state, currentLevel, nowSeconds)
+	synchronizeObservedLevel(private, state, currentLevel, nowSeconds)
 
 	if desired == currentLevel then
 		state.pendingLevel = nil
@@ -552,7 +574,7 @@ function FidelityManager.step(
 		then self.config.promotionHoldSeconds
 		else self.config.demotionHoldSeconds
 	if nowSeconds - pendingSince < holdSeconds then
-		self._metrics.blockedByHold += 1
+		private.metrics.blockedByHold += 1
 		return {
 			transitioned = false,
 			currentLevel = currentLevel,
@@ -563,7 +585,7 @@ function FidelityManager.step(
 	end
 
 	if nowSeconds - state.lastTransitionAt < self.config.transitionCooldownSeconds then
-		self._metrics.blockedByCooldown += 1
+		private.metrics.blockedByCooldown += 1
 		return {
 			transitioned = false,
 			currentLevel = currentLevel,
@@ -574,7 +596,7 @@ function FidelityManager.step(
 	end
 
 	if applyTransition == nil then
-		self._metrics.blockedByMissingTransition += 1
+		private.metrics.blockedByMissingTransition += 1
 		return {
 			transitioned = false,
 			currentLevel = currentLevel,
@@ -585,18 +607,18 @@ function FidelityManager.step(
 	end
 
 	applyTransition(entityId, currentLevel, desired, reason)
-	self._metrics.transitionHookCalls += 1
-	adjustCount(self._metrics.counts, currentLevel, -1)
-	adjustCount(self._metrics.counts, desired, 1)
+	private.metrics.transitionHookCalls += 1
+	adjustCount(private.metrics.counts, currentLevel, -1)
+	adjustCount(private.metrics.counts, desired, 1)
 	state.observedLevel = desired
 	state.pendingLevel = nil
 	state.pendingSince = nil
 	state.lastTransitionAt = nowSeconds
-	self._metrics.transitions += 1
+	private.metrics.transitions += 1
 	if isPromotion then
-		self._metrics.promotions += 1
+		private.metrics.promotions += 1
 	else
-		self._metrics.demotions += 1
+		private.metrics.demotions += 1
 	end
 
 	return {
@@ -609,18 +631,19 @@ function FidelityManager.step(
 end
 
 function FidelityManager.getMetrics(self: Manager): Metrics
+	local metrics = privateState(self).metrics
 	return table.freeze({
-		registered = self._metrics.registered,
-		counts = frozenCounts(self._metrics),
-		transitions = self._metrics.transitions,
-		promotions = self._metrics.promotions,
-		demotions = self._metrics.demotions,
-		transitionHookCalls = self._metrics.transitionHookCalls,
-		blockedByHold = self._metrics.blockedByHold,
-		blockedByCooldown = self._metrics.blockedByCooldown,
-		blockedByMissingTransition = self._metrics.blockedByMissingTransition,
-		externalSynchronizations = self._metrics.externalSynchronizations,
-		registrationCapacityRejections = self._metrics.registrationCapacityRejections,
+		registered = metrics.registered,
+		counts = frozenCounts(metrics),
+		transitions = metrics.transitions,
+		promotions = metrics.promotions,
+		demotions = metrics.demotions,
+		transitionHookCalls = metrics.transitionHookCalls,
+		blockedByHold = metrics.blockedByHold,
+		blockedByCooldown = metrics.blockedByCooldown,
+		blockedByMissingTransition = metrics.blockedByMissingTransition,
+		externalSynchronizations = metrics.externalSynchronizations,
+		registrationCapacityRejections = metrics.registrationCapacityRejections,
 	})
 end
 
