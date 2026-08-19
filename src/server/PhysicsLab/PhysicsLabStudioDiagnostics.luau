@@ -191,7 +191,7 @@ local function assertReadoutShape(
 	)
 	assert(#adornees == #entities, "diagnostics internal adornee cardinality mismatch")
 
-	local readoutsByName: { [string]: Instance } = {}
+	local readoutsByName: { [string]: Instance? } = {}
 	for _, readout in ipairs(readouts) do
 		assert(readoutsByName[readout.Name] == nil, `duplicate diagnostics readout name: {readout.Name}`)
 		readoutsByName[readout.Name] = readout
