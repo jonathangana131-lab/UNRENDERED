@@ -14,20 +14,20 @@ The readout surface exposes:
 
 - stable `WorldEntityId`;
 - authoritative current fidelity from the `WorldEntity` record;
-- entity recipe identity;
-- representation/state revisions in the machine-readable snapshot;
+- authoritative representation/state revisions from the same record, both in the live visual label and the machine-readable snapshot;
+- entity recipe identity in the machine-readable snapshot;
 - resolved-region fingerprint;
 - resolved-region repro key.
 
 The visual labels are diagnostic representation only. They are never canonical world data and are excluded from all diagnostics-off validation evidence by being destroyed before `PhysicsLabValidation.captureFull()` runs.
 
-## Failure atomicity audit
+## Failure atomicity
 
-The diagnostics boundary must be fail-closed as well as leak-free. A failed diagnostics-on attempt must not leave a partial owned tree that changes the next observation or causes the next enable attempt to fail as "already enabled."
+Diagnostics-on is fail-closed. `enable()` preflights the realized representations, authoritative records, required identity/fidelity attributes, revision counters, and usable `BasePart` adornees before it parents the owned diagnostics root. The owned Instance tree is then realized inside a protected transaction; if any later configuration/capture step fails, the owned root is destroyed before the original error is rethrown.
 
-Current source does not yet prove that invariant for every assertion path: `enable()` creates and parents the owned diagnostics folder before it has preflighted every realized representation, authoritative record, required identity attribute, and usable `BasePart` adornee. If any later validation/assertion fails, the partially-created folder can remain under the lab root. This is a source-level audit finding, **not** a claim that the engine evidence row has failed or passed.
+`tests/physics_lab_diagnostics_atomicity.luau` guards the preflight-before-mutation ordering, ownership-before-configuration ordering, rollback path, and live revision-readout contract. This source test does **not** replace the real Studio observation required for #151.
 
-Until the implementation is hardened, evidence collection must treat any interrupted/errored diagnostics-on attempt as contaminated. Explicitly disable/clean the owned diagnostics tree and re-establish the canonical lab baseline before collecting a new candidate observation. A production fix should make enable failure-atomic by validating all required inputs before mutation or by guaranteed rollback of every owned Instance created during a failed attempt. The fix requires a regression test for an injected mid-enable failure and must preserve the rule that an unrelated same-name object is never adopted or destroyed.
+An unrelated same-name object is still never adopted or destroyed. If Studio evidence ever exposes a distinct post-preflight failure path that leaves owned state behind, preserve that exact repro and repair the smallest source defect rather than weakening the evidence contract.
 
 ## Manual server procedure
 
@@ -48,7 +48,7 @@ print("PHYSICS_LAB_DIAGNOSTICS_ON=" .. HttpService:JSONEncode(enabled))
 
 -- Inspect at least one structural representation and one ObjectGenome-backed F2
 -- proxy in the 3D view. The labels must agree with the representation attributes
--- and the authoritative WorldEntity record.
+-- and the authoritative WorldEntity record, including fidelity and revisions.
 
 local disabled = Diagnostics.disable(lab)
 print("PHYSICS_LAB_DIAGNOSTICS_OFF=" .. HttpService:JSONEncode(disabled))
@@ -82,7 +82,7 @@ This proves bounded cleanup of the diagnostics Instances that this adapter owns.
 The diagnostics row remains open until a tester/bridge run on the exact commit establishes all of the following:
 
 1. the code runs in real Studio server RunMode (`RunService:IsStudio()` and `RunService:IsServer()`);
-2. diagnostics-on visibly exposes the stable identity/fidelity/fingerprint/repro information on real realized representations;
+2. diagnostics-on visibly exposes the stable identity, fidelity, representation/state revisions, fingerprint, and repro information on real realized representations;
 3. at least one structural entity and one ObjectGenome-backed representation are inspected;
 4. the machine-readable snapshot agrees with production `WorldEntity` state;
 5. diagnostics-off leaves no owned diagnostics tree;
