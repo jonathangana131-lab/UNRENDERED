@@ -61,6 +61,10 @@ end
 function PhysicsLabStudioHarness.restart(parent: Instance?): RealizedLab
 	assertStudioServer()
 	local targetParent = resolveWorkspaceParent(parent)
+	local active = current
+	if active ~= nil then
+		assertCanonicalPlacement(active)
+	end
 	PhysicsLabStudioHarness.stop()
 	return PhysicsLabStudioHarness.start(targetParent)
 end
