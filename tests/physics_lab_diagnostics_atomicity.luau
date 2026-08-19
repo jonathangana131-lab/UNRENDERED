@@ -28,6 +28,9 @@ local function run(): number
 	local billboardConfiguration = position("billboard.AlwaysOnTop = true")
 	local labelOwnership = position("label.Parent = billboard")
 	local labelConfiguration = position("label.BackgroundTransparency = 0.2")
+	local representationRevision = position("representationRevision = record.representationRevision")
+	local stateRevision = position("stateRevision = record.stateRevision")
+	local visualRevisionReadout = position("reprRev=%d | stateRev=%d")
 	local capture = position("return PhysicsLabStudioDiagnostics.capture(lab)")
 	local transactionEnd = position("\tend)\n\n\tif not ok then")
 	local rollback = position("folder:Destroy()")
@@ -36,6 +39,18 @@ local function run(): number
 	expect(
 		"all readout dependencies are preflighted before the owned root is parented",
 		preflight ~= nil and parentMutation ~= nil and preflight < parentMutation
+	)
+	expect(
+		"authoritative revisions are preflighted before the owned root is parented",
+		representationRevision ~= nil
+			and stateRevision ~= nil
+			and parentMutation ~= nil
+			and representationRevision < parentMutation
+			and stateRevision < parentMutation
+	)
+	expect(
+		"live readouts expose both authoritative revision counters",
+		visualRevisionReadout ~= nil
 	)
 	expect(
 		"Instance realization begins inside a protected transaction",
