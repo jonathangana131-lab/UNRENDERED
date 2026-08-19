@@ -47,6 +47,12 @@ local function run(): number
 		enumerationFunction
 	)
 	local enumerationCountMatch = position("#representations == representedCount", enumerationFunction)
+	local readoutShapeHelper = position("local function assertReadoutShape(")
+	local readoutChildCount = position("#readouts == #entities", readoutShapeHelper)
+	local readoutNameCheck = position("readout.Name == expectedName", readoutShapeHelper)
+	local readoutClassCheck = position('readout:IsA("BillboardGui")', readoutShapeHelper)
+	local readoutLabelCheck = position('label ~= nil and label:IsA("TextLabel")', readoutShapeHelper)
+	local readoutDescendantCount = position("descendantCount == #entities * 2", readoutShapeHelper)
 	local preflightFunction = position("local function preflightReadouts")
 	local captureFunction = position("function PhysicsLabStudioDiagnostics.capture")
 	local enableFunction = position("function PhysicsLabStudioDiagnostics.enable")
@@ -54,6 +60,8 @@ local function run(): number
 	local captureEnumeration = position("directRepresentations(lab, model)", captureFunction)
 	local preflightMetadataCheck = position("assertRepresentationMetadata(", preflightFunction)
 	local captureMetadataCheck = position("assertRepresentationMetadata(", captureFunction)
+	local captureReadoutShapeCheck =
+		position("diagnosticInstanceCount = assertReadoutShape(folder, entities)", captureFunction)
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
 	local rootName = position("folder.Name = DIAGNOSTICS_ROOT_NAME")
@@ -112,6 +120,28 @@ local function run(): number
 			and enumerationCountMatch ~= nil
 			and enumerationFunction < representedCountRead
 			and representedCountRead < enumerationCountMatch
+	)
+	expect(
+		"enabled diagnostics fail closed on partial or malformed visual readout trees",
+		readoutShapeHelper ~= nil
+			and readoutChildCount ~= nil
+			and readoutNameCheck ~= nil
+			and readoutClassCheck ~= nil
+			and readoutLabelCheck ~= nil
+			and readoutDescendantCount ~= nil
+			and readoutShapeHelper < readoutChildCount
+			and readoutChildCount < readoutNameCheck
+			and readoutNameCheck < readoutClassCheck
+			and readoutClassCheck < readoutLabelCheck
+			and readoutLabelCheck < readoutDescendantCount
+	)
+	expect(
+		"machine-readable capture validates visual readout shape before publishing an enabled snapshot",
+		captureFunction ~= nil
+			and captureReadoutShapeCheck ~= nil
+			and enableFunction ~= nil
+			and captureFunction < captureReadoutShapeCheck
+			and captureReadoutShapeCheck < enableFunction
 	)
 	expect(
 		"readout preflight uses the represented-count cardinality guard before diagnostics realization",

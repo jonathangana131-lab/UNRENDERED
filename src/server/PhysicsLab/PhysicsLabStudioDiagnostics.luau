@@ -152,6 +152,43 @@ local function adorneeFor(representation: Instance): BasePart
 	return part
 end
 
+local function readoutName(index: number, key: string): string
+	return string.format("Entity_%03d_%s", index, key)
+end
+
+local function assertReadoutShape(folder: Folder, entities: { EntityDiagnostic }): number
+	local readouts = folder:GetChildren()
+	assert(
+		#readouts == #entities,
+		`diagnostics readout cardinality disagrees with represented entities: expected {#entities}, got {#readouts}`
+	)
+	table.sort(readouts, function(a: Instance, b: Instance): boolean
+		return a.Name < b.Name
+	end)
+
+	for index, entity in ipairs(entities) do
+		local readout = readouts[index]
+		local expectedName = readoutName(index, entity.key)
+		assert(
+			readout.Name == expectedName,
+			`unexpected diagnostics readout: expected {expectedName}, got {readout.Name}`
+		)
+		assert(readout:IsA("BillboardGui"), `unexpected diagnostics readout class: {readout.ClassName}`)
+
+		local children = readout:GetChildren()
+		assert(#children == 1, `unexpected diagnostics readout child count: {readout.Name}`)
+		local label = readout:FindFirstChild("Readout")
+		assert(label ~= nil and label:IsA("TextLabel"), `missing diagnostics TextLabel: {readout.Name}`)
+	end
+
+	local descendantCount = #folder:GetDescendants()
+	assert(
+		descendantCount == #entities * 2,
+		`diagnostics descendant cardinality disagrees with represented entities: expected {#entities * 2}, got {descendantCount}`
+	)
+	return 1 + descendantCount
+end
+
 local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model): { ReadoutPlan }
 	local plans: { ReadoutPlan } = {}
 	for _, representation in ipairs(directRepresentations(lab, model)) do
@@ -220,7 +257,7 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 	table.freeze(entities)
 	local diagnosticInstanceCount = 0
 	if folder ~= nil then
-		diagnosticInstanceCount = 1 + #folder:GetDescendants()
+		diagnosticInstanceCount = assertReadoutShape(folder, entities)
 	end
 
 	local snapshot: Snapshot = {
@@ -260,7 +297,7 @@ function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab)
 		for index, plan in ipairs(plans) do
 			local billboard = Instance.new("BillboardGui")
 			billboard.Parent = folder
-			billboard.Name = string.format("Entity_%03d_%s", index, plan.key)
+			billboard.Name = readoutName(index, plan.key)
 			billboard.AlwaysOnTop = true
 			billboard.MaxDistance = 120
 			billboard.Size = UDim2.fromOffset(560, 136)
