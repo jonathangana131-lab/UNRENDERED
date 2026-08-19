@@ -109,7 +109,7 @@ local function diagnosticsRoot(model: Model): Folder?
 	return existing
 end
 
-local function directRepresentations(model: Model): { Instance }
+local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model: Model): { Instance }
 	local representations = {}
 	local seenEntityIds: { [string]: boolean } = {}
 	for _, child in ipairs(model:GetChildren()) do
@@ -118,6 +118,10 @@ local function directRepresentations(model: Model): { Instance }
 			assert(
 				seenEntityIds[entityId] ~= true,
 				`diagnostics representation enumeration contains duplicate WorldEntityId: {entityId}`
+			)
+			assert(
+				lab.ownsRepresentation(entityId, child),
+				`diagnostics child is not the authoritative owned representation: {entityId}`
 			)
 			seenEntityIds[entityId] = true
 			table.insert(representations, child)
@@ -150,7 +154,7 @@ end
 
 local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model): { ReadoutPlan }
 	local plans: { ReadoutPlan } = {}
-	for _, representation in ipairs(directRepresentations(model)) do
+	for _, representation in ipairs(directRepresentations(lab, model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
 		assertRepresentationMetadata(
@@ -182,7 +186,7 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 	local folder = diagnosticsRoot(model)
 	local entities: { EntityDiagnostic } = {}
 
-	for _, representation in ipairs(directRepresentations(model)) do
+	for _, representation in ipairs(directRepresentations(lab, model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
 		assertRepresentationMetadata(
