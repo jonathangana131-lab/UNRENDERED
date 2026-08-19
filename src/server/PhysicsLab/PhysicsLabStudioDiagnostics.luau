@@ -36,6 +36,8 @@ type ReadoutPlan = {
 	key: string,
 	worldEntityId: string,
 	fidelity: string,
+	representationRevision: number,
+	stateRevision: number,
 	adornee: BasePart,
 }
 
@@ -102,6 +104,8 @@ local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Mod
 			key = representation.Name,
 			worldEntityId = record.id,
 			fidelity = record.fidelity,
+			representationRevision = record.representationRevision,
+			stateRevision = record.stateRevision,
 			adornee = adorneeFor(representation),
 		}
 		table.freeze(plan)
@@ -206,10 +210,12 @@ function PhysicsLabStudioDiagnostics.enable(lab: PhysicsLabRealizer.RealizedLab)
 			label.TextXAlignment = Enum.TextXAlignment.Left
 			label.TextYAlignment = Enum.TextYAlignment.Top
 			label.Text = string.format(
-				"%s | %s | fidelity=%s\nfingerprint=%s\nrepro=%s",
+				"%s | %s | fidelity=%s\nstateRevision=%d | representationRevision=%d\nfingerprint=%s\nrepro=%s",
 				plan.key,
 				plan.worldEntityId,
 				plan.fidelity,
+				plan.stateRevision,
+				plan.representationRevision,
 				fingerprint,
 				reproKey
 			)
