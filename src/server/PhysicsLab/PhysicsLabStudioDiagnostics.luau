@@ -137,8 +137,8 @@ local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model:
 				`diagnostics representation enumeration contains duplicate WorldEntityId: {entityId}`
 			)
 			assert(
-				lab.isRepresented(entityId),
-				`diagnostics child is not an authoritative representation: {entityId}`
+				lab.ownsRepresentation(entityId, child),
+				`diagnostics child is not the runtime-owned representation: {entityId}`
 			)
 			seenEntityIds[entityId] = true
 			table.insert(representations, child)
