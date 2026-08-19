@@ -48,10 +48,7 @@ local function run(): number
 			and representationRevision < parentMutation
 			and stateRevision < parentMutation
 	)
-	expect(
-		"live readouts expose both authoritative revision counters",
-		visualRevisionReadout ~= nil
-	)
+	expect("live readouts expose both authoritative revision counters", visualRevisionReadout ~= nil)
 	expect(
 		"Instance realization begins inside a protected transaction",
 		transaction ~= nil and parentMutation ~= nil and transaction < parentMutation
