@@ -203,7 +203,10 @@ local function assertReadoutShape(
 		assert(readout ~= nil, `missing diagnostics readout: {expectedName}`)
 		assert(readout:IsA("BillboardGui"), `unexpected diagnostics readout class: {readout.ClassName}`)
 		local billboard = readout :: BillboardGui
-		assert(billboard.Adornee == adornees[index], `diagnostics readout targets wrong representation: {expectedName}`)
+		assert(
+			billboard.Adornee == adornees[index],
+			`diagnostics readout targets wrong representation: {expectedName}`
+		)
 
 		local children = billboard:GetChildren()
 		assert(#children == 1, `unexpected diagnostics readout child count: {expectedName}`)
