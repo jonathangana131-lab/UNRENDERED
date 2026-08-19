@@ -6,15 +6,15 @@ Current phase: **Hero Gate — Production Physics Lab**
 
 - Roblox/Rojo production bootstrap is merged.
 - The proven CI path covers pinned tool installation, Rojo sourcemap, StyLua, Selene, Roblox Luau analysis, pure deterministic tests, Rojo build, and artifact upload.
-- Every worker must inspect the latest `main` Actions status. Red main overrides feature work.
+- Every agent must inspect the latest `main` Actions status. Red main overrides feature work.
 
 ## Quality policy
 
 `Docs/QUALITY_STANDARD.md` is mandatory.
 
-Open issue != unlocked work. This file is the authoritative unlock board.
+Open issue != unlocked work. This file is the authoritative unlock board. Repository execution/coordination authority lives in the root `AGENTS.md`.
 
-Project-wide WIP limit: **3 major Feature Epics maximum**. With many chats, deepen active epics through tests, fuzzing, performance, polish, integration and independent review rather than opening unrelated systems; apply Foundry 17 repository-pressure admission before any new product branch.
+Project-wide WIP limit: **3 major Feature Epics maximum**. With many parallel sessions, deepen active epics through tests, fuzzing, performance, polish, integration and independent review rather than opening unrelated systems; use live PR/check/review pressure and the lightweight concurrency rules in `AGENTS.md` before opening another product branch.
 
 ## Foundation Lock — Wave 1 complete
 
@@ -104,7 +104,7 @@ The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational; 
 - Fresh post-display-guard two-client request `20260810-039-two-client-post97-post93-835f-sol56m9` on exact public `main@835f6bc39f9468a0fbe3c8f6c1c1249365fc9540` is durable `physics-lab-two-client` `FAIL` / `NO_CAPTURE` with empty evidence and `transport status was not PASS`. It provides no accepted two-client authority evidence; the row remains open.
 - Request `20260810-031-diagnostics-capture-090e-sol56k8` on exact UNRENDERED SHA `090e112c83126ebe8e6f9ba75f27b7bcc31dc3af` has raw transport `PASS` and proves the source-owned diagnostics behavior itself reached visible ON, completed all 20 bounded toggle cycles with checkpoints 1/5/10/20, preserved zero tracked resource deltas and zero envelope drift, emitted each request-bound runtime marker exactly once, and finished OFF. Its durable semantic status remains `FAIL` solely because the required live diagnostics-on viewport capture was missing (`NO_CAPTURE`). This is useful failure evidence, not an accepted diagnostics row. Fresh post-display-guard request `20260810-036-diagnostics-displayguard-835f-sol56r8` on exact public `main@835f6bc39f9468a0fbe3c8f6c1c1249365fc9540` also published durable `FAIL` / `NO_CAPTURE` with empty evidence and `transport status was not PASS`, so it contributes no accepted diagnostics evidence.
 - Request `20260810-040-diagnostics-phaseprobe-835f-sol56sol` against UNRENDERED `835f6bc39f9468a0fbe3c8f6c1c1249365fc9540` predates bridge #118 and published durable `FAIL` / `NO_CAPTURE` with `failureDiagnostics.phase=NO_REQUEST_BOUND_LOG`, `requestMarkerLines=0`, and zero foundation/lab/visual/result/finished markers. This sharpens the observed blocker to pre-request-bound Studio execution, but it is **not** accepted diagnostics evidence and must not be cited as validation of #118.
-- Bridge #118 later landed runner-owned non-PASS telemetry on bridge `main@fa8077e9365cd59e30a8c227397d8f056109558f` with Bridge CI `31455126625` green: bounded elapsed/timeout/watchdog state, Studio-alive-at-loop-end state, capture-attempt/success state, and request-bound marker counts are now durable failure diagnostics rather than inferred evidence. Because the display preflight remains red and the scheduler forbids speculative retries, these newly added #118 runner-owned fields have **not yet been exercised by a fresh Studio request**. Do not queue a probe solely to exercise them; wait for real GUI recovery or a distinct post-recovery defect.
+- Bridge #118 later landed runner-owned non-PASS telemetry on bridge `main@fa8077e9365cd59e30a8c227397d8f056109558f` with Bridge CI `31455126625` green: bounded elapsed/timeout/watchdog state, Studio-alive-at-loop-end state, capture-attempt/success state, and request-bound marker counts are now durable failure diagnostics rather than inferred evidence. Because the display preflight remains red and speculative retries remain forbidden, these newly added #118 runner-owned fields have **not yet been exercised by a fresh Studio request**. Do not queue a probe solely to exercise them; wait for real GUI recovery or a distinct post-recovery defect.
 - Request `20260810-032-performance-observation-090e-sol56s9` on exact UNRENDERED SHA `090e112c83126ebe8e6f9ba75f27b7bcc31dc3af` is accepted as the bounded `physics-lab-performance-observation` row after hardened full-payload re-evaluation. The original Studio result records real server RunMode on Roblox engine `0.733.0.7330989`, 30 warmup + 120 measured Heartbeats (mean 17.785 ms, median 16.692 ms, p95 18.304 ms, max 93.643 ms), full-capture/restart observations, exact canonical WorldId/RegionId/fingerprint/repro identity, zero tracked restart resource deltas, and the documented 0.001-stud envelope preserved. Bridge #65 first added total/mean/sample and typed-zero consistency checks; #75 then added nearest-rank percentile/extrema feasibility; merged bridge #78 loaded the **entire durable request-032 result JSON** and required current `evaluate_evidence.evaluate()` acceptance under those hardened guards, with Bridge CI run `31450117146` green. This accepts measurement capture/consistency only under explicit `OBSERVED_NO_BUDGET`; it does **not** establish a permanent frame-time/startup/device-suitability budget. Fresh request `20260810-033-performance-post65-090e-sol56h3` later timed out before durable engine output and contributes no additional evidence.
 - Future engine evidence requests must pin an exact canonical SHA that is reachable from the named canonical ref and satisfy the job-specific evaluator. No lifecycle, single-server, physical-sanity, or measurement-only performance result may unlock the Hero Gate by itself.
 
@@ -112,16 +112,16 @@ The dedicated Mac ↔ GitHub ↔ Roblox Studio execution bridge is operational; 
 
 **No new major Feature Epic is unlocked yet.** Issues #11–#25 remain gated until this file explicitly unlocks one after the Hero Gate evidence is strong enough.
 
-Workers may still:
+Agents may still:
 - repair red `main`,
 - review/integrate active work,
 - repair a concrete regression in the landed #10 contracts,
 - prepare or consume real Roblox Studio evidence for the permanent lab without inventing PASS results,
-- perform scheduler/contract maintenance needed to keep the swarm state accurate.
+- perform project-state/governance maintenance needed to keep execution truth accurate.
 
-While bridge #88's macOS display preflight is red, workers must not queue speculative diagnostics/two-client evidence retries. Resume those evidence lanes only after the runner has a real active GUI display or a post-recovery run exposes a distinct code defect.
+While bridge #88's macOS display preflight is red, agents must not queue speculative diagnostics/two-client evidence retries. Resume those evidence lanes only after the runner has a real active GUI display or a post-recovery run exposes a distinct code defect.
 
-Do not start a Reality-Grade door, chair, physical-player controller, world generator, or another major system merely because worker capacity is available.
+Do not start a Reality-Grade door, chair, physical-player controller, world generator, or another major system merely because parallel capacity is available.
 
 ## Hero Gate exit direction
 
@@ -133,7 +133,7 @@ After that evidence is gathered and reviewed, update this file to explicitly unl
 
 Issues #11–#25 are planned future work. They are **not automatically implementation-ready** until this file unlocks them or they become an explicit prerequisite for an unlocked Epic.
 
-Workers may inspect/review/decompose them, but should not build those major systems yet merely because worker capacity exists.
+Agents may inspect/review/decompose them, but should not build those major systems yet merely because parallel capacity exists.
 
 ## Known external setup gaps
 
@@ -160,7 +160,7 @@ Compatibility note: historical `ResolvedRegionRecipe` schema v1 remains replay-o
 
 1. restore a usable runner GUI/display path and gather the remaining accepted diagnostics and true two-client canonical-authority evidence without weakening source truth,
 2. keep source-owned lifecycle/repro/ownership, accepted physical-sanity, and bounded performance-observation evidence green, and keep every remaining evidence path fail closed on regressions,
-3. explicitly update this scheduler before opening the next major Hero Feature,
+3. explicitly update this state file before opening the next major Hero Feature,
 4. when unlocked, deepen door/chair/physical-player work on these foundations rather than replacing them,
 5. improve the first five-minute experience only after the relevant foundations are actually unlocked and proven.
 
