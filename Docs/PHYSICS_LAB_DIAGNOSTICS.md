@@ -21,13 +21,15 @@ The readout surface exposes:
 
 Before a readout is accepted, the realized representation's fidelity, `UNRENDERED_RecipeKey`, `UNRENDERED_RepresentationRevision`, and `UNRENDERED_StateRevision` attributes must agree exactly with the authoritative `WorldEntity` record. Revision attributes must be valid nonnegative integers. The identity-tagged realized representation population must also equal the production realizer's `UNRENDERED_RepresentedCount`, so a missing identity tag cannot silently omit a represented entity from diagnostics. Diagnostics fails closed on missing, malformed, stale, contradictory, or incomplete physical metadata instead of projecting a partial evidence surface.
 
+When diagnostics are enabled, machine-readable capture also validates the owned visual tree itself: there must be exactly one expected `BillboardGui` per represented entity, each must contain exactly one `Readout` `TextLabel`, and the total owned descendant count must match that one-billboard/one-label shape. A deleted, extra, renamed, or malformed live readout therefore invalidates the snapshot instead of allowing a complete entity list to mask a partial visual overlay.
+
 The visual labels are diagnostic representation only. They are never canonical world data and are excluded from all diagnostics-off validation evidence by being destroyed before `PhysicsLabValidation.captureFull()` runs.
 
 ## Failure atomicity
 
 Diagnostics-on is fail-closed. `enable()` preflights the realized representation population/cardinality, authoritative records, required identity/fidelity/recipe attributes, valid revision attributes and exact representation-to-record agreement, plus usable `BasePart` adornees before it parents the owned diagnostics root. The owned Instance tree is then realized inside a protected transaction; if any later configuration/capture step fails, the owned root is destroyed before the original error is rethrown.
 
-`tests/physics_lab_diagnostics_atomicity.luau` guards represented-count cardinality, preflight-before-mutation ordering, representation-to-record fidelity/recipe/revision agreement, ownership-before-configuration ordering, rollback path, live revision-readout contract, default-off evidence precondition, and final-off evidence publication guard. This source test does **not** replace the real Studio observation required for #151.
+`tests/physics_lab_diagnostics_atomicity.luau` guards represented-count cardinality, enabled visual-readout cardinality/shape, preflight-before-mutation ordering, representation-to-record fidelity/recipe/revision agreement, ownership-before-configuration ordering, rollback path, live revision-readout contract, default-off evidence precondition, and final-off evidence publication guard. This source test does **not** replace the real Studio observation required for #151.
 
 An unrelated same-name object is still never adopted or destroyed. If Studio evidence ever exposes a distinct post-preflight failure path that leaves owned state behind, preserve that exact repro and repair the smallest source defect rather than weakening the evidence contract.
 
@@ -88,7 +90,7 @@ The diagnostics row remains open until a tester/bridge run on the exact commit e
 1. the code runs in real Studio server RunMode (`RunService:IsStudio()` and `RunService:IsServer()`);
 2. diagnostics-on visibly exposes the stable identity, fidelity, representation/state revisions, fingerprint, and repro information on real realized representations;
 3. at least one structural entity and one ObjectGenome-backed representation are inspected;
-4. the machine-readable snapshot agrees with production `WorldEntity` state, the realized fidelity/recipe/revision attributes agree with that same authoritative state, and the identity-tagged representation population matches `UNRENDERED_RepresentedCount`;
+4. the machine-readable snapshot agrees with production `WorldEntity` state, the realized fidelity/recipe/revision attributes agree with that same authoritative state, the identity-tagged representation population matches `UNRENDERED_RepresentedCount`, and the owned visual tree contains exactly one valid billboard/readout pair per represented entity;
 5. diagnostics-off leaves no owned diagnostics tree;
 6. the 20-cycle sweep records zero scoped resource drift and stable full-lab envelope at required checkpoints, and its final post-yield observation is still OFF with zero owned diagnostic Instances;
 7. diagnostics are observed OFF by default after normal bootstrap/rebuild; the evidence sweep must fail rather than normalize a pre-existing ON state;
