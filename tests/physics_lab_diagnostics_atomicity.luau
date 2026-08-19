@@ -35,6 +35,12 @@ local function run(): number
 	local transactionEnd = position("\tend)\n\n\tif not ok then")
 	local rollback = position("folder:Destroy()")
 	local propagate = position("error(result, 0)")
+	local toggleEvidence = position("function PhysicsLabStudioDiagnostics.runToggleEvidence(")
+	local toggleInitial = position("local initial = PhysicsLabStudioDiagnostics.capture(lab)")
+	local toggleDefaultOff = position("not initial.enabled and initial.diagnosticInstanceCount == 0")
+	local toggleBaseline = position("local baseline = Validation.captureFull(lab.model)")
+	local firstToggleDisable = position("local disabled = PhysicsLabStudioDiagnostics.disable(lab)")
+	local legacyDefaultOffNormalizer = position("PhysicsLabStudioDiagnostics.disable(lab)\n\tlocal baseline")
 
 	expect(
 		"all readout dependencies are preflighted before the owned root is parented",
@@ -88,6 +94,19 @@ local function run(): number
 			and transactionEnd ~= nil
 			and transactionEnd < rollback
 			and rollback < propagate
+	)
+	expect(
+		"toggle evidence observes and rejects a default-on state before baseline or cleanup",
+		toggleEvidence ~= nil
+			and toggleInitial ~= nil
+			and toggleDefaultOff ~= nil
+			and toggleBaseline ~= nil
+			and firstToggleDisable ~= nil
+			and toggleEvidence < toggleInitial
+			and toggleInitial < toggleDefaultOff
+			and toggleDefaultOff < toggleBaseline
+			and toggleBaseline < firstToggleDisable
+			and legacyDefaultOffNormalizer == nil
 	)
 
 	return failures
