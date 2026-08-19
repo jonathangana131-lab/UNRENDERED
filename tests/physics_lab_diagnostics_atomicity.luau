@@ -42,7 +42,8 @@ local function run(): number
 	local firstToggleDisable = position("local disabled = PhysicsLabStudioDiagnostics.disable(lab)")
 	local legacyDefaultOffNormalizer = position("PhysicsLabStudioDiagnostics.disable(lab)\n\tlocal baseline")
 	local toggleFinalSnapshot = position("local finalSnapshot = PhysicsLabStudioDiagnostics.capture(lab)")
-	local toggleFinalOff = position("not finalSnapshot.enabled and finalSnapshot.diagnosticInstanceCount == 0")
+	local toggleFinalOff =
+		position("not finalSnapshot.enabled and finalSnapshot.diagnosticInstanceCount == 0")
 	local toggleFinalPublication = position("finallyEnabled = finalSnapshot.enabled")
 
 	expect(
