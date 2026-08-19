@@ -41,6 +41,12 @@ type ReadoutPlan = {
 	adornee: BasePart,
 }
 
+type RepresentationState = {
+	fidelity: string,
+	representationRevision: number,
+	stateRevision: number,
+}
+
 local function assertStudioServer(): ()
 	assert(RunService:IsStudio(), "Physics Lab diagnostics are Studio-only")
 	assert(RunService:IsServer(), "Physics Lab diagnostics must run on the server")
@@ -50,6 +56,27 @@ local function requireStringAttribute(instance: Instance, attributeName: string)
 	local value = instance:GetAttribute(attributeName)
 	assert(type(value) == "string" and value ~= "", `missing diagnostics identity attribute: {attributeName}`)
 	return value :: string
+end
+
+local function requireRevisionAttribute(instance: Instance, attributeName: string): number
+	local value = instance:GetAttribute(attributeName)
+	assert(
+		type(value) == "number"
+			and value == value
+			and value >= 0
+			and value < math.huge
+			and value % 1 == 0,
+		`invalid diagnostics revision attribute: {attributeName}`
+	)
+	return value :: number
+end
+
+local function readRepresentationState(representation: Instance): RepresentationState
+	return table.freeze({
+		fidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity"),
+		representationRevision = requireRevisionAttribute(representation, "UNRENDERED_RepresentationRevision"),
+		stateRevision = requireRevisionAttribute(representation, "UNRENDERED_StateRevision"),
+	})
 end
 
 local function diagnosticsRoot(model: Model): Folder?
@@ -95,10 +122,18 @@ local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Mod
 	for _, representation in ipairs(directRepresentations(model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
-		local representedFidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity")
+		local represented = readRepresentationState(representation)
 		assert(
-			record.fidelity == representedFidelity,
+			record.fidelity == represented.fidelity,
 			`diagnostics fidelity disagrees with authoritative WorldEntity: {entityId}`
+		)
+		assert(
+			record.representationRevision == represented.representationRevision,
+			`diagnostics representation revision disagrees with authoritative WorldEntity: {entityId}`
+		)
+		assert(
+			record.stateRevision == represented.stateRevision,
+			`diagnostics state revision disagrees with authoritative WorldEntity: {entityId}`
 		)
 		local plan: ReadoutPlan = {
 			key = representation.Name,
@@ -124,10 +159,18 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 	for _, representation in ipairs(directRepresentations(model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
-		local representedFidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity")
+		local represented = readRepresentationState(representation)
 		assert(
-			record.fidelity == representedFidelity,
+			record.fidelity == represented.fidelity,
 			`diagnostics fidelity disagrees with authoritative WorldEntity: {entityId}`
+		)
+		assert(
+			record.representationRevision == represented.representationRevision,
+			`diagnostics representation revision disagrees with authoritative WorldEntity: {entityId}`
+		)
+		assert(
+			record.stateRevision == represented.stateRevision,
+			`diagnostics state revision disagrees with authoritative WorldEntity: {entityId}`
 		)
 
 		local representationClass = representation:GetAttribute("UNRENDERED_RepresentationClass")
