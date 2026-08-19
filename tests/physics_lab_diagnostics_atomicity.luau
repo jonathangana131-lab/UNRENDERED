@@ -60,10 +60,8 @@ local function run(): number
 	local captureEnumeration = position("directRepresentations(model)", captureFunction)
 	local preflightMetadataCheck = position("assertRepresentationMetadata(", preflightFunction)
 	local captureMetadataCheck = position("assertRepresentationMetadata(", captureFunction)
-	local captureReadoutShapeCheck = position(
-		"diagnosticInstanceCount = assertReadoutShape(folder, entities)",
-		captureFunction
-	)
+	local captureReadoutShapeCheck =
+		position("diagnosticInstanceCount = assertReadoutShape(folder, entities)", captureFunction)
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
 	local rootName = position("folder.Name = DIAGNOSTICS_ROOT_NAME")
