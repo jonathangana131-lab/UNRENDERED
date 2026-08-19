@@ -163,7 +163,7 @@ Run the matrix in a real Roblox Studio test session on the exact commit. The fir
 | spawn anchor | present as production-identified lab content; does not introduce a parallel character controller | UNVERIFIED |
 | teardown/rebuild | production teardown removes old representation; rebuild restores same IDs without duplicates | UNVERIFIED |
 | diagnostics off | release/default path does not create unbounded development labels/log spam | UNVERIFIED |
-| diagnostics on | WorldEntityId, fidelity, resolved fingerprint, and repro key are inspectable | UNVERIFIED |
+| diagnostics on | WorldEntityId, fidelity, authoritative `stateRevision` / `representationRevision`, resolved fingerprint, and repro key are inspectable | UNVERIFIED |
 
 Do not describe the current F2 anchored door/cart/cabinet proxies as validated hinges, casters, or drawers. F3/F4 mechanism behavior requires actual articulated realization plus Studio evidence.
 
@@ -223,7 +223,7 @@ A monotonic resource increase tied to each complete teardown/rebuild is a blocke
 
 ## Diagnostics / boundedness
 
-Development diagnostics must make WorldEntityId and fidelity inspectable without becoming canonical state or an unbounded history store.
+Development diagnostics must make WorldEntityId, fidelity, authoritative `stateRevision` / `representationRevision`, and repro identity inspectable without becoming canonical state or an unbounded history store.
 
 Audit that:
 
