@@ -20,11 +20,16 @@ local function run(): number
 	end
 
 	local metadataHelper = position("local function assertRepresentationMetadata(")
-	local recipeKeyRead = position('requireStringAttribute(representation, "UNRENDERED_RecipeKey")', metadataHelper)
-	local representationRevisionRead =
-		position('requireNonNegativeIntegerAttribute(representation, "UNRENDERED_RepresentationRevision")', metadataHelper)
-	local stateRevisionRead =
-		position('requireNonNegativeIntegerAttribute(representation, "UNRENDERED_StateRevision")', metadataHelper)
+	local recipeKeyRead =
+		position('requireStringAttribute(representation, "UNRENDERED_RecipeKey")', metadataHelper)
+	local representationRevisionRead = position(
+		'requireNonNegativeIntegerAttribute(representation, "UNRENDERED_RepresentationRevision")',
+		metadataHelper
+	)
+	local stateRevisionRead = position(
+		'requireNonNegativeIntegerAttribute(representation, "UNRENDERED_StateRevision")',
+		metadataHelper
+	)
 	local recipeKeyMatch = position("expectedRecipeKey == representedRecipeKey", metadataHelper)
 	local representationRevisionMatch =
 		position("expectedRepresentationRevision == representedRepresentationRevision", metadataHelper)
