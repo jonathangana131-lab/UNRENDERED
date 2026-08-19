@@ -8,7 +8,7 @@ Every phase uses `Docs/QUALITY_STANDARD.md`. Phase exit means the required found
 - Rojo/Rokit toolchain and green CI.
 - strict Luau boundaries.
 - stable source layout.
-- project docs/swarm protocol.
+- project docs/autonomous development contract.
 - baseline deterministic core.
 
 Exit: reproducible source build and green CI. **Complete.**
