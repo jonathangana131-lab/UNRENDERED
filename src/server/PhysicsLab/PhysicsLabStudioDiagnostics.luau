@@ -56,7 +56,7 @@ local function requireNonNegativeIntegerAttribute(instance: Instance, attributeN
 	local value = instance:GetAttribute(attributeName)
 	assert(
 		type(value) == "number" and value == value and value >= 0 and value % 1 == 0,
-		`missing or invalid diagnostics revision attribute: {attributeName}`
+		`missing or invalid diagnostics integer attribute: {attributeName}`
 	)
 	return value :: number
 end
@@ -116,6 +116,13 @@ local function directRepresentations(model: Model): { Instance }
 			table.insert(representations, child)
 		end
 	end
+
+	local representedCount = requireNonNegativeIntegerAttribute(model, "UNRENDERED_RepresentedCount")
+	assert(
+		#representations == representedCount,
+		`diagnostics representation enumeration disagrees with represented count: expected {representedCount}, got {#representations}`
+	)
+
 	table.sort(representations, function(a: Instance, b: Instance): boolean
 		return a.Name < b.Name
 	end)
