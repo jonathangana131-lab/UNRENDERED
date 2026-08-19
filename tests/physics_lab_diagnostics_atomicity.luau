@@ -40,6 +40,9 @@ local function run(): number
 		enumerationFunction
 	)
 	local enumerationCountMatch = position("#representations == representedCount", enumerationFunction)
+	local seenEntityIds = position("local seenEntityIds: { [string]: boolean } = {}", enumerationFunction)
+	local duplicateIdentityGuard = position("seenEntityIds[entityId] == nil", enumerationFunction)
+	local duplicateIdentityRemember = position("seenEntityIds[entityId] = true", enumerationFunction)
 	local preflightFunction = position("local function preflightReadouts")
 	local captureFunction = position("function PhysicsLabStudioDiagnostics.capture")
 	local enableFunction = position("function PhysicsLabStudioDiagnostics.enable")
@@ -91,6 +94,16 @@ local function run(): number
 			and enumerationCountMatch ~= nil
 			and enumerationFunction < representedCountRead
 			and representedCountRead < enumerationCountMatch
+	)
+	expect(
+		"representation enumeration rejects duplicate WorldEntity identities after cardinality validation",
+		enumerationCountMatch ~= nil
+			and seenEntityIds ~= nil
+			and duplicateIdentityGuard ~= nil
+			and duplicateIdentityRemember ~= nil
+			and enumerationCountMatch < seenEntityIds
+			and seenEntityIds < duplicateIdentityGuard
+			and duplicateIdentityGuard < duplicateIdentityRemember
 	)
 	expect(
 		"readout preflight uses the represented-count cardinality guard before diagnostics realization",
