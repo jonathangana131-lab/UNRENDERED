@@ -114,6 +114,19 @@ local function assertCanonicalPartGeometry(
 	assertNearVector3(part.CFrame.LookVector, expectedCFrame.LookVector, `{label} look-vector`)
 end
 
+local function assertCanonicalWorkspaceRoot(root: Model): ()
+	assert(root.Parent == workspace, "Physics Lab validation requires the canonical direct Workspace root")
+
+	local matchingRootCount = 0
+	for _, child in ipairs(workspace:GetChildren()) do
+		if child.Name == ROOT_NAME then
+			matchingRootCount += 1
+			assert(child == root, "Physics Lab validation found a competing canonical root")
+		end
+	end
+	assert(matchingRootCount == 1, "Physics Lab validation requires exactly one canonical Workspace root")
+end
+
 local function assertCanonicalRootIdentity(root: Model, recipe: PhysicsLabRecipe.PhysicsLabRecipe): ()
 	assert(root.Name == ROOT_NAME, `Physics Lab validation expected root name {ROOT_NAME}`)
 	assert(
@@ -336,6 +349,7 @@ local function captureInternal(root: Instance, requireComplete: boolean): Snapsh
 	assert(root:GetAttribute(OWNED_ATTRIBUTE) == true, "Physics Lab validation refuses an unowned root")
 
 	local model = root :: Model
+	assertCanonicalWorkspaceRoot(model)
 	local recipe = PhysicsLabRecipe.build()
 	assertCanonicalRootIdentity(model, recipe)
 	assertCanonicalRepresentationSet(model, recipe, requireComplete)

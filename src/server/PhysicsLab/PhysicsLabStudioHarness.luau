@@ -23,6 +23,13 @@ local function resolveWorkspaceParent(parent: Instance?): Workspace
 	return workspace
 end
 
+local function assertCanonicalPlacement(lab: RealizedLab): ()
+	assert(
+		lab.model.Parent == workspace,
+		"Physics Lab Studio harness owned lab left the canonical Workspace root"
+	)
+end
+
 function PhysicsLabStudioHarness.start(parent: Instance?): RealizedLab
 	assertStudioServer()
 	local targetParent = resolveWorkspaceParent(parent)
@@ -34,7 +41,11 @@ end
 
 function PhysicsLabStudioHarness.get(): RealizedLab?
 	assertStudioServer()
-	return current
+	local active = current
+	if active ~= nil then
+		assertCanonicalPlacement(active)
+	end
+	return active
 end
 
 function PhysicsLabStudioHarness.stop(): ()
@@ -50,6 +61,10 @@ end
 function PhysicsLabStudioHarness.restart(parent: Instance?): RealizedLab
 	assertStudioServer()
 	local targetParent = resolveWorkspaceParent(parent)
+	local active = current
+	if active ~= nil then
+		assertCanonicalPlacement(active)
+	end
 	PhysicsLabStudioHarness.stop()
 	return PhysicsLabStudioHarness.start(targetParent)
 end
