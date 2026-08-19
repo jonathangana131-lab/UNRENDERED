@@ -9,6 +9,8 @@ local PhysicsLabStudioDiagnostics = {}
 
 local DIAGNOSTICS_ROOT_NAME = "UNRENDERED_PhysicsLabDiagnostics"
 local DIAGNOSTICS_SCHEMA_VERSION = 1
+local DEFAULT_TOGGLE_EVIDENCE_CYCLES = 20
+local MAX_TOGGLE_EVIDENCE_CYCLES = 20
 local CHECKPOINT_CYCLES = table.freeze({ [1] = true, [5] = true, [10] = true, [20] = true })
 
 export type EntityDiagnostic = {
@@ -61,6 +63,21 @@ local function requireNonNegativeIntegerAttribute(instance: Instance, attributeN
 	return value :: number
 end
 
+local function requireToggleCycleCount(cycles: any): number
+	if cycles == nil then
+		return DEFAULT_TOGGLE_EVIDENCE_CYCLES
+	end
+	assert(
+		type(cycles) == "number"
+			and cycles == cycles
+			and cycles >= 1
+			and cycles <= MAX_TOGGLE_EVIDENCE_CYCLES
+			and cycles % 1 == 0,
+		`diagnostics cycle count must be an integer in [1, {MAX_TOGGLE_EVIDENCE_CYCLES}]`
+	)
+	return cycles :: number
+end
+
 local function assertRepresentationMetadata(
 	representation: Instance,
 	entityId: string,
@@ -109,10 +126,18 @@ local function diagnosticsRoot(model: Model): Folder?
 	return existing
 end
 
-local function directRepresentations(model: Model): { Instance }
+local function directRepresentations(lab: PhysicsLabRealizer.RealizedLab, model: Model): { Instance }
 	local representations = {}
+	local seenEntityIds: { [string]: boolean } = {}
 	for _, child in ipairs(model:GetChildren()) do
 		if child.Name ~= DIAGNOSTICS_ROOT_NAME and child:GetAttribute("UNRENDERED_WorldEntityId") ~= nil then
+			local entityId = requireStringAttribute(child, "UNRENDERED_WorldEntityId")
+			assert(not seenEntityIds[entityId], `duplicate diagnostics representation id: {entityId}`)
+			assert(
+				lab.isRepresented(entityId),
+				`diagnostics child is not an authoritative representation: {entityId}`
+			)
+			seenEntityIds[entityId] = true
 			table.insert(representations, child)
 		end
 	end
@@ -143,7 +168,7 @@ end
 
 local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Model): { ReadoutPlan }
 	local plans: { ReadoutPlan } = {}
-	for _, representation in ipairs(directRepresentations(model)) do
+	for _, representation in ipairs(directRepresentations(lab, model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
 		assertRepresentationMetadata(
@@ -175,7 +200,7 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 	local folder = diagnosticsRoot(model)
 	local entities: { EntityDiagnostic } = {}
 
-	for _, representation in ipairs(directRepresentations(model)) do
+	for _, representation in ipairs(directRepresentations(lab, model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
 		assertRepresentationMetadata(
@@ -306,8 +331,7 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 	cycles: number?
 ): { [string]: any }
 	assertStudioServer()
-	local cycleCount = cycles or 20
-	assert(cycleCount >= 1 and cycleCount % 1 == 0, "diagnostics cycle count must be a positive integer")
+	local cycleCount = requireToggleCycleCount(cycles)
 
 	local initial = PhysicsLabStudioDiagnostics.capture(lab)
 	assert(
