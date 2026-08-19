@@ -312,6 +312,10 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 	assert(sample ~= nil, "diagnostics evidence did not capture an entity sample")
 	table.freeze(checkpoints)
 	local finalSnapshot = PhysicsLabStudioDiagnostics.capture(lab)
+	assert(
+		not finalSnapshot.enabled and finalSnapshot.diagnosticInstanceCount == 0,
+		"Physics Lab diagnostics must be off when toggle evidence finishes"
+	)
 	local evidence = {
 		schemaVersion = DIAGNOSTICS_SCHEMA_VERSION,
 		cycleCount = cycleCount,
