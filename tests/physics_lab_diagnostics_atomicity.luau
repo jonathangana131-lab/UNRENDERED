@@ -41,6 +41,10 @@ local function run(): number
 	local toggleBaseline = position("local baseline = Validation.captureFull(lab.model)")
 	local firstToggleDisable = position("local disabled = PhysicsLabStudioDiagnostics.disable(lab)")
 	local legacyDefaultOffNormalizer = position("PhysicsLabStudioDiagnostics.disable(lab)\n\tlocal baseline")
+	local toggleFinalSnapshot = position("local finalSnapshot = PhysicsLabStudioDiagnostics.capture(lab)")
+	local toggleFinalOff =
+		position("not finalSnapshot.enabled and finalSnapshot.diagnosticInstanceCount == 0")
+	local toggleFinalPublication = position("finallyEnabled = finalSnapshot.enabled")
 
 	expect(
 		"all readout dependencies are preflighted before the owned root is parented",
@@ -107,6 +111,14 @@ local function run(): number
 			and toggleDefaultOff < toggleBaseline
 			and toggleBaseline < firstToggleDisable
 			and legacyDefaultOffNormalizer == nil
+	)
+	expect(
+		"toggle evidence rejects a final diagnostics-on state before publishing success",
+		toggleFinalSnapshot ~= nil
+			and toggleFinalOff ~= nil
+			and toggleFinalPublication ~= nil
+			and toggleFinalSnapshot < toggleFinalOff
+			and toggleFinalOff < toggleFinalPublication
 	)
 
 	return failures
