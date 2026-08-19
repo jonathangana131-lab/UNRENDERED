@@ -25,7 +25,7 @@ The visual labels are diagnostic representation only. They are never canonical w
 
 Diagnostics-on is fail-closed. `enable()` preflights the realized representations, authoritative records, required identity/fidelity attributes, revision counters, and usable `BasePart` adornees before it parents the owned diagnostics root. The owned Instance tree is then realized inside a protected transaction; if any later configuration/capture step fails, the owned root is destroyed before the original error is rethrown.
 
-`tests/physics_lab_diagnostics_atomicity.luau` guards the preflight-before-mutation ordering, ownership-before-configuration ordering, rollback path, and live revision-readout contract. This source test does **not** replace the real Studio observation required for #151.
+`tests/physics_lab_diagnostics_atomicity.luau` guards the preflight-before-mutation ordering, ownership-before-configuration ordering, rollback path, live revision-readout contract, and default-off evidence precondition. This source test does **not** replace the real Studio observation required for #151.
 
 An unrelated same-name object is still never adopted or destroyed. If Studio evidence ever exposes a distinct post-preflight failure path that leaves owned state behind, preserve that exact repro and repair the smallest source defect rather than weakening the evidence contract.
 
@@ -73,9 +73,9 @@ local evidence = Diagnostics.runToggleEvidence(lab, 20)
 print("PHYSICS_LAB_DIAGNOSTICS_20=" .. HttpService:JSONEncode(evidence))
 ```
 
-`runToggleEvidence()` performs twenty diagnostics-on/off cycles. After every disable it runs the existing `PhysicsLabValidation.captureFull()` and `compare()` boundary against the initial canonical baseline. It fails immediately if any scoped Instance/resource count changes or the full-lab envelope moves beyond the existing `0.001` stud tolerance. Checkpoints are retained at cycles 1, 5, 10, and 20.
+`runToggleEvidence()` first captures the current diagnostics state without mutating it and fails unless diagnostics are already OFF with zero owned diagnostic Instances. It does not call `disable()` to manufacture a clean initial state. Only after that observed precondition does it capture the canonical baseline and perform twenty diagnostics-on/off cycles. After every disable it runs the existing `PhysicsLabValidation.captureFull()` and `compare()` boundary against that initial canonical baseline. It fails immediately if any scoped Instance/resource count changes or the full-lab envelope moves beyond the existing `0.001` stud tolerance. Checkpoints are retained at cycles 1, 5, 10, and 20.
 
-This proves bounded cleanup of the diagnostics Instances that this adapter owns. The stronger "no connection/registration/history/queue accumulation" requirement is satisfied structurally because the adapter creates none of those resources; a future diagnostics extension that introduces any of them must add explicit ownership counters and leak evidence rather than relying on this statement.
+This proves bounded cleanup of the diagnostics Instances that this adapter owns while keeping the required default-OFF observation distinct from cleanup behavior. The stronger "no connection/registration/history/queue accumulation" requirement is satisfied structurally because the adapter creates none of those resources; a future diagnostics extension that introduces any of them must add explicit ownership counters and leak evidence rather than relying on this statement.
 
 ## Required engine evidence before PASS
 
@@ -87,7 +87,7 @@ The diagnostics row remains open until a tester/bridge run on the exact commit e
 4. the machine-readable snapshot agrees with production `WorldEntity` state;
 5. diagnostics-off leaves no owned diagnostics tree;
 6. the 20-cycle sweep records zero scoped resource drift and stable full-lab envelope at required checkpoints;
-7. diagnostics are still off by default after normal bootstrap/rebuild;
+7. diagnostics are observed OFF by default after normal bootstrap/rebuild; the evidence sweep must fail rather than normalize a pre-existing ON state;
 8. no unrelated same-name Instance is silently destroyed or adopted;
 9. a failed/interrupted diagnostics-on attempt cannot leave a partial owned diagnostics tree or poison the next candidate observation.
 
