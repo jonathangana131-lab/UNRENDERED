@@ -15,10 +15,30 @@ local function run(): number
 	end
 
 	local source = fs.readFile(DIAGNOSTICS_SOURCE)
-	local function position(needle: string): number?
-		return string.find(source, needle, 1, true)
+	local function position(needle: string, init: number?): number?
+		return string.find(source, needle, init or 1, true)
 	end
 
+	local metadataHelper = position("local function assertRepresentationMetadata(")
+	local recipeKeyRead =
+		position('requireStringAttribute(representation, "UNRENDERED_RecipeKey")', metadataHelper)
+	local representationRevisionRead = position(
+		'requireNonNegativeIntegerAttribute(representation, "UNRENDERED_RepresentationRevision")',
+		metadataHelper
+	)
+	local stateRevisionRead = position(
+		'requireNonNegativeIntegerAttribute(representation, "UNRENDERED_StateRevision")',
+		metadataHelper
+	)
+	local recipeKeyMatch = position("expectedRecipeKey == representedRecipeKey", metadataHelper)
+	local representationRevisionMatch =
+		position("expectedRepresentationRevision == representedRepresentationRevision", metadataHelper)
+	local stateRevisionMatch = position("expectedStateRevision == representedStateRevision", metadataHelper)
+	local preflightFunction = position("local function preflightReadouts")
+	local captureFunction = position("function PhysicsLabStudioDiagnostics.capture")
+	local enableFunction = position("function PhysicsLabStudioDiagnostics.enable")
+	local preflightMetadataCheck = position("assertRepresentationMetadata(", preflightFunction)
+	local captureMetadataCheck = position("assertRepresentationMetadata(", captureFunction)
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
 	local rootName = position("folder.Name = DIAGNOSTICS_ROOT_NAME")
@@ -46,6 +66,32 @@ local function run(): number
 		position("not finalSnapshot.enabled and finalSnapshot.diagnosticInstanceCount == 0")
 	local toggleFinalPublication = position("finallyEnabled = finalSnapshot.enabled")
 
+	expect(
+		"diagnostics fail closed when physical recipe/revision metadata drifts from authoritative state",
+		metadataHelper ~= nil
+			and recipeKeyRead ~= nil
+			and representationRevisionRead ~= nil
+			and stateRevisionRead ~= nil
+			and recipeKeyMatch ~= nil
+			and representationRevisionMatch ~= nil
+			and stateRevisionMatch ~= nil
+	)
+	expect(
+		"readout preflight validates physical metadata before diagnostics realization",
+		preflightFunction ~= nil
+			and preflightMetadataCheck ~= nil
+			and enableFunction ~= nil
+			and preflightFunction < preflightMetadataCheck
+			and preflightMetadataCheck < enableFunction
+	)
+	expect(
+		"diagnostics capture validates physical metadata instead of masking stale representation attributes",
+		captureFunction ~= nil
+			and captureMetadataCheck ~= nil
+			and enableFunction ~= nil
+			and captureFunction < captureMetadataCheck
+			and captureMetadataCheck < enableFunction
+	)
 	expect(
 		"all readout dependencies are preflighted before the owned root is parented",
 		preflight ~= nil and parentMutation ~= nil and preflight < parentMutation

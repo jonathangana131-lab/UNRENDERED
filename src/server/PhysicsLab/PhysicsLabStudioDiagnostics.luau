@@ -52,6 +52,50 @@ local function requireStringAttribute(instance: Instance, attributeName: string)
 	return value :: string
 end
 
+local function requireNonNegativeIntegerAttribute(instance: Instance, attributeName: string): number
+	local value = instance:GetAttribute(attributeName)
+	assert(
+		type(value) == "number" and value == value and value >= 0 and value % 1 == 0,
+		`missing or invalid diagnostics revision attribute: {attributeName}`
+	)
+	return value :: number
+end
+
+local function assertRepresentationMetadata(
+	representation: Instance,
+	entityId: string,
+	expectedFidelity: string,
+	expectedRecipeKey: string,
+	expectedRepresentationRevision: number,
+	expectedStateRevision: number
+): ()
+	local representedFidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity")
+	assert(
+		expectedFidelity == representedFidelity,
+		`diagnostics fidelity disagrees with authoritative WorldEntity: {entityId}`
+	)
+
+	local representedRecipeKey = requireStringAttribute(representation, "UNRENDERED_RecipeKey")
+	assert(
+		expectedRecipeKey == representedRecipeKey,
+		`diagnostics recipe key disagrees with authoritative WorldEntity: {entityId}`
+	)
+
+	local representedRepresentationRevision =
+		requireNonNegativeIntegerAttribute(representation, "UNRENDERED_RepresentationRevision")
+	assert(
+		expectedRepresentationRevision == representedRepresentationRevision,
+		`diagnostics representation revision disagrees with authoritative WorldEntity: {entityId}`
+	)
+
+	local representedStateRevision =
+		requireNonNegativeIntegerAttribute(representation, "UNRENDERED_StateRevision")
+	assert(
+		expectedStateRevision == representedStateRevision,
+		`diagnostics state revision disagrees with authoritative WorldEntity: {entityId}`
+	)
+end
+
 local function diagnosticsRoot(model: Model): Folder?
 	local existing = model:FindFirstChild(DIAGNOSTICS_ROOT_NAME)
 	if existing == nil then
@@ -95,10 +139,13 @@ local function preflightReadouts(lab: PhysicsLabRealizer.RealizedLab, model: Mod
 	for _, representation in ipairs(directRepresentations(model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
-		local representedFidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity")
-		assert(
-			record.fidelity == representedFidelity,
-			`diagnostics fidelity disagrees with authoritative WorldEntity: {entityId}`
+		assertRepresentationMetadata(
+			representation,
+			entityId,
+			record.fidelity,
+			record.origin.recipeKey,
+			record.representationRevision,
+			record.stateRevision
 		)
 		local plan: ReadoutPlan = {
 			key = representation.Name,
@@ -124,10 +171,13 @@ function PhysicsLabStudioDiagnostics.capture(lab: PhysicsLabRealizer.RealizedLab
 	for _, representation in ipairs(directRepresentations(model)) do
 		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
 		local record = lab.getRecord(entityId)
-		local representedFidelity = requireStringAttribute(representation, "UNRENDERED_Fidelity")
-		assert(
-			record.fidelity == representedFidelity,
-			`diagnostics fidelity disagrees with authoritative WorldEntity: {entityId}`
+		assertRepresentationMetadata(
+			representation,
+			entityId,
+			record.fidelity,
+			record.origin.recipeKey,
+			record.representationRevision,
+			record.stateRevision
 		)
 
 		local representationClass = representation:GetAttribute("UNRENDERED_RepresentationClass")
