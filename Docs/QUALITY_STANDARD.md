@@ -31,15 +31,15 @@ A feature may be merged incrementally before Reality-Grade, but the Feature Epic
 
 ## 2. Depth before breadth
 
-Do not create 20 half-finished systems because 20 workers are available.
+Do not create 20 half-finished systems because many agents are available.
 
-The project allows at most **3 active major Feature Epics**. Extra admitted workers deepen those epics through implementation, testing, visual/audio polish, tooling, performance, review, fuzzing, and integration; excess chats park instead of creating breadth.
+The product allows at most **3 active major Feature Epics**. Additional agents should deepen those epics through implementation, testing, visual/audio polish, tooling, performance, review, fuzzing, and integration rather than create breadth for its own sake. Repository execution concurrency is adaptive under root `AGENTS.md`; this product WIP limit is about major feature breadth, not a fixed worker count or scheduler admission slot.
 
-An issue being open does **not** mean it is unlocked. `Docs/PROJECT_STATE.md` is the authoritative list of currently unlocked work.
+An issue being open does **not** mean it is unlocked. `Docs/PROJECT_STATE.md` is the authoritative list of currently unlocked major product work.
 
 Do not begin a gated P1/P2 feature simply because it looks more exciting.
 
-## 3. Strike-team model
+## 3. Convergence model
 
 A mature feature can have multiple independent child tasks:
 - implementation/contracts,
@@ -51,9 +51,9 @@ A mature feature can have multiple independent child tasks:
 - UX/accessibility,
 - integration/review.
 
-Workers claim one major task at a time. They may continue to another compatible child after publishing their current work.
+Prefer one writer for an overlapping subsystem/root cause. Additional agents may take genuinely separable implementation, testing, profiling, polish, evidence, or review work with a clear integration path. After publishing a coherent checkpoint, refresh live GitHub and continue with another compatible outcome when useful.
 
-One worker does not need to own an entire feature forever, but one Epic must have a coherent integration path. Competing implementations require an ADR and evidence.
+One agent does not need to own an entire feature forever, but one Epic must have a coherent integration path. Competing implementations require an ADR and evidence.
 
 ## 4. Hero Features
 
@@ -309,7 +309,7 @@ Procedural families must look manufacturable before anomaly.
 
 ## 20. Independent Reality-Grade review
 
-A worker should not unilaterally declare its own major Epic finished.
+An implementation author should not unilaterally declare a major Epic finished.
 
 An independent reviewer audits applicable categories:
 - architecture,
@@ -329,7 +329,7 @@ The reviewer may return the Epic to implementation/polish even when CI is green.
 
 ## 21. System freeze after proof
 
-Once a framework reaches Reality-Grade, its public contracts become intentionally stable. New workers add families/capabilities through those contracts rather than rewriting them for taste.
+Once a framework reaches Reality-Grade, its public contracts become intentionally stable. New work adds families/capabilities through those contracts rather than rewriting them for taste.
 
 A significant rewrite requires an ADR containing measured limitation, alternatives, migration plan, regressions/tests, and why extension is insufficient.
 
