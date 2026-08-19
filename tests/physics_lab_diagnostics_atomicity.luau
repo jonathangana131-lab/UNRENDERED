@@ -18,6 +18,19 @@ local function run(): number
 	local function position(needle: string): number?
 		return string.find(source, needle, 1, true)
 	end
+	local function occurrences(needle: string): number
+		local count = 0
+		local cursor = 1
+		while true do
+			local found = string.find(source, needle, cursor, true)
+			if found == nil then
+				break
+			end
+			count += 1
+			cursor = found + #needle
+		end
+		return count
+	end
 
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
@@ -31,6 +44,14 @@ local function run(): number
 	local representationRevision = position("representationRevision = record.representationRevision")
 	local stateRevision = position("stateRevision = record.stateRevision")
 	local visualRevisionReadout = position("reprRev=%d | stateRev=%d")
+	local revisionReader = position("local function requireRevisionAttribute")
+	local representationRevisionAttribute =
+		position('representationRevision = requireRevisionAttribute(representation, "UNRENDERED_RepresentationRevision")')
+	local stateRevisionAttribute =
+		position('stateRevision = requireRevisionAttribute(representation, "UNRENDERED_StateRevision")')
+	local representationRevisionAgreement =
+		position("record.representationRevision == represented.representationRevision")
+	local stateRevisionAgreement = position("record.stateRevision == represented.stateRevision")
 	local capture = position("return PhysicsLabStudioDiagnostics.capture(lab)")
 	local transactionEnd = position("\tend)\n\n\tif not ok then")
 	local rollback = position("folder:Destroy()")
@@ -59,6 +80,35 @@ local function run(): number
 			and stateRevision < parentMutation
 	)
 	expect("live readouts expose both authoritative revision counters", visualRevisionReadout ~= nil)
+	expect(
+		"realized revision attributes are required before diagnostics mutation",
+		revisionReader ~= nil
+			and representationRevisionAttribute ~= nil
+			and stateRevisionAttribute ~= nil
+			and parentMutation ~= nil
+			and revisionReader < representationRevisionAttribute
+			and representationRevisionAttribute < parentMutation
+			and stateRevisionAttribute < parentMutation
+	)
+	expect(
+		"revision attributes must be finite nonnegative integers",
+		position("and value >= 0") ~= nil
+			and position("and value < math.huge") ~= nil
+			and position("and value % 1 == 0") ~= nil
+	)
+	expect(
+		"preflight rejects stale realized revision metadata before mutation",
+		representationRevisionAgreement ~= nil
+			and stateRevisionAgreement ~= nil
+			and parentMutation ~= nil
+			and representationRevisionAgreement < parentMutation
+			and stateRevisionAgreement < parentMutation
+	)
+	expect(
+		"capture and preflight both require exact realized-to-authoritative revisions",
+		occurrences("record.representationRevision == represented.representationRevision") == 2
+			and occurrences("record.stateRevision == represented.stateRevision") == 2
+	)
 	expect(
 		"Instance realization begins inside a protected transaction",
 		transaction ~= nil and parentMutation ~= nil and transaction < parentMutation
