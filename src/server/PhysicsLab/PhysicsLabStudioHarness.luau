@@ -15,10 +15,19 @@ local function assertStudioServer(): ()
 	assert(RunService:IsServer(), "PhysicsLabStudioHarness must run on the server")
 end
 
+local function resolveWorkspaceParent(parent: Instance?): Workspace
+	assert(
+		parent == nil or parent == workspace,
+		"Physics Lab Studio harness may only realize the permanent lab under Workspace"
+	)
+	return workspace
+end
+
 function PhysicsLabStudioHarness.start(parent: Instance?): RealizedLab
 	assertStudioServer()
+	local targetParent = resolveWorkspaceParent(parent)
 	assert(current == nil, "Physics Lab Studio harness already owns a realized lab")
-	local realized = PhysicsLabRealizer.realize(parent or workspace)
+	local realized = PhysicsLabRealizer.realize(targetParent)
 	current = realized
 	return realized
 end
@@ -40,8 +49,9 @@ end
 
 function PhysicsLabStudioHarness.restart(parent: Instance?): RealizedLab
 	assertStudioServer()
+	local targetParent = resolveWorkspaceParent(parent)
 	PhysicsLabStudioHarness.stop()
-	return PhysicsLabStudioHarness.start(parent)
+	return PhysicsLabStudioHarness.start(targetParent)
 end
 
 return table.freeze(PhysicsLabStudioHarness)
