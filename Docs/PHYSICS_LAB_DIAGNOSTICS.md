@@ -25,6 +25,8 @@ The visual labels are diagnostic representation only. They are never canonical w
 
 Diagnostics-on is fail-closed. `enable()` preflights the realized representations, authoritative records, required identity/fidelity attributes, revision counters, and usable `BasePart` adornees before it parents the owned diagnostics root. The owned Instance tree is then realized inside a protected transaction; if any later configuration/capture step fails, the owned root is destroyed before the original error is rethrown.
 
+Before a readout or snapshot is accepted, realized `UNRENDERED_RecipeKey`, `UNRENDERED_RepresentationRevision`, and `UNRENDERED_StateRevision` metadata must exactly match the authoritative `WorldEntity` record. Malformed or stale representation metadata is a diagnostics failure rather than something the overlay normalizes.
+
 `tests/physics_lab_diagnostics_atomicity.luau` guards the preflight-before-mutation ordering, ownership-before-configuration ordering, rollback path, live revision-readout contract, default-off evidence precondition, and final-off evidence publication guard. This source test does **not** replace the real Studio observation required for #151.
 
 An unrelated same-name object is still never adopted or destroyed. If Studio evidence ever exposes a distinct post-preflight failure path that leaves owned state behind, preserve that exact repro and repair the smallest source defect rather than weakening the evidence contract.
