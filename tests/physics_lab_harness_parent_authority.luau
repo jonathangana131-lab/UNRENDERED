@@ -35,6 +35,8 @@ local function run(): number
 	local restartFunction = position(harnessSource, "function PhysicsLabStudioHarness.restart")
 	local restartPreflight =
 		position(harnessSource, "local targetParent = resolveWorkspaceParent(parent)", restartFunction)
+	local restartActive = position(harnessSource, "local active = current", restartFunction)
+	local restartPlacement = position(harnessSource, "assertCanonicalPlacement(active)", restartFunction)
 	local restartStop = position(harnessSource, "PhysicsLabStudioHarness.stop()", restartFunction)
 	local restartStart =
 		position(harnessSource, "return PhysicsLabStudioHarness.start(targetParent)", restartFunction)
@@ -72,6 +74,16 @@ local function run(): number
 			and restartPreflight ~= nil
 			and restartStop ~= nil
 			and restartPreflight < restartStop
+	)
+	expect(
+		"restart rejects a drifted current lab before teardown",
+		restartPreflight ~= nil
+			and restartActive ~= nil
+			and restartPlacement ~= nil
+			and restartStop ~= nil
+			and restartPreflight < restartActive
+			and restartActive < restartPlacement
+			and restartPlacement < restartStop
 	)
 	expect(
 		"restart reuses the validated Workspace parent",
