@@ -47,11 +47,16 @@ local function run(): number
 		enumerationFunction
 	)
 	local enumerationCountMatch = position("#representations == representedCount", enumerationFunction)
+	local readoutNameHelper = position("local function readoutName(")
+	local readoutTextHelper = position("local function readoutText(")
 	local readoutShapeHelper = position("local function assertReadoutShape(")
 	local readoutChildCount = position("#readouts == #entities", readoutShapeHelper)
-	local readoutNameCheck = position("readout.Name == expectedName", readoutShapeHelper)
-	local readoutClassCheck = position('readout:IsA("BillboardGui")', readoutShapeHelper)
-	local readoutLabelCheck = position('label ~= nil and label:IsA("TextLabel")', readoutShapeHelper)
+	local duplicateReadoutGuard = position("readoutsByName[readout.Name] == nil", readoutShapeHelper)
+	local missingReadoutGuard = position("readout ~= nil", readoutShapeHelper)
+	local readoutClassGuard = position('readout:IsA("BillboardGui")', readoutShapeHelper)
+	local readoutAdorneeGuard = position("billboard.Adornee == adornees[index]", readoutShapeHelper)
+	local readoutLabelGuard = position('label ~= nil and label:IsA("TextLabel")', readoutShapeHelper)
+	local readoutTextGuard = position("label.Text == expectedText", readoutShapeHelper)
 	local readoutDescendantCount = position("descendantCount == #entities * 2", readoutShapeHelper)
 	local preflightFunction = position("local function preflightReadouts")
 	local captureFunction = position("function PhysicsLabStudioDiagnostics.capture")
@@ -60,8 +65,12 @@ local function run(): number
 	local captureEnumeration = position("directRepresentations(lab, model)", captureFunction)
 	local preflightMetadataCheck = position("assertRepresentationMetadata(", preflightFunction)
 	local captureMetadataCheck = position("assertRepresentationMetadata(", captureFunction)
-	local captureReadoutShapeCheck =
-		position("diagnosticInstanceCount = assertReadoutShape(folder, entities)", captureFunction)
+	local captureReadoutShapeCheck = position(
+		"diagnosticInstanceCount = assertReadoutShape(folder, entities, adornees, fingerprint, reproKey)",
+		captureFunction
+	)
+	local enableReadoutName = position("billboard.Name = readoutName(index, plan.key)", enableFunction)
+	local enableReadoutText = position("label.Text = readoutText(", enableFunction)
 	local preflight = position("local plans = preflightReadouts(lab, model)")
 	local transaction = position("local ok, result = pcall(function(): Snapshot")
 	local rootName = position("folder.Name = DIAGNOSTICS_ROOT_NAME")
@@ -122,21 +131,26 @@ local function run(): number
 			and representedCountRead < enumerationCountMatch
 	)
 	expect(
-		"enabled diagnostics fail closed on partial or malformed visual readout trees",
+		"enabled diagnostics reject partial, duplicate, or malformed readout trees",
 		readoutShapeHelper ~= nil
 			and readoutChildCount ~= nil
-			and readoutNameCheck ~= nil
-			and readoutClassCheck ~= nil
-			and readoutLabelCheck ~= nil
+			and duplicateReadoutGuard ~= nil
+			and missingReadoutGuard ~= nil
+			and readoutClassGuard ~= nil
+			and readoutLabelGuard ~= nil
 			and readoutDescendantCount ~= nil
-			and readoutShapeHelper < readoutChildCount
-			and readoutChildCount < readoutNameCheck
-			and readoutNameCheck < readoutClassCheck
-			and readoutClassCheck < readoutLabelCheck
-			and readoutLabelCheck < readoutDescendantCount
 	)
 	expect(
-		"machine-readable capture validates visual readout shape before publishing an enabled snapshot",
+		"enabled diagnostics bind every readout to the represented Instance and exact current text",
+		readoutNameHelper ~= nil
+			and readoutTextHelper ~= nil
+			and readoutAdorneeGuard ~= nil
+			and readoutTextGuard ~= nil
+			and enableReadoutName ~= nil
+			and enableReadoutText ~= nil
+	)
+	expect(
+		"machine-readable capture validates the visual readout tree before publishing enabled state",
 		captureFunction ~= nil
 			and captureReadoutShapeCheck ~= nil
 			and enableFunction ~= nil
