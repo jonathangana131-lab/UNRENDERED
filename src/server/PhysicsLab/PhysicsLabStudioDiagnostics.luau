@@ -9,6 +9,8 @@ local PhysicsLabStudioDiagnostics = {}
 
 local DIAGNOSTICS_ROOT_NAME = "UNRENDERED_PhysicsLabDiagnostics"
 local DIAGNOSTICS_SCHEMA_VERSION = 1
+local DEFAULT_TOGGLE_EVIDENCE_CYCLES = 20
+local MAX_TOGGLE_EVIDENCE_CYCLES = 20
 local CHECKPOINT_CYCLES = table.freeze({ [1] = true, [5] = true, [10] = true, [20] = true })
 
 export type EntityDiagnostic = {
@@ -59,6 +61,21 @@ local function requireNonNegativeIntegerAttribute(instance: Instance, attributeN
 		`missing or invalid diagnostics integer attribute: {attributeName}`
 	)
 	return value :: number
+end
+
+local function requireToggleCycleCount(cycles: any): number
+	if cycles == nil then
+		return DEFAULT_TOGGLE_EVIDENCE_CYCLES
+	end
+	assert(
+		type(cycles) == "number"
+			and cycles == cycles
+			and cycles >= 1
+			and cycles <= MAX_TOGGLE_EVIDENCE_CYCLES
+			and cycles % 1 == 0,
+		`diagnostics cycle count must be an integer in [1, {MAX_TOGGLE_EVIDENCE_CYCLES}]`
+	)
+	return cycles :: number
 end
 
 local function assertRepresentationMetadata(
@@ -354,8 +371,7 @@ function PhysicsLabStudioDiagnostics.runToggleEvidence(
 	cycles: number?
 ): { [string]: any }
 	assertStudioServer()
-	local cycleCount = cycles or 20
-	assert(cycleCount >= 1 and cycleCount % 1 == 0, "diagnostics cycle count must be a positive integer")
+	local cycleCount = requireToggleCycleCount(cycles)
 
 	local initial = PhysicsLabStudioDiagnostics.capture(lab)
 	assert(
