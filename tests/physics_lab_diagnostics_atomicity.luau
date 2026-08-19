@@ -65,8 +65,10 @@ local function run(): number
 	local captureEnumeration = position("directRepresentations(lab, model)", captureFunction)
 	local preflightMetadataCheck = position("assertRepresentationMetadata(", preflightFunction)
 	local captureMetadataCheck = position("assertRepresentationMetadata(", captureFunction)
-	local captureReadoutShapeCheck =
-		position("diagnosticInstanceCount = assertReadoutShape(folder, entities, adornees, fingerprint, reproKey)", captureFunction)
+	local captureReadoutShapeCheck = position(
+		"diagnosticInstanceCount = assertReadoutShape(folder, entities, adornees, fingerprint, reproKey)",
+		captureFunction
+	)
 	local enableReadoutName = position("billboard.Name = readoutName(index, plan.key)", enableFunction)
 	local enableReadoutText = position("label.Text = readoutText(", enableFunction)
 	local preflight = position("local plans = preflightReadouts(lab, model)")
