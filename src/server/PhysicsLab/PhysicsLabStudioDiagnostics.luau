@@ -123,6 +123,13 @@ local function directRepresentations(model: Model): { Instance }
 		`diagnostics representation enumeration disagrees with represented count: expected {representedCount}, got {#representations}`
 	)
 
+	local seenEntityIds: { [string]: boolean } = {}
+	for _, representation in ipairs(representations) do
+		local entityId = requireStringAttribute(representation, "UNRENDERED_WorldEntityId")
+		assert(seenEntityIds[entityId] == nil, `duplicate diagnostics representation WorldEntityId: {entityId}`)
+		seenEntityIds[entityId] = true
+	end
+
 	table.sort(representations, function(a: Instance, b: Instance): boolean
 		return a.Name < b.Name
 	end)
