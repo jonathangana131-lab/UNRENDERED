@@ -18,11 +18,8 @@ local function run(): number
 	local realizer = fs.readFile(REALIZER_SOURCE)
 	local diagnostics = fs.readFile(DIAGNOSTICS_SOURCE)
 
-	local ownsType = realizer:find(
-		"ownsRepresentation: (entityId: string, candidate: Instance) -> boolean",
-		1,
-		true
-	)
+	local ownsType =
+		realizer:find("ownsRepresentation: (entityId: string, candidate: Instance) -> boolean", 1, true)
 	local ownsStart = realizer:find(
 		"local function ownsRepresentation(entityId: string, candidate: Instance): boolean",
 		1,
@@ -38,7 +35,8 @@ local function run(): number
 		"ownership predicate preserves fidelity authority before exact Instance comparison",
 		ownsSource:find("if not isRepresented(entityId) then", 1, true) ~= nil
 			and ownsSource:find("local representation = representations[entityId]", 1, true) ~= nil
-			and ownsSource:find("representation == candidate and candidate.Parent == model", 1, true) ~= nil
+			and ownsSource:find("representation == candidate and candidate.Parent == model", 1, true)
+				~= nil
 	)
 	expect(
 		"public handle exposes predicate without exposing private representation map",
@@ -52,7 +50,11 @@ local function run(): number
 		true
 	)
 	local enumerationEnd = enumerationStart
-		and diagnostics:find("\nlocal function adorneeFor(representation: Instance): BasePart", enumerationStart, true)
+			and diagnostics:find(
+				"\nlocal function adorneeFor(representation: Instance): BasePart",
+				enumerationStart,
+				true
+			)
 		or nil
 	local enumerationSource = if enumerationStart ~= nil and enumerationEnd ~= nil
 		then diagnostics:sub(enumerationStart, enumerationEnd - 1)
