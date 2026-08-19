@@ -435,9 +435,12 @@ function FidelityManager.new(config: PolicyConfig?): Manager
 	local resolvedConfig = copyConfig(sourceConfig)
 	validateConfig(resolvedConfig)
 
-	local manager = setmetatable({
-		config = table.freeze(resolvedConfig),
-	} :: ManagerImpl, FidelityManager) :: Manager
+	local manager = setmetatable(
+		{
+			config = table.freeze(resolvedConfig),
+		} :: ManagerImpl,
+		FidelityManager
+	) :: Manager
 	PRIVATE_STATE[manager] = {
 		states = {},
 		metrics = {
