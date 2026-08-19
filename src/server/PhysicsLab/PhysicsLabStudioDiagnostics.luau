@@ -165,7 +165,10 @@ local function assertReadoutShape(folder: Folder, entities: { EntityDiagnostic }
 	for index, entity in ipairs(entities) do
 		local readout = readouts[index]
 		local expectedName = readoutName(index, entity.key)
-		assert(readout.Name == expectedName, `unexpected diagnostics readout: expected {expectedName}, got {readout.Name}`)
+		assert(
+			readout.Name == expectedName,
+			`unexpected diagnostics readout: expected {expectedName}, got {readout.Name}`
+		)
 		assert(readout:IsA("BillboardGui"), `unexpected diagnostics readout class: {readout.ClassName}`)
 
 		local children = readout:GetChildren()
